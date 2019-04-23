@@ -58,13 +58,22 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREF
 
 # Python c++ bindings
 add_subdirectory(pybind11)
-pybind11_add_module(symbzpy EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
+pybind11_add_module(symbz EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
 # Testing via `make check`
 enable_testing()
+# to see output from failed tests, run via, e.g.,
+# CTEST_OUTPUT_ON_FAILURE=1 make check
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 set(CMAKE_CTEST_COMMAND ctest -V)
-add_executable(docheck EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/test/test.cpp ${SOURCES})
-target_link_libraries(docheck m)
-add_test(docheck docheck)
-add_dependencies(check docheck)
+add_executable(test_cpp EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/test/test.cpp ${SOURCES})
+target_link_libraries(test_cpp symbz_shared)
+add_test(NAME C++ COMMAND test_cpp)
+add_dependencies(check test_cpp)
+
+set(Python_ADDITIONAL_VERSIONS "3")
+find_package(PythonInterp)
+if (${PYTHONINTERP_FOUND})
+	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR})
+	add_dependencies(check symbz)
+endif()

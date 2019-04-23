@@ -1,23 +1,23 @@
 
 
 template<typename T,typename R> double same_lattice_dot(const R* x, const T* y, const double* len, const double* ang){
-	double out = x[0]*y[0]*len[0]*len[0]
-	           + x[1]*y[1]*len[1]*len[1]
-						 + x[2]*y[2]*len[2]*len[2]
-						 + (x[0]*y[1]+x[1]*y[0])*len[0]*len[1]*cos(ang[2])
-						 + (x[1]*y[2]+x[2]*y[1])*len[1]*len[2]*cos(ang[0])
-						 + (x[2]*y[0]+x[0]*y[2])*len[2]*len[0]*cos(ang[1]);
+	double out = double(x[0])*double(y[0])*len[0]*len[0]
+	           + double(x[1])*double(y[1])*len[1]*len[1]
+						 + double(x[2])*double(y[2])*len[2]*len[2]
+						 + (double(x[0])*double(y[1])+double(x[1])*double(y[0]))*len[0]*len[1]*cos(ang[2])
+						 + (double(x[1])*double(y[2])+double(x[2])*double(y[1]))*len[1]*len[2]*cos(ang[0])
+						 + (double(x[2])*double(y[0])+double(x[0])*double(y[2]))*len[2]*len[0]*cos(ang[1]);
 	return out;
 }
-template<typename T,typename R> double same_lattice_dot(const R& x, const T& y, const double* len, const double* ang){
-	double out = x[0]*y[0]*len[0]*len[0]
-	           + x[1]*y[1]*len[1]*len[1]
-						 + x[2]*y[2]*len[2]*len[2]
-						 + (x[0]*y[1]+x[1]*y[0])*len[0]*len[1]*cos(ang[2])
-						 + (x[1]*y[2]+x[2]*y[1])*len[1]*len[2]*cos(ang[0])
-						 + (x[2]*y[0]+x[0]*y[2])*len[2]*len[0]*cos(ang[1]);
-	return out;
-}
+// template<typename T,typename R> double same_lattice_dot(const R& x, const T& y, const double* len, const double* ang){
+// 	double out = double(x[0])*double(y[0])*len[0]*len[0]
+// 	           + double(x[1])*double(y[1])*len[1]*len[1]
+// 						 + double(x[2])*double(y[2])*len[2]*len[2]
+// 						 + (double(x[0])*double(y[1])+double(x[1])*double(y[0]))*len[0]*len[1]*cos(ang[2])
+// 						 + (double(x[1])*double(y[2])+double(x[2])*double(y[1]))*len[1]*len[2]*cos(ang[0])
+// 						 + (double(x[2])*double(y[0])+double(x[0])*double(y[2]))*len[2]*len[0]*cos(ang[1]);
+// 	return out;
+// }
 
 // cross
 template<class T, class R, template<class> class L,
@@ -53,7 +53,7 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
 		for (size_t i=0; i<si.n; i++)
 			out.insert( same_lattice_dot( a.datapointer(si.a?0:i), b.datapointer(si.b?0:i), len, ang), i);
 	} else {
-		double tmp;
+		double tmp=0;
 		for (size_t i=0; i<si.n; i++) {
 			for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.a?0:i,j) * b.getvalue(si.b?0:i,si.s?0:j);
 			out.insert(2*PI*tmp, i);

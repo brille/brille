@@ -30,14 +30,14 @@ template<typename T> py::array_t<T> av2np(const ArrayVector<T> av){
 }
 
 
-PYBIND11_MODULE(symbzpy,m){
+PYBIND11_MODULE(symbz,m){
 	m.doc() = "SymBZ for dealing with symmetry of the first Brillouin Zone";
 
 	py::class_<Lattice>(m,"Lattice")
 		.def(py::init<double,double,double,double,double,double,double>(),
 		     py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha"),py::arg("beta"),py::arg("gamma"),py::arg("volume"))
 		.def(py::init<double,double,double,double,double,double>(),
-		     py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha"),py::arg("beta"),py::arg("gamma"))
+		     py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2)
 		.def(py::init([](py::array_t<double> lens, py::array_t<double> angs) {
 			py::buffer_info linfo = lens.request(), ainfo = angs.request();
 			if ( linfo.ndim!=1 || ainfo.ndim!=1)
@@ -81,6 +81,7 @@ PYBIND11_MODULE(symbzpy,m){
 		})
 		.def("star",[](Lattice &l){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
 		.def("issame",&Lattice::issame)
+		.def("__eq__",&Lattice::issame)
 		.def("isstar",[](Lattice &l, Lattice a){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
 		.def("__repr__",&Lattice::string_repr)
 		;
@@ -217,11 +218,10 @@ PYBIND11_MODULE(symbzpy,m){
 		/* ndim  assumed interpolation data type  numel /
 		/   1              scalar                   1   /
 		/   2              vector                shape[1]  /
-		/   3       matrix / rank 2 tensor       shape[1]+shape[2]       /
-		/   N         rank N-1 tensor            sum(shape,1,N-1)      */
-		size_t numel, numarrays=bi.shape[0];
-		numel = ndim > 1 ? 0 : 1;
-		if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel += bi.shape[i];
+		/   3       matrix / rank 2 tensor       shape[1]*shape[2]       /
+		/   N         rank N-1 tensor            prod(shape,1,N-1)      */
+		size_t numel=1, numarrays=bi.shape[0];
+		if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel *= bi.shape[i];
 		ArrayVector<double> data(numel, numarrays, (double*)bi.ptr);
 		ArrayVector<size_t> shape(1,ndim);
 		for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
@@ -281,7 +281,10 @@ PYBIND11_MODULE(symbzpy,m){
 		size_t total_elements = 1;
 		for (ssize_t osi : outshape) total_elements *= osi;
 		if (total_elements != lires.numel()*lires.size() ){
-			printf("Why do we expect %u total elements but only get back %u?\n",total_elements,lires.numel()*lires.size());
+			std::cout << "outshape: (";
+			for (ssize_t osi : outshape) std::cout << osi << "," ;
+			std::cout << "\b)" << std::endl;
+			printf("Why do we expect %u total elements but only get back %u? (%u × %u)\n",total_elements,lires.numel()*lires.size(),lires.numel(),lires.size());
 			throw std::runtime_error("error determining output size");
 		}
 		auto liout = py::array_t<double,py::array::c_style>(outshape);
