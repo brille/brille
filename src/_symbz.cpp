@@ -143,12 +143,12 @@ PYBIND11_MODULE(symbz,m){
 
 	py::class_<BrillouinZone> bz(m,"BrillouinZone");
 	bz.def(py::init<Reciprocal,int>(),py::arg("lattice"),py::arg("search_length")=1)
-	  .def("get_vertices",[](BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
-		.def("get_vertices_xyz",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
-		.def("get_faces",[](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-		.def("get_faces_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-		.def("get_faces_per_vertex",[](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-		.def("get_faces_per_vertex_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+	  .def_property_readonly("vertices",    [](BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
+		.def_property_readonly("vertices_xyz",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+		.def_property_readonly("faces",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+		.def_property_readonly("faces_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+		.def_property_readonly("faces_per_vertex_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
 		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;
@@ -167,7 +167,7 @@ PYBIND11_MODULE(symbz,m){
 			bool *rptr = (bool *) result.request().ptr;
 			for (size_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
 			return result;
-		},py::arg("points"),py::arg("tol")=1e-15)
+		},py::arg("points"),py::arg("tol")=1e-14)
 		.def("moveinto",[](BrillouinZone &b, py::array_t<double, py::array::c_style> Q){
 			py::buffer_info bi = Q.request();
 			ssize_t ndim=bi.ndim;

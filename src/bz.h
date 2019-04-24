@@ -30,7 +30,7 @@ public:
 	ArrayVector<int> get_faces_per_vertex() const;
 	void print() const;
 
-	template<typename T> ArrayVector<bool> isinside(const LQVec<T> *p, const double tol=1e-15);
+	template<typename T> ArrayVector<bool> isinside(const LQVec<T> *p, const double tol=1e-14);
 	bool moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int> *tau);
 };
 
