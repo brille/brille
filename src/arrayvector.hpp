@@ -5,7 +5,7 @@ template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
 	if (i<this->size() && j<this->numel())
 		ptr = this->data + (i*this->numel() + j);
 	if (!ptr){
-		printf("i=%u and j=%u but numel()=%u and size()=%u\n",i,j,this->numel(),this->size());
+		printf("ArrayVector<T>::datapointer(i=%u,j=%u) but size()=%u, numel()=%u\n",i,j,this->size(),this->numel());
 		throw std::domain_error("attempting to access out of bounds pointer");
 	}
 	return ptr;
@@ -31,6 +31,20 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, cons
 	if (allinbounds){
 		out.resize(n);
 		for (size_t j=0; j<n; j++) out.set(j, this->datapointer(i[j]) );
+	}
+	return out;
+}
+template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<size_t>& idx) const{
+	bool allinbounds = true;
+	ArrayVector<T> out(this->numel(),0u);
+	if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+	for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
+	if (allinbounds){
+		out.resize(idx.size());
+		for (size_t j=0; j<idx.size(); ++j) {
+			printf("Accessing array %u of %u\n",idx.getvalue(j),this->size());
+			out.set(j, this->datapointer( idx.getvalue(j)) );
+		}
 	}
 	return out;
 }
@@ -151,6 +165,12 @@ template<typename T> bool ArrayVector<T>::arealltrue(void) const {
 		for (size_t j=0; j<this->numel(); j++)
 			if (!this->getvalue(i,j)) return false;
 	return true;
+}
+template<typename T> bool ArrayVector<T>::areanytrue(void) const {
+	for (size_t i=0; i<this->size(); i++)
+		for (size_t j=0; j<this->numel(); j++)
+			if (this->getvalue(i,j)) return true;
+	return false;
 }
 template<typename T> bool ArrayVector<T>::areallpositive(void) const {
 	for (size_t i=0; i<this->size(); i++)

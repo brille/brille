@@ -211,7 +211,9 @@ PYBIND11_MODULE(symbz,m){
 	}),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true);
 	bzg.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid3& bzg3){ return bzg3.get_brillouinzone();} )
 	   .def_property_readonly("hkl",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_hkl());} )
-		 .def_property_readonly("xyz",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_xyz());} );
+		 .def_property_readonly("xyz",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_xyz());} )
+		 .def_property_readonly("mapped_hkl",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_mapped_hkl());} )
+		 .def_property_readonly("mapped_xyz",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_mapped_xyz());} );
   bzg.def("fill",[](BrillouinZoneGrid3& bzg3, py::array_t<double,py::array::c_style> pydata){
 		py::buffer_info bi = pydata.request();
 		ssize_t ndim = bi.ndim;
@@ -236,21 +238,21 @@ PYBIND11_MODULE(symbz,m){
 			shape[0] = bzg3.size(0);
 			shape[1] = bzg3.size(1);
 			shape[2] = bzg3.size(2);
-			auto np = py::array_t<size_t,py::array::c_style>(shape);
-			size_t nret = bzg3.unsafe_get_map( (size_t*)np.request().ptr );
+			auto np = py::array_t<ssize_t,py::array::c_style>(shape);
+			size_t nret = bzg3.unsafe_get_map( (ssize_t*)np.request().ptr );
 			if (nret != shape[0]*shape[1]*shape[2])
 				// I guess nret is smaller, otherwise we probably already encountered a segfault
 				throw std::runtime_error("Something has gone horribly wrong with getting the map.");
 			return np;
 		},
-		/*set map*/ [](BrillouinZoneGrid3& bzg3, py::array_t<size_t,py::array::c_style> pymap){
+		/*set map*/ [](BrillouinZoneGrid3& bzg3, py::array_t<ssize_t,py::array::c_style> pymap){
 			py::buffer_info bi = pymap.request();
 			if (bi.ndim != 3) throw std::runtime_error("The mapping must be a 3 dimensional array");
 			for (size_t i=0; i<3; ++i) if (bi.shape[i]!=bzg3.size(i))
 				throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
-			if (bzg3.maximum_mapping( (size_t*)bi.ptr ) > bzg3.num_data() )
+			if (bzg3.maximum_mapping( (ssize_t*)bi.ptr ) > bzg3.num_data() )
 				throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
-			bzg3.unsafe_set_map( (size_t*)bi.ptr ); //no error, so this works.
+			bzg3.unsafe_set_map( (ssize_t*)bi.ptr ); //no error, so this works.
 	});
 	bzg.def("interpolate_at",[](BrillouinZoneGrid3& bzg3, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
 		py::buffer_info bi = pyX.request();

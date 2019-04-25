@@ -57,6 +57,7 @@ bool three_plane_intersection(const LQVec<double> *n,
 															const int i, const int j, const int k,
 															LQVec<double> *iat, const int idx=0);
 
-int make_all_indices(LQVec<int> *ijk, const int extent=1);
+// int make_all_indices(LQVec<int> *ijk, const int extent=1);
+ArrayVector<int> make_relative_neighbour_indices(const int extent=1);
 
 #endif

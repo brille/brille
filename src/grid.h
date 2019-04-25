@@ -12,7 +12,7 @@ template<typename T> class MapGrid3{
 protected:
   size_t N[3];
   size_t span[3];
-  size_t *map; // replace this with a Blitz++ multidimensional array? https://github.com/blitzpp/blitz
+  ssize_t *map; // replace this with a Blitz++ multidimensional array? https://github.com/blitzpp/blitz
   ArrayVector<T> data;
   ArrayVector<size_t> shape; // when "filled" (by a Python call), what is the shape of the numpy.np array that is passed in
 public:
@@ -21,7 +21,7 @@ public:
     { this->set_size(n); };
   MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); };
-  MapGrid3(const size_t *n, const size_t *inmap, const ArrayVector<T>& av): map(nullptr)
+  MapGrid3(const size_t *n, const ssize_t *inmap, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); };
   // copy constructor
   MapGrid3(const MapGrid3<T>& other): map(nullptr) {
@@ -49,7 +49,7 @@ public:
     for (size_t l=0; l<this->numel(); l++) this->map[l]=l;
     return this->numel()-1 < this->data.size() ? 0 : 1;
   };
-  int set_map(const size_t *inmap, const size_t *n, const size_t d){
+  int set_map(const ssize_t *inmap, const size_t *n, const size_t d){
     if ( d!=3u ) return -3;
     if ( n[0]*n[1]*n[2] != this->numel() ) return -2;
     if ( n[0]!=this->size(0) || n[1]!=this->size(1) || n[2]!=this->size(2)) return -1;
@@ -59,23 +59,29 @@ public:
           this->map[i*this->span[0] + j*this->span[1] + k*this->span[2]] = inmap[i*this->span[0]+j*this->span[1]+k*this->span[2]];
     return this->check_map();
   };
-  int unsafe_set_map(size_t *inmap){ // only call this if inmap has been allocated *for sure* with enough space to hold the map
+  int unsafe_set_map(ssize_t *inmap){ // only call this if inmap has been allocated *for sure* with enough space to hold the map
     for (size_t i=0; i<this->numel(); ++i) this->map[i] = inmap[i];
     return this->check_map();
   }
-  size_t unsafe_get_map(size_t *outmap) const { // only call this if outmap has enough space *for sure* to hold the map
+  size_t unsafe_get_map(ssize_t *outmap) const { // only call this if outmap has enough space *for sure* to hold the map
     size_t i=0;
     for (i=0; i<this->numel(); ++i) outmap[i] = this->map[i];
     return i;
   }
   //
-  size_t maximum_mapping(const size_t *map2check, const size_t num2check) const {
+  size_t maximum_mapping(const ssize_t *map2check, const size_t num2check) const {
     size_t maxmap=0;
     for (size_t i=0; i<num2check; ++i) if (map2check[i]>maxmap) maxmap = map2check[i];
     return maxmap;
   }
-  size_t maximum_mapping(const size_t *map2check) const { return this->maximum_mapping(map2check, this->numel()); };
+  size_t maximum_mapping(const ssize_t *map2check) const { return this->maximum_mapping(map2check, this->numel()); };
   size_t maximum_mapping(void) const {return this->maximum_mapping(this->map, this->numel()); };
+  //
+  size_t valid_mapping_count(void) const {
+    size_t count = 0;
+    for (size_t i=0; i<this->numel(); ++i) if ( this->valid_mapping(i) ) ++count;
+    return count;
+  };
   //
   int check_map(const ArrayVector<T>& data2check) const { return ( this->maximum_mapping() < data2check.size() ) ? 0 : 1; };
   int check_map(void) const { return this->check_map(this->data); };
@@ -112,12 +118,14 @@ public:
   int sub2map(const size_t *s, size_t *m) const {
     size_t l;
     if (this->sub2lin(s,&l)) return 1;
-    *m = this->map[l];
+    if (!this->valid_mapping(l)) return -1;
+    *m = size_t(this->map[l]);
     return 0;
   };
   int lin2map(const size_t l, size_t *m) const {
     if ( l+1 > this->numel() ) return 1;
-    *m = this->map[l];
+    if (!this->valid_mapping(l)) return -1;
+    *m = size_t(this->map[l]);
     return 0;
   };
   size_t numel(void) const { return (N==nullptr) ? 0u : N[0]*N[1]*N[2]; };
@@ -159,7 +167,13 @@ protected:
     }
   };
   void instantiate_map(){
-    if ( this->map == nullptr && this->numel()>0 ) this->map = new size_t[this->numel()]();
+    if ( this->map == nullptr && this->numel()>0 ) this->map = new ssize_t[this->numel()]();
+  };
+  bool valid_mapping(size_t l) const {
+    return this->map[l] >= 0;
+  };
+  bool valid_mapping(size_t i, size_t j, size_t k) const {
+    return this->valid_mapping( i*this->span[0]+j*this->span[1]+k*this->span[2] );
   };
 };
 
@@ -174,45 +188,45 @@ class InterpolateGrid3: public MapGrid3<double>{
 public:
   InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3(n) { this->set_zero(z); this->set_step(s); };
   InterpolateGrid3(const size_t *n, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const size_t* inmap, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n, const ssize_t* inmap, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,inmap,av){ this->set_zero(z); this->set_step(s); };
 
 
   void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
   void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; };
 
-  size_t get_grid_x(const size_t maxN, double *x) const {
-    if ( maxN < this->numel() ) return 0;
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s0=this->step[0], z0=this->zero[0];
-    for (i=0; i<n0; i++)
-      for (j=0; j<n1; j++)
-        for (k=0; k<n2; k++)
-          x[ cnt++ ] = z0 + s0*i;
-    return cnt;
-  };
-  size_t get_grid_y(const size_t maxN, double *y) const {
-    if ( maxN < this->numel() ) return 0;
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s1=this->step[1], z1=this->zero[1];
-    for (i=0; i<n0; i++)
-      for (j=0; j<n1; j++)
-        for (k=0; k<n2; k++)
-          y[ cnt++ ] = z1 + s1*j;
-    return cnt;
-  };
-  size_t get_grid_z(const size_t maxN, double *z) const {
-    if ( maxN < this->numel() ) return 0;
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s2=this->step[2], z2=this->zero[2];
-    for (i=0; i<n0; i++)
-      for (j=0; j<n1; j++)
-        for (k=0; k<n2; k++)
-          z[ cnt++ ] = z2 + s2*k;
-    return cnt;
-  };
+  // size_t get_grid_x(const size_t maxN, double *x) const {
+  //   if ( maxN < this->numel() ) return 0;
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s0=this->step[0], z0=this->zero[0];
+  //   for (i=0; i<n0; i++)
+  //     for (j=0; j<n1; j++)
+  //       for (k=0; k<n2; k++)
+  //         x[ cnt++ ] = z0 + s0*i;
+  //   return cnt;
+  // };
+  // size_t get_grid_y(const size_t maxN, double *y) const {
+  //   if ( maxN < this->numel() ) return 0;
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s1=this->step[1], z1=this->zero[1];
+  //   for (i=0; i<n0; i++)
+  //     for (j=0; j<n1; j++)
+  //       for (k=0; k<n2; k++)
+  //         y[ cnt++ ] = z1 + s1*j;
+  //   return cnt;
+  // };
+  // size_t get_grid_z(const size_t maxN, double *z) const {
+  //   if ( maxN < this->numel() ) return 0;
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s2=this->step[2], z2=this->zero[2];
+  //   for (i=0; i<n0; i++)
+  //     for (j=0; j<n1; j++)
+  //       for (k=0; k<n2; k++)
+  //         z[ cnt++ ] = z2 + s2*k;
+  //   return cnt;
+  // };
   size_t get_grid_xyz(const size_t maxN, double *xyz) const {
     if ( maxN < this->numel() ) return 0;
     size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
@@ -250,30 +264,30 @@ public:
     return cnt;
   };
 
-  ArrayVector<double> get_grid_x() const {
-    ArrayVector<double> x(1u,this->numel());
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s0=this->step[0], z0=this->zero[0];
-    for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) x.insert( z0+s0*i, cnt++);
-    return x;
-  };
-  ArrayVector<double> get_grid_y() const {
-    ArrayVector<double> y(1u,this->numel());
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s1=this->step[1], z1=this->zero[1];
-    for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) y.insert( z1+s1*i, cnt++);
-    return y;
-  };
-  ArrayVector<double> get_grid_z() const {
-    ArrayVector<double> z(1u,this->numel());
-    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-    size_t cnt = 0;
-    double s2=this->step[2], z2=this->zero[2];
-    for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) z.insert( z2+s2*i, cnt++);
-    return z;
-  };
+  // ArrayVector<double> get_grid_x() const {
+  //   ArrayVector<double> x(1u,this->numel());
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s0=this->step[0], z0=this->zero[0];
+  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) x.insert( z0+s0*i, cnt++);
+  //   return x;
+  // };
+  // ArrayVector<double> get_grid_y() const {
+  //   ArrayVector<double> y(1u,this->numel());
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s1=this->step[1], z1=this->zero[1];
+  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) y.insert( z1+s1*i, cnt++);
+  //   return y;
+  // };
+  // ArrayVector<double> get_grid_z() const {
+  //   ArrayVector<double> z(1u,this->numel());
+  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+  //   size_t cnt = 0;
+  //   double s2=this->step[2], z2=this->zero[2];
+  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) z.insert( z2+s2*i, cnt++);
+  //   return z;
+  // };
   ArrayVector<double> get_grid_xyz() const {
     ArrayVector<double> xyz(3u,this->numel());
     size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
@@ -285,6 +299,22 @@ public:
           xyz.insert( z0+s0*i, cnt  ,0);
           xyz.insert( z1+s1*j, cnt  ,1);
           xyz.insert( z2+s2*k, cnt++,2);
+        }
+    return xyz;
+  };
+  ArrayVector<double> get_mapped_xyz() const {
+    ArrayVector<double> xyz(3u,this->valid_mapping_count());
+    size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+    size_t cnt = 0;
+    double s0=this->step[0], z0=this->zero[0], s1=this->step[1], z1=this->zero[1], s2=this->step[2], z2=this->zero[2];
+    for (i=0; i<n0; i++)
+      for (j=0; j<n1; j++)
+        for (k=0; k<n2; k++){
+          if ( this->valid_mapping(i,j,k) ) {
+            xyz.insert( z0+s0*i, cnt  ,0);
+            xyz.insert( z1+s1*j, cnt  ,1);
+            xyz.insert( z2+s2*k, cnt++,2);
+          }
         }
     return xyz;
   };
@@ -378,7 +408,7 @@ public:
     return out;
   };
 protected:
-  int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x){
+  int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x) const {
     int d[3], oob=0;
     size_t t[3];
     double p[3], m[3], tmp;
@@ -389,7 +419,7 @@ protected:
       p[i] = abs(tmp/(double)(this->step[i]));
       m[i] = 1.0-p[i];
     }
-                  oob += this->sub2map(t,c  ); w[0] = m[0]*m[1]*m[2]; // (000)
+                  oob += this->sub2map(t,c   ); w[0] = m[0]*m[1]*m[2]; // (000)
     t[0] += d[0]; oob += this->sub2map(t,c+1u); w[1] = p[0]*m[1]*m[2]; // (100)
     t[1] += d[1]; oob += this->sub2map(t,c+2u); w[2] = p[0]*p[1]*m[2]; // (110)
     t[0] -= d[0]; oob += this->sub2map(t,c+3u); w[3] = m[0]*p[1]*m[2]; // (010)
@@ -399,6 +429,39 @@ protected:
     t[0] -= d[0]; oob += this->sub2map(t,c+7u); w[7] = m[0]*m[1]*p[2]; // (001)
 
     return oob;
+  };
+  ArrayVector<size_t> get_neighbours(const size_t centre) const {
+    printf("finding the neighbours\n");
+    ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
+    ArrayVector<size_t> ijk(3u,1u);
+    this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
+    bool isz[3];
+    for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
+    size_t valid_neighbours = 0;
+    ArrayVector<bool> is_valid(1u,mzp.size());
+    for (size_t i=0; i<mzp.size(); ++i){
+      is_valid.insert(true,i);
+      for (size_t j=0; j<mzp.numel(); ++j)
+        if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
+      if (is_valid.getvalue(i)) ++valid_neighbours;
+    }
+    ArrayVector<size_t> neighbours(1u,valid_neighbours);
+    ArrayVector<size_t> tmp(3u,1u);
+    int oob = 0;
+    size_t valid_neighbour=0;
+    for (size_t i=0; i<mzp.size(); ++i){
+      if (is_valid.getvalue(i)){
+        // we can't use
+        //    tmp = mzp[i] + ijk;
+        // because the compiler doesn't know what to do with ArrayVector<int> + ArrayVector<size_t>
+        for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
+        oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
+      }
+    }
+
+    // do something if oob is greater than zero? or just ignore it and calculate at the edge-case multiple times
+    printf("done finding %u of %u neighbours\n",valid_neighbour,valid_neighbours);
+    return neighbours;
   };
 };
 

@@ -80,7 +80,7 @@ public:
 		}
 		return *this;
 	};
-	const ArrayVector<T>& operator[](const size_t i) const{
+	ArrayVector<T> operator[](const size_t i) const{
 		bool isok = i < this->size();
 		ArrayVector<T> out(this->numel(), isok ? 1u: 0u);
 		if (isok){
@@ -105,6 +105,7 @@ public:
 	// return a single element (but still an ArrayVector)
 	ArrayVector<T> extract(const size_t i=0) const ;
 	ArrayVector<T> extract(const size_t n, const size_t *i) const;
+	ArrayVector<T> extract(const ArrayVector<size_t>& idx) const;
 	// copy-out the ith array
 	bool get(const size_t i, T* out) const;
 	// copy-in the ith array
@@ -124,6 +125,7 @@ public:
 	size_t refresh(size_t newnumel, size_t newsize=0u);
 	// treat elements as logical values:
 	bool arealltrue(void) const;
+	bool areanytrue(void) const;
 	bool areallpositive(void) const;
 	bool areallzero(void) const;
 	ArrayVector<int> round() const;

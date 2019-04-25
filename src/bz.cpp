@@ -23,8 +23,10 @@ void BrillouinZone::set_faces_per_vertex(ArrayVector<int> newfpv){
 }
 
 void BrillouinZone::determine_everything(const int extent){
-	LQVec<int> tau(this->lattice);
-	int ntau = make_all_indices(&tau,extent);
+	// LQVec<int> tau(this->lattice);
+	// int ntau = make_all_indices(&tau,extent);
+	LQVec<int> tau(this->lattice, make_relative_neighbour_indices(extent) );
+	int ntau = (int)tau.size();
 	// the number of unique combinations of 3-taus is the number that we need to check
 	size_t ntocheck=0;
 	// there is probably a better way to do this, but brute force never hurt anyone
@@ -343,11 +345,31 @@ bool between_origin_and_plane(const LQVec<double> *p,
 	return true;
 }
 
-int make_all_indices(LQVec<int> *ijk, const int extent){
-	if (ijk->numel()!=3u) throw "expected three vectors";
+// int make_all_indices(LQVec<int> *ijk, const int extent){
+// 	if (ijk->numel()!=3u) throw "expected three vectors";
+// 	int min = -extent, max = extent+1;
+// 	int num = max-min;
+// 	ijk->resize(num*num*num-1); //-1 because we're skipping the origin
+// 	int *tmp = new int[3];
+// 	int n=0;
+// 	for (int i=min; i<max; i++){
+// 		tmp[0] = i;
+// 		for (int j=min; j<max; j++){
+// 			tmp[1] = j;
+// 			for (int k=min; k<max; k++){
+// 				tmp[2] = k;
+// 				if (i||j||k) ijk->set(n++,tmp); // as long as any are non-zero
+// 			}
+// 		}
+// 	}
+// 	delete[] tmp;
+// 	return n;
+// }
+
+ArrayVector<int> make_relative_neighbour_indices(const int extent){
 	int min = -extent, max = extent+1;
 	int num = max-min;
-	ijk->resize(num*num*num-1); //-1 because we're skipping the origin
+	ArrayVector<int> out(3u,num*num*num-1);  //-1 because we're skipping the origin
 	int *tmp = new int[3];
 	int n=0;
 	for (int i=min; i<max; i++){
@@ -356,10 +378,10 @@ int make_all_indices(LQVec<int> *ijk, const int extent){
 			tmp[1] = j;
 			for (int k=min; k<max; k++){
 				tmp[2] = k;
-				if (i||j||k) ijk->set(n++,tmp); // as long as any are non-zero
+				if (i||j||k) out.set(n++,tmp); // as long as any are non-zero
 			}
 		}
 	}
 	delete[] tmp;
-	return n;
+	return out;
 }
