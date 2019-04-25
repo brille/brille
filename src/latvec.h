@@ -15,7 +15,7 @@ template<typename T> class LDVec;
 template<typename T> class LQVec;
 
 template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
-	Reciprocal lattice;
+	Direct lattice;
 public:
 	LDVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
 	LDVec(const Reciprocal lat, const ArrayVector<T>& vec): ArrayVector<T>(vec), lattice(lat){};
@@ -43,7 +43,7 @@ public:
 		return out;
 	}
 
-	Reciprocal get_lattice() const { return lattice; };
+	Direct get_lattice() const { return lattice; };
 	template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); };
 	template<typename R> bool samelattice(const LQVec<R> *vec) const { return false; };
 	template<typename R> bool starlattice(const LDVec<R> *vec) const { return false; };
@@ -80,6 +80,8 @@ public:
 	AVSizeInfo consistency_check(const A<R>& b) const {
 		return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
 	};
+	template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+	bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
 };
 
 template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
@@ -147,6 +149,8 @@ public:
 	AVSizeInfo consistency_check(const A<R>& b) const {
 		return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
 	};
+	template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+	bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
 };
 
 

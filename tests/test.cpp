@@ -137,7 +137,7 @@ int test_arrayvector(){
 
 	ArrayVector<double> newerav = newav + 1e-16;
 
-	if ( newav.isapprox( &newerav ) )
+	if ( newav.isapprox( newerav ) )
 		printf("isapprox works!\n");
 
 	ArrayVector<double> xtr = newav.extract(1u);

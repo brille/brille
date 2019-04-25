@@ -41,7 +41,14 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b){
 			else if (!std::is_convertible<T,R>::value) return false; // they can't be equal in this case
 		} else if ( isfpT ) useTtol=true;
 	}
-	return ( my_abs(a-b) > 100*(useTtol ? Ttol :Rtol)*my_abs(a+b) ) ? false : true;
+	// if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
+	bool answer;
+	if ( my_abs(a) <= 100*Ttol && my_abs(b) <= 100*Rtol )
+		answer = my_abs(a-b) < 100*(useTtol ? Ttol :Rtol);
+	else
+		answer = my_abs(a-b) < 100*(useTtol ? Ttol :Rtol)*my_abs(a+b);
+	return answer;
+	// return ( my_abs(a-b) > 100*(useTtol ? Ttol :Rtol)*my_abs(a+b) ) ? false : true;
 }
 template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B){
 	bool isfpT, isfpR;

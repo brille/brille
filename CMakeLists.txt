@@ -57,7 +57,7 @@ install(TARGETS symbz_static ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 # Python c++ bindings
-add_subdirectory(pybind11)
+add_subdirectory(lib/pybind11)
 pybind11_add_module(symbz EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
 # Testing via `make check`
@@ -66,7 +66,7 @@ enable_testing()
 # CTEST_OUTPUT_ON_FAILURE=1 make check
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 set(CMAKE_CTEST_COMMAND ctest -V)
-add_executable(test_cpp EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/test/test.cpp ${SOURCES})
+add_executable(test_cpp EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/tests/test.cpp ${SOURCES})
 target_link_libraries(test_cpp symbz_shared)
 add_test(NAME C++ COMMAND test_cpp)
 add_dependencies(check test_cpp)
@@ -77,3 +77,10 @@ if (${PYTHONINTERP_FOUND})
 	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR})
 	add_dependencies(check symbz)
 endif()
+
+file(GLOB TEST_CHECK_SOURCES ${PROJECT_SOURCE_DIR}/tests/*_test.cpp)
+add_executable(test_check EXCLUDE_FROM_ALL ${TEST_CHECK_SOURCES} ${SOURCES})
+# target_include_directories(test_check PUBLIC "${PROJECT_SOURCE_DIR}/lib")
+target_include_directories(test_check PUBLIC "${PROJECT_SOURCE_DIR}/lib") # where catch.hpp is located
+add_dependencies(check test_check)
+add_test(NAME catch2 COMMAND test_check)

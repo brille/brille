@@ -30,7 +30,7 @@ L<double> cross(const L<T>& a, const L<R>& b) {
 	typename LatticeTraits<L<T>>::type lat = a.get_lattice();
 	typename LatVecTraits<L<T>,double>::star tmp( lat.star(), si.n);
 	for (size_t i=0; i<si.n; i++)
-		vector_cross<double,T,R,3>(tmp.datapointer(i), a.datapointer(si.a?0:i), b.datapointer(si.b?0:i));
+		vector_cross<double,T,R,3>(tmp.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
   tmp *= lat.get_volume()/2.0/PI;
   return tmp.star();
 }
@@ -45,17 +45,18 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
 		throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
 	AVSizeInfo si = a.consistency_check(b);
 	if (si.m!=3u) throw std::runtime_error("Lattice dot product is only defined for three vectors");
+	if (si.scalara||si.scalarb) throw std::runtime_error("Lattice dot product requires two three-vectors");
 	ArrayVector<double> out(1,si.n);
 	if (issame){
 		typename LatticeTraits<L1<T>>::type lat = a.get_lattice();
 		double len[3] = {lat.get_a(),lat.get_b(),lat.get_c()};
 		double ang[3] = {lat.get_alpha(),lat.get_beta(),lat.get_gamma()};
 		for (size_t i=0; i<si.n; i++)
-			out.insert( same_lattice_dot( a.datapointer(si.a?0:i), b.datapointer(si.b?0:i), len, ang), i);
+			out.insert( same_lattice_dot( a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i), len, ang), i);
 	} else {
 		double tmp=0;
 		for (size_t i=0; i<si.n; i++) {
-			for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.a?0:i,j) * b.getvalue(si.b?0:i,si.s?0:j);
+			for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
 			out.insert(2*PI*tmp, i);
 		}
 	}
@@ -95,10 +96,10 @@ L<S> operator+(const L<T>& a, const A<R>& b){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( a.getvalue(si.a?0:i,j) + b.getvalue(si.b?0:i,si.s?0:j), i,j);
+			out.insert( a.getvalue(si.oneveca?0:i,j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
 	return out;
 }
-// // LatVec - ArrayVec
+// LatVec - ArrayVec
 template<class T, class R, template<class> class L, template<class> class A,
          typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
 				 typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
@@ -109,7 +110,7 @@ L<S> operator-(const L<T>& a, const A<R>& b){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( a.getvalue(si.a?0:i,j) - b.getvalue(si.b?0:i,si.s?0:j), i,j);
+			out.insert( a.getvalue(si.oneveca?0:i,j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
 	return out;
 }
 // LatVec * ArrayVec
@@ -123,7 +124,7 @@ L<S> operator*(const L<T>& a, const A<R>& b){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( a.getvalue(si.a?0:i,j) * b.getvalue(si.b?0:i,si.s?0:j), i,j);
+			out.insert( a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
 	return out;
 }
 // LatVec / ArrayVec
@@ -139,7 +140,7 @@ L<S> operator/(const L<T>& a, const A<R>& b){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( a.getvalue(si.a?0:i,j) / b.getvalue(si.b?0:i,si.s?0:j), i,j);
+			out.insert( a.getvalue(si.oneveca?0:i,j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
 	return out;
 }
 
@@ -154,7 +155,7 @@ L<S> operator+(const A<R>& b, const L<T>& a){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( b.getvalue(si.b?0:i,si.s?0:j) + a.getvalue(si.a?0:i,j), i,j);
+			out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) + a.getvalue(si.oneveca?0:i,j), i,j);
 	return out;
 }
 // ArrayVec - LatVec
@@ -168,7 +169,7 @@ L<S> operator-(const A<R>& b, const L<T>& a){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( b.getvalue(si.b?0:i,si.s?0:j) - a.getvalue(si.a?0:i,j), i,j);
+			out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) - a.getvalue(si.oneveca?0:i,j), i,j);
 	return out;
 }
 // LatVec * ArrayVec
@@ -182,7 +183,7 @@ L<S> operator*(const A<R>& b, const L<T>& a){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( b.getvalue(si.b?0:i,si.s?0:j) * a.getvalue(si.a?0:i,j), i,j);
+			out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) * a.getvalue(si.oneveca?0:i,j), i,j);
 	return out;
 }
 // LatVec / ArrayVec
@@ -199,6 +200,6 @@ L<S> operator/(const A<R>& b, const L<T>& a){
 	L<S> out(a.get_lattice(),si.n);
 	for (size_t i=0; i<si.n; ++i)
 		for (size_t j=0; j<si.m; ++j)
-			out.insert( b.getvalue(si.b?0:i,si.s?0:j) / a.getvalue(si.a?0:i,j), i,j);
+			out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) / a.getvalue(si.oneveca?0:i,j), i,j);
 	return out;
 }

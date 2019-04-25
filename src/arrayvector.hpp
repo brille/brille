@@ -117,12 +117,12 @@ template<typename T> size_t ArrayVector<T>::refresh(size_t newnumel, size_t news
 
 
 
-template<typename T> template<typename R> bool ArrayVector<T>::isapprox(const ArrayVector<R> *that) const {
-	AVSizeInfo si = this->consistency_check(*that);
-	if (si.s) return false; // that is singular but this is not.
+template<typename T> template<typename R> bool ArrayVector<T>::isapprox(const ArrayVector<R> &that) const {
+	AVSizeInfo si = this->consistency_check(that);
+	if (si.scalara^si.scalarb) return false; // only one is an "ArrayScalar"
 	for (size_t i=0; i<si.n; i++)
 		for (size_t j=0; j<si.m; j++)
-			if ( !approx_scalar(this->getvalue(si.a?0:i,j), that->getvalue(si.b?0:i,si.s?0:j)) )
+			if ( !approx_scalar(this->getvalue(si.oneveca?0:i,j), that.getvalue(si.onevecb?0:i,si.singular?0:j)) )
 				return false;
 	return true;
 }
@@ -217,12 +217,12 @@ template<class T, class R, template<class> class A,
 				 >
 A<S> dot(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
-	if (si.s) throw std::runtime_error("ArrayVector dot requires equal numel()");
+	if (si.scalara^si.scalarb) throw std::runtime_error("ArrayVector dot requires equal numel()");
 	A<S> out(1u,si.n);
 	S tmp;
 	for (size_t i=0; i<si.n; ++i){
 		tmp = S(0);
-		for (size_t j=0; j<si.m; ++j) tmp+= a.getvalue(si.a?0:i,j) * b.getvalue(si.b?0:i,j);
+		for (size_t j=0; j<si.m; ++j) tmp+= a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
 		out.insert(tmp,i,0);
 	}
 	return out;
@@ -255,22 +255,22 @@ L<int> ceil(const L<T>& a){
 // In Place arithmetic ArrayVector +-*/ ArrayVector
 template<typename T> ArrayVector<T>& ArrayVector<T>:: operator +=(const ArrayVector<T> &av){
 	AVSizeInfo si = this->inplace_consistency_check(av);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) + av.getvalue(si.b?0:i,si.s?0:j), i,j );
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) + av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 template<typename T> ArrayVector<T>& ArrayVector<T>:: operator -=(const ArrayVector<T> &av){
 	AVSizeInfo si = this->inplace_consistency_check(av);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) - av.getvalue(si.b?0:i,si.s?0:j), i,j );
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) - av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 template<typename T> ArrayVector<T>& ArrayVector<T>:: operator *=(const ArrayVector<T> &av){
 	AVSizeInfo si = this->inplace_consistency_check(av);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) * av.getvalue(si.b?0:i,si.s?0:j), i,j );
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) * av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 template<typename T> ArrayVector<T>& ArrayVector<T>:: operator /=(const ArrayVector<T> &av){
 	AVSizeInfo si = this->inplace_consistency_check(av);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) / av.getvalue(si.b?0:i,si.s?0:j), i,j );
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) / av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 // In-place binary operators with scalars
@@ -298,7 +298,17 @@ template<class T, class R, template<class> class A,
 A<S> operator+(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
 	A<S> out( si.aorb ? a : b);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.a?0:i,j) + b.getvalue(si.b?0:i,si.s?0:j), i,j );
+	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
+	// if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
+	// 	printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
+	// 	printf("OneVector   %3d %3d\n",si.oneveca?1:0,si.onevecb?1:0);
+	// 	printf("ArrayScalar %3d %3d\n",si.scalara?1:0,si.scalarb?1:0);
+	// 	printf("-----------------------\n");
+	// 	printf("chosen      %3d %3d\n",si.aorb?1:0,si.aorb?0:1);
+	// 	printf("size()      %3u %3u %3u\n",a.size(), b.size(), out.size());
+	// 	printf("numel()     %3u %3u %3u\n",a.numel(), b.numel(), out.numel());
+	// }
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
 }
 template<class T, class R, template<class> class A,
@@ -307,7 +317,8 @@ template<class T, class R, template<class> class A,
 A<S> operator-(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
 	A<S> out( si.aorb ? a : b);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.a?0:i,j) - b.getvalue(si.b?0:i,si.s?0:j), i,j );
+	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
 }
 template<class T, class R, template<class> class A,
@@ -316,7 +327,8 @@ template<class T, class R, template<class> class A,
 A<S> operator*(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
 	A<S> out( si.aorb ? a : b);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.a?0:i,j) * b.getvalue(si.b?0:i,si.s?0:j), i,j );
+	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
 }
 template<class T, class R, template<class> class A,
@@ -326,7 +338,8 @@ template<class T, class R, template<class> class A,
 A<S> operator/(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
 	A<S> out( si.aorb ? a : b);
-	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.a?0:i,j) / b.getvalue(si.b?0:i,si.s?0:j), i,j );
+	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
+	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
 }
 

@@ -12,12 +12,14 @@ template<typename T> class ArrayVector;
 class LatVec; // forward declare so that we can prevent operator overloads from applying to LQVec and LDVec
 
 typedef struct{
-	size_t n;
-	size_t m;
-	bool a;
-	bool b;
-	bool s;
-	bool aorb;
+	size_t n; // the common number of Vectors
+	size_t m; // the common number of elements per Vector
+	bool oneveca; // is "a" a "SingleVector"
+	bool onevecb; // is "b" a "SingleVector"
+	bool scalara; // is "a" an "ArrayScalar"
+	bool scalarb; // is "b" an "ArrayScalar"
+	bool singular;// is only "b" an "ArrayScalar"
+	bool aorb; // does "a" hold more Vector(/Scalar) elements
 } AVSizeInfo;
 
 /**********************************************************
@@ -133,26 +135,34 @@ public:
 	AVSizeInfo consistency_check(const ArrayVector<R>& b) const {
 		const ArrayVector<T>& a = *this;
 		AVSizeInfo si;
-		si.a = a.size()==1u;
-		si.b = b.size()==1u;
-		si.s = 1u==b.numel() && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
-		if (!si.s && a.numel()!=b.numel()) throw "binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1";
-		si.aorb = !(si.a || a.size()>b.size());
-		si.n = si.aorb ? a.size() : b.size();
-		si.m = a.numel();
+		si.oneveca = a.size() ==1u;
+		si.scalara = a.numel()==1u;
+		si.onevecb = b.size() ==1u;
+		si.scalarb = b.numel()==1u;
+		si.singular = si.scalarb && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
+		if (!(si.scalara^si.scalarb) && a.numel()!=b.numel()) throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+		si.n = si.oneveca ? b.size() : a.size();
+		si.m = si.scalara? b.numel() : a.numel();
+		if (si.oneveca^si.onevecb){
+			si.aorb = !si.oneveca; // hopefully they're both scalars (or non scalars and the same)
+		} else {
+			si.aorb = !si.scalara; // in reality we need to make sure out gets *resized* to (m,n) no matter what
+		}
 		return si;
 	}
 	template<typename R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
 	AVSizeInfo inplace_consistency_check(const ArrayVector<R> &b) const{
 		const ArrayVector<T>& a = *this;
 		AVSizeInfo si;
-		si.a = false;
-		si.b = b.size()==1u;
-		si.s = 1u==b.numel() && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
-		if (!si.s && a.numel()!=b.numel()) throw "binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1";
+		si.oneveca = false;
+		si.scalara = a.numel()==1u;
+		si.onevecb = b.size()==1u;
+		si.scalarb = b.numel()==1u;
+		si.singular = si.scalarb && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
+		if (!si.scalarb && a.numel()!=b.numel()) throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
 		si.n = a.size();
 		si.m = a.numel();
-		if (!si.b && b.size()!=a.size()) throw "equal sized or second-singular arrays required";
+		if (!si.onevecb && b.size()!=a.size()) throw std::runtime_error("equal sized or second-singular arrays required");
 		si.aorb = true; // this doesn't matter here but will later
 		return si;
 	}
@@ -169,7 +179,7 @@ public:
 	ArrayVector<T>& operator *=(const T& times);
 	ArrayVector<T>& operator /=(const T& divide);
 
-	template<typename R> bool isapprox(const ArrayVector<R> *that) const;
+	template<typename R> bool isapprox(const ArrayVector<R> &that) const;
 	bool isapprox(const size_t i, const size_t j) const;
 	void cross(const size_t i, const size_t j, T* out) const;
 	T dot(const size_t i, const size_t j) const;

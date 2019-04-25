@@ -61,7 +61,7 @@ template<typename T> LDVec<T>& LDVec<T>:: operator+=(const LDVec<T>& av){
 	if (si.m != 3u) throw "LDVecs should always have numel()==3!\n";
 	for (size_t i=0; i<si.n; i++)
 		for(size_t j=0; j<si.m; j++)
-			this->insert(  this->getvalue(i,j) + av.getvalue(si.b?0:i,si.s?0:j), i,j );
+			this->insert(  this->getvalue(i,j) + av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 template<typename T> LDVec<T>& LDVec<T>:: operator-=(const LDVec<T>& av){
@@ -70,7 +70,7 @@ template<typename T> LDVec<T>& LDVec<T>:: operator-=(const LDVec<T>& av){
 	if (si.m != 3u) throw "LDVecs should always have numel()==3!\n";
 	for (size_t i=0; i<si.n; i++)
 		for(size_t j=0; j<si.m; j++)
-			this->insert(  this->getvalue(i,j) - av.getvalue(si.b?0:i,si.s?0:j), i,j );
+			this->insert(  this->getvalue(i,j) - av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
 	return *this;
 }
 
