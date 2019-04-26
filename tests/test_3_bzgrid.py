@@ -28,11 +28,20 @@ if hasmpl:
     import matplotlib.pyplot as pp
     from mpl_toolkits.mplot3d.axes3d import Axes3D
 
-def plot_points(x):
+def plot_points(x,title=''):
     if hasmpl:
         fig = pp.figure()
         ax = Axes3D(fig)
         ax.scatter(x[:,0],x[:,1],x[:,2],s=10)
+        ax.set_title(title)
+        pp.show()
+def plot_points_with_lines(x,y,title=''):
+    if hasmpl:
+        fig = pp.figure()
+        ax = Axes3D(fig)
+        ax.plot(y[:,0],y[:,1],y[:,2])
+        ax.scatter(x[:,0],x[:,1],x[:,2],s=10)
+        ax.set_title(title)
         pp.show()
 
 
@@ -55,13 +64,31 @@ class BrillouinZoneGrid (unittest.TestCase):
         xyz = bzg.xyz # the positions of the points in Å⁻¹
         self.assertEqual(hkl.shape,xyz.shape)
         self.assertAlmostEqual( np.abs(xyz - 2*np.pi*hkl).sum(), 0 )
-    def test_b_plot_unit_cube(self):
-        d,r,bz = make_drbz(2*np.pi,2*np.pi,2*np.pi)
-        step = np.array((0.2,0.2,0.2))
-        bzg = s.BZGrid(bz, step, False)
-        numpoints = (2*np.ceil(1/(2*step))+2).prod()
-        plot_points( bzg.hkl )
-        self.assertEqual( bzg.hkl.shape[0], numpoints )
+    # def test_b_plot_unit_cube(self):
+    #     d,r,bz = make_drbz(2*np.pi,2*np.pi,2*np.pi)
+    #     step = np.array((0.2,0.2,0.2))
+    #     bzg = s.BZGrid(bz, step, False)
+    #     numpoints = (2*np.ceil(1/(2*step))+2).prod()
+    #     plot_points( bzg.hkl )
+    #     self.assertEqual( bzg.hkl.shape[0], numpoints )
+    # def test_a_init_hexagonal(self):
+    #     d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
+    #     with self.assertRaises(RuntimeError):
+    #         s.BZGrid(bz,4)
+    #     with self.assertRaises(RuntimeError):
+    #         s.BZGrid(bz,[4,3])
+    #     with self.assertRaises(RuntimeError):
+    #         s.BZGrid(bz,[[2,2,2]])
+    #     Ntuple = (20,20,1)
+    #     bzg = s.BZGrid(bz, Ntuple)
+    def test_b_plot_hexagonal(self):
+        print('hexagon plot')
+        d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
+        Ntuple = (2,2,0)
+        bzg = s.BZGrid(bz, Ntuple)
+        # plot_points( bzg.xyz        ,'full grid')
+        plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz ,'mapped grid')
+
 
 
 if __name__ == '__main__':

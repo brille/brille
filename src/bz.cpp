@@ -224,10 +224,13 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p
 	ArrayVector<double> inout(1u,p->size());
 	LQVec<double> facevecs(this->lattice, (this->faces)/2.0); // this->faces is a) ArrayVector<integer> and b) reciprocal lattice points, and we want their halves
 	bool tmp = true;
-	for (int i=0; i<p->size(); i++){
+	LQVec<T> p_i;
+	for (size_t i=0; i<p->size(); i++){
 		// {p[i] - (hkl)}⋅(hkl) -- positive means p is beyond the plane defined by (hkl)
 		// inout = (p->get(i)-facevecs).dot(&facevecs);
-		inout = dot( p->get(i)-facevecs, facevecs);
+		p_i = p->get(i);
+		if (p_i.size()!=1u) throw std::runtime_error("error accessing p element");
+		inout = dot(facevecs, p_i-facevecs);
 		tmp = true;
 		for (int j=0; j<facevecs.size(); j++){
 			if ( inout.getvalue(j) > tol ) {
@@ -239,6 +242,24 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p
 	}
 	return out;
 }
+// template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p, const double tol){
+// 	ArrayVector<bool> out(1u,p.size());
+// 	ArrayVector<double> inout(1u,p.size());
+// 	LQVec<double> facevecs(this->lattice, (this->faces)/2.0); // this->faces is a) ArrayVector<integer> and b) reciprocal lattice points, and we want their halves
+// 	bool tmp = true;
+// 	for (size_t i=0; i<p.size(); i++){
+// 		inout = dot( p[i]-facevecs, facevecs);
+// 		tmp = true;
+// 		for (int j=0; j<facevecs.size(); j++){
+// 			if ( inout.getvalue(j) > tol ) {
+// 				tmp = false;
+// 				break;
+// 			}
+// 		}
+// 		out.insert(tmp,i);
+// 	}
+// 	return out;
+// }
 
 bool BrillouinZone::moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int> *tau){
 	// we could enforce that q and tau already have enough storage space to hold

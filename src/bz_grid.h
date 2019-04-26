@@ -26,7 +26,7 @@ public:
     if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl+3*i, fromxyz, xyz.datapointer(i));
     return xyz.size();
-  }
+  };
   ArrayVector<double> get_grid_hkl() const {
     ArrayVector<double> xyz = this->get_grid_xyz();
     double toxyz[9], fromxyz[9];
@@ -36,7 +36,7 @@ public:
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
-  }
+  };
   ArrayVector<double> get_mapped_hkl() const {
     ArrayVector<double> xyz = this->get_mapped_xyz();
     double toxyz[9], fromxyz[9];
@@ -46,7 +46,7 @@ public:
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
-  }
+  };
 protected:
   void determine_map_size(const double *d_in, const int isrlu){
     double d[3];
@@ -86,7 +86,7 @@ protected:
     this->set_zero(z);
     this->set_map(); // fills the 3D map with linear indices -- eventually replace this with a fancier mapping that (a) respects the zone boundary and (b) sticks to the irreducible wedge
     this->truncate_grid_to_brillouin_zone();
-  }
+  };
 
   void determine_map_step(const size_t *in){
     size_t n[3];
@@ -113,25 +113,24 @@ protected:
     this->set_zero(z);
     this->set_map();
     this->truncate_grid_to_brillouin_zone();
-  }
+  };
 
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
-    printf("got LQVec hkl points\n");
+    printf("all hkl:\n"); hkl.print(); printf("inside hkl:\n");
     ArrayVector<bool> inbz = this->brillouinzone.isinside(&hkl);
-    printf("found which ones are inside the first Brillouin zone\n");
-    ArrayVector<bool> keep(inbz); // keep those points that are inside the 1st Brillouin zone
-    printf("and made a copy\n");
-    ArrayVector<size_t> neighbours;
-    for (size_t i=0; i<hkl.size(); ++i){
-        neighbours = this->get_neighbours(i);
-        if (!inbz.getvalue(i) && inbz.extract(neighbours).areanytrue())
-          keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
-    }
+    ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
+    // for (size_t i=0; i<hkl.size(); ++i)
+    //     if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
+    //       keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
     ssize_t kept = 0;
+    for (size_t i=0; i<hkl.size(); ++i){
+      if (keep.getvalue(i)) hkl[i].print();
+    }
+    printf("this->numel() %u, hkl.size() %u\n",this->numel(),hkl.size());
     for (size_t i=0; i<hkl.size(); ++i)
       this->map[i] = keep.getvalue(i) ? kept++ : ssize_t(-1);
-  }
+  };
 };
 
 

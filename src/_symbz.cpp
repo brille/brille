@@ -147,8 +147,7 @@ PYBIND11_MODULE(symbz,m){
 		.def_property_readonly("vertices_xyz",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
 		.def_property_readonly("faces",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
 		.def_property_readonly("faces_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-		.def_property_readonly("faces_per_vertex_xyz",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces());})
 		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;

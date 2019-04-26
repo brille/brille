@@ -12,6 +12,40 @@ sys.path.append(addpath)
 
 import symbz as s
 
+from importlib import util
+hasmpl  = util.find_spec('matplotlib') is not None
+hasmpl &= util.find_spec('mpl_toolkits') is not None
+# protect against trying to load a submodule of a non-existant module
+if hasmpl:
+    hasmpl &= util.find_spec('mpl_toolkits.mplot3d') is not None
+if hasmpl:
+    import matplotlib.pyplot as pp
+    from mpl_toolkits.mplot3d.axes3d import Axes3D
+
+def plot_points(x,title=''):
+    if hasmpl:
+        fig = pp.figure()
+        ax = Axes3D(fig)
+        ax.scatter(x[:,0],x[:,1],x[:,2],s=10)
+        ax.set_title(title)
+        pp.show()
+def plot_points_with_lines(x,y,title=''):
+    if hasmpl:
+        fig = pp.figure()
+        ax = Axes3D(fig)
+        ax.plot(y[:,0],y[:,1],y[:,2])
+        ax.scatter(x[:,0],x[:,1],x[:,2],s=10)
+        ax.set_title(title)
+        pp.show()
+def plot_2d_points_with_lines(x,y,title=''):
+    if hasmpl:
+        ax = pp.axes()
+        ax.plot(y[:,0],y[:,1])
+        ax.scatter(x[:,0],x[:,1],s=10)
+        ax.set_title(title)
+        pp.show()
+
+
 def make_dr(a,b,c,al=np.pi/2,be=np.pi/2,ga=np.pi/2):
     d = s.Direct(a,b,c,al,be,ga)
     r = d.star()
@@ -98,6 +132,19 @@ class BrillouinZone (unittest.TestCase):
         self.assertAlmostEqual( np.abs(expected_verts-verts).sum(), 0)
         self.assertTrue( (bz.isinside(expected_faces/2)).all() )
         self.assertTrue( (bz.isinside(expected_verts)).all() )
+    def test_b_isinside_hexagonal(self):
+        d,r = make_dr(3,3,9,np.pi/2,np.pi/2,np.pi*2/3)
+        bz = s.BrillouinZone(r)
+        # Q = (np.random.rand(1000,3)-0.5) * 2 # this is a uniform distribution over [-1,1)
+        x=np.linspace(-1,1,100)
+        X,Y,Z=np.meshgrid(x,x,0)
+        Q = np.stack( (X.flatten(),Y.flatten(),Z.flatten()),axis=-1)
+        Qin = bz.isinside(Q)
+        B = r.get_B_matrix()
+        X = np.stack( (np.matmul(B,v) for v in Q[Qin,:]) )
+        plot_2d_points_with_lines(X,bz.vertices_xyz)
+
+
     def test_c_moveinto_hexagonal(self):
         d,r = make_dr(3,3,9,np.pi/2,np.pi/2,np.pi*2/3)
         bz = s.BrillouinZone(r)

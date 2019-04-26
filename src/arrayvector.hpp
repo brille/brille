@@ -41,10 +41,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
 	for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
 	if (allinbounds){
 		out.resize(idx.size());
-		for (size_t j=0; j<idx.size(); ++j) {
-			printf("Accessing array %u of %u\n",idx.getvalue(j),this->size());
-			out.set(j, this->datapointer( idx.getvalue(j)) );
-		}
+		for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx.getvalue(j)) );
 	}
 	return out;
 }

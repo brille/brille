@@ -175,6 +175,12 @@ protected:
   bool valid_mapping(size_t i, size_t j, size_t k) const {
     return this->valid_mapping( i*this->span[0]+j*this->span[1]+k*this->span[2] );
   };
+  bool is_inbounds(size_t i, size_t j, size_t k) const {
+    return (i<this->size(0) && j<this->size(1) && k<this->size(2));
+  };
+  bool is_inbounds(const size_t* s) const {
+    return (s[0]<this->size(0) && s[1]<this->size(1) && s[2]<this->size(2));
+  };
 };
 
 // TODO: allow for more-compact data arrays with appropriate reducing maps
@@ -194,39 +200,6 @@ public:
   void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
   void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; };
 
-  // size_t get_grid_x(const size_t maxN, double *x) const {
-  //   if ( maxN < this->numel() ) return 0;
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s0=this->step[0], z0=this->zero[0];
-  //   for (i=0; i<n0; i++)
-  //     for (j=0; j<n1; j++)
-  //       for (k=0; k<n2; k++)
-  //         x[ cnt++ ] = z0 + s0*i;
-  //   return cnt;
-  // };
-  // size_t get_grid_y(const size_t maxN, double *y) const {
-  //   if ( maxN < this->numel() ) return 0;
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s1=this->step[1], z1=this->zero[1];
-  //   for (i=0; i<n0; i++)
-  //     for (j=0; j<n1; j++)
-  //       for (k=0; k<n2; k++)
-  //         y[ cnt++ ] = z1 + s1*j;
-  //   return cnt;
-  // };
-  // size_t get_grid_z(const size_t maxN, double *z) const {
-  //   if ( maxN < this->numel() ) return 0;
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s2=this->step[2], z2=this->zero[2];
-  //   for (i=0; i<n0; i++)
-  //     for (j=0; j<n1; j++)
-  //       for (k=0; k<n2; k++)
-  //         z[ cnt++ ] = z2 + s2*k;
-  //   return cnt;
-  // };
   size_t get_grid_xyz(const size_t maxN, double *xyz) const {
     if ( maxN < this->numel() ) return 0;
     size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
@@ -264,30 +237,6 @@ public:
     return cnt;
   };
 
-  // ArrayVector<double> get_grid_x() const {
-  //   ArrayVector<double> x(1u,this->numel());
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s0=this->step[0], z0=this->zero[0];
-  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) x.insert( z0+s0*i, cnt++);
-  //   return x;
-  // };
-  // ArrayVector<double> get_grid_y() const {
-  //   ArrayVector<double> y(1u,this->numel());
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s1=this->step[1], z1=this->zero[1];
-  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) y.insert( z1+s1*i, cnt++);
-  //   return y;
-  // };
-  // ArrayVector<double> get_grid_z() const {
-  //   ArrayVector<double> z(1u,this->numel());
-  //   size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
-  //   size_t cnt = 0;
-  //   double s2=this->step[2], z2=this->zero[2];
-  //   for (i=0; i<n0; i++) for (j=0; j<n1; j++) for (k=0; k<n2; k++) z.insert( z2+s2*i, cnt++);
-  //   return z;
-  // };
   ArrayVector<double> get_grid_xyz() const {
     ArrayVector<double> xyz(3u,this->numel());
     size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
@@ -307,9 +256,9 @@ public:
     size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
     size_t cnt = 0;
     double s0=this->step[0], z0=this->zero[0], s1=this->step[1], z1=this->zero[1], s2=this->step[2], z2=this->zero[2];
-    for (i=0; i<n0; i++)
-      for (j=0; j<n1; j++)
-        for (k=0; k<n2; k++){
+    for (i=0; i<n0; ++i)
+      for (j=0; j<n1; ++j)
+        for (k=0; k<n2; ++k){
           if ( this->valid_mapping(i,j,k) ) {
             xyz.insert( z0+s0*i, cnt  ,0);
             xyz.insert( z1+s1*j, cnt  ,1);
@@ -431,22 +380,27 @@ protected:
     return oob;
   };
   ArrayVector<size_t> get_neighbours(const size_t centre) const {
-    printf("finding the neighbours\n");
     ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
     ArrayVector<size_t> ijk(3u,1u);
     this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
     bool isz[3];
     for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
-    size_t valid_neighbours = 0;
     ArrayVector<bool> is_valid(1u,mzp.size());
     for (size_t i=0; i<mzp.size(); ++i){
       is_valid.insert(true,i);
       for (size_t j=0; j<mzp.numel(); ++j)
         if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
-      if (is_valid.getvalue(i)) ++valid_neighbours;
     }
-    ArrayVector<size_t> neighbours(1u,valid_neighbours);
     ArrayVector<size_t> tmp(3u,1u);
+    for (size_t i=0; i<mzp.size(); ++i){
+      if (is_valid.getvalue(i)){
+        for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
+        is_valid.insert( is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+      }
+    }
+    size_t valid_neighbours = 0;
+    for (size_t i=0; i<is_valid.size(); ++i) if (is_valid.getvalue(i)) ++valid_neighbours;
+    ArrayVector<size_t> neighbours(1u,valid_neighbours);
     int oob = 0;
     size_t valid_neighbour=0;
     for (size_t i=0; i<mzp.size(); ++i){
@@ -458,9 +412,7 @@ protected:
         oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
       }
     }
-
-    // do something if oob is greater than zero? or just ignore it and calculate at the edge-case multiple times
-    printf("done finding %u of %u neighbours\n",valid_neighbour,valid_neighbours);
+    if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
     return neighbours;
   };
 };
