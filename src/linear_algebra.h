@@ -49,17 +49,12 @@ template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C,
 template<typename T, typename R, typename S, int N=3> void add_matrix(T *C, const R *A, const S *B);
 
 // special casting of floating point values to integers
-int    cast_to_int(const int    a);
-int    cast_to_int(const double a);
-double cast_to_dbl(const double a);
-double cast_to_dbl(const int    a);
+// effectively rounds doubles to their nearest integer **not** by truncating. So 0.6=>1 not 0. -1.9=>-2 not -1 (or would it go to -2?)
+template<typename T,typename R> T my_cast(const R a);
 // element-wise re-(special)-casting of arrays
 template<typename T, typename R, int N, int M> void cast_array(T *A, const R *B);
-template<typename R, int N, int M> void cast_array(int    *A, const R *B);
-template<typename R, int N, int M> void cast_array(double *A, const R *B);
 template<typename T, typename R, int N> void cast_matrix(T *A, const R *B);
 template<typename T, typename R, int N> void cast_vector(T *A, const R *B);
-
 
 // The cofactor array C_ij of the N by M array A is a M-1 by N-1 array of transpose(A with row i and column j) missing:
 template<typename R> void array_cofactor(R *C, const R *A, const int i, const int j, const int N=3, const int M=3);

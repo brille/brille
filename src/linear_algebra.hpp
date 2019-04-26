@@ -1,3 +1,4 @@
+// #include <iostream>
 #include "safealloc.h"
 #define ZERO_PREC 1e-10
 ////////////////////////////
@@ -9,7 +10,7 @@
 template<typename T, int N> T trace(const T *M){
 	T out = T(0);
 	for (int i=0; i<N; i++) out += M[i*(1+N)];
-    return out;
+  return out;
 }
 
 // copying array from source (S) to destination (D)
@@ -66,8 +67,15 @@ template<typename T, typename R, int N, int M> bool approx_array(const T *A, con
 	// tol is defined for any combinations of types (might be zero).
 	// since tol is epsilon, we need to make sure the value we check is scaled
 	// by the sum of the items we're looking at the difference of
-	for (int i=0; i<N*M; i++) if ( my_abs(A[i]-B[i]) > (useTtol ? Ttol : Rtol)*my_abs(A[i]+B[i]) ) return false;
-	return true;
+	bool answer=true;
+	for (int i=0; i<N*M; i++){
+		// if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
+		if ( my_abs(A[i]) <= 100*Ttol && my_abs(B[i]) <= 100*Rtol )
+			answer = my_abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol);
+		else
+			answer = my_abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol)*my_abs(A[i]+B[i]);
+	}
+	return answer;
 }
 template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B){return approx_array<T,R,N,N>(A,B);}
 template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R *B){return approx_array<T,R,N,1>(A,B);}
@@ -76,7 +84,6 @@ template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
 template<typename T, typename R, typename S, int N, int I, int M> void multiply_arrays(T *C, const R *A, const S *B){
 	for (int i=0;i<N*M;i++) C[i]=T(0);
-	// for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i+j*N] += T(A[i+k*N]*B[k+j*I]);
 	for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i*M+j] += T(A[i*I+k]*B[k*M+j]);
 }
 template<typename T, typename R, typename S, int N> void multiply_matrix_matrix(T *C, const R *A, const S *B){ multiply_arrays<T,R,S,N,N,N>(C,A,B); }
@@ -87,10 +94,12 @@ template<typename T, typename R, typename S, int N> void multiply_vector_matrix(
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B){ for (int i=0; i<N*M; i++) C[i] = T(A[i]+B[i]); }
 template<typename T, typename R, typename S, int N> void add_matrix(T *C, const R *A, const S *B){ add_arrays<T,R,S,N,N>(C,A,B); }
 
+// specialized casting of doubles to ints
+template<typename T,typename R> T my_cast(const R a){ return T(a); }
+// inlined to avoid redefining this specialization each time the header is called
+template<> inline int my_cast<int,double>(const double a){ return int( a<0 ? a-0.5 : a+0.5); }
 // element-wise re-(special)-casting of arrays
-template<typename T, typename R, int N, int M> void cast_array(T *A, const R *B){;}
-template<typename R, int N, int M> void cast_array(int    *A, const R *B){ for (int i=0; i<N*M; i++) A[i] = cast_to_int(B[i]); }
-template<typename R, int N, int M> void cast_array(double *A, const R *B){ for (int i=0; i<N*M; i++) A[i] = cast_to_dbl(B[i]); }
+template<typename T, typename R, int N, int M> void cast_array(T *A, const R *B){ for (int i=0; i<N*M; i++) A[i] = my_cast<T,R>(B[i]); }
 
 template<typename T, typename R, int N> void cast_matrix(T *A, const R *B){ cast_array<T,R,N,N>(A,B); }
 template<typename T, typename R, int N> void cast_vector(T *A, const R *B){ cast_array<T,R,N,1>(A,B); }
@@ -159,8 +168,10 @@ template<typename T, int N> bool similar_matrix(T *M, const T *A, const T *B, co
 	T *C = safealloc<T>(N*N);
 	bool ok = matrix_inverse(C,B,tol,N);
 	if ( ok ){
-		multiply_matrix_matrix<T,T,T,N>(M,A,B);
-		multiply_matrix_matrix<T,T,T,N>(M,C,M);
+		T *P = safealloc<T>(N*N);
+		multiply_matrix_matrix<T,T,T,N>(P,A,B);
+		multiply_matrix_matrix<T,T,T,N>(M,C,P);
+		delete[] P;
 	} else {
 		printf("spglib: No similar matrix due to 0 determinant.\n");
 	}
@@ -168,7 +179,9 @@ template<typename T, int N> bool similar_matrix(T *M, const T *A, const T *B, co
 	return ok;
 }
 
-template<typename R, int N, int M> void array_transpose(R *D, const R *S){ for (int i=0; i<M; i++) for (int j=0; i<N; j++) D[i+j*M] = S[j+i*N]; }
+template<typename R, int N, int M> void array_transpose(R *D, const R *S){
+	for (int i=0; i<N; ++i) for (int j=0; j<M; ++j)	D[i+j*N] = S[j+i*M];
+}
 template<typename R, int N> void matrix_transpose(R *D, const R *S){ array_transpose<R,N,N>(D,S); }
 // in place transpose:
 template<typename R, int N> void matrix_transpose(R *B){
@@ -183,7 +196,7 @@ template<typename R, int N> void matrix_transpose(R *B){
 template<typename R, int N> void matrix_metric(R *M, const R *L){
 	R *Lt = safealloc<R>(N*N);
 	matrix_transpose<R,N>(Lt,L);
-	multiply_matrix_matrix<R,N>(M,Lt,L);
+	multiply_matrix_matrix<R,R,R,N>(M,Lt,L);
 	delete[] Lt;
 }
 
@@ -206,12 +219,12 @@ template<typename R, int N> R vector_dot(const R *a, const R *b){
 }
 
 template<typename T> T mod1(const T a){
-	T b = a - cast_to_int(a);
+	T b = a - my_cast<int,T>(a);
 	return ( (b < T(0) - ZERO_PREC ) ? b + T(1) : b );
 }
 
 template<typename T, typename R, int N> bool is_int_matrix(const T * A, const R tol){
-	for (int i=0; i<N*N; i++) if ( my_abs(cast_to_int(A[i]) - A[i]) > tol ) return false;
+	for (int i=0; i<N*N; i++) if ( my_abs(my_cast<int,T>(A[i]) - A[i]) > tol ) return false;
 	return true;
 }
 template<typename R> bool is_int_matrix(const int *, const R){ return true; }
