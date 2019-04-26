@@ -171,19 +171,22 @@ void Reciprocal::get_B_matrix(double *B) const {
 	asg = sin(this->get_gamma());
 	if (asg<0) asg*=-1.0;
 
-	// a-star along x
+	// Be careful about indexing B. Make sure each vector goes in as a column, not a row!
+	// if you mix this up, you'll only notice for non-orthogonal space groups
+
+	// a-star along x -- first column = [0,3,6] in C ([0,1,2] in MATLAB)
 	B[0] = this->get_a();
-	B[1] = 0.0;
-	B[2] = 0.0;
+	B[3] = 0.0;
+	B[6] = 0.0;
 
-	// b-star in the x-y plane
-	B[3] = this->get_b()*cos(this->get_gamma());
+	// b-star in the x-y plane -- second column = [1,4,7] in C ([3,4,5] in MATLAB)
+	B[1] = this->get_b()*cos(this->get_gamma());
 	B[4] = this->get_b()*asg;
-	B[5] = 0.0;
+	B[7] = 0.0;
 
-	// and c-star
-	B[6] = this->get_c()*cos(this->get_beta());
-	B[7] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
+	// and c-star -- third column = [2,5,8] in C ([6,7,8] in MATLAB)
+	B[2] = this->get_c()*cos(this->get_beta());
+	B[5] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
 	B[8] = 2*PI/d.get_c();
 }
 void Reciprocal::get_xyz_transform(double *toxyz) const {
