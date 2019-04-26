@@ -76,7 +76,8 @@ template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
 template<typename T, typename R, typename S, int N, int I, int M> void multiply_arrays(T *C, const R *A, const S *B){
 	for (int i=0;i<N*M;i++) C[i]=T(0);
-	for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i+j*N] += T(A[i+k*N]*B[k+j*I]);
+	// for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i+j*N] += T(A[i+k*N]*B[k+j*I]);
+	for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i*M+j] += T(A[i*I+k]*B[k*M+j]);
 }
 template<typename T, typename R, typename S, int N> void multiply_matrix_matrix(T *C, const R *A, const S *B){ multiply_arrays<T,R,S,N,N,N>(C,A,B); }
 template<typename T, typename R, typename S, int N> void multiply_matrix_vector(T *C, const R *A, const S *b){ multiply_arrays<T,R,S,N,N,1>(C,A,b); }
