@@ -117,33 +117,33 @@ int test_arrayvector(){
 	printf("*** test_arrayvector ***\n");
 	double tmp[9] = {1,2,3,4,5,6,7,8,9};
 	ArrayVector<double> novalues(3,3);
-	novalues.print();
+	// novalues.print();
 	ArrayVector<double> withvalue(3,3,tmp);
-	withvalue.print();
+	// withvalue.print();
 
 	novalues += 1.11111111;
-	novalues.print();
+	// novalues.print();
 
 	novalues += withvalue;
-	novalues.print();
+	// novalues.print();
 
 	ArrayVector<double> newav = novalues/withvalue;
-	newav.print();
+	// newav.print();
 
 	ArrayVector<double> setafterinit;
 	setafterinit = newav*3.14159;
-	setafterinit.print();
-	printf("asignment works!\n");
+	// setafterinit.print();
+	// printf("asignment works!\n");
 
 	ArrayVector<double> newerav = newav + 1e-16;
 
-	if ( newav.isapprox( newerav ) )
-		printf("isapprox works!\n");
+	// if ( newav.isapprox( newerav ) )
+		// printf("isapprox works!\n");
 
 	ArrayVector<double> xtr = newav.extract(1u);
-	xtr.print();
+	// xtr.print();
 	ArrayVector<double> nxt = xtr - newav;
-	nxt.print();
+	// nxt.print();
 
 	return 0;
 }
@@ -186,28 +186,28 @@ static int test_latvec(){
     Direct dlat(1.,1.,1.);
     Reciprocal rlat = dlat.star();
 
-    printf("direct lattice: "); dlat.print();
-    printf("reciprocal lattice: "); rlat.print();
+    // printf("direct lattice: "); dlat.print();
+    // printf("reciprocal lattice: "); rlat.print();
 
     double tmp[] = { 1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0 };
 
     LQVec<double> q(rlat, 3, tmp);
-    printf("reciprocal lattice vectors:\n");
-    q.print();
+    // printf("reciprocal lattice vectors:\n");
+    // q.print();
 
-    printf("with lengths (in inverse angtrom):\n");
-		norm(q).print();
+    // printf("with lengths (in inverse angtrom):\n");
+		// norm(q).print();
 
-    printf("cross products:\n");
-    q.get(0).print();
-    printf("cross\n");
-    q.get(1).print();
-    printf("=\n");
-    q.cross(0,1).print();
+    // printf("cross products:\n");
+    // q.get(0).print();
+    // printf("cross\n");
+    // q.get(1).print();
+    // printf("=\n");
+    // q.cross(0,1).print();
 
-		printf("accessing by index\n");
+		// printf("accessing by index\n");
 		LQVec<double> b = q[0];
-		b.print();
+		// b.print();
 
     return 0;
 }
@@ -234,19 +234,19 @@ int test_bz_info(){
 	bz.get_faces_per_vertex_bare(3*vc,faces_per_vertex);
 
 
-	printf("Brillouin Zone with %u vertices, %u faces\n",vc,fc);
-	if (vc){
-		printf("Vertices at:\n");
-		for(size_t i=0; i<vc; i++)
-			// printf("[% 7.4f % 7.4f % 7.4f]\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
-			printf(" % 7.4f % 7.4f % 7.4f\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
-	}
-	if (fc){
-		printf("Brillouin Zone constucted from:\n");
-		for(size_t i=0; i<fc; i++)
-			// printf("(% 2d % 2d % 2d)\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
-			printf(" % 2d % 2d % 2d\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
-	}
+	// printf("Brillouin Zone with %u vertices, %u faces\n",vc,fc);
+	// if (vc){
+	// 	printf("Vertices at:\n");
+	// 	for(size_t i=0; i<vc; i++)
+	// 		// printf("[% 7.4f % 7.4f % 7.4f]\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
+	// 		printf(" % 7.4f % 7.4f % 7.4f\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
+	// }
+	// if (fc){
+	// 	printf("Brillouin Zone constucted from:\n");
+	// 	for(size_t i=0; i<fc; i++)
+	// 		// printf("(% 2d % 2d % 2d)\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
+	// 		printf(" % 2d % 2d % 2d\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
+	// }
 
 	delete[] verts;
 	delete[] faces;
@@ -261,7 +261,7 @@ static int test_bz_moveinto(){
 	Reciprocal rlat = d.star();
 	BrillouinZone bz(rlat);
 
-	printf("Face vectors\n"); bz.get_faces().print();
+	// printf("Face vectors\n"); bz.get_faces().print();
 
 	std::default_random_engine generator;
 	std::uniform_real_distribution<double> qrand(0.0,1.0); // [0,1)
@@ -279,14 +279,14 @@ static int test_bz_moveinto(){
 	LQVec<int> tv(rlat,10);
 
 	if (!bz.moveinto(&Qv,&qv,&tv)) return 1;
-	printf("Q =\n"); Qv.print();
-	printf("q =\n"); qv.print();
-	printf("tau =\n"); tv.print();
+	// printf("Q =\n"); Qv.print();
+	// printf("q =\n"); qv.print();
+	// printf("tau =\n"); tv.print();
 	// so the following is untested so far
 	int numwrong = 0;
 	for (int i=0; i<10; ++i) for (int j=0; j<3; ++j) {
 	  if ( abs(qv.getvalue(i,j)+tv.getvalue(i,j) - q[i*3+j]-tau[i*3+j]) > 1e-15) {
-      printf("% 8.5f%+3d != % 8.5f%+3d (%g)\n",qv.getvalue(i,j),tv.getvalue(i,j),q[i*3+j],tau[i*3+j],qv.getvalue(i,j)+tv.getvalue(i,j)-q[i*3+j]-tau[i*3+j]);
+      // printf("% 8.5f%+3d != % 8.5f%+3d (%g)\n",qv.getvalue(i,j),tv.getvalue(i,j),q[i*3+j],tau[i*3+j],qv.getvalue(i,j)+tv.getvalue(i,j)-q[i*3+j]-tau[i*3+j]);
       ++numwrong;
     }
 	}
@@ -297,29 +297,38 @@ static int test_bz_moveinto(){
 
 static int test_bz_grid(){
 	printf("\n*** test_bz_grid ***\n");
-	Direct dlat(9.,9.,9.,PI/2.,PI/2.,2.*PI/3.);
+	size_t mg3N[3] = {3,4,2};
+	MapGrid3<int> mg3;
+	mg3.resize(mg3N);
+	mg3.set_map();
+
+
+	Direct dlat(9.,9.,9.,PI/2.,PI/2.,2*PI/3.);
 	Reciprocal rlat= dlat.star();
 	BrillouinZone bz(rlat);
 
-	size_t N[3] = {3,3,3};
+	size_t N[3] = {10,10,0};
 
 	BrillouinZoneGrid3 bzg(bz,N);
+	bzg.print_map();
 
 	ArrayVector<double> x = bzg.get_grid_x_vec();
 	ArrayVector<double> y = bzg.get_grid_y_vec();
 	ArrayVector<double> z = bzg.get_grid_z_vec();
 
-	printf("Brillouin Zone Grid x values:\n"); x.print();
-	printf("Brillouin Zone Grid y values:\n"); y.print();
-	printf("Brillouin Zone Grid z values:\n"); z.print();
+	// printf("Brillouin Zone Grid x values:\n"); x.print();
+	// printf("Brillouin Zone Grid y values:\n"); y.print();
+	// printf("Brillouin Zone Grid z values:\n"); z.print();
 
 	ArrayVector<double> xyz = bzg.get_grid_xyz();
-	printf("Brillouin Zone Grid x,y,z values (in inverse Angstrom):\n");
-	xyz.print();
+	// printf("Brillouin Zone Grid x,y,z values (in inverse Angstrom):\n");
+	// xyz.print();
 
 	ArrayVector<double> hkl = bzg.get_grid_hkl();
-	printf("Brillouin Zone Grid h,k,l values (in rlu):\n");
-	hkl.print();
+	// printf("Brillouin Zone Grid h,k,l values (in rlu):\n");
+	// hkl.print();
+
+	ArrayVector<double> map_xyz = bzg.get_mapped_xyz();
 
 
 	return 0;

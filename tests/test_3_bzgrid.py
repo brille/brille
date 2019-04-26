@@ -84,7 +84,7 @@ class BrillouinZoneGrid (unittest.TestCase):
     def test_b_plot_hexagonal(self):
         print('hexagon plot')
         d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
-        Ntuple = (2,2,0)
+        Ntuple = (20,20,0)
         bzg = s.BZGrid(bz, Ntuple)
         # plot_points( bzg.xyz        ,'full grid')
         plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz ,'mapped grid')

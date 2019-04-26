@@ -1,3 +1,7 @@
+// #ifdef _WIN32
+  typedef long slong; // ssize_t is only defined for gcc?
+// #endif
+
 #ifndef _BZ_GRID_
 #define _BZ_GRID_
 
@@ -12,6 +16,7 @@
 // TODO: Be clever about the map/grid creation (like spglib)?
 
 class BrillouinZoneGrid3: public InterpolateGrid3{
+protected:
   BrillouinZone brillouinzone;
 public:
   BrillouinZoneGrid3(const BrillouinZone bz, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(d,isrlu);};
@@ -117,19 +122,14 @@ protected:
 
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
-    printf("all hkl:\n"); hkl.print(); printf("inside hkl:\n");
     ArrayVector<bool> inbz = this->brillouinzone.isinside(&hkl);
     ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
-    // for (size_t i=0; i<hkl.size(); ++i)
-    //     if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
-    //       keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
-    ssize_t kept = 0;
-    for (size_t i=0; i<hkl.size(); ++i){
-      if (keep.getvalue(i)) hkl[i].print();
-    }
-    printf("this->numel() %u, hkl.size() %u\n",this->numel(),hkl.size());
     for (size_t i=0; i<hkl.size(); ++i)
-      this->map[i] = keep.getvalue(i) ? kept++ : ssize_t(-1);
+        if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
+          keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
+    slong kept = 0;
+    for (size_t i=0; i<hkl.size(); ++i)
+      this->map[i] = keep.getvalue(i) ? kept++ : slong(-1);
   };
 };
 

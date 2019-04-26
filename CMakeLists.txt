@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(symbz)
 
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+endif()
 
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_C_FLAGS_RELEASE "-Wall -O2")
@@ -29,7 +34,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
             ${PROJECT_SOURCE_DIR}/src/bz.cpp
             ${PROJECT_SOURCE_DIR}/src/lattice.cpp
-            ${PROJECT_SOURCE_DIR}/src/mathfunc.cpp
             ${PROJECT_SOURCE_DIR}/src/pointgroup.cpp
             ${PROJECT_SOURCE_DIR}/src/spg_database.cpp
             ${PROJECT_SOURCE_DIR}/src/symbz.cpp
@@ -58,7 +62,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREF
 
 # Python c++ bindings
 add_subdirectory(lib/pybind11)
-pybind11_add_module(symbz EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
+pybind11_add_module(symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
 # Testing via `make check`
 enable_testing()
@@ -78,9 +82,9 @@ if (${PYTHONINTERP_FOUND})
 	add_dependencies(check symbz)
 endif()
 
-file(GLOB TEST_CHECK_SOURCES ${PROJECT_SOURCE_DIR}/tests/*_test.cpp)
-add_executable(test_check EXCLUDE_FROM_ALL ${TEST_CHECK_SOURCES} ${SOURCES})
-# target_include_directories(test_check PUBLIC "${PROJECT_SOURCE_DIR}/lib")
-target_include_directories(test_check PUBLIC "${PROJECT_SOURCE_DIR}/lib") # where catch.hpp is located
-add_dependencies(check test_check)
-add_test(NAME catch2 COMMAND test_check)
+file(GLOB TEST_CATCH_SOURCES ${PROJECT_SOURCE_DIR}/tests/*_test.cpp)
+add_executable(test_catch EXCLUDE_FROM_ALL ${TEST_CATCH_SOURCES} ${SOURCES})
+# add_executable(test_check EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/tests/linalg_test.cpp ${PROJECT_SOURCE_DIR}/tests/catch_test.cpp ${SOURCES})
+target_include_directories(test_catch PUBLIC "${PROJECT_SOURCE_DIR}/lib") # where catch.hpp is located
+add_dependencies(check test_catch)
+add_test(NAME catch2 COMMAND test_catch)
