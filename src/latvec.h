@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <typeinfo> // for std::bad_cast
 #include <exception>
+#include "lattice.h"
 #include "arrayvector.h"
 #include "linear_algebra.h"
 #include "safealloc.h"

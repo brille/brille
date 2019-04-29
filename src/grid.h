@@ -2,6 +2,7 @@
   typedef long slong; // ssize_t is only defined for gcc?
 // #endif
 #include "arrayvector.h"
+#include "latvec.h"
 #include "neighbours.h"
 
 #ifndef _GRID_H_
@@ -236,6 +237,8 @@ public:
     ret += this->sub2lin(ijk,&lidx);
     return lidx;
   }
+  template<typename R> ArrayVector<double> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<double> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
 
   template<typename R> ArrayVector<double> linear_interpolate_at(const ArrayVector<R>& x){
     if (this->data.size()==0)
