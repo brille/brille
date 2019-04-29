@@ -125,21 +125,21 @@ public:
         }
     return cnt;
   };
-  size_t get_grid_x_vec(const size_t maxN, double *x) const {
+  size_t get_grid_x(const size_t maxN, double *x) const {
     if ( maxN < this->size(0) ) return 0;
     size_t cnt = 0;
     double s0=this->step[0], z0=this->zero[0];
     for (size_t i=0; i<this->size(0); i++) x[ cnt++ ] = z0 + s0*i;
     return cnt;
   };
-  size_t get_grid_y_vec(const size_t maxN, double *y) const {
+  size_t get_grid_y(const size_t maxN, double *y) const {
     if ( maxN < this->size(1) ) return 0;
     size_t cnt = 0;
     double s1=this->step[1], z1=this->zero[1];
     for (size_t j=0; j<this->size(1); j++) y[ cnt++ ] = z1 + s1*j;
     return cnt;
   };
-  size_t get_grid_z_vec(const size_t maxN, double *z) const {
+  size_t get_grid_z(const size_t maxN, double *z) const {
     if ( maxN < this->size(2) ) return 0;
     size_t cnt = 0;
     double s2=this->step[2], z2=this->zero[2];
@@ -179,19 +179,19 @@ public:
         }
     return xyz;
   };
-  ArrayVector<double> get_grid_x_vec() const {
+  ArrayVector<double> get_grid_x() const {
     ArrayVector<double> x(1u,this->size(0));
     double s0=this->step[0], z0=this->zero[0];
     for (size_t i=0; i<x.size(); i++) x.insert( z0+s0*i, i);
     return x;
   };
-  ArrayVector<double> get_grid_y_vec() const {
+  ArrayVector<double> get_grid_y() const {
     ArrayVector<double> y(1u,this->size(1));
     double s1=this->step[1], z1=this->zero[1];
     for (size_t j=0; j<y.size(); j++) y.insert( z1+s1*j, j);
     return y;
   };
-  ArrayVector<double> get_grid_z_vec() const {
+  ArrayVector<double> get_grid_z() const {
     ArrayVector<double> z(1u,this->size(2));
     double s2=this->step[2], z2=this->zero[2];
     for (size_t k=0; k<z.size(); k++) z.insert( z2+s2*k, k);

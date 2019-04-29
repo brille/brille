@@ -57,11 +57,11 @@ class BrillouinZoneGrid (unittest.TestCase):
             s.BZGrid(bz,[[2,2,2]])
         Ntuple = (2,2,2)
         bzg = s.BZGrid(bz, Ntuple)
-        hkl = bzg.hkl
+        hkl = bzg.rlu
         self.assertEqual(hkl.ndim,2)
         self.assertEqual(hkl.shape[0], np.prod(2*Ntuple) )
         self.assertEqual(hkl.shape[1],3)
-        xyz = bzg.xyz # the positions of the points in Å⁻¹
+        xyz = bzg.invA # the positions of the points in Å⁻¹
         self.assertEqual(hkl.shape,xyz.shape)
         self.assertAlmostEqual( np.abs(xyz - 2*np.pi*hkl).sum(), 0 )
     # def test_b_plot_unit_cube(self):
@@ -86,12 +86,12 @@ class BrillouinZoneGrid (unittest.TestCase):
         d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
         Ntuple = (20,20,0)
         bzg = s.BZGrid(bz, Ntuple)
-        # plot_points( bzg.xyz        ,'full grid')
-        plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz ,'mapped grid')
+        # plot_points( bzg.invA        ,'full grid')
+        plot_points_with_lines( bzg.mapped_invA, bz.vertices_invA ,'mapped grid')
     # def test_c(self):
     #     d,r,bz = make_drbz(1,1,1, 2*np.pi/3, 2*np.pi/3, np.pi/3)
     #     bzg = s.BZGrid(bz, (5,5,5))
-    #     plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz, 'rhomb')
+    #     plot_points_with_lines( bzg.mapped_invA, bz.vertices_invA, 'rhomb')
 
 
 

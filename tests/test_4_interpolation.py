@@ -63,50 +63,50 @@ class Interpolate (unittest.TestCase):
   def test_a_norm(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_ones( bzg.mapped_hkl ) )
+    bzg.fill( sqwfunc_ones( bzg.mapped_rlu ) )
     interpolated_ones = bzg.interpolate_at(Qi)
     self.assertTrue( (interpolated_ones==1).all() )
   def test_b_x(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_x(bzg.mapped_hkl) )
+    bzg.fill( sqwfunc_x(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue( np.isclose(intres,Qi[:,0]).all() )
   def test_b_y(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_y(bzg.mapped_hkl) )
+    bzg.fill( sqwfunc_y(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue( np.isclose(intres,Qi[:,1]).all() )
   def test_b_z(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_z(bzg.mapped_hkl) )
+    bzg.fill( sqwfunc_z(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue( np.isclose(intres,Qi[:,2]).all() )
   def test_c_xy(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_xy(bzg.mapped_hkl) )
+    bzg.fill( sqwfunc_xy(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue( np.isclose(intres,Qi[:,0]+Qi[:,1]).all() )
   def test_c_xyz(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( sqwfunc_xyz(bzg.mapped_hkl) )
+    bzg.fill( sqwfunc_xyz(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue( np.isclose(intres,Qi[:,0]+Qi[:,1]+Qi[:,2]).all() )
   def test_d_vec_ident(self):
     bzg = setup_grid();
     Qi = define_Q_points()
-    bzg.fill( vecfun_ident(bzg.mapped_hkl) )
+    bzg.fill( vecfun_ident(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     self.assertTrue(np.isclose(intres,Qi).all())
   def test_d_vec_rotx(self):
     bzg = setup_grid();
     Qi = define_Q_points()
     ang = np.pi/3;
-    bzg.fill( vecfun_rotx(bzg.mapped_hkl,ang) )
+    bzg.fill( vecfun_rotx(bzg.mapped_rlu,ang) )
     intres = bzg.interpolate_at(Qi)
     antres = vecfun_rotx(Qi,ang)
     self.assertTrue(np.isclose(intres,antres).all())
@@ -114,14 +114,14 @@ class Interpolate (unittest.TestCase):
     bzg = setup_grid();
     Qi = define_Q_points()
     ang = 3*np.pi/5;
-    bzg.fill( vecfun_rotz(bzg.mapped_hkl,ang) )
+    bzg.fill( vecfun_rotz(bzg.mapped_rlu,ang) )
     intres = bzg.interpolate_at(Qi)
     antres = vecfun_rotz(Qi,ang)
     self.assertTrue(np.isclose(intres,antres).all())
   def test_e_mat_ident(self):
     bzg = setup_grid()
     Qi = define_Q_points()
-    bzg.fill( matfun_ident(bzg.mapped_hkl) )
+    bzg.fill( matfun_ident(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     antres = matfun_ident(Qi)
     self.assertTrue(np.isclose(intres,antres).all())

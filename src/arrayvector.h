@@ -167,7 +167,41 @@ public:
 		if (!si.onevecb && b.size()!=a.size()) throw std::runtime_error("equal sized or second-singular arrays required");
 		si.aorb = true; // this doesn't matter here but will later
 		return si;
-	}
+	};
+
+	int removeelements(const size_t from, const size_t to){
+		size_t last;
+		size_t remaining_elements;
+		if (from < this->M){ // otherwise there's nothing to do
+			 last = to < this->M-1 ? to : this->M-1;
+			 remaining_elements = from + (this->M-1 - last);
+			 if (remaining_elements != this->M){ // otherwise we have nothing to do
+				 T *newdata = new T[remaining_elements*this->N]();
+				 size_t idx;
+				 for (size_t i=0; i<this->N; ++i)
+				 	for (size_t j=0; j<this->M; ++j){
+						idx = 0;
+						if ( j < from || j > last)
+							newdata[i*remaining_elements + idx++] = this->data[i*this->N + j];
+				 }
+				 delete[] this->data; //before we loose its pointer
+				 this->M = remaining_elements;
+				 this->data = newdata;
+			 }
+		}
+	};
+	int addelements(const size_t ntoadd, const T valtoadd=T(0)){
+		size_t newM = this->M + ntoadd;
+		size_t i, j;
+		T* newdata = new T[newM*this->N]();
+		for (i=0; i<this->N; ++i){
+			for (j=0; j<this->M; ++j) newdata[i*newM+j] = this->data[i*this->M+j];
+			for (j=this->M; j<newM; ++j)  newdata[i*newM+j] = valtoadd;
+		}
+		delete[] this->data;
+		this->M = newM;
+		this->data = newdata;
+	};
 
 	ArrayVector<T> operator -() const;
 

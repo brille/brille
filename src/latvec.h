@@ -18,7 +18,7 @@ template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
 	Direct lattice;
 public:
 	LDVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
-	LDVec(const Reciprocal lat, const ArrayVector<T>& vec): ArrayVector<T>(vec), lattice(lat){};
+	LDVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); };
 	template<class R>	LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
 
 	LDVec<T>& operator=(const LDVec<T>& other){
@@ -82,13 +82,15 @@ public:
 	};
 	template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
 	bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+protected:
+	void check_arrayvector(const int);
 };
 
 template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
 	Reciprocal lattice;
 public:
 	LQVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
-	LQVec(const Reciprocal lat, const ArrayVector<T>& vec): ArrayVector<T>(vec), lattice(lat){};
+	LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); };
 	template<class R>	LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
 
 	LQVec<T>& operator=(const LQVec<T>& other){
@@ -151,6 +153,8 @@ public:
 	};
 	template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
 	bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+protected:
+	void check_arrayvector(const int);
 };
 
 

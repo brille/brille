@@ -98,3 +98,18 @@ template<typename T> LDVec<T>& LDVec<T>:: operator /=(const T& av){
 			this->insert( this->getvalue(i,j) / av, i, j);
 	return *this;
 }
+
+template<typename T> void LDVec<T>::check_arrayvector(const int flag){
+	// Lattice vectors must always have 3 elements per vector. If we create
+	// a LDVec from a lattice and a Direct lattice, we need to check this:
+	size_t nel = this->numel();
+	if (nel > 3u){
+		if (flag) throw std::runtime_error("Lattice vectors require 3 elements -- if constructing LDVec(Direct,ArrayVector), set optional flag to 0 to truncate input");
+		this->removeelements(4u,nel);
+	}
+	if (nel < 3u) {
+		if (flag) throw std::runtime_error("Lattice vectors require 3 elements -- if constructing LDVec(Direct,ArrayVector), set optional flag to 0 to pad input");
+		this->addelements(3u-nel);
+	}
+
+}

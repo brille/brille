@@ -312,9 +312,9 @@ static int test_bz_grid(){
 	BrillouinZoneGrid3 bzg(bz,N);
 	bzg.print_map();
 
-	ArrayVector<double> x = bzg.get_grid_x_vec();
-	ArrayVector<double> y = bzg.get_grid_y_vec();
-	ArrayVector<double> z = bzg.get_grid_z_vec();
+	ArrayVector<double> x = bzg.get_grid_x();
+	ArrayVector<double> y = bzg.get_grid_y();
+	ArrayVector<double> z = bzg.get_grid_z();
 
 	// printf("Brillouin Zone Grid x values:\n"); x.print();
 	// printf("Brillouin Zone Grid y values:\n"); y.print();

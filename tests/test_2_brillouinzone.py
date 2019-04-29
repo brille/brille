@@ -137,7 +137,7 @@ class BrillouinZone (unittest.TestCase):
         print(B)
         X = np.stack( [np.matmul(B,v) for v in expected_verts])
         plot_points(X)
-        
+
     def test_b_isinside_hexagonal(self):
         d,r = make_dr(3,3,9,np.pi/2,np.pi/2,np.pi*2/3)
         bz = s.BrillouinZone(r)
@@ -148,7 +148,7 @@ class BrillouinZone (unittest.TestCase):
         Qin = bz.isinside(Q)
         B = r.get_B_matrix()
         X = np.stack( [ np.matmul(B,v) for v in Q[Qin,:] ] )
-        plot_2d_points_with_lines(X,bz.vertices_xyz)
+        plot_2d_points_with_lines(X,bz.vertices_invA)
 
 
     def test_c_moveinto_hexagonal(self):
