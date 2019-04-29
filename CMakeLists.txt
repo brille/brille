@@ -17,17 +17,10 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+set(Python_ADDITIONAL_VERSIONS "3")
+find_package(PythonInterp)
 
-# Version numbers
-file(READ ${PROJECT_SOURCE_DIR}/src/symbz.h version_file)
-string(REGEX MATCH "SYMBZ_MAJOR_VERSION ([0-9]+)" symbz_major_version ${version_file})
-set(symbz_major_version ${CMAKE_MATCH_1})
-string(REGEX MATCH "SYMBZ_MINOR_VERSION ([0-9]+)" symbz_minor_version ${version_file})
-set(symbz_minor_version ${CMAKE_MATCH_1})
-string(REGEX MATCH "SYMBZ_PATCH_VERSION ([0-9]+)" symbz_patch_version ${version_file})
-set(symbz_patch_version ${CMAKE_MATCH_1})
-set(serial "${symbz_major_version}.${symbz_minor_version}.${symbz_patch_version}")
-set(soserial "1")
+include("write_version_info.cmake")
 
 # Source code
 include_directories("${PROJECT_SOURCE_DIR}/src")
@@ -42,7 +35,7 @@ set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
 
 # Shared library
 add_library(symbz_shared SHARED ${SOURCES})
-set_property(TARGET symbz_shared PROPERTY VERSION ${serial})
+set_property(TARGET symbz_shared PROPERTY VERSION ${SYMBZ_VERSION})
 set_property(TARGET symbz_shared PROPERTY SOVERSION ${soserial})
 set_property(TARGET symbz_shared PROPERTY OUTPUT_NAME symbz)
 if (WIN32)
@@ -50,20 +43,23 @@ if (WIN32)
 else()
 	install(TARGETS symbz_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
+add_dependencies(symbz_shared write_version_info)
 
 # Static link library
 add_library(symbz_static STATIC ${SOURCES})
-set_property(TARGET symbz_static PROPERTY VERSION ${serial})
+set_property(TARGET symbz_static PROPERTY VERSION ${SYMBZ_VERSION})
 set_property(TARGET symbz_static PROPERTY SOVERSION ${soserial})
 set_property(TARGET symbz_static PROPERTY OUTPUT_NAME symbz)
 install(TARGETS symbz_static ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+add_dependencies(symbz_static write_version_info)
 
 # Header file
 install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 # Python c++ bindings
 add_subdirectory(lib/pybind11)
-pybind11_add_module(symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
+pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
+add_dependencies(_symbz write_version_info)
 
 # Testing via `make check`
 enable_testing()
@@ -76,11 +72,9 @@ target_link_libraries(test_cpp symbz_shared)
 add_test(NAME C++ COMMAND test_cpp)
 add_dependencies(check test_cpp)
 
-set(Python_ADDITIONAL_VERSIONS "3")
-find_package(PythonInterp)
 if (${PYTHONINTERP_FOUND})
 	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR})
-	add_dependencies(check symbz)
+	add_dependencies(check _symbz)
 endif()
 
 file(GLOB TEST_CATCH_SOURCES ${PROJECT_SOURCE_DIR}/tests/*_test.cpp)

@@ -10,7 +10,14 @@ if os.path.exists('Debug'):
     addpath += "\\Debug"
 sys.path.append(addpath)
 
-import symbz as s
+from importlib import util
+
+if util.find_spec('symbz') is not None and util.find_spec('symbz._symbz') is not None:
+    import symbz as s
+elif util.find_spec('_symbz') is not None:
+    import _symbz as s
+else:
+    raise Exception("symbz module not found!")
 
 def make_drbz(a,b,c,al=np.pi/2,be=np.pi/2,ga=np.pi/2):
     d = s.Direct(a,b,c,al,be,ga)
@@ -18,7 +25,6 @@ def make_drbz(a,b,c,al=np.pi/2,be=np.pi/2,ga=np.pi/2):
     bz = s.BrillouinZone(r)
     return (d,r,bz)
 
-from importlib import util
 hasmpl  = util.find_spec('matplotlib') is not None
 hasmpl &= util.find_spec('mpl_toolkits') is not None
 # protect against trying to load a submodule of a non-existant module

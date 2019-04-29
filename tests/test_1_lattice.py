@@ -10,8 +10,15 @@ if os.path.exists('Debug'):
     addpath += "\\Debug"
 sys.path.append(addpath)
 
+from importlib import util
 
-import symbz as s
+if util.find_spec('symbz') is not None and util.find_spec('symbz._symbz') is not None:
+    import symbz as s
+elif util.find_spec('_symbz') is not None:
+    import _symbz as s
+else:
+    raise Exception("symbz module not found!")
+
 
 class Lattice (unittest.TestCase):
     def test_a_init1(self):

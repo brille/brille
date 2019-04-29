@@ -14,6 +14,8 @@
 #include "grid.h"
 #include "bz_grid.h"
 
+#include "version_info.h"
+
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
 
@@ -29,10 +31,29 @@ template<typename T> py::array_t<T> av2np(const ArrayVector<T> av){
 	return np;
 }
 
+
+std::string long_version(){
+	using namespace symbz::version;
+	std::string v = version_number;
+	if (!std::string(git_revision).empty()){
+		v += "-" + std::string(git_revision).substr(0,7)
+		   + "@" + git_branch;
+	}
+	return v;
+}
+
 typedef long slong; // ssize_t is only defined for gcc?
 
-PYBIND11_MODULE(symbz,m){
+PYBIND11_MODULE(_symbz,m){
 	m.doc() = "SymBZ for dealing with symmetry of the first Brillouin Zone";
+
+	{
+	using namespace symbz::version;
+	m.attr("version") = long_version();
+	m.attr("git_revision") = git_revision;
+	m.attr("build_datetime") = build_datetime;
+	m.attr("build_hostname") = build_hostname;
+	}
 
 	py::class_<Lattice>(m,"Lattice")
 		.def(py::init<double,double,double,double,double,double,double>(),

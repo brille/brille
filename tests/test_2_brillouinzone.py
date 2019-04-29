@@ -10,9 +10,15 @@ if os.path.exists('Debug'):
     addpath += "\\Debug"
 sys.path.append(addpath)
 
-import symbz as s
-
 from importlib import util
+
+if util.find_spec('symbz') is not None and util.find_spec('symbz._symbz') is not None:
+    import symbz as s
+elif util.find_spec('_symbz') is not None:
+    import _symbz as s
+else:
+    raise Exception("symbz module not found!")
+
 hasmpl  = util.find_spec('matplotlib') is not None
 hasmpl &= util.find_spec('mpl_toolkits') is not None
 # protect against trying to load a submodule of a non-existant module

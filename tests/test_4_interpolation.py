@@ -10,8 +10,14 @@ if os.path.exists('Debug'):
     addpath += "\\Debug"
 sys.path.append(addpath)
 
+from importlib import util
 
-import symbz as s
+if util.find_spec('symbz') is not None and util.find_spec('symbz._symbz') is not None:
+    import symbz as s
+elif util.find_spec('_symbz') is not None:
+    import _symbz as s
+else:
+    raise Exception("symbz module not found!")
 
 def sqwfunc_ones(Q):
   return 1.0+0*(Q[:,0]+Q[:,1]+Q[:,2])

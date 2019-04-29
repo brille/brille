@@ -33,23 +33,6 @@ static SymBZErrorMessage spglib_error_message[] = {
   {SYMBZ_NONE, ""},
 };
 
-/*-----------------------------------------*/
-/* Version: spglib-[major].[minor].[patch] */
-/*-----------------------------------------*/
-int symbz_get_major_version(void){
-  symbz_error_code = SYMBZ_SUCCESS;
-  return SYMBZ_MAJOR_VERSION;
-}
-
-int symbz_get_minor_version(void){
-  symbz_error_code = SYMBZ_SUCCESS;
-  return SYMBZ_MINOR_VERSION;
-}
-
-int symbz_get_micro_version(void){
-  symbz_error_code = SYMBZ_SUCCESS;
-  return SYMBZ_PATCH_VERSION;
-}
 
 /*-------*/
 /* error */

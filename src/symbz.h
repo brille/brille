@@ -35,10 +35,6 @@
 #ifndef __spglib_H__
 #define __spglib_H__
 
-#define SYMBZ_MAJOR_VERSION 0
-#define SYMBZ_MINOR_VERSION 1
-#define SYMBZ_PATCH_VERSION 0
-
 #ifdef __cplusplus
 extern "C" {
 #endif
