@@ -187,8 +187,11 @@ public:
 				 delete[] this->data; //before we loose its pointer
 				 this->M = remaining_elements;
 				 this->data = newdata;
+				 return 0;
 			 }
+			 return 2;
 		}
+		return 1;
 	};
 	int addelements(const size_t ntoadd, const T valtoadd=T(0)){
 		size_t newM = this->M + ntoadd;
@@ -201,6 +204,7 @@ public:
 		delete[] this->data;
 		this->M = newM;
 		this->data = newdata;
+		return 0;
 	};
 
 	ArrayVector<T> operator -() const;
