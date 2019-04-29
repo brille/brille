@@ -1,6 +1,7 @@
 #include "arrayvector.h"
 #include "lattice.h"
 #include "latvec.h"
+#include "neighbours.h"
 
 #ifndef _BZ_CLASS_H_
 #define _BZ_CLASS_H_
@@ -59,6 +60,6 @@ bool three_plane_intersection(const LQVec<double> *n,
 															LQVec<double> *iat, const int idx=0);
 
 // int make_all_indices(LQVec<int> *ijk, const int extent=1);
-ArrayVector<int> make_relative_neighbour_indices(const int extent=1);
+// ArrayVector<int> make_relative_neighbour_indices(const int extent=1);
 
 #endif

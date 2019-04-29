@@ -88,6 +88,10 @@ class BrillouinZoneGrid (unittest.TestCase):
         bzg = s.BZGrid(bz, Ntuple)
         # plot_points( bzg.xyz        ,'full grid')
         plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz ,'mapped grid')
+    # def test_c(self):
+    #     d,r,bz = make_drbz(1,1,1, 2*np.pi/3, 2*np.pi/3, np.pi/3)
+    #     bzg = s.BZGrid(bz, (5,5,5))
+    #     plot_points_with_lines( bzg.mapped_xyz, bz.vertices_xyz, 'rhomb')
 
 
 

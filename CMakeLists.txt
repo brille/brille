@@ -34,6 +34,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
             ${PROJECT_SOURCE_DIR}/src/bz.cpp
             ${PROJECT_SOURCE_DIR}/src/lattice.cpp
+            ${PROJECT_SOURCE_DIR}/src/neighbours.cpp
             ${PROJECT_SOURCE_DIR}/src/pointgroup.cpp
             ${PROJECT_SOURCE_DIR}/src/spg_database.cpp
             ${PROJECT_SOURCE_DIR}/src/symbz.cpp
