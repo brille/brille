@@ -212,6 +212,7 @@ protected:
     // for interpolation purposes, we want to make sure we go one-step beyond
     // the zone boundary in each Q direction:
     for (int i=0; i<3; i++) n[i] += 2;
+    n[3] += 1; // ensure, e.g., that [0,1,10] returns [0,1,2,...,9,10] not [0,1,2,...,9]
     // which means we need to shift the origin of the grid as well by one step
     double z[4];
     for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]/2 -1); // ensure we hit zero, and that N/2 points are on the postive side

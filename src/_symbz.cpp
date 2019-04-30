@@ -169,7 +169,7 @@ PYBIND11_MODULE(_symbz,m){
 		.def_property_readonly("vertices_invA",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
 		.def_property_readonly("faces",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
 		.def_property_readonly("faces_invA",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces());})
+		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
 		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;
@@ -214,7 +214,7 @@ PYBIND11_MODULE(_symbz,m){
 		}, py::arg("Q"))
 		;
 
-	py::class_<BrillouinZoneGrid3> bzg(m,"BZGrid");
+	py::class_<BrillouinZoneGrid3> bzg(m,"BZGridQ");
 	// Initializer (BrillouinZone, [half-]Number_of_steps vector)
 	bzg.def(py::init([](BrillouinZone &b, py::array_t<size_t,py::array::c_style> pyN){
 		py::buffer_info bi = pyN.request();
@@ -318,7 +318,7 @@ PYBIND11_MODULE(_symbz,m){
 		return liout;
 	},py::arg("Q"),py::arg("moveinto")=true);
 
-	py::class_<BrillouinZoneGrid4> bzg4(m,"BZGrid4");
+	py::class_<BrillouinZoneGrid4> bzg4(m,"BZGridQE");
 	// Initializer (BrillouinZone, [half-]Number_of_steps vector)
 	bzg4.def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pySpec, py::array_t<size_t,py::array::c_style> pyN){
 	  py::buffer_info b0 = pySpec.request();
