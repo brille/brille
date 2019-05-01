@@ -2,7 +2,7 @@ function [dlat,rlat] = lattice(varargin)
 % use varargin to define angle units, and whether the parameters describe
 % a direct or reciprocal lattice.
 kdef = struct('degree',true,'radian',false,'direct',true,'reciprocal',false);
-[args,kwds]=parse_arguments(varargin,kdef,{'degree','radian','direct','reciprocal'});
+[args,kwds]=symbz.parse_arguments(varargin,kdef,{'degree','radian','direct','reciprocal'});
 
 assert( numel(args)>0 ,'At least the lattice vector lengths are required to define a lattice.');
 lens = args{1};

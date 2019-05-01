@@ -48,15 +48,21 @@ template<class T> size_t MapGrid3<T>::unsafe_get_map(slong *outmap) const {
 }
 //
 template<class T> size_t MapGrid3<T>::maximum_mapping(const slong *map2check, const size_t num2check) const {
-  size_t maxmap=0;
+  slong maxmap=0;
   for (size_t i=0; i<num2check; ++i) if (map2check[i]>maxmap) maxmap = map2check[i];
-  return maxmap;
+  return (size_t) maxmap; // maxmap (should always be) >=0
 }
 template<class T> size_t MapGrid3<T>::maximum_mapping(const slong *map2check) const {
    return this->maximum_mapping(map2check, this->numel());
+   // size_t maxmap = 0;
+   // for (size_t i=0; i<this->numel(); ++i) if (map2check[i]>maxmap) maxmap=map2check[i];
+   // return maxmap;
 }
 template<class T> size_t MapGrid3<T>::maximum_mapping(void) const {
   return this->maximum_mapping(this->map, this->numel());
+  // size_t maxmap = 0;
+  // for (size_t i=0; i<this->numel(); ++i) if (this->map[i]>maxmap) maxmap=this->map[i];
+  // return maxmap;
 }
 //
 template<class T> size_t MapGrid3<T>::valid_mapping_count(void) const {
@@ -170,6 +176,10 @@ template<class T> size_t MapGrid3<T>::num_data(void) const {
 }
 template<class T> ArrayVector<size_t> MapGrid3<T>::data_shape(void) const {
   return this->shape;
+}
+template<class T> ArrayVector<size_t> MapGrid3<T>::get_N(void) const {
+  ArrayVector<size_t> out(1u,3u, this->N);
+  return out;
 }
 // protected methods:
 template<class T> void MapGrid3<T>::set_size(const size_t *n){

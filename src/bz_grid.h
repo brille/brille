@@ -205,14 +205,13 @@ protected:
     }
     size_t n[4];
     for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] ); // ×2 to ensure we have an even number of steps
-    n[3] = std::ceil( (spec[2]-spec[0])/spec[1] );
+    n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] ); // 2+1-0 to ensure 2 is included
     // account for using ceil:
     for (int i=0; i<3; i++) d[i] = (maxx[i]-minx[i])/n[i];
-    d[3] = (spec[2]-spec[0])/n[3];
+    d[3] = (spec[2]+spec[1]-spec[0])/(n[3]);
     // for interpolation purposes, we want to make sure we go one-step beyond
     // the zone boundary in each Q direction:
     for (int i=0; i<3; i++) n[i] += 2;
-    n[3] += 1; // ensure, e.g., that [0,1,10] returns [0,1,2,...,9,10] not [0,1,2,...,9]
     // which means we need to shift the origin of the grid as well by one step
     double z[4];
     for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]/2 -1); // ensure we hit zero, and that N/2 points are on the postive side
@@ -232,7 +231,7 @@ protected:
       iszero[i] = 0u==in[i];
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
-    n[3] = std::ceil( (spec[2]-spec[0])/spec[1] );
+    n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
@@ -241,7 +240,7 @@ protected:
         if (vxyz.getvalue(i,j) > maxx[j]) maxx[j] = vxyz.getvalue(i,j);
     double d[4];
     for (int i=0; i<3; i++) d[i] = (n[i]<2) ? (iszero[i] ? 0.0 : maxx[i]) : maxx[i]/(n[i]-1);
-    d[3] = (spec[2]-spec[0])/n[3];
+    d[3] = (spec[2]+spec[1]-spec[0])/n[3];
     double z[4];
     for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]-1); // ensure we hit zero, and that N/2 points are on the postive side
     z[3] = spec[0];

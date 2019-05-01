@@ -19,7 +19,7 @@
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
 
-template<typename T> py::array_t<T> av2np(const ArrayVector<T> av){
+template<typename T> py::array_t<T> av2np(const ArrayVector<T>& av){
 	std::vector<ssize_t> shape(2); // ArrayVectors are 2D by default
 	shape[0] = av.size();
 	shape[1] = av.numel();
@@ -28,6 +28,26 @@ template<typename T> py::array_t<T> av2np(const ArrayVector<T> av){
 	for (size_t i =0; i< av.size(); i++)
 		for (size_t j=0; j< av.numel(); j++)
 			rptr[i*av.numel()+j] = av.getvalue(i,j);
+	return np;
+}
+template<typename T> py::array_t<T> av2np_squeeze(const ArrayVector<T>& av){
+	std::vector<ssize_t> shape(1); // assume we'll be able to squeeze.
+	if (av.size()==1u)
+		shape[0] = av.numel();
+	else{
+		if (av.numel()==1u)
+			shape[0] = av.size();
+		else
+			return av2np(av); // no squeezing possible
+	}
+	auto np = py::array_t<T,py::array::c_style>(shape);
+	T *rptr = (T*) np.request().ptr;
+	if (av.size()==1u)
+		for (size_t j=0; j<av.numel(); ++j)
+			rptr[j] = av.getvalue(0,j);
+	else
+		for (size_t i=0; i<av.size(); ++i)
+			rptr[i] = av.getvalue(i,0);
 	return np;
 }
 
@@ -165,11 +185,12 @@ PYBIND11_MODULE(_symbz,m){
 
 	py::class_<BrillouinZone> bz(m,"BrillouinZone");
 	bz.def(py::init<Reciprocal,int>(),py::arg("lattice"),py::arg("search_length")=1)
-	  .def_property_readonly("vertices",    [](BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
-		.def_property_readonly("vertices_invA",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
-		.def_property_readonly("faces",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-		.def_property_readonly("faces_invA",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+	  .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
+	  .def_property_readonly("vertices",    [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
+		.def_property_readonly("vertices_invA",[](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+		.def_property_readonly("faces",    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+		.def_property_readonly("faces_invA",[](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+		.def_property_readonly("faces_per_vertex",    [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
 		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;
@@ -222,7 +243,7 @@ PYBIND11_MODULE(_symbz,m){
 		if (bi.shape[0] < 3) throw std::runtime_error("N must have three elements");
 		BrillouinZoneGrid3 bzg3( b, (size_t*)bi.ptr );
 		return bzg3;
-	}),py::arg("brillouinzone"),py::arg("N"));
+	}),py::arg("brillouinzone"),py::arg("halfN"));
 	// Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
   bzg.def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pyD, const bool& isrlu){
 		py::buffer_info bi = pyD.request();
@@ -230,7 +251,9 @@ PYBIND11_MODULE(_symbz,m){
 		if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
 		return BrillouinZoneGrid3( b, (double*)bi.ptr, isrlu ? 1 : 0 );
 	}),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true);
-	bzg.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid3& bzg3){ return bzg3.get_brillouinzone();} )
+	bzg.def_property_readonly("N",[](const BrillouinZoneGrid3& bzg3){ return av2np_squeeze(bzg3.get_N());})
+	   .def_property_readonly("halfN",[](const BrillouinZoneGrid3& bzg3){ return av2np_squeeze(bzg3.get_N()/2);})
+		 .def_property_readonly("brillouinzone",[](const BrillouinZoneGrid3& bzg3){ return bzg3.get_brillouinzone();} )
 	   .def_property_readonly("rlu",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_hkl());} )
 		 .def_property_readonly("invA",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_xyz());} )
 		 .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_mapped_hkl());} )
@@ -249,7 +272,10 @@ PYBIND11_MODULE(_symbz,m){
 		ArrayVector<size_t> shape(1,ndim);
 		for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
 		int mapExceedsNewData = bzg3.check_map(data);
-		if (mapExceedsNewData) throw std::runtime_error("There are less provided data arrays than unique integers in the mapping.");
+		if (mapExceedsNewData) {
+			std::string msg = "Provided " + std::to_string(data.size()) + " data inputs but expected "+ std::to_string(bzg3.maximum_mapping())+"!";
+			throw std::runtime_error(msg);
+		}
 		bzg3.replace_data(data,shape); // no error, so this will work for sure
 		// return mapExceedsNewData; // let the calling function deal with this?
 	});
@@ -340,15 +366,18 @@ PYBIND11_MODULE(_symbz,m){
 	  if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
 	  return BrillouinZoneGrid4( b, (double*)b0.ptr, (double*)bi.ptr, isrlu ? 1 : 0 );
 	}),py::arg("brillouinzone"),py::arg("spec"),py::arg("step"),py::arg("rlu")=true);
+	bzg4.def_property_readonly("N",    [](const BrillouinZoneGrid4& a){return av2np_squeeze(a.get_N());} )
+			.def_property_readonly("halfN",[](const BrillouinZoneGrid4& a){return av2np_squeeze(a.get_halfN());} )
+			.def_property_readonly("spec", [](const BrillouinZoneGrid4& a){return av2np_squeeze(a.get_spec());} );
 	bzg4.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid4& a){ return a.get_brillouinzone();} )
-	   .def_property_readonly("rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkl());} )
-	   .def_property_readonly("invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyz());} )
-	   .def_property_readonly("mapped_rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkl());} )
-	   .def_property_readonly("mapped_invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyz());} )
-	   .def_property_readonly("rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkle());} )
-	   .def_property_readonly("invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyzw());} )
-	   .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkle());} )
-	   .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyzw());} );
+	    .def_property_readonly("rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkl());} )
+	    .def_property_readonly("invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyz());} )
+	    .def_property_readonly("mapped_rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkl());} )
+	    .def_property_readonly("mapped_invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyz());} )
+	    .def_property_readonly("rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkle());} )
+	    .def_property_readonly("invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyzw());} )
+	    .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkle());} )
+	    .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyzw());} );
 	bzg4.def("fill",[](BrillouinZoneGrid4& a, py::array_t<double,py::array::c_style> pydata){
 	  py::buffer_info bi = pydata.request();
 	  ssize_t ndim = bi.ndim;

@@ -176,6 +176,10 @@ template<class T> size_t MapGrid4<T>::num_data(void) const {
 template<class T> ArrayVector<size_t> MapGrid4<T>::data_shape(void) const {
   return this->shape;
 }
+template<class T> ArrayVector<size_t> MapGrid4<T>::get_N(void) const {
+  ArrayVector<size_t> out(1u,4u, this->N);
+  return out;
+}
 // protected methods:
 template<class T> void MapGrid4<T>::set_size(const size_t *n){
   for (size_t i=0; i<4u; i++) this->N[i] = n[i];

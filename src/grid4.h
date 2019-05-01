@@ -83,6 +83,7 @@ public:
   size_t data_ndim(void) const;
   size_t num_data(void) const;
   ArrayVector<size_t> data_shape(void) const;
+  ArrayVector<size_t> get_N(void) const;
 protected:
   void set_size(const size_t *n);
   void calc_span();
@@ -256,6 +257,18 @@ public:
       // and set that ArrayVector as element i of the output ArrayVector
       out.set( i, (this->data.extract(8u, corners) * weights).sum() );
     }
+    return out;
+  };
+  ArrayVector<size_t> get_halfN(void) const {
+    ArrayVector<size_t> out(1u,3u,this->N); // this is the Q part of N
+    return out/2; // and we want just half of it
+  };
+  ArrayVector<double> get_spec(void) const {
+    double spec[3];
+    spec[0] = this->zero[3];
+    spec[1] = this->step[3];
+    spec[2] = this->zero[3] + this->step[3] * (double)(this->size(3)-1);
+    ArrayVector<double> out(1u,3u,spec);
     return out;
   };
 protected:

@@ -59,7 +59,7 @@ def matfun_ident(Q):
 def setup_grid():
   rlat = s.Reciprocal( (1,1,1), np.array([1,1,1])*np.pi/2 )
   bz = s.BrillouinZone(rlat)
-  bzg = s.BZGrid(bz, N=(2,2,2))
+  bzg = s.BZGridQ(bz, halfN=(2,2,2))
   return bzg
 
 def define_Q_points():

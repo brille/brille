@@ -84,6 +84,7 @@ public:
   size_t data_ndim(void) const;
   size_t num_data(void) const;
   ArrayVector<size_t> data_shape(void) const;
+  ArrayVector<size_t> get_N(void) const;
 protected:
   void set_size(const size_t *n);
   void calc_span();

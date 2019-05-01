@@ -1,6 +1,6 @@
 function plot3(BrillouinZone_or_BZGrid,varargin)
     defs=struct('facecolor','none','facealpha',1,'edgecolor','k','edgealpha',1,'showgrid',true,'fullgrid',false);
-    [~,kwds]=parse_arguments(varargin,defs,{'showgrid','fullgrid'});
+    [~,kwds]=symbz.parse_arguments(varargin,defs,{'showgrid','fullgrid'});
     ph = ishold();
     hold on;
     

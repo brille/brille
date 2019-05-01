@@ -56,13 +56,13 @@ class BrillouinZoneGrid (unittest.TestCase):
     def test_a_init_unit_cube(self):
         d,r,bz = make_drbz(1,1,1)
         with self.assertRaises(RuntimeError):
-            s.BZGrid(bz,4)
+            s.BZGridQ(bz,4)
         with self.assertRaises(RuntimeError):
-            s.BZGrid(bz,[4,3])
+            s.BZGridQ(bz,[4,3])
         with self.assertRaises(RuntimeError):
-            s.BZGrid(bz,[[2,2,2]])
+            s.BZGridQ(bz,[[2,2,2]])
         Ntuple = (2,2,2)
-        bzg = s.BZGrid(bz, Ntuple)
+        bzg = s.BZGridQ(bz, Ntuple)
         hkl = bzg.rlu
         self.assertEqual(hkl.ndim,2)
         self.assertEqual(hkl.shape[0], np.prod(2*Ntuple) )
@@ -91,14 +91,22 @@ class BrillouinZoneGrid (unittest.TestCase):
         print('hexagon plot')
         d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
         Ntuple = (20,20,0)
-        bzg = s.BZGrid(bz, Ntuple)
+        bzg = s.BZGridQ(bz, Ntuple)
         # plot_points( bzg.invA        ,'full grid')
         plot_points_with_lines( bzg.mapped_invA, bz.vertices_invA ,'mapped grid')
     # def test_c(self):
     #     d,r,bz = make_drbz(1,1,1, 2*np.pi/3, 2*np.pi/3, np.pi/3)
     #     bzg = s.BZGrid(bz, (5,5,5))
     #     plot_points_with_lines( bzg.mapped_invA, bz.vertices_invA, 'rhomb')
-
+    def test_d_copying(self):
+        d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
+        dtuple = (0.2,0.2,0.3)
+        bzg0 = s.BZGridQ(bz,dtuple,False)
+        bzg1 = s.BZGridQ( bzg0.brillouinzone, bzg0.halfN)
+        #
+        # and for 4D grids:
+        fd0 = s.BZGridQE(bz, (0.,1.,10.), (2,2,2))
+        fd1 = s.BZGridQE(fd0.brillouinzone, fd0.spec, fd0.halfN)
 
 
 if __name__ == '__main__':
