@@ -99,13 +99,13 @@ protected:
 const double default_zero[3] = {0.,0.,0.};
 const double default_step[3] = {1.,1.,1.};
 
-class InterpolateGrid3: public MapGrid3<double>{
+template<class T> class InterpolateGrid3: public MapGrid3<T>{
   double zero[3];
   double step[3];
 public:
-  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3(n) { this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n) { this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); };
 
 
   void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
@@ -237,15 +237,15 @@ public:
     ret += this->sub2lin(ijk,&lidx);
     return lidx;
   }
-  template<typename R> ArrayVector<double> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
-  template<typename R> ArrayVector<double> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
 
-  template<typename R> ArrayVector<double> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
-    ArrayVector<double> out(this->data.numel(), x.size());
+    ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3];
     int flg, oob;
     ArrayVector<double> weights(1u, 8u);
@@ -310,7 +310,7 @@ protected:
     for (size_t i=0; i<mzp.size(); ++i){
       if (is_valid.getvalue(i)){
         for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        is_valid.insert( is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+        is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
       }
     }
     size_t valid_neighbours = 0;

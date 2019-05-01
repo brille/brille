@@ -98,13 +98,13 @@ protected:
 const double default_zero4[4] = {0.,0.,0.,0.};
 const double default_step4[4] = {1.,1.,1.,1.};
 
-class InterpolateGrid4: public MapGrid4<double>{
+template<class T> class InterpolateGrid4: public MapGrid4<T>{
   double zero[4];
   double step[4];
 public:
-  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4(n) { this->set_zero(z); this->set_step(s); };
-  InterpolateGrid4(const size_t *n, const ArrayVector<double>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<double>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n) { this->set_zero(z); this->set_step(s); };
+  InterpolateGrid4(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); };
 
 
   void set_zero(const double *newzero){ for(int i=0;i<4;i++) this->zero[i] = newzero[i]; };
@@ -227,12 +227,12 @@ public:
     return lidx;
   }
 
-  template<typename R> ArrayVector<double> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=4u)
       throw std::runtime_error("InterpolateGrid4 requires x values which are four-vectors.");
-    ArrayVector<double> out(this->data.numel(), x.size());
+    ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[16], ijk[4];
     int flg, oob;
     ArrayVector<double> weights(1u, 16u);
@@ -305,7 +305,7 @@ protected:
     for (size_t i=0; i<mzp.size(); ++i){
       if (is_valid.getvalue(i)){
         for (size_t j=0; j<4u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        is_valid.insert( is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+        is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
       }
     }
     size_t valid_neighbours = 0;

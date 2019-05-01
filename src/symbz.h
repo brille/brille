@@ -110,10 +110,10 @@ extern "C" {
 
   int symbz_get_bz(const double *lengths, const double *angles, const int search_length, const int *max_sizes, double *verts, int *faces, int *fpv, int *counts);
 
-  size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz);
-  size_t symbz_get_bz_step_grid_hkl(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz);
-  size_t symbz_get_bz_inva_grid_xyz(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz);
-  size_t symbz_get_bz_inva_grid_hkl(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz);
+  // size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz);
+  // size_t symbz_get_bz_step_grid_hkl(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz);
+  // size_t symbz_get_bz_inva_grid_xyz(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz);
+  // size_t symbz_get_bz_inva_grid_hkl(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz);
 
 #ifdef __cplusplus
 }

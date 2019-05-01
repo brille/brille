@@ -214,13 +214,13 @@ PYBIND11_MODULE(_symbz,m){
 		}, py::arg("Q"))
 		;
 
-	py::class_<BrillouinZoneGrid3> bzg(m,"BZGridQ");
+	py::class_<BrillouinZoneGrid3<double>> bzg(m,"BZGridQ");
 	// Initializer (BrillouinZone, [half-]Number_of_steps vector)
 	bzg.def(py::init([](BrillouinZone &b, py::array_t<size_t,py::array::c_style> pyN){
 		py::buffer_info bi = pyN.request();
 		if (bi.ndim != 1) throw std::runtime_error("N must be a 1-D array");
 		if (bi.shape[0] < 3) throw std::runtime_error("N must have three elements");
-		BrillouinZoneGrid3 bzg3( b, (size_t*)bi.ptr );
+		BrillouinZoneGrid3<double> bzg3( b, (size_t*)bi.ptr );
 		return bzg3;
 	}),py::arg("brillouinzone"),py::arg("N"));
 	// Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
@@ -228,14 +228,14 @@ PYBIND11_MODULE(_symbz,m){
 		py::buffer_info bi = pyD.request();
 		if (bi.ndim != 1) throw std::runtime_error("stepsize must be a 1-D array");
 		if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
-		return BrillouinZoneGrid3( b, (double*)bi.ptr, isrlu ? 1 : 0 );
+		return BrillouinZoneGrid3<double>( b, (double*)bi.ptr, isrlu ? 1 : 0 );
 	}),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true);
-	bzg.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid3& bzg3){ return bzg3.get_brillouinzone();} )
-	   .def_property_readonly("rlu",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_hkl());} )
-		 .def_property_readonly("invA",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_grid_xyz());} )
-		 .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_mapped_hkl());} )
-		 .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid3& bzg3){ return av2np(bzg3.get_mapped_xyz());} );
-  bzg.def("fill",[](BrillouinZoneGrid3& bzg3, py::array_t<double,py::array::c_style> pydata){
+	bzg.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid3<double>& bzg3){ return bzg3.get_brillouinzone();} )
+	   .def_property_readonly("rlu",[](const BrillouinZoneGrid3<double>& bzg3){ return av2np(bzg3.get_grid_hkl());} )
+		 .def_property_readonly("invA",[](const BrillouinZoneGrid3<double>& bzg3){ return av2np(bzg3.get_grid_xyz());} )
+		 .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid3<double>& bzg3){ return av2np(bzg3.get_mapped_hkl());} )
+		 .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid3<double>& bzg3){ return av2np(bzg3.get_mapped_xyz());} );
+  bzg.def("fill",[](BrillouinZoneGrid3<double>& bzg3, py::array_t<double,py::array::c_style> pydata){
 		py::buffer_info bi = pydata.request();
 		ssize_t ndim = bi.ndim;
 		/* ndim  assumed interpolation data type  numel /
@@ -254,7 +254,7 @@ PYBIND11_MODULE(_symbz,m){
 		// return mapExceedsNewData; // let the calling function deal with this?
 	});
 	bzg.def_property("map",
-		/*get map*/ [](BrillouinZoneGrid3& bzg3){
+		/*get map*/ [](BrillouinZoneGrid3<double>& bzg3){
 			std::vector<ssize_t> shape(3); // the map is 3D
 			shape[0] = bzg3.size(0);
 			shape[1] = bzg3.size(1);
@@ -266,7 +266,7 @@ PYBIND11_MODULE(_symbz,m){
 				throw std::runtime_error("Something has gone horribly wrong with getting the map.");
 			return np;
 		},
-		/*set map*/ [](BrillouinZoneGrid3& bzg3, py::array_t<slong,py::array::c_style> pymap){
+		/*set map*/ [](BrillouinZoneGrid3<double>& bzg3, py::array_t<slong,py::array::c_style> pymap){
 			py::buffer_info bi = pymap.request();
 			if (bi.ndim != 3) throw std::runtime_error("The mapping must be a 3 dimensional array");
 			for (size_t i=0; i<3; ++i) if (bi.shape[i]!=bzg3.size(i))
@@ -275,7 +275,7 @@ PYBIND11_MODULE(_symbz,m){
 				throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
 			bzg3.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
 	});
-	bzg.def("interpolate_at",[](BrillouinZoneGrid3& bzg3, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
+	bzg.def("interpolate_at",[](BrillouinZoneGrid3<double>& bzg3, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
 		py::buffer_info bi = pyX.request();
 		if ( bi.shape[bi.ndim-1] !=3 )
 			throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -318,7 +318,7 @@ PYBIND11_MODULE(_symbz,m){
 		return liout;
 	},py::arg("Q"),py::arg("moveinto")=true);
 
-	py::class_<BrillouinZoneGrid4> bzg4(m,"BZGridQE");
+	py::class_<BrillouinZoneGrid4<double>> bzg4(m,"BZGridQE");
 	// Initializer (BrillouinZone, [half-]Number_of_steps vector)
 	bzg4.def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pySpec, py::array_t<size_t,py::array::c_style> pyN){
 	  py::buffer_info b0 = pySpec.request();
@@ -327,7 +327,7 @@ PYBIND11_MODULE(_symbz,m){
 	  py::buffer_info bi = pyN.request();
 	  if (bi.ndim != 1) throw std::runtime_error("N must be a 1-D array");
 	  if (bi.shape[0] < 3) throw std::runtime_error("N must have three elements");
-	  BrillouinZoneGrid4 a( b, (double*)b0.ptr, (size_t*)bi.ptr );
+	  BrillouinZoneGrid4<double> a( b, (double*)b0.ptr, (size_t*)bi.ptr );
 	  return a;
 	}),py::arg("brillouinzone"),py::arg("spec"),py::arg("N"));
 	// Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
@@ -338,18 +338,18 @@ PYBIND11_MODULE(_symbz,m){
 	  py::buffer_info bi = pyD.request();
 	  if (bi.ndim != 1) throw std::runtime_error("stepsize must be a 1-D array");
 	  if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
-	  return BrillouinZoneGrid4( b, (double*)b0.ptr, (double*)bi.ptr, isrlu ? 1 : 0 );
+	  return BrillouinZoneGrid4<double>( b, (double*)b0.ptr, (double*)bi.ptr, isrlu ? 1 : 0 );
 	}),py::arg("brillouinzone"),py::arg("spec"),py::arg("step"),py::arg("rlu")=true);
-	bzg4.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid4& a){ return a.get_brillouinzone();} )
-	   .def_property_readonly("rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkl());} )
-	   .def_property_readonly("invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyz());} )
-	   .def_property_readonly("mapped_rlu_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkl());} )
-	   .def_property_readonly("mapped_invA_Q",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyz());} )
-	   .def_property_readonly("rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_hkle());} )
-	   .def_property_readonly("invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_grid_xyzw());} )
-	   .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_hkle());} )
-	   .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid4& a){ return av2np(a.get_mapped_xyzw());} );
-	bzg4.def("fill",[](BrillouinZoneGrid4& a, py::array_t<double,py::array::c_style> pydata){
+	bzg4.def_property_readonly("brillouinzone",[](const BrillouinZoneGrid4<double>& a){ return a.get_brillouinzone();} )
+	   .def_property_readonly("rlu_Q",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_grid_hkl());} )
+	   .def_property_readonly("invA_Q",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_grid_xyz());} )
+	   .def_property_readonly("mapped_rlu_Q",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_mapped_hkl());} )
+	   .def_property_readonly("mapped_invA_Q",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_mapped_xyz());} )
+	   .def_property_readonly("rlu",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_grid_hkle());} )
+	   .def_property_readonly("invA",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_grid_xyzw());} )
+	   .def_property_readonly("mapped_rlu",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_mapped_hkle());} )
+	   .def_property_readonly("mapped_invA",[](const BrillouinZoneGrid4<double>& a){ return av2np(a.get_mapped_xyzw());} );
+	bzg4.def("fill",[](BrillouinZoneGrid4<double>& a, py::array_t<double,py::array::c_style> pydata){
 	  py::buffer_info bi = pydata.request();
 	  ssize_t ndim = bi.ndim;
 	  /* ndim  assumed interpolation data type  numel /
@@ -368,7 +368,7 @@ PYBIND11_MODULE(_symbz,m){
 	  // return mapExceedsNewData; // let the calling function deal with this?
 	});
 	bzg4.def_property("map",
-	  /*get map*/ [](BrillouinZoneGrid4& a){
+	  /*get map*/ [](BrillouinZoneGrid4<double>& a){
 	    std::vector<ssize_t> shape(4); // the map is 4D
 	    for (int i=0; i<4; i++) shape[i] = a.size(i);
 	    auto np = py::array_t<slong,py::array::c_style>(shape);
@@ -378,7 +378,7 @@ PYBIND11_MODULE(_symbz,m){
 	      throw std::runtime_error("Something has gone horribly wrong with getting the map.");
 	    return np;
 	  },
-	  /*set map*/ [](BrillouinZoneGrid4& a, py::array_t<slong,py::array::c_style> pymap){
+	  /*set map*/ [](BrillouinZoneGrid4<double>& a, py::array_t<slong,py::array::c_style> pymap){
 	    py::buffer_info bi = pymap.request();
 	    if (bi.ndim != 4) throw std::runtime_error("The mapping must be a 4 dimensional array");
 	    for (size_t i=0; i<4; ++i) if (bi.shape[i]!=a.size(i))
@@ -387,7 +387,7 @@ PYBIND11_MODULE(_symbz,m){
 	      throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
 	    a.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
 	});
-	bzg.def("interpolate_at",[](BrillouinZoneGrid4& a, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
+	bzg.def("interpolate_at",[](BrillouinZoneGrid4<double>& a, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
 	  py::buffer_info bi = pyX.request();
 	  if ( bi.shape[bi.ndim-1] !=4 )
 	    throw std::runtime_error("Interpolation requires one or more 4-vectors");
