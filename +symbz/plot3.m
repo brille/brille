@@ -5,7 +5,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
     hold on;
     
     bztype = 'py.symbz._symbz.BrillouinZone';
-    bzgtype = 'py.symbz._symbz.BZGrid';
+    bzgtype = 'py.symbz._symbz.BZGridQ';
     if isa(BrillouinZone_or_BZGrid,bztype)
         isgrid = false;
         bz = BrillouinZone_or_BZGrid;
@@ -13,7 +13,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
         isgrid = true;
         bz = BrillouinZone_or_BZGrid.brillouinzone;
     end
-    assert( exist('bz','var')==1, 'The first input must be either a BrillouinZone or BrillouinZoneGrid object');
+    assert( exist('bz','var')==1, 'The first input must be either a BrillouinZone or BZGridQ object');
     
     % pull out MATLAB versions of python numpy arrays
     faces = double(bz.faces_invA)/2;
@@ -53,7 +53,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
         else
             grid_points = double(BrillouinZone_or_BZGrid.mapped_invA);
         end
-        plotpoints3(grid_points);
+        plotpoints3(grid_points,[],[],{'Q_x','Q_y','Q_z'});
     end
     
     view(3)
