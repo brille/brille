@@ -221,7 +221,7 @@ public:
     */
     int tmp, out=0;
     for (int i=0; i<3; i++){
-      tmp = round( (x[i] - this->zero[i])/this->step[i] );
+      tmp = (int)round( (x[i] - this->zero[i])/this->step[i] );
       if (tmp < 0) { tmp = 0; out += 1<<i; }
       if (tmp >= this->size(i) ) { tmp = this->size(i)-1; out += 1<<(3+i); }
       ijk[i] = (size_t)tmp;
@@ -260,8 +260,8 @@ public:
       if (flg || oob) {
         // flg has detailed information of the nearest grid point to ijk deficiencies
         // oob contains the number of corners which are out of bounds.
-        printf("linear_interpolate_at: %d corners are out of bounds!\n",oob);
-        throw std::runtime_error("out of bounds corner(s)");
+        std::string msg = std::to_string(oob)+" corners are out of bounds! " + std::to_string(flg);
+        throw std::runtime_error(msg);
       }
       // now do the actual interpolation:
       // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
@@ -299,13 +299,17 @@ protected:
     ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
     ArrayVector<size_t> ijk(3u,1u);
     this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
-    bool isz[3];
+    bool isz[3], ism[3]; // is the centre index 0 (isz) or the maximum (ism)
     for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
+    for (size_t i=0; i<3u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
     ArrayVector<bool> is_valid(1u,mzp.size());
     for (size_t i=0; i<mzp.size(); ++i){
+      // keep track of if we *can* (or should) add each mzp vector to the centre index
       is_valid.insert(true,i);
-      for (size_t j=0; j<mzp.numel(); ++j)
+      for (size_t j=0; j<mzp.numel(); ++j){
         if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
+        if (ism[j] && mzp.getvalue(i,j)>0 ) is_valid.insert(false,i);
+      }
     }
     ArrayVector<size_t> tmp(3u,1u);
     for (size_t i=0; i<mzp.size(); ++i){

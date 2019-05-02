@@ -56,10 +56,17 @@ def matfun_ident(Q):
     z[i,:,:] = np.diag(Q[i,:])
   return z
 
-def setup_grid():
+def complex_scalar(Q):
+  return (Q[:,0]-Q[:,1])+(Q[:,2]+Q[:,1])*1j
+
+
+def setup_grid(iscomplex=False):
   rlat = s.Reciprocal( (1,1,1), np.array([1,1,1])*np.pi/2 )
   bz = s.BrillouinZone(rlat)
-  bzg = s.BZGridQ(bz, halfN=(2,2,2))
+  if iscomplex:
+    bzg = s.BZGridQcomplex(bz,halfN=(2,2,2))
+  else:
+    bzg = s.BZGridQ(bz, halfN=(2,2,2))
   return bzg
 
 def define_Q_points():
@@ -131,6 +138,14 @@ class Interpolate (unittest.TestCase):
     intres = bzg.interpolate_at(Qi)
     antres = matfun_ident(Qi)
     self.assertTrue(np.isclose(intres,antres).all())
+
+  def test_f_complex_scalar(self):
+    bzg = setup_grid(iscomplex=True)
+    Qi = define_Q_points()
+    bzg.fill( complex_scalar(bzg.mapped_rlu) )
+    intres = bzg.interpolate_at(Qi)
+    antres = complex_scalar(Qi)
+    self.assertTrue( np.isclose(intres,antres).all() )
 
 if __name__ == '__main__':
   unittest.main()

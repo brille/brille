@@ -206,8 +206,36 @@ template<class T> bool MapGrid3<T>::valid_mapping(const size_t i, const size_t j
   return this->valid_mapping( this->sub2lin(i,j,k) );
 }
 template<class T> bool MapGrid3<T>::is_inbounds(const size_t i, const size_t j, const size_t k) const {
+  std::string msg = "index (" + std::to_string(i)
+                        + "," + std::to_string(j)
+                        + "," + std::to_string(k) + ")";
+  if (i >= this->size(0) ) msg += " is out of bounds along axis 0";
+  if (j >= this->size(1) ) msg += " is out of bounds along axis 1";
+  if (k >= this->size(2) ) msg += " is out of bounds along axis 2";
+  if (i<this->size(0) && j<this->size(1) && k<this->size(2)) return true;
+  msg += ": [" + std::to_string(this->size(0))
+         + " " + std::to_string(this->size(1))
+         + " " + std::to_string(this->size(2)) + "]";
+  msg += "/ [" + std::to_string(this->N[0])
+         + " " + std::to_string(this->N[1])
+         + " " + std::to_string(this->N[2]) + "]";
+  throw std::runtime_error(msg);
   return (i<this->size(0) && j<this->size(1) && k<this->size(2));
 }
 template<class T> bool MapGrid3<T>::is_inbounds(const size_t* s) const {
+  std::string msg = "index (" + std::to_string(s[0])
+                        + "," + std::to_string(s[1])
+                        + "," + std::to_string(s[2]) + ")";
+  if (s[0] >= this->size(0) ) msg += " is out of bounds along axis 0";
+  if (s[1] >= this->size(1) ) msg += " is out of bounds along axis 1";
+  if (s[2] >= this->size(2) ) msg += " is out of bounds along axis 2";
+  if (s[0]<this->size(0) && s[1]<this->size(1) && s[2]<this->size(2)) return true;
+  msg += ": [" + std::to_string(this->size(0))
+         + " " + std::to_string(this->size(1))
+         + " " + std::to_string(this->size(2)) + "]";
+  msg += "/ [" + std::to_string(this->N[0])
+      + " " + std::to_string(this->N[1])
+      + " " + std::to_string(this->N[2]) + "]";
+  throw std::runtime_error(msg);
   return (s[0]<this->size(0) && s[1]<this->size(1) && s[2]<this->size(2));
 }

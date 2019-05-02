@@ -12,6 +12,13 @@ TEST_CASE("Testing MapGrid3 instantiation"){
   MapGrid3<double> c(b);
   for (int i=0; i<3; i++) REQUIRE( c.size(i) == n[i] );
 }
+TEST_CASE("Testing BrillouinZoneGrid3 instantiation"){
+  Direct d(3.,3.,3.,PI/2,PI/2,PI/2*3);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  size_t half[3]={2,2,2};
+  BrillouinZoneGrid3<double> bzg(bz,half);
+}
 
 TEST_CASE("Testing BrillouinZoneGrid4 instantiation"){
   Direct d(3.,3.,3.,PI/2,PI/2,PI/2*3);
@@ -19,6 +26,6 @@ TEST_CASE("Testing BrillouinZoneGrid4 instantiation"){
   BrillouinZone bz(r);
   double spec[3]={0.,1.,10.};
   size_t half[3]={2,2,2};
-  BrillouinZoneGrid4 bzg(bz,spec,half);
+  BrillouinZoneGrid4<double> bzg(bz,spec,half);
 
 }
