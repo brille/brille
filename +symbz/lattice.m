@@ -19,8 +19,8 @@ if kwds.degree && ~kwds.radian
     angs = angs / 180 * pi;
 end
 
-pylens = py.numpy.array( lens(1:3) );
-pyangs = py.numpy.array( angs(1:3) );
+pylens =symbz.m2p( lens(1:3) );
+pyangs =symbz.m2p( angs(1:3) );
 
 if kwds.direct && ~kwds.reciprocal
     dlat = py.symbz.Direct(pylens, pyangs);

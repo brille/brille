@@ -100,13 +100,13 @@ protected:
 const double default_zero[3] = {0.,0.,0.};
 const double default_step[3] = {1.,1.,1.};
 
-class InterpolateGrid3: public MapGrid3<double>{
+template<class T> class InterpolateGrid3: public MapGrid3<T>{
   double zero[3];
   double step[3];
 public:
-  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3(n) { this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<double>& av, const double *z=default_zero, const double *s=default_step): MapGrid3(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n) { this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); };
 
 
   void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
@@ -221,7 +221,7 @@ public:
     */
     int tmp, out=0;
     for (int i=0; i<3; i++){
-      tmp = round( (x[i] - this->zero[i])/this->step[i] );
+      tmp = (int)round( (x[i] - this->zero[i])/this->step[i] );
       if (tmp < 0) { tmp = 0; out += 1<<i; }
       if (tmp >= this->size(i) ) { tmp = this->size(i)-1; out += 1<<(3+i); }
       ijk[i] = (size_t)tmp;
@@ -238,15 +238,15 @@ public:
     ret += this->sub2lin(ijk,&lidx);
     return lidx;
   }
-  template<typename R> ArrayVector<double> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
-  template<typename R> ArrayVector<double> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
 
-  template<typename R> ArrayVector<double> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
-    ArrayVector<double> out(this->data.numel(), x.size());
+    ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3];
     int flg, oob;
     ArrayVector<double> weights(1u, 8u);
@@ -260,8 +260,8 @@ public:
       if (flg || oob) {
         // flg has detailed information of the nearest grid point to ijk deficiencies
         // oob contains the number of corners which are out of bounds.
-        printf("linear_interpolate_at: %d corners are out of bounds!\n",oob);
-        throw std::runtime_error("out of bounds corner(s)");
+        std::string msg = std::to_string(oob)+" corners are out of bounds! " + std::to_string(flg);
+        throw std::runtime_error(msg);
       }
       // now do the actual interpolation:
       // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
@@ -299,19 +299,23 @@ protected:
     ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
     ArrayVector<size_t> ijk(3u,1u);
     this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
-    bool isz[3];
+    bool isz[3], ism[3]; // is the centre index 0 (isz) or the maximum (ism)
     for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
+    for (size_t i=0; i<3u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
     ArrayVector<bool> is_valid(1u,mzp.size());
     for (size_t i=0; i<mzp.size(); ++i){
+      // keep track of if we *can* (or should) add each mzp vector to the centre index
       is_valid.insert(true,i);
-      for (size_t j=0; j<mzp.numel(); ++j)
+      for (size_t j=0; j<mzp.numel(); ++j){
         if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
+        if (ism[j] && mzp.getvalue(i,j)>0 ) is_valid.insert(false,i);
+      }
     }
     ArrayVector<size_t> tmp(3u,1u);
     for (size_t i=0; i<mzp.size(); ++i){
       if (is_valid.getvalue(i)){
         for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        is_valid.insert( is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+        is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
       }
     }
     size_t valid_neighbours = 0;

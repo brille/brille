@@ -147,41 +147,41 @@ int symbz_get_bz(const double *lengths, const double *angles, const int search_l
 	return 0;
 }
 
-size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
-	Direct d(lengths,angles);
-	Reciprocal r = d.star();
-	BrillouinZone bz(r,search_length);
-	BrillouinZoneGrid3 bzg(r,multiplicity);
-	size_t num = bzg.get_grid_xyz(maxN, xyz);
-	return num;
-}
-size_t symbz_get_bz_step_grid_hkl(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
-	Direct d(lengths,angles);
-	d.print();
-	Reciprocal r = d.star();
-	r.print();
-	BrillouinZone bz(r,search_length);
-	bz.print();
-	printf("Generate BrillouinZoneGrid3 with multiplicity=[%lu,%lu,%lu] ...",multiplicity[0],multiplicity[1],multiplicity[2]);
-	BrillouinZoneGrid3 bzg(r,multiplicity);
-	printf(" done.\n Copy up to %lu (h,k,l) vectors which form the grid ...",maxN);
-	size_t num = bzg.get_grid_hkl(maxN, xyz);
-	printf(" done.\n Got back %lu grid points.\n",num);
-	return num;
-}
-size_t symbz_get_bz_inva_grid_xyz(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
-	Direct d(lengths,angles);
-	Reciprocal r = d.star();
-	BrillouinZone bz(r,search_length);
-	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
-	size_t num = bzg.get_grid_xyz(maxN, xyz);
-	return num;
-}
-size_t symbz_get_bz_inva_grid_hkl(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
-	Direct d(lengths,angles);
-	Reciprocal r = d.star();
-	BrillouinZone bz(r,search_length);
-	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
-	size_t num = bzg.get_grid_hkl(maxN, xyz);
-	return num;
-}
+// size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
+// 	Direct d(lengths,angles);
+// 	Reciprocal r = d.star();
+// 	BrillouinZone bz(r,search_length);
+// 	BrillouinZoneGrid3 bzg(r,multiplicity);
+// 	size_t num = bzg.get_grid_xyz(maxN, xyz);
+// 	return num;
+// }
+// size_t symbz_get_bz_step_grid_hkl(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
+// 	Direct d(lengths,angles);
+// 	d.print();
+// 	Reciprocal r = d.star();
+// 	r.print();
+// 	BrillouinZone bz(r,search_length);
+// 	bz.print();
+// 	printf("Generate BrillouinZoneGrid3 with multiplicity=[%lu,%lu,%lu] ...",multiplicity[0],multiplicity[1],multiplicity[2]);
+// 	BrillouinZoneGrid3 bzg(r,multiplicity);
+// 	printf(" done.\n Copy up to %lu (h,k,l) vectors which form the grid ...",maxN);
+// 	size_t num = bzg.get_grid_hkl(maxN, xyz);
+// 	printf(" done.\n Got back %lu grid points.\n",num);
+// 	return num;
+// }
+// size_t symbz_get_bz_inva_grid_xyz(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
+// 	Direct d(lengths,angles);
+// 	Reciprocal r = d.star();
+// 	BrillouinZone bz(r,search_length);
+// 	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
+// 	size_t num = bzg.get_grid_xyz(maxN, xyz);
+// 	return num;
+// }
+// size_t symbz_get_bz_inva_grid_hkl(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
+// 	Direct d(lengths,angles);
+// 	Reciprocal r = d.star();
+// 	BrillouinZone bz(r,search_length);
+// 	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
+// 	size_t num = bzg.get_grid_hkl(maxN, xyz);
+// 	return num;
+// }

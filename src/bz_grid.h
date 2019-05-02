@@ -16,7 +16,7 @@
 
 // TODO: Be clever about the map/grid creation (like spglib)?
 
-class BrillouinZoneGrid3: public InterpolateGrid3{
+template<class T> class BrillouinZoneGrid3: public InterpolateGrid3<T>{
 protected:
   BrillouinZone brillouinzone;
 public:
@@ -134,7 +134,7 @@ protected:
   };
 };
 
-class BrillouinZoneGrid4: public InterpolateGrid4{
+template<class T> class BrillouinZoneGrid4: public InterpolateGrid4<T>{
 protected:
   BrillouinZone brillouinzone;
 public:
