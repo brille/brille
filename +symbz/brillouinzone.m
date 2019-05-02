@@ -1,6 +1,6 @@
 function bz = brillouinzone(Reciprocal,varargin)
 kdef = struct('extent',1);
-[args,kwds]=parse_arguments(varargin,kdef);
+[args,kwds]=symbz.parse_arguments(varargin,kdef);
 
 reqInType = 'py.symbz._symbz.Reciprocal';
 assert(isa(Reciprocal,reqInType), ['A single',reqInType,' lattice is required as input']);

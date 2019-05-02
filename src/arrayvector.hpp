@@ -387,11 +387,15 @@ A<S> operator*(const A<T>& a, const R& b){
 	for (size_t i=0; i<out.size(); i++) for(size_t j=0; j<out.numel(); j++) out.insert( a.getvalue(i,j) * b, i,j );
 	return out;
 }
+// template<class T, class R, template<class> class A,
+// 				 typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
+// 				 typename=typename std::enable_if<!std::is_base_of<ArrayVector<R>,R>::value>::type,
+// 				 class S = typename std::common_type<T,R>::type,
+// 				 typename=typename std::enable_if<std::is_floating_point<S>::value>::type >
 template<class T, class R, template<class> class A,
 				 typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
 				 typename=typename std::enable_if<!std::is_base_of<ArrayVector<R>,R>::value>::type,
-				 class S = typename std::common_type<T,R>::type,
-				 typename=typename std::enable_if<std::is_floating_point<S>::value>::type >
+				 class S = typename std::common_type<T,R>::type> // leave off the is_floating_point restriction on S for the special case used by halfN
 A<S> operator/(const A<T>& a, const R& b){
 	A<S> out(a);
 	for (size_t i=0; i<out.size(); i++) for(size_t j=0; j<out.numel(); j++) out.insert( a.getvalue(i,j) / b, i,j );

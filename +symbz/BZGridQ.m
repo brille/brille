@@ -1,6 +1,6 @@
 function bzg = BZGridQ(BrillouinZone,varargin)
 kdef = struct('N',[1,1,1],'d',[0,0,0],'isrlu',true);
-[args,kwds]=parse_arguments(varargin,kdef,{'isrlu'});
+[args,kwds]=symbz.parse_arguments(varargin,kdef,{'isrlu'});
 
 reqInType = 'py.symbz._symbz.BrillouinZone';
 assert(isa(BrillouinZone,reqInType), ['A single',reqInType,' is required as input']);

@@ -1,7 +1,7 @@
 function [dlat,rlat] = spinw2lat(sw,varargin)
 % function [dlat,rlat, positions, types] = sw2lat(sw,varargin)
 kdef = struct('k',NaN*[0;0;0],'nExt',NaN*[1;1;1]);
-[~,kwds]=parse_arguments(varargin,kdef);
+[~,kwds]=symbz.parse_arguments(varargin,kdef);
 
 if all(isnan(kwds.k))
     k = sw.mag_str.k;

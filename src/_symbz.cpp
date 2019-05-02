@@ -2,6 +2,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
 #include <vector>
+#include <complex>
 
 // #include <symbz.h>
 #include "symbz.h"
@@ -145,11 +146,12 @@ PYBIND11_MODULE(_symbz,m){
 
 	py::class_<BrillouinZone> bz(m,"BrillouinZone");
 	bz.def(py::init<Reciprocal,int>(),py::arg("lattice"),py::arg("search_length")=1)
-	  .def_property_readonly("vertices",    [](BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
-		.def_property_readonly("vertices_invA",[](BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
-		.def_property_readonly("faces",    [](BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-		.def_property_readonly("faces_invA",[](BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-		.def_property_readonly("faces_per_vertex",    [](BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+	  .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
+	  .def_property_readonly("vertices",    [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
+		.def_property_readonly("vertices_invA",[](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+		.def_property_readonly("faces",    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+		.def_property_readonly("faces_invA",[](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+		.def_property_readonly("faces_per_vertex",    [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
 		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;
