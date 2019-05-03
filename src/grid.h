@@ -4,6 +4,9 @@
 #include "arrayvector.h"
 #include "latvec.h"
 #include "neighbours.h"
+#include <omp.h>
+
+#include "unsignedtosigned.h"
 
 #ifndef _GRID_H_
 #define _GRID_H_
@@ -219,12 +222,14 @@ public:
       (--+) => 100011 == 35  (+0+) => 101000 == 40  (+-+) => 101010 == 42
       (0++) => 110000 == 48  (-++) => 110001 == 49  (+++) => 111000 == 56
     */
-    int tmp, out=0;
+    int out=0;
+    slong tmp;
     for (int i=0; i<3; i++){
-      tmp = (int)round( (x[i] - this->zero[i])/this->step[i] );
+      tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
       if (tmp < 0) { tmp = 0; out += 1<<i; }
       if (tmp >= this->size(i) ) { tmp = this->size(i)-1; out += 1<<(3+i); }
-      ijk[i] = (size_t)tmp;
+      // ijk[i] = signed_to_unsigned<size_t,slong>(tmp);
+      ijk[i] = (size_t)(tmp);
     }
     return out;
   };
@@ -272,6 +277,50 @@ public:
     }
     return out;
   };
+
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LQVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LDVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
+    if (this->data.size()==0)
+      throw std::runtime_error("The grid must be filled before interpolating!");
+    if (x.numel()!=3u)
+      throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+    ArrayVector<T> out(this->data.numel(), x.size());
+    const ArrayVector<R>* const xptr = &x;
+          ArrayVector<T>* const outptr = &out;
+    const ArrayVector<T>* const datptr = &(this->data);
+    const InterpolateGrid3<T>* const thsptr = this;
+
+    (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
+
+    size_t corners[8], ijk[3];
+    ArrayVector<double> weights(1u, 8u);
+    // some versions of OpenMP require that the for loop variable be signed.
+    slong xsize = unsigned_to_signed<slong,size_t>(x.size());
+    // Compared to single-processor code, there is no out explicit out-of-bounds
+    // error checking here (nearest_index and get_corners_and_weights) both do
+    // internal checks, but we ignore their results.
+    // TODO: consider putting the error check back in within a pragma omp critical block
+
+#pragma omp parallel for firstprivate(corners,ijk,weights,xsize)
+    for (slong si=0; si<xsize; si++){
+      // size_t i = (size_t)(i); // all functions called with i expect an unsigned integer.
+      size_t i = signed_to_unsigned<size_t,slong>(si);
+      // find the closest grid subscripted indices to x[i]
+      thsptr->nearest_index(xptr->datapointer(i), ijk );
+      // determine the linear indices for the 8 grid points surrounding x[i]
+      // plus their linear-interpolation weights.
+      thsptr->get_corners_and_weights(corners,weights.datapointer(0),ijk,xptr->datapointer(i));
+      // now do the actual interpolation:
+      // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
+      // multiply all elements at each corner by the weight for that corner
+      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
+      // and set that ArrayVector as element i of the output ArrayVector
+      outptr->set( i, (datptr->extract(8u, corners) * weights).sum() );
+    }
+    return out;
+  };
+
 protected:
   int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x) const {
     int d[3], oob=0;

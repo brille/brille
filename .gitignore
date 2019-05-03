@@ -31,7 +31,7 @@ nosetests.xml
 # Doc
 .buildinfo
 .doctrees
-*_build
+*build
 
 # autotools
 AUTHORS

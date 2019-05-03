@@ -12,7 +12,8 @@ num = numel(qh);
 numres = num * sum(cellfun(@prod,obj.shape));
 
 % Do the actual interpolation
-allres = symbz.p2m( obj.BZGrid.interpolate_at(iat) );
+pyallres = obj.BZGrid.interpolate_at(iat,true,obj.parallel);
+allres = symbz.p2m( pyallres );
 assert( numel(allres) == numres )
 % and then split-up the interpolated results into the expected outputs
 offsets = cumsum( cat(2, 0, cellfun(@prod,obj.shape)) );

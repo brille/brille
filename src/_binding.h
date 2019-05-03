@@ -3,6 +3,7 @@
 #include <pybind11/complex.h>
 #include <vector>
 #include <complex>
+#include <omp.h>
 
 #include "symbz.h"
 #include "arithmetic.h"
@@ -135,7 +136,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 					throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
 				cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
 		})
-		.def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
+		.def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto, const bool& useparallel, const int& threads){
 			py::buffer_info bi = pyX.request();
 			if ( bi.shape[bi.ndim-1] !=3 )
 				throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -152,7 +153,12 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 					throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
 			}
 			// do the interpolation for each point in qv
-			ArrayVector<T> lires = cobj.linear_interpolate_at(qv);
+			ArrayVector<T> lires;
+			if (useparallel){
+				lires = cobj.parallel_linear_interpolate_at(qv,threads);
+			} else {
+				lires = cobj.linear_interpolate_at(qv);
+			}
 			// and then make sure we return an numpy array of appropriate size:
 			std::vector<ssize_t> outshape;
 			for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -179,7 +185,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 				for (size_t j=0; j< lires.numel(); j++)
 					rptr[i*lires.numel()+j] = lires.getvalue(i,j);
 			return liout;
-		},py::arg("Q"),py::arg("moveinto")=true);
+		},py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
 }
 
 template<class T>
@@ -258,7 +264,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
-    .def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto){
+    .def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto, const bool& useparallel, const int& threads){
       py::buffer_info bi = pyX.request();
       if ( bi.shape[bi.ndim-1] !=4 )
         throw std::runtime_error("Interpolation requires one or more 4-vectors");
@@ -274,11 +280,17 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         bool success = b.moveinto(&Qv,&qv,&tauv);
         if (!success)
           throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
-        // replace the first three elements of qEv with qv.
-        for (size_t i=0; i<npts; ++i) for(size_t j=0; j<3u; ++j) qEv.insert(qv.getvalue(i,j), i,j);
+        // replace the first three elements of qEv with qv in absolute units.
+				ArrayVector<double> qv_invA = qv.get_xyz();
+        for (size_t i=0; i<npts; ++i) for(size_t j=0; j<3u; ++j) qEv.insert(qv_invA.getvalue(i,j), i,j);
       }
       // do the interpolation for each point in qv
-      ArrayVector<T> lires = cobj.linear_interpolate_at(qEv);
+			ArrayVector<T> lires;
+			if (useparallel){
+				lires = cobj.parallel_linear_interpolate_at(qEv,threads);
+			} else {
+				lires = cobj.linear_interpolate_at(qEv);
+			}
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -305,7 +317,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("QE"),py::arg("moveinto")=true);
+    },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
   }
 
 

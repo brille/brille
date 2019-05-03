@@ -3,6 +3,7 @@
 #include <pybind11/complex.h>
 #include <vector>
 #include <complex>
+#include <omp.h>
 
 // #include <symbz.h>
 #include "symbz.h"

@@ -259,6 +259,48 @@ public:
     }
     return out;
   };
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
+    if (this->data.size()==0)
+      throw std::runtime_error("The grid must be filled before interpolating!");
+    if (x.numel()!=4u)
+      throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+    ArrayVector<T> out(this->data.numel(), x.size());
+    const ArrayVector<R>* const xptr = &x;
+          ArrayVector<T>* const outptr = &out;
+    const ArrayVector<T>* const datptr = &(this->data);
+    const InterpolateGrid4<T>* const thsptr = this;
+
+    (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
+
+    size_t corners[16], ijk[4];
+    ArrayVector<double> weights(1u, 16u);
+    // some versions of OpenMP require that the for loop variable be signed.
+    slong xsize = unsigned_to_signed<long,size_t>(x.size());
+    // Compared to single-processor code, there is no out explicit out-of-bounds
+    // error checking here (nearest_index and get_corners_and_weights) both do
+    // internal checks, but we ignore their results.
+    // TODO: consider putting the error check back in within a pragma omp critical block
+
+#pragma omp parallel for firstprivate(corners,ijk,weights,xsize)
+    for (slong si=0; si<xsize; si++){
+      // size_t i = (size_t)(i); // all functions called with i expect an unsigned integer.
+      size_t i = signed_to_unsigned<size_t,slong>(si);
+      // find the closest grid subscripted indices to x[i]
+      thsptr->nearest_index(xptr->datapointer(i), ijk );
+      // determine the linear indices for the 8 grid points surrounding x[i]
+      // plus their linear-interpolation weights.
+      thsptr->get_corners_and_weights(corners,weights.datapointer(0),ijk,xptr->datapointer(i));
+      // now do the actual interpolation:
+      // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
+      // multiply all elements at each corner by the weight for that corner
+      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
+      // and set that ArrayVector as element i of the output ArrayVector
+      outptr->set( i, (datptr->extract(16u, corners) * weights).sum() );
+    }
+    return out;
+  };
+
+
   ArrayVector<size_t> get_halfN(void) const {
     ArrayVector<size_t> out(1u,3u,this->N); // this is the Q part of N
     return out/2; // and we want just half of it

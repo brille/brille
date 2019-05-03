@@ -1,17 +1,15 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(symbz)
 
-if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
-else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-endif()
-
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_C_FLAGS_RELEASE "-Wall -O2")
-set(CMAKE_C_FLAGS_DEBUG "-g -DSPGDEBUG -DSPGWARNING")
+if (MSVC)
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Zi")
+else()
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
+endif()
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
@@ -20,7 +18,18 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(Python_ADDITIONAL_VERSIONS "3")
 find_package(PythonInterp)
 
-include("write_version_info.cmake")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	add_custom_target(write_version_info
+	                  COMMAND python ${CMAKE_SOURCE_DIR}/write_version_info.py ${CMAKE_BINARY_DIR}/version_info.h
+	                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	)
+endif()
+execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/write_version_info.py ${CMAKE_BINARY_DIR}/version_info.h WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_BINARY_DIR})
+execute_process(COMMAND python -c "from write_version_info import print_version_number; print_version_number()"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE SYMBZ_VERSION)
+message("Building for version ${SYMBZ_VERSION}")
 
 # Source code
 include_directories("${PROJECT_SOURCE_DIR}/src")
@@ -43,7 +52,6 @@ if (WIN32)
 else()
 	install(TARGETS symbz_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()
-add_dependencies(symbz_shared write_version_info)
 
 # Static link library
 add_library(symbz_static STATIC ${SOURCES})
@@ -51,7 +59,6 @@ set_property(TARGET symbz_static PROPERTY VERSION ${SYMBZ_VERSION})
 set_property(TARGET symbz_static PROPERTY SOVERSION ${soserial})
 set_property(TARGET symbz_static PROPERTY OUTPUT_NAME symbz)
 install(TARGETS symbz_static ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-add_dependencies(symbz_static write_version_info)
 
 # Header file
 install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
@@ -59,7 +66,13 @@ install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREF
 # Python c++ bindings
 add_subdirectory(lib/pybind11)
 pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
-add_dependencies(_symbz write_version_info)
+
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	add_dependencies(symbz_shared write_version_info)
+	add_dependencies(symbz_static write_version_info)
+	add_dependencies(_symbz write_version_info)
+endif()
 
 # Testing via `make check`
 enable_testing()
@@ -83,3 +96,41 @@ add_executable(test_catch EXCLUDE_FROM_ALL ${TEST_CATCH_SOURCES} ${SOURCES})
 target_include_directories(test_catch PUBLIC "${PROJECT_SOURCE_DIR}/lib") # where catch.hpp is located
 add_dependencies(check test_catch)
 add_test(NAME catch2 COMMAND test_catch)
+
+
+# OpenMP support:
+if( CMAKE_MAJOR_VERSION GREATER 2 AND CMAKE_MINOR_VERSION GREATER 8) # new style available since 3.9
+	find_package(OpenMP)
+else()
+	if(MSVC)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /openmp")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -pthread")
+	endif()
+	if(NOT TARGET OpenMP::OpenMP_CXX)
+	    find_package(Threads REQUIRED)
+	    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+	    set_property(TARGET OpenMP::OpenMP_CXX
+	                 PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
+	    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+	    set_property(TARGET OpenMP::OpenMP_CXX
+	                 PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
+	endif()
+endif()
+if(OpenMP_CXX_FOUND)
+		target_link_libraries(_symbz       PUBLIC OpenMP::OpenMP_CXX)
+		target_link_libraries(test_catch   PUBLIC OpenMP::OpenMP_CXX)
+		target_link_libraries(symbz_static PUBLIC OpenMP::OpenMP_CXX)
+		target_link_libraries(symbz_shared PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+if(MSVC)
+	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")
+		find_package(Matlab)
+		target_link_libraries(_symbz PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
+		set_property(TARGET _symbz APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
+	else()
+	endif()
+else()
+	target_link_libraries(_symbz PUBLIC "-fopenmp")
+endif()

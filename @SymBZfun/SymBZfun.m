@@ -20,10 +20,18 @@ classdef SymBZfun < handle
         nRet = 0
         nInt = 1
         rluNeeded = true
+        parallel = true
     end
     methods
         function newobj = SymBZfun(BZGrid,varargin)
-            kdef = struct('fill',@(x)(1+0*x),'nfill',[],'shape',[],'model','','interpret',@(x)(x),'nret',[],'rlu',true);
+            kdef = struct('fill',@(x)(1+0*x),...
+                          'nfill',[],...
+                          'shape',[],...
+                          'model','',...
+                          'interpret',@(x)(x),...
+                          'nret',[],...
+                          'rlu',true,...
+                          'parallel',true);
             [args,kwds]=symbz.parse_arguments(varargin,kdef,{'rlu'});
             g3type = 'py.symbz._symbz.BZGridQ';  % or py.symbz._symbz.BZGridQcomplex
             g4type = 'py.symbz._symbz.BZGridQE'; % or py.symbz._symbz.BZGridQEcomplex
@@ -94,7 +102,10 @@ classdef SymBZfun < handle
             newobj.nRet = nret;
             newobj.interpreter = interpret;
             
-            newobj.BZGrid=BZGrid;            
+            newobj.BZGrid=BZGrid;
+            if islogical( kwds.parallel)
+                newobj.parallel = kwds.parallel;
+            end
         end
         sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
         QorQE = get_mapped(obj)

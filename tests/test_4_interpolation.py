@@ -60,17 +60,22 @@ def complex_scalar(Q):
   return (Q[:,0]-Q[:,1])+(Q[:,2]+Q[:,1])*1j
 
 
-def setup_grid(iscomplex=False):
+def setup_grid(iscomplex=False,halfN=(2,2,2)):
   rlat = s.Reciprocal( (1,1,1), np.array([1,1,1])*np.pi/2 )
   bz = s.BrillouinZone(rlat)
   if iscomplex:
-    bzg = s.BZGridQcomplex(bz,halfN=(2,2,2))
+    bzg = s.BZGridQcomplex(bz,halfN=halfN)
   else:
-    bzg = s.BZGridQ(bz, halfN=(2,2,2))
+    bzg = s.BZGridQ(bz, halfN=halfN)
   return bzg
 
-def define_Q_points():
-  return np.array( [[0,0,0],[0.1,0,0],[0,0.1,0],[0,0,0.1]],dtype='double')
+def define_Q_points(rand=False,N=10):
+  if rand:
+    # the tests only work if the Q points are already within the first BZ
+    Q = np.random.rand(N,3)-0.5 # (-0.5,0.5)
+  else:
+    Q = np.array( [[0,0,0],[0.1,0,0],[0,0.1,0],[0,0,0.1]],dtype='double')
+  return Q
 
 class Interpolate (unittest.TestCase):
   def test_a_norm(self):
@@ -145,6 +150,18 @@ class Interpolate (unittest.TestCase):
     bzg.fill( complex_scalar(bzg.mapped_rlu) )
     intres = bzg.interpolate_at(Qi)
     antres = complex_scalar(Qi)
+    self.assertTrue( np.isclose(intres,antres).all() )
+
+  def test_g_big_grid(self):
+    bzg = setup_grid(iscomplex=False, halfN=(20,20,20))
+    Qi = define_Q_points(rand=True,N=100000)
+    bzg.fill( matfun_ident(bzg.mapped_rlu) )
+    intres = bzg.interpolate_at(Qi,True,True,10)
+    antres = matfun_ident(Qi)
+    # print("interpolated result:")
+    # print(intres)
+    # print("expected result:")
+    # print(antres)
     self.assertTrue( np.isclose(intres,antres).all() )
 
 if __name__ == '__main__':
