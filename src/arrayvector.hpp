@@ -445,3 +445,70 @@ template<typename T> ArrayVector<T> ArrayVector<T>:: operator -() const {
 	for (size_t i=0; i<(this->numel()*this->size()); i++) out.data[i] = -(this->data[i]);
 	return out;
 }
+
+
+
+template<typename T> ArrayVector<T> accumulate(const ArrayVector<T>& av, const size_t n, const size_t *i) {
+	ArrayVector<T> out(av.numel(),1u);
+	// for (size_t j=0; j<av.numel(); ++j) out.insert(T(0), 0,j);
+	for (size_t j=0; j<n; j++) out += av.extract(i[j]);
+	return out;
+}
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+				 class S = typename std::common_type<T,R>::type
+				 >
+A<S> accumulate(const A<T>& av, const size_t n, const size_t *i, const R *w) {
+	A<S> out(av.numel(),1u);
+	// for (size_t j=0; j<av.numel(); ++j) out.insert(S(0), 0,j);
+	for (size_t j=0; j<n; j++) out += av.extract(i[j]) *w[j];
+	return out;
+}
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+				 class S = typename std::common_type<T,R>::type
+				 >
+void accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, A<S>& out, const size_t j) {
+	if (av.numel() != out.numel()) throw std::runtime_error("source and sink ArrayVectors must have same number of elements");
+	if ( j >= out.size() ) throw std::out_of_range("sink index out of range");
+	for (size_t k=0;k<n;++k) if (i[k]>=av.size()) throw std::out_of_range("source index out of range");
+	unsafe_accumulate_to(av,n,i,w,out,j);
+}
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+				 class S = typename std::common_type<T,R>::type
+				 >
+void unsafe_accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, A<S>& out, const size_t j) {
+	S *outdata = out.datapointer(j);
+	T *avidata;
+	size_t m=av.numel();
+	for (size_t x=0; x<n; ++x){
+		avidata = av.datapointer(i[x]);
+		for (size_t y=0; y<m; ++y)
+			outdata[y] += avidata[y]*w[x];
+	}
+}
+
+
+//
+// template<typename T> ArrayVector<T> extract(const ArrayVector<T>& av, const ArrayVector<size_t>& idx) {
+// 	ArrayVector<T> out(av.numel(),1u);
+// 	if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+// 	// for (size_t j=0; j<av.numel(); ++j) out.insert(T(0), 0,j);
+// 	for (size_t j=0; j<idx.size(); ++j) out += av.extract( idx.getvalue(j) );
+// 	return out;
+// }
+// template<class T, class R, template<class> class A,
+//          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+// 				 class S = typename std::common_type<T,R>::type
+// 				 >
+// A<S> accumulate(const A<T>& av, const A<size_t>& idx, const A<R>& w) {
+// 	A<S> out(av.numel(),1u);
+// 	if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+// 	// for (size_t j=0; j<av.numel(); ++j) out.insert(S(0), 0,j);
+// 	if ( w.numel() == 1u )
+// 		for (size_t j=0; j<idx.size();	j++) out += av.extract(idx.getvalue(j)) * w.getvalue(j);
+// 	else
+// 	 	for (size_t j=0; j<idx.size();	j++) out += av.extract(idx.getvalue(j)) * w[j];
+// 	return out;
+// }

@@ -254,14 +254,16 @@ public:
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3];
     int flg, oob;
-    ArrayVector<double> weights(1u, 8u);
+    double weights[8];
+
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
       // determine the linear indices for the 8 grid points surrounding x[i]
       // plus their linear-interpolation weights.
-      oob = this->get_corners_and_weights(corners,weights.datapointer(0),ijk,x.datapointer(i));
+      oob = this->get_corners_and_weights(corners,weights,ijk,x.datapointer(i));
+
       if (flg || oob) {
         // flg has detailed information of the nearest grid point to ijk deficiencies
         // oob contains the number of corners which are out of bounds.
@@ -273,7 +275,7 @@ public:
       // multiply all elements at each corner by the weight for that corner
       // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
       // and set that ArrayVector as element i of the output ArrayVector
-      out.set( i, (this->data.extract(8u, corners) * weights).sum() );
+      unsafe_accumulate_to(this->data,8u,corners,weights,out,i);
     }
     return out;
   };
@@ -294,7 +296,7 @@ public:
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
 
     size_t corners[8], ijk[3];
-    ArrayVector<double> weights(1u, 8u);
+    double weights[8];
     // some versions of OpenMP require that the for loop variable be signed.
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     // Compared to single-processor code, there is no out explicit out-of-bounds
@@ -310,13 +312,14 @@ public:
       thsptr->nearest_index(xptr->datapointer(i), ijk );
       // determine the linear indices for the 8 grid points surrounding x[i]
       // plus their linear-interpolation weights.
-      thsptr->get_corners_and_weights(corners,weights.datapointer(0),ijk,xptr->datapointer(i));
+      thsptr->get_corners_and_weights(corners,weights,ijk,xptr->datapointer(i));
+
       // now do the actual interpolation:
       // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
       // multiply all elements at each corner by the weight for that corner
       // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
       // and set that ArrayVector as element i of the output ArrayVector
-      outptr->set( i, (datptr->extract(8u, corners) * weights).sum() );
+      unsafe_accumulate_to(*datptr, 8u, corners, weights, *outptr, i);
     }
     return out;
   };

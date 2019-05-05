@@ -6,10 +6,22 @@
 #include "bz_grid.h"
 
 ArrayVector<double> f_of_Q(const ArrayVector<double>& Q){
-  ArrayVector<double> out( 9u, Q.size() );
-  for (size_t i=0; i<Q.size(); ++i){
-    for (size_t j=0; j<9u; ++j) out.insert(0.0, i,j);
-    for (size_t j=0; j<3u; ++j) out.insert( Q.getvalue(i,j), i, j*4u);
+  size_t i,j,n = 40u;
+  ArrayVector<double> out( n, Q.size() );
+  for (i=0; i<Q.size(); ++i){
+    for (j=0; j<n; ++j) out.insert(0.0, i,j);
+    // mode 0
+    out.insert( Q.getvalue(i,0)+Q.getvalue(i,1)+Q.getvalue(i,2), i, 0); // first scalar
+    for (j=0; j<3u; ++j) out.insert( Q.getvalue(i,j), i, 1u+j*4u); // first matrix
+    // mode 1
+    out.insert( Q.getvalue(i,0)+Q.getvalue(i,1)-Q.getvalue(i,2), i, 10u);
+    for (j=0; j<3u; ++j) out.insert( -1.0*Q.getvalue(i,j), i, 11u+j*4u);
+    // mode 2
+    out.insert( Q.getvalue(i,0)-Q.getvalue(i,1)-Q.getvalue(i,2), i, 20u);
+    for (j=0; j<3u; ++j) out.insert( 2.0*Q.getvalue(i,j), i, 21u+j*4u);
+    // mode 3
+    out.insert( -Q.getvalue(i,0)-Q.getvalue(i,1)-Q.getvalue(i,2), i, 30u);
+    for (j=0; j<3u; ++j) out.insert( -2.0*Q.getvalue(i,j), i, 31u+j*4u);
   }
   return out;
 }
@@ -25,7 +37,7 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-0.5,0.5);
 
-  int nQ = 100;
+  int nQ = 10000;
   double* rawQ = new double[nQ*3]();
   for (int i=0; i<nQ; ++i) rawQ[i] = distribution(generator);
   LQVec<double> Q(r,nQ,rawQ);
