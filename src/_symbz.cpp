@@ -153,14 +153,14 @@ PYBIND11_MODULE(_symbz,m){
 		.def_property_readonly("faces",    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
 		.def_property_readonly("faces_invA",[](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
 		.def_property_readonly("faces_per_vertex",    [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
-		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p, double tol){
+		.def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p){
 			py::buffer_info bi = p.request();
 			ssize_t ndim = bi.ndim;
 			if ( bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional points is required");
 			ssize_t npts = 1;
 			if (ndim > 1)	for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
 			LQVec<double> pv( b.get_lattice(), npts, (double*) bi.ptr ); // this is a copy :(
-			ArrayVector<bool> resultv = b.isinside(&pv,tol);
+			ArrayVector<bool> resultv = b.isinside(&pv);
 			std::vector<ssize_t> outshape(ndim>1 ? ndim-1 : 1);
 			if (ndim > 1){
 				for (ssize_t i=0; i<ndim-1; i++) outshape[i] = bi.shape[i];
@@ -171,7 +171,7 @@ PYBIND11_MODULE(_symbz,m){
 			bool *rptr = (bool *) result.request().ptr;
 			for (size_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
 			return result;
-		},py::arg("points"),py::arg("tol")=1e-14)
+		},py::arg("points"))
 		.def("moveinto",[](BrillouinZone &b, py::array_t<double, py::array::c_style> Q){
 			py::buffer_info bi = Q.request();
 			ssize_t ndim=bi.ndim;

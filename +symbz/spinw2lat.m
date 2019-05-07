@@ -1,4 +1,4 @@
-function [dlat,rlat] = spinw2lat(sw,varargin)
+function [dlat,rlat,trnm] = spinw2lat(sw,varargin)
 % function [dlat,rlat, positions, types] = sw2lat(sw,varargin)
 kdef = struct('k',NaN*[0;0;0],'nExt',NaN*[1;1;1]);
 [~,kwds]=symbz.parse_arguments(varargin,kdef);
@@ -26,13 +26,18 @@ if numel(k)==3
             kn(1),kd(1),kn(2),kd(2),kn(3),kd(3),...
             nExt(1),nExt(2),nExt(3))
         nExt = max( kd, nExt);
+        warning('Returning supercell lattice for nExt=(%d,%d,%d)',nExt(1),nExt(2),nExt(3))
     end
 end
 
-lens = sw.lattice.lat_const(:) .* nExt;
-angs = sw.lattice.angle(:);
+% the transformation matrix from units of Q in input lattice to those in
+% the returned lattice (which SpinW expects)
+trnm = diag( cat(1,nExt,1) ); 
 
-[dlat,rlat]=symbz.lattice(lens,angs,'degrees','direct');
+lens = sw.lattice.lat_const(:) .* nExt;
+angs = sw.lattice.angle(:); % SpinW stores angles in radian
+
+[dlat,rlat]=symbz.lattice(lens,angs,'radian','direct');
 
 % positions = sw.atom.r;  %(3,nAtoms)
 % types = sw.atom.idx(:); %(nAtoms,1)

@@ -1,3 +1,6 @@
+#include <type_traits>
+#include <limits>
+
 #include "arrayvector.h"
 #include "lattice.h"
 #include "latvec.h"
@@ -31,20 +34,20 @@ public:
 	ArrayVector<int> get_faces_per_vertex() const;
 	void print() const;
 
-	template<typename T> ArrayVector<bool> isinside(const LQVec<T> *p, const double tol=1e-14);
+	template<typename T> ArrayVector<bool> isinside(const LQVec<T> *p);
 	// template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p, const double tol=1e-14);
 	bool moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int> *tau);
 };
 
 
-bool between_origin_and_plane_xyz(const ArrayVector<double> *p,
-	                                const ArrayVector<double> *v,
-															    const ArrayVector<int> *ijk, const int idx, ArrayVector<double> *inv,
-															    const int store_at=0, const double tol=1e-15);
-bool three_plane_intersection_xyz(const ArrayVector<double> *n,
-	                                const ArrayVector<double> *p,
-															    const int i, const int j, const int k,
-																	ArrayVector<double> *iat, const int idx);
+// bool between_origin_and_plane_xyz(const ArrayVector<double> *p,
+// 	                                const ArrayVector<double> *v,
+// 															    const ArrayVector<int> *ijk, const int idx, ArrayVector<double> *inv,
+// 															    const int store_at=0, const double tol=1e-15);
+// bool three_plane_intersection_xyz(const ArrayVector<double> *n,
+// 	                                const ArrayVector<double> *p,
+// 															    const int i, const int j, const int k,
+// 																	ArrayVector<double> *iat, const int idx);
 
 bool between_origin_and_plane(const LQVec<double> *p,
 	                            const LQVec<double> *v,
@@ -52,7 +55,7 @@ bool between_origin_and_plane(const LQVec<double> *p,
 															const int idx,
 															      LQVec<double> *inv,
 															const int store_at=0,
-															const double tol=1e-15);
+															const double tol=0*1e-15);
 bool three_plane_intersection(const LQVec<double> *n,
 	                            const LQVec<double> *p,
 															const ArrayVector<double> *xyz,

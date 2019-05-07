@@ -119,6 +119,11 @@ public:
 	void print(const size_t i) const;
 	void print(const size_t first, const size_t last, const char *after="\n") const;
 	void printheader(const char* name="ArrayVector") const;
+	// or return it as a string:
+	std::string unsafe_to_string(const size_t first, const size_t last, const std::string &after="\n") const;
+	std::string to_string() const;
+	std::string to_string(const size_t i) const;
+	std::string to_string(const size_t first, const size_t last, const std::string &after="\n") const;
 	// Allow for initializing without knowing how big it needs to be:
 	size_t resize(size_t newsize);
 	// also we sometimes want to create a pointer with known numel and size

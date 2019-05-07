@@ -30,33 +30,9 @@ p = [1,3,2,4];
 SabS = (Sab + permute(Sab,p))/2;
 
 % Normalized scattering wavevector in xyz coordinate system.
-Qnorm = bsxfun(@rdivide,Q,sqrt(sum(Q.^2,2)));
-
-% avoid NaN for Q=0
-NaNidx = find(any( isnan(Qnorm), 2));
-if ~isempty(NaNidx)
-    for i=NaNidx
-        if and(i > 1, i < nQ)
-            j = i-1;
-            k = i+1;
-        elseif i==1
-            j=1;
-            k=2;
-        else
-            j=nQ-1;
-            k=nQ;
-        end
-        if any( any( isnan(Qnorm([j,k],:)) ) )
-            Qnorm(i,:) = [1 0 0];
-        elseif any(isnan(Qnorm(j,:)))
-            Qnorm(i,:) = Qnorm(k,:);
-        elseif any(isnan(Qnorm(k,:)))
-            Qnorm(i,:) = Qnorm(j,:);
-        else
-            Qnorm(i,:) = (Qnorm(j,:)+Qnorm(k,:))/2;
-        end
-    end
-end
+Q2 = sqrt(sum(Q.^2,2));
+Q2(Q2==0) = 1; % avoid dividing by zero for zero-length Q.
+Qnorm = bsxfun(@rdivide,Q,Q2);
 
 Ql = repmat(permute(Qnorm,[1 2 3]),[1 1 3]);
 Qr = repmat(permute(Qnorm,[1 3 2]),[1 3 1]);

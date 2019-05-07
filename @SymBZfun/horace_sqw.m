@@ -76,15 +76,27 @@ inpForm.soft   = {false      false        false};
 warnState = warning('off','sw_readparam:UnreadInput');
 kwds = sw_readparam(inpForm, varargin{:});
 
+% Prune varargin for passing to disp2sqw or horace:
+passon = varargin;
+for key = inpForm.fname
+    keys = find(cellfun(@ischar, passon)); % possible keys in varargin
+    if ~isempty(keys)
+        iskey = cellfun(@(x) contains(key,x), passon(keys));
+        keyloc = keys(iskey);
+        if ~isempty(keyloc)
+            passon = [passon(1:keyloc-1) passon(keyloc+2:end)];
+        end
+    end
+end
+
 
 % Sets the number of spinW model parameters. All others are interpreter pars.
 n_horace_pars = numel(kwds.mat);
 if isempty(n_horace_pars)
     n_horace_pars = 0;
 end
-% fillerinpt = [{pars(1:n_horace_pars)} varargin];
-fillerinpt = {pars(1:n_horace_pars) varargin{:}};
-interpinpt = [{'pars'} {pars((1+n_horace_pars):end)} varargin];
+fillerinpt = [{pars(1:n_horace_pars)} passon];
+interpinpt = [{'pars'} {pars((1+n_horace_pars):end)} passon];
 
 % The object holds one of:
 %   one py.symbz._symbz.BZGridQ[,complex]

@@ -93,6 +93,37 @@ template<typename T> void ArrayVector<T>::printheader(const char* name) const {
 	printf("%s numel %u, size %u\n", name, this->numel(), this->size());
 }
 
+template<typename T> std::string ArrayVector<T>::unsafe_to_string(const size_t first, const size_t last, const std::string &after) const {
+	size_t i,j,b=this->numel();
+	std::string str;
+	for (i=first;i<last;i++){
+		for (j=0;j<b;j++) {
+			str += std::to_string( this->getvalue(i,j) );
+			// if ( str.find_last_not_of('.') ){
+			// 	str.erase ( str.find_last_not_of('0') + 1, std::string::npos );
+			// 	str.erase ( str.find_last_not_of('.') + 1, std::string::npos );
+			// }
+			str += " ";
+		}
+		str += after;
+	}
+	return str;
+}
+template<typename T> std::string ArrayVector<T>::to_string() const {
+	return this->unsafe_to_string(0,this->size(),"\n");
+}
+template<typename T> std::string ArrayVector<T>::to_string(const size_t i) const {
+	return this->unsafe_to_string(i,i+1,"");
+}
+template<typename T> std::string ArrayVector<T>::to_string(const size_t first, const size_t last, const std::string &after) const {
+	if (first<this->size() && last<this->size())
+		return this->unsafe_to_string(first,last+1,after);
+	std::string msg = "Attempted to print elements " + std::to_string(first)
+	                + " to " + std::to_string(last) + " of size()=" + this->size()
+								  + " ArrayVector!";
+  throw std::domain_error(msg);
+}
+
 template<typename T> size_t ArrayVector<T>::resize(size_t newsize){
 	bool std = (newsize*this->numel())>0;
 	T * newdata;

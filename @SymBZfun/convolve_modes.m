@@ -83,7 +83,7 @@ function out = voigt_internal(Emat, center, pars)
           (exp(-Ediff2 ./ (2*sig^2)) ./ (sig*sqrt(2*pi))) .* (1 - lorfrac);
 end
 
-function weight = sho_internal(en, om, sf, pars)
+function weight = sho_internal(en, omega, sf, pars)
 % Calculates weight from SHO model
     gam = 0.1;
     temp = 0;
@@ -91,6 +91,8 @@ function weight = sho_internal(en, om, sf, pars)
     if numel(pars)>0; gam  = pars(1); end
     if numel(pars)>1; temp = pars(2); end
     if numel(pars)>2; amp  = pars(3); end
+    
+    om = real(omega);
     
     nQ = numel(en);
     nM = size(om,2);

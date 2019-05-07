@@ -216,24 +216,53 @@ void BrillouinZone::print() const {
 	printf("BrillouinZone with %d vertices and %d faces\n",this->vertices_count(),this->faces_count());
 }
 
-template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p, const double tol){
+// template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p, const double tol){
+// 	// this BrillouinZone object has already been instantiated, meaning that it
+// 	// knows *which* reciprocal lattice points define it!
+// 	// we just need to check whether the point(s) in p are closer to the origin than the planes which make-up the Brillouin Zone
+// 	ArrayVector<bool> out(1u,p->size());
+// 	ArrayVector<double> inout(1u,p->size());
+// 	LQVec<double> facevecs(this->lattice, (this->faces)/2.0); // this->faces is a) ArrayVector<integer> and b) reciprocal lattice points, and we want their halves
+// 	bool tmp = true;
+// 	LQVec<T> p_i;
+// 	for (size_t i=0; i<p->size(); i++){
+// 		// {p[i] - (hkl)}⋅(hkl) -- positive means p is beyond the plane defined by (hkl)
+// 		// inout = (p->get(i)-facevecs).dot(&facevecs);
+// 		p_i = p->get(i);
+// 		if (p_i.size()!=1u) throw std::runtime_error("error accessing p element");
+// 		inout = dot(facevecs, p_i-facevecs);
+// 		tmp = true;
+// 		for (int j=0; j<facevecs.size(); j++){
+// 			if ( inout.getvalue(j) > tol ) {
+// 				tmp = false;
+// 				break;
+// 			}
+// 		}
+// 		out.insert(tmp,i);
+// 	}
+// 	return out;
+// }
+template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p){
 	// this BrillouinZone object has already been instantiated, meaning that it
 	// knows *which* reciprocal lattice points define it!
 	// we just need to check whether the point(s) in p are closer to the origin than the planes which make-up the Brillouin Zone
 	ArrayVector<bool> out(1u,p->size());
-	ArrayVector<double> inout(1u,p->size());
-	LQVec<double> facevecs(this->lattice, (this->faces)/2.0); // this->faces is a) ArrayVector<integer> and b) reciprocal lattice points, and we want their halves
+	LQVec<double> fv(this->lattice, (this->faces)/2.0); // this->faces is a) ArrayVector<integer> and b) reciprocal lattice points, and we want their halves
 	bool tmp = true;
-	LQVec<T> p_i;
+	ArrayVector<double> fv2 = dot(fv,fv);
+	ArrayVector<double> fvp(1u,fv.size());
+	T vvj, vpj, tol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
 	for (size_t i=0; i<p->size(); i++){
-		// {p[i] - (hkl)}⋅(hkl) -- positive means p is beyond the plane defined by (hkl)
-		// inout = (p->get(i)-facevecs).dot(&facevecs);
-		p_i = p->get(i);
-		if (p_i.size()!=1u) throw std::runtime_error("error accessing p element");
-		inout = dot(facevecs, p_i-facevecs);
+		fvp = dot( fv, p->get(i) );
 		tmp = true;
-		for (int j=0; j<facevecs.size(); j++){
-			if ( inout.getvalue(j) > tol ) {
+		for (int j=0; j<fv.size(); j++){
+			vvj = fv2.getvalue(j);
+			vpj = fvp.getvalue(j);
+			// if fⱼ⋅(pᵢ-fⱼ) is larger than ϵ×fⱼ⋅(pᵢ+fⱼ) then pⱼ is outside of the BrillouinZone
+			if ( (vpj-vvj) > (vpj+vvj)*tol && (vpj-vvj) > tol ){ // both in case vpj+vvj < 1
+				// std::cout << std::to_string(vpj-vvj) << " > " << std::to_string((vpj+vvj)*tol);
+				// std::cout << " and " << std::to_string(tol) << " ==> ";
+				// std::cout <<  p->to_string(i) << " is outside" << std::endl;
 				tmp = false;
 				break;
 			}
@@ -242,6 +271,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> *p
 	}
 	return out;
 }
+
 // template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p, const double tol){
 // 	ArrayVector<bool> out(1u,p.size());
 // 	ArrayVector<double> inout(1u,p.size());
@@ -278,6 +308,7 @@ bool BrillouinZone::moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int
 	LQVec<double> facenrm = facehkl/facelen;
 	LQVec<double> qi;
 	LQVec<int> taui;
+	ArrayVector<double> q_dot_facenrm;
 	ArrayVector<int> Nhkl;
 	int maxat = 0;
 	int maxnm = 0;
@@ -286,17 +317,24 @@ bool BrillouinZone::moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int
 		count = 0;
 		qi = Q->get(i);
 		taui = tau->get(i);
-		while (!allinside.getvalue(i) && count++ < 100*facelen.size()){
-			Nhkl = (dot( qi , facenrm )/facelen).round();
+		while (!allinside.getvalue(i) && count++ < 5*facelen.size()){
+			// std::cout << "Moving q = " << qi.to_string() << std::endl;
+			q_dot_facenrm = dot( qi , facenrm );
+			Nhkl = (q_dot_facenrm/facelen).round();
+			// std::cout << "Nhkl = " << Nhkl.to_string() << std::endl;
 			if ( Nhkl.areallzero() ) {allinside.insert(true,i); break;} // qi is *on* the Brilluoin Zone surface (or inside) so break.
 			maxnm = 0;
 			maxat = 0;
 			for (size_t j=0; j<Nhkl.size(); ++j){
-				if (Nhkl.getvalue(j)>maxnm){
+				if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
 					maxnm = Nhkl.getvalue(j);
 					maxat = j;
 				}
 			}
+			// std::cout << "Of which, the maximum is vector " << std::to_string(maxat);
+			// std::cout << " with value " << facehkl.to_string(maxat) << " " << std::to_string(maxnm);
+			// std::cout << " of which will be removed." << std::endl;
+
 			qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
 			taui += facehkl[maxat] * maxnm; // but add LQVec<int>
 
@@ -304,6 +342,14 @@ bool BrillouinZone::moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int
 		}
 		q->set(i, &qi);
 		tau->set(i, &taui);
+	}
+	if (!allinside.arealltrue()){
+		std::string msg;
+		for (size_t i=0; i<Q->size(); ++i)
+			if (!allinside.getvalue(i))
+				msg += "Q=" + Q->to_string(i) + " is outside of the BrillouinZone "
+				    + " : tau = " + tau->to_string(i) + " , q = " + q->to_string(i) + "\n";
+		throw std::runtime_error(msg);
 	}
 	return allinside.arealltrue(); // return false if any points are still outside of the first Brilluoin Zone
 }
@@ -323,7 +369,7 @@ bool three_plane_intersection(const LQVec<double> *n,                // plane no
 	double detM;
 	detM = matrix_determinant(M);
 	delete[] M;
-	if ( my_abs(detM) > 1e-10 ){
+	if ( my_abs(detM) > 1e-10 ){ // this 1e-10 provides a cutoff for far-from-origin intersections
 		LQVec<double> ni,nj,nk, pi,pj,pk, cij,cjk,cki, tmp;
 		ni=n->get(i);	nj=n->get(j);	nk=n->get(k);
 		pi=p->get(i);	pj=p->get(j);	pk=p->get(k);
@@ -340,7 +386,6 @@ bool three_plane_intersection(const LQVec<double> *n,                // plane no
 	return false;
 }
 
-
 bool between_origin_and_plane(const LQVec<double> *p,
 	                            const LQVec<double> *v,
 															const ArrayVector<int> *ijk,
@@ -348,19 +393,23 @@ bool between_origin_and_plane(const LQVec<double> *p,
 															LQVec<double> *inv,
 															const int store_at,
 															const double tol){
-	if (ijk->numel()!=3u) throw "expected all three vector arrays";
 	// p and v should be the points defining each plane and the vertices of the intersections of three planes
-	ArrayVector<double> inout;
-	// inout = (v->get(idx) - *p).dot(p);
-	inout = dot(v->get(idx) - *p, *p);
+	ArrayVector<double> v_p = dot(v->get(idx),*p), p_p = dot(*p,*p);
 	// we want to skip over the planes which gave us this intersection point
 	size_t i, skip1, skip2, skip3;
 	skip1 = (size_t) ijk->getvalue(idx,0);
 	skip2 = (size_t) ijk->getvalue(idx,1);
 	skip3 = (size_t) ijk->getvalue(idx,2);
-	for (i=0; i < p->size(); i++)
-		if ( !(i==skip1||i==skip2||i==skip3) && inout.getvalue(i) > tol)
-			return false;
+
+	double vpi, ppi, eps = std::numeric_limits<double>::epsilon();
+	for (i=0; i < p->size(); i++){
+		if ( !(i==skip1||i==skip2||i==skip3) ){
+			vpi = v_p.getvalue(i);
+			ppi = p_p.getvalue(i);
+			if ((vpi-ppi) > (vpi+ppi)*eps && (vpi-ppi) > eps && (vpi-ppi) > tol)
+				return false;
+		}
+	}
 	// none of p are closer to the origin than v(i)
 	inv->set(store_at, v->datapointer(idx));
 	return true;
