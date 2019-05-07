@@ -239,3 +239,107 @@ template<class T> bool MapGrid3<T>::is_inbounds(const size_t* s) const {
   // throw std::runtime_error(msg);
   return (s[0]<this->size(0) && s[1]<this->size(1) && s[2]<this->size(2));
 }
+
+
+template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t centre) const {
+  ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
+  ArrayVector<size_t> ijk(3u,1u);
+  this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
+  bool isz[3], ism[3]; // is the centre index 0 (isz) or the maximum (ism)
+  for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
+  for (size_t i=0; i<3u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
+  ArrayVector<bool> is_valid(1u,mzp.size());
+  for (size_t i=0; i<mzp.size(); ++i){
+    // keep track of if we *can* (or should) add each mzp vector to the centre index
+    is_valid.insert(true,i);
+    for (size_t j=0; j<mzp.numel(); ++j){
+      if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
+      if (ism[j] && mzp.getvalue(i,j)>0 ) is_valid.insert(false,i);
+    }
+  }
+  ArrayVector<size_t> tmp(3u,1u);
+  for (size_t i=0; i<mzp.size(); ++i){
+    if (is_valid.getvalue(i)){
+      for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
+      is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+    }
+  }
+  size_t valid_neighbours = 0;
+  for (size_t i=0; i<is_valid.size(); ++i) if (is_valid.getvalue(i)) ++valid_neighbours;
+  ArrayVector<size_t> neighbours(1u,valid_neighbours);
+  int oob = 0;
+  size_t valid_neighbour=0;
+  for (size_t i=0; i<mzp.size(); ++i){
+    if (is_valid.getvalue(i)){
+      // we can't use
+      //    tmp = mzp[i] + ijk;
+      // because the compiler doesn't know what to do with ArrayVector<int> + ArrayVector<size_t>
+      for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
+      oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
+    }
+  }
+  if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
+  return neighbours;
+};
+
+
+template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
+  /*
+    The data contained in the MapGrid3 is often multiple scalars, vectors,
+    matrices, or higher-order tensors. It is often important to identify which
+    elements on neighbouring modes are *most likely* related to enable accurate
+    interpolation between them.
+    This function produces a sorting permutation of the stored values at each
+    point in the mapped grid. The last dimension of the data is interpreted as
+    representing different scalars/vectors/tensors to be sorted.
+  */
+  ArrayVector<size_t> elshape = this->data_shape(); // (n,m,...,nobj) stored at each index of the data ArrayVector
+  size_t span = 1;
+  for(size_t i=0; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
+  size_t nobj = elshape.getvalue(elshape.size()-1);
+  // within each index of the data ArrayVector there are span*nobj entries.
+  // Each object consists of span elements, and we need to skip by span to get to the next one.
+
+  // We will return the permutation of 0:nobj-1 which sorts the objects between neighbouring mapped points.
+  ArrayVector<size_t> perm( nobj, this->data.size() )
+  ArrayVector<bool> hasbeensorted(1u, this->data.size() );
+  for(size_t i=0; i<this->data.size(); ++i) hasbeensorted.insert(false,i);
+
+  bool isvalid, foundneighbour, foundfirst = false;
+  size_t linidx;
+  size_t mapidx;
+  size_t neigmi;
+  ArrayVector<size_t> neighbours;
+
+
+  for(size_t idx=0; idx<this->numel(); ++idx){
+    if (this->valid_mapping(idx)){
+      mapidx = this->map[idx];
+      if (foundfirst){ //the normal part of the loop
+        // look for a neighbouring already-sorted point
+        neighbours = this->get_neighbours(idx);
+        foundneighbour = false;
+        for(size_t j=0; j<neighbours.size(); ++j){
+          if (this->valid_mapping(neighbours.getvalue(j))){
+            neigmi = this->>map[neighbours.getvalue(j)];
+            if (hasbeensorted.getvalue(neigmi)) foundneighbour = true;
+          }
+          if (foundneighbour) break;
+        }
+        if (!foundneighbour) throw std::runtime_error("something has gone wrong in sort_perm. no already-sorted neighbours!");
+        // we have the index into this->data.size() for our current point
+        // *AND* an already-sorted neighbouring point.
+
+        // now *all* we have to do is the actual sorting :/
+
+
+      } else { // the first valid mapping gets arbitrarily assigned permutation
+        for(size_t j=0; j<nobj; ++j) perm.insert(j, mapidx, j);
+        foundfirst = true;
+        hasbeensorted.insert(true,mapidx);
+      }
+    }
+  }
+
+
+}

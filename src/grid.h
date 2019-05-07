@@ -88,6 +88,9 @@ public:
   size_t num_data(void) const;
   ArrayVector<size_t> data_shape(void) const;
   ArrayVector<size_t> get_N(void) const;
+  //
+  ArrayVector<size_t> get_neighbours(const size_t centre) const;
+  ArrayVector<size_t> sort_perm(void) const;
 protected:
   void set_size(const size_t *n);
   void calc_span();
@@ -346,46 +349,6 @@ protected:
     t[0] -= d[0]; oob += this->sub2map(t,c+7u); w[7] = m[0]*m[1]*p[2]; // (001)
 
     return oob;
-  };
-  ArrayVector<size_t> get_neighbours(const size_t centre) const {
-    ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
-    ArrayVector<size_t> ijk(3u,1u);
-    this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
-    bool isz[3], ism[3]; // is the centre index 0 (isz) or the maximum (ism)
-    for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
-    for (size_t i=0; i<3u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
-    ArrayVector<bool> is_valid(1u,mzp.size());
-    for (size_t i=0; i<mzp.size(); ++i){
-      // keep track of if we *can* (or should) add each mzp vector to the centre index
-      is_valid.insert(true,i);
-      for (size_t j=0; j<mzp.numel(); ++j){
-        if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
-        if (ism[j] && mzp.getvalue(i,j)>0 ) is_valid.insert(false,i);
-      }
-    }
-    ArrayVector<size_t> tmp(3u,1u);
-    for (size_t i=0; i<mzp.size(); ++i){
-      if (is_valid.getvalue(i)){
-        for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
-      }
-    }
-    size_t valid_neighbours = 0;
-    for (size_t i=0; i<is_valid.size(); ++i) if (is_valid.getvalue(i)) ++valid_neighbours;
-    ArrayVector<size_t> neighbours(1u,valid_neighbours);
-    int oob = 0;
-    size_t valid_neighbour=0;
-    for (size_t i=0; i<mzp.size(); ++i){
-      if (is_valid.getvalue(i)){
-        // we can't use
-        //    tmp = mzp[i] + ijk;
-        // because the compiler doesn't know what to do with ArrayVector<int> + ArrayVector<size_t>
-        for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
-      }
-    }
-    if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
-    return neighbours;
   };
 };
 
