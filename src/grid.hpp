@@ -301,7 +301,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
   // Each object consists of span elements, and we need to skip by span to get to the next one.
 
   // We will return the permutation of 0:nobj-1 which sorts the objects between neighbouring mapped points.
-  ArrayVector<size_t> perm( nobj, this->data.size() )
+  ArrayVector<size_t> perm( nobj, this->data.size() );
   ArrayVector<bool> hasbeensorted(1u, this->data.size() );
   for(size_t i=0; i<this->data.size(); ++i) hasbeensorted.insert(false,i);
 
@@ -311,6 +311,13 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
   size_t neigmi;
   ArrayVector<size_t> neighbours;
 
+  size_t *mink  = new size_t[nobj]();
+  size_t *neqv  = new size_t[nobj]();
+  T *sumabsdiff = new T[nobj*nobj]();
+  T tmind;
+  size_t tmink;
+  bool anydegenerate = false;
+  bool *unassigned = new bool[nobj*nobj]();
 
   for(size_t idx=0; idx<this->numel(); ++idx){
     if (this->valid_mapping(idx)){
@@ -321,7 +328,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
         foundneighbour = false;
         for(size_t j=0; j<neighbours.size(); ++j){
           if (this->valid_mapping(neighbours.getvalue(j))){
-            neigmi = this->>map[neighbours.getvalue(j)];
+            neigmi = this->map[neighbours.getvalue(j)];
             if (hasbeensorted.getvalue(neigmi)) foundneighbour = true;
           }
           if (foundneighbour) break;
@@ -331,6 +338,74 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
         // *AND* an already-sorted neighbouring point.
 
         // now *all* we have to do is the actual sorting :/
+        for (size_t i=0; i<nobj*nobj; ++i) sumabsdiff[i]=T(0);
+        for (size_t i=0; i<nobj; ++i)
+          for (size_t j=0; j<nobj; ++i)
+            for (size_t k=0; k<span; ++k) sumabsdiff[i*nobj+j] += abs( this->data.getvalue(mapidx, i*span+k) - this->data.getvalue(neigmi, j*span+k) );
+        // we want to select out the minimum index, k, for each i
+        // hopefully only one k will be smallest for each i, and the mapping will be singular
+        anydegenerate = false;
+        for (size_t i=0; i<nobj*nobj; ++i) unassigned[i]=true;
+        size_t count=0, Nunassigned=nobj;
+        do{
+          if (anydegenerate && count++ > Nunassigned) {
+            /* for there to be a degenerate set of sumabsdiff[i,:] either
+            1) there are equal-distance modes on either side
+            or 2) there are degenerate modes in j
+
+            In the first case selecting a j for the other i's should resolve
+            the degeneracy.
+            -- try not picking any at random Nunassigned times
+            In the second case, we can safely pick a j at random.
+            */
+            for (size_t i=0; i<nobj; ++i){
+              if (neqv[i] > 1){
+                T *tmp_sad = new T[neqv[i]-1]();
+                size_t tmp_neq = 0;
+                for (size_t j=mink[i]+1; j<nobj; ++j){ // the first one is guaranteed to be mink[i]
+                  if (unassigned[i*nobj+j] && sumabsdiff[i*nobj+j] == sumabsdiff[i*nobj+mink[i]]){
+                    tmp_sad[tmp_neq] = T(0);
+                    for (size_t k=0; k<span; ++k) tmp_sad[tmp_neq] += abs( this->data.getvalue(neigmi, j*span+k) - this->data.getvalue(neigmi, mink[i]*span+k) );
+                    tmp_neq++;
+                  }
+                }
+                if (tmp_neq > 0){ // tmp_neq+1 equivalent modes at the neighbouring site.
+                  // pick the first one
+                  perm.insert( perm.getvalue(neigmi, mink[i]), mapidx, i);
+                  for (size_t j=0; j<nobj; ++j) unassigned[j*nobj+mink[i]]=false;
+                  Nunassigned -= 1;
+                  neqv[i] = 0;
+                  count = 0;
+                }
+              }
+            }
+          }
+          for (size_t i=0; i<nobj; ++i){
+            tmind=std::numeric_limits<T>::max();
+            for (size_t j=0; j<nobj; ++j){
+              if (unassigned[i*nobj+j]){
+                if (sumabsdiff[i*nobj+j] < tmind){
+                  tmind = sumabsdiff[i*nobj+j];
+                  tmink = j;
+                  neqv[i] = 1;
+                } else {
+                  if (sumabsdiff[i*nobj+j] == tmind) neqv[i]+=1;
+                }
+                mink[i] = tmink;
+              }
+            }
+            if (neqv[i]>1) anydegenerate=true;
+          }
+          // assign any non-degenerate cases:
+          for (size_t i=0; i<nobj; ++i){
+            if (neqv[i] == 1){
+              perm.insert( perm.getvalue(neigmi,mink[i]), mapidx, i );
+              for (size_t j=0; j<nobj; ++j) unassigned[j*nobj+mink[i]] = false;
+              Nunassigned -= 1;
+              neqv[i] = 0;
+            }
+          }
+        } while (anydegenerate);
 
 
       } else { // the first valid mapping gets arbitrarily assigned permutation
@@ -341,5 +416,5 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
     }
   }
 
-
+  return perm;
 }
