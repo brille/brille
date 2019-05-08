@@ -5,8 +5,10 @@
 #include "latvec.h"
 #include "neighbours.h"
 #include <omp.h>
+#include <complex>
 
 #include "unsignedtosigned.h"
+#include "munkres.h"
 
 #ifndef _GRID_H_
 #define _GRID_H_
@@ -350,6 +352,23 @@ protected:
 
     return oob;
   };
+};
+
+// // maybe put this somewhere else:
+// template<class T> bool AsmallerthanB(T &A, T &B){
+//   return (A<B);
+// }
+// template<class R> bool AsmallerthanB<std::complex<R>>(std::complex<R> &A, std::complex<R> &B){
+//   return (std::abs(A) < std::abs(B) )
+// }
+
+template<class T> struct GridDiffTraits{
+  using type = T;
+  constexpr static T max = std::numeric_limits<T>::max();
+};
+template<class T> struct GridDiffTraits<std::complex<T>>{
+  using type = T;
+  constexpr static T max = std::numeric_limits<T>::max();
 };
 
 #include "grid.hpp"

@@ -114,6 +114,12 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 			cobj.replace_data(data,shape); // no error, so this will work for sure
 			// return mapExceedsNewData; // let the calling function deal with this?
 		})
+		.def_property_readonly("sort_perm",[](Class& cobj){
+			printf("Got into the sort_perm binding\n");
+			auto ret = cobj.sort_perm();
+			printf("Called sort_perm ok.");
+			return av2np(ret); 
+		})
 		.def_property("map",
 			/*get map*/ [](Class& cobj){
 				std::vector<ssize_t> shape(3); // the map is 3D

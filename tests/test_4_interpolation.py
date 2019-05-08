@@ -56,6 +56,17 @@ def matfun_ident(Q):
     z[i,:,:] = np.diag(Q[i,:])
   return z
 
+def modefun(Q):
+  sh = Q.shape
+  modes = np.ndarray( (sh[0],sh[1],sh[1],3), dtype=Q.dtype)
+  for i in range(sh[0]):
+    modes[i,   :   ,   :   ,0] = np.diag(Q[i,:])
+    modes[i,   0   ,   :   ,1] =   Q[i,:]
+    modes[i,   :   ,   0   ,2] =  -Q[i,:]
+    # modes[i,sh[1]-1,   :   ,3] = 1-Q[i,:]
+    # modes[i,   :   ,sh[1]-1,4] = 1+Q[i,:]
+  return modes
+
 def complex_scalar(Q):
   return (Q[:,0]-Q[:,1])+(Q[:,2]+Q[:,1])*1j
 
@@ -163,6 +174,13 @@ class Interpolate (unittest.TestCase):
     # print("expected result:")
     # print(antres)
     self.assertTrue( np.isclose(intres,antres).all() )
+
+  def test_h_sorting(self):
+    bzg = setup_grid(iscomplex=False, halfN=(10,10,10))
+    bzg.fill( modefun(bzg.mapped_rlu) )
+    sp = bzg.sort_perm
+    self.assertFalse( (sp==0).all(1).any() ) # no returned sort permutations should be all zeros
+
 
 if __name__ == '__main__':
   unittest.main()

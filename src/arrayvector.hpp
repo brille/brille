@@ -2,12 +2,15 @@
 
 template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
 	T *ptr = nullptr;
-	if (i<this->size() && j<this->numel())
-		ptr = this->data + (i*this->numel() + j);
-	if (!ptr){
-		printf("ArrayVector<T>::datapointer(i=%u,j=%u) but size()=%u, numel()=%u\n",i,j,this->size(),this->numel());
-		throw std::domain_error("attempting to access out of bounds pointer");
+	if (i>=this->size() || j>=this->numel()){
+		std::string msg = "ArrayVector<T>::datapointer(" + std::to_string(i)
+		+ "," + std::to_string(j) +")" + " but size()="
+		+ std::to_string(this->size()) + " and numel()="
+		+ std::to_string(this->numel());
+		throw std::domain_error(msg);
 	}
+	ptr = this->data + (i*this->numel() + j);
+	if (!ptr) throw std::runtime_error("Attempting to access uninitialized datapointer");
 	return ptr;
 }
 
