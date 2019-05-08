@@ -369,6 +369,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
                     tmp_neq++;
                   }
                 }
+                delete[] tmp_sad;
                 if (tmp_neq > 0){ // tmp_neq+1 equivalent modes at the neighbouring site.
                   // pick the first one
                   perm.insert( perm.getvalue(neigmi, mink[i]), mapidx, i);
@@ -380,6 +381,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
               }
             }
           }
+          anydegenerate = false;
           for (size_t i=0; i<nobj; ++i){
             tmind=std::numeric_limits<T>::max();
             for (size_t j=0; j<nobj; ++j){
@@ -415,6 +417,10 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm(void) const {
       }
     }
   }
-
+  delete[] mink;
+  delete[] neqv;
+  delete[] sumabsdiff;
+  delete[] unassigned;
+  
   return perm;
 }
