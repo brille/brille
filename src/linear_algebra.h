@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <limits>
 #include <math.h>
+#include <complex>
 
 const double PI = std::atan(1.0)*4;
 const double PICUBED = PI*PI*PI;
@@ -47,6 +48,9 @@ template<typename T, typename R, typename S, int N=3> void multiply_vector_matri
 // array element-wise addition
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B);
 template<typename T, typename R, typename S, int N=3> void add_matrix(T *C, const R *A, const S *B);
+// array element-wise subtraction
+template<typename T, typename R, typename S, int N, int M> void subtract_arrays(T *C, const R *A, const S *B);
+template<typename T, typename R, typename S, int N> void subtract_matrix(T *C, const R *A, const S *B);
 
 // special casting of floating point values to integers
 // effectively rounds doubles to their nearest integer **not** by truncating. So 0.6=>1 not 0. -1.9=>-2 not -1 (or would it go to -2?)
@@ -84,6 +88,9 @@ template<typename T> T mod1(const T a);
 
 template<typename T, typename R, int N=3> bool is_int_matrix(const T * A, const R tol);
 template<typename R> bool is_int_matrix(const int *, const R);
+
+template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n);
+template<typename T> T frobenius_distance(const std::complex<T>* A, const std::complex<T>* B, const size_t n);
 
 #include "linear_algebra.hpp"
 

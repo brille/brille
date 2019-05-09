@@ -5,10 +5,8 @@ newHash = symbz.DataHash(varargin);
 if ~strcmp(obj.parameterHash, newHash)
     vecs = obj.get_mapped();
     fillwith = cell(1,obj.nFill);
-    [fillwith{:}] = obj.filler{1}(vecs{:},varargin{:});
-    for i=2:obj.nFillers
-        [fillwith{:}] = obj.filler{i}(fillwith{:});
-    end
+    
+    [fillwith{:}] = obj.filler(vecs{:},varargin{:});
     
     % reshape the output(s) if necessary
     num = numel(vecs{1});

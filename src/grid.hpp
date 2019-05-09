@@ -487,12 +487,34 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
     point in the mapped grid. The last dimension of the data is interpreted as
     representing different scalars/vectors/tensors to be sorted.
   */
-  printf("Starting the sort_perm function\n");
-
   ArrayVector<size_t> elshape = this->data_shape(); // (data.size(),m,...,nobj) stored at each index of the data ArrayVector
   size_t span = 1;
-
   for(size_t i=1; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
+  // try to be clever about what we're spanning:
+  bool matspan = false;
+  size_t matsize = 0, matstart=0;
+  if (span < 11u){
+    switch ( (int) span){
+      case 4:  matspan=true; matstart=0u; matsize=2u; break;
+      case 5:  matspan=true; matstart=1u; matsize=2u; break;
+      case 9:  matspan=true; matstart=0u; matsize=3u; break;
+      case 10: matspan=true; matstart=1u; matsize=3u; break;
+    }
+  } else {
+    double spanroot = std::sqrt( (double)span );
+    matspan = (spanroot*spanroot) == (double)span;
+    if (matspan) matsize = (size_t) spanroot;
+    if (!matspan){
+      spanroot = std::sqrt( (double)(span-1) );
+      matspan = (spanroot*spanroot) == (double)(span-1);
+      if (matspan) {
+        matsize = (size_t) spanroot;
+        matstart = 1u;
+      }
+    }
+  }
+
+
   size_t nobj = elshape.getvalue(elshape.size()-1);
   // within each index of the data ArrayVector there are span*nobj entries.
   // Each object consists of span elements, and we need to skip by span to get to the next one.
@@ -510,14 +532,13 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
   typename GridDiffTraits<T>::type gdzero = typename GridDiffTraits<T>::type(0);
   typename GridDiffTraits<T>::type tval = gdzero;
   Munkres<typename GridDiffTraits<T>::type> munkres(nobj);
-  typename GridDiffTraits<T>::type *cost = new typename GridDiffTraits<T>::type[nobj*nobj]();
-  munkres.set_cost_ptr(cost);
 
   bool assigned_ok;
   size_t* assignment = new size_t[nobj]();
 
+  T* Amat = new T[matsize*matsize]();
+  T* Bmat = new T[matsize*matsize]();
   T A, B;
-  printf("Starting the main loop\n");
   for(size_t idx=0; idx<this->numel(); ++idx){
     if (this->valid_mapping(idx)){
       this_idx = this->map[idx];
@@ -547,12 +568,26 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
         for (size_t i=0; i<nobj; ++i)
           for (size_t j=0; j<nobj; ++j){
             tval = gdzero;
-            for (size_t k=0; k<span; ++k) {
-              A = this->data.getvalue(this_idx, i*span+k);
-              B = this->data.getvalue(that_idx, j*span+k);
-              tval += squared_distance(A,B);
+            if (matspan){
+              if (matstart > 0){
+                A = this->data.getvalue(this_idx, i*span);
+                B = this->data.getvalue(that_idx, j*span);
+                tval += squared_distance(A,B);
+              }
+              for (size_t ki=0; ki<matspan; ++ki)
+                for (size_t kj=0; kj<matspan; ++kj){
+                  Amat[ki*matspan+kj] = this->data.getvalue(this_idx, i*span+matstart+ki*matspan+kj);
+                  Bmat[ki*matspan+kj] = this->data.getvalue(that_idx, j*span+matstart+ki*matspan+kj);
+                }
+              tval += frobenius_distance(Amat,Bmat,matspan);
+            } else {
+              for (size_t k=0; k<span; ++k) {
+                A = this->data.getvalue(this_idx, i*span+k);
+                B = this->data.getvalue(that_idx, j*span+k);
+                tval += squared_distance(A,B);
+              }
             }
-            cost[i*nobj+j] = std::sqrt(tval);
+            munkres.get_cost()[i*nobj+j] = std::sqrt(tval);
           }
         // and use the Munkres' algorithm to determine the optimal assignment
         assigned_ok = munkres.get_assignment(assignment);
@@ -562,11 +597,8 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
       }
     }
   }
-  printf("Main loop finished.\n");
   delete[] assignment;
-
-  perm.print();
-
-  printf("Returning the permutations\n");
+  delete[] Amat;
+  delete[] Bmat;
   return perm;
 }

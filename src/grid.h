@@ -6,6 +6,7 @@
 #include "neighbours.h"
 #include <omp.h>
 #include <complex>
+#include <memory>
 
 #include "unsignedtosigned.h"
 #include "munkres.h"

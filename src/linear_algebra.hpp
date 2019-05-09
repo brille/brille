@@ -93,6 +93,9 @@ template<typename T, typename R, typename S, int N> void multiply_vector_matrix(
 // array element-wise addition
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B){ for (int i=0; i<N*M; i++) C[i] = T(A[i]+B[i]); }
 template<typename T, typename R, typename S, int N> void add_matrix(T *C, const R *A, const S *B){ add_arrays<T,R,S,N,N>(C,A,B); }
+// array element-wise subtraction
+template<typename T, typename R, typename S, int N, int M> void subtract_arrays(T *C, const R *A, const S *B){ for (int i=0; i<N*M; i++) C[i] = T(A[i]-B[i]); }
+template<typename T, typename R, typename S, int N> void subtract_matrix(T *C, const R *A, const S *B){ subtract_arrays<T,R,S,N,N>(C,A,B); }
 
 // specialized casting of doubles to ints
 template<typename T,typename R> T my_cast(const R a){ return T(a); }
@@ -183,6 +186,11 @@ template<typename R, int N, int M> void array_transpose(R *D, const R *S){
 	for (int i=0; i<N; ++i) for (int j=0; j<M; ++j)	D[i+j*N] = S[j+i*M];
 }
 template<typename R, int N> void matrix_transpose(R *D, const R *S){ array_transpose<R,N,N>(D,S); }
+//
+template<typename R, int N, int M> void complex_conj_array_transpose(std::complex<R> *D, const std::complex<R> *S){
+	for (int i=0; i<N; ++i) for (int j=0; j<M; ++j)	D[i+j*N] = std::conj(S[j+i*M]);
+}
+template<typename R, int N> void complex_conj_matrix_transpose(std::complex<R> *D, const std::complex<R> *S){ complex_conj_array_transpose<R,N,N>(D,S); }
 // in place transpose:
 template<typename R, int N> void matrix_transpose(R *B){
 	R t;
@@ -228,3 +236,48 @@ template<typename T, typename R, int N> bool is_int_matrix(const T * A, const R 
 	return true;
 }
 template<typename R> bool is_int_matrix(const int *, const R){ return true; }
+
+
+template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n){
+	// A-B
+	T* AmB = safealloc<T>(n*n);
+	for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
+	// (A-B)'
+	T* AmBt = safealloc<T>(n*n);
+	for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j) AmBt[i*n+j] = AmB[i+j*n];
+	// (A-B)x(A-B)'
+	T* mult = safealloc<T>(n*n);
+	for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
+		mult[i*n+j] = T(0);
+		for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmB[k*n+j];
+	}
+	delete[] AmB; delete[] AmBt;
+	// tr( (A-B)x(A-B)')
+	T tr = T(0);
+	for (int i=0; i<n; i++) tr += mult[i*(1+n)];
+	delete[] mult;
+	// sqrt( tr( (A-B)x(A-B)') )
+	return std::sqrt(tr);
+}
+
+template<typename T> T frobenius_distance(const std::complex<T>* A, const std::complex<T>* B, const size_t n){
+	// A-B
+	std::complex<T>* AmB = safealloc<std::complex<T>>(n*n);
+	for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
+	// (A-B)'
+	std::complex<T>* AmBt = safealloc<std::complex<T>>(n*n);
+	for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j) AmBt[i*n+j] = std::conj(AmB[i+j*n]);
+	// (A-B)x(A-B)'
+	std::complex<T>* mult = safealloc<std::complex<T>>(n*n);
+	for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
+		mult[i*n+j] = std::complex<T>(0);
+		for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmB[k*n+j];
+	}
+	delete[] AmB; delete[] AmBt;
+	// tr( (A-B)x(A-B)')
+	std::complex<T> tr = std::complex<T>(0);
+	for (int i=0; i<n; i++) tr += mult[i*(1+n)];
+	delete[] mult;
+	// sqrt( tr( (A-B)x(A-B)') )
+	return std::sqrt(std::real(tr))+std::sqrt(std::imag(tr));
+}

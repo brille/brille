@@ -64,17 +64,7 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   size_t halfN[3] = {10,10,10};
   BrillouinZoneGrid3<double> bzg(bz,halfN);
 
-  ArrayVector<size_t> newshape(1u,4u); // (nQ, 3,3, nModes)
   ArrayVector<double> Qmap = bzg.get_mapped_xyz();
-  newshape.insert( Qmap.size(), 0u );
-  newshape.insert( 3u, 1u );
-  newshape.insert( 3u, 2u );
-  newshape.insert( 4u, 3u );
-  bzg.replace_data( f_of_Q_mats( Qmap ), newshape ); // maybe mapped_hkl instead?
-
-  ArrayVector<size_t> sortperm = bzg.sort_perm();
-
-
   bzg.replace_data( f_of_Q(Qmap) );
 
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
@@ -102,4 +92,21 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
   REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
+}
+
+TEST_CASE("Testing BrillouinZoneGrid3 Sorting","[munkres]"){
+  Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
+  BrillouinZone bz(r);
+  size_t halfN[3] = {10,10,10};
+  BrillouinZoneGrid3<double> bzg(bz,halfN);
+
+  ArrayVector<size_t> newshape(1u,4u); // (nQ, 3,3, nModes)
+  ArrayVector<double> Qmap = bzg.get_mapped_xyz();
+  newshape.insert( Qmap.size(), 0u );
+  newshape.insert( 3u, 1u );
+  newshape.insert( 3u, 2u );
+  newshape.insert( 4u, 3u );
+  bzg.replace_data( f_of_Q_mats( Qmap ), newshape ); // maybe mapped_hkl instead?
+
+  ArrayVector<size_t> sortperm = bzg.sort_perm();
 }

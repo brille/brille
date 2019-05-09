@@ -16,6 +16,7 @@ classdef SymBZfun < handle
     properties (SetAccess = private)
         isQE = false
         nFill = 1
+        nFillers = 1;
         shape = {1}
         nRet = 0
         nInt = 1
@@ -41,22 +42,27 @@ classdef SymBZfun < handle
                 error('A single %s or %s (or their complex variants) is required as input',g3type,g4type);
             end
             
-            fill = kwds.fill;
+            if iscell(kwds.fill)
+                fill = kwds.fill;
+            else
+                fill = {kwds.fill};
+            end
             if numel(args)>0
                 if isa(args{1},'function_handle')
-                    fill = args{1};
+                    fill = args(1);
                 elseif iscell(args{1}) && all( cellfun(@(x)(isa(x,'function_handle')), args{1}) )
-                    fill = args{1}(1);
+                    fill = args{1};
                 end
             end
-            assert(isa(fill,'function_handle'));
+            assert(iscell(fill) && all( cellfun(@(x)(isa(x,'function_handle')), fill) ));
             newobj.filler = fill;
+            newobj.nFillers = length(fill);
             
             % anything that defines 'varargout', including anonymous functions, returns negative nargout
             if ~isempty(kwds.nfill) && isnumeric(kwds.nfill) && isscalar(kwds.nfill)
                 nfill = kwds.nfill;
             else
-                nfill = abs(nargout(fill)); 
+                nfill = abs(nargout(fill{1})); 
             end
             fshape = kwds.shape; % what is the shape of each filler output
             rlu = kwds.rlu; % does the filler function expect Q in rlu or inverse Angstrom?
@@ -66,6 +72,10 @@ classdef SymBZfun < handle
                 switch lower(kwds.model)
                     case 'spinw'
                         nfill = 2;
+                        if newobj.nFillers==1
+                            newobj.filler = [ newobj.filler {@symbz.modesort} ];
+                            newobj.nFillers=2;
+                        end
                         rlu = true;
                         interpret = { @newobj.neutron_spinwave_intensity, @newobj.convolve_modes };
                         nret = [2,1];

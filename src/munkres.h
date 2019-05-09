@@ -1,5 +1,7 @@
 #include <forward_list>
 #include <limits>
+#include <memory>
+#include <vector>
 
 #ifndef __MUNKRES_H_
 #define __MUNKRES_H_
@@ -15,32 +17,34 @@ enum marker {
 template<typename T> class Munkres{
 private:
   size_t N;
-  T* cost;
-  marker* mask;
+  std::vector<T> cost;
+  std::vector<marker> mask;
   int step;
-  int* rowcover;
-  int* colcover;
+  std::vector<int> rowcover;
+  std::vector<int> colcover;
   size_t stored_row;
   size_t stored_col;
   bool finished;
 public:
-  Munkres(const size_t n, const T* cmat=nullptr) : N(n), step(1) {
-    make_cost();
-    make_mask();
-    if (cmat) {
-      for(size_t i=0; i<N*N; ++i) cost[i] = cmat[i];
-      finished = run_assignment();
+  Munkres(size_t n, std::vector<T> cmat = std::vector<T>()) : N(n), step(1), cost(cmat){
+    if (cost.size()<N*N) cost.resize(N*N);
+
+    for (size_t i=0; i<N*N; ++i) mask.push_back(marker::NORMAL);
+    for (size_t i=0; i<N; ++i){
+      rowcover.push_back(0);
+      colcover.push_back(0);
     }
-  }
- ~Munkres(){
-   if (cost) delete[] cost;
-   if (mask) delete[] mask;
-   if (rowcover) delete[] rowcover;
-   if (colcover) delete[] colcover;
+    stored_row = 0;
+    stored_col = 0;
+
+    T sum = 0;
+    for (size_t i=0; i< cost.size(); ++i) sum+=abs(cost[i]);
+    finished= (sum>0) ? run_assignment() : false;
   }
   bool run_assignment(){
     bool done = false, ok = false;
     while (!done) {
+      // show();
       switch (step) {
         case 1: step_one();   break;
         case 2: step_two();   break;
@@ -55,13 +59,8 @@ public:
     step = 1; // reset in case we feel like running this again.
     return ok;
   }
-  T* get_cost_ptr(void){
-    return cost;
-  }
-  void set_cost_ptr(T* newcost){
-    if (newcost && cost) delete[] cost;
-    if (newcost) cost = newcost;
-  }
+  std::vector<T>& get_cost(void){ return cost;}
+  const std::vector<T>& get_cost(void) const { return cost; }
   bool get_assignment(size_t* out){
     if (!finished) finished = run_assignment();
     if (finished){
@@ -71,25 +70,18 @@ public:
     }
     return finished;
   }
-private:
-  void make_cost(void){
-    if (N>0 && !cost) cost = new T[N*N]();
-  }
-  void make_mask(void){
-    if (N>0){
-      mask = new marker[N*N]();
-      for (size_t i=0; i<N*N; ++i) mask[i] = marker::NORMAL;
-
-      rowcover = new int[N]();
-      colcover = new int[N]();
-      for (size_t i=0; i<N; ++i){
-        rowcover[i] = 0;
-        colcover[i] = 0;
-      }
-      stored_row = 0;
-      stored_col = 0;
+  void show(){
+    printf("s=%d\t",step);
+    for (size_t c=0; c<N; ++c) printf("%s\t", colcover[c] ? "X" : "" );
+    printf("\n");
+    for (size_t r=0; r<N; ++r){
+      printf("%s\t", rowcover[r] ? "X" : "");
+      for (size_t c=0; c<N; ++c)
+        printf("%5.2f%s\t", cost[r*N+c], mask[r*N+c]==PRIMED ? "'" : mask[r*N+c]==STARED ? "*" : "");
+      printf("\n");
     }
   }
+private:
   void find_a_zero(long long &row, long long &col){
     row = -1;
     col = -1;
@@ -127,9 +119,10 @@ private:
   void step_two(){
     // Find a zero (Z) in the resulting matrix. If there is no starred zero
     // in its row or column, star Z. Repeat for each element in the matrix.
+    T zero = 0;
     for (size_t r=0; r<N; ++r)
       for (size_t c=0; c<N; ++c)
-        if (cost[r*N+c] == T(0) && rowcover[r]==0 && colcover[r]==0){
+        if (cost[r*N+c] == zero && rowcover[r]==0 && colcover[c]==0){
           mask[r*N+c] = marker::STARED;
           rowcover[r] = 1;
           colcover[c] = 1;
@@ -214,13 +207,13 @@ private:
       }
     }
 
-    marker* maski;
+    size_t idx;
     for (const auto &i : path){
-      maski = mask + i.first*N + i.second;
+      idx = i.first*N + i.second;
       // unstar each starred zero.
-      if (marker::STARED == *maski) *maski = marker::NORMAL;
+      if (marker::STARED == mask[idx]) mask[idx] = marker::NORMAL;
       // star each primed zero.
-      if (marker::PRIMED == *maski) *maski = marker::STARED;
+      if (marker::PRIMED == mask[idx]) mask[idx] = marker::STARED;
     }
     // erase all primes.
     for (size_t i=0; i<N*N; ++i) if (marker::PRIMED==mask[i]) mask[i]==marker::NORMAL;
@@ -236,7 +229,7 @@ private:
     // Add the value found in step 4 to every element of each covered row
     // and subtract it from every element of each uncovered column.
     // Return to step 4 without altering any stars, primes or covered lines.
-    T smallest = std::numeric_limits<T>::max();
+    auto smallest = std::numeric_limits<T>::max();
     for (size_t r=0; r<N; ++r)
       for (size_t c=0; c<N; ++c)
         if (rowcover[r]==0 && colcover[c]==0 && cost[r*N+c] < smallest) smallest=cost[r*N+c];
