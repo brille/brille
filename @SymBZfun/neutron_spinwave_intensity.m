@@ -14,6 +14,9 @@ nQ = numel(qh);
 Q = cat(2,qh,qk,ql);
 if obj.rluNeeded % qh,qk,ql are (or should be) in rlu, but we need absolute
     Bmatrix = double( obj.BZGrid.brillouinzone.lattice.get_B_matrix() );
+    trn = obj.Qtrans(1:3,1:3);
+    Bmatrix = trn*Bmatrix;
+
     Q = permute(mtimesx_mex(Bmatrix,permute(Q,[2,1])),[2,1]); % Q is (nQ,3) but mtimesx needs (3,nQ)
 end
 
@@ -31,17 +34,26 @@ SabS = (Sab + permute(Sab,p))/2;
 
 % Normalized scattering wavevector in xyz coordinate system.
 Q2 = sqrt(sum(Q.^2,2));
+% Calculate the neutron form factor, if requested:
+if obj.formfact && isa(obj.formfactfun,'function_handle')
+    FF = transpose(obj.formfactfun( obj.magneticion, transpose(Q2))).^2; % we really want the form factor squared
+else
+    FF = ones(size(Q2));
+end
+% determine Qhat, efectively ignoring Q=0 points
 Q2(Q2==0) = 1; % avoid dividing by zero for zero-length Q.
-Qnorm = bsxfun(@rdivide,Q,Q2);
+Qhat = bsxfun(@rdivide,Q,Q2);
 
-Ql = repmat(permute(Qnorm,[1 2 3]),[1 1 3]);
-Qr = repmat(permute(Qnorm,[1 3 2]),[1 3 1]);
+    
+
+Qhatl = repmat(permute(Qhat,[1 2 3]),[1 1 3]);
+Qhatr = repmat(permute(Qhat,[1 3 2]),[1 3 1]);
 
 % Perpendicular part of the scattering wavevector. delta(a,b) - hatQa*hatQb
-Qfact = repmat(permute(eye(3),[3 1 2])  ,[nQ,1,1])- Ql.*Qr;
+Qfact = repmat(permute(eye(3),[3 1 2])  ,[nQ,1,1])- Qhatl.*Qhatr;
 Qfact = repmat(permute(Qfact ,[1 2 3 4]),[1 1 1 nMode]);
 
 % Dynamical structure factor for neutron scattering
 % S: nQ x nMode.
-S = permute(sum(sum(Qfact.*SabS,2),3),[1 4 2 3]);
+S = permute(sum(sum(Qfact.*SabS,2),3),[1 4 2 3]) .* repmat(FF,[1,nMode]);
 % end

@@ -1,4 +1,4 @@
-function [dlat,rlat,trnm] = spinw2lat(sw,varargin)
+function [dlat,rlat,P,trnm,latmat,latmat_primitive] = spinw2lat(sw,varargin)
 % function [dlat,rlat, positions, types] = sw2lat(sw,varargin)
 kdef = struct('k',NaN*[0;0;0],'nExt',NaN*[1;1;1]);
 [~,kwds]=symbz.parse_arguments(varargin,kdef);
@@ -32,27 +32,71 @@ end
 
 % the transformation matrix from units of Q in input lattice to those in
 % the returned lattice (which SpinW expects)
-trnm = diag( cat(1,nExt,1) ); 
+trnm = diag( nExt ); 
 
 lens = sw.lattice.lat_const(:) .* nExt;
 angs = sw.lattice.angle(:); % SpinW stores angles in radian
 
+positions = sw.atom.r;  %(3,nAtoms)
+types = sw.atom.idx(:); %(nAtoms,1)
+if any(nExt > 1)
+    ijk = zeros(3, 1, prod(nExt));
+    l=1;
+    for i=1:nExt(1)
+    for j=1:nExt(2)
+    for k=1:nExt(3)
+        ijk(:,l) = [i;j;k];
+        l = l + 1;
+    end
+    end
+    end
+    positions = reshape( bsxfun(@plus,positions,ijk-1), [3, size(positions,2)*prod(nExt)]);
+    positions = bsxfun(@rdivide,positions,nExt);
+    types = repmat(types,[prod(nExt),1]);
+end
+
+% use spglib to determine which centreing this is
+latmat = symbz.latmat(lens,angs,'radian');
+
+dataset = spglib.get_symmetry_dataset(latmat,positions,types);
+ctype = dataset.international(1);
+switch lower(ctype)
+    case 'a'
+        P = [2 0 0; 0 1 -1; 0 1 1]/2;
+    case 'c'
+        P = [1 1 0; -1 1 0; 0 0 2]/2;
+    case 'r'
+        P = [2 -1 -1; 1 1 -2; 1 1 1]/3;
+    case 'i'
+        P = [-1 1 1; 1 -1 1; 1 1 -1]/2;
+    case 'f'
+        P = [0 1 1; 1 0 1; 1 1 0]/2;
+    otherwise
+        P = [1 0 0; 0 1 0; 0 0 1];
+end
+
+latmat_primitive = latmat*P; 
+vap = latmat_primitive(:,1);
+vbp = latmat_primitive(:,2);
+vcp = latmat_primitive(:,3);
+ap = norm(vap);
+bp = norm(vbp);
+cp = norm(vcp);
+alp = acos( dot(vbp/bp, vcp/cp) );
+bep = acos( dot(vcp/cp, vap/ap) );
+gap = acos( dot(vap/ap, vbp/bp) );
+lens = [ap,bp,cp];
+angs = [alp,bep,gap];
+
+trnm = trnm/P;
+
 [dlat,rlat]=symbz.lattice(lens,angs,'radian','direct');
 
-% positions = sw.atom.r;  %(3,nAtoms)
-% types = sw.atom.idx(:); %(nAtoms,1)
-% if any(nExt > 1)
-%     ijk = zeros(3, 1, prod(nExt));
-%     l=1;
-%     for i=1:nExt(1)
-%     for j=1:nExt(2)
-%     for k=1:nExt(3)
-%         ijk(:,l) = [i;j;k];
-%         l = l + 1;
-%     end
-%     end
-%     end
-%     positions = reshape( bsxfun(@plus,positions,ijk-1), [3, size(positions,2)*prod(nExt)]);
-%     positions = bsxfun(@rdivide,positions,nExt);
-%     types = repmat(types,[prod(nExt),1]);
-% end
+
+BoverB=latmatstar(latmat)\P*latmatstar(latmat_primitive);
+
+
+
+
+
+

@@ -5,6 +5,15 @@ iat = cat(2,qh,qk,ql);
 if obj.isQE 
    iat = cat(2,iat,en);
 end
+s2 = size(iat,2);
+trn = obj.Qtrans(1:s2,1:s2);
+if sum(sum(abs(trn - eye(s2))))>0
+    for i = 1:size(iat,1)
+        iat(i,:) = permute( trn* permute(iat(i,:),[2,1]), [2,1]);
+%         iat(i,:) = iat(i,:)/trn;
+    end
+end
+
 % numpy.array as input to the interpolator
 iat = symbz.m2p(iat);
 

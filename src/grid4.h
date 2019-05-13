@@ -303,7 +303,7 @@ public:
 
   ArrayVector<size_t> get_halfN(void) const {
     ArrayVector<size_t> out(1u,3u,this->N); // this is the Q part of N
-    return out/2; // and we want just half of it
+    return (out-1)/2; // and we want just half of it
   };
   ArrayVector<double> get_spec(void) const {
     double spec[3];

@@ -22,9 +22,14 @@ classdef SymBZfun < handle
         nInt = 1
         rluNeeded = true
         parallel = true
+        formfact = false
+        magneticion
+        formfactfun
+        Qscale = eye(4);
+        Qtrans = eye(4);
     end
     methods
-        function newobj = SymBZfun(BZGrid,varargin)
+        function obj = SymBZfun(BZGrid,varargin)
             kdef = struct('fill',@(x)(1+0*x),...
                           'nfill',[],...
                           'shape',[],...
@@ -32,14 +37,45 @@ classdef SymBZfun < handle
                           'interpret',@(x)(x),...
                           'nret',[],...
                           'rlu',true,...
-                          'parallel',true);
+                          'parallel',true,...
+                          'formfact',false,...
+                          'magneticion','',...
+                          'formfactfun',@sw_mff,...
+                          'Qscale',eye(4),...
+                          'Qtrans',eye(4));
             [args,kwds]=symbz.parse_arguments(varargin,kdef,{'rlu'});
             g3type = 'py.symbz._symbz.BZGridQ';  % or py.symbz._symbz.BZGridQcomplex
             g4type = 'py.symbz._symbz.BZGridQE'; % or py.symbz._symbz.BZGridQEcomplex
             if strncmp(class(BZGrid),g4type,length(g4type))
-                newobj.isQE=true;
+                obj.isQE=true;
             elseif ~strncmp(class(BZGrid),g3type,length(g3type))
                 error('A single %s or %s (or their complex variants) is required as input',g3type,g4type);
+            end
+            if islogical( kwds.parallel)
+                obj.parallel = kwds.parallel;
+            end
+            if islogical( kwds.formfact )
+                obj.formfact = kwds.formfact;
+            end
+            if obj.formfact && ~isempty(kwds.magneticion)
+                obj.magneticion = kwds.magneticion;
+            end
+            if obj.formfact && isa(kwds.formfactfun,'function_handle')
+                obj.formfactfun = kwds.formfactfun;
+            end
+            if isnumeric(kwds.Qscale) && ismatrix(kwds.Qscale)
+                if numel(kwds.Qscale)==16
+                    obj.Qscale(:) = kwds.Qscale(:);
+                elseif numel(kwds.Qscale)==9
+                    obj.Qscale([1,2,3,5,6,7,9,10,11])=kwds.Qscale(:);
+                end
+            end
+            if isnumeric(kwds.Qtrans) && ismatrix(kwds.Qtrans)
+                if numel(kwds.Qtrans)==16
+                    obj.Qtrans(:) = kwds.Qtrans(:);
+                elseif numel(kwds.Qtrans)==9
+                    obj.Qtrans([1,2,3,5,6,7,9,10,11])=kwds.Qtrans(:);
+                end
             end
             
             if iscell(kwds.fill)
@@ -55,8 +91,8 @@ classdef SymBZfun < handle
                 end
             end
             assert(iscell(fill) && all( cellfun(@(x)(isa(x,'function_handle')), fill) ));
-            newobj.filler = fill;
-            newobj.nFillers = length(fill);
+            obj.filler = fill;
+            obj.nFillers = length(fill);
             
             % anything that defines 'varargout', including anonymous functions, returns negative nargout
             if ~isempty(kwds.nfill) && isnumeric(kwds.nfill) && isscalar(kwds.nfill)
@@ -72,12 +108,12 @@ classdef SymBZfun < handle
                 switch lower(kwds.model)
                     case 'spinw'
                         nfill = 2;
-                        if newobj.nFillers==1
-                            newobj.filler = [ newobj.filler {@symbz.modesort} ];
-                            newobj.nFillers=2;
+                        if obj.nFillers==1
+                            obj.filler = [ obj.filler {@symbz.modesort} ];
+                            obj.nFillers=2;
                         end
                         rlu = true;
-                        interpret = { @newobj.neutron_spinwave_intensity, @newobj.convolve_modes };
+                        interpret = { @obj.neutron_spinwave_intensity, @obj.convolve_modes };
                         nret = [2,1];
                         fshape = {1,[3,3]};
                 end
@@ -92,7 +128,7 @@ classdef SymBZfun < handle
             end
             assert( all( cellfun(@(x)(isa(x,'function_handle')), interpret) ),...
                 'A single function handle or a cell of function handles is required for the interpreter' );
-            newobj.nInt = numel(interpret);
+            obj.nInt = numel(interpret);
             
             if ~isempty(kwds.nret) && isnumeric(kwds.nret) && numel(kwds.nret)==numel(interpret)
                 nret = kwds.nret;
@@ -106,16 +142,13 @@ classdef SymBZfun < handle
             assert( ~isempty(fshape) && numel(fshape) == nfill, 'We need to know the shape of the filler output(s)' );
             
             assert( nret(end) == 1, 'the last interpreter function should return a scalar!');
-            newobj.nFill = nfill;
-            newobj.shape = fshape;
-            newobj.rluNeeded = rlu;
-            newobj.nRet = nret;
-            newobj.interpreter = interpret;
+            obj.nFill = nfill;
+            obj.shape = fshape;
+            obj.rluNeeded = rlu;
+            obj.nRet = nret;
+            obj.interpreter = interpret;
             
-            newobj.BZGrid=BZGrid;
-            if islogical( kwds.parallel)
-                newobj.parallel = kwds.parallel;
-            end
+            obj.BZGrid=BZGrid;
         end
         sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
         QorQE = get_mapped(obj)

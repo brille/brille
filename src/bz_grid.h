@@ -77,15 +77,14 @@ protected:
       }
     }
     size_t n[3];
-    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] ); // ×2 to ensure we have an even number of steps
+    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] )+1; // ×2 to ensure we have an odd number of steps
     // account for using ceil:
     for (int i=0; i<3; i++) d[i] = (maxx[i]-minx[i])/n[i];
     // for interpolation purposes, we want to make sure we go one-step beyond
     // the zone boundary in each direction:
     for (int i=0; i<3; i++) n[i] += 2;
-    // which means we need to shift the origin of the grid as well by one step
     double z[3];
-    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]/2 -1); // ensure we hit zero, and that N/2 points are on the postive side
+    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]-1)/2; // ensure we hit zero, and that N/2 points are on the postive side
 
     this->resize(n);
     this->set_step(d);
@@ -108,11 +107,11 @@ protected:
       for (size_t j=0; j<3u; j++)
         if (vxyz.getvalue(i,j) > maxx[j]) maxx[j] = vxyz.getvalue(i,j);
     double d[3];
-    for (int i=0; i<3; i++) d[i] = (n[i]<2) ? (iszero[i] ? 0.0 : maxx[i]) : maxx[i]/(n[i]-1);
+    for (int i=0; i<3; i++) d[i] = (n[i]<2) ? (iszero[i] ? 0.0 : maxx[i]) : maxx[i]/n[i];
     double z[3];
-    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]-1); // ensure we hit zero, and that N/2 points are on the postive side
+    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*n[i]; // ensure we hit zero, and that N/2 points are on the postive side
 
-    for (int i=0;i<3;i++) if (!iszero[i]) n[i]*=2; // we actually want 2N unless the input requested zero points, in which case we *need* one
+    for (int i=0;i<3;i++) if (!iszero[i]) n[i]=2*n[i]+1; // we actually want 2N+1 unless the input requested zero points, in which case we *need* one
 
     this->resize(n);
     this->set_step(d);
@@ -120,6 +119,7 @@ protected:
     this->set_map();
     this->truncate_grid_to_brillouin_zone();
   };
+
 
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
@@ -204,7 +204,7 @@ protected:
       }
     }
     size_t n[4];
-    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] ); // ×2 to ensure we have an even number of steps
+    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] )+1; // ×2 to ensure we have an even number of steps
     n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] ); // 2+1-0 to ensure 2 is included
     // account for using ceil:
     for (int i=0; i<3; i++) d[i] = (maxx[i]-minx[i])/n[i];
@@ -214,7 +214,7 @@ protected:
     for (int i=0; i<3; i++) n[i] += 2;
     // which means we need to shift the origin of the grid as well by one step
     double z[4];
-    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]/2 -1); // ensure we hit zero, and that N/2 points are on the postive side
+    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]-1)/2; // ensure we hit zero, and that N/2 points are on the postive side
     z[3] = spec[0]; // and that we dont offset the energy zero
 
     this->resize(n);
@@ -239,13 +239,13 @@ protected:
       for (size_t j=0; j<3u; j++)
         if (vxyz.getvalue(i,j) > maxx[j]) maxx[j] = vxyz.getvalue(i,j);
     double d[4];
-    for (int i=0; i<3; i++) d[i] = (n[i]<2) ? (iszero[i] ? 0.0 : maxx[i]) : maxx[i]/(n[i]-1);
+    for (int i=0; i<3; i++) d[i] = (n[i]<2) ? (iszero[i] ? 0.0 : maxx[i]) : maxx[i]/n[i];
     d[3] = (spec[2]+spec[1]-spec[0])/n[3];
     double z[4];
-    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*(n[i]-1); // ensure we hit zero, and that N/2 points are on the postive side
+    for (int i=0; i<3; i++) z[i] = 0.0 - d[i]*n[i]; // ensure we hit zero, and that N/2 points are on the postive side
     z[3] = spec[0];
 
-    for (int i=0;i<3;i++) if (!iszero[i]) n[i]*=2; // we actually want 2N unless the input requested zero points, in which case we *need* one
+    for (int i=0;i<3;i++) if (!iszero[i]) n[i]=2*n[i]+1; // we actually want 2N+1 unless the input requested zero points, in which case we *need* one
 
     this->resize(n);
     this->set_step(d);

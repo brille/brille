@@ -85,7 +85,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 			return Class( b, (double*)bi.ptr, isrlu ? 1 : 0 );
 		}),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true)
 		.def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
-		   .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze(cobj.get_N()/2);})
+		   .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze((cobj.get_N()-1)/2);})
 			 .def_property_readonly("brillouinzone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
 		   .def_property_readonly("rlu",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
 			 .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
@@ -118,7 +118,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 			printf("Got into the sort_perm binding\n");
 			auto ret = cobj.sort_perm();
 			printf("Called sort_perm ok.");
-			return av2np(ret); 
+			return av2np(ret);
 		})
 		.def_property("map",
 			/*get map*/ [](Class& cobj){

@@ -355,14 +355,6 @@ protected:
   };
 };
 
-// // maybe put this somewhere else:
-// template<class T> bool AsmallerthanB(T &A, T &B){
-//   return (A<B);
-// }
-// template<class R> bool AsmallerthanB<std::complex<R>>(std::complex<R> &A, std::complex<R> &B){
-//   return (std::abs(A) < std::abs(B) )
-// }
-
 template<class T> struct GridDiffTraits{
   using type = T;
   constexpr static T max = std::numeric_limits<T>::max();
