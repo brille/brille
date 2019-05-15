@@ -1,3 +1,6 @@
+#ifndef _BZ_CLASS_H_
+#define _BZ_CLASS_H_
+
 #include <type_traits>
 #include <limits>
 
@@ -5,9 +8,8 @@
 #include "lattice.h"
 #include "latvec.h"
 #include "neighbours.h"
-
-#ifndef _BZ_CLASS_H_
-#define _BZ_CLASS_H_
+#include "primitive.h"
+#include "primitive_transforms.h"
 
 class BrillouinZone {
 	Reciprocal lattice;
@@ -18,7 +20,7 @@ class BrillouinZone {
 	ArrayVector<int> faces;            // the reciprocal lattice points defining the faces -- twice the *actual* face vectors
 	ArrayVector<int> faces_per_vertex;
 public:
-	BrillouinZone(Reciprocal lat, bool toprim=false, int extent=1): outerlattice(lat) {
+	BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1): outerlattice(lat) {
 		lattice = toprim ? lat.primitive() : lat;
 		this->determine_everything(extent);
 	}
@@ -29,12 +31,15 @@ public:
 	// void determine_everything_xyz(const int extent=1);
 	size_t vertices_count() const { return vertices.size();};
 	size_t faces_count() const { return faces.size();};
-	size_t get_vertices_bare        (const size_t max, double *out) const;
-	size_t get_faces_bare           (const size_t max, int *out) const ;
-	size_t get_faces_per_vertex_bare(const size_t max, int *out) const;
-	const Reciprocal get_lattice() const { return this->lattice;};
+	// size_t get_vertices_bare        (const size_t max, double *out) const;
+	// size_t get_faces_bare           (const size_t max, int *out) const ;
+	// size_t get_faces_per_vertex_bare(const size_t max, int *out) const;
+	const Reciprocal get_lattice() const { return this->outerlattice;};
+	const Reciprocal get_primitive_lattice() const { return this->lattice;};
 	LQVec<double>    get_vertices() const;
 	LQVec<int>       get_faces() const ;
+	LQVec<double>    get_primitive_vertices() const;
+	LQVec<int>       get_primitive_faces() const ;
 	ArrayVector<int> get_faces_per_vertex() const;
 	void print() const;
 	bool isprimitive(void) const {return !(lattice.issame(outerlattice));};

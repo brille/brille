@@ -289,11 +289,14 @@ void Reciprocal::print(){
 Direct Direct::primitive(void) const{
 	double plm[9], lm[9];
 	SpacegroupType spgt = spgdb_get_spacegroup_type(this->hall);
-	this->get_lattice_matrix(lm);
 	PrimitiveTransform P(spgt.centering);
-	std::array<double,9> Parray = P.get_to_primitive();
-	multiply_matrix_matrix<double,double,double,3>(plm,lm,Parray.data());
-	return Direct(plm);
+	if (P.does_anything()){
+		this->get_lattice_matrix(lm);
+		std::array<double,9> Parray = P.get_to_primitive();
+		multiply_matrix_matrix<double,double,double,3>(plm,lm,Parray.data());
+		return Direct(plm);
+	}
+	return *this;
 }
 Reciprocal Reciprocal::primitive(void) const{
 	return this->star().primitive().star();

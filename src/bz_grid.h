@@ -29,7 +29,7 @@ public:
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
+    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl+3*i, fromxyz, xyz.datapointer(i));
     return xyz.size();
   };
@@ -38,7 +38,7 @@ public:
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
+    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
@@ -48,7 +48,7 @@ public:
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
+    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
@@ -61,13 +61,11 @@ protected:
       LQVec<int> ei(this->brillouinzone.get_lattice(),1u);
       for (int i=0;i<3;i++){
         for (int j=0;j<3;j++) ei.insert(i==j?1:0,0,j);
-        // ei.norm() == ArrayVector<double>(1u,1u) --> .getvalue(0) returns its only element
-        // d[i] *= ei.norm().getvalue(0);
         d[i] *= norm(ei).getvalue(0);
       }
     }
     // d is "guaranteed" to now be in units of inverse angstrom.
-    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
     double minx[3], maxx[3];
     for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
@@ -100,7 +98,7 @@ protected:
       iszero[i] = 0u==in[i];
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
-    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
     for (size_t i=0; i<vxyz.size(); i++)
@@ -147,7 +145,7 @@ public:
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
+    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
@@ -166,7 +164,7 @@ public:
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) printf("transform matrix toxyz has zero determinant?!\n");
+    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
@@ -194,7 +192,7 @@ protected:
       }
     }
     // d is "guaranteed" to now be in units of inverse angstrom (and meV).
-    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
     double minx[3], maxx[3];
     for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
@@ -232,7 +230,7 @@ protected:
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
     n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
-    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
     for (size_t i=0; i<vxyz.size(); i++)

@@ -11,6 +11,7 @@
 #include "linear_algebra.h"
 #include "safealloc.h"
 
+
 class LatVec{}; // base class to identify both LDVec and LQVec
 template<typename T> class LDVec;
 template<typename T> class LQVec;
@@ -183,6 +184,14 @@ template <class R, class S> struct LatVecTraits<LDVec<R>,S>{
 };
 // template<> template <typename R,typename S> struct LatVecTraits<LQVec<R>,S>{
 template <class R, class S> struct LatVecTraits<LQVec<R>,S>{
+	using type = LQVec<S>;
+	using star = LDVec<S>;
+};
+template <class S> struct LatVecTraits<Direct,S>{
+	using type = LDVec<S>;
+	using star = LQVec<S>;
+};
+template <class S> struct LatVecTraits<Reciprocal,S>{
 	using type = LQVec<S>;
 	using star = LDVec<S>;
 };

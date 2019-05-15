@@ -224,33 +224,33 @@ int test_bz_info(){
 	BrillouinZone bz(rlat,max_search_index);
 	size_t fc = bz.faces_count();
 	size_t vc = bz.vertices_count();
-
-	double *verts = safealloc<double>(3*vc);
-	int *faces = safealloc<int>(3*fc);
-	int *faces_per_vertex = safealloc<int>(3*vc);
-
-	bz.get_faces_bare(3*fc,faces);
-	bz.get_vertices_bare(3*vc,verts);
-	bz.get_faces_per_vertex_bare(3*vc,faces_per_vertex);
-
-
-	// printf("Brillouin Zone with %u vertices, %u faces\n",vc,fc);
-	// if (vc){
-	// 	printf("Vertices at:\n");
-	// 	for(size_t i=0; i<vc; i++)
-	// 		// printf("[% 7.4f % 7.4f % 7.4f]\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
-	// 		printf(" % 7.4f % 7.4f % 7.4f\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
-	// }
-	// if (fc){
-	// 	printf("Brillouin Zone constucted from:\n");
-	// 	for(size_t i=0; i<fc; i++)
-	// 		// printf("(% 2d % 2d % 2d)\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
-	// 		printf(" % 2d % 2d % 2d\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
-	// }
-
-	delete[] verts;
-	delete[] faces;
-	delete[] faces_per_vertex;
+	//
+	// double *verts = safealloc<double>(3*vc);
+	// int *faces = safealloc<int>(3*fc);
+	// int *faces_per_vertex = safealloc<int>(3*vc);
+	// //
+	// // bz.get_faces_bare(3*fc,faces);
+	// // bz.get_vertices_bare(3*vc,verts);
+	// // bz.get_faces_per_vertex_bare(3*vc,faces_per_vertex);
+	// //
+	//
+	// // printf("Brillouin Zone with %u vertices, %u faces\n",vc,fc);
+	// // if (vc){
+	// // 	printf("Vertices at:\n");
+	// // 	for(size_t i=0; i<vc; i++)
+	// // 		// printf("[% 7.4f % 7.4f % 7.4f]\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
+	// // 		printf(" % 7.4f % 7.4f % 7.4f\n",verts[i*3],verts[i*3+1],verts[i*3+2]);
+	// // }
+	// // if (fc){
+	// // 	printf("Brillouin Zone constucted from:\n");
+	// // 	for(size_t i=0; i<fc; i++)
+	// // 		// printf("(% 2d % 2d % 2d)\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
+	// // 		printf(" % 2d % 2d % 2d\n",faces[i*3],faces[i*3+1],faces[i*3+2]);
+	// // }
+	//
+	// delete[] verts;
+	// delete[] faces;
+	// delete[] faces_per_vertex;
 
 	return (fc&&vc) ? 0: 1;
 }
@@ -260,7 +260,7 @@ static int test_bz_moveinto(){
 	Direct d(3.0,3.0,9.0,PI/2,PI/2,2*PI/3);
 	Reciprocal rlat = d.star();
 	BrillouinZone bz(rlat);
-
+	// 
 	// printf("Face vectors\n"); bz.get_faces().print();
 
 	std::default_random_engine generator;
@@ -278,7 +278,7 @@ static int test_bz_moveinto(){
 	LQVec<double> qv(rlat,10);
 	LQVec<int> tv(rlat,10);
 
-	if (!bz.moveinto(&Qv,&qv,&tv)) return 1;
+	if (!bz.moveinto(Qv,qv,tv)) return 1;
 	// printf("Q =\n"); Qv.print();
 	// printf("q =\n"); qv.print();
 	// printf("tau =\n"); tv.print();

@@ -1,3 +1,5 @@
+#ifndef _GRID_H_
+#define _GRID_H_
 // #ifdef _WIN32
   typedef long slong; // ssize_t is only defined for gcc?
 // #endif
@@ -11,8 +13,6 @@
 #include "unsignedtosigned.h"
 #include "munkres.h"
 
-#ifndef _GRID_H_
-#define _GRID_H_
 // A grid is a 3 (or 4) dimensional object that for a given index, e.g.,
 // [i][j][k], contains the (linear) index into a second ArrayVector object.
 

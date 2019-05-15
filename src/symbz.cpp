@@ -133,19 +133,19 @@ int symbz_get_hall_number_from_international(const char* itname){
 
 // Entirely new-to-SymBZ functions follow:
 
-int symbz_get_bz(const double *lengths, const double *angles, const int search_length, const int *max_sizes, double *verts, int *faces, int *fpv, int *counts){
-	Direct dlat(lengths,angles);
-	BrillouinZone bz(dlat.star(),search_length);
-	counts[0] = bz.vertices_count();
-	counts[1] = bz.faces_count();
-
-	if (max_sizes[0]<counts[0] || max_sizes[1]<counts[1]) return 1;
-
-	bz.get_vertices_bare(max_sizes[0],verts);
-	bz.get_faces_bare(max_sizes[1],faces);
-	bz.get_faces_per_vertex_bare(max_sizes[0],fpv);
-	return 0;
-}
+// int symbz_get_bz(const double *lengths, const double *angles, const int search_length, const int *max_sizes, double *verts, int *faces, int *fpv, int *counts){
+// 	Direct dlat(lengths,angles);
+// 	BrillouinZone bz(dlat.star(),search_length);
+// 	counts[0] = bz.vertices_count();
+// 	counts[1] = bz.faces_count();
+//
+// 	if (max_sizes[0]<counts[0] || max_sizes[1]<counts[1]) return 1;
+//
+// 	bz.get_vertices_bare(max_sizes[0],verts);
+// 	bz.get_faces_bare(max_sizes[1],faces);
+// 	bz.get_faces_per_vertex_bare(max_sizes[0],fpv);
+// 	return 0;
+// }
 
 // size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
 // 	Direct d(lengths,angles);

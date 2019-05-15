@@ -1,9 +1,9 @@
+#ifndef _UNSIGNEDTOSIGNED_H
+#define _UNSIGNEDTOSIGNED_H
+
 #include <limits>     // for std::numeric_limits
 #include <stdexcept>  // for std::overflow_error
 #include <string>
-
-#ifndef _UNSIGNEDTOSIGNED_H
-#define _UNSIGNEDTOSIGNED_H
 
 template<typename S,typename U>
 S unsigned_to_signed(const U u){

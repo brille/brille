@@ -1,10 +1,9 @@
-
 #ifndef _PRIMITIVE_H_
 #define _PRIMITIVE_H_
 
 #include <array>
-
 #include "spg_database.h"
+
 
 const std::array<double,9> P_I_TRANSFORM{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
 const std::array<double,9> P_F_TRANSFORM{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
@@ -54,7 +53,7 @@ public:
         p2c=R_P_TRANSFORM;
         break;
       default:
-        c2p={1,0,0, 0,1,0, 0,0,1};
+        c2p={1,1,1, 1,1,1, 1,1,1};
         p2c={1,0,0, 0,1,0, 0,0,1};
     }
   };
@@ -72,38 +71,14 @@ public:
       printf("\n");
     }
   };
+	bool does_anything() { return (cen!=PRIMITIVE);};
+	bool does_nothing() { return (cen==PRIMITIVE); };
 };
 
-
-template<class L, class T, template<class> class LV,
-         typename=typename std::enable_if<std::is_base_of<LatVec,LV<T>>::value>::type,      // only Lattice Vectors
-				 typename=typename std::enable_if<std::is_same<L,LatticeTraits<LV<T>>::type>::type, // which maintain their Lattice type
-				 class S = typename std::common_type<T,double>::type>
-L<S> transform_to_primitive(const Lattice newlat, const L<T>& a){
-	// different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-	SpacegroupType spgt = spgdb_get_spacegroup_type(newlat.get_hall());
-	PrimitiveTransform PT(spgt.centering);
-	std::array<double,9> P = PT.get_to_primitive();
-	L<S> out(newlat, a.size());
-	for (size_t i=0; i<a.size(); ++i)
-		multiply_matrix_vector<S,double,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
-	return out;
-}
-
-template<class L, class T, template<class> class LV,
-         typename=typename std::enable_if<std::is_base_of<LatVec,LV<T>>::value>::type,      // only Lattice Vectors
-				 typename=typename std::enable_if<std::is_same<L,LatticeTraits<LV<T>>::type>::type, // which maintain their Lattice type
-				 class S = typename std::common_type<T,int>::type>
-L<S> transform_from_primitive(const Lattice newlat, const L<T>& a){
-	// if (newlat.issame(a.get_lattice())) return a;
-	// different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-	SpacegroupType spgt = spgdb_get_spacegroup_type(newlat.get_hall());
-	PrimitiveTransform PT(spgt.centering);
-	std::array<int,9> P = PT.get_from_primitive();
-	L<S> out(newlat, a.size());
-	for (size_t i=0; i<a.size(); ++i)
-		multiply_matrix_vector<S,double,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
-	return out;
-}
+// create new primitive transform traits
+struct PrimitiveTransformTraits{
+	using to = double;
+	using from = int;
+};
 
 #endif

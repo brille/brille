@@ -227,7 +227,7 @@ void BrillouinZone::determine_everything(const int extent){
 // 	return this->faces_per_vertex.size();
 // }
 LQVec<double> BrillouinZone::get_vertices(void) const {
-	LDVec<double> lqverts(this->lattice,this->vertices);
+	LQVec<double> lqverts(this->lattice,this->vertices);
 	if (this->isprimitive())
 		lqverts = transform_from_primitive(this->outerlattice,lqverts);
 	return lqverts;
@@ -236,21 +236,10 @@ LQVec<double> BrillouinZone::get_primitive_vertices(void) const {
 	return LQVec<double>(this->lattice, this->vertices);
 }
 LQVec<int>    BrillouinZone::get_faces   (void) const {
-	if (this->isprimitive()){
-		return transform_from_primitive(this->outerlattice,)
-		SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
-		PrimitiveTransform PT(spgt.centering);
-		std::array<int,9> P = PT.get_from_primitive();
-		int tmp[3];
-		LQVec<int> out(this->outerlattice, this->faces.size());
-		for (size_t i=0; i<out.size(); ++i){
-			this->faces.get(i,tmp);
-			multiply_matrix_vector<int,int,int,3>( out.datapointer(i), P.data(), tmp);
-		}
-		return out;
-	} else {
-		return LQVec<int>(this->lattice, this->faces   );
-	}
+	LQVec<int> lqfaces(this->lattice,this->faces);
+	if (this->isprimitive())
+		lqfaces = transform_from_primitive(this->outerlattice,lqfaces);
+	return lqfaces;
 }
 LQVec<int> BrillouinZone::get_primitive_faces(void) const {
 	return LQVec<int>(this->lattice, this->faces   );
@@ -270,12 +259,8 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> &p
 	LQVec<T> pprim(this->lattice);
 	if (!(already_same || transform_needed))
 		throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-	if (transform_needed){
-		SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
-		PrimitiveTransform PT(spgt.centering);
-		std::array<double,9> P = PT.get_to_primitive();
-		pprim = P*p;
-	}
+	if (transform_needed)
+		pprim = transform_to_primitive(this->outerlattice,p);
 	const LQVec<T> & psl = transform_needed ? pprim : p;
 	// this BrillouinZone object has already been instantiated, meaning that it
 	// knows *which* reciprocal lattice points define it!
@@ -308,17 +293,15 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> &p
 
 bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau){
 	bool already_same = this->lattice.issame(Q.get_lattice());
-	bool transform_needed = this->outerlattice.issame(Q.get_lattice());
 	LQVec<double> Qprim(this->lattice), qprim(this->lattice);
 	LQVec<int> tauprim(this->lattice);
 	SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
 	PrimitiveTransform PT(spgt.centering);
+	bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
 	if (!(already_same || transform_needed))
 		throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-	if (transform_needed){
-		std::array<double,9> P = PT.get_to_primitive();
-		Qprim = P*Q;
-	}
+	if (transform_needed)
+		Qprim = transform_to_primitive(this->outerlattice,Q);
 	const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
 	LQVec<double> & qsl = transform_needed ? qprim : q;
 	LQVec<int> & tausl = transform_needed? tauprim : tau;
@@ -333,7 +316,7 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 	q   = Q * 0.0;
 	tau = round(q); // returns int element type for sure
 
-	LQVec<int> facehkl = this->get_faces();
+	LQVec<int> facehkl(this->lattice,this->faces);
 	// ArrayVector<double> facelen = facehkl.norm();
 	ArrayVector<double> facelen = norm(facehkl);
 	LQVec<double> facenrm = facehkl/facelen;
@@ -383,9 +366,8 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 		throw std::runtime_error(msg);
 	}
 	if (transform_needed){ // then we need to transform back q and tau
-		std::array<int,9> invP = PT.get_from_primitive();
-		q = invP*qsl;
-		tau = invP*tausl;
+		q   = transform_from_primitive(this->outerlattice,qsl);
+		tau = transform_from_primitive(this->outerlattice,tausl);
 	}
 	return allinside.arealltrue(); // return false if any points are still outside of the first Brilluoin Zone
 }

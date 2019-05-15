@@ -522,27 +522,3 @@ void unsafe_accumulate_to(const A<T>& av, const size_t n, const size_t *i, const
 			outdata[y] += avidata[y]*w[x];
 	}
 }
-
-
-//
-// template<typename T> ArrayVector<T> extract(const ArrayVector<T>& av, const ArrayVector<size_t>& idx) {
-// 	ArrayVector<T> out(av.numel(),1u);
-// 	if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
-// 	// for (size_t j=0; j<av.numel(); ++j) out.insert(T(0), 0,j);
-// 	for (size_t j=0; j<idx.size(); ++j) out += av.extract( idx.getvalue(j) );
-// 	return out;
-// }
-// template<class T, class R, template<class> class A,
-//          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
-// 				 class S = typename std::common_type<T,R>::type
-// 				 >
-// A<S> accumulate(const A<T>& av, const A<size_t>& idx, const A<R>& w) {
-// 	A<S> out(av.numel(),1u);
-// 	if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
-// 	// for (size_t j=0; j<av.numel(); ++j) out.insert(S(0), 0,j);
-// 	if ( w.numel() == 1u )
-// 		for (size_t j=0; j<idx.size();	j++) out += av.extract(idx.getvalue(j)) * w.getvalue(j);
-// 	else
-// 	 	for (size_t j=0; j<idx.size();	j++) out += av.extract(idx.getvalue(j)) * w[j];
-// 	return out;
-// }

@@ -9,6 +9,7 @@
 #include "spg_database.h"
 #include "primitive.h"
 
+
 class Lattice;
 class Direct;
 class Reciprocal;

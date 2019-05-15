@@ -1,10 +1,11 @@
+#ifndef __MUNKRES_H_
+#define __MUNKRES_H_
+
 #include <forward_list>
 #include <limits>
 #include <memory>
 #include <vector>
 
-#ifndef __MUNKRES_H_
-#define __MUNKRES_H_
 // A single-case implementation of the Munkres' Assignment Algorithm
 // see, e.g., http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
 
