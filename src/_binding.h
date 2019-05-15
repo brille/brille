@@ -154,7 +154,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 			if (moveinto){
 				LQVec<double> Qv(qv); // second memcopy
 				LQVec<int>  tauv(lat,npts); // filled by moveinto
-				bool success = b.moveinto(&Qv,&qv,&tauv);
+				bool success = b.moveinto(Qv,qv,tauv);
 				if (!success)
 					throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
 			}
@@ -283,7 +283,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         LQVec<double> Qv(lat, qEv, 0); // 0 ==> truncate qEv such that it has numel()==3.
         LQVec<double> qv(lat,npts); // filled by moveinto
         LQVec<int>  tauv(lat,npts); // filled by moveinto
-        bool success = b.moveinto(&Qv,&qv,&tauv);
+        bool success = b.moveinto(Qv,qv,tauv);
         if (!success)
           throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
         // replace the first three elements of qEv with qv in absolute units.
@@ -326,5 +326,42 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
   }
 
+template<class T>
+void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {
+		pclass.def("star",&T::star,"Return the dual lattice");
+		pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const int hall){
+			py::buffer_info linfo = lens.request(), ainfo = angs.request();
+			if ( linfo.ndim!=1 || ainfo.ndim!=1)
+				throw std::runtime_error("Number of dimensions must be one");
+			if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
+				throw std::runtime_error("(At least) three lengths and angles required.");
+			double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
+			return T(lengths,angles,hall);
+		}), py::arg( ("lengths/"+lenunit).c_str() ),
+		    py::arg("angles/radian"), py::arg("hall")=1);
+		pclass.def(py::init<double,double,double, double,double,double, int>(),
+	             py::arg( ("a/"+lenunit).c_str() ),
+							 py::arg( ("b/"+lenunit).c_str() ),
+							 py::arg( ("c/"+lenunit).c_str() ),
+						   py::arg("alpha/radian")=PI/2,
+							 py::arg("beta/radian")=PI/2,
+							 py::arg("gamma/radian")=PI/2,
+						   py::arg("HallNumber")=1 );
+		pclass.def("xyz_transform",[](T &d){
+			auto result = py::array_t<double, py::array::c_style>({3,3});
+			py::buffer_info bi = result.request();
+			d.get_xyz_transform( (double *) bi.ptr);
+			return result;
+		});
+		pclass.def("lattice_matrix",[](T &d){
+			auto result = py::array_t<double, py::array::c_style>({3,3});
+			py::buffer_info bi = result.request();
+			d.get_lattice_matrix( (double *) bi.ptr);
+			return result;
+		});
+		pclass.def("isstar",(bool (T::*)(const Direct    ) const) &T::isstar);
+		pclass.def("isstar",(bool (T::*)(const Reciprocal) const) &T::isstar);
+		pclass.def("primitive",&T::primitive,"Return the primitive lattice");
+}
 
 #endif

@@ -94,7 +94,8 @@ class Interpolate (unittest.TestCase):
     Qi = define_Q_points()
     bzg.fill( sqwfunc_ones( bzg.mapped_rlu ) )
     interpolated_ones = bzg.interpolate_at(Qi)
-    self.assertTrue( (interpolated_ones==1).all() )
+    # self.assertTrue( (interpolated_ones==1).all() )
+    self.assertTrue( (np.abs(interpolated_ones-1)<1e-15).all() )
   def test_b_x(self):
     bzg = setup_grid()
     Qi = define_Q_points()

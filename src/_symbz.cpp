@@ -38,10 +38,10 @@ PYBIND11_MODULE(_symbz,m){
 	}
 
 	py::class_<Lattice>(m,"Lattice")
-		.def(py::init<double,double,double,double,double,double,double>(),
-		     py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha"),py::arg("beta"),py::arg("gamma"),py::arg("volume"))
-		.def(py::init<double,double,double,double,double,double>(),
-		     py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2)
+		.def(py::init<double,double,double,double,double,double,int>(),
+		     py::arg("a"),py::arg("b"),py::arg("c"),
+				 py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2,
+				 py::arg("HallNumber")=1)
 		.def(py::init([](py::array_t<double> lens, py::array_t<double> angs) {
 			py::buffer_info linfo = lens.request(), ainfo = angs.request();
 			if ( linfo.ndim!=1 || ainfo.ndim!=1)
@@ -58,6 +58,7 @@ PYBIND11_MODULE(_symbz,m){
 		.def_property_readonly("beta",  &Lattice::get_beta)
 		.def_property_readonly("gamma", &Lattice::get_gamma)
 		.def_property_readonly("volume",&Lattice::get_volume)
+		.def_property("hall",&Lattice::get_hall,&Lattice::set_hall)
 		.def("fill_covariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
 			py::buffer_info bi = cmt.request();
 			if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
@@ -93,57 +94,14 @@ PYBIND11_MODULE(_symbz,m){
 	py::class_<Direct,Lattice> direct(m,"Direct");
 	py::class_<Reciprocal,Lattice> reciprocal(m,"Reciprocal");
 
-	direct.def("star", &Direct::star, "A real space lattice")
-				.def(py::init<double,double,double,double,double,double,double>(),
-						 py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha"),py::arg("beta"),py::arg("gamma"),py::arg("volume"))
-				.def(py::init<double,double,double,double,double,double>(),
-						 py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2)
-				.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs) {
-					py::buffer_info linfo = lens.request(), ainfo = angs.request();
-					if ( linfo.ndim!=1 || ainfo.ndim!=1)
-						throw std::runtime_error("Number of dimensions must be one");
-					if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
-						throw std::runtime_error("(At least) three lengths and angles required.");
-					double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-					return Direct(lengths,angles);
-				}), py::arg("lengths/Å"), py::arg("angles/radian"))
-		    .def("get_xyz_transform",[](Direct &d){
-					auto result = py::array_t<double, py::array::c_style>({3,3});
-					py::buffer_info bi = result.request();
-					d.get_xyz_transform((double *)bi.ptr);
-					return result;
-				})
-				.def("isstar",(bool (Direct::*)(const Direct) const) &Direct::isstar)
-				.def("isstar",(bool (Direct::*)(const Reciprocal) const) &Direct::isstar);
-
-	reciprocal.def("star", &Reciprocal::star, "A reciprocal space lattice")
-						.def(py::init<double,double,double,double,double,double,double>(),
-								 py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha"),py::arg("beta"),py::arg("gamma"),py::arg("volume"))
-						.def(py::init<double,double,double,double,double,double>(),
-								 py::arg("a"),py::arg("b"),py::arg("c"),py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2)
-						.def(py::init([](py::array_t<double> lens, py::array_t<double> angs) {
-							py::buffer_info linfo = lens.request(), ainfo = angs.request();
-							if ( linfo.ndim!=1 || ainfo.ndim!=1)
-								throw std::runtime_error("Number of dimensions must be one");
-							if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
-								throw std::runtime_error("(At least) three lengths and angles required.");
-							double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-							return Reciprocal(lengths,angles);
-						}), py::arg("lengths/Å⁻¹"), py::arg("angles/radian"))
-						.def("get_B_matrix",[](Reciprocal &r){
-							auto result = py::array_t<double, py::array::c_style>({3,3});
-							py::buffer_info bi = result.request();
-							r.get_B_matrix((double *)bi.ptr);
-							return result;
-						})
-						.def("get_xyz_transform",[](Reciprocal &r){
-							auto result = py::array_t<double, py::array::c_style>({3,3});
-							py::buffer_info bi = result.request();
-							r.get_xyz_transform((double *)bi.ptr);
-							return result;
-						})
-						.def("isstar",(bool (Reciprocal::*)(const Reciprocal) const) &Reciprocal::isstar)
-						.def("isstar",(bool (Reciprocal::*)(const Direct) const) &Reciprocal::isstar);
+	declare_lattice_methods<Direct>(direct,"Å");
+	declare_lattice_methods<Reciprocal>(reciprocal,"Å⁻¹");
+	reciprocal.def("get_B_matrix",[](Reciprocal &r){
+		auto result = py::array_t<double, py::array::c_style>({3,3});
+		py::buffer_info bi = result.request();
+		r.get_B_matrix((double *)bi.ptr);
+		return result;
+	});
 
 	py::class_<BrillouinZone> bz(m,"BrillouinZone");
 	bz.def(py::init<Reciprocal,int>(),py::arg("lattice"),py::arg("search_length")=1)
@@ -160,7 +118,7 @@ PYBIND11_MODULE(_symbz,m){
 			ssize_t npts = 1;
 			if (ndim > 1)	for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
 			LQVec<double> pv( b.get_lattice(), npts, (double*) bi.ptr ); // this is a copy :(
-			ArrayVector<bool> resultv = b.isinside(&pv);
+			ArrayVector<bool> resultv = b.isinside(pv);
 			std::vector<ssize_t> outshape(ndim>1 ? ndim-1 : 1);
 			if (ndim > 1){
 				for (ssize_t i=0; i<ndim-1; i++) outshape[i] = bi.shape[i];
@@ -181,7 +139,7 @@ PYBIND11_MODULE(_symbz,m){
 			LQVec<double> Qv( b.get_lattice(), npts, (double*) bi.ptr); // memcopy
 			LQVec<double> qv(b.get_lattice(), npts); // output
 			LQVec<int>  tauv(b.get_lattice(), npts); // output
-			bool success = b.moveinto(&Qv,&qv,&tauv);
+			bool success = b.moveinto(Qv,qv,tauv);
 			if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
 			auto qout = py::array_t<double, py::array::c_style>(bi.shape);
 			auto tout = py::array_t<int, py::array::c_style>(bi.shape);

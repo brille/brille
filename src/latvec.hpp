@@ -203,3 +203,16 @@ L<S> operator/(const A<R>& b, const L<T>& a){
 			out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) / a.getvalue(si.oneveca?0:i,j), i,j);
 	return out;
 }
+
+// Matrix * LatVec
+template<class T, class R, template<class> class L,
+         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
+				 class S = typename std::common_type<T,R>::type,
+				 typename=typename std::enable_if<std::is_floating_point<S>::value>::type>
+L<S> operator*(const std::array<R,9>& m, const L<T>& a){
+	L<S> out(a.get_lattice(), a.size());
+	S tmp[3];
+	for (size_t i=0; i<a.size(); ++i)
+		multiply_matrix_vector<S,R,T,3>(out.datapointer(i), m.data(), a.datapointer(i) );
+	return out;
+}

@@ -1,35 +1,86 @@
-#include <math.h>
+#include <cmath>
 #include "linear_algebra.h"
 #include "lattice.h"
 #include <string>
 
-Lattice::Lattice(const double *lengths, const double *angles){
-	for (int i=0;i<3;i++){
-		this->len[i] = lengths[i];
-		this->ang[i] = angles[i];
-	}
-	volume=calculatevolume();
-}
-Lattice::Lattice(double la, double lb, double lc, double al, double bl, double cl, double vol){
-	this->len[0] = la;
-	this->len[1] = lb;
-	this->len[2] = lc;
-	this->ang[0] = al;
-	this->ang[1] = bl;
-	this->ang[2] = cl;
-	this->volume = vol;
-}
-Lattice::Lattice(double la, double lb, double lc, double al, double bl, double cl){
-	this->len[0] = la;
-	this->len[1] = lb;
-	this->len[2] = lc;
-	this->ang[0] = al;
-	this->ang[1] = bl;
-	this->ang[2] = cl;
-	this->volume = calculatevolume();
+Lattice::Lattice(const double* latmat, const int h){
+	double l[3]={0,0,0}, a[3]={0,0,0}, n[9];
+	// compute the dot product of each column with itself
+	for (int i=0; i<3; ++i)	for (int j=0; j<3; ++j)	l[i] += latmat[i*3+j]*latmat[i*3+j];
+	// the lattice vector lengths are the square root of this
+	for (int i=0; i<3; ++i) l[i] = std::sqrt(l[i]);
+	// normalize the column vectors, leaving only angle information
+	for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*3+j] = latmat[i*3+j]/l[i];
+	// take the dot product between cyclically permuted columns: 0=1⋅2, 1=2⋅0, 2=0⋅1
+	for (int i=0; i<3; ++i)	for (int j=0; j<3; ++j)	a[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
+	// the lattice angles are the arccosines of these dot products of normalized lattice vectors
+	for (int i=0; i<3; ++i) a[i] = std::acos(a[i]);
+
+	this->set_len_pointer(l);
+	this->set_ang_pointer(a);
+	this->volume=this->calculatevolume();
+	this->check_hall_number(h);
 }
 
+Lattice::Lattice(const double* lengths, const double* angles, const int h){
+	this->set_len_pointer(lengths);
+	this->set_ang_pointer(angles);
+  this->volume=this->calculatevolume();
+	this->check_hall_number(h);
+}
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const int h){
+	this->set_len_scalars(la,lb,lc);
+	this->set_ang_scalars(al,bl,cl);
+	this->volume = this->calculatevolume();
+  this->check_hall_number(h);
+}
+Lattice::Lattice(const double *lengths, const double *angles, const std::string itname){
+	this->set_len_pointer(lengths);
+	this->set_ang_pointer(angles);
+  this->volume=this->calculatevolume();
+	this->check_IT_name(itname);
+}
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string itname){
+	this->set_len_scalars(la,lb,lc);
+	this->set_ang_scalars(al,bl,cl);
+	this->volume = this->calculatevolume();
+  this->check_IT_name(itname);
+}
+void Lattice::set_len_pointer(const double *lvec){
+	for (int i=0;i<3;i++) this->len[i] = lvec[i];
+}
+void Lattice::set_ang_pointer(const double *avec){
+	for (int i=0;i<3;i++)	this->ang[i] = avec[i];
+}
+void Lattice::set_len_scalars(const double a, const double b, const double c){
+	this->len[0] = a;
+	this->len[1] = b;
+	this->len[2] = c;
+}
+void Lattice::set_ang_scalars(const double a, const double b, const double g){
+	this->ang[0] = a;
+	this->ang[1] = b;
+	this->ang[2] = g;
+}
+void Lattice::check_hall_number(const int h){
+	this->hall = hall_number_ok(h) ? h : 0;
+}
+void Lattice::check_IT_name(const std::string itname){
+	this->hall = spgdb_international_to_hall_number(itname.c_str());
+}
+double Lattice::unitvolume() const{
+	// The volume of a parallelpiped with unit length sides and our body angles
+	double c[3];
+	for (int i=0;i<3;++i) c[i]=std::cos(this->ang[i]);
+	double sos=0, prd=2;
+	for (int i=0;i<3;++i){
+		sos+=c[i]*c[i];
+		prd*=c[i];
+	}
+	return std::sqrt( 1 - sos + prd );
+}
 double Lattice::calculatevolume(){
+	// we could replace this by l[0]*l[1]*l[2]*this->unitvolume()
 	double tmp=1;
 	double *a = this->ang;
 	double *l = this->len;
@@ -63,7 +114,7 @@ Lattice Lattice::inner_star() const {
 	sbb = acos( (cosc*cosa-cosb)/(sinc*sina) );
 	scc = acos( (cosa*cosb-cosc)/(sina*sinb) );
 
-	return Lattice(sas, sbs, scs, saa, sbb, scc, 8*PICUBED/this->volume);
+	return Lattice(sas, sbs, scs, saa, sbb, scc, this->hall);
 }
 void Lattice::get_metric_tensor(double * mt) const {
 	const double *a = this->ang;
@@ -126,15 +177,6 @@ std::string lattice2string(const Lattice& l, const std::string lenunit="", const
 std::string Lattice::string_repr(){ return lattice2string(*this); }
 std::string Direct::string_repr(){return lattice2string(*this,"Å");}
 std::string Reciprocal::string_repr(){return lattice2string(*this,"Å⁻¹");}
-// 	std::string repr;
-// 	repr = "(" + std::to_string(this->len[0]) + " "
-// 	           + std::to_string(this->len[1]) + " "
-// 						 + std::to_string(this->len[2]) + ")"
-// 			 +" (" + std::to_string(this->ang[0]/PI*180) + " "
-// 			       + std::to_string(this->ang[1]/PI*180) + " "
-// 						 + std::to_string(this->ang[2]/PI*180) + ")°";
-// 	return repr;
-// }
 
 Reciprocal Direct::star() const {
 	return Reciprocal(this->inner_star());
@@ -143,8 +185,21 @@ Direct Reciprocal::star() const {
 	return Direct(this->inner_star());
 }
 
+void Direct::get_lattice_matrix(double *latmat) const{
+	// define the lattice basis vectors using the same convention as spglib
+	double c0=std::cos(this->ang[0]), c1=std::cos(this->ang[1]), c2=std::cos(this->ang[2]);
+	double s2=std::sin(this->ang[2]);
 
+	double xhat[3]={1,0,0}, yhat[3]={c2,s2,0};
+	double zhat[3]={c1, (c0-c2*c1)/s2, this->unitvolume()/s2};
 
+	for (int i=0;i<3;++i){
+		latmat[i*3+0] = this->len[0]*xhat[i];
+		latmat[i*3+1] = this->len[1]*yhat[i];
+		latmat[i*3+2] = this->len[2]*zhat[i];
+	}
+
+}
 void Direct::get_xyz_transform(double *toxyz) const {
 	// there are infinite possibilities for your choice of axes.
 	// the original spglib used x along a and y in the (a,b) plane
@@ -160,6 +215,14 @@ void Direct::get_xyz_transform(double *toxyz) const {
 	delete[] B;
 }
 
+void Reciprocal::get_lattice_matrix(double *latmat) const{
+	Direct d = this->star();
+	double m[9];
+	d.get_lattice_matrix(m);
+	matrix_inverse(latmat,m);
+	matrix_transpose(latmat);
+	for (int i=0; i<9; ++i) latmat[i]*=2*PI;
+}
 void Reciprocal::get_B_matrix(double *B) const {
 	//Calculate the B-matrix as in Acta Cryst. (1967). 22, 457
 	// http://dx.doi.org/10.1107/S0365110X67000970
@@ -220,4 +283,18 @@ void Direct::print(){
 void Reciprocal::print(){
 	printf("(%g %g %g)/A " ,this->len[0], this->len[1], this->len[2]);
 	printf("(%g %g %g)\n",this->ang[0]/PI*180, this->ang[1]/PI*180, this->ang[2]/PI*180);
+}
+
+
+Direct Direct::primitive(void) const{
+	double plm[9], lm[9];
+	SpacegroupType spgt = spgdb_get_spacegroup_type(this->hall);
+	this->get_lattice_matrix(lm);
+	PrimitiveTransform P(spgt.centering);
+	std::array<double,9> Parray = P.get_to_primitive();
+	multiply_matrix_matrix<double,double,double,3>(plm,lm,Parray.data());
+	return Direct(plm);
+}
+Reciprocal Reciprocal::primitive(void) const{
+	return this->star().primitive().star();
 }

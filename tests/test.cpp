@@ -309,7 +309,7 @@ static int test_bz_grid(){
 
 	size_t N[3] = {10,10,0};
 
-	BrillouinZoneGrid3 bzg(bz,N);
+	BrillouinZoneGrid3<double> bzg(bz,N);
 	bzg.print_map();
 
 	ArrayVector<double> x = bzg.get_grid_x();

@@ -35,6 +35,7 @@
 #ifndef __spg_database_H__
 #define __spg_database_H__
 
+#include<iostream>
 #include "symmetry.h"
 
 typedef struct {

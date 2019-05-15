@@ -65,7 +65,7 @@ class BrillouinZoneGrid (unittest.TestCase):
         bzg = s.BZGridQ(bz, Ntuple)
         hkl = bzg.rlu
         self.assertEqual(hkl.ndim,2)
-        self.assertEqual(hkl.shape[0], np.prod(2*Ntuple) )
+        self.assertEqual(hkl.shape[0], np.prod(2*np.array(Ntuple)+1) )
         self.assertEqual(hkl.shape[1],3)
         xyz = bzg.invA # the positions of the points in Å⁻¹
         self.assertEqual(hkl.shape,xyz.shape)

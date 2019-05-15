@@ -123,7 +123,7 @@ protected:
 
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
-    ArrayVector<bool> inbz = this->brillouinzone.isinside(&hkl);
+    ArrayVector<bool> inbz = this->brillouinzone.isinside(hkl);
     ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
     for (size_t i=0; i<hkl.size(); ++i)
         if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
@@ -256,7 +256,7 @@ protected:
 
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
-    ArrayVector<bool> inbz = this->brillouinzone.isinside(&hkl);
+    ArrayVector<bool> inbz = this->brillouinzone.isinside(hkl);
     ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
     for (size_t i=0; i<hkl.size(); ++i)
         if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())

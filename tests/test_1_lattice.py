@@ -21,18 +21,6 @@ else:
 
 
 class Lattice (unittest.TestCase):
-    def test_a_init1(self):
-        a=1.0
-        b=np.pi/2
-        v = 1.0
-        l = s.Lattice(a,a,a,b,b,b,v)
-        self.assertEqual(l.a,a)
-        self.assertEqual(l.b,a)
-        self.assertEqual(l.c,a)
-        self.assertEqual(l.alpha,b)
-        self.assertEqual(l.beta,b)
-        self.assertEqual(l.gamma,b)
-        self.assertEqual(l.volume,v)
     def test_a_init2(self):
         a=1.0
         b=np.pi/2
@@ -79,7 +67,7 @@ class Lattice (unittest.TestCase):
         a=1.0
         b=np.pi/2
         v = 1.0
-        l1 = s.Lattice(a,a,a,b,b,b,v)
+        l1 = s.Lattice(a,a,a,b,b,b)
         l2 = s.Lattice(a,a,a,b,b,b)
         self.assertTrue(l1.issame(l2))
         self.assertEqual(l1,l2)

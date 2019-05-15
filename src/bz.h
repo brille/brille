@@ -11,18 +11,22 @@
 
 class BrillouinZone {
 	Reciprocal lattice;
+	Reciprocal outerlattice;
 //	ArrayVector<double> position;
 //	ArrayVector<int> type;
 	ArrayVector<double> vertices;
 	ArrayVector<int> faces;            // the reciprocal lattice points defining the faces -- twice the *actual* face vectors
 	ArrayVector<int> faces_per_vertex;
 public:
-	BrillouinZone(Reciprocal lat, int extent=1);
+	BrillouinZone(Reciprocal lat, bool toprim=false, int extent=1): outerlattice(lat) {
+		lattice = toprim ? lat.primitive() : lat;
+		this->determine_everything(extent);
+	}
 	void set_vertices(ArrayVector<double> newverts);
 	void set_faces(ArrayVector<int> newfaces);
 	void set_faces_per_vertex(ArrayVector<int> newfpv);
 	void determine_everything(const int extent=1);
-	void determine_everything_xyz(const int extent=1);
+	// void determine_everything_xyz(const int extent=1);
 	size_t vertices_count() const { return vertices.size();};
 	size_t faces_count() const { return faces.size();};
 	size_t get_vertices_bare        (const size_t max, double *out) const;
@@ -33,10 +37,10 @@ public:
 	LQVec<int>       get_faces() const ;
 	ArrayVector<int> get_faces_per_vertex() const;
 	void print() const;
+	bool isprimitive(void) const {return !(lattice.issame(outerlattice));};
 
-	template<typename T> ArrayVector<bool> isinside(const LQVec<T> *p);
-	// template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p, const double tol=1e-14);
-	bool moveinto(const LQVec<double> *Q, LQVec<double> *q, LQVec<int> *tau);
+	template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p);
+	bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau);
 };
 
 
