@@ -86,7 +86,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 		}),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true)
 		.def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
 		   .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze((cobj.get_N()-1)/2);})
-			 .def_property_readonly("brillouinzone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
+			 .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
 		   .def_property_readonly("rlu",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
 			 .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
 			 .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
@@ -114,12 +114,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 			cobj.replace_data(data,shape); // no error, so this will work for sure
 			// return mapExceedsNewData; // let the calling function deal with this?
 		})
-		.def_property_readonly("sort_perm",[](Class& cobj){
-			printf("Got into the sort_perm binding\n");
-			auto ret = cobj.sort_perm();
-			printf("Called sort_perm ok.");
-			return av2np(ret);
-		})
+		.def_property_readonly("sort_perm",[](Class& cobj){	return av2np(cobj.sort_perm()); })
 		.def_property("map",
 			/*get map*/ [](Class& cobj){
 				std::vector<ssize_t> shape(3); // the map is 3D
@@ -223,7 +218,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
 		.def_property_readonly("N",    [](const Class& cobj){return av2np_squeeze(cobj.get_N());} )
 		.def_property_readonly("halfN",[](const Class& cobj){return av2np_squeeze(cobj.get_halfN());} )
 		.def_property_readonly("spec", [](const Class& cobj){return av2np_squeeze(cobj.get_spec());} )
-    .def_property_readonly("brillouinzone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
+    .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
     .def_property_readonly("rlu_Q",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
     .def_property_readonly("invA_Q",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
     .def_property_readonly("mapped_rlu_Q",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
@@ -326,19 +321,35 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
   }
 
+template<class R, class T>
+void declare_lattice_init(py::class_<T,Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
+	pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const R groupid){
+		py::buffer_info linfo = lens.request(), ainfo = angs.request();
+		if ( linfo.ndim!=1 || ainfo.ndim!=1)
+			throw std::runtime_error("Number of dimensions must be one");
+		if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
+			throw std::runtime_error("(At least) three lengths and angles required.");
+		double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
+		return T(lengths,angles,groupid);
+	}), py::arg( ("lengths/"+lenunit).c_str() ),
+			py::arg("angles/radian"), py::arg(argname.c_str())=defarg);
+}
+
 template<class T>
 void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {
+	  declare_lattice_init(pclass,lenunit,"hall",1);
+		declare_lattice_init(pclass,lenunit,"ITname","P_1");
 		pclass.def("star",&T::star,"Return the dual lattice");
-		pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const int hall){
-			py::buffer_info linfo = lens.request(), ainfo = angs.request();
-			if ( linfo.ndim!=1 || ainfo.ndim!=1)
-				throw std::runtime_error("Number of dimensions must be one");
-			if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
-				throw std::runtime_error("(At least) three lengths and angles required.");
-			double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-			return T(lengths,angles,hall);
-		}), py::arg( ("lengths/"+lenunit).c_str() ),
-		    py::arg("angles/radian"), py::arg("hall")=1);
+		// pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const int hall){
+		// 	py::buffer_info linfo = lens.request(), ainfo = angs.request();
+		// 	if ( linfo.ndim!=1 || ainfo.ndim!=1)
+		// 		throw std::runtime_error("Number of dimensions must be one");
+		// 	if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
+		// 		throw std::runtime_error("(At least) three lengths and angles required.");
+		// 	double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
+		// 	return T(lengths,angles,hall);
+		// }), py::arg( ("lengths/"+lenunit).c_str() ),
+		//     py::arg("angles/radian"), py::arg("hall")=1);
 		pclass.def(py::init<double,double,double, double,double,double, int>(),
 	             py::arg( ("a/"+lenunit).c_str() ),
 							 py::arg( ("b/"+lenunit).c_str() ),

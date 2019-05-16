@@ -249,14 +249,20 @@ public:
     ret += this->sub2lin(ijk,&lidx);
     return lidx;
   }
-  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
-  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
-
-  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
+    if (this->size(0)<2||this->size(1)<2||this->size(2)<2)
+      throw std::runtime_error("Interpolation is only possible on grids with at least two elements in each dimension");
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+    return 0;
+  }
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+    this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3];
     int flg, oob;
@@ -289,10 +295,7 @@ public:
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LQVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LDVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
-    if (this->data.size()==0)
-      throw std::runtime_error("The grid must be filled before interpolating!");
-    if (x.numel()!=3u)
-      throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+    this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     const ArrayVector<R>* const xptr = &x;
           ArrayVector<T>* const outptr = &out;

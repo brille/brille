@@ -11,11 +11,22 @@ if ~strcmp(obj.parameterHash, newHash)
     end
     
     % reshape the output(s) if necessary
+    obj.span = ones(size(fillwith));
     num = numel(vecs{1});
+    mds = zeros(size(fillwith));
     for i=1:obj.nFill
         fws = size(fillwith{i});
         obj.shape{i} = fws(2:end);
-        if length(obj.shape{i}) > 1
+        mds(i) = fws(end);
+        if length(fws)>2
+            obj.span(i)=prod(fws(2:end-1));
+        end
+    end
+    equalmodes = std(mds)==0;
+    for i=1:obj.nFill
+        if equalmodes
+            fillwith{i} = reshape( fillwith{i}, [num, obj.span(i), mds(i)] );
+        elseif length(obj.shape{i}) > 1
             fillwith{i} = reshape( fillwith{i}, [num, prod(obj.shape{i})] );
         end
     end

@@ -8597,16 +8597,17 @@ int spgdb_international_number_to_hall_number(const int number){
 	return -1;
 }
 
-int spgdb_international_to_hall_number(const char* itname)
+int spgdb_international_to_hall_number(const std::string& itname)
 {
   SpacegroupType spgtype;
+  size_t n = itname.size();
   for (int i=1; i<531; i++){
 	  spgtype = spgdb_get_spacegroup_type(i);
 	  // now check for matching international table names
-	  if ( 0 == strncmp(itname, spgtype.international, 32)
-		 ||0 == strncmp(itname, spgtype.international_full,20)
-	     ||0 == strncmp(itname, spgtype.international_short,11))
-		 return i;
+    if ( 0==itname.compare(0,n,spgtype.international      ,n<32?n:32)
+       ||0==itname.compare(0,n,spgtype.international_full ,n<20?n:20)
+       ||0==itname.compare(0,n,spgtype.international_short,n<11?n:11) )
+      return i;
   }
   return 0; // no matching strings
 }

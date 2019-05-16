@@ -1,7 +1,7 @@
 function [dlat,rlat] = lattice(varargin)
 % use varargin to define angle units, and whether the parameters describe
 % a direct or reciprocal lattice.
-kdef = struct('degree',true,'radian',false,'direct',true,'reciprocal',false);
+kdef = struct('degree',true,'radian',false,'direct',true,'reciprocal',false,'spgr','P 1');
 [args,kwds]=symbz.parse_arguments(varargin,kdef,{'degree','radian','direct','reciprocal'});
 
 assert( numel(args)>0 ,'At least the lattice vector lengths are required to define a lattice.');
@@ -23,10 +23,10 @@ pylens =symbz.m2p( lens(1:3) );
 pyangs =symbz.m2p( angs(1:3) );
 
 if kwds.direct && ~kwds.reciprocal
-    dlat = py.symbz.Direct(pylens, pyangs);
+    dlat = py.symbz.Direct(pylens, pyangs, kwds.spgr);
     rlat = dlat.star();
 elseif kwds.reciprocal && ~kwds.direct
-    rlat = py.symbz.Reciprocal(pylens,pyangs);
+    rlat = py.symbz.Reciprocal(pylens, pyangs, kwds.spgr);
     dlat = rlat.star();
 end
 end

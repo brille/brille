@@ -66,7 +66,7 @@ void Lattice::check_hall_number(const int h){
 	this->hall = hall_number_ok(h) ? h : 0;
 }
 void Lattice::check_IT_name(const std::string itname){
-	this->hall = spgdb_international_to_hall_number(itname.c_str());
+	this->hall = spgdb_international_to_hall_number(itname);
 }
 double Lattice::unitvolume() const{
 	// The volume of a parallelpiped with unit length sides and our body angles

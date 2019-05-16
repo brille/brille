@@ -102,11 +102,11 @@ class BrillouinZoneGrid (unittest.TestCase):
         d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
         dtuple = (0.2,0.2,0.3)
         bzg0 = s.BZGridQ(bz,dtuple,False)
-        bzg1 = s.BZGridQ( bzg0.brillouinzone, bzg0.halfN)
+        bzg1 = s.BZGridQ( bzg0.BrillouinZone, bzg0.halfN)
         #
         # and for 4D grids:
         fd0 = s.BZGridQE(bz, (0.,1.,10.), (2,2,2))
-        fd1 = s.BZGridQE(fd0.brillouinzone, fd0.spec, fd0.halfN)
+        fd1 = s.BZGridQE(fd0.BrillouinZone, fd0.spec, fd0.halfN)
 
 
 if __name__ == '__main__':

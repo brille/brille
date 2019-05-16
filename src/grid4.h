@@ -226,13 +226,19 @@ public:
     size_t lidx;
     ret += this->sub2lin(ijkl,&lidx);
     return lidx;
-  }
-
-  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+  };
+  template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
+    if (this->size(0)<2||this->size(1)<2||this->size(2)<2||this->size(3)<2)
+      throw std::runtime_error("Interpolation is only possible on grids with at least two elements in each dimension");
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
-    if (x.numel()!=4u)
-      throw std::runtime_error("InterpolateGrid4 requires x values which are four-vectors.");
+    if (x.numel()!=3u)
+      throw std::runtime_error("InterpolateGrid4 requires x values which are three-vectors.");
+    return 0;
+  };
+
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+    this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[16], ijk[4];
     int flg, oob;
@@ -260,10 +266,7 @@ public:
     return out;
   };
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
-    if (this->data.size()==0)
-      throw std::runtime_error("The grid must be filled before interpolating!");
-    if (x.numel()!=4u)
-      throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+    this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     const ArrayVector<R>* const xptr = &x;
           ArrayVector<T>* const outptr = &out;

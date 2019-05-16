@@ -25,10 +25,18 @@ pyallres = obj.BZGrid.interpolate_at(iat,true,obj.parallel);
 allres = symbz.p2m( pyallres );
 assert( numel(allres) == numres )
 % and then split-up the interpolated results into the expected outputs
-offsets = cumsum( cat(2, 0, cellfun(@prod,obj.shape)) );
 intres = cell(1,obj.nFill);
-for i=1:obj.nFill
-    intres{i} = reshape( allres(:, (offsets(i)+1):offsets(i+1) ), cat(2,num,obj.shape{i}) );
+if ismatrix(allres)
+    offsets = cumsum( cat(2, 0, cellfun(@prod,obj.shape)) );
+    for i=1:obj.nFill
+        intres{i} = reshape( allres(:, (offsets(i)+1):offsets(i+1) ), cat(2,num,obj.shape{i}) );
+    end
+elseif ndims(allres)==3
+    offsets = cumsum( cat(2, 0, obj.span) );
+    for i=1:obj.nFill
+        intres{i} = reshape( allres(:, (offsets(i)+1):offsets(i+1), :), cat(2,num,obj.shape{i}) );
+    end    
 end
+
 
 end

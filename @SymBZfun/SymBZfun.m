@@ -17,6 +17,7 @@ classdef SymBZfun < handle
         isQE = false
         nFill = 1
         nFillers = 1;
+        span  = 1
         shape = {1}
         nRet = 0
         nInt = 1

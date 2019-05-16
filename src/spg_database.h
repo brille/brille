@@ -36,6 +36,7 @@
 #define __spg_database_H__
 
 #include<iostream>
+#include<string>
 #include "symmetry.h"
 
 typedef struct {
@@ -86,7 +87,7 @@ Symmetry spgdb_get_spacegroup_operations(const int hall_number);
 SpacegroupType spgdb_get_spacegroup_type(const int hall_number);
 
 int spgdb_international_number_to_hall_number(const int number);
-int spgdb_international_to_hall_number(const char* itname);
+int spgdb_international_to_hall_number(const std::string& itname);
 size_t spgdb_get_symmetry_from_database(int *rotations, double *translations, const size_t space, const int hall_number);
 
 #endif
