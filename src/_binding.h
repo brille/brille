@@ -153,13 +153,15 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 				if (!success)
 					throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
 			}
+			if (qv.size()<100){printf("Will interpolate at: \n"); qv.print();}
 			// do the interpolation for each point in qv
 			ArrayVector<T> lires;
-			if (useparallel){
-				lires = cobj.parallel_linear_interpolate_at(qv,threads);
-			} else {
+			// if (useparallel){
+			// 	lires = cobj.parallel_linear_interpolate_at(qv,threads);
+			// } else {
 				lires = cobj.linear_interpolate_at(qv);
-			}
+			// }
+			if (qv.size()<100){printf("interpolated results: \n"); lires.print();}
 			// and then make sure we return an numpy array of appropriate size:
 			std::vector<ssize_t> outshape;
 			for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);

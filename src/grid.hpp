@@ -127,6 +127,11 @@ template<class T> int MapGrid3<T>::sub2map(const size_t *s, size_t *m) const {
   *m = size_t(this->map[l]);
   return 0;
 }
+template<class T> size_t MapGrid3<T>::sub2map(const size_t *s) const {
+  size_t m=0;
+  this->sub2map(s,&m);
+  return m;
+}
 template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t *m) const {
   if ( l+1 > this->numel() ) return 1;
   if (!this->valid_mapping(l)) return -1;

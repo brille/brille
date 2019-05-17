@@ -215,6 +215,16 @@ template<typename T> bool ArrayVector<T>::areallzero(void) const {
 			if (this->getvalue(i,j)) return false;
 	return true;
 }
+template<typename T> bool ArrayVector<T>::areallapprox(const T val) const {
+	T p,m, tol=2*std::numeric_limits<T>::epsilon();
+	for (size_t i=0; i<this->size(); i++)
+		for (size_t j=0; j<this->numel(); j++){
+			m = std::abs(this->getvalue(i,j) - val);
+			p = std::abs(this->getvalue(i,j) + val);
+			if (m>p*tol && m>tol) return false;
+		}
+	return true;
+}
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{
 	ArrayVector<int> out(this->numel(),this->size());
@@ -348,7 +358,7 @@ template<class T, class R, template<class> class A,
 				 class S = typename std::common_type<T,R>::type >
 A<S> operator+(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
-	A<S> out( si.aorb ? a : b);
+	A<S> out = si.aorb ? A<S>(a) : A<S>(b);
 	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
 	// if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
 	// 	printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
@@ -367,7 +377,7 @@ template<class T, class R, template<class> class A,
 				 class S = typename std::common_type<T,R>::type >
 A<S> operator-(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
-	A<S> out( si.aorb ? a : b);
+	A<S> out = si.aorb ? A<S>(a) : A<S>(b);
 	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
 	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
@@ -377,7 +387,7 @@ template<class T, class R, template<class> class A,
 				 class S = typename std::common_type<T,R>::type >
 A<S> operator*(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
-	A<S> out( si.aorb ? a : b);
+	A<S> out = si.aorb ? A<S>(a) : A<S>(b);
 	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
 	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;
@@ -388,7 +398,7 @@ template<class T, class R, template<class> class A,
 				 typename=typename std::enable_if<std::is_floating_point<S>::value>::type >
 A<S> operator/(const A<T>& a, const A<R>& b){
 	AVSizeInfo si = a.consistency_check(b);
-	A<S> out( si.aorb ? a : b);
+	A<S> out = si.aorb ? A<S>(a) : A<S>(b);
 	out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
 	for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
 	return out;

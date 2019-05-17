@@ -58,6 +58,7 @@ ArrayVector<double> f_of_Q_eigs(const ArrayVector<double>& Q){
   return out;
 }
 
+
 TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
   BrillouinZone bz(r);
@@ -72,7 +73,7 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
 
   int nQ = 10000;
   double* rawQ = new double[nQ*3]();
-  for (int i=0; i<nQ; ++i) rawQ[i] = distribution(generator);
+  for (int i=0; i<3*nQ; ++i) rawQ[i] = distribution(generator);
   LQVec<double> Q(r,nQ,rawQ);
   delete[] rawQ;
 
@@ -80,6 +81,13 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   ArrayVector<double> antres = f_of_Q( Q.get_xyz() );
 
   ArrayVector<double> diff = intres - antres;
+  // printf("\nInterpolation results:\n");
+  // intres.print();
+  // printf("\nExpected results:\n");
+  // antres.print();
+  // printf("\nRounded difference:\n");
+  // diff.round().print();
+
   REQUIRE( diff.round().areallzero() ); // this is not a great test :(
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
@@ -109,4 +117,47 @@ TEST_CASE("Testing BrillouinZoneGrid3 Sorting","[munkres]"){
   bzg.replace_data( f_of_Q_mats( Qmap ), newshape ); // maybe mapped_hkl instead?
 
   ArrayVector<size_t> sortperm = bzg.sort_perm();
+}
+
+ArrayVector<double> fe_dispersion(const ArrayVector<double>& Q){
+  ArrayVector<double> out( 1u, Q.size() );
+  double J = -16, delta = -0.1;
+  for (size_t i=0; i<Q.size(); ++i)
+    out.insert( delta+8*J*(1-std::cos(PI*Q.getvalue(i,0))*std::cos(PI*Q.getvalue(i,1))*std::cos(PI*Q.getvalue(i,2))), i,0);
+  return out;
+}
+ArrayVector<std::complex<double>> complex_fe_dispersion(const ArrayVector<double>& Q){
+  ArrayVector<std::complex<double>> out( 1u, Q.size() );
+  double J = -16, delta = -0.1;
+  for (size_t i=0; i<Q.size(); ++i)
+    out.insert( delta+8*J*(1-std::cos(PI*Q.getvalue(i,0))*std::cos(PI*Q.getvalue(i,1))*std::cos(PI*Q.getvalue(i,2))), i,0);
+  return out;
+}
+
+TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation"){
+  std::string spgr = "Im-3m";
+  Direct d(2.87,2.87,2.87,PI/2,PI/2,PI/2,spgr);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  size_t halfN[3] = {10,10,10};
+  BrillouinZoneGrid3<std::complex<double>> bzg(bz,halfN);
+
+  // for future reference:
+  //  linear_interpolate_at expects that Q is in absolute units!
+  //  (Changing this would require duplicating [or wrapping] the method for BZGrid objects)
+  ArrayVector<double> Qmap = bzg.get_mapped_xyz();
+  ArrayVector<std::complex<double>> fedisp = fe_dispersion(Qmap);
+  bzg.replace_data( fedisp );
+
+  ArrayVector<std::complex<double>> intres;
+  SECTION("Single-thread interpolation"){
+    intres = bzg.linear_interpolate_at(Qmap);
+  }
+  SECTION("Multi-thread interpolation"){
+    intres = bzg.parallel_linear_interpolate_at(Qmap,10);
+  }
+  ArrayVector<std::complex<double>> diff = intres - fedisp;
+  for (size_t i=0; i<diff.size(); ++i)
+  for (size_t j=0; j<diff.numel(); ++j)
+  REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
 }

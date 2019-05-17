@@ -21,14 +21,19 @@ else:
 
 def sqwfunc_ones(Q):
   return 1.0+0*(Q[:,0]+Q[:,1]+Q[:,2])
+
 def sqwfunc_x(Q):
   return Q[:,0]
+
 def sqwfunc_y(Q):
   return Q[:,1]
+
 def sqwfunc_z(Q):
   return Q[:,2]
+
 def sqwfunc_xy(Q):
   return Q[:,0]+Q[:,1]
+
 def sqwfunc_xyz(Q):
   return Q[:,0]+Q[:,1]+Q[:,2]
 
@@ -87,6 +92,22 @@ def define_Q_points(rand=False,N=10):
   else:
     Q = np.array( [[0,0,0],[0.1,0,0],[0,0.1,0],[0,0,0.1]],dtype='double')
   return Q
+
+def fe_dispersion(Q,p=(-16,0.01)):
+  J = p[0] # exchange, meV
+  d = p[1] # anisotropy
+  # the dispersion relationship:
+  w = d + 8*J*(1-np.cos(np.pi*Q[:,0])*np.cos(np.pi*Q[:,1])*np.cos(np.pi*Q[:,2]))
+  return w
+def fe_analytic(Q,E,p):
+  J = p[0] # exchange, meV
+  d = p[1] # anisotropy
+  g = p[2] # mode-lifetime, meV
+  T = p[3] # Temperature, K
+  A = p[4] # scale-factor
+  w = fe_dispersion(Q,p);
+  S = A/np.pi *(E/1-np.exp(-11.602*E/T))*(4*g*w)/((E**2-w**2)**2+4*(g*E)**2)
+  return S
 
 class Interpolate (unittest.TestCase):
   def test_a_norm(self):
@@ -182,6 +203,16 @@ class Interpolate (unittest.TestCase):
     sp = bzg.sort_perm
     self.assertFalse( (sp==0).all(1).any() ) # no returned sort permutations should be all zeros
 
+  def test_i_iron_self_consistency(self):
+    d = s.Direct((2.87,2.87,2.87),np.pi/2*np.array((1,1,1)),"Im-3m");
+    r = d.star();
+    bz = s.BrillouinZone(r);
+    bzg = s.BZGridQcomplex(bz, halfN=(1,1,1));
+    Q = bzg.mapped_rlu
+    bzg.fill( fe_dispersion(Q) )
+    intres = bzg.interpolate_at(Q,False,False)
+    antres = fe_dispersion(Q)
+    self.assertTrue( np.isclose(intres,antres).all() )
 
 if __name__ == '__main__':
   unittest.main()

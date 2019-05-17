@@ -133,6 +133,7 @@ public:
 	bool areanytrue(void) const;
 	bool areallpositive(void) const;
 	bool areallzero(void) const;
+	bool areallapprox(const T val) const;
 	ArrayVector<int> round() const;
 	ArrayVector<int> floor() const;
 	ArrayVector<int> ceil() const;

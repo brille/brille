@@ -300,8 +300,13 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 	bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
 	if (!(already_same || transform_needed))
 		throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-	if (transform_needed)
+	if (transform_needed){
+		// perform the transformation
 		Qprim = transform_to_primitive(this->outerlattice,Q);
+		// and allocate space to store qi and taui
+		qprim.resize(Q.size());
+		tauprim.resize(Q.size());
+	}
 	const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
 	LQVec<double> & qsl = transform_needed ? qprim : q;
 	LQVec<int> & tausl = transform_needed? tauprim : tau;

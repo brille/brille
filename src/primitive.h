@@ -11,7 +11,8 @@ const std::array<double,9> P_A_TRANSFORM{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0
 const std::array<double,9> P_B_TRANSFORM{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
 const std::array<double,9> P_C_TRANSFORM{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
 const std::array<double,9> P_R_TRANSFORM{ 0.66666666666666666667,-0.33333333333333333333,-0.33333333333333333333,  0.33333333333333333333, 0.33333333333333333333,-0.66666666666666666667,  0.33333333333333333333, 0.33333333333333333333, 0.33333333333333333333};
-// const std::array<double,9> P_P_TRANSFORM{  1 ,  0 ,  0,    0 ,  1 ,  0 ,   0 ,  0 ,  1 };
+const std::array<double,9> P_P_TRANSFORM{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
+const std::array<int,9> P_P_INVTRNFRM{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
 const std::array<int,9> I_P_TRANSFORM{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
 const std::array<int,9> F_P_TRANSFORM{-1, 1, 1,  1,-1, 1,  1, 1,-1};
 const std::array<int,9> A_P_TRANSFORM{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
@@ -53,8 +54,8 @@ public:
         p2c=R_P_TRANSFORM;
         break;
       default:
-        c2p={1,1,1, 1,1,1, 1,1,1};
-        p2c={1,0,0, 0,1,0, 0,0,1};
+        c2p=P_P_TRANSFORM;
+        p2c=P_P_INVTRNFRM;
     }
   };
   // const double* get_to_primitive_ptr()   const { return c2p.data(); };
