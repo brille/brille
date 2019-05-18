@@ -6,6 +6,7 @@
 #include "arrayvector.h"
 #include "latvec.h"
 #include "neighbours.h"
+#include "interpolation.h"
 #include <omp.h>
 #include <complex>
 #include <memory>
@@ -280,29 +281,29 @@ public:
           weights[0] = 1.0; // and the weight to one
           cnt = 1u;
           break;
-        case -6: // [0jk] partial match printf("Partial (0jk) match\n");
-          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -5: // [i0k] partial match printf("Partial (i0k) match\n");
-          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -4: // [00k] partial match printf("Partial (00k) match\n");
-          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
+        case -6: // [0jk] partial match        printf("Partial (0jk) match\n");
+          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
           break;
-        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
-          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
+        case -5: // [i0k] partial match        printf("Partial (i0k) match\n");
           oob = this->get_corners_and_weights_line(1u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
           break;
-        case -1: // [i00] partial match        printf("Partial (i00) match\n");
-          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
+        case -4: // [00k] partial match        printf("Partial (00k) match\n");
+          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
+          break;
+        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
+          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
+          break;
+        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
+          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
+          break;
+        case -1: // [i00] partial match        printf("Partial (i00) match\n");
+          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
           break;
         case  0: // all neighbours exist and no partial exact match
           oob = this->get_corners_and_weights(corners,weights,ijk,x.datapointer(i));
@@ -321,7 +322,6 @@ public:
       // multiply all elements at each corner by the weight for that corner
       // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
       // and set that ArrayVector as element i of the output ArrayVector
-      if(x.size()<100) printf("Accumulating %d grid points for ouput %d\n",cnt,i);
       unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
@@ -351,29 +351,29 @@ public:
           weights[0] = 1.0; // and the weight to one
           cnt = 1u;
           break;
-        case -6: // [0jk] partial match printf("Partial (0jk) match\n");
-          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -5: // [i0k] partial match printf("Partial (i0k) match\n");
-          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -4: // [00k] partial match printf("Partial (00k) match\n");
-          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
+        case -6: // [0jk] partial match        printf("Partial (0jk) match\n");
+          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
           break;
-        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
-          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
+        case -5: // [i0k] partial match        printf("Partial (i0k) match\n");
           oob = this->get_corners_and_weights_line(1u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
           break;
-        case -1: // [i00] partial match        printf("Partial (i00) match\n");
-          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
+        case -4: // [00k] partial match        printf("Partial (00k) match\n");
+          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
+          break;
+        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
+          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
           cnt = 2u;
+          break;
+        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
+          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
+          break;
+        case -1: // [i00] partial match        printf("Partial (i00) match\n");
+          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
+          cnt = 4u;
           break;
         case  0: // all neighbours exist and no partial exact match
           oob = this->get_corners_and_weights(corners,weights,ijk,x.datapointer(i));
@@ -461,17 +461,15 @@ protected:
   };
   int get_corners_and_weights_area(const size_t a, const size_t b, size_t *c, double *w, const size_t *ijk, const double *x) const {
     int d[2], oob=0;
-    double tmp;
-    size_t t[3]={ijk[a],ijk[b],0}; // temporarily store ijk[[a,b]] here
-    double m[2] = {x[a],x[b]}; // temporarily store x[[a,b]] here.
-    double p[2] = {this->zero[a],this->zero[b]}; // temporarily store zero[[a,b]] here
-    double s[2] = {this->step[a],this->step[b]};
-    for (int i=0; i<2; i++){
-      tmp = m[i] - p[i] + t[i]*s[i]; // x[[a,b][i]] - this->zero[[a,b][i]] + ijk[[a,b][i]]*this->step[[a,b][i]];
-      d[i] = tmp < 0 ? -1 : 1;
-      p[i] = abs(tmp/(double)(s[i]));
-      m[i] = 1.0-p[i];
+    double p[2],m[2];
+    p[0] = interpolation_direction_and_distance(this->zero[a],this->step[a],ijk[a],x[a]);
+    p[1] = interpolation_direction_and_distance(this->zero[b],this->step[b],ijk[b],x[b]);
+    for (int i=0; i<2; ++i){
+      d[i] = p[i] < 0 ? -1 : 1;
+      p[i] = std::abs(p[i]);
+      m[i] = 1-p[i];
     }
+    size_t t[3];
     for (int i=0; i<3; i++) t[i]=ijk[i];
                   oob +=   this->sub2map(t,c   ); w[0] = m[0]*m[1]; // (00)
     t[a] += d[0]; oob += 2*this->sub2map(t,c+1u); w[1] = p[0]*m[1]; // (10)
@@ -480,17 +478,24 @@ protected:
     return oob;
   };
   int get_corners_and_weights_line(const size_t a, size_t *c, double *w, const size_t *ijk, const double *x) const {
-    double tmp = x[a] - this->zero[a] + ijk[a]*this->step[a];
-    int d = tmp < 0 ? -1 : 1;
-    double p = abs(tmp/(double)(this->step[a]));
+    double p = interpolation_direction_and_distance(this->zero[a],this->step[a],ijk[a],x[a]);
+    int oob, d = p < 0 ? -1 : 1;
+    p = std::abs(p);
     double m = 1.0-p;
     size_t t[3];
     for (int i=0; i<3; i++) t[i]=ijk[i];
-    int oob         =   this->sub2map(t,c   ); w[0] = 1.0-p; // (0)
-    t[a] += d; oob += 2*this->sub2map(t,c+1u); w[1] = p;     // (1)
+    // (0)
+    oob  = this->sub2map(t,c);
+    w[0] = m;
+    // (1)
+    t[a] += d;
+    oob += 2*this->sub2map(t,c+1u);
+    w[1] = p;
     return oob;
   };
 };
+
+
 
 template<class T> struct GridDiffTraits{
   using type = T;
