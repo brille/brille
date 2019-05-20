@@ -234,8 +234,16 @@ public:
     slong tmp;
     for (int i=0; i<3; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp < 0) { tmp = 0; out += 1<<i; }
-      if (tmp >= this->size(i) ) { tmp = this->size(i)-1; out += 1<<(3+i); }
+      if (tmp < 0) {
+        printf("(%g - %g)/%g < 0\n",x[i],this->zero[i],this->step[i]);
+        tmp = 0;
+        out += 1<<i;
+      }
+      if (tmp >= this->size(i) ) {
+        printf("(%g - %g)/%g >= %d\n",x[i],this->zero[i],this->step[i],this->size(i));
+        tmp = this->size(i)-1;
+        out += 1<<(3+i);
+      }
       if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i])) { out -= 1<<i; }; // signal an exact match
       // ijk[i] = signed_to_unsigned<size_t,slong>(tmp);
       ijk[i] = (size_t)(tmp);
@@ -270,67 +278,41 @@ public:
     size_t corners[8], ijk[3], cnt;
     int flg, oob=0;
     double weights[8];
-    std::vector<size_t> dirs;
+    std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
 
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
-      switch (flg){
-        case -7: // [ijk] exact match printf("Exact match!\n");
-          this->sub2map(ijk,corners); // set the first "corner" to this mapped index
-          weights[0] = 1.0; // and the weight to one
-          cnt = 1u;
-          break;
-        case -6: // [0jk] partial match        printf("Partial (0jk) match\n");
-          dirs.resize(1);
-          dirs[0]=0u;
-          cnt = 2u;
-          break;
-        case -5: // [i0k] partial match        printf("Partial (i0k) match\n");
-          dirs.resize(1);
-          dirs[0]=1u;
-          cnt = 2u;
-          break;
-        case -4: // [00k] partial match        printf("Partial (00k) match\n");
-          dirs.resize(2);
-          dirs[0]=0u;
-          dirs[1]=1u;
-          cnt = 4u;
-          break;
-        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
-          dirs.resize(1);
-          dirs[0]=2u;
-          cnt = 2u;
-          break;
-        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
-          dirs.resize(2);
-          dirs[0]=0u;
-          dirs[1]=2u;
-          cnt = 4u;
-          break;
-        case -1: // [i00] partial match        printf("Partial (i00) match\n");
-          dirs.resize(2);
-          dirs[0]=1u;
-          dirs[1]=2u;
-          cnt = 4u;
-          break;
-        case  0: // all neighbours exist and no partial exact match
-          dirs.resize(3);
-          dirs[0]=0u;
-          dirs[1]=1u;
-          dirs[2]=2u;
-          cnt = 8u;
-          break;
-        default:
-          std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
-          throw std::runtime_error(msg_flg);
+      cnt = 1u; // will be modified if more than one-point interpolation
+      if (flg > 0 ){
+        std::string msg_flg = "grid.h::linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
+        throw std::runtime_error(msg_flg);
       }
-      if (flg!=-7)
+      if (-7 == flg)/*+++*/{
+        this->sub2map(ijk,corners); // set the first "corner" to this mapped index
+        weights[0] = 1.0; // and the weight to one
+      } else {
+        if ( 0 == flg)/*xxx*/{
+          dirs.resize(3);
+          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
+        }
+        if (-1 == flg || -2 == flg || -4 == flg ) dirs.resize(2);
+        if (-1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+        if (-2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+        if (-4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+
+        if (-3 == flg || -5 == flg || -6 == flg ) dirs.resize(1);
+        if (-3==flg)/*++x*/ dirs[0] = 2u;
+        if (-5==flg)/*+x+*/ dirs[0] = 1u;
+        if (-6==flg)/*x++*/ dirs[0] = 0u;
+
         oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
-      if (oob){
-        std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
-        throw std::runtime_error(msg);
+        cnt=corner_count[dirs.size()];
+        if (oob){
+          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
+          throw std::runtime_error(msg);
+        }
       }
       // now do the actual interpolation:
       // extract an ArrayVector(this->data.numel(),cnt) of the corner Arrays
@@ -354,53 +336,42 @@ public:
     int flg=0, oob=0;
     double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
+    std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
 
-#pragma omp parallel for shared(x,out) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt)
+#pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
-      switch (flg){
-        case -7: // [ijk] exact match printf("Exact match!\n");
-          this->sub2map(ijk,corners); // set the first "corner" to this mapped index
-          weights[0] = 1.0; // and the weight to one
-          cnt = 1u;
-          break;
-        case -6: // [0jk] partial match        printf("Partial (0jk) match\n");
-          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
-          cnt = 2u;
-          break;
-        case -5: // [i0k] partial match        printf("Partial (i0k) match\n");
-          oob = this->get_corners_and_weights_line(1u,corners,weights,ijk,x.datapointer(i));
-          cnt = 2u;
-          break;
-        case -4: // [00k] partial match        printf("Partial (00k) match\n");
-          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
-          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 2u;
-          break;
-        case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
-          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case -1: // [i00] partial match        printf("Partial (i00) match\n");
-          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
-          cnt = 4u;
-          break;
-        case  0: // all neighbours exist and no partial exact match
-          oob = this->get_corners_and_weights(corners,weights,ijk,x.datapointer(i));
-          cnt = 8u;
-          break;
-        default:
-          std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
-          throw std::runtime_error(msg_flg);
+      cnt = 1u; // will be modified if more than one-point interpolation
+      if (flg > 0 ){
+        std::string msg_flg = "grid.h::parallel_linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
+        throw std::runtime_error(msg_flg);
       }
-      if (oob){
-        std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
-        throw std::runtime_error(msg);
+      if (-7 == flg)/*+++*/{
+        this->sub2map(ijk,corners); // set the first "corner" to this mapped index
+        weights[0] = 1.0; // and the weight to one
+      } else {
+        if ( 0 == flg)/*xxx*/{
+          dirs.resize(3);
+          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
+        }
+        if (-1 == flg || -2 == flg || -4 == flg ) dirs.resize(2);
+        if (-1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+        if (-2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+        if (-4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+
+        if (-3 == flg || -5 == flg || -6 == flg ) dirs.resize(1);
+        if (-3==flg)/*++x*/ dirs[0] = 2u;
+        if (-5==flg)/*+x+*/ dirs[0] = 1u;
+        if (-6==flg)/*x++*/ dirs[0] = 0u;
+
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        cnt = corner_count[dirs.size()];
+        if (oob){
+          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
+          throw std::runtime_error(msg);
+        }
       }
       // now do the actual interpolation:
       // extract an ArrayVector(this->data.numel(),cnt) of the corner Arrays
@@ -410,63 +381,6 @@ public:
       unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
-  };
-
-protected:
-  int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x) const {
-    double p[3], m[3];
-    int d[3], oob=0;
-    size_t t[3];
-    for (int i=0; i<3; ++i){
-      t[i] = ijk[i];
-      p[i] = interpolation_direction_and_distance(this->zero[i],this->step[i],ijk[i],x[i]);
-      d[i] = p[i] < 0 ? -1 : 1;
-      p[i] = std::abs(p[i]);
-      m[i] = 1.0-p[i];
-    }
-                  oob +=     this->sub2map(t,c   ); w[0] = m[0]*m[1]*m[2]; // (000)
-    t[0] += d[0]; oob +=   2*this->sub2map(t,c+1u); w[1] = p[0]*m[1]*m[2]; // (100)
-    t[1] += d[1]; oob +=   4*this->sub2map(t,c+2u); w[2] = p[0]*p[1]*m[2]; // (110)
-    t[0] -= d[0]; oob +=   8*this->sub2map(t,c+3u); w[3] = m[0]*p[1]*m[2]; // (010)
-    t[2] += d[2]; oob +=  16*this->sub2map(t,c+4u); w[4] = m[0]*p[1]*p[2]; // (011)
-    t[0] += d[0]; oob +=  32*this->sub2map(t,c+5u); w[5] = p[0]*p[1]*p[2]; // (111)
-    t[1] -= d[1]; oob +=  64*this->sub2map(t,c+6u); w[6] = p[0]*m[1]*p[2]; // (101)
-    t[0] -= d[0]; oob += 128*this->sub2map(t,c+7u); w[7] = m[0]*m[1]*p[2]; // (001)
-    return oob;
-  };
-  int get_corners_and_weights_area(const size_t a, const size_t b, size_t *c, double *w, const size_t *ijk, const double *x) const {
-    int d[2], oob=0;
-    double p[2],m[2];
-    p[0] = interpolation_direction_and_distance(this->zero[a],this->step[a],ijk[a],x[a]);
-    p[1] = interpolation_direction_and_distance(this->zero[b],this->step[b],ijk[b],x[b]);
-    for (int i=0; i<2; ++i){
-      d[i] = p[i] < 0 ? -1 : 1;
-      p[i] = std::abs(p[i]);
-      m[i] = 1-p[i];
-    }
-    size_t t[3];
-    for (int i=0; i<3; i++) t[i]=ijk[i];
-                  oob +=   this->sub2map(t,c   ); w[0] = m[0]*m[1]; // (00)
-    t[a] += d[0]; oob += 2*this->sub2map(t,c+1u); w[1] = p[0]*m[1]; // (10)
-    t[b] += d[1]; oob += 4*this->sub2map(t,c+2u); w[2] = p[0]*p[1]; // (11)
-    t[a] -= d[0]; oob += 8*this->sub2map(t,c+3u); w[3] = m[0]*p[1]; // (01)
-    return oob;
-  };
-  int get_corners_and_weights_line(const size_t a, size_t *c, double *w, const size_t *ijk, const double *x) const {
-    double p = interpolation_direction_and_distance(this->zero[a],this->step[a],ijk[a],x[a]);
-    int oob, d = p < 0 ? -1 : 1;
-    p = std::abs(p);
-    double m = 1.0-p;
-    size_t t[3];
-    for (int i=0; i<3; i++) t[i]=ijk[i];
-    // (0)
-    oob  = this->sub2map(t,c);
-    w[0] = m;
-    // (1)
-    t[a] += d;
-    oob += 2*this->sub2map(t,c+1u);
-    w[1] = p;
-    return oob;
   };
 };
 

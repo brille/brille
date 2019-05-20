@@ -3,8 +3,7 @@
 #include <iostream>
 // #include <functional>
 #include <vector>
-
-double interpolation_direction_and_distance(const double, const double, const size_t, const double);
+#include <cmath>
 
 template <class R, template<class> class T>
 int corners_and_weights( T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t> dirs){
@@ -12,10 +11,12 @@ int corners_and_weights( T<R>* that, const double* zero, const double* step, con
     std::vector<double> p(ndims), m(ndims);
     std::vector<int> d(ndims);
     size_t ti;
+    double tmp;
     for (size_t i=0; i<ndims; ++i){
-      p[i] = interpolation_direction_and_distance(zero[dirs[i]],step[dirs[i]],ijk[dirs[i]],x[dirs[i]]);
-      d[i] = p[i] < 0 ? -1 : 1;
-      p[i] = std::abs(p[i]);
+      // tmp = interpolation_direction_and_distance(zero[dirs[i]],step[dirs[i]],ijk[dirs[i]],x[dirs[i]]);
+      tmp = (x[dirs[i]]-(zero[dirs[i]]+ijk[dirs[i]]*step[dirs[i]]))/step[dirs[i]];
+      d[i] = tmp < 0 ? -1 : 1;
+      p[i] = std::abs(tmp);
       m[i] = 1.0 - p[i];
     }
     std::vector<size_t> t(N);

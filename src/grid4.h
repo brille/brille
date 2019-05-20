@@ -4,6 +4,7 @@
   typedef long slong; // ssize_t is only defined for gcc?
 // #endif
 #include "arrayvector.h"
+#include "interpolation.h"
 #include "neighbours.h"
 
 // A grid is a 3 (or 4) dimensional object that for a given index, e.g.,
@@ -240,69 +241,119 @@ public:
   template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[16], ijk[4];
+    size_t corners[16], ijk[4], cnt;
     int flg, oob;
-    ArrayVector<double> weights(1u, 16u);
+    double weights[16];
+    std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
-      // determine the linear indices for the 16 grid points surrounding x[i]
-      // plus their linear-interpolation weights.
-      oob = this->get_corners_and_weights(corners,weights.datapointer(0),ijk,x.datapointer(i));
-      if (flg || oob) {
-        // flg has detailed information of the nearest grid point to ijk deficiencies
-        // oob contains the number of corners which are out of bounds.
-        std::string msg = std::to_string(oob)+" corners are out of bounds! " + std::to_string(flg);
-        throw std::runtime_error(msg);
+      cnt = 1u;
+      if (flg > 0 ){
+        std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
+        throw std::runtime_error(msg_flg);
       }
-      // now do the actual interpolation:
-      // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
-      // multiply all elements at each corner by the weight for that corner
-      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
-      // and set that ArrayVector as element i of the output ArrayVector
-      out.set( i, (this->data.extract(8u, corners) * weights).sum() );
+      if (-15 == flg)/*++++*/{
+        this->sub2map(ijk,corners);
+        weights[0]=1.0;
+      } else {
+        if (0 == flg)/*xxxx*/{
+          dirs.resize(4);
+          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+        }
+        if ( -1==flg|| -2==flg|| -4==flg|| -8==flg) dirs.resize(3);
+        if ( -1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
+        if ( -2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
+        if ( -4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
+        if ( -8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
+
+        if ( -3==flg|| -5==flg|| -9==flg|| -6==flg||-10==flg||-12==flg) dirs.resize(2);
+        if ( -3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
+        if ( -5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
+        if ( -9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
+        if ( -6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
+        if (-10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
+        if (-12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
+
+        if ( -7==flg||-11==flg||-13==flg||-14==flg) dirs.resize(1);
+        if ( -7==flg)/*+++x*/ dirs[0]=3u;
+        if (-11==flg)/*++x+*/ dirs[0]=2u;
+        if (-13==flg)/*+x++*/ dirs[0]=1u;
+        if (-14==flg)/*x+++*/ dirs[0]=0u;
+
+        // determine the linear indices for the (up to) 16 grid points
+        // surrounding x[i] plus their linear-interpolation weights.
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,4u,dirs);
+        cnt = corner_count[dirs.size()];
+        if (oob) {
+          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
+          throw std::runtime_error(msg);
+        }
+      }
+      unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
   };
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
     this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
-    const ArrayVector<R>* const xptr = &x;
-          ArrayVector<T>* const outptr = &out;
-    const ArrayVector<T>* const datptr = &(this->data);
-    const InterpolateGrid4<T>* const thsptr = this;
+    size_t corners[16], ijk[4], cnt;
+    int flg, oob;
+    double weights[16];
+    std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
 
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
-
-    size_t corners[16], ijk[4];
-    ArrayVector<double> weights(1u, 16u);
-    // some versions of OpenMP require that the for loop variable be signed.
-    slong xsize = unsigned_to_signed<long,size_t>(x.size());
-    // Compared to single-processor code, there is no out explicit out-of-bounds
-    // error checking here (nearest_index and get_corners_and_weights) both do
-    // internal checks, but we ignore their results.
-    // TODO: consider putting the error check back in within a pragma omp critical block
-
-#pragma omp parallel for firstprivate(corners,ijk,weights,xsize)
+    slong xsize = unsigned_to_signed<slong,size_t>(x.size());
+#pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs)
     for (slong si=0; si<xsize; si++){
-      // size_t i = (size_t)(i); // all functions called with i expect an unsigned integer.
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
-      thsptr->nearest_index(xptr->datapointer(i), ijk );
-      // determine the linear indices for the 8 grid points surrounding x[i]
-      // plus their linear-interpolation weights.
-      thsptr->get_corners_and_weights(corners,weights.datapointer(0),ijk,xptr->datapointer(i));
-      // now do the actual interpolation:
-      // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
-      // multiply all elements at each corner by the weight for that corner
-      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
-      // and set that ArrayVector as element i of the output ArrayVector
-      outptr->set( i, (datptr->extract(16u, corners) * weights).sum() );
+      flg = this->nearest_index(x.datapointer(i), ijk );
+      cnt = 1u;
+      if (flg > 0 ){
+        std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
+        throw std::runtime_error(msg_flg);
+      }
+      if (-15 == flg)/*++++*/{
+        this->sub2map(ijk,corners);
+        weights[0]=1.0;
+      } else {
+        if (0 == flg)/*xxxx*/{
+          dirs.resize(4);
+          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+        }
+        if ( -1==flg|| -2==flg|| -4==flg|| -8==flg) dirs.resize(3);
+        if ( -1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
+        if ( -2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
+        if ( -4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
+        if ( -8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
+
+        if ( -3==flg|| -5==flg|| -9==flg|| -6==flg||-10==flg||-12==flg) dirs.resize(2);
+        if ( -3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
+        if ( -5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
+        if ( -9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
+        if ( -6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
+        if (-10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
+        if (-12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
+
+        if ( -7==flg||-11==flg||-13==flg||-14==flg) dirs.resize(1);
+        if ( -7==flg)/*+++x*/ dirs[0]=3u;
+        if (-11==flg)/*++x+*/ dirs[0]=2u;
+        if (-13==flg)/*+x++*/ dirs[0]=1u;
+        if (-14==flg)/*x+++*/ dirs[0]=0u;
+
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,4u,dirs);
+        cnt = corner_count[dirs.size()];
+        if (oob) {
+          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
+          throw std::runtime_error(msg);
+        }
+      }
+      unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
   };
-
 
   ArrayVector<size_t> get_halfN(void) const {
     ArrayVector<size_t> out(1u,3u,this->N); // this is the Q part of N
@@ -317,36 +368,6 @@ public:
     return out;
   };
 protected:
-  int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x) const {
-    int d[4], oob=0;
-    size_t t[4];
-    double p[4], m[4], tmp;
-    for (int i=0; i<4; i++){
-      t[i]=ijk[i];
-      tmp = x[i] - (this->zero[i]+ijk[i]*this->step[i]);
-      d[i] = tmp < 0 ? -1 : 1;
-      p[i] = abs(tmp/(double)(this->step[i]));
-      m[i] = 1.0-p[i];
-    }
-                  oob += this->sub2map(t,c    ); w[ 0] = m[0]*m[1]*m[2]*m[3]; // (0000)
-    t[0] += d[0]; oob += this->sub2map(t,c+1u ); w[ 1] = p[0]*m[1]*m[2]*m[3]; // (1000)
-    t[1] += d[1]; oob += this->sub2map(t,c+2u ); w[ 2] = p[0]*p[1]*m[2]*m[3]; // (1100)
-    t[0] -= d[0]; oob += this->sub2map(t,c+3u ); w[ 3] = m[0]*p[1]*m[2]*m[3]; // (0100)
-    t[2] += d[2]; oob += this->sub2map(t,c+4u ); w[ 4] = m[0]*p[1]*p[2]*m[3]; // (0110)
-    t[0] += d[0]; oob += this->sub2map(t,c+5u ); w[ 5] = p[0]*p[1]*p[2]*m[3]; // (1110)
-    t[1] -= d[1]; oob += this->sub2map(t,c+6u ); w[ 6] = p[0]*m[1]*p[2]*m[3]; // (1010)
-    t[0] -= d[0]; oob += this->sub2map(t,c+7u ); w[ 7] = m[0]*m[1]*p[2]*m[3]; // (0010)
-    t[2] -= d[2]; // get back to (0000)
-    t[3] += d[3]; oob += this->sub2map(t,c+8u ); w[ 8] = m[0]*m[1]*m[2]*p[3]; // (0001)
-    t[0] += d[0]; oob += this->sub2map(t,c+9u ); w[ 9] = p[0]*m[1]*m[2]*p[3]; // (1001)
-    t[1] += d[1]; oob += this->sub2map(t,c+10u); w[10] = p[0]*p[1]*m[2]*p[3]; // (1101)
-    t[0] -= d[0]; oob += this->sub2map(t,c+11u); w[11] = m[0]*p[1]*m[2]*p[3]; // (0101)
-    t[2] += d[2]; oob += this->sub2map(t,c+12u); w[12] = m[0]*p[1]*p[2]*p[3]; // (0111)
-    t[0] += d[0]; oob += this->sub2map(t,c+13u); w[13] = p[0]*p[1]*p[2]*p[3]; // (1111)
-    t[1] -= d[1]; oob += this->sub2map(t,c+14u); w[14] = p[0]*m[1]*p[2]*p[3]; // (1011)
-    t[0] -= d[0]; oob += this->sub2map(t,c+15u); w[15] = m[0]*m[1]*p[2]*p[3]; // (0011)
-    return oob;
-  };
   ArrayVector<size_t> get_neighbours(const size_t centre) const {
     ArrayVector<int> mzp = make_relative_neighbour_indices4(1); // all combinations of [-1,0,+1] for four dimensions, skipping (0,0,0,0)
     ArrayVector<size_t> ijk(4u,1u);

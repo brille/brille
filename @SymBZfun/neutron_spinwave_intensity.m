@@ -13,7 +13,7 @@ end
 nQ = numel(qh);
 Q = cat(2,qh,qk,ql);
 if obj.rluNeeded % qh,qk,ql are (or should be) in rlu, but we need absolute
-    Bmatrix = double( obj.BZGrid.brillouinzone.lattice.get_B_matrix() );
+    Bmatrix = double( obj.BZGrid.BrillouinZone.lattice.get_B_matrix() );
     trn = obj.Qtrans(1:3,1:3);
     Bmatrix = trn*Bmatrix;
 

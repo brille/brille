@@ -300,29 +300,19 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 	bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
 	if (!(already_same || transform_needed))
 		throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-	if (transform_needed){
-		// perform the transformation
-		Qprim = transform_to_primitive(this->outerlattice,Q);
-		// and allocate space to store qi and taui
-		qprim.resize(Q.size());
-		tauprim.resize(Q.size());
-	}
+
+	if (transform_needed)	Qprim = transform_to_primitive(this->outerlattice,Q);
 	const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
 	LQVec<double> & qsl = transform_needed ? qprim : q;
 	LQVec<int> & tausl = transform_needed? tauprim : tau;
 
-	// we could enforce that q and tau already have enough storage space to hold
-	// their respective parts of Q, but LQVec/ArrayVector objects will resize
-	// themselves if necessary, so don't bother.
+	// Determine which points in Q are already inside the first BZ
 	ArrayVector<bool> allinside = this->isinside(Qsl);
-
-	// *tau = *Q * (int)(0); //hopefully this calls operator*<T,int> which *should* return an LQVec<int>
-	// for (size_t i=0; i<tau->size(); ++i) for (size_t j=0; j<tau->numel(); ++j) tau->insert(0,i,j); // this sucks
-	q   = Q * 0.0;
-	tau = round(q); // returns int element type for sure
+	// ensure that qsl and tausl can hold each qi and taui
+	qsl.resize(Qsl.size());
+	tausl.resize(Qsl.size());
 
 	LQVec<int> facehkl(this->lattice,this->faces);
-	// ArrayVector<double> facelen = facehkl.norm();
 	ArrayVector<double> facelen = norm(facehkl);
 	LQVec<double> facenrm = facehkl/facelen;
 	LQVec<double> qi;
@@ -335,8 +325,8 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 	for (size_t i=0; i<Qsl.size(); i++){
 		count = 0;
 		qi = Qsl.get(i);
-		taui = tausl.get(i);
-		while (!allinside.getvalue(i) && count++ < 5*facelen.size()){
+		taui = 0*tausl.get(i);
+		while (!allinside.getvalue(i) && count++ < 50*facelen.size()){
 			// std::cout << "Moving q = " << qi.to_string() << std::endl;
 			q_dot_facenrm = dot( qi , facenrm );
 			Nhkl = (q_dot_facenrm/facelen).round();

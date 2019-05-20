@@ -35,7 +35,6 @@ message("Building for version ${SYMBZ_VERSION}")
 include_directories("${PROJECT_SOURCE_DIR}/src")
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
             ${PROJECT_SOURCE_DIR}/src/bz.cpp
-						${PROJECT_SOURCE_DIR}/src/interpolation.cpp
             ${PROJECT_SOURCE_DIR}/src/lattice.cpp
             ${PROJECT_SOURCE_DIR}/src/neighbours.cpp
             ${PROJECT_SOURCE_DIR}/src/pointgroup.cpp

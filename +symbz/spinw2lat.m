@@ -90,8 +90,8 @@ end
 % 
 % trnm = trnm/P;
 
-% [dlat,rlat]=symbz.lattice(lens,angs,'radian','direct','spgr',sw.lattice.label);
-[dlat,rlat]=symbz.lattice(lens,angs,'radian','direct');
+[dlat,rlat]=symbz.lattice(lens,angs,'radian','direct','spgr',sw.lattice.label);
+% [dlat,rlat]=symbz.lattice(lens,angs,'radian','direct');
 
 
 

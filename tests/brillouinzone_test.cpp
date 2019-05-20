@@ -27,7 +27,7 @@ TEST_CASE("Testing BrillouinZone moveinto"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-5.0,5.0);
 
-  int nQ = 10000;
+  int nQ = 3333;
   double* rawQ = new double[nQ*3]();
   for (int i=0; i<3*nQ; ++i) rawQ[i] = distribution(generator);
   LQVec<double> Q(r,nQ,rawQ);
@@ -37,12 +37,10 @@ TEST_CASE("Testing BrillouinZone moveinto"){
   LQVec<int> tau(r,nQ);
 
   REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
+  REQUIRE( bz.isinside(q).arealltrue() );
   LQVec<double> Qmq = Q-q;
   LQVec<double> Qmqmtau = Q-(q+tau);
   for (size_t i=0; i<Q.size(); ++i)
   for (size_t j=0; j<Q.numel(); ++j)
   REQUIRE( Q.getvalue(i,j) == Approx( q.getvalue(i,j) + tau.getvalue(i,j) ) );
-
-  // REQUIRE( Qmqmtau.areallapprox(0.) ); // Q ≡ q+τ is what move into is all about
-
 }
