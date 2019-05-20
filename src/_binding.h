@@ -7,6 +7,7 @@
 
 #include "symbz.h"
 #include "arithmetic.h"
+#include "interpolation.h"
 #include "linear_algebra.h"
 #include "lattice.h"
 #include "bz.h"

@@ -16,6 +16,7 @@
 #include "bz.h"
 #include "grid.h"
 #include "bz_grid.h"
+#include "interpolation.h"
 
 #include "version_info.h"
 

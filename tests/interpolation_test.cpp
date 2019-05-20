@@ -4,6 +4,7 @@
 
 #include "grid.h"
 #include "bz_grid.h"
+#include "interpolation.h"
 
 ArrayVector<double> f_of_Q(const ArrayVector<double>& Q){
   size_t i,j,n = 40u;

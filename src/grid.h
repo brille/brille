@@ -270,6 +270,7 @@ public:
     size_t corners[8], ijk[3], cnt;
     int flg, oob=0;
     double weights[8];
+    std::vector<size_t> dirs;
 
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
@@ -282,37 +283,51 @@ public:
           cnt = 1u;
           break;
         case -6: // [0jk] partial match        printf("Partial (0jk) match\n");
-          oob = this->get_corners_and_weights_line(0u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(1);
+          dirs[0]=0u;
           cnt = 2u;
           break;
         case -5: // [i0k] partial match        printf("Partial (i0k) match\n");
-          oob = this->get_corners_and_weights_line(1u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(1);
+          dirs[0]=1u;
           cnt = 2u;
           break;
         case -4: // [00k] partial match        printf("Partial (00k) match\n");
-          oob = this->get_corners_and_weights_area(0u,1u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(2);
+          dirs[0]=0u;
+          dirs[1]=1u;
           cnt = 4u;
           break;
         case -3: // [ij0] partial match        printf("Partial (ij0) match\n");
-          oob = this->get_corners_and_weights_line(2u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(1);
+          dirs[0]=2u;
           cnt = 2u;
           break;
         case -2: // [0j0] partial match        printf("Partial (0j0) match\n");
-          oob = this->get_corners_and_weights_area(0u,2u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(2);
+          dirs[0]=0u;
+          dirs[1]=2u;
           cnt = 4u;
           break;
         case -1: // [i00] partial match        printf("Partial (i00) match\n");
-          oob = this->get_corners_and_weights_area(1u,2u,corners,weights,ijk,x.datapointer(i));
+          dirs.resize(2);
+          dirs[0]=1u;
+          dirs[1]=2u;
           cnt = 4u;
           break;
         case  0: // all neighbours exist and no partial exact match
-          oob = this->get_corners_and_weights(corners,weights,ijk,x.datapointer(i));
+          dirs.resize(3);
+          dirs[0]=0u;
+          dirs[1]=1u;
+          dirs[2]=2u;
           cnt = 8u;
           break;
         default:
           std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
           throw std::runtime_error(msg_flg);
       }
+      if (flg!=-7)
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
       if (oob){
         std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
         throw std::runtime_error(msg);
@@ -397,55 +412,16 @@ public:
     return out;
   };
 
-//   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
-//     this->check_before_interpolating(x);
-//     ArrayVector<T> out(this->data.numel(), x.size());
-//     const ArrayVector<R>* const xptr = &x;
-//           ArrayVector<T>* const outptr = &out;
-//     const ArrayVector<T>* const datptr = &(this->data);
-//     const InterpolateGrid3<T>* const thsptr = this;
-//
-//     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
-//
-//     size_t corners[8], ijk[3];
-//     double weights[8];
-//     // some versions of OpenMP require that the for loop variable be signed.
-//     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
-//     // Compared to single-processor code, there is no out explicit out-of-bounds
-//     // error checking here (nearest_index and get_corners_and_weights) both do
-//     // internal checks, but we ignore their results.
-//     // TODO: consider putting the error check back in within a pragma omp critical block
-//
-// #pragma omp parallel for firstprivate(corners,ijk,weights,xsize)
-//     for (slong si=0; si<xsize; si++){
-//       // size_t i = (size_t)(i); // all functions called with i expect an unsigned integer.
-//       size_t i = signed_to_unsigned<size_t,slong>(si);
-//       // find the closest grid subscripted indices to x[i]
-//       thsptr->nearest_index(xptr->datapointer(i), ijk );
-//       // determine the linear indices for the 8 grid points surrounding x[i]
-//       // plus their linear-interpolation weights.
-//       thsptr->get_corners_and_weights(corners,weights,ijk,xptr->datapointer(i));
-//
-//       // now do the actual interpolation:
-//       // extract an ArrayVector(this->data.numel(),8u) of the corner Arrays
-//       // multiply all elements at each corner by the weight for that corner
-//       // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
-//       // and set that ArrayVector as element i of the output ArrayVector
-//       unsafe_accumulate_to(*datptr, 8u, corners, weights, *outptr, i);
-//     }
-//     return out;
-//   };
-
 protected:
   int get_corners_and_weights(size_t *c, double *w, const size_t *ijk, const double *x) const {
+    double p[3], m[3];
     int d[3], oob=0;
     size_t t[3];
-    double p[3], m[3], tmp;
-    for (int i=0; i<3; i++){
-      t[i]=ijk[i];
-      tmp = x[i] - (this->zero[i]+ijk[i]*this->step[i]);
-      d[i] = tmp < 0 ? -1 : 1;
-      p[i] = abs(tmp/(double)(this->step[i]));
+    for (int i=0; i<3; ++i){
+      t[i] = ijk[i];
+      p[i] = interpolation_direction_and_distance(this->zero[i],this->step[i],ijk[i],x[i]);
+      d[i] = p[i] < 0 ? -1 : 1;
+      p[i] = std::abs(p[i]);
       m[i] = 1.0-p[i];
     }
                   oob +=     this->sub2map(t,c   ); w[0] = m[0]*m[1]*m[2]; // (000)
@@ -456,7 +432,6 @@ protected:
     t[0] += d[0]; oob +=  32*this->sub2map(t,c+5u); w[5] = p[0]*p[1]*p[2]; // (111)
     t[1] -= d[1]; oob +=  64*this->sub2map(t,c+6u); w[6] = p[0]*m[1]*p[2]; // (101)
     t[0] -= d[0]; oob += 128*this->sub2map(t,c+7u); w[7] = m[0]*m[1]*p[2]; // (001)
-
     return oob;
   };
   int get_corners_and_weights_area(const size_t a, const size_t b, size_t *c, double *w, const size_t *ijk, const double *x) const {

@@ -2,6 +2,7 @@
 
 #include "grid.h"
 #include "bz_grid.h"
+#include "interpolation.h"
 
 TEST_CASE("Testing MapGrid3 instantiation"){
   MapGrid3<int> a;
