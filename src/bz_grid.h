@@ -65,7 +65,7 @@ protected:
       }
     }
     // d is "guaranteed" to now be in units of inverse angstrom.
-    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double minx[3], maxx[3];
     for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
@@ -98,7 +98,7 @@ protected:
       iszero[i] = 0u==in[i];
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
-    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
     for (size_t i=0; i<vxyz.size(); i++)
@@ -192,7 +192,7 @@ protected:
       }
     }
     // d is "guaranteed" to now be in units of inverse angstrom (and meV).
-    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double minx[3], maxx[3];
     for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
@@ -230,7 +230,7 @@ protected:
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
     n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
-    ArrayVector<double> vxyz = this->brillouinzone.get_primitive_vertices().get_xyz();
+    ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
     for (size_t i=0; i<vxyz.size(); i++)
