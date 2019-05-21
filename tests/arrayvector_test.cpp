@@ -6,7 +6,7 @@
 
 #include "arrayvector.h"
 
-TEST_CASE("ArrayVector creation is tested","[arrayvector]"){
+TEST_CASE("ArrayVector creation","[arrayvector]"){
   ArrayVector<double> novalues(3,3);
   REQUIRE( novalues.numel() == 3);
   REQUIRE( novalues.size() == 3);
@@ -50,7 +50,7 @@ TEST_CASE("ArrayVector creation is tested","[arrayvector]"){
 
 }
 
-TEST_CASE("ArrayVector scalar math operations are tested","[arrayvector]"){
+TEST_CASE("ArrayVector scalar math operations","[arrayvector]"){
     double values[9] = {1,2,3,4,5,6,7,8,9};
     ArrayVector<double> x(3,3,values);
 
@@ -83,7 +83,7 @@ TEST_CASE("ArrayVector scalar math operations are tested","[arrayvector]"){
     }
 }
 
-TEST_CASE("ArrayVector ArrayVector math operations are tested","[arrayvector]"){
+TEST_CASE("ArrayVector ArrayVector math operations","[arrayvector]"){
     double values[9] = {1,2,3,4,5,6,7,8,9};
     ArrayVector<double> x(3,3,values);
 

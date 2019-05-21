@@ -85,27 +85,25 @@ end
 
 function weight = sho_internal(en, omega, sf, pars)
 % Calculates weight from SHO model
-    gam = 0.1;
-    temp = 0;
-    amp = 1;
-    if numel(pars)>0; gam  = pars(1); end
-    if numel(pars)>1; temp = pars(2); end
-    if numel(pars)>2; amp  = pars(3); end
+    if numel(pars)>0; gam  = pars(1); else gam  = 0.1; end
+    if numel(pars)>1; temp = pars(2); else temp = 0;   end
+    if numel(pars)>2; amp  = pars(3); else amp  = 1;   end
     
     om = real(omega);
     
     nQ = numel(en);
     nM = size(om,2);
-    Bose = ones(nQ,1);
     if abs(temp)>sqrt(eps) 
         Bose = en./ (1-exp(-11.602.*en./temp));
+    else
+        Bose = ones(nQ,1);
     end
 
     % Use damped SHO model to give intensity:
     enM2 = repmat(en.^2,[1,nM]);
     ok = om > 0 & isfinite(om);
     sho = zeros(nQ,nM);
-    sho(ok) = 4*gam*om(ok).*sf(ok) ./ (pi*(enM2(ok)-om(ok).^2).^2 + 4*gam^2*enM2(ok));
+    sho(ok) = (4/pi)*gam*om(ok).*sf(ok)./((enM2(ok)-om(ok).^2).^2 + 4*gam^2*enM2(ok));
     weight = sum(sho,2);
     weight = amp .* Bose .* weight;
 end

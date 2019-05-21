@@ -4,7 +4,7 @@
 
 #include "munkres.h"
 
-TEST_CASE("Testing Munkres' Assignment algorithm","[munkres]"){
+TEST_CASE("Munkres' Assignment algorithm","[munkres]"){
   // double cost[9] = {1.,2.,3., 2.,4.,6., 3.,6.,9.};
   std::vector<double> cost = {1.,2.,3., 2.,4.,6., 3.,6.,9.};
 

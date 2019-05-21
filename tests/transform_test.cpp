@@ -9,7 +9,7 @@
 #include "latvec.h"
 #include "primitive_transforms.h"
 
-TEST_CASE("Testing primitive transforms"){
+TEST_CASE("primitive transforms","[transform]"){
   Centering c;
   SECTION("Body centering"){ c = BODY; }
   SECTION("Face centering"){ c = FACE; }
@@ -27,7 +27,7 @@ TEST_CASE("Testing primitive transforms"){
   REQUIRE( approx_matrix<double,double,3>(res,I) );
 }
 
-TEST_CASE("Testing primitive vector transforms"){
+TEST_CASE("primitive vector transforms","[transform]"){
   std::string spgr;
   SECTION("Primitive spacegroup"){
     spgr = "P 1";

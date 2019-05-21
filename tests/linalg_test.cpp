@@ -3,11 +3,11 @@
 
 // Put in TEST_CASEs for all functions defined in linear_algebra, starting from the top
 
-TEST_CASE("Testing trace"){
+TEST_CASE("trace","[linalg]"){
   int mat[9] = {1,2,3, 4,5,6, 7,8,9};
   REQUIRE(trace<int,3>(mat) == 1+5+9);
 }
-TEST_CASE("Testing array copying and equivalency"){
+TEST_CASE("array copying and equivalency","[linalg]"){
   int source[16] = {1,2,3,4, 5,6,7,8, 9,10,11,12, 13,14,15,16};
   int dest[16] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
   SECTION("copy_array"){
@@ -23,7 +23,7 @@ TEST_CASE("Testing array copying and equivalency"){
     REQUIRE( equal_vector<int,16>(dest,source) );
   }
 }
-TEST_CASE("Testing approx"){
+TEST_CASE("approx","[linalg]"){
   float  f[16] = {1e-7,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
   double d[16] ={1e-15,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
   SECTION("approx_scalar"){ for (int i=0; i<16; i++) REQUIRE( approx_scalar(f[i],d[i]) ); }
@@ -32,7 +32,7 @@ TEST_CASE("Testing approx"){
   SECTION("approx_vector"){ REQUIRE( approx_vector<float,double,16>(f,d) ); }
 }
 
-TEST_CASE("Testing array multiplication"){
+TEST_CASE("array multiplication","[linalg]"){
   int A[9] = {1,2,3,4,5,6,7,8,9};
   int B[9] = {10,-2,14,5,-3,8,-18,0,4};
   int W[12] = {1,2,3,4,5,6,7,8,9,10,11,12};
@@ -67,7 +67,7 @@ TEST_CASE("Testing array multiplication"){
   }
 }
 
-TEST_CASE("Testing array addition"){
+TEST_CASE("array addition","[linalg]"){
   int A[16]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
   double B[16]={0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.01,0.11,0.21,0.31,0.41,0.51,0.61};
   double C[16], expected[16]={1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8,9.9,10.01,11.11,12.21,13.31,14.41,15.51,16.61};
@@ -81,7 +81,7 @@ TEST_CASE("Testing array addition"){
   }
 }
 
-TEST_CASE("Testing specialized (rounding for double->int) casting"){
+TEST_CASE("specialized (rounding for double->int) casting","[linalg]"){
   double cD[9], D[9] = {-1.9, -1.1, -0.3, 0.6, 2.2, 1.4, 0.3, -0.7, -2.1};
   int    cI[9], I[9] = {-2,   -1,    0,   1,   2,   1,   0,   -1,   -2  };
   SECTION("my_cast"){
@@ -104,7 +104,7 @@ TEST_CASE("Testing specialized (rounding for double->int) casting"){
   }
 }
 
-TEST_CASE("Testing determinant and inverse of matrices"){
+TEST_CASE("determinant and inverse of matrices","[linalg]"){
   double M[9] = {1,0,1, 0,1,0, 0,1,1};
   double invM[9], expected_invM[9] = {1,1,-1, 0,1,0, 0,-1,1};
   REQUIRE( matrix_determinant<double>(M) == Approx(1) );
@@ -112,7 +112,7 @@ TEST_CASE("Testing determinant and inverse of matrices"){
   REQUIRE( approx_matrix<double,double,3>(invM, expected_invM) ); // and that the result is correct
 }
 
-TEST_CASE("Testing similar matrix"){
+TEST_CASE("similar matrix","[linalg]"){
   double A[9] = {1,2,3,4,5,6,7,8,9};
   double M[9] = {1,0,1, 0,1,0, 0,1,1};
   double S[9], expected[9] = {-2,-1,-2,4,11,10,3,6,6};
@@ -120,7 +120,7 @@ TEST_CASE("Testing similar matrix"){
   REQUIRE( approx_matrix<double,double,3>(S,expected) );
 }
 
-TEST_CASE("Testing array transpose"){
+TEST_CASE("array transpose","[linalg]"){
   int M[12] = {1,2,3,4, 5,6,7,8, 9,10,11,12};
   int Mt[12];
   SECTION("(3,4)->(4,3)"){
@@ -134,7 +134,7 @@ TEST_CASE("Testing array transpose"){
     REQUIRE( equal_array<int,3,4>(Mt,expected) );
   }
 }
-TEST_CASE("Testing matrix transpose"){
+TEST_CASE("matrix transpose","[linalg]"){
   int M[9] = {1,2,3,4,5,6,7,8,9};
   int expected[9] = {1,4,7, 2,5,8, 3,6,9};
   SECTION("store transpose in second matrix"){
@@ -148,17 +148,17 @@ TEST_CASE("Testing matrix transpose"){
   }
 }
 
-TEST_CASE("Testing matrix metric"){
+TEST_CASE("matrix metric","[linalg]"){
   double B[9] = {10,-2,14,5,-3,8,-18,0,4};
   double Bm[9], expected[9]={449,-35,108,-35,13,-52,108,-52,276};
   matrix_metric<double,3>(Bm,B);
   REQUIRE( approx_matrix<double,double,3>(Bm,expected) );
 }
-TEST_CASE("Testing vector norm squared"){
+TEST_CASE("vector norm squared","[linalg]"){
   double v[3] = {1,-2,3};
   REQUIRE( vector_norm_squared<double,3>(v) == Approx(14.0) );
 }
-TEST_CASE("Testing vector cross products"){
+TEST_CASE("vector cross products","[linalg]"){
   double v1[3] = {1,0,0}, v2[3] = {0,1,0}, v3[3] = {0,0,1};
   double cross[3];
   SECTION("(100)×(010)"){
@@ -174,7 +174,7 @@ TEST_CASE("Testing vector cross products"){
     REQUIRE( approx_vector<double,double,3>(cross,v2) );
   }
 }
-TEST_CASE("Testing vector dot products"){
+TEST_CASE("vector dot products","[linalg]"){
   double v1[3] = {1,1,0}, v2[3] = {0,1,1}, v3[3] = {1,0,1};
   double dot[3];
   SECTION("(110)⋅(011)"){ REQUIRE( vector_dot<double,3>(v1,v2) == Approx(1.0) );}

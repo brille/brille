@@ -60,7 +60,7 @@ ArrayVector<double> f_of_Q_eigs(const ArrayVector<double>& Q){
 }
 
 
-TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
+TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
   BrillouinZone bz(r);
   size_t halfN[3] = {10,10,10};
@@ -103,7 +103,7 @@ TEST_CASE("Testing BrillouinZoneGrid3 Interpolation"){
   REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
 }
 
-TEST_CASE("Testing BrillouinZoneGrid3 Sorting","[munkres]"){
+TEST_CASE("BrillouinZoneGrid3 Sorting","[munkres]"){
   Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
   BrillouinZone bz(r);
   size_t halfN[3] = {10,10,10};
@@ -135,12 +135,12 @@ ArrayVector<std::complex<double>> complex_fe_dispersion(const ArrayVector<double
   return out;
 }
 
-TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation"){
+TEST_CASE("primitive BrillouinZoneGrid3 Interpolation","[interpolation]"){
   std::string spgr = "Im-3m";
   Direct d(2.87,2.87,2.87,PI/2,PI/2,PI/2,spgr);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
-  size_t halfN[3] = {10,10,10};
+  size_t halfN[3] = {30,30,30};
   BrillouinZoneGrid3<std::complex<double>> bzg(bz,halfN);
 
   bzg.replace_data( fe_dispersion(bzg.get_mapped_xyz()) );
@@ -158,10 +158,15 @@ TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation"){
   ArrayVector<std::complex<double>> sum = intres+fedisp;
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
-  REQUIRE( abs(diff.getvalue(i,j)) <= 1e-14*abs(sum.getvalue(i,j)) );
+  REQUIRE( Approx(abs(diff.getvalue(i,j))) <= 1e-10*abs(sum.getvalue(i,j)) );
 }
-//
-TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation, random"){
+
+// The following test is not a great general test-case since we're checking
+// if a linear interpolation has done a good job approximating a
+// decidedly-not-linear function.
+// The tag [.] indicates to Catch that this test should be hidden and only run
+// if its second tag is specified.
+TEST_CASE("primitive BrillouinZoneGrid3 Interpolation, random","[.][random]"){
   std::string spgr = "Im-3m";
   Direct d(2.87,2.87,2.87,PI/2,PI/2,PI/2,spgr);
   Reciprocal r = d.star();
@@ -176,7 +181,7 @@ TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation, random"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-5,5);
 
-  int nQ = 33;
+  int nQ = 333;
   double* rawQ = new double[nQ*3]();
   for (int i=0; i<3*nQ; ++i) rawQ[i] = distribution(generator);
   LQVec<double> Q(r,nQ,rawQ);
@@ -184,8 +189,8 @@ TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation, random"){
   LQVec<double> q(r,nQ);
   LQVec<int> tau(r,nQ);
   REQUIRE( bz.moveinto(Q,q,tau) );
-  printf("Q = \n"); Q.get_xyz().print();
-  printf("q = \n"); q.get_xyz().print();
+  // printf("Q = \n"); Q.get_xyz().print();
+  // printf("q = \n"); q.get_xyz().print();
 
   SECTION("Single-thread interpolation"){
     intres = bzg.linear_interpolate_at(q.get_xyz());
@@ -201,5 +206,5 @@ TEST_CASE("Testing primitive BrillouinZoneGrid3 Interpolation, random"){
 
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
-  REQUIRE( abs(percent.getvalue(i,j)) <= Approx(50) );
+  REQUIRE( abs(percent.getvalue(i,j)) <= Approx(35) );
 }

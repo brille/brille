@@ -186,46 +186,6 @@ void BrillouinZone::determine_everything(const int extent){
 	delete[] contrib;
 }
 
-// size_t BrillouinZone::get_vertices_bare(const size_t max, double *out) const {
-// 	if (max<this->vertices.size()) return 0;
-// 	if (this->isprimitive()){
-// 		SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
-// 		PrimitiveTransform PT(spgt.centering);
-// 		std::array<int,9> P = PT.get_from_primitive();
-// 		double tmp[3];
-// 		for (size_t i=0; i<this->vertices.size(); ++i){
-// 			this->vertices.get(i,tmp);
-// 			multiply_matrix_vector<double,int,double,3>(out+i*3,P.data(),tmp);
-// 		}
-// 	}else{
-// 		for (size_t i=0; i<this->vertices.size(); i++)
-// 		this->vertices.get(i, out+i*3);
-// 	}
-// 	return this->vertices.size();
-// }
-// size_t BrillouinZone::get_faces_bare(const size_t max, int *out) const {
-// 	if (max<this->faces.size()) return 0;
-// 	if (this->isprimitive()){
-// 		SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
-// 		PrimitiveTransform PT(spgt.centering);
-// 		std::array<int,9> P = PT.get_from_primitive();
-// 		int tmp[3];
-// 		for (size_t i=0; i<this->faces.size(); ++i){
-// 			this->faces.get(i,tmp);
-// 			multiply_matrix_vector<int,int,int,3>(out+i*3,P.data(),tmp);
-// 		}
-// 	}else{
-// 	for (size_t i=0; i<this->faces.size(); i++)
-// 		this->faces.get(i, out+i*3);
-// 	}
-//   return this->faces.size();
-// }
-// size_t BrillouinZone::get_faces_per_vertex_bare(const size_t max, int *out) const {
-// 	if (max<this->faces_per_vertex.size()) return 0;
-// 	for (size_t i=0; i<this->faces_per_vertex.size(); i++)
-// 		this->faces_per_vertex.get(i, out+i*3);
-// 	return this->faces_per_vertex.size();
-// }
 LQVec<double> BrillouinZone::get_vertices(void) const {
 	LQVec<double> lqverts(this->lattice,this->vertices);
 	if (this->isprimitive())

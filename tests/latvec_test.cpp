@@ -10,11 +10,11 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
   double values[] = { 1,0,0, 0,1,0, 0,0,1 };
   LQVec<double> q(r,3,values);
 
-  SECTION("Single-vector length via .norm(integer)"){
+  SECTION("length via .norm(integer)"){
     for(size_t i=0; i<3; i++)
     REQUIRE( q.norm(i) == Approx(2*PI) );
   }
-  SECTION("All vectors length via norm()"){
+  SECTION("length via norm()"){
     ArrayVector<double> normq = norm(q);
     REQUIRE( normq.size() == q.size() );
     REQUIRE( normq.numel() == 1u );

@@ -18,7 +18,7 @@ def plot_points_with_lines(x,y,title=''):
     ax.set_title(title)
     pp.show()
 
-def plot_bz(bz,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,linewidth=1,alpha=0.7):
+def plot_bz(bz,origin=None,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,linewidth=1,alpha=0.7):
     if units == 'rlu':
         v = bz.vertices
         f = bz.faces
@@ -28,6 +28,10 @@ def plot_bz(bz,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,li
     else:
         v = bz.vertices_invA
         f = bz.faces_invA
+    if origin is not None and type(origin) != np.ndarray:
+        origin = np.array(origin)
+    if origin is None or origin.size != 3 or origin.ndim>1:
+        origin = np.array((0,0,0))
     # We have the three faces contributing to each vertex
     fpv = bz.faces_per_vertex
     # but for plotting we want the opposite -- the vertices contributing per face
@@ -57,7 +61,7 @@ def plot_bz(bz,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,li
             else:
                 r = np.random.randint(nv)
             perm[[n[0],r]] = perm[[r,n[0]]]
-        patches[t] = patches[t][perm]
+        patches[t] = patches[t][perm]+origin
 
     min = np.array([x.min() for x in np.vsplit(v.transpose(),3)])
     max = np.array([x.max() for x in np.vsplit(v.transpose(),3)])
@@ -71,6 +75,7 @@ def plot_bz(bz,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,li
     collection.set_facecolor(color)
     ax.add_collection3d(collection)
 
+
     if face_vectors:
         fvecs = [ np.array([[0,0,0],f[i]/2]) for i in range(f.shape[0]) ]
         lcol = Line3DCollection(fvecs)
@@ -78,6 +83,15 @@ def plot_bz(bz,Q=None,units='invA',color='b',edgecolor='k',face_vectors=False,li
     ax.set_xlim(left=min[0],right=max[0])
     ax.set_ylim(bottom=min[1],top=max[1])
     ax.set_zlim(bottom=min[2],top=max[2])
-    if Q is not None and Q.shape[1]==3:
+    if Q is not None and type(Q) == numpy.ndarray and Q.ndim==2 and Q.shape[1]==3:
         ax.scatter(Q[:,0],Q[:,1],Q[:,2])
     pp.show()
+
+# def cube(p0,p1):
+#     dx = np.array((p1[0]-p0[0],0,0));
+#     dy = np.array((0,p1[1]-p0[1],0));
+#     dz = np.array((0,0,p1[2]-p0[2]));
+#     v = p0+np.array([dx-dx, dx, dx+dy, dy, dz, dz+dx, dz+dx+dy, dz+dy])
+#     t = np.array([[0,1,2,3],[0,1,5,4],[0,4,7,3],[4,5,6,7],[6,2,1,5],[2,6,7,3]])
+#     patches = [ v[x] for x in t ]
+#     return patches
