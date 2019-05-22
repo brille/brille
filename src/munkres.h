@@ -6,27 +6,33 @@
 #include <memory>
 #include <vector>
 
-// A single-case implementation of the Munkres' Assignment Algorithm
-// see, e.g., http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
-
 enum marker {
   NORMAL,
   STARED,
   PRIMED,
 };
+/*! \brief A single-case implementation of the Munkres' Assignment Algorithm
 
+    See, e.g., http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
+*/
 template<typename T> class Munkres{
 private:
-  size_t N;
-  std::vector<T> cost;
-  std::vector<marker> mask;
-  int step;
-  std::vector<int> rowcover;
-  std::vector<int> colcover;
-  size_t stored_row;
-  size_t stored_col;
-  bool finished;
+  size_t N;                  //!< dimensionality of the problem
+  std::vector<T> cost;       //!< cost matrix, to be optimized
+  std::vector<marker> mask;  //!< mask matrix, to indicate star and prime zeros
+  int step;                  //!< the current step of the algorithm
+  std::vector<int> rowcover; //!< indicator for if a row is covered
+  std::vector<int> colcover; //!< indicator for if a column is covered
+  size_t stored_row;         //!< stored row index
+  size_t stored_col;         //!< stored column index
+  bool finished;             //!< flag to indicate if the algorithm has succeeded
 public:
+  /*! The Munkres intializer
+      @param n the dimensionality of the system, which must be square
+      @param cmat [optional] the cost matrix
+
+      If the cost matrix is provided the assignment algorithm is run automatically.
+  */
   Munkres(size_t n, std::vector<T> cmat = std::vector<T>()) : N(n), step(1), cost(cmat){
     if (cost.size()<N*N) cost.resize(N*N);
 
@@ -42,6 +48,8 @@ public:
     for (size_t i=0; i< cost.size(); ++i) sum+=abs(cost[i]);
     finished= (sum>0) ? run_assignment() : false;
   }
+  //! Start the assignment algorithm.
+  //! @returns A flag to indicate if the algorithm finished successfully
   bool run_assignment(){
     bool done = false, ok = false;
     while (!done) {
@@ -60,8 +68,15 @@ public:
     step = 1; // reset in case we feel like running this again.
     return ok;
   }
+  //! Get a mutable reference to the cost matrix, useful for filling.
   std::vector<T>& get_cost(void){ return cost;}
+  //! Get an immutable reference to the cost matrix
   const std::vector<T>& get_cost(void) const { return cost; }
+  /*! After the assignment algorithm has run, use get_assignment to retrieve
+      the result
+      @param[out] out A size_t pointer at which the N task assignments will be stored
+      @returns The returned flag is true if the assignment was made.
+  */
   bool get_assignment(size_t* out){
     if (!finished) finished = run_assignment();
     if (finished){
@@ -71,6 +86,7 @@ public:
     }
     return finished;
   }
+private:
   void show(){
     printf("s=%d\t",step);
     for (size_t c=0; c<N; ++c) printf("%s\t", colcover[c] ? "X" : "" );
@@ -82,7 +98,6 @@ public:
       printf("\n");
     }
   }
-private:
   void find_a_zero(long long &row, long long &col){
     row = -1;
     col = -1;

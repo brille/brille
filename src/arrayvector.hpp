@@ -1,4 +1,4 @@
-
+/*! \file */
 
 template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
 	T *ptr = nullptr;
@@ -491,13 +491,27 @@ template<typename T> ArrayVector<T> ArrayVector<T>:: operator -() const {
 }
 
 
-
+/*! Combine multiple arrays from one ArrayVector into a single-array ArrayVector
+	@param av The ArrayVector from which arrays will be extracted
+	@param n The number of arrays to be extraced
+	@param i A pointer to the indices of the arrays to be extracted
+	@returns a single-array ArrayVector with elements that are the sum of the
+					 extracted arrays' elements
+*/
 template<typename T> ArrayVector<T> accumulate(const ArrayVector<T>& av, const size_t n, const size_t *i) {
 	ArrayVector<T> out(av.numel(),1u);
 	// for (size_t j=0; j<av.numel(); ++j) out.insert(T(0), 0,j);
 	for (size_t j=0; j<n; j++) out += av.extract(i[j]);
 	return out;
 }
+/*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector
+	@param av The ArrayVector from which arrays will be extracted
+	@param n The number of arrays to be extraced
+	@param i A pointer to the indices of the arrays to be extracted
+	@param w A pointer to the weights used in combining the extracted arrays
+	@returns a single-array ArrayVector with elements that are the weighted sum
+					 of the extracted arrays' elements
+*/
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
 				 class S = typename std::common_type<T,R>::type
@@ -508,6 +522,15 @@ A<S> accumulate(const A<T>& av, const size_t n, const size_t *i, const R *w) {
 	for (size_t j=0; j<n; j++) out += av.extract(i[j]) *w[j];
 	return out;
 }
+/*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector,
+		storing the result in the specified ArrayVector at the specified index
+	@param av The ArrayVector from which arrays will be extracted
+	@param n The number of arrays to be extraced
+	@param i A pointer to the indices of the arrays to be extracted
+	@param w A pointer to the weights used in combining the extracted arrays
+	@param[out] out A reference to the ArrayVector where the result will be stored
+	@param j The index into out where the array will be stored
+*/
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
 				 class S = typename std::common_type<T,R>::type
@@ -518,6 +541,17 @@ void accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, 
 	for (size_t k=0;k<n;++k) if (i[k]>=av.size()) throw std::out_of_range("source index out of range");
 	unsafe_accumulate_to(av,n,i,w,out,j);
 }
+/*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector,
+		storing the result in the specified ArrayVector at the specified index
+	@param av The ArrayVector from which arrays will be extracted
+	@param n The number of arrays to be extraced
+	@param i A pointer to the indices of the arrays to be extracted
+	@param w A pointer to the weights used in combining the extracted arrays
+	@param[out] out A reference to the ArrayVector where the result will be stored
+	@param j The index into out where the array will be stored
+	@note This function performs no bounds checking. Use accumulate_to if there is
+	      a need to ensure no out-of-bounds access is performed.
+*/
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
 				 class S = typename std::common_type<T,R>::type

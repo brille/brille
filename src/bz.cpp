@@ -21,7 +21,7 @@ void BrillouinZone::set_faces_per_vertex(ArrayVector<int> newfpv){
 	this->faces_per_vertex = newfpv;
 }
 
-void BrillouinZone::determine_everything(const int extent){
+void BrillouinZone::vertex_search(const int extent){
 	// LQVec<int> tau(this->lattice);
 	// int ntau = make_all_indices(&tau,extent);
 	LQVec<int> tau(this->lattice, make_relative_neighbour_indices(extent) );
