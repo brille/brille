@@ -19,7 +19,7 @@
 
 const size_t default_n[3] = { 0u,0u,0u };
 
-/*! \brief A class holding a grid which maps into an internal ArrayVector
+/*! \brief A class holding a 3D grid which maps into an internal ArrayVector
 
 The MapGrid3 holds a mapping grid where each entry is either a valid index into
 a held ArrayVector or is `-1` to indicate that the grid point does not map.
@@ -124,7 +124,7 @@ public:
   //
   //! Return the total number of elements in the mapping grid
   size_t numel(void) const;
-  //! Return the number of elements in the mapping grid along a given direction
+  //! Return the number of elements in the mapping grid along a given dimension
   size_t size(const size_t i) const;
   //! Change the size of the mapping grid given three new sizes
   size_t resize(const size_t n0, const size_t n1, const size_t n2);
@@ -168,7 +168,7 @@ const double default_step[3] = {1.,1.,1.};
 /*! \brief Extends the MapGrid3 class to have positions of each grid point enabling interpolation between mapped points
 */
 template<class T> class InterpolateGrid3: public MapGrid3<T>{
-  double zero[3]; //!< the position of `map[0]`
+  double zero[3]; //!< the 3-vector position of `map[0]`
   double step[3]; //!< the step size along each direction of the grid
 public:
   InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n) { this->set_zero(z); this->set_step(s); };
@@ -179,7 +179,7 @@ public:
   void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
   void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; };
 
-  /* \brief Return the positions of all grid points
+  /*! \brief Return the positions of all grid points
   @param maxN the maximum number of grid points which can be stored in `xyz`
   @param[out] xyz A location to store the grid point coordinates
   @returns the number of grid points returned
@@ -199,7 +199,7 @@ public:
         }
     return cnt;
   };
-  /* \brief Return the x coordiates of the grid points
+  /*! \brief Return the x coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `x`
   @param[out] x A location to store the x values
   @returns the number of values stored
@@ -211,7 +211,7 @@ public:
     for (size_t i=0; i<this->size(0); i++) x[ cnt++ ] = z0 + s0*i;
     return cnt;
   };
-  /* \brief Return the y coordiates of the grid points
+  /*! \brief Return the y coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `y`
   @param[out] y A location to store the y values
   @returns the number of values stored
@@ -223,7 +223,7 @@ public:
     for (size_t j=0; j<this->size(1); j++) y[ cnt++ ] = z1 + s1*j;
     return cnt;
   };
-  /* \brief Return the z coordiates of the grid points
+  /*! \brief Return the z coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `z`
   @param[out] z A location to store the z values
   @returns the number of values stored
@@ -295,29 +295,31 @@ public:
   @param[out] ijk A storage location for the subscripted indices
   @returns An integer with detailed information about if and how `x` is out of
            bounds of the grid.
-  @note `out` encodes whether `x` is beyond the boundaries of the grid, using
-        its bits as flags. For a given axis n, a number fₙ takes one of three
-        values {2ⁿ,0,2ⁿ⁺³} if `x` is smaller than the lowest coordiate in the
-        grid along n, within the bounds of the grid along n, or larger than the
-        highest coordinate in the grid along n; and `out` = f₀ + f₁ + f₂.
+  @note `out` encodes details about how each component of `x` is located in
+         relation to the boundaries of the grid, using its bits as flags.
+         For a given axis n, a number fₙ takes one of four
+         values {0,2ⁿ,2ⁿ⁺³,2ⁿ⁺⁶} to indicate that  `x` is between two grid points,
+         within machine precision of a grid point, smaller than the lowest grid
+         point, or larger than the highest grid point, respectively.
+         `out` is then f₀+f₁+f₂.
   */
   int nearest_index(const double *x, size_t *ijk) const {
     int out=0;
     slong tmp;
     for (int i=0; i<3; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp < 0) {
-        printf("(%g - %g)/%g < 0\n",x[i],this->zero[i],this->step[i]);
-        tmp = 0;
-        out += 1<<i;
+      if (tmp>=0 && tmp<this-<size(i)){
+        if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
+          out += 1<<i; // exact match
+      } else {
+        if (tmp<0) {
+          tmp = 0;
+          out += 1<<(3+i); // underflow
+        } else {
+          tmp = this->size(i)-1;
+          out += 1<<(6+i); // overflow
+        }
       }
-      if (tmp >= this->size(i) ) {
-        printf("(%g - %g)/%g >= %d\n",x[i],this->zero[i],this->step[i],this->size(i));
-        tmp = this->size(i)-1;
-        out += 1<<(3+i);
-      }
-      if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i])) { out -= 1<<i; }; // signal an exact match
-      // ijk[i] = signed_to_unsigned<size_t,slong>(tmp);
       ijk[i] = (size_t)(tmp);
     }
     return out;
@@ -373,27 +375,28 @@ public:
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
       cnt = 1u; // will be modified if more than one-point interpolation
-      if (flg > 0 ){
+      // Alternatively, ignore out-of-bounds information by flg &= 7;
+      if (flg > 7){
         std::string msg_flg = "grid.h::linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
         throw std::runtime_error(msg_flg);
       }
-      if (-7 == flg)/*+++*/{
+      if (7==flg)/*+++*/{
         this->sub2map(ijk,corners); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
-        if ( 0 == flg)/*xxx*/{
+        if (0==flg)/*xxx*/{
           dirs.resize(3);
           dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
         }
-        if (-1 == flg || -2 == flg || -4 == flg ) dirs.resize(2);
-        if (-1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
-        if (-2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
-        if (-4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+        if (1==flg || 2==flg || 4==flg) dirs.resize(2);
+        if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+        if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+        if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
 
-        if (-3 == flg || -5 == flg || -6 == flg ) dirs.resize(1);
-        if (-3==flg)/*++x*/ dirs[0] = 2u;
-        if (-5==flg)/*+x+*/ dirs[0] = 1u;
-        if (-6==flg)/*x++*/ dirs[0] = 0u;
+        if (3==flg || 5==flg || 6==flg) dirs.resize(1);
+        if (3==flg)/*++x*/ dirs[0] = 2u;
+        if (5==flg)/*+x+*/ dirs[0] = 1u;
+        if (6==flg)/*x++*/ dirs[0] = 0u;
 
         oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
         cnt=corner_count[dirs.size()];
@@ -444,27 +447,27 @@ public:
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
       cnt = 1u; // will be modified if more than one-point interpolation
-      if (flg > 0 ){
+      if (flg > 7){
         std::string msg_flg = "grid.h::parallel_linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
         throw std::runtime_error(msg_flg);
       }
-      if (-7 == flg)/*+++*/{
+      if (7 == flg)/*+++*/{
         this->sub2map(ijk,corners); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
-        if ( 0 == flg)/*xxx*/{
+        if (0==flg)/*xxx*/{
           dirs.resize(3);
           dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
         }
-        if (-1 == flg || -2 == flg || -4 == flg ) dirs.resize(2);
-        if (-1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
-        if (-2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
-        if (-4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+        if (1==flg || 2==flg || 4==flg) dirs.resize(2);
+        if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+        if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+        if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
 
-        if (-3 == flg || -5 == flg || -6 == flg ) dirs.resize(1);
-        if (-3==flg)/*++x*/ dirs[0] = 2u;
-        if (-5==flg)/*+x+*/ dirs[0] = 1u;
-        if (-6==flg)/*x++*/ dirs[0] = 0u;
+        if (3==flg || 5==flg || 6==flg) dirs.resize(1);
+        if (3==flg)/*++x*/ dirs[0] = 2u;
+        if (5==flg)/*+x+*/ dirs[0] = 1u;
+        if (6==flg)/*x++*/ dirs[0] = 0u;
 
         oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
         cnt = corner_count[dirs.size()];

@@ -55,43 +55,7 @@ if any(nExt > 1)
     types = repmat(types,[prod(nExt),1]);
 end
 
-% % use spglib to determine which centreing this is
-% latmat = symbz.latmat(lens,angs,'radian');
-% 
-% dataset = spglib.get_symmetry_dataset(latmat,positions,types);
-% ctype = dataset.international(1);
-% switch lower(ctype)
-%     case 'a'
-%         P = [2 0 0; 0 1 -1; 0 1 1]/2;
-%     case 'c'
-%         P = [1 1 0; -1 1 0; 0 0 2]/2;
-%     case 'r'
-%         P = [2 -1 -1; 1 1 -2; 1 1 1]/3;
-%     case 'i'
-%         P = [-1 1 1; 1 -1 1; 1 1 -1]/2;
-%     case 'f'
-%         P = [0 1 1; 1 0 1; 1 1 0]/2;
-%     otherwise
-%         P = [1 0 0; 0 1 0; 0 0 1];
-% end
-% 
-% latmat_primitive = latmat*P; 
-% vap = latmat_primitive(:,1);
-% vbp = latmat_primitive(:,2);
-% vcp = latmat_primitive(:,3);
-% ap = norm(vap);
-% bp = norm(vbp);
-% cp = norm(vcp);
-% alp = acos( dot(vbp/bp, vcp/cp) );
-% bep = acos( dot(vcp/cp, vap/ap) );
-% gap = acos( dot(vap/ap, vbp/bp) );
-% lens = [ap,bp,cp];
-% angs = [alp,bep,gap];
-% 
-% trnm = trnm/P;
-
 [dlat,rlat]=symbz.lattice(lens,angs,'radian','direct','spgr',sw.lattice.label);
-% [dlat,rlat]=symbz.lattice(lens,angs,'radian','direct');
 
 
 

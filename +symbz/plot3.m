@@ -1,5 +1,5 @@
 function plot3(BrillouinZone_or_BZGrid,varargin)
-    defs=struct('facecolor','none','facealpha',1,'edgecolor','k','edgealpha',1,'showgrid',true,'fullgrid',false);
+    defs=struct('facecolor','none','facealpha',1,'edgecolor','k','edgealpha',1,'showgrid',true,'fullgrid',false,'units','invA');
     [~,kwds]=symbz.parse_arguments(varargin,defs,{'showgrid','fullgrid'});
     ph = ishold();
     hold on;
@@ -16,13 +16,22 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
     assert( exist('bz','var')==1, 'The first input must be either a BrillouinZone or BZGridQ object');
     
     % pull out MATLAB versions of python numpy arrays
-    faces = double(bz.faces_invA)/2;
-    verts = double(bz.vertices_invA);
+    if strcmpi(kwds.units,'rlu')
+        faces = double(bz.faces)/2;
+        verts = double(bz.vertices);
+    else
+        faces = double(bz.faces_invA)/2;
+        verts = double(bz.vertices_invA);
+    end
     f_p_v = int32(bz.faces_per_vertex) +1 ; % +1 to convert from C to MATLAB indexing
     
     for i=1:size(faces,1)
         this_f_v = any( f_p_v == i, 2);
-        corners = unique( verts(this_f_v,:), 'rows' );
+        % If a corner has N>3 faces adjacent to it, we will miss it for
+        % N-3 of those faces, but we can still find it now:
+        extras = abs(mtimesx_mex(verts-faces(i,:),faces(i,:)'))<1e-14;
+        % Make sure we keep only those which are unique
+        corners = unique( verts(this_f_v|extras,:), 'rows' );
         % to draw a patch, we need to sort the corners
         % we want dot( cross( corner(i)-dot(corner(i),faces(i)), corner(i+1)-dot(corner(i+1),faces(i)) ) , faces(i)) > 0 
         % for all corners
@@ -57,6 +66,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
     end
     
     view(3)
+    axis equal
     
     if ~ph
         hold off;
