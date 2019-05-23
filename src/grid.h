@@ -303,8 +303,8 @@ public:
          point, or larger than the highest grid point, respectively.
          `out` is then f₀+f₁+f₂.
   */
-  int nearest_index(const double *x, size_t *ijk) const {
-    int out=0;
+  unsigned int nearest_index(const double *x, size_t *ijk) const {
+    unsigned int out=0;
     slong tmp;
     for (int i=0; i<3; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
@@ -324,20 +324,20 @@ public:
     }
     return out;
   };
-  /*! Find the linear index of the closest grid point to a specified position
-  @param x The test position
-  @returns The linear index of the closest grid point -- even if `x` is out of bounds
-  */
-  size_t nearest_linear_index(const double *x) const {
-    size_t ijk[3];
-    int ret;
-    if ( (ret = nearest_index(x,ijk)) ){
-      // somehow indicate that we've hit one or more boundaries?
-    }
-    size_t lidx;
-    ret += this->sub2lin(ijk,&lidx);
-    return lidx;
-  }
+  // /*! Find the linear index of the closest grid point to a specified position
+  // @param x The test position
+  // @returns The linear index of the closest grid point -- even if `x` is out of bounds
+  // */
+  // size_t nearest_linear_index(const double *x) const {
+  //   size_t ijk[3];
+  //   int ret;
+  //   if ( (ret = nearest_index(x,ijk)) ){
+  //     // somehow indicate that we've hit one or more boundaries?
+  //   }
+  //   size_t lidx;
+  //   ret += this->sub2lin(ijk,&lidx);
+  //   return lidx;
+  // }
   //! Perform sanity checks before attempting to interpolate
   template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
     if (this->size(0)<2||this->size(1)<2||this->size(2)<2)
@@ -366,7 +366,8 @@ public:
     this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3], cnt;
-    int flg, oob=0;
+    unsigned int flg;
+    int oob=0;
     double weights[8];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
 
@@ -384,16 +385,16 @@ public:
         this->sub2map(ijk,corners); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
-        if (0==flg)/*xxx*/{
+        if (!flg)/*xxx*/{
           dirs.resize(3);
           dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
         }
-        if (1==flg || 2==flg || 4==flg) dirs.resize(2);
+        if ( flg && !(flg&(flg-1)) ) dirs.resize(2); // flg&(flg-1) is zero if flg is a power of 2 (or zero)
         if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
         if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
         if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
 
-        if (3==flg || 5==flg || 6==flg) dirs.resize(1);
+        if ( flg && (flg&(flg-1)) ) dirs.resize(1);
         if (3==flg)/*++x*/ dirs[0] = 2u;
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
@@ -436,7 +437,8 @@ public:
     (threads>0) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
 
     size_t corners[8], ijk[3], cnt=0u;
-    int flg=0, oob=0;
+    unsigned int flg=0;
+    int oob=0;
     double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
