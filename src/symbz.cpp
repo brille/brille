@@ -62,7 +62,7 @@ size_t symbz_get_symmetry_from_database(int *rotations, double *translations, co
       sym.getrot(i, rotations + i*9);
       sym.gettran(i, translations + i*3);
     }
-	symbz_error_code = SYMBZ_SUCCESS;
+  symbz_error_code = SYMBZ_SUCCESS;
     return sym.size();
   }
   if (sym.size()>space)
@@ -121,67 +121,67 @@ int symbz_get_pointgroup_rotations_hall_number(int *rotations, const int max_siz
 }
 
 int symbz_get_hall_number_from_international(const char* itname){
-	int hall_number;
-	hall_number = spgdb_international_to_hall_number(itname);
-	if (hall_number)
-		symbz_error_code = SYMBZ_SUCCESS;
-	else
-		symbz_error_code = SYMBZ_SPACEGROUP_SEARCH_FAILED;
-	return hall_number;
+  int hall_number;
+  hall_number = spgdb_international_to_hall_number(itname);
+  if (hall_number)
+    symbz_error_code = SYMBZ_SUCCESS;
+  else
+    symbz_error_code = SYMBZ_SPACEGROUP_SEARCH_FAILED;
+  return hall_number;
 }
 
 
 // Entirely new-to-SymBZ functions follow:
 
 // int symbz_get_bz(const double *lengths, const double *angles, const int search_length, const int *max_sizes, double *verts, int *faces, int *fpv, int *counts){
-// 	Direct dlat(lengths,angles);
-// 	BrillouinZone bz(dlat.star(),search_length);
-// 	counts[0] = bz.vertices_count();
-// 	counts[1] = bz.faces_count();
+//   Direct dlat(lengths,angles);
+//   BrillouinZone bz(dlat.star(),search_length);
+//   counts[0] = bz.vertices_count();
+//   counts[1] = bz.faces_count();
 //
-// 	if (max_sizes[0]<counts[0] || max_sizes[1]<counts[1]) return 1;
+//   if (max_sizes[0]<counts[0] || max_sizes[1]<counts[1]) return 1;
 //
-// 	bz.get_vertices_bare(max_sizes[0],verts);
-// 	bz.get_faces_bare(max_sizes[1],faces);
-// 	bz.get_faces_per_vertex_bare(max_sizes[0],fpv);
-// 	return 0;
+//   bz.get_vertices_bare(max_sizes[0],verts);
+//   bz.get_faces_bare(max_sizes[1],faces);
+//   bz.get_faces_per_vertex_bare(max_sizes[0],fpv);
+//   return 0;
 // }
 
 // size_t symbz_get_bz_step_grid_xyz(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
-// 	Direct d(lengths,angles);
-// 	Reciprocal r = d.star();
-// 	BrillouinZone bz(r,search_length);
-// 	BrillouinZoneGrid3 bzg(r,multiplicity);
-// 	size_t num = bzg.get_grid_xyz(maxN, xyz);
-// 	return num;
+//   Direct d(lengths,angles);
+//   Reciprocal r = d.star();
+//   BrillouinZone bz(r,search_length);
+//   BrillouinZoneGrid3 bzg(r,multiplicity);
+//   size_t num = bzg.get_grid_xyz(maxN, xyz);
+//   return num;
 // }
 // size_t symbz_get_bz_step_grid_hkl(const double *lengths, const double *angles, const int search_length, const size_t *multiplicity, const size_t maxN, double *xyz){
-// 	Direct d(lengths,angles);
-// 	d.print();
-// 	Reciprocal r = d.star();
-// 	r.print();
-// 	BrillouinZone bz(r,search_length);
-// 	bz.print();
-// 	printf("Generate BrillouinZoneGrid3 with multiplicity=[%lu,%lu,%lu] ...",multiplicity[0],multiplicity[1],multiplicity[2]);
-// 	BrillouinZoneGrid3 bzg(r,multiplicity);
-// 	printf(" done.\n Copy up to %lu (h,k,l) vectors which form the grid ...",maxN);
-// 	size_t num = bzg.get_grid_hkl(maxN, xyz);
-// 	printf(" done.\n Got back %lu grid points.\n",num);
-// 	return num;
+//   Direct d(lengths,angles);
+//   d.print();
+//   Reciprocal r = d.star();
+//   r.print();
+//   BrillouinZone bz(r,search_length);
+//   bz.print();
+//   printf("Generate BrillouinZoneGrid3 with multiplicity=[%lu,%lu,%lu] ...",multiplicity[0],multiplicity[1],multiplicity[2]);
+//   BrillouinZoneGrid3 bzg(r,multiplicity);
+//   printf(" done.\n Copy up to %lu (h,k,l) vectors which form the grid ...",maxN);
+//   size_t num = bzg.get_grid_hkl(maxN, xyz);
+//   printf(" done.\n Got back %lu grid points.\n",num);
+//   return num;
 // }
 // size_t symbz_get_bz_inva_grid_xyz(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
-// 	Direct d(lengths,angles);
-// 	Reciprocal r = d.star();
-// 	BrillouinZone bz(r,search_length);
-// 	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
-// 	size_t num = bzg.get_grid_xyz(maxN, xyz);
-// 	return num;
+//   Direct d(lengths,angles);
+//   Reciprocal r = d.star();
+//   BrillouinZone bz(r,search_length);
+//   BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
+//   size_t num = bzg.get_grid_xyz(maxN, xyz);
+//   return num;
 // }
 // size_t symbz_get_bz_inva_grid_hkl(const double *lengths, const double *angles, const int search_length, const double *stepsize, const int stepisrlu, const size_t maxN, double *xyz){
-// 	Direct d(lengths,angles);
-// 	Reciprocal r = d.star();
-// 	BrillouinZone bz(r,search_length);
-// 	BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
-// 	size_t num = bzg.get_grid_hkl(maxN, xyz);
-// 	return num;
+//   Direct d(lengths,angles);
+//   Reciprocal r = d.star();
+//   BrillouinZone bz(r,search_length);
+//   BrillouinZoneGrid3 bzg(r,stepsize,stepisrlu);
+//   size_t num = bzg.get_grid_hkl(maxN, xyz);
+//   return num;
 // }

@@ -1,3 +1,4 @@
+/*! \file */
 #ifndef _PRIMITIVE_H_
 #define _PRIMITIVE_H_
 
@@ -20,11 +21,24 @@ const std::array<int,9> B_P_TRANSFORM{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
 const std::array<int,9> C_P_TRANSFORM{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
 const std::array<int,9> R_P_TRANSFORM{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 
+/*! A class to hold transformation matricies and their inverse, with the matrix
+stored in an object is determined by a provided Centering type.
+
+For each centred real-space-filling lattice there is a transformation matrix P
+which converts its basis vectors into those of an equivalent primitive
+space-filling lattice via,
+    (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P
+This transformation matrix has an inverse matrix P⁻¹ which performs the opposite
+conversion of basis vectors, or converts the associated reciprocal space-filling
+lattice basis vectors to their equivalent primitive basis vectors.
+
+This class holds P and P⁻¹ for a given centering type.
+*/
 class PrimitiveTransform{
 private:
-  Centering cen;
-  std::array<double,9> c2p;
-  std::array<int,9> p2c;
+  Centering cen;            //!< The Centering enum value
+  std::array<double,9> c2p; //!< The matrix taking centred lattice to the primitive lattice
+  std::array<int,9> p2c;    //!< The inverse matrix taking the primitive lattice to the centred lattice
 public:
   PrimitiveTransform(const Centering c): cen{c} { set_matrices(); };
   void set_matrices(void) {
@@ -72,14 +86,16 @@ public:
       printf("\n");
     }
   };
-	bool does_anything() { return (cen!=PRIMITIVE);};
-	bool does_nothing() { return (cen==PRIMITIVE); };
+  //! A check if the Matrices *should* do anything, that *is not* if the centering is Primitive
+  bool does_anything() { return (cen!=PRIMITIVE);};
+  //! A check if the Matrices *shouldn't* do anything, that *is* if the centering is Primitive
+  bool does_nothing() { return (cen==PRIMITIVE); };
 };
 
 // create new primitive transform traits
 struct PrimitiveTransformTraits{
-	using to = double;
-	using from = int;
+  using to = double;
+  using from = int;
 };
 
 #endif

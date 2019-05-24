@@ -20,22 +20,22 @@
 |   size                   return the number of motions the object can store. |
 \*****************************************************************************/
 class Symmetry{
-	unsigned int N;
-	int         *R;
-	double      *T;
+  unsigned int N;
+  int         *R;
+  double      *T;
 public:
-	Symmetry(unsigned int n=0): N(n), R(nullptr), T(nullptr) { if (N){ R = new int [N*9](); T = new double [N*3](); } };
-	~Symmetry(){ if (N){ delete[] R; delete[] T; } };
-	unsigned int size() { return N; };
-	bool     set(const unsigned int i, const int *r, const double *t);
-	bool     setrot(const unsigned int i, const int *r);
-	bool     settran(const unsigned int i, const double *t);
-	bool     get(const unsigned int i, int *r, double *t);
-	bool     getrot(const unsigned int i, int *r);
-	bool     gettran(const unsigned int i, double *t);
-	int    * getrot(const unsigned int i);
-	double * gettran(const unsigned int i);
-	unsigned int resize(const unsigned int i);
+  Symmetry(unsigned int n=0): N(n), R(nullptr), T(nullptr) { if (N){ R = new int [N*9](); T = new double [N*3](); } };
+  ~Symmetry(){ if (N){ delete[] R; delete[] T; } };
+  unsigned int size() { return N; };
+  bool     set(const unsigned int i, const int *r, const double *t);
+  bool     setrot(const unsigned int i, const int *r);
+  bool     settran(const unsigned int i, const double *t);
+  bool     get(const unsigned int i, int *r, double *t);
+  bool     getrot(const unsigned int i, int *r);
+  bool     gettran(const unsigned int i, double *t);
+  int    * getrot(const unsigned int i);
+  double * gettran(const unsigned int i);
+  unsigned int resize(const unsigned int i);
 };
 
 
@@ -52,16 +52,16 @@ public:
 |   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
 class PointSymmetry{
-	unsigned int N;
-	int         *R;
+  unsigned int N;
+  int         *R;
 public:
-	PointSymmetry(unsigned int n=0): N(n), R(nullptr) {if (N) R = new int[N*9](); };
-	~PointSymmetry(){ if (N) delete[] R; };
-	unsigned int size(){ return N; };
-	bool  get(const unsigned int i, int *r);
-	bool  set(const unsigned int i, const int *r);
-	int * get(const unsigned int i);
-	unsigned int resize(const unsigned int newsize);
+  PointSymmetry(unsigned int n=0): N(n), R(nullptr) {if (N) R = new int[N*9](); };
+  ~PointSymmetry(){ if (N) delete[] R; };
+  unsigned int size(){ return N; };
+  bool  get(const unsigned int i, int *r);
+  bool  set(const unsigned int i, const int *r);
+  int * get(const unsigned int i);
+  unsigned int resize(const unsigned int newsize);
 };
 
 

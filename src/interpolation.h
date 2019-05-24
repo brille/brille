@@ -1,10 +1,43 @@
+/*! \file */
 #ifndef _INTERPOLATION_H_
 #define _INTERPOLATION_H_
 #include <iostream>
-// #include <functional>
 #include <vector>
 #include <cmath>
 
+/*! \brief Find the linear index and weights of interpolation points for a given position
+
+Linear interpolation in D dimensions requires 2ᴰ points surrounding the position
+where an interpolated value is to be determined. The value at each of the 2ᴰ
+points contributes in proportion to how close it is to the interpolation point.
+This function finds the linear indices for any object which has a `sub2map`
+method with signature `(const size_t* subscripted_index, size_t* linear_index)`
+and determines the appropriate normalized weights for each of the 2ᴰ points.
+
+@param that A pointer to an object with a `sub2map(const size_t*, size_t*)`
+            method: MapGrid3, MapGrid4, InterpolateGrid3, InterpolateGrid4,
+                    BrillouinZoneGrid3, BrillouinZoneGrid4, etc.
+@param      zero  Pointer to the zero-point values of the grid, with N elements
+@param      step  Pointer to the step-size values of the grid, with N elements
+@param      ijk   Pointer to the nearest grid subscripted index to the
+                  interpolation point, with N elements
+@param      x     Pointer to the coordinates of the interpolation point,
+                  with N elements
+@param[out] c     Pointer where the linear indices will be stored,
+                  with 2ᴺ elements
+@param[out] w     Pointer where the weights will be stored, with 2ᴺ elements
+@param      N     Dimensionality of the gridded space
+@param      dirs  Directions in the gridded space over which interpolation is
+                  to be performed; D=1≤`dirs.size()`≤N
+@returns An unsigned integer with bits acting as flags to indicate whether a
+         point required for the interpolation is out-of-bounds. The order of
+         bits depends on `dirs.size()`, see the source if you need to decode
+         this information.
+@note This function supports linear, bilinear, trilinear, and quadralinear
+      interpolation, e.g., 1≤D≤4, in an arbitrary number of dimensions with D≤N;
+      extending it to higher-dimensional interpolation should be possible
+      if ever desired.
+*/
 template <class R, template<class> class T>
 int corners_and_weights( T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t> dirs){
     size_t ndims = dirs.size();

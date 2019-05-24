@@ -24,6 +24,7 @@ protected:
   slong *map;                  //!< The mapping grid
   ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
   ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
+public:
   // constructors
   MapGrid4(const size_t *n=default_n4): map(nullptr), data(0,0), shape(1,0)
     { this->set_size(n); };
@@ -279,7 +280,7 @@ public:
     slong tmp;
     for (int i=0; i<4; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp>=0 && tmp<this-<size(i)){
+      if (tmp>=0 && tmp<this->size(i)){
         if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
           out += 1<<i; // exact match
       } else {
@@ -291,7 +292,7 @@ public:
           out += 1<<(8+i); // overflow
         }
       }
-      ijk[i] = (size_t)(tmp);
+      ijkl[i] = (size_t)(tmp);
     }
     return out;
   };
