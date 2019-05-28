@@ -1,7 +1,4 @@
-#include <cmath>
-#include "linear_algebra.h"
 #include "lattice.h"
-#include <string>
 
 Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0}, n[9];
@@ -66,7 +63,7 @@ void Lattice::check_hall_number(const int h){
   this->hall = hall_number_ok(h) ? h : 0;
 }
 void Lattice::check_IT_name(const std::string itname){
-  this->hall = spgdb_international_to_hall_number(itname);
+  this->hall = international_string_to_hall_number(itname);
 }
 double Lattice::unitvolume() const{
   // The volume of a parallelpiped with unit length sides and our body angles
@@ -288,8 +285,7 @@ void Reciprocal::print(){
 
 Direct Direct::primitive(void) const{
   double plm[9], lm[9];
-  SpacegroupType spgt = spgdb_get_spacegroup_type(this->hall);
-  PrimitiveTransform P(spgt.centering);
+  PrimitiveTransform P(get_spacegroup(this->hall));
   if (P.does_anything()){
     this->get_lattice_matrix(lm);
     std::array<double,9> Parray = P.get_to_primitive();

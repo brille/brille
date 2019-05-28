@@ -1,15 +1,14 @@
+/*! \file */
 #ifndef _GRID_H_
 #define _GRID_H_
-// #ifdef _WIN32
-  typedef long slong; // ssize_t is only defined for gcc?
-// #endif
-#include "arrayvector.h"
+typedef long slong; // ssize_t is only defined for gcc?
+
 #include "latvec.h"
 #include "neighbours.h"
 #include "interpolation.h"
 #include <omp.h>
-#include <complex>
-#include <memory>
+// #include <complex>
+// #include <memory>
 
 #include "unsignedtosigned.h"
 #include "munkres.h"
@@ -490,15 +489,30 @@ public:
 };
 
 
+/*! \brief Type information for MapGrid3, MapGrid4, and their subclasses.
 
+In order to compare the array of information stored at each mapped grid point
+in order to, e.g., create a sorting permutation, it is necessary to define the
+typename of the comparison criterion. Since MapGrid3 and MapGrid4 objects can
+hold complex data but the comparison is always performed on a real valued scalar
+or array this struct provides a convenient way of providing the comparison type
+for templated functions.
+
+| template typename | type | max |
+| T | T | std::numeric_limits<T>::max() |
+| std::complex<T> | T | std::numeric_limits<T>::max() |
+
+*/
 template<class T> struct GridDiffTraits{
   using type = T;
   constexpr static T max = std::numeric_limits<T>::max();
 };
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T> struct GridDiffTraits<std::complex<T>>{
   using type = T;
   constexpr static T max = std::numeric_limits<T>::max();
 };
+#endif
 
 #include "grid.hpp"
 

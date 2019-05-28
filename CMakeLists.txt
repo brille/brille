@@ -39,29 +39,7 @@ set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
             ${PROJECT_SOURCE_DIR}/src/neighbours.cpp
             ${PROJECT_SOURCE_DIR}/src/pointgroup.cpp
             ${PROJECT_SOURCE_DIR}/src/spg_database.cpp
-            ${PROJECT_SOURCE_DIR}/src/symbz.cpp
             ${PROJECT_SOURCE_DIR}/src/symmetry.cpp)
-
-# Shared library
-add_library(symbz_shared SHARED ${SOURCES})
-set_property(TARGET symbz_shared PROPERTY VERSION ${SYMBZ_VERSION})
-set_property(TARGET symbz_shared PROPERTY SOVERSION ${soserial})
-set_property(TARGET symbz_shared PROPERTY OUTPUT_NAME symbz)
-if (WIN32)
-	install(TARGETS symbz_shared RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-else()
-	install(TARGETS symbz_shared LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-endif()
-
-# Static link library
-add_library(symbz_static STATIC ${SOURCES})
-set_property(TARGET symbz_static PROPERTY VERSION ${SYMBZ_VERSION})
-set_property(TARGET symbz_static PROPERTY SOVERSION ${soserial})
-set_property(TARGET symbz_static PROPERTY OUTPUT_NAME symbz)
-install(TARGETS symbz_static ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-
-# Header file
-install(FILES ${PROJECT_SOURCE_DIR}/src/symbz.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 
 # Python c++ bindings
 add_subdirectory(lib/pybind11)
@@ -69,8 +47,6 @@ pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	add_dependencies(symbz_shared write_version_info)
-	add_dependencies(symbz_static write_version_info)
 	add_dependencies(_symbz write_version_info)
 endif()
 
@@ -81,7 +57,7 @@ enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 set(CMAKE_CTEST_COMMAND ctest -V)
 add_executable(test_cpp EXCLUDE_FROM_ALL ${PROJECT_SOURCE_DIR}/tests/test.cpp ${SOURCES})
-target_link_libraries(test_cpp symbz_shared)
+# target_link_libraries(test_cpp symbz_shared)
 add_test(NAME C++ COMMAND test_cpp)
 add_dependencies(check test_cpp)
 
@@ -120,8 +96,6 @@ endif()
 if(OpenMP_CXX_FOUND)
 		target_link_libraries(_symbz       PUBLIC OpenMP::OpenMP_CXX)
 		target_link_libraries(test_catch   PUBLIC OpenMP::OpenMP_CXX)
-		target_link_libraries(symbz_static PUBLIC OpenMP::OpenMP_CXX)
-		target_link_libraries(symbz_shared PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
 if(MSVC)
@@ -138,7 +112,7 @@ endif()
 
 
 # first we can indicate the documentation build as an option and set it to ON by default
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 
 # check if Doxygen is installed
 find_package(Doxygen)
@@ -146,16 +120,21 @@ if (DOXYGEN_FOUND)
     # set input and output files
     set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
     set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
     # request to configure the file
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-
-    # note the option ALL which allows to build the docs together with the application
-    add_custom_target( docs
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM )
+		if (BUILD_DOC)
+			add_custom_target( docs ALL
+	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+	        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	        COMMENT "Generating documentation with Doxygen"
+	        VERBATIM )
+		else (BUILD_DOC)
+	    add_custom_target( docs
+	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+	        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	        COMMENT "Generating documentation with Doxygen"
+	        VERBATIM )
+		endif (BUILD_DOC)
 else (DOXYGEN_FOUND)
-  message("Doxygen needs to be installed to generate the documentation")
+  message("Documentation generation requires Doxygen to be available")
 endif (DOXYGEN_FOUND)

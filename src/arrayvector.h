@@ -1,12 +1,12 @@
+/*! \file */
 #ifndef _ARRAYVECTOR_H_
 #define _ARRAYVECTOR_H_
 
 #include<iostream>
 #include<string>
-#include<math.h>
 #include<cmath>
 #include<functional>
-#include "safealloc.h"
+#include "linear_algebra.h"
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 
@@ -354,7 +354,7 @@ public:
 
 };
 
-#include "linear_algebra.h"
+
 #include "arrayvector.hpp"
 
 

@@ -11,6 +11,7 @@
 #include <limits>
 #include <math.h>
 #include <complex>
+#include "safealloc.h"
 
 const double PI = std::atan(1.0)*4;
 const double PICUBED = PI*PI*PI;

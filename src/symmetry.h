@@ -1,3 +1,4 @@
+/*! \file */
 #ifndef _SYMMETRY_H_
 #define _SYMMETRY_H_
 

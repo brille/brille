@@ -1,4 +1,3 @@
-#include "symbz.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -11,10 +10,6 @@
 #include "bz.h"
 #include "bz_grid.h"
 
-
-static int test_symbz_get_spacegroup_type(void);
-static int test_symbz_get_symmetry_from_database(void);
-static void show_spacegroup_type(const SpglibSpacegroupType spgtype);
 
 static int test_arrayvector();
 static int test_bz_info();
@@ -33,8 +28,6 @@ int main(void)
 		test_bz_info,
 		test_bz_grid,
 		test_bz_moveinto,
-    // test_symbz_get_spacegroup_type,
-    // test_symbz_get_symmetry_from_database,
     NULL};
 
   int i, result;
@@ -53,65 +46,6 @@ int main(void)
 
   return 0;
 }
-
-
-static int test_symbz_get_spacegroup_type(void)
-{
-  SpglibSpacegroupType spgtype;
-  spgtype = symbz_get_spacegroup_type(446);
-
-  printf("*** symbz_get_spacegroup_type ***:\n");
-  if (spgtype.number) {
-    show_spacegroup_type(spgtype);
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-static int test_symbz_get_symmetry_from_database(void)
-{
-  int *rotations;
-  double *translations;
-  size_t size=192;
-  rotations = new int[size*9]();
-  translations = new double[size*3]();
-
-  size = symbz_get_symmetry_from_database(rotations, translations, size, 460);
-
-  if (size) {
-    printf("*** symbz_get_symmetry_from_database ***:\n");
-    for (size_t i = 0; i < size; i++) {
-      printf("--- %d ---\n", i + 1);
-      for (size_t j = 0; j < 3; j++){
-        for (size_t k = 0; k<3; k++)
-          printf("%2d ",rotations[i*9+j+k*3]);
-        printf("\n");
-	  }
-	  for (size_t k=0; k<3; k++)
-        printf("%6.4f ",translations[i*3+k]);
-      printf("\n");
-    }
-  }
-  delete[] rotations;
-  delete[] translations;
-  return (size ? 0 : 1);
-}
-
-static void show_spacegroup_type(const SpglibSpacegroupType spgtype)
-{
-  printf("Number:            %d\n", spgtype.number);
-  printf("International:     %s\n", spgtype.international_short);
-  printf("International:     %s\n", spgtype.international_full);
-  printf("International:     %s\n", spgtype.international);
-  printf("Schoenflies:       %s\n", spgtype.schoenflies);
-  printf("Hall symbol:       %s\n", spgtype.hall_symbol);
-  printf("Point group intl:  %s\n", spgtype.pointgroup_international);
-  printf("Point group Schoe: %s\n", spgtype.pointgroup_schoenflies);
-  printf("Arithmetic cc num. %d\n", spgtype.arithmetic_crystal_class_number);
-  printf("Arithmetic cc sym. %s\n", spgtype.arithmetic_crystal_class_symbol);
-}
-
 
 int test_arrayvector(){
 	printf("*** test_arrayvector ***\n");
@@ -260,7 +194,7 @@ static int test_bz_moveinto(){
 	Direct d(3.0,3.0,9.0,PI/2,PI/2,2*PI/3);
 	Reciprocal rlat = d.star();
 	BrillouinZone bz(rlat);
-	// 
+	//
 	// printf("Face vectors\n"); bz.get_faces().print();
 
 	std::default_random_engine generator;

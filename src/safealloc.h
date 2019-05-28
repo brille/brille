@@ -1,3 +1,4 @@
+/*! \file */
 #ifndef _SAFEALLOC_H_
 #define _SAFEALLOC_H_
 // (array) allocation for specified type

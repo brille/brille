@@ -7,16 +7,16 @@
 #include "linear_algebra.h"
 #include "lattice.h"
 #include "latvec.h"
-#include "primitive_transforms.h"
+#include "transform.h"
 
 TEST_CASE("primitive transforms","[transform]"){
-  Centering c;
-  SECTION("Body centering"){ c = BODY; }
-  SECTION("Face centering"){ c = FACE; }
-  SECTION("EndA centering"){ c = A_FACE; }
-  SECTION("EndB centering"){ c = B_FACE; }
-  SECTION("EndC centering"){ c = C_FACE; }
-  SECTION("R centering"){ c = R_CENTER; }
+  BravaisLetter c;
+  SECTION("Body centring"){ c = I; }
+  SECTION("All-face centring"){ c = F; }
+  SECTION("A-face centring"){ c = A; }
+  SECTION("B-face centring"){ c = B; }
+  SECTION("C-face centring"){ c = C; }
+  SECTION("Rhombohedral centring"){ c = R; }
   PrimitiveTransform PT(c);
   REQUIRE( !PT.does_nothing() );
   std::array<double,9> P = PT.get_to_primitive();

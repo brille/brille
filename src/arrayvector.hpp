@@ -1,5 +1,3 @@
-/*! \file */
-
 template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){

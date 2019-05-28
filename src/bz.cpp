@@ -1,11 +1,4 @@
-#include <iostream>
-#include <cstring>
-#include <limits>
-
 #include "bz.h"
-#include "arrayvector.h"
-#include "lattice.h"
-#include "latvec.h"
 
 
 void BrillouinZone::set_vertices(ArrayVector<double> newverts){
@@ -255,8 +248,7 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
   LQVec<int> tauprim(this->lattice);
-  SpacegroupType spgt = spgdb_get_spacegroup_type(this->outerlattice.get_hall());
-  PrimitiveTransform PT(spgt.centering);
+  PrimitiveTransform PT(get_spacegroup(this->outerlattice.get_hall()));
   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
   if (!(already_same || transform_needed))
     throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");

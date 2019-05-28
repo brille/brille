@@ -1313,7 +1313,7 @@ static int _internal_pointgroup_rotations(int *rotations, const int max_size, Ar
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
 	Symmetry sym;
-	sym = spgdb_get_spacegroup_operations(hall_number);
+	sym = get_spacegroup_symmetry_operations(hall_number);
 
 	ArrayVector<int> * all_rots;
   all_rots->refresh(9u, sym.size() );

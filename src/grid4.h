@@ -1,9 +1,9 @@
+/*! \file */
 #ifndef _GRID4_H_
 #define _GRID4_H_
-// #ifdef _WIN32
-  typedef long slong; // ssize_t is only defined for gcc?
-// #endif
-#include "arrayvector.h"
+
+typedef long slong; // ssize_t is only defined for gcc?
+
 #include "interpolation.h"
 #include "neighbours.h"
 

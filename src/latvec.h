@@ -1,26 +1,37 @@
+/*! \file */
 #ifndef _LATVEC_CLASS_H_
 #define _LATVEC_CLASS_H_
 
-#include <math.h>
-#include <assert.h>
-#include <type_traits>
 #include <typeinfo> // for std::bad_cast
 #include <exception>
 #include "lattice.h"
 #include "arrayvector.h"
-#include "linear_algebra.h"
-#include "safealloc.h"
 
+/*! \brief Superclass to identify both LDVec and LQVec
 
-class LatVec{}; // base class to identify both LDVec and LQVec
+The two Lattice vector classes, LDVec and LQVec, are subclasses of ArrayVector.
+In order to distinguish between the Lattice vector types and "bare" ArrayVector
+objects in operator- and function-overloading it is advantageous to have a
+shared superclass on which to enable templates. Thus LatVec is a superclass used
+for logic only which has no properties and defines no methods.
+*/
+class LatVec{};
 template<typename T> class LDVec;
 template<typename T> class LQVec;
 
+/*! \brief 3-vector(s) expressed in units of a Direct lattice
+
+By adding a Direct lattice to a 3-element ArrayVector this class represents one
+or more 3-vector in units of a real-space-spanning lattice.
+*/
 template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
   Direct lattice;
 public:
+  //! Default constructor, enforces that 3-vectors are held
   LDVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
+  //! Copy constructor, optionally verifying that only 3-element arrays are provided.
   LDVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); };
+  //! [Optional type conversion] copy constructor
   template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
 
   LDVec<T>& operator=(const LDVec<T>& other){
@@ -38,6 +49,7 @@ public:
     }
     return *this;
   };
+  //! Extract the 3-vector with index `i`
   const LDVec<T> operator[](const size_t i) const{
     bool isok = i < this->size();
     LDVec<T> out(this->lattice, isok ? 1u: 0u);
@@ -54,13 +66,20 @@ public:
   template<typename R> bool samelattice(const LQVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LDVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  //! extract the 3-vector with index `i`
   LDVec get(const size_t i) const;
+  //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
   ArrayVector<T> get_hkl() const;
+  //! Extract the coordinates in *an* orthonormal frame
   ArrayVector<double> get_xyz() const;
+  //! Return the vector(s) expressed in units of the Reciprocal lattice
   LQVec<double> star() const;
 
+  //! Determine the scalar product between two vectors in the object
   double dot(const size_t i, const size_t j) const;
+  //! Determine the absolute length of a vector in the object
   double norm(const size_t i) const { return sqrt(this->dot(i,i)); };
+  //! Determine the cross product of two vectors in the object
   LDVec<double> cross(const size_t i, const size_t j) const;
 
   LDVec<T>& operator-=(const LDVec<T>& av);
@@ -70,29 +89,42 @@ public:
   LDVec<T>& operator-=(const T& av);
   LDVec<T>& operator*=(const T& av);
   LDVec<T>& operator/=(const T& av);
+  // LDVec<T> operator -(); // unary subtraction is not actually defined anywhere
 
-  LDVec<T> operator -();
+  //! Verify two LDVec objects are compatible for binary operations
   template<class R> AVSizeInfo consistency_check(const LDVec<R>& b) const {
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
     return this->ArrayVector<T>::consistency_check(b);
   };
+  //! Verify that a ArrayVector object is consistent for binary operations
   template<class R, template<class> class A,
     typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
     >
   AVSizeInfo consistency_check(const A<R>& b) const {
     return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
   };
+  //! Check whether a second LDVec is approximately the same as this object
   template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+  //! Check whether two vectors in the object are approximately the same
   bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
 protected:
   void check_arrayvector(const int);
 };
 
+
+/*! \brief 3-vector(s) expressed in units of a Reciprocal lattice
+
+By adding a Reciprocal lattice to a 3-element ArrayVector this class represents one
+or more 3-vector in units of a reciprocal-space-spanning lattice.
+*/
 template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
   Reciprocal lattice;
 public:
+  //! Default constructor, enforces that 3-vectors are held
   LQVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
+  //! Copy constructor, optionally verifying that only 3-element arrays are provided.
   LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); };
+  //! [Optional type conversion] copy constructor
   template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
 
   LQVec<T>& operator=(const LQVec<T>& other){
@@ -110,6 +142,7 @@ public:
     }
     return *this;
   };
+  //! Extract the 3-vector with index `i`
   const LQVec<T> operator[](const size_t i) const{
     bool isok = i < this->size();
     LQVec<T> out(this->lattice, isok ? 1u: 0u);
@@ -126,13 +159,23 @@ public:
   template<typename R> bool samelattice(const LDVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LQVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  //! Extract the 3-vector with index `i`
   LQVec get(const size_t i) const;
+  //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)
   ArrayVector<T> get_hkl() const;
+  /*! Extract the coordinates in an orthonormal frame with its first axis, x,
+  along a*, its second, y, perpendicular with y⋅b*>0 , and it's third forming
+  the right-handed set z=x×y.
+  */
   ArrayVector<double> get_xyz() const;
+  //! Return the vector(s) expressed in units of the Direct lattice
   LDVec<double> star() const;
 
+  //! Determine the scalar product between two vectors in the object.
   double dot(const size_t i, const size_t j) const;
+  //! Determine the absolute length of a vector in the object.
   double norm(const size_t i) const { return sqrt(this->dot(i,i)); };
+  //! Determine the cross product of two vectors in the object.
   LQVec<double> cross(const size_t i, const size_t j) const;
 
   LQVec<T>& operator+=(const LQVec<T>& av);
@@ -141,48 +184,67 @@ public:
   LQVec<T>& operator-=(const T& av);
   LQVec<T>& operator*=(const T& av);
   LQVec<T>& operator/=(const T& av);
-  LQVec<T> operator -();
+  // LQVec<T> operator -();
 
+  //! Verify that a second LQVec object is compatible for binary operations
   template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
     return this->ArrayVector<T>::consistency_check(b);
   };
+  //! Verify that an ArrayVector object is compatible for binary operations
   template<class R, template<class> class A,
     typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
     >
   AVSizeInfo consistency_check(const A<R>& b) const {
     return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
   };
+  //! Check whether a second LQVec is approximately the same as this object
   template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+  //! Check whether two vectors in the object are approximately the same.
   bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
 protected:
   void check_arrayvector(const int);
 };
 
 
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 // extend the lattice traits structs
-// template<> template<typename T> struct LatticeTraits<LDVec<T>>{
 template<class T> struct LatticeTraits<LDVec<T>>{
   using type = Direct;
   using star = Reciprocal;
 };
-// template<> template<typename T> struct LatticeTraits<LQVec<T>>{
 template<class T> struct LatticeTraits<LQVec<T>>{
   using type = Reciprocal;
   using star = Direct;
 };
-// create new lattice vectors traits
+#endif
+
+/*! \brief Vector type information for Lattice and LatVec objects
+
+Some templated functions require internal variables or return types which
+depend on *which* subtype of Lattice of LatVec are provided. This traits struct
+provides the typename of an appropriate LatVec subclass and its inverse for
+those cases.
+
+The two `using` typnames `type` and `star` are defined based on the templated
+typename as
+
+| templated typename | type | star |
+| --- | --- | --- |
+| Direct | LDVec<R> | LQVec<R> |
+| Reciprocal | LQVec<R> | LDVec<R> |
+| LDVec | LDVec<R> | LQVec<R> |
+| LQVec | LQVec<R> | LDVec<R> |
+*/
 template<class T, class R> struct LatVecTraits{
-  using type = void;
-  using star = void;
+  using type = void; //< LDVec<R> or LQVec<R>
+  using star = void; //< LQVec<R> or LDVec<R>
 };
-// template<> template <typename R,typename S> struct LatVecTraits<LDVec<R>,S>{
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template <class R, class S> struct LatVecTraits<LDVec<R>,S>{
   using type = LDVec<S>;
   using star = LQVec<S>;
 };
-// template<> template <typename R,typename S> struct LatVecTraits<LQVec<R>,S>{
 template <class R, class S> struct LatVecTraits<LQVec<R>,S>{
   using type = LQVec<S>;
   using star = LDVec<S>;
@@ -195,6 +257,7 @@ template <class S> struct LatVecTraits<Reciprocal,S>{
   using type = LQVec<S>;
   using star = LDVec<S>;
 };
+#endif
 
 
 #include "latvec.hpp"

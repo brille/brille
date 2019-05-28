@@ -1,3 +1,4 @@
+/*!\file*/
 /* Copyright (C) 2010 Atsushi Togo
  All rights reserved.
 
@@ -35,541 +36,552 @@
 #include <stdlib.h>
 #include <cstring>
 #include "spg_database.h"
-#include "symmetry.h"
+
+/* Modifications from spglib original:
+' CENTERING_ERROR' --> 'P'
+'       PRIMITIVE' --> 'P'
+'          A_FACE' --> 'A'
+'          B_FACE' --> 'B'  (not present)
+'          C_FACE' --> 'C'
+'            BODY' --> 'I'
+'            FACE' --> 'F'
+'        R_CENTER' --> 'R'
+'            BASE' --> 'X' (not present)
+2019-05-28 G Tucker */
 
 /* In Hall symbols (3rd column), '=' is used instead of '"'. */
-static const SpacegroupType spacegroup_types[] = {
-  {  0, "      ", "                ", "                               ", "                   ", "          ", "     ", CENTERING_ERROR,  0 }, /*   0 */
-  {  1, "C1^1  ", "P 1             ", "P 1                            ", "P 1                ", "P1        ", "     ",       PRIMITIVE,  1 }, /*   1 */
-  {  2, "Ci^1  ", "-P 1            ", "P -1                           ", "P -1               ", "P-1       ", "     ",       PRIMITIVE,  2 }, /*   2 */
-  {  3, "C2^1  ", "P 2y            ", "P 2 = P 1 2 1                  ", "P 1 2 1            ", "P2        ", "b    ",       PRIMITIVE,  3 }, /*   3 */
-  {  3, "C2^1  ", "P 2             ", "P 2 = P 1 1 2                  ", "P 1 1 2            ", "P2        ", "c    ",       PRIMITIVE,  3 }, /*   4 */
-  {  3, "C2^1  ", "P 2x            ", "P 2 = P 2 1 1                  ", "P 2 1 1            ", "P2        ", "a    ",       PRIMITIVE,  3 }, /*   5 */
-  {  4, "C2^2  ", "P 2yb           ", "P 2_1 = P 1 2_1 1              ", "P 1 2_1 1          ", "P2_1      ", "b    ",       PRIMITIVE,  3 }, /*   6 */
-  {  4, "C2^2  ", "P 2c            ", "P 2_1 = P 1 1 2_1              ", "P 1 1 2_1          ", "P2_1      ", "c    ",       PRIMITIVE,  3 }, /*   7 */
-  {  4, "C2^2  ", "P 2xa           ", "P 2_1 = P 2_1 1 1              ", "P 2_1 1 1          ", "P2_1      ", "a    ",       PRIMITIVE,  3 }, /*   8 */
-  {  5, "C2^3  ", "C 2y            ", "C 2 = C 1 2 1                  ", "C 1 2 1            ", "C2        ", "b1   ",          C_FACE,  3 }, /*   9 */
-  {  5, "C2^3  ", "A 2y            ", "C 2 = A 1 2 1                  ", "A 1 2 1            ", "C2        ", "b2   ",          A_FACE,  3 }, /*  10 */
-  {  5, "C2^3  ", "I 2y            ", "C 2 = I 1 2 1                  ", "I 1 2 1            ", "C2        ", "b3   ",            BODY,  3 }, /*  11 */
-  {  5, "C2^3  ", "A 2             ", "C 2 = A 1 1 2                  ", "A 1 1 2            ", "C2        ", "c1   ",          A_FACE,  3 }, /*  12 */
-  {  5, "C2^3  ", "B 2             ", "C 2 = B 1 1 2 = B 2            ", "B 1 1 2            ", "C2        ", "c2   ",       PRIMITIVE,  3 }, /*  13 */
-  {  5, "C2^3  ", "I 2             ", "C 2 = I 1 1 2                  ", "I 1 1 2            ", "C2        ", "c3   ",            BODY,  3 }, /*  14 */
-  {  5, "C2^3  ", "B 2x            ", "C 2 = B 2 1 1                  ", "B 2 1 1            ", "C2        ", "a1   ",       PRIMITIVE,  3 }, /*  15 */
-  {  5, "C2^3  ", "C 2x            ", "C 2 = C 2 1 1                  ", "C 2 1 1            ", "C2        ", "a2   ",          C_FACE,  3 }, /*  16 */
-  {  5, "C2^3  ", "I 2x            ", "C 2 = I 2 1 1                  ", "I 2 1 1            ", "C2        ", "a3   ",            BODY,  3 }, /*  17 */
-  {  6, "Cs^1  ", "P -2y           ", "P m = P 1 m 1                  ", "P 1 m 1            ", "Pm        ", "b    ",       PRIMITIVE,  4 }, /*  18 */
-  {  6, "Cs^1  ", "P -2            ", "P m = P 1 1 m                  ", "P 1 1 m            ", "Pm        ", "c    ",       PRIMITIVE,  4 }, /*  19 */
-  {  6, "Cs^1  ", "P -2x           ", "P m = P m 1 1                  ", "P m 1 1            ", "Pm        ", "a    ",       PRIMITIVE,  4 }, /*  20 */
-  {  7, "Cs^2  ", "P -2yc          ", "P c = P 1 c 1                  ", "P 1 c 1            ", "Pc        ", "b1   ",       PRIMITIVE,  4 }, /*  21 */
-  {  7, "Cs^2  ", "P -2yac         ", "P c = P 1 n 1                  ", "P 1 n 1            ", "Pc        ", "b2   ",       PRIMITIVE,  4 }, /*  22 */
-  {  7, "Cs^2  ", "P -2ya          ", "P c = P 1 a 1                  ", "P 1 a 1            ", "Pc        ", "b3   ",       PRIMITIVE,  4 }, /*  23 */
-  {  7, "Cs^2  ", "P -2a           ", "P c = P 1 1 a                  ", "P 1 1 a            ", "Pc        ", "c1   ",       PRIMITIVE,  4 }, /*  24 */
-  {  7, "Cs^2  ", "P -2ab          ", "P c = P 1 1 n                  ", "P 1 1 n            ", "Pc        ", "c2   ",       PRIMITIVE,  4 }, /*  25 */
-  {  7, "Cs^2  ", "P -2b           ", "P c = P 1 1 b = P b            ", "P 1 1 b            ", "Pc        ", "c3   ",       PRIMITIVE,  4 }, /*  26 */
-  {  7, "Cs^2  ", "P -2xb          ", "P c = P b 1 1                  ", "P b 1 1            ", "Pc        ", "a1   ",       PRIMITIVE,  4 }, /*  27 */
-  {  7, "Cs^2  ", "P -2xbc         ", "P c = P n 1 1                  ", "P n 1 1            ", "Pc        ", "a2   ",       PRIMITIVE,  4 }, /*  28 */
-  {  7, "Cs^2  ", "P -2xc          ", "P c = P c 1 1                  ", "P c 1 1            ", "Pc        ", "a3   ",       PRIMITIVE,  4 }, /*  29 */
-  {  8, "Cs^3  ", "C -2y           ", "C m = C 1 m 1                  ", "C 1 m 1            ", "Cm        ", "b1   ",          C_FACE,  4 }, /*  30 */
-  {  8, "Cs^3  ", "A -2y           ", "C m = A 1 m 1                  ", "A 1 m 1            ", "Cm        ", "b2   ",          A_FACE,  4 }, /*  31 */
-  {  8, "Cs^3  ", "I -2y           ", "C m = I 1 m 1                  ", "I 1 m 1            ", "Cm        ", "b3   ",            BODY,  4 }, /*  32 */
-  {  8, "Cs^3  ", "A -2            ", "C m = A 1 1 m                  ", "A 1 1 m            ", "Cm        ", "c1   ",          A_FACE,  4 }, /*  33 */
-  {  8, "Cs^3  ", "B -2            ", "C m = B 1 1 m = B m            ", "B 1 1 m            ", "Cm        ", "c2   ",       PRIMITIVE,  4 }, /*  34 */
-  {  8, "Cs^3  ", "I -2            ", "C m = I 1 1 m                  ", "I 1 1 m            ", "Cm        ", "c3   ",            BODY,  4 }, /*  35 */
-  {  8, "Cs^3  ", "B -2x           ", "C m = B m 1 1                  ", "B m 1 1            ", "Cm        ", "a1   ",       PRIMITIVE,  4 }, /*  36 */
-  {  8, "Cs^3  ", "C -2x           ", "C m = C m 1 1                  ", "C m 1 1            ", "Cm        ", "a2   ",          C_FACE,  4 }, /*  37 */
-  {  8, "Cs^3  ", "I -2x           ", "C m = I m 1 1                  ", "I m 1 1            ", "Cm        ", "a3   ",            BODY,  4 }, /*  38 */
-  {  9, "Cs^4  ", "C -2yc          ", "C c = C 1 c 1                  ", "C 1 c 1            ", "Cc        ", "b1   ",          C_FACE,  4 }, /*  39 */
-  {  9, "Cs^4  ", "A -2yac         ", "C c = A 1 n 1                  ", "A 1 n 1            ", "Cc        ", "b2   ",          A_FACE,  4 }, /*  40 */
-  {  9, "Cs^4  ", "I -2ya          ", "C c = I 1 a 1                  ", "I 1 a 1            ", "Cc        ", "b3   ",            BODY,  4 }, /*  41 */
-  {  9, "Cs^4  ", "A -2ya          ", "C c = A 1 a 1                  ", "A 1 a 1            ", "Cc        ", "-b1  ",          A_FACE,  4 }, /*  42 */
-  {  9, "Cs^4  ", "C -2ybc         ", "C c = C 1 n 1                  ", "C 1 n 1            ", "Cc        ", "-b2  ",          C_FACE,  4 }, /*  43 */
-  {  9, "Cs^4  ", "I -2yc          ", "C c = I 1 c 1                  ", "I 1 c 1            ", "Cc        ", "-b3  ",            BODY,  4 }, /*  44 */
-  {  9, "Cs^4  ", "A -2a           ", "C c = A 1 1 a                  ", "A 1 1 a            ", "Cc        ", "c1   ",          A_FACE,  4 }, /*  45 */
-  {  9, "Cs^4  ", "B -2bc          ", "C c = B 1 1 n                  ", "B 1 1 n            ", "Cc        ", "c2   ",       PRIMITIVE,  4 }, /*  46 */
-  {  9, "Cs^4  ", "I -2b           ", "C c = I 1 1 b                  ", "I 1 1 b            ", "Cc        ", "c3   ",            BODY,  4 }, /*  47 */
-  {  9, "Cs^4  ", "B -2b           ", "C c = B 1 1 b = B b            ", "B 1 1 b            ", "Cc        ", "-c1  ",       PRIMITIVE,  4 }, /*  48 */
-  {  9, "Cs^4  ", "A -2ac          ", "C c = A 1 1 n                  ", "A 1 1 n            ", "Cc        ", "-c2  ",          A_FACE,  4 }, /*  49 */
-  {  9, "Cs^4  ", "I -2a           ", "C c = I 1 1 a                  ", "I 1 1 a            ", "Cc        ", "-c3  ",            BODY,  4 }, /*  50 */
-  {  9, "Cs^4  ", "B -2xb          ", "C c = B b 1 1                  ", "B b 1 1            ", "Cc        ", "a1   ",       PRIMITIVE,  4 }, /*  51 */
-  {  9, "Cs^4  ", "C -2xbc         ", "C c = C n 1 1                  ", "C n 1 1            ", "Cc        ", "a2   ",          C_FACE,  4 }, /*  52 */
-  {  9, "Cs^4  ", "I -2xc          ", "C c = I c 1 1                  ", "I c 1 1            ", "Cc        ", "a3   ",            BODY,  4 }, /*  53 */
-  {  9, "Cs^4  ", "C -2xc          ", "C c = C c 1 1                  ", "C c 1 1            ", "Cc        ", "-a1  ",          C_FACE,  4 }, /*  54 */
-  {  9, "Cs^4  ", "B -2xbc         ", "C c = B n 1 1                  ", "B n 1 1            ", "Cc        ", "-a2  ",       PRIMITIVE,  4 }, /*  55 */
-  {  9, "Cs^4  ", "I -2xb          ", "C c = I b 1 1                  ", "I b 1 1            ", "Cc        ", "-a3  ",            BODY,  4 }, /*  56 */
-  { 10, "C2h^1 ", "-P 2y           ", "P 2/m = P 1 2/m 1              ", "P 1 2/m 1          ", "P2/m      ", "b    ",       PRIMITIVE,  5 }, /*  57 */
-  { 10, "C2h^1 ", "-P 2            ", "P 2/m = P 1 1 2/m              ", "P 1 1 2/m          ", "P2/m      ", "c    ",       PRIMITIVE,  5 }, /*  58 */
-  { 10, "C2h^1 ", "-P 2x           ", "P 2/m = P 2/m 1 1              ", "P 2/m 1 1          ", "P2/m      ", "a    ",       PRIMITIVE,  5 }, /*  59 */
-  { 11, "C2h^2 ", "-P 2yb          ", "P 2_1/m = P 1 2_1/m 1          ", "P 1 2_1/m 1        ", "P2_1/m    ", "b    ",       PRIMITIVE,  5 }, /*  60 */
-  { 11, "C2h^2 ", "-P 2c           ", "P 2_1/m = P 1 1 2_1/m          ", "P 1 1 2_1/m        ", "P2_1/m    ", "c    ",       PRIMITIVE,  5 }, /*  61 */
-  { 11, "C2h^2 ", "-P 2xa          ", "P 2_1/m = P 2_1/m 1 1          ", "P 2_1/m 1 1        ", "P2_1/m    ", "a    ",       PRIMITIVE,  5 }, /*  62 */
-  { 12, "C2h^3 ", "-C 2y           ", "C 2/m = C 1 2/m 1              ", "C 1 2/m 1          ", "C2/m      ", "b1   ",          C_FACE,  5 }, /*  63 */
-  { 12, "C2h^3 ", "-A 2y           ", "C 2/m = A 1 2/m 1              ", "A 1 2/m 1          ", "C2/m      ", "b2   ",          A_FACE,  5 }, /*  64 */
-  { 12, "C2h^3 ", "-I 2y           ", "C 2/m = I 1 2/m 1              ", "I 1 2/m 1          ", "C2/m      ", "b3   ",            BODY,  5 }, /*  65 */
-  { 12, "C2h^3 ", "-A 2            ", "C 2/m = A 1 1 2/m              ", "A 1 1 2/m          ", "C2/m      ", "c1   ",          A_FACE,  5 }, /*  66 */
-  { 12, "C2h^3 ", "-B 2            ", "C 2/m = B 1 1 2/m = B 2/m      ", "B 1 1 2/m          ", "C2/m      ", "c2   ",       PRIMITIVE,  5 }, /*  67 */
-  { 12, "C2h^3 ", "-I 2            ", "C 2/m = I 1 1 2/m              ", "I 1 1 2/m          ", "C2/m      ", "c3   ",            BODY,  5 }, /*  68 */
-  { 12, "C2h^3 ", "-B 2x           ", "C 2/m = B 2/m 1 1              ", "B 2/m 1 1          ", "C2/m      ", "a1   ",       PRIMITIVE,  5 }, /*  69 */
-  { 12, "C2h^3 ", "-C 2x           ", "C 2/m = C 2/m 1 1              ", "C 2/m 1 1          ", "C2/m      ", "a2   ",          C_FACE,  5 }, /*  70 */
-  { 12, "C2h^3 ", "-I 2x           ", "C 2/m = I 2/m 1 1              ", "I 2/m 1 1          ", "C2/m      ", "a3   ",            BODY,  5 }, /*  71 */
-  { 13, "C2h^4 ", "-P 2yc          ", "P 2/c = P 1 2/c 1              ", "P 1 2/c 1          ", "P2/c      ", "b1   ",       PRIMITIVE,  5 }, /*  72 */
-  { 13, "C2h^4 ", "-P 2yac         ", "P 2/c = P 1 2/n 1              ", "P 1 2/n 1          ", "P2/c      ", "b2   ",       PRIMITIVE,  5 }, /*  73 */
-  { 13, "C2h^4 ", "-P 2ya          ", "P 2/c = P 1 2/a 1              ", "P 1 2/a 1          ", "P2/c      ", "b3   ",       PRIMITIVE,  5 }, /*  74 */
-  { 13, "C2h^4 ", "-P 2a           ", "P 2/c = P 1 1 2/a              ", "P 1 1 2/a          ", "P2/c      ", "c1   ",       PRIMITIVE,  5 }, /*  75 */
-  { 13, "C2h^4 ", "-P 2ab          ", "P 2/c = P 1 1 2/n              ", "P 1 1 2/n          ", "P2/c      ", "c2   ",       PRIMITIVE,  5 }, /*  76 */
-  { 13, "C2h^4 ", "-P 2b           ", "P 2/c = P 1 1 2/b = P 2/b      ", "P 1 1 2/b          ", "P2/c      ", "c3   ",       PRIMITIVE,  5 }, /*  77 */
-  { 13, "C2h^4 ", "-P 2xb          ", "P 2/c = P 2/b 1 1              ", "P 2/b 1 1          ", "P2/c      ", "a1   ",       PRIMITIVE,  5 }, /*  78 */
-  { 13, "C2h^4 ", "-P 2xbc         ", "P 2/c = P 2/n 1 1              ", "P 2/n 1 1          ", "P2/c      ", "a2   ",       PRIMITIVE,  5 }, /*  79 */
-  { 13, "C2h^4 ", "-P 2xc          ", "P 2/c = P 2/c 1 1              ", "P 2/c 1 1          ", "P2/c      ", "a3   ",       PRIMITIVE,  5 }, /*  80 */
-  { 14, "C2h^5 ", "-P 2ybc         ", "P 2_1/c = P 1 2_1/c 1          ", "P 1 2_1/c 1        ", "P2_1/c    ", "b1   ",       PRIMITIVE,  5 }, /*  81 */
-  { 14, "C2h^5 ", "-P 2yn          ", "P 2_1/c = P 1 2_1/n 1          ", "P 1 2_1/n 1        ", "P2_1/c    ", "b2   ",       PRIMITIVE,  5 }, /*  82 */
-  { 14, "C2h^5 ", "-P 2yab         ", "P 2_1/c = P 1 2_1/a 1          ", "P 1 2_1/a 1        ", "P2_1/c    ", "b3   ",       PRIMITIVE,  5 }, /*  83 */
-  { 14, "C2h^5 ", "-P 2ac          ", "P 2_1/c = P 1 1 2_1/a          ", "P 1 1 2_1/a        ", "P2_1/c    ", "c1   ",       PRIMITIVE,  5 }, /*  84 */
-  { 14, "C2h^5 ", "-P 2n           ", "P 2_1/c = P 1 1 2_1/n          ", "P 1 1 2_1/n        ", "P2_1/c    ", "c2   ",       PRIMITIVE,  5 }, /*  85 */
-  { 14, "C2h^5 ", "-P 2bc          ", "P 2_1/c = P 1 1 2_1/b = P 2_1/b", "P 1 1 2_1/b        ", "P2_1/c    ", "c3   ",       PRIMITIVE,  5 }, /*  86 */
-  { 14, "C2h^5 ", "-P 2xab         ", "P 2_1/c = P 2_1/b 1 1          ", "P 2_1/b 1 1        ", "P2_1/c    ", "a1   ",       PRIMITIVE,  5 }, /*  87 */
-  { 14, "C2h^5 ", "-P 2xn          ", "P 2_1/c = P 2_1/n 1 1          ", "P 2_1/n 1 1        ", "P2_1/c    ", "a2   ",       PRIMITIVE,  5 }, /*  88 */
-  { 14, "C2h^5 ", "-P 2xac         ", "P 2_1/c = P 2_1/c 1 1          ", "P 2_1/c 1 1        ", "P2_1/c    ", "a3   ",       PRIMITIVE,  5 }, /*  89 */
-  { 15, "C2h^6 ", "-C 2yc          ", "C 2/c = C 1 2/c 1              ", "C 1 2/c 1          ", "C2/c      ", "b1   ",          C_FACE,  5 }, /*  90 */
-  { 15, "C2h^6 ", "-A 2yac         ", "C 2/c = A 1 2/n 1              ", "A 1 2/n 1          ", "C2/c      ", "b2   ",          A_FACE,  5 }, /*  91 */
-  { 15, "C2h^6 ", "-I 2ya          ", "C 2/c = I 1 2/a 1              ", "I 1 2/a 1          ", "C2/c      ", "b3   ",            BODY,  5 }, /*  92 */
-  { 15, "C2h^6 ", "-A 2ya          ", "C 2/c = A 1 2/a 1              ", "A 1 2/a 1          ", "C2/c      ", "-b1  ",          A_FACE,  5 }, /*  93 */
-  { 15, "C2h^6 ", "-C 2ybc         ", "C 2/c = C 1 2/n 1              ", "C 1 2/n 1          ", "C2/c      ", "-b2  ",          C_FACE,  5 }, /*  94 */
-  { 15, "C2h^6 ", "-I 2yc          ", "C 2/c = I 1 2/c 1              ", "I 1 2/c 1          ", "C2/c      ", "-b3  ",            BODY,  5 }, /*  95 */
-  { 15, "C2h^6 ", "-A 2a           ", "C 2/c = A 1 1 2/a              ", "A 1 1 2/a          ", "C2/c      ", "c1   ",          A_FACE,  5 }, /*  96 */
-  { 15, "C2h^6 ", "-B 2bc          ", "C 2/c = B 1 1 2/n              ", "B 1 1 2/n          ", "C2/c      ", "c2   ",       PRIMITIVE,  5 }, /*  97 */
-  { 15, "C2h^6 ", "-I 2b           ", "C 2/c = I 1 1 2/b              ", "I 1 1 2/b          ", "C2/c      ", "c3   ",            BODY,  5 }, /*  98 */
-  { 15, "C2h^6 ", "-B 2b           ", "C 2/c = B 1 1 2/b = B 2/b      ", "B 1 1 2/b          ", "C2/c      ", "-c1  ",       PRIMITIVE,  5 }, /*  99 */
-  { 15, "C2h^6 ", "-A 2ac          ", "C 2/c = A 1 1 2/n              ", "A 1 1 2/n          ", "C2/c      ", "-c2  ",          A_FACE,  5 }, /* 100 */
-  { 15, "C2h^6 ", "-I 2a           ", "C 2/c = I 1 1 2/a              ", "I 1 1 2/a          ", "C2/c      ", "-c3  ",            BODY,  5 }, /* 101 */
-  { 15, "C2h^6 ", "-B 2xb          ", "C 2/c = B 2/b 1 1              ", "B 2/b 1 1          ", "C2/c      ", "a1   ",       PRIMITIVE,  5 }, /* 102 */
-  { 15, "C2h^6 ", "-C 2xbc         ", "C 2/c = C 2/n 1 1              ", "C 2/n 1 1          ", "C2/c      ", "a2   ",          C_FACE,  5 }, /* 103 */
-  { 15, "C2h^6 ", "-I 2xc          ", "C 2/c = I 2/c 1 1              ", "I 2/c 1 1          ", "C2/c      ", "a3   ",            BODY,  5 }, /* 104 */
-  { 15, "C2h^6 ", "-C 2xc          ", "C 2/c = C 2/c 1 1              ", "C 2/c 1 1          ", "C2/c      ", "-a1  ",          C_FACE,  5 }, /* 105 */
-  { 15, "C2h^6 ", "-B 2xbc         ", "C 2/c = B 2/n 1 1              ", "B 2/n 1 1          ", "C2/c      ", "-a2  ",       PRIMITIVE,  5 }, /* 106 */
-  { 15, "C2h^6 ", "-I 2xb          ", "C 2/c = I 2/b 1 1              ", "I 2/b 1 1          ", "C2/c      ", "-a3  ",            BODY,  5 }, /* 107 */
-  { 16, "D2^1  ", "P 2 2           ", "P 2 2 2                        ", "P 2 2 2            ", "P222      ", "     ",       PRIMITIVE,  6 }, /* 108 */
-  { 17, "D2^2  ", "P 2c 2          ", "P 2 2 2_1                      ", "P 2 2 2_1          ", "P222_1    ", "     ",       PRIMITIVE,  6 }, /* 109 */
-  { 17, "D2^2  ", "P 2a 2a         ", "P 2_1 2 2                      ", "P 2_1 2 2          ", "P2_122    ", "cab  ",       PRIMITIVE,  6 }, /* 110 */
-  { 17, "D2^2  ", "P 2 2b          ", "P 2 2_1 2                      ", "P 2 2_1 2          ", "P22_12    ", "bca  ",       PRIMITIVE,  6 }, /* 111 */
-  { 18, "D2^3  ", "P 2 2ab         ", "P 2_1 2_1 2                    ", "P 2_1 2_1 2        ", "P2_12_12  ", "     ",       PRIMITIVE,  6 }, /* 112 */
-  { 18, "D2^3  ", "P 2bc 2         ", "P 2 2_1 2_1                    ", "P 2 2_1 2_1        ", "P22_12_1  ", "cab  ",       PRIMITIVE,  6 }, /* 113 */
-  { 18, "D2^3  ", "P 2ac 2ac       ", "P 2_1 2 2_1                    ", "P 2_1 2 2_1        ", "P2_122_1  ", "bca  ",       PRIMITIVE,  6 }, /* 114 */
-  { 19, "D2^4  ", "P 2ac 2ab       ", "P 2_1 2_1 2_1                  ", "P 2_1 2_1 2_1      ", "P2_12_12_1", "     ",       PRIMITIVE,  6 }, /* 115 */
-  { 20, "D2^5  ", "C 2c 2          ", "C 2 2 2_1                      ", "C 2 2 2_1          ", "C222_1    ", "     ",          C_FACE,  6 }, /* 116 */
-  { 20, "D2^5  ", "A 2a 2a         ", "A 2_1 2 2                      ", "A 2_1 2 2          ", "A2_122    ", "cab  ",          A_FACE,  6 }, /* 117 */
-  { 20, "D2^5  ", "B 2 2b          ", "B 2 2_1 2                      ", "B 2 2_1 2          ", "B22_12    ", "bca  ",       PRIMITIVE,  6 }, /* 118 */
-  { 21, "D2^6  ", "C 2 2           ", "C 2 2 2                        ", "C 2 2 2            ", "C222      ", "     ",          C_FACE,  6 }, /* 119 */
-  { 21, "D2^6  ", "A 2 2           ", "A 2 2 2                        ", "A 2 2 2            ", "A222      ", "cab  ",          A_FACE,  6 }, /* 120 */
-  { 21, "D2^6  ", "B 2 2           ", "B 2 2 2                        ", "B 2 2 2            ", "B222      ", "bca  ",       PRIMITIVE,  6 }, /* 121 */
-  { 22, "D2^7  ", "F 2 2           ", "F 2 2 2                        ", "F 2 2 2            ", "F222      ", "     ",            FACE,  6 }, /* 122 */
-  { 23, "D2^8  ", "I 2 2           ", "I 2 2 2                        ", "I 2 2 2            ", "I222      ", "     ",            BODY,  6 }, /* 123 */
-  { 24, "D2^9  ", "I 2b 2c         ", "I 2_1 2_1 2_1                  ", "I 2_1 2_1 2_1      ", "I2_12_12_1", "     ",            BODY,  6 }, /* 124 */
-  { 25, "C2v^1 ", "P 2 -2          ", "P m m 2                        ", "P m m 2            ", "Pmm2      ", "     ",       PRIMITIVE,  7 }, /* 125 */
-  { 25, "C2v^1 ", "P -2 2          ", "P 2 m m                        ", "P 2 m m            ", "P2mm      ", "cab  ",       PRIMITIVE,  7 }, /* 126 */
-  { 25, "C2v^1 ", "P -2 -2         ", "P m 2 m                        ", "P m 2 m            ", "Pm2m      ", "bca  ",       PRIMITIVE,  7 }, /* 127 */
-  { 26, "C2v^2 ", "P 2c -2         ", "P m c 2_1                      ", "P m c 2_1          ", "Pmc2_1    ", "     ",       PRIMITIVE,  7 }, /* 128 */
-  { 26, "C2v^2 ", "P 2c -2c        ", "P c m 2_1                      ", "P c m 2_1          ", "Pcm2_1    ", "ba-c ",       PRIMITIVE,  7 }, /* 129 */
-  { 26, "C2v^2 ", "P -2a 2a        ", "P 2_1 m a                      ", "P 2_1 m a          ", "P2_1ma    ", "cab  ",       PRIMITIVE,  7 }, /* 130 */
-  { 26, "C2v^2 ", "P -2 2a         ", "P 2_1 a m                      ", "P 2_1 a m          ", "P2_1am    ", "-cba ",       PRIMITIVE,  7 }, /* 131 */
-  { 26, "C2v^2 ", "P -2 -2b        ", "P b 2_1 m                      ", "P b 2_1 m          ", "Pb2_1m    ", "bca  ",       PRIMITIVE,  7 }, /* 132 */
-  { 26, "C2v^2 ", "P -2b -2        ", "P m 2_1 b                      ", "P m 2_1 b          ", "Pm2_1b    ", "a-cb ",       PRIMITIVE,  7 }, /* 133 */
-  { 27, "C2v^3 ", "P 2 -2c         ", "P c c 2                        ", "P c c 2            ", "Pcc2      ", "     ",       PRIMITIVE,  7 }, /* 134 */
-  { 27, "C2v^3 ", "P -2a 2         ", "P 2 a a                        ", "P 2 a a            ", "P2aa      ", "cab  ",       PRIMITIVE,  7 }, /* 135 */
-  { 27, "C2v^3 ", "P -2b -2b       ", "P b 2 b                        ", "P b 2 b            ", "Pb2b      ", "bca  ",       PRIMITIVE,  7 }, /* 136 */
-  { 28, "C2v^4 ", "P 2 -2a         ", "P m a 2                        ", "P m a 2            ", "Pma2      ", "     ",       PRIMITIVE,  7 }, /* 137 */
-  { 28, "C2v^4 ", "P 2 -2b         ", "P b m 2                        ", "P b m 2            ", "Pbm2      ", "ba-c ",       PRIMITIVE,  7 }, /* 138 */
-  { 28, "C2v^4 ", "P -2b 2         ", "P 2 m b                        ", "P 2 m b            ", "P2mb      ", "cab  ",       PRIMITIVE,  7 }, /* 139 */
-  { 28, "C2v^4 ", "P -2c 2         ", "P 2 c m                        ", "P 2 c m            ", "P2cm      ", "-cba ",       PRIMITIVE,  7 }, /* 140 */
-  { 28, "C2v^4 ", "P -2c -2c       ", "P c 2 m                        ", "P c 2 m            ", "Pc2m      ", "bca  ",       PRIMITIVE,  7 }, /* 141 */
-  { 28, "C2v^4 ", "P -2a -2a       ", "P m 2 a                        ", "P m 2 a            ", "Pm2a      ", "a-cb ",       PRIMITIVE,  7 }, /* 142 */
-  { 29, "C2v^5 ", "P 2c -2ac       ", "P c a 2_1                      ", "P c a 2_1          ", "Pca2_1    ", "     ",       PRIMITIVE,  7 }, /* 143 */
-  { 29, "C2v^5 ", "P 2c -2b        ", "P b c 2_1                      ", "P b c 2_1          ", "Pbc2_1    ", "ba-c ",       PRIMITIVE,  7 }, /* 144 */
-  { 29, "C2v^5 ", "P -2b 2a        ", "P 2_1 a b                      ", "P 2_1 a b          ", "P2_1ab    ", "cab  ",       PRIMITIVE,  7 }, /* 145 */
-  { 29, "C2v^5 ", "P -2ac 2a       ", "P 2_1 c a                      ", "P 2_1 c a          ", "P2_1ca    ", "-cba ",       PRIMITIVE,  7 }, /* 146 */
-  { 29, "C2v^5 ", "P -2bc -2c      ", "P c 2_1 b                      ", "P c 2_1 b          ", "Pc2_1b    ", "bca  ",       PRIMITIVE,  7 }, /* 147 */
-  { 29, "C2v^5 ", "P -2a -2ab      ", "P b 2_1 a                      ", "P b 2_1 a          ", "Pb2_1a    ", "a-cb ",       PRIMITIVE,  7 }, /* 148 */
-  { 30, "C2v^6 ", "P 2 -2bc        ", "P n c 2                        ", "P n c 2            ", "Pnc2      ", "     ",       PRIMITIVE,  7 }, /* 149 */
-  { 30, "C2v^6 ", "P 2 -2ac        ", "P c n 2                        ", "P c n 2            ", "Pcn2      ", "ba-c ",       PRIMITIVE,  7 }, /* 150 */
-  { 30, "C2v^6 ", "P -2ac 2        ", "P 2 n a                        ", "P 2 n a            ", "P2na      ", "cab  ",       PRIMITIVE,  7 }, /* 151 */
-  { 30, "C2v^6 ", "P -2ab 2        ", "P 2 a n                        ", "P 2 a n            ", "P2an      ", "-cba ",       PRIMITIVE,  7 }, /* 152 */
-  { 30, "C2v^6 ", "P -2ab -2ab     ", "P b 2 n                        ", "P b 2 n            ", "Pb2n      ", "bca  ",       PRIMITIVE,  7 }, /* 153 */
-  { 30, "C2v^6 ", "P -2bc -2bc     ", "P n 2 b                        ", "P n 2 b            ", "Pn2b      ", "a-cb ",       PRIMITIVE,  7 }, /* 154 */
-  { 31, "C2v^7 ", "P 2ac -2        ", "P m n 2_1                      ", "P m n 2_1          ", "Pmn2_1    ", "     ",       PRIMITIVE,  7 }, /* 155 */
-  { 31, "C2v^7 ", "P 2bc -2bc      ", "P n m 2_1                      ", "P n m 2_1          ", "Pnm2_1    ", "ba-c ",       PRIMITIVE,  7 }, /* 156 */
-  { 31, "C2v^7 ", "P -2ab 2ab      ", "P 2_1 m n                      ", "P 2_1 m n          ", "P2_1mn    ", "cab  ",       PRIMITIVE,  7 }, /* 157 */
-  { 31, "C2v^7 ", "P -2 2ac        ", "P 2_1 n m                      ", "P 2_1 n m          ", "P2_1nm    ", "-cba ",       PRIMITIVE,  7 }, /* 158 */
-  { 31, "C2v^7 ", "P -2 -2bc       ", "P n 2_1 m                      ", "P n 2_1 m          ", "Pn2_1m    ", "bca  ",       PRIMITIVE,  7 }, /* 159 */
-  { 31, "C2v^7 ", "P -2ab -2       ", "P m 2_1 n                      ", "P m 2_1 n          ", "Pm2_1n    ", "a-cb ",       PRIMITIVE,  7 }, /* 160 */
-  { 32, "C2v^8 ", "P 2 -2ab        ", "P b a 2                        ", "P b a 2            ", "Pba2      ", "     ",       PRIMITIVE,  7 }, /* 161 */
-  { 32, "C2v^8 ", "P -2bc 2        ", "P 2 c b                        ", "P 2 c b            ", "P2cb      ", "cab  ",       PRIMITIVE,  7 }, /* 162 */
-  { 32, "C2v^8 ", "P -2ac -2ac     ", "P c 2 a                        ", "P c 2 a            ", "Pc2a      ", "bca  ",       PRIMITIVE,  7 }, /* 163 */
-  { 33, "C2v^9 ", "P 2c -2n        ", "P n a 2_1                      ", "P n a 2_1          ", "Pna2_1    ", "     ",       PRIMITIVE,  7 }, /* 164 */
-  { 33, "C2v^9 ", "P 2c -2ab       ", "P b n 2_1                      ", "P b n 2_1          ", "Pbn2_1    ", "ba-c ",       PRIMITIVE,  7 }, /* 165 */
-  { 33, "C2v^9 ", "P -2bc 2a       ", "P 2_1 n b                      ", "P 2_1 n b          ", "P2_1nb    ", "cab  ",       PRIMITIVE,  7 }, /* 166 */
-  { 33, "C2v^9 ", "P -2n 2a        ", "P 2_1 c n                      ", "P 2_1 c n          ", "P2_1cn    ", "-cba ",       PRIMITIVE,  7 }, /* 167 */
-  { 33, "C2v^9 ", "P -2n -2ac      ", "P c 2_1 n                      ", "P c 2_1 n          ", "Pc2_1n    ", "bca  ",       PRIMITIVE,  7 }, /* 168 */
-  { 33, "C2v^9 ", "P -2ac -2n      ", "P n 2_1 a                      ", "P n 2_1 a          ", "Pn2_1a    ", "a-cb ",       PRIMITIVE,  7 }, /* 169 */
-  { 34, "C2v^10", "P 2 -2n         ", "P n n 2                        ", "P n n 2            ", "Pnn2      ", "     ",       PRIMITIVE,  7 }, /* 170 */
-  { 34, "C2v^10", "P -2n 2         ", "P 2 n n                        ", "P 2 n n            ", "P2nn      ", "cab  ",       PRIMITIVE,  7 }, /* 171 */
-  { 34, "C2v^10", "P -2n -2n       ", "P n 2 n                        ", "P n 2 n            ", "Pn2n      ", "bca  ",       PRIMITIVE,  7 }, /* 172 */
-  { 35, "C2v^11", "C 2 -2          ", "C m m 2                        ", "C m m 2            ", "Cmm2      ", "     ",          C_FACE,  7 }, /* 173 */
-  { 35, "C2v^11", "A -2 2          ", "A 2 m m                        ", "A 2 m m            ", "A2mm      ", "cab  ",          A_FACE,  7 }, /* 174 */
-  { 35, "C2v^11", "B -2 -2         ", "B m 2 m                        ", "B m 2 m            ", "Bm2m      ", "bca  ",       PRIMITIVE,  7 }, /* 175 */
-  { 36, "C2v^12", "C 2c -2         ", "C m c 2_1                      ", "C m c 2_1          ", "Cmc2_1    ", "     ",          C_FACE,  7 }, /* 176 */
-  { 36, "C2v^12", "C 2c -2c        ", "C c m 2_1                      ", "C c m 2_1          ", "Ccm2_1    ", "ba-c ",          C_FACE,  7 }, /* 177 */
-  { 36, "C2v^12", "A -2a 2a        ", "A 2_1 m a                      ", "A 2_1 m a          ", "A2_1ma    ", "cab  ",          A_FACE,  7 }, /* 178 */
-  { 36, "C2v^12", "A -2 2a         ", "A 2_1 a m                      ", "A 2_1 a m          ", "A2_1am    ", "-cba ",          A_FACE,  7 }, /* 179 */
-  { 36, "C2v^12", "B -2 -2b        ", "B b 2_1 m                      ", "B b 2_1 m          ", "Bb2_1m    ", "bca  ",       PRIMITIVE,  7 }, /* 180 */
-  { 36, "C2v^12", "B -2b -2        ", "B m 2_1 b                      ", "B m 2_1 b          ", "Bm2_1b    ", "a-cb ",       PRIMITIVE,  7 }, /* 181 */
-  { 37, "C2v^13", "C 2 -2c         ", "C c c 2                        ", "C c c 2            ", "Ccc2      ", "     ",          C_FACE,  7 }, /* 182 */
-  { 37, "C2v^13", "A -2a 2         ", "A 2 a a                        ", "A 2 a a            ", "A2aa      ", "cab  ",          A_FACE,  7 }, /* 183 */
-  { 37, "C2v^13", "B -2b -2b       ", "B b 2 b                        ", "B b 2 b            ", "Bb2b      ", "bca  ",       PRIMITIVE,  7 }, /* 184 */
-  { 38, "C2v^14", "A 2 -2          ", "A m m 2                        ", "A m m 2            ", "Amm2      ", "     ",          A_FACE,  7 }, /* 185 */
-  { 38, "C2v^14", "B 2 -2          ", "B m m 2                        ", "B m m 2            ", "Bmm2      ", "ba-c ",       PRIMITIVE,  7 }, /* 186 */
-  { 38, "C2v^14", "B -2 2          ", "B 2 m m                        ", "B 2 m m            ", "B2mm      ", "cab  ",       PRIMITIVE,  7 }, /* 187 */
-  { 38, "C2v^14", "C -2 2          ", "C 2 m m                        ", "C 2 m m            ", "C2mm      ", "-cba ",          C_FACE,  7 }, /* 188 */
-  { 38, "C2v^14", "C -2 -2         ", "C m 2 m                        ", "C m 2 m            ", "Cm2m      ", "bca  ",          C_FACE,  7 }, /* 189 */
-  { 38, "C2v^14", "A -2 -2         ", "A m 2 m                        ", "A m 2 m            ", "Am2m      ", "a-cb ",          A_FACE,  7 }, /* 190 */
-  { 39, "C2v^15", "A 2 -2c         ", "A e m 2                        ", "A e m 2            ", "Aem2      ", "     ",          A_FACE,  7 }, /* 191 */
-  { 39, "C2v^15", "B 2 -2c         ", "B m e 2                        ", "B m e 2            ", "Bme2      ", "ba-c ",       PRIMITIVE,  7 }, /* 192 */
-  { 39, "C2v^15", "B -2c 2         ", "B 2 e m                        ", "B 2 e m            ", "B2em      ", "cab  ",       PRIMITIVE,  7 }, /* 193 */
-  { 39, "C2v^15", "C -2b 2         ", "C 2 m e                        ", "C 2 m e            ", "C2me      ", "-cba ",          C_FACE,  7 }, /* 194 */
-  { 39, "C2v^15", "C -2b -2b       ", "C m 2 e                        ", "C m 2 e            ", "Cm2e      ", "bca  ",          C_FACE,  7 }, /* 195 */
-  { 39, "C2v^15", "A -2c -2c       ", "A e 2 m                        ", "A e 2 m            ", "Ae2m      ", "a-cb ",          A_FACE,  7 }, /* 196 */
-  { 40, "C2v^16", "A 2 -2a         ", "A m a 2                        ", "A m a 2            ", "Ama2      ", "     ",          A_FACE,  7 }, /* 197 */
-  { 40, "C2v^16", "B 2 -2b         ", "B b m 2                        ", "B b m 2            ", "Bbm2      ", "ba-c ",       PRIMITIVE,  7 }, /* 198 */
-  { 40, "C2v^16", "B -2b 2         ", "B 2 m b                        ", "B 2 m b            ", "B2mb      ", "cab  ",       PRIMITIVE,  7 }, /* 199 */
-  { 40, "C2v^16", "C -2c 2         ", "C 2 c m                        ", "C 2 c m            ", "C2cm      ", "-cba ",          C_FACE,  7 }, /* 200 */
-  { 40, "C2v^16", "C -2c -2c       ", "C c 2 m                        ", "C c 2 m            ", "Cc2m      ", "bca  ",          C_FACE,  7 }, /* 201 */
-  { 40, "C2v^16", "A -2a -2a       ", "A m 2 a                        ", "A m 2 a            ", "Am2a      ", "a-cb ",          A_FACE,  7 }, /* 202 */
-  { 41, "C2v^17", "A 2 -2ac        ", "A e a 2                        ", "A e a 2            ", "Aea2      ", "     ",          A_FACE,  7 }, /* 203 */
-  { 41, "C2v^17", "B 2 -2bc        ", "B b e 2                        ", "B b e 2            ", "Bbe2      ", "ba-c ",       PRIMITIVE,  7 }, /* 204 */
-  { 41, "C2v^17", "B -2bc 2        ", "B 2 e b                        ", "B 2 e b            ", "B2eb      ", "cab  ",       PRIMITIVE,  7 }, /* 205 */
-  { 41, "C2v^17", "C -2bc 2        ", "C 2 c e                        ", "C 2 c e            ", "C2ce      ", "-cba ",          C_FACE,  7 }, /* 206 */
-  { 41, "C2v^17", "C -2bc -2bc     ", "C c 2 e                        ", "C c 2 e            ", "Cc2e      ", "bca  ",          C_FACE,  7 }, /* 207 */
-  { 41, "C2v^17", "A -2ac -2ac     ", "A e 2 a                        ", "A e 2 a            ", "Ae2a      ", "a-cb ",          A_FACE,  7 }, /* 208 */
-  { 42, "C2v^18", "F 2 -2          ", "F m m 2                        ", "F m m 2            ", "Fmm2      ", "     ",            FACE,  7 }, /* 209 */
-  { 42, "C2v^18", "F -2 2          ", "F 2 m m                        ", "F 2 m m            ", "F2mm      ", "cab  ",            FACE,  7 }, /* 210 */
-  { 42, "C2v^18", "F -2 -2         ", "F m 2 m                        ", "F m 2 m            ", "Fm2m      ", "bca  ",            FACE,  7 }, /* 211 */
-  { 43, "C2v^19", "F 2 -2d         ", "F d d 2                        ", "F d d 2            ", "Fdd2      ", "     ",            FACE,  7 }, /* 212 */
-  { 43, "C2v^19", "F -2d 2         ", "F 2 d d                        ", "F 2 d d            ", "F2dd      ", "cab  ",            FACE,  7 }, /* 213 */
-  { 43, "C2v^19", "F -2d -2d       ", "F d 2 d                        ", "F d 2 d            ", "Fd2d      ", "bca  ",            FACE,  7 }, /* 214 */
-  { 44, "C2v^20", "I 2 -2          ", "I m m 2                        ", "I m m 2            ", "Imm2      ", "     ",            BODY,  7 }, /* 215 */
-  { 44, "C2v^20", "I -2 2          ", "I 2 m m                        ", "I 2 m m            ", "I2mm      ", "cab  ",            BODY,  7 }, /* 216 */
-  { 44, "C2v^20", "I -2 -2         ", "I m 2 m                        ", "I m 2 m            ", "Im2m      ", "bca  ",            BODY,  7 }, /* 217 */
-  { 45, "C2v^21", "I 2 -2c         ", "I b a 2                        ", "I b a 2            ", "Iba2      ", "     ",            BODY,  7 }, /* 218 */
-  { 45, "C2v^21", "I -2a 2         ", "I 2 c b                        ", "I 2 c b            ", "I2cb      ", "cab  ",            BODY,  7 }, /* 219 */
-  { 45, "C2v^21", "I -2b -2b       ", "I c 2 a                        ", "I c 2 a            ", "Ic2a      ", "bca  ",            BODY,  7 }, /* 220 */
-  { 46, "C2v^22", "I 2 -2a         ", "I m a 2                        ", "I m a 2            ", "Ima2      ", "     ",            BODY,  7 }, /* 221 */
-  { 46, "C2v^22", "I 2 -2b         ", "I b m 2                        ", "I b m 2            ", "Ibm2      ", "ba-c ",            BODY,  7 }, /* 222 */
-  { 46, "C2v^22", "I -2b 2         ", "I 2 m b                        ", "I 2 m b            ", "I2mb      ", "cab  ",            BODY,  7 }, /* 223 */
-  { 46, "C2v^22", "I -2c 2         ", "I 2 c m                        ", "I 2 c m            ", "I2cm      ", "-cba ",            BODY,  7 }, /* 224 */
-  { 46, "C2v^22", "I -2c -2c       ", "I c 2 m                        ", "I c 2 m            ", "Ic2m      ", "bca  ",            BODY,  7 }, /* 225 */
-  { 46, "C2v^22", "I -2a -2a       ", "I m 2 a                        ", "I m 2 a            ", "Im2a      ", "a-cb ",            BODY,  7 }, /* 226 */
-  { 47, "D2h^1 ", "-P 2 2          ", "P m m m                        ", "P 2/m 2/m 2/m      ", "Pmmm      ", "     ",       PRIMITIVE,  8 }, /* 227 */
-  { 48, "D2h^2 ", "P 2 2 -1n       ", "P n n n                        ", "P 2/n 2/n 2/n      ", "Pnnn      ", "1    ",       PRIMITIVE,  8 }, /* 228 */
-  { 48, "D2h^2 ", "-P 2ab 2bc      ", "P n n n                        ", "P 2/n 2/n 2/n      ", "Pnnn      ", "2    ",       PRIMITIVE,  8 }, /* 229 */
-  { 49, "D2h^3 ", "-P 2 2c         ", "P c c m                        ", "P 2/c 2/c 2/m      ", "Pccm      ", "     ",       PRIMITIVE,  8 }, /* 230 */
-  { 49, "D2h^3 ", "-P 2a 2         ", "P m a a                        ", "P 2/m 2/a 2/a      ", "Pmaa      ", "cab  ",       PRIMITIVE,  8 }, /* 231 */
-  { 49, "D2h^3 ", "-P 2b 2b        ", "P b m b                        ", "P 2/b 2/m 2/b      ", "Pbmb      ", "bca  ",       PRIMITIVE,  8 }, /* 232 */
-  { 50, "D2h^4 ", "P 2 2 -1ab      ", "P b a n                        ", "P 2/b 2/a 2/n      ", "Pban      ", "1    ",       PRIMITIVE,  8 }, /* 233 */
-  { 50, "D2h^4 ", "-P 2ab 2b       ", "P b a n                        ", "P 2/b 2/a 2/n      ", "Pban      ", "2    ",       PRIMITIVE,  8 }, /* 234 */
-  { 50, "D2h^4 ", "P 2 2 -1bc      ", "P n c b                        ", "P 2/n 2/c 2/b      ", "Pncb      ", "1cab ",       PRIMITIVE,  8 }, /* 235 */
-  { 50, "D2h^4 ", "-P 2b 2bc       ", "P n c b                        ", "P 2/n 2/c 2/b      ", "Pncb      ", "2cab ",       PRIMITIVE,  8 }, /* 236 */
-  { 50, "D2h^4 ", "P 2 2 -1ac      ", "P c n a                        ", "P 2/c 2/n 2/a      ", "Pcna      ", "1bca ",       PRIMITIVE,  8 }, /* 237 */
-  { 50, "D2h^4 ", "-P 2a 2c        ", "P c n a                        ", "P 2/c 2/n 2/a      ", "Pcna      ", "2bca ",       PRIMITIVE,  8 }, /* 238 */
-  { 51, "D2h^5 ", "-P 2a 2a        ", "P m m a                        ", "P 2_1/m 2/m 2/a    ", "Pmma      ", "     ",       PRIMITIVE,  8 }, /* 239 */
-  { 51, "D2h^5 ", "-P 2b 2         ", "P m m b                        ", "P 2/m 2_1/m 2/b    ", "Pmmb      ", "ba-c ",       PRIMITIVE,  8 }, /* 240 */
-  { 51, "D2h^5 ", "-P 2 2b         ", "P b m m                        ", "P 2/b 2_1/m 2/m    ", "Pbmm      ", "cab  ",       PRIMITIVE,  8 }, /* 241 */
-  { 51, "D2h^5 ", "-P 2c 2c        ", "P c m m                        ", "P 2/c 2/m 2_1/m    ", "Pcmm      ", "-cba ",       PRIMITIVE,  8 }, /* 242 */
-  { 51, "D2h^5 ", "-P 2c 2         ", "P m c m                        ", "P 2/m 2/c 2_1/m    ", "Pmcm      ", "bca  ",       PRIMITIVE,  8 }, /* 243 */
-  { 51, "D2h^5 ", "-P 2 2a         ", "P m a m                        ", "P 2_1/m 2/a 2/m    ", "Pmam      ", "a-cb ",       PRIMITIVE,  8 }, /* 244 */
-  { 52, "D2h^6 ", "-P 2a 2bc       ", "P n n a                        ", "P 2/n 2_1/n 2/a    ", "Pnna      ", "     ",       PRIMITIVE,  8 }, /* 245 */
-  { 52, "D2h^6 ", "-P 2b 2n        ", "P n n b                        ", "P 2_1/n 2/n 2/b    ", "Pnnb      ", "ba-c ",       PRIMITIVE,  8 }, /* 246 */
-  { 52, "D2h^6 ", "-P 2n 2b        ", "P b n n                        ", "P 2/b 2/n 2_1/n    ", "Pbnn      ", "cab  ",       PRIMITIVE,  8 }, /* 247 */
-  { 52, "D2h^6 ", "-P 2ab 2c       ", "P c n n                        ", "P 2/c 2_1/n 2/n    ", "Pcnn      ", "-cba ",       PRIMITIVE,  8 }, /* 248 */
-  { 52, "D2h^6 ", "-P 2ab 2n       ", "P n c n                        ", "P 2_1/n 2/c 2/n    ", "Pncn      ", "bca  ",       PRIMITIVE,  8 }, /* 249 */
-  { 52, "D2h^6 ", "-P 2n 2bc       ", "P n a n                        ", "P 2/n 2/a 2_1/n    ", "Pnan      ", "a-cb ",       PRIMITIVE,  8 }, /* 250 */
-  { 53, "D2h^7 ", "-P 2ac 2        ", "P m n a                        ", "P 2/m 2/n 2_1/a    ", "Pmna      ", "     ",       PRIMITIVE,  8 }, /* 251 */
-  { 53, "D2h^7 ", "-P 2bc 2bc      ", "P n m b                        ", "P 2/n 2/m 2_1/b    ", "Pnmb      ", "ba-c ",       PRIMITIVE,  8 }, /* 252 */
-  { 53, "D2h^7 ", "-P 2ab 2ab      ", "P b m n                        ", "P 2_1/b 2/m 2/n    ", "Pbmn      ", "cab  ",       PRIMITIVE,  8 }, /* 253 */
-  { 53, "D2h^7 ", "-P 2 2ac        ", "P c n m                        ", "P 2_1/c 2/n 2/m    ", "Pcnm      ", "-cba ",       PRIMITIVE,  8 }, /* 254 */
-  { 53, "D2h^7 ", "-P 2 2bc        ", "P n c m                        ", "P 2/n 2_1/c 2/m    ", "Pncm      ", "bca  ",       PRIMITIVE,  8 }, /* 255 */
-  { 53, "D2h^7 ", "-P 2ab 2        ", "P m a n                        ", "P 2/m 2_1/a 2/n    ", "Pman      ", "a-cb ",       PRIMITIVE,  8 }, /* 256 */
-  { 54, "D2h^8 ", "-P 2a 2ac       ", "P c c a                        ", "P 2_1/c 2/c 2/a    ", "Pcca      ", "     ",       PRIMITIVE,  8 }, /* 257 */
-  { 54, "D2h^8 ", "-P 2b 2c        ", "P c c b                        ", "P 2/c 2_1/c 2/b    ", "Pccb      ", "ba-c ",       PRIMITIVE,  8 }, /* 258 */
-  { 54, "D2h^8 ", "-P 2a 2b        ", "P b a a                        ", "P 2/b 2_1/a 2/a    ", "Pbaa      ", "cab  ",       PRIMITIVE,  8 }, /* 259 */
-  { 54, "D2h^8 ", "-P 2ac 2c       ", "P c a a                        ", "P 2/c 2/a 2_1/a    ", "Pcaa      ", "-cba ",       PRIMITIVE,  8 }, /* 260 */
-  { 54, "D2h^8 ", "-P 2bc 2b       ", "P b c b                        ", "P 2/b 2/c 2_1/b    ", "Pbcb      ", "bca  ",       PRIMITIVE,  8 }, /* 261 */
-  { 54, "D2h^8 ", "-P 2b 2ab       ", "P b a b                        ", "P 2_1/b 2/a 2/b    ", "Pbab      ", "a-cb ",       PRIMITIVE,  8 }, /* 262 */
-  { 55, "D2h^9 ", "-P 2 2ab        ", "P b a m                        ", "P 2_1/b 2_1/a 2/m  ", "Pbam      ", "     ",       PRIMITIVE,  8 }, /* 263 */
-  { 55, "D2h^9 ", "-P 2bc 2        ", "P m c b                        ", "P 2/m 2_1/c 2_1/b  ", "Pmcb      ", "cab  ",       PRIMITIVE,  8 }, /* 264 */
-  { 55, "D2h^9 ", "-P 2ac 2ac      ", "P c m a                        ", "P 2_1/c 2/m 2_1/a  ", "Pcma      ", "bca  ",       PRIMITIVE,  8 }, /* 265 */
-  { 56, "D2h^10", "-P 2ab 2ac      ", "P c c n                        ", "P 2_1/c 2_1/c 2/n  ", "Pccn      ", "     ",       PRIMITIVE,  8 }, /* 266 */
-  { 56, "D2h^10", "-P 2ac 2bc      ", "P n a a                        ", "P 2/n 2_1/a 2_1/a  ", "Pnaa      ", "cab  ",       PRIMITIVE,  8 }, /* 267 */
-  { 56, "D2h^10", "-P 2bc 2ab      ", "P b n b                        ", "P 2_1/b 2/n 2_1/b  ", "Pbnb      ", "bca  ",       PRIMITIVE,  8 }, /* 268 */
-  { 57, "D2h^11", "-P 2c 2b        ", "P b c m                        ", "P 2/b 2_1/c 2_1/m  ", "Pbcm      ", "     ",       PRIMITIVE,  8 }, /* 269 */
-  { 57, "D2h^11", "-P 2c 2ac       ", "P c a m                        ", "P 2_1/c 2/a 2_1/m  ", "Pcam      ", "ba-c ",       PRIMITIVE,  8 }, /* 270 */
-  { 57, "D2h^11", "-P 2ac 2a       ", "P m c a                        ", "P 2_1/m 2/c 2_1/a  ", "Pmca      ", "cab  ",       PRIMITIVE,  8 }, /* 271 */
-  { 57, "D2h^11", "-P 2b 2a        ", "P m a b                        ", "P 2_1/m 2_1/a 2/b  ", "Pmab      ", "-cba ",       PRIMITIVE,  8 }, /* 272 */
-  { 57, "D2h^11", "-P 2a 2ab       ", "P b m a                        ", "P 2_1/b 2_1/m 2/a  ", "Pbma      ", "bca  ",       PRIMITIVE,  8 }, /* 273 */
-  { 57, "D2h^11", "-P 2bc 2c       ", "P c m b                        ", "P 2/c 2_1/m 2_1/b  ", "Pcmb      ", "a-cb ",       PRIMITIVE,  8 }, /* 274 */
-  { 58, "D2h^12", "-P 2 2n         ", "P n n m                        ", "P 2_1/n 2_1/n 2/m  ", "Pnnm      ", "     ",       PRIMITIVE,  8 }, /* 275 */
-  { 58, "D2h^12", "-P 2n 2         ", "P m n n                        ", "P 2/m 2_1/n 2_1/n  ", "Pmnn      ", "cab  ",       PRIMITIVE,  8 }, /* 276 */
-  { 58, "D2h^12", "-P 2n 2n        ", "P n m n                        ", "P 2_1/n 2/m 2_1/n  ", "Pnmn      ", "bca  ",       PRIMITIVE,  8 }, /* 277 */
-  { 59, "D2h^13", "P 2 2ab -1ab    ", "P m m n                        ", "P 2_1/m 2_1/m 2/n  ", "Pmmn      ", "1    ",       PRIMITIVE,  8 }, /* 278 */
-  { 59, "D2h^13", "-P 2ab 2a       ", "P m m n                        ", "P 2_1/m 2_1/m 2/n  ", "Pmmn      ", "2    ",       PRIMITIVE,  8 }, /* 279 */
-  { 59, "D2h^13", "P 2bc 2 -1bc    ", "P n m m                        ", "P 2/n 2_1/m 2_1/m  ", "Pnmm      ", "1cab ",       PRIMITIVE,  8 }, /* 280 */
-  { 59, "D2h^13", "-P 2c 2bc       ", "P n m m                        ", "P 2/n 2_1/m 2_1/m  ", "Pnmm      ", "2cab ",       PRIMITIVE,  8 }, /* 281 */
-  { 59, "D2h^13", "P 2ac 2ac -1ac  ", "P m n m                        ", "P 2_1/m 2/n 2_1/m  ", "Pmnm      ", "1bca ",       PRIMITIVE,  8 }, /* 282 */
-  { 59, "D2h^13", "-P 2c 2a        ", "P m n m                        ", "P 2_1/m 2/n 2_1/m  ", "Pmnm      ", "2bca ",       PRIMITIVE,  8 }, /* 283 */
-  { 60, "D2h^14", "-P 2n 2ab       ", "P b c n                        ", "P 2_1/b 2/c 2_1/n  ", "Pbcn      ", "     ",       PRIMITIVE,  8 }, /* 284 */
-  { 60, "D2h^14", "-P 2n 2c        ", "P c a n                        ", "P 2/c 2_1/a 2_1/n  ", "Pcan      ", "ba-c ",       PRIMITIVE,  8 }, /* 285 */
-  { 60, "D2h^14", "-P 2a 2n        ", "P n c a                        ", "P 2_1/n 2_1/c 2/a  ", "Pnca      ", "cab  ",       PRIMITIVE,  8 }, /* 286 */
-  { 60, "D2h^14", "-P 2bc 2n       ", "P n a b                        ", "P 2_1/n 2/a 2_1/b  ", "Pnab      ", "-cba ",       PRIMITIVE,  8 }, /* 287 */
-  { 60, "D2h^14", "-P 2ac 2b       ", "P b n a                        ", "P 2/b 2_1/n 2_1/a  ", "Pbna      ", "bca  ",       PRIMITIVE,  8 }, /* 288 */
-  { 60, "D2h^14", "-P 2b 2ac       ", "P c n b                        ", "P 2_1/c 2_1/n 2/b  ", "Pcnb      ", "a-cb ",       PRIMITIVE,  8 }, /* 289 */
-  { 61, "D2h^15", "-P 2ac 2ab      ", "P b c a                        ", "P 2_1/b 2_1/c 2_1/a", "Pbca      ", "     ",       PRIMITIVE,  8 }, /* 290 */
-  { 61, "D2h^15", "-P 2bc 2ac      ", "P c a b                        ", "P 2_1/c 2_1/a 2_1/b", "Pcab      ", "ba-c ",       PRIMITIVE,  8 }, /* 291 */
-  { 62, "D2h^16", "-P 2ac 2n       ", "P n m a                        ", "P 2_1/n 2_1/m 2_1/a", "Pnma      ", "     ",       PRIMITIVE,  8 }, /* 292 */
-  { 62, "D2h^16", "-P 2bc 2a       ", "P m n b                        ", "P 2_1/m 2_1/n 2_1/b", "Pmnb      ", "ba-c ",       PRIMITIVE,  8 }, /* 293 */
-  { 62, "D2h^16", "-P 2c 2ab       ", "P b n m                        ", "P 2_1/b 2_1/n 2_1/m", "Pbnm      ", "cab  ",       PRIMITIVE,  8 }, /* 294 */
-  { 62, "D2h^16", "-P 2n 2ac       ", "P c m n                        ", "P 2_1/c 2_1/m 2_1/n", "Pcmn      ", "-cba ",       PRIMITIVE,  8 }, /* 295 */
-  { 62, "D2h^16", "-P 2n 2a        ", "P m c n                        ", "P 2_1/m 2_1/c 2_1/n", "Pmcn      ", "bca  ",       PRIMITIVE,  8 }, /* 296 */
-  { 62, "D2h^16", "-P 2c 2n        ", "P n a m                        ", "P 2_1/n 2_1/a 2_1/m", "Pnam      ", "a-cb ",       PRIMITIVE,  8 }, /* 297 */
-  { 63, "D2h^17", "-C 2c 2         ", "C m c m                        ", "C 2/m 2/c 2_1/m    ", "Cmcm      ", "     ",          C_FACE,  8 }, /* 298 */
-  { 63, "D2h^17", "-C 2c 2c        ", "C c m m                        ", "C 2/c 2/m 2_1/m    ", "Ccmm      ", "ba-c ",          C_FACE,  8 }, /* 299 */
-  { 63, "D2h^17", "-A 2a 2a        ", "A m m a                        ", "A 2_1/m 2/m 2/a    ", "Amma      ", "cab  ",          A_FACE,  8 }, /* 300 */
-  { 63, "D2h^17", "-A 2 2a         ", "A m a m                        ", "A 2_1/m 2/a 2/m    ", "Amam      ", "-cba ",          A_FACE,  8 }, /* 301 */
-  { 63, "D2h^17", "-B 2 2b         ", "B b m m                        ", "B 2/b 2_1/m 2/m    ", "Bbmm      ", "bca  ",       PRIMITIVE,  8 }, /* 302 */
-  { 63, "D2h^17", "-B 2b 2         ", "B m m b                        ", "B 2/m 2_1/m 2/b    ", "Bmmb      ", "a-cb ",       PRIMITIVE,  8 }, /* 303 */
-  { 64, "D2h^18", "-C 2bc 2        ", "C m c e                        ", "C 2/m 2/c 2_1/e    ", "Cmce      ", "     ",          C_FACE,  8 }, /* 304 */
-  { 64, "D2h^18", "-C 2bc 2bc      ", "C c m e                        ", "C 2/c 2/m 2_1/e    ", "Ccme      ", "ba-c ",          C_FACE,  8 }, /* 305 */
-  { 64, "D2h^18", "-A 2ac 2ac      ", "A e m a                        ", "A 2_1/e 2/m 2/a    ", "Aema      ", "cab  ",          A_FACE,  8 }, /* 306 */
-  { 64, "D2h^18", "-A 2 2ac        ", "A e a m                        ", "A 2_1/e 2/a 2/m    ", "Aeam      ", "-cba ",          A_FACE,  8 }, /* 307 */
-  { 64, "D2h^18", "-B 2 2bc        ", "B b e m                        ", "B 2/b 2_1/e 2/m    ", "Bbem      ", "bca  ",       PRIMITIVE,  8 }, /* 308 */
-  { 64, "D2h^18", "-B 2bc 2        ", "B m e b                        ", "B 2/m 2_1/e 2/b    ", "Bmeb      ", "a-cb ",       PRIMITIVE,  8 }, /* 309 */
-  { 65, "D2h^19", "-C 2 2          ", "C m m m                        ", "C 2/m 2/m 2/m      ", "Cmmm      ", "     ",          C_FACE,  8 }, /* 310 */
-  { 65, "D2h^19", "-A 2 2          ", "A m m m                        ", "A 2/m 2/m 2/m      ", "Ammm      ", "cab  ",          A_FACE,  8 }, /* 311 */
-  { 65, "D2h^19", "-B 2 2          ", "B m m m                        ", "B 2/m 2/m 2/m      ", "Bmmm      ", "bca  ",       PRIMITIVE,  8 }, /* 312 */
-  { 66, "D2h^20", "-C 2 2c         ", "C c c m                        ", "C 2/c 2/c 2/m      ", "Cccm      ", "     ",          C_FACE,  8 }, /* 313 */
-  { 66, "D2h^20", "-A 2a 2         ", "A m a a                        ", "A 2/m 2/a 2/a      ", "Amaa      ", "cab  ",          A_FACE,  8 }, /* 314 */
-  { 66, "D2h^20", "-B 2b 2b        ", "B b m b                        ", "B 2/b 2/m 2/b      ", "Bbmb      ", "bca  ",       PRIMITIVE,  8 }, /* 315 */
-  { 67, "D2h^21", "-C 2b 2         ", "C m m e                        ", "C 2/m 2/m 2/e      ", "Cmme      ", "     ",          C_FACE,  8 }, /* 316 */
-  { 67, "D2h^21", "-C 2b 2b        ", "C m m e                        ", "C 2/m 2/m 2/e      ", "Cmme      ", "ba-c ",          C_FACE,  8 }, /* 317 */
-  { 67, "D2h^21", "-A 2c 2c        ", "A e m m                        ", "A 2/e 2/m 2/m      ", "Aemm      ", "cab  ",          A_FACE,  8 }, /* 318 */
-  { 67, "D2h^21", "-A 2 2c         ", "A e m m                        ", "A 2/e 2/m 2/m      ", "Aemm      ", "-cba ",          A_FACE,  8 }, /* 319 */
-  { 67, "D2h^21", "-B 2 2c         ", "B m e m                        ", "B 2/m 2/e 2/m      ", "Bmem      ", "bca  ",       PRIMITIVE,  8 }, /* 320 */
-  { 67, "D2h^21", "-B 2c 2         ", "B m e m                        ", "B 2/m 2/e 2/m      ", "Bmem      ", "a-cb ",       PRIMITIVE,  8 }, /* 321 */
-  { 68, "D2h^22", "C 2 2 -1bc      ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "1    ",          C_FACE,  8 }, /* 322 */
-  { 68, "D2h^22", "-C 2b 2bc       ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "2    ",          C_FACE,  8 }, /* 323 */
-  { 68, "D2h^22", "C 2 2 -1bc      ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "1ba-c",          C_FACE,  8 }, /* 324 */
-  { 68, "D2h^22", "-C 2b 2c        ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "2ba-c",          C_FACE,  8 }, /* 325 */
-  { 68, "D2h^22", "A 2 2 -1ac      ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "1cab ",          A_FACE,  8 }, /* 326 */
-  { 68, "D2h^22", "-A 2a 2c        ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "2cab ",          A_FACE,  8 }, /* 327 */
-  { 68, "D2h^22", "A 2 2 -1ac      ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "1-cba",          A_FACE,  8 }, /* 328 */
-  { 68, "D2h^22", "-A 2ac 2c       ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "2-cba",          A_FACE,  8 }, /* 329 */
-  { 68, "D2h^22", "B 2 2 -1bc      ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "1bca ",       PRIMITIVE,  8 }, /* 330 */
-  { 68, "D2h^22", "-B 2bc 2b       ", "B b c b                        ", "B 2/b 2/e 2/b      ", "Bbcb      ", "2bca ",       PRIMITIVE,  8 }, /* 331 */
-  { 68, "D2h^22", "B 2 2 -1bc      ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "1a-cb",       PRIMITIVE,  8 }, /* 332 */
-  { 68, "D2h^22", "-B 2b 2bc       ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "2a-cb",       PRIMITIVE,  8 }, /* 333 */
-  { 69, "D2h^23", "-F 2 2          ", "F m m m                        ", "F 2/m 2/m 2/m      ", "Fmmm      ", "     ",            FACE,  8 }, /* 334 */
-  { 70, "D2h^24", "F 2 2 -1d       ", "F d d d                        ", "F 2/d 2/d 2/d      ", "Fddd      ", "1    ",            FACE,  8 }, /* 335 */
-  { 70, "D2h^24", "-F 2uv 2vw      ", "F d d d                        ", "F 2/d 2/d 2/d      ", "Fddd      ", "2    ",            FACE,  8 }, /* 336 */
-  { 71, "D2h^25", "-I 2 2          ", "I m m m                        ", "I 2/m 2/m 2/m      ", "Immm      ", "     ",            BODY,  8 }, /* 337 */
-  { 72, "D2h^26", "-I 2 2c         ", "I b a m                        ", "I 2/b 2/a 2/m      ", "Ibam      ", "     ",            BODY,  8 }, /* 338 */
-  { 72, "D2h^26", "-I 2a 2         ", "I m c b                        ", "I 2/m 2/c 2/b      ", "Imcb      ", "cab  ",            BODY,  8 }, /* 339 */
-  { 72, "D2h^26", "-I 2b 2b        ", "I c m a                        ", "I 2/c 2/m 2/a      ", "Icma      ", "bca  ",            BODY,  8 }, /* 340 */
-  { 73, "D2h^27", "-I 2b 2c        ", "I b c a                        ", "I 2/b 2/c 2/a      ", "Ibca      ", "     ",            BODY,  8 }, /* 341 */
-  { 73, "D2h^27", "-I 2a 2b        ", "I c a b                        ", "I 2/c 2/a 2/b      ", "Icab      ", "ba-c ",            BODY,  8 }, /* 342 */
-  { 74, "D2h^28", "-I 2b 2         ", "I m m a                        ", "I 2/m 2/m 2/a      ", "Imma      ", "     ",            BODY,  8 }, /* 343 */
-  { 74, "D2h^28", "-I 2a 2a        ", "I m m b                        ", "I 2/m 2/m 2/b      ", "Immb      ", "ba-c ",            BODY,  8 }, /* 344 */
-  { 74, "D2h^28", "-I 2c 2c        ", "I b m m                        ", "I 2/b 2/m 2/m      ", "Ibmm      ", "cab  ",            BODY,  8 }, /* 345 */
-  { 74, "D2h^28", "-I 2 2b         ", "I c m m                        ", "I 2/c 2/m 2/m      ", "Icmm      ", "-cba ",            BODY,  8 }, /* 346 */
-  { 74, "D2h^28", "-I 2 2a         ", "I m c m                        ", "I 2/m 2/c 2/m      ", "Imcm      ", "bca  ",            BODY,  8 }, /* 347 */
-  { 74, "D2h^28", "-I 2c 2         ", "I m a m                        ", "I 2/m 2/a 2/m      ", "Imam      ", "a-cb ",            BODY,  8 }, /* 348 */
-  { 75, "C4^1  ", "P 4             ", "P 4                            ", "P 4                ", "P4        ", "     ",       PRIMITIVE,  9 }, /* 349 */
-  { 76, "C4^2  ", "P 4w            ", "P 4_1                          ", "P 4_1              ", "P4_1      ", "     ",       PRIMITIVE,  9 }, /* 350 */
-  { 77, "C4^3  ", "P 4c            ", "P 4_2                          ", "P 4_2              ", "P4_2      ", "     ",       PRIMITIVE,  9 }, /* 351 */
-  { 78, "C4^4  ", "P 4cw           ", "P 4_3                          ", "P 4_3              ", "P4_3      ", "     ",       PRIMITIVE,  9 }, /* 352 */
-  { 79, "C4^5  ", "I 4             ", "I 4                            ", "I 4                ", "I4        ", "     ",            BODY,  9 }, /* 353 */
-  { 80, "C4^6  ", "I 4bw           ", "I 4_1                          ", "I 4_1              ", "I4_1      ", "     ",            BODY,  9 }, /* 354 */
-  { 81, "S4^1  ", "P -4            ", "P -4                           ", "P -4               ", "P-4       ", "     ",       PRIMITIVE, 10 }, /* 355 */
-  { 82, "S4^2  ", "I -4            ", "I -4                           ", "I -4               ", "I-4       ", "     ",            BODY, 10 }, /* 356 */
-  { 83, "C4h^1 ", "-P 4            ", "P 4/m                          ", "P 4/m              ", "P4/m      ", "     ",       PRIMITIVE, 11 }, /* 357 */
-  { 84, "C4h^2 ", "-P 4c           ", "P 4_2/m                        ", "P 4_2/m            ", "P4_2/m    ", "     ",       PRIMITIVE, 11 }, /* 358 */
-  { 85, "C4h^3 ", "P 4ab -1ab      ", "P 4/n                          ", "P 4/n              ", "P4/n      ", "1    ",       PRIMITIVE, 11 }, /* 359 */
-  { 85, "C4h^3 ", "-P 4a           ", "P 4/n                          ", "P 4/n              ", "P4/n      ", "2    ",       PRIMITIVE, 11 }, /* 360 */
-  { 86, "C4h^4 ", "P 4n -1n        ", "P 4_2/n                        ", "P 4_2/n            ", "P4_2/n    ", "1    ",       PRIMITIVE, 11 }, /* 361 */
-  { 86, "C4h^4 ", "-P 4bc          ", "P 4_2/n                        ", "P 4_2/n            ", "P4_2/n    ", "2    ",       PRIMITIVE, 11 }, /* 362 */
-  { 87, "C4h^5 ", "-I 4            ", "I 4/m                          ", "I 4/m              ", "I4/m      ", "     ",            BODY, 11 }, /* 363 */
-  { 88, "C4h^6 ", "I 4bw -1bw      ", "I 4_1/a                        ", "I 4_1/a            ", "I4_1/a    ", "1    ",            BODY, 11 }, /* 364 */
-  { 88, "C4h^6 ", "-I 4ad          ", "I 4_1/a                        ", "I 4_1/a            ", "I4_1/a    ", "2    ",            BODY, 11 }, /* 365 */
-  { 89, "D4^1  ", "P 4 2           ", "P 4 2 2                        ", "P 4 2 2            ", "P422      ", "     ",       PRIMITIVE, 12 }, /* 366 */
-  { 90, "D4^2  ", "P 4ab 2ab       ", "P 4 2_1 2                      ", "P 4 2_1 2          ", "P42_12    ", "     ",       PRIMITIVE, 12 }, /* 367 */
-  { 91, "D4^3  ", "P 4w 2c         ", "P 4_1 2 2                      ", "P 4_1 2 2          ", "P4_122    ", "     ",       PRIMITIVE, 12 }, /* 368 */
-  { 92, "D4^4  ", "P 4abw 2nw      ", "P 4_1 2_1 2                    ", "P 4_1 2_1 2        ", "P4_12_12  ", "     ",       PRIMITIVE, 12 }, /* 369 */
-  { 93, "D4^5  ", "P 4c 2          ", "P 4_2 2 2                      ", "P 4_2 2 2          ", "P4_222    ", "     ",       PRIMITIVE, 12 }, /* 370 */
-  { 94, "D4^6  ", "P 4n 2n         ", "P 4_2 2_1 2                    ", "P 4_2 2_1 2        ", "P4_22_12  ", "     ",       PRIMITIVE, 12 }, /* 371 */
-  { 95, "D4^7  ", "P 4cw 2c        ", "P 4_3 2 2                      ", "P 4_3 2 2          ", "P4_322    ", "     ",       PRIMITIVE, 12 }, /* 372 */
-  { 96, "D4^8  ", "P 4nw 2abw      ", "P 4_3 2_1 2                    ", "P 4_3 2_1 2        ", "P4_32_12  ", "     ",       PRIMITIVE, 12 }, /* 373 */
-  { 97, "D4^9  ", "I 4 2           ", "I 4 2 2                        ", "I 4 2 2            ", "I422      ", "     ",            BODY, 12 }, /* 374 */
-  { 98, "D4^10 ", "I 4bw 2bw       ", "I 4_1 2 2                      ", "I 4_1 2 2          ", "I4_122    ", "     ",            BODY, 12 }, /* 375 */
-  { 99, "C4v^1 ", "P 4 -2          ", "P 4 m m                        ", "P 4 m m            ", "P4mm      ", "     ",       PRIMITIVE, 13 }, /* 376 */
-  {100, "C4v^2 ", "P 4 -2ab        ", "P 4 b m                        ", "P 4 b m            ", "P4bm      ", "     ",       PRIMITIVE, 13 }, /* 377 */
-  {101, "C4v^3 ", "P 4c -2c        ", "P 4_2 c m                      ", "P 4_2 c m          ", "P4_2cm    ", "     ",       PRIMITIVE, 13 }, /* 378 */
-  {102, "C4v^4 ", "P 4n -2n        ", "P 4_2 n m                      ", "P 4_2 n m          ", "P4_2nm    ", "     ",       PRIMITIVE, 13 }, /* 379 */
-  {103, "C4v^5 ", "P 4 -2c         ", "P 4 c c                        ", "P 4 c c            ", "P4cc      ", "     ",       PRIMITIVE, 13 }, /* 380 */
-  {104, "C4v^6 ", "P 4 -2n         ", "P 4 n c                        ", "P 4 n c            ", "P4nc      ", "     ",       PRIMITIVE, 13 }, /* 381 */
-  {105, "C4v^7 ", "P 4c -2         ", "P 4_2 m c                      ", "P 4_2 m c          ", "P4_2mc    ", "     ",       PRIMITIVE, 13 }, /* 382 */
-  {106, "C4v^8 ", "P 4c -2ab       ", "P 4_2 b c                      ", "P 4_2 b c          ", "P4_2bc    ", "     ",       PRIMITIVE, 13 }, /* 383 */
-  {107, "C4v^9 ", "I 4 -2          ", "I 4 m m                        ", "I 4 m m            ", "I4mm      ", "     ",            BODY, 13 }, /* 384 */
-  {108, "C4v^10", "I 4 -2c         ", "I 4 c m                        ", "I 4 c m            ", "I4cm      ", "     ",            BODY, 13 }, /* 385 */
-  {109, "C4v^11", "I 4bw -2        ", "I 4_1 m d                      ", "I 4_1 m d          ", "I4_1md    ", "     ",            BODY, 13 }, /* 386 */
-  {110, "C4v^12", "I 4bw -2c       ", "I 4_1 c d                      ", "I 4_1 c d          ", "I4_1cd    ", "     ",            BODY, 13 }, /* 387 */
-  {111, "D2d^1 ", "P -4 2          ", "P -4 2 m                       ", "P -4 2 m           ", "P-42m     ", "     ",       PRIMITIVE, 14 }, /* 388 */
-  {112, "D2d^2 ", "P -4 2c         ", "P -4 2 c                       ", "P -4 2 c           ", "P-42c     ", "     ",       PRIMITIVE, 14 }, /* 389 */
-  {113, "D2d^3 ", "P -4 2ab        ", "P -4 2_1 m                     ", "P -4 2_1 m         ", "P-42_1m   ", "     ",       PRIMITIVE, 14 }, /* 390 */
-  {114, "D2d^4 ", "P -4 2n         ", "P -4 2_1 c                     ", "P -4 2_1 c         ", "P-42_1c   ", "     ",       PRIMITIVE, 14 }, /* 391 */
-  {115, "D2d^5 ", "P -4 -2         ", "P -4 m 2                       ", "P -4 m 2           ", "P-4m2     ", "     ",       PRIMITIVE, 14 }, /* 392 */
-  {116, "D2d^6 ", "P -4 -2c        ", "P -4 c 2                       ", "P -4 c 2           ", "P-4c2     ", "     ",       PRIMITIVE, 14 }, /* 393 */
-  {117, "D2d^7 ", "P -4 -2ab       ", "P -4 b 2                       ", "P -4 b 2           ", "P-4b2     ", "     ",       PRIMITIVE, 14 }, /* 394 */
-  {118, "D2d^8 ", "P -4 -2n        ", "P -4 n 2                       ", "P -4 n 2           ", "P-4n2     ", "     ",       PRIMITIVE, 14 }, /* 395 */
-  {119, "D2d^9 ", "I -4 -2         ", "I -4 m 2                       ", "I -4 m 2           ", "I-4m2     ", "     ",            BODY, 14 }, /* 396 */
-  {120, "D2d^10", "I -4 -2c        ", "I -4 c 2                       ", "I -4 c 2           ", "I-4c2     ", "     ",            BODY, 14 }, /* 397 */
-  {121, "D2d^11", "I -4 2          ", "I -4 2 m                       ", "I -4 2 m           ", "I-42m     ", "     ",            BODY, 14 }, /* 398 */
-  {122, "D2d^12", "I -4 2bw        ", "I -4 2 d                       ", "I -4 2 d           ", "I-42d     ", "     ",            BODY, 14 }, /* 399 */
-  {123, "D4h^1 ", "-P 4 2          ", "P 4/m m m                      ", "P 4/m 2/m 2/m      ", "P4/mmm    ", "     ",       PRIMITIVE, 15 }, /* 400 */
-  {124, "D4h^2 ", "-P 4 2c         ", "P 4/m c c                      ", "P 4/m 2/c 2/c      ", "P4/mcc    ", "     ",       PRIMITIVE, 15 }, /* 401 */
-  {125, "D4h^3 ", "P 4 2 -1ab      ", "P 4/n b m                      ", "P 4/n 2/b 2/m      ", "P4/nbm    ", "1    ",       PRIMITIVE, 15 }, /* 402 */
-  {125, "D4h^3 ", "-P 4a 2b        ", "P 4/n b m                      ", "P 4/n 2/b 2/m      ", "P4/nbm    ", "2    ",       PRIMITIVE, 15 }, /* 403 */
-  {126, "D4h^4 ", "P 4 2 -1n       ", "P 4/n n c                      ", "P 4/n 2/n 2/c      ", "P4/nnc    ", "1    ",       PRIMITIVE, 15 }, /* 404 */
-  {126, "D4h^4 ", "-P 4a 2bc       ", "P 4/n n c                      ", "P 4/n 2/n 2/c      ", "P4/nnc    ", "2    ",       PRIMITIVE, 15 }, /* 405 */
-  {127, "D4h^5 ", "-P 4 2ab        ", "P 4/m b m                      ", "P 4/m 2_1/b m      ", "P4/mbm    ", "     ",       PRIMITIVE, 15 }, /* 406 */
-  {128, "D4h^6 ", "-P 4 2n         ", "P 4/m n c                      ", "P 4/m 2_1/n c      ", "P4/mnc    ", "     ",       PRIMITIVE, 15 }, /* 407 */
-  {129, "D4h^7 ", "P 4ab 2ab -1ab  ", "P 4/n m m                      ", "P 4/n 2_1/m m      ", "P4/nmm    ", "1    ",       PRIMITIVE, 15 }, /* 408 */
-  {129, "D4h^7 ", "-P 4a 2a        ", "P 4/n m m                      ", "P 4/n 2_1/m m      ", "P4/nmm    ", "2    ",       PRIMITIVE, 15 }, /* 409 */
-  {130, "D4h^8 ", "P 4ab 2n -1ab   ", "P 4/n c c                      ", "P 4/n 2_1/c c      ", "P4/ncc    ", "1    ",       PRIMITIVE, 15 }, /* 410 */
-  {130, "D4h^8 ", "-P 4a 2ac       ", "P 4/n c c                      ", "P 4/n 2_1/c c      ", "P4/ncc    ", "2    ",       PRIMITIVE, 15 }, /* 411 */
-  {131, "D4h^9 ", "-P 4c 2         ", "P 4_2/m m c                    ", "P 4_2/m 2/m 2/c    ", "P4_2/mmc  ", "     ",       PRIMITIVE, 15 }, /* 412 */
-  {132, "D4h^10", "-P 4c 2c        ", "P 4_2/m c m                    ", "P 4_2/m 2/c 2/m    ", "P4_2/mcm  ", "     ",       PRIMITIVE, 15 }, /* 413 */
-  {133, "D4h^11", "P 4n 2c -1n     ", "P 4_2/n b c                    ", "P 4_2/n 2/b 2/c    ", "P4_2/nbc  ", "1    ",       PRIMITIVE, 15 }, /* 414 */
-  {133, "D4h^11", "-P 4ac 2b       ", "P 4_2/n b c                    ", "P 4_2/n 2/b 2/c    ", "P4_2/nbc  ", "2    ",       PRIMITIVE, 15 }, /* 415 */
-  {134, "D4h^12", "P 4n 2 -1n      ", "P 4_2/n n m                    ", "P 4_2/n 2/n 2/m    ", "P4_2/nnm  ", "1    ",       PRIMITIVE, 15 }, /* 416 */
-  {134, "D4h^12", "-P 4ac 2bc      ", "P 4_2/n n m                    ", "P 4_2/n 2/n 2/m    ", "P4_2/nnm  ", "2    ",       PRIMITIVE, 15 }, /* 417 */
-  {135, "D4h^13", "-P 4c 2ab       ", "P 4_2/m b c                    ", "P 4_2/m 2_1/b 2/c  ", "P4_2/mbc  ", "     ",       PRIMITIVE, 15 }, /* 418 */
-  {136, "D4h^14", "-P 4n 2n        ", "P 4_2/m n m                    ", "P 4_2/m 2_1/n 2/m  ", "P4_2/mnm  ", "     ",       PRIMITIVE, 15 }, /* 419 */
-  {137, "D4h^15", "P 4n 2n -1n     ", "P 4_2/n m c                    ", "P 4_2/n 2_1/m 2/c  ", "P4_2/nmc  ", "1    ",       PRIMITIVE, 15 }, /* 420 */
-  {137, "D4h^15", "-P 4ac 2a       ", "P 4_2/n m c                    ", "P 4_2/n 2_1/m 2/c  ", "P4_2/nmc  ", "2    ",       PRIMITIVE, 15 }, /* 421 */
-  {138, "D4h^16", "P 4n 2ab -1n    ", "P 4_2/n c m                    ", "P 4_2/n 2_1/c 2/m  ", "P4_2/ncm  ", "1    ",       PRIMITIVE, 15 }, /* 422 */
-  {138, "D4h^16", "-P 4ac 2ac      ", "P 4_2/n c m                    ", "P 4_2/n 2_1/c 2/m  ", "P4_2/ncm  ", "2    ",       PRIMITIVE, 15 }, /* 423 */
-  {139, "D4h^17", "-I 4 2          ", "I 4/m m m                      ", "I 4/m 2/m 2/m      ", "I4/mmm    ", "     ",            BODY, 15 }, /* 424 */
-  {140, "D4h^18", "-I 4 2c         ", "I 4/m c m                      ", "I 4/m 2/c 2/m      ", "I4/mcm    ", "     ",            BODY, 15 }, /* 425 */
-  {141, "D4h^19", "I 4bw 2bw -1bw  ", "I 4_1/a m d                    ", "I 4_1/a 2/m 2/d    ", "I4_1/amd  ", "1    ",            BODY, 15 }, /* 426 */
-  {141, "D4h^19", "-I 4bd 2        ", "I 4_1/a m d                    ", "I 4_1/a 2/m 2/d    ", "I4_1/amd  ", "2    ",            BODY, 15 }, /* 427 */
-  {142, "D4h^20", "I 4bw 2aw -1bw  ", "I 4_1/a c d                    ", "I 4_1/a 2/c 2/d    ", "I4_1/acd  ", "1    ",            BODY, 15 }, /* 428 */
-  {142, "D4h^20", "-I 4bd 2c       ", "I 4_1/a c d                    ", "I 4_1/a 2/c 2/d    ", "I4_1/acd  ", "2    ",            BODY, 15 }, /* 429 */
-  {143, "C3^1  ", "P 3             ", "P 3                            ", "P 3                ", "P3        ", "     ",       PRIMITIVE, 16 }, /* 430 */
-  {144, "C3^2  ", "P 31            ", "P 3_1                          ", "P 3_1              ", "P3_1      ", "     ",       PRIMITIVE, 16 }, /* 431 */
-  {145, "C3^3  ", "P 32            ", "P 3_2                          ", "P 3_2              ", "P3_2      ", "     ",       PRIMITIVE, 16 }, /* 432 */
-  {146, "C3^4  ", "R 3             ", "R 3                            ", "R 3                ", "R3        ", "H    ",        R_CENTER, 16 }, /* 433 */
-  {146, "C3^4  ", "P 3*            ", "R 3                            ", "R 3                ", "R3        ", "R    ",       PRIMITIVE, 16 }, /* 434 */
-  {147, "C3i^1 ", "-P 3            ", "P -3                           ", "P -3               ", "P-3       ", "     ",       PRIMITIVE, 17 }, /* 435 */
-  {148, "C3i^2 ", "-R 3            ", "R -3                           ", "R -3               ", "R-3       ", "H    ",        R_CENTER, 17 }, /* 436 */
-  {148, "C3i^2 ", "-P 3*           ", "R -3                           ", "R -3               ", "R-3       ", "R    ",       PRIMITIVE, 17 }, /* 437 */
-  {149, "D3^1  ", "P 3 2           ", "P 3 1 2                        ", "P 3 1 2            ", "P312      ", "     ",       PRIMITIVE, 18 }, /* 438 */
-  {150, "D3^2  ", "P 3 2=          ", "P 3 2 1                        ", "P 3 2 1            ", "P321      ", "     ",       PRIMITIVE, 18 }, /* 439 */
-  {151, "D3^3  ", "P 31 2c (0 0 1) ", "P 3_1 1 2                      ", "P 3_1 1 2          ", "P3_112    ", "     ",       PRIMITIVE, 18 }, /* 440 */
-  {152, "D3^4  ", "P 31 2=         ", "P 3_1 2 1                      ", "P 3_1 2 1          ", "P3_121    ", "     ",       PRIMITIVE, 18 }, /* 441 */
-  {153, "D3^5  ", "P 32 2c (0 0 -1)", "P 3_2 1 2                      ", "P 3_2 1 2          ", "P3_212    ", "     ",       PRIMITIVE, 18 }, /* 442 */
-  {154, "D3^6  ", "P 32 2=         ", "P 3_2 2 1                      ", "P 3_2 2 1          ", "P3_221    ", "     ",       PRIMITIVE, 18 }, /* 443 */
-  {155, "D3^7  ", "R 3 2=          ", "R 3 2                          ", "R 3 2              ", "R32       ", "H    ",        R_CENTER, 18 }, /* 444 */
-  {155, "D3^7  ", "P 3* 2          ", "R 3 2                          ", "R 3 2              ", "R32       ", "R    ",       PRIMITIVE, 18 }, /* 445 */
-  {156, "C3v^1 ", "P 3 -2=         ", "P 3 m 1                        ", "P 3 m 1            ", "P3m1      ", "     ",       PRIMITIVE, 19 }, /* 446 */
-  {157, "C3v^2 ", "P 3 -2          ", "P 3 1 m                        ", "P 3 1 m            ", "P31m      ", "     ",       PRIMITIVE, 19 }, /* 447 */
-  {158, "C3v^3 ", "P 3 -2=c        ", "P 3 c 1                        ", "P 3 c 1            ", "P3c1      ", "     ",       PRIMITIVE, 19 }, /* 448 */
-  {159, "C3v^4 ", "P 3 -2c         ", "P 3 1 c                        ", "P 3 1 c            ", "P31c      ", "     ",       PRIMITIVE, 19 }, /* 449 */
-  {160, "C3v^5 ", "R 3 -2=         ", "R 3 m                          ", "R 3 m              ", "R3m       ", "H    ",        R_CENTER, 19 }, /* 450 */
-  {160, "C3v^5 ", "P 3* -2         ", "R 3 m                          ", "R 3 m              ", "R3m       ", "R    ",       PRIMITIVE, 19 }, /* 451 */
-  {161, "C3v^6 ", "R 3 -2=c        ", "R 3 c                          ", "R 3 c              ", "R3c       ", "H    ",        R_CENTER, 19 }, /* 452 */
-  {161, "C3v^6 ", "P 3* -2n        ", "R 3 c                          ", "R 3 c              ", "R3c       ", "R    ",       PRIMITIVE, 19 }, /* 453 */
-  {162, "D3d^1 ", "-P 3 2          ", "P -3 1 m                       ", "P -3 1 2/m         ", "P-31m     ", "     ",       PRIMITIVE, 20 }, /* 454 */
-  {163, "D3d^2 ", "-P 3 2c         ", "P -3 1 c                       ", "P -3 1 2/c         ", "P-31c     ", "     ",       PRIMITIVE, 20 }, /* 455 */
-  {164, "D3d^3 ", "-P 3 2=         ", "P -3 m 1                       ", "P -3 2/m 1         ", "P-3m1     ", "     ",       PRIMITIVE, 20 }, /* 456 */
-  {165, "D3d^4 ", "-P 3 2=c        ", "P -3 c 1                       ", "P -3 2/c 1         ", "P-3c1     ", "     ",       PRIMITIVE, 20 }, /* 457 */
-  {166, "D3d^5 ", "-R 3 2=         ", "R -3 m                         ", "R -3 2/m           ", "R-3m      ", "H    ",        R_CENTER, 20 }, /* 458 */
-  {166, "D3d^5 ", "-P 3* 2         ", "R -3 m                         ", "R -3 2/m           ", "R-3m      ", "R    ",       PRIMITIVE, 20 }, /* 459 */
-  {167, "D3d^6 ", "-R 3 2=c        ", "R -3 c                         ", "R -3 2/c           ", "R-3c      ", "H    ",        R_CENTER, 20 }, /* 460 */
-  {167, "D3d^6 ", "-P 3* 2n        ", "R -3 c                         ", "R -3 2/c           ", "R-3c      ", "R    ",       PRIMITIVE, 20 }, /* 461 */
-  {168, "C6^1  ", "P 6             ", "P 6                            ", "P 6                ", "P6        ", "     ",       PRIMITIVE, 21 }, /* 462 */
-  {169, "C6^2  ", "P 61            ", "P 6_1                          ", "P 6_1              ", "P6_1      ", "     ",       PRIMITIVE, 21 }, /* 463 */
-  {170, "C6^3  ", "P 65            ", "P 6_5                          ", "P 6_5              ", "P6_5      ", "     ",       PRIMITIVE, 21 }, /* 464 */
-  {171, "C6^4  ", "P 62            ", "P 6_2                          ", "P 6_2              ", "P6_2      ", "     ",       PRIMITIVE, 21 }, /* 465 */
-  {172, "C6^5  ", "P 64            ", "P 6_4                          ", "P 6_4              ", "P6_4      ", "     ",       PRIMITIVE, 21 }, /* 466 */
-  {173, "C6^6  ", "P 6c            ", "P 6_3                          ", "P 6_3              ", "P6_3      ", "     ",       PRIMITIVE, 21 }, /* 467 */
-  {174, "C3h^1 ", "P -6            ", "P -6                           ", "P -6               ", "P-6       ", "     ",       PRIMITIVE, 22 }, /* 468 */
-  {175, "C6h^1 ", "-P 6            ", "P 6/m                          ", "P 6/m              ", "P6/m      ", "     ",       PRIMITIVE, 23 }, /* 469 */
-  {176, "C6h^2 ", "-P 6c           ", "P 6_3/m                        ", "P 6_3/m            ", "P6_3/m    ", "     ",       PRIMITIVE, 23 }, /* 470 */
-  {177, "D6^1  ", "P 6 2           ", "P 6 2 2                        ", "P 6 2 2            ", "P622      ", "     ",       PRIMITIVE, 24 }, /* 471 */
-  {178, "D6^2  ", "P 61 2 (0 0 -1) ", "P 6_1 2 2                      ", "P 6_1 2 2          ", "P6_122    ", "     ",       PRIMITIVE, 24 }, /* 472 */
-  {179, "D6^3  ", "P 65 2 (0 0 1)  ", "P 6_5 2 2                      ", "P 6_5 2 2          ", "P6_522    ", "     ",       PRIMITIVE, 24 }, /* 473 */
-  {180, "D6^4  ", "P 62 2c (0 0 1) ", "P 6_2 2 2                      ", "P 6_2 2 2          ", "P6_222    ", "     ",       PRIMITIVE, 24 }, /* 474 */
-  {181, "D6^5  ", "P 64 2c (0 0 -1)", "P 6_4 2 2                      ", "P 6_4 2 2          ", "P6_422    ", "     ",       PRIMITIVE, 24 }, /* 475 */
-  {182, "D6^6  ", "P 6c 2c         ", "P 6_3 2 2                      ", "P 6_3 2 2          ", "P6_322    ", "     ",       PRIMITIVE, 24 }, /* 476 */
-  {183, "C6v^1 ", "P 6 -2          ", "P 6 m m                        ", "P 6 m m            ", "P6mm      ", "     ",       PRIMITIVE, 25 }, /* 477 */
-  {184, "C6v^2 ", "P 6 -2c         ", "P 6 c c                        ", "P 6 c c            ", "P6cc      ", "     ",       PRIMITIVE, 25 }, /* 478 */
-  {185, "C6v^3 ", "P 6c -2         ", "P 6_3 c m                      ", "P 6_3 c m          ", "P6_3cm    ", "     ",       PRIMITIVE, 25 }, /* 479 */
-  {186, "C6v^4 ", "P 6c -2c        ", "P 6_3 m c                      ", "P 6_3 m c          ", "P6_3mc    ", "     ",       PRIMITIVE, 25 }, /* 480 */
-  {187, "D3h^1 ", "P -6 2          ", "P -6 m 2                       ", "P -6 m 2           ", "P-6m2     ", "     ",       PRIMITIVE, 26 }, /* 481 */
-  {188, "D3h^2 ", "P -6c 2         ", "P -6 c 2                       ", "P -6 c 2           ", "P-6c2     ", "     ",       PRIMITIVE, 26 }, /* 482 */
-  {189, "D3h^3 ", "P -6 -2         ", "P -6 2 m                       ", "P -6 2 m           ", "P-62m     ", "     ",       PRIMITIVE, 26 }, /* 483 */
-  {190, "D3h^4 ", "P -6c -2c       ", "P -6 2 c                       ", "P -6 2 c           ", "P-62c     ", "     ",       PRIMITIVE, 26 }, /* 484 */
-  {191, "D6h^1 ", "-P 6 2          ", "P 6/m m m                      ", "P 6/m 2/m 2/m      ", "P6/mmm    ", "     ",       PRIMITIVE, 27 }, /* 485 */
-  {192, "D6h^2 ", "-P 6 2c         ", "P 6/m c c                      ", "P 6/m 2/c 2/c      ", "P6/mcc    ", "     ",       PRIMITIVE, 27 }, /* 486 */
-  {193, "D6h^3 ", "-P 6c 2         ", "P 6_3/m c m                    ", "P 6_3/m 2/c 2/m    ", "P6_3/mcm  ", "     ",       PRIMITIVE, 27 }, /* 487 */
-  {194, "D6h^4 ", "-P 6c 2c        ", "P 6_3/m m c                    ", "P 6_3/m 2/m 2/c    ", "P6_3/mmc  ", "     ",       PRIMITIVE, 27 }, /* 488 */
-  {195, "T^1   ", "P 2 2 3         ", "P 2 3                          ", "P 2 3              ", "P23       ", "     ",       PRIMITIVE, 28 }, /* 489 */
-  {196, "T^2   ", "F 2 2 3         ", "F 2 3                          ", "F 2 3              ", "F23       ", "     ",            FACE, 28 }, /* 490 */
-  {197, "T^3   ", "I 2 2 3         ", "I 2 3                          ", "I 2 3              ", "I23       ", "     ",            BODY, 28 }, /* 491 */
-  {198, "T^4   ", "P 2ac 2ab 3     ", "P 2_1 3                        ", "P 2_1 3            ", "P2_13     ", "     ",       PRIMITIVE, 28 }, /* 492 */
-  {199, "T^5   ", "I 2b 2c 3       ", "I 2_1 3                        ", "I 2_1 3            ", "I2_13     ", "     ",            BODY, 28 }, /* 493 */
-  {200, "Th^1  ", "-P 2 2 3        ", "P m -3                         ", "P 2/m -3           ", "Pm-3      ", "     ",       PRIMITIVE, 29 }, /* 494 */
-  {201, "Th^2  ", "P 2 2 3 -1n     ", "P n -3                         ", "P 2/n -3           ", "Pn-3      ", "1    ",       PRIMITIVE, 29 }, /* 495 */
-  {201, "Th^2  ", "-P 2ab 2bc 3    ", "P n -3                         ", "P 2/n -3           ", "Pn-3      ", "2    ",       PRIMITIVE, 29 }, /* 496 */
-  {202, "Th^3  ", "-F 2 2 3        ", "F m -3                         ", "F 2/m -3           ", "Fm-3      ", "     ",            FACE, 29 }, /* 497 */
-  {203, "Th^4  ", "F 2 2 3 -1d     ", "F d -3                         ", "F 2/d -3           ", "Fd-3      ", "1    ",            FACE, 29 }, /* 498 */
-  {203, "Th^4  ", "-F 2uv 2vw 3    ", "F d -3                         ", "F 2/d -3           ", "Fd-3      ", "2    ",            FACE, 29 }, /* 499 */
-  {204, "Th^5  ", "-I 2 2 3        ", "I m -3                         ", "I 2/m -3           ", "Im-3      ", "     ",            BODY, 29 }, /* 500 */
-  {205, "Th^6  ", "-P 2ac 2ab 3    ", "P a -3                         ", "P 2_1/a -3         ", "Pa-3      ", "     ",       PRIMITIVE, 29 }, /* 501 */
-  {206, "Th^7  ", "-I 2b 2c 3      ", "I a -3                         ", "I 2_1/a -3         ", "Ia-3      ", "     ",            BODY, 29 }, /* 502 */
-  {207, "O^1   ", "P 4 2 3         ", "P 4 3 2                        ", "P 4 3 2            ", "P432      ", "     ",       PRIMITIVE, 30 }, /* 503 */
-  {208, "O^2   ", "P 4n 2 3        ", "P 4_2 3 2                      ", "P 4_2 3 2          ", "P4_232    ", "     ",       PRIMITIVE, 30 }, /* 504 */
-  {209, "O^3   ", "F 4 2 3         ", "F 4 3 2                        ", "F 4 3 2            ", "F432      ", "     ",            FACE, 30 }, /* 505 */
-  {210, "O^4   ", "F 4d 2 3        ", "F 4_1 3 2                      ", "F 4_1 3 2          ", "F4_132    ", "     ",            FACE, 30 }, /* 506 */
-  {211, "O^5   ", "I 4 2 3         ", "I 4 3 2                        ", "I 4 3 2            ", "I432      ", "     ",            BODY, 30 }, /* 507 */
-  {212, "O^6   ", "P 4acd 2ab 3    ", "P 4_3 3 2                      ", "P 4_3 3 2          ", "P4_332    ", "     ",       PRIMITIVE, 30 }, /* 508 */
-  {213, "O^7   ", "P 4bd 2ab 3     ", "P 4_1 3 2                      ", "P 4_1 3 2          ", "P4_132    ", "     ",       PRIMITIVE, 30 }, /* 509 */
-  {214, "O^8   ", "I 4bd 2c 3      ", "I 4_1 3 2                      ", "I 4_1 3 2          ", "I4_132    ", "     ",            BODY, 30 }, /* 510 */
-  {215, "Td^1  ", "P -4 2 3        ", "P -4 3 m                       ", "P -4 3 m           ", "P-43m     ", "     ",       PRIMITIVE, 31 }, /* 511 */
-  {216, "Td^2  ", "F -4 2 3        ", "F -4 3 m                       ", "F -4 3 m           ", "F-43m     ", "     ",            FACE, 31 }, /* 512 */
-  {217, "Td^3  ", "I -4 2 3        ", "I -4 3 m                       ", "I -4 3 m           ", "I-43m     ", "     ",            BODY, 31 }, /* 513 */
-  {218, "Td^4  ", "P -4n 2 3       ", "P -4 3 n                       ", "P -4 3 n           ", "P-43n     ", "     ",       PRIMITIVE, 31 }, /* 514 */
-  {219, "Td^5  ", "F -4c 2 3       ", "F -4 3 c                       ", "F -4 3 c           ", "F-43c     ", "     ",            FACE, 31 }, /* 515 */
-  {220, "Td^6  ", "I -4bd 2c 3     ", "I -4 3 d                       ", "I -4 3 d           ", "I-43d     ", "     ",            BODY, 31 }, /* 516 */
-  {221, "Oh^1  ", "-P 4 2 3        ", "P m -3 m                       ", "P 4/m -3 2/m       ", "Pm-3m     ", "     ",       PRIMITIVE, 32 }, /* 517 */
-  {222, "Oh^2  ", "P 4 2 3 -1n     ", "P n -3 n                       ", "P 4/n -3 2/n       ", "Pn-3n     ", "1    ",       PRIMITIVE, 32 }, /* 518 */
-  {222, "Oh^2  ", "-P 4a 2bc 3     ", "P n -3 n                       ", "P 4/n -3 2/n       ", "Pn-3n     ", "2    ",       PRIMITIVE, 32 }, /* 519 */
-  {223, "Oh^3  ", "-P 4n 2 3       ", "P m -3 n                       ", "P 4_2/m -3 2/n     ", "Pm-3n     ", "     ",       PRIMITIVE, 32 }, /* 520 */
-  {224, "Oh^4  ", "P 4n 2 3 -1n    ", "P n -3 m                       ", "P 4_2/n -3 2/m     ", "Pn-3m     ", "1    ",       PRIMITIVE, 32 }, /* 521 */
-  {224, "Oh^4  ", "-P 4bc 2bc 3    ", "P n -3 m                       ", "P 4_2/n -3 2/m     ", "Pn-3m     ", "2    ",       PRIMITIVE, 32 }, /* 522 */
-  {225, "Oh^5  ", "-F 4 2 3        ", "F m -3 m                       ", "F 4/m -3 2/m       ", "Fm-3m     ", "     ",            FACE, 32 }, /* 523 */
-  {226, "Oh^6  ", "-F 4c 2 3       ", "F m -3 c                       ", "F 4/m -3 2/c       ", "Fm-3c     ", "     ",            FACE, 32 }, /* 524 */
-  {227, "Oh^7  ", "F 4d 2 3 -1d    ", "F d -3 m                       ", "F 4_1/d -3 2/m     ", "Fd-3m     ", "1    ",            FACE, 32 }, /* 525 */
-  {227, "Oh^7  ", "-F 4vw 2vw 3    ", "F d -3 m                       ", "F 4_1/d -3 2/m     ", "Fd-3m     ", "2    ",            FACE, 32 }, /* 526 */
-  {228, "Oh^8  ", "F 4d 2 3 -1cd   ", "F d -3 c                       ", "F 4_1/d -3 2/c     ", "Fd-3c     ", "1    ",            FACE, 32 }, /* 527 */
-  {228, "Oh^8  ", "-F 4cvw 2vw 3   ", "F d -3 c                       ", "F 4_1/d -3 2/c     ", "Fd-3c     ", "2    ",            FACE, 32 }, /* 528 */
-  {229, "Oh^9  ", "-I 4 2 3        ", "I m -3 m                       ", "I 4/m -3 2/m       ", "Im-3m     ", "     ",            BODY, 32 }, /* 529 */
-  {230, "Oh^10 ", "-I 4bd 2c 3     ", "I a -3 d                       ", "I 4_1/a -3 2/d     ", "Ia-3d     ", "     ",            BODY, 32 }, /* 530 */
+static const Spacegroup spacegroup_types[] = {
+  {  0, "      ", "                ", "                               ", "                   ", "          ", "     ", P,  0 }, /*   0 */
+  {  1, "C1^1  ", "P 1             ", "P 1                            ", "P 1                ", "P1        ", "     ", P,  1 }, /*   1 */
+  {  2, "Ci^1  ", "-P 1            ", "P -1                           ", "P -1               ", "P-1       ", "     ", P,  2 }, /*   2 */
+  {  3, "C2^1  ", "P 2y            ", "P 2 = P 1 2 1                  ", "P 1 2 1            ", "P2        ", "b    ", P,  3 }, /*   3 */
+  {  3, "C2^1  ", "P 2             ", "P 2 = P 1 1 2                  ", "P 1 1 2            ", "P2        ", "c    ", P,  3 }, /*   4 */
+  {  3, "C2^1  ", "P 2x            ", "P 2 = P 2 1 1                  ", "P 2 1 1            ", "P2        ", "a    ", P,  3 }, /*   5 */
+  {  4, "C2^2  ", "P 2yb           ", "P 2_1 = P 1 2_1 1              ", "P 1 2_1 1          ", "P2_1      ", "b    ", P,  3 }, /*   6 */
+  {  4, "C2^2  ", "P 2c            ", "P 2_1 = P 1 1 2_1              ", "P 1 1 2_1          ", "P2_1      ", "c    ", P,  3 }, /*   7 */
+  {  4, "C2^2  ", "P 2xa           ", "P 2_1 = P 2_1 1 1              ", "P 2_1 1 1          ", "P2_1      ", "a    ", P,  3 }, /*   8 */
+  {  5, "C2^3  ", "C 2y            ", "C 2 = C 1 2 1                  ", "C 1 2 1            ", "C2        ", "b1   ", C,  3 }, /*   9 */
+  {  5, "C2^3  ", "A 2y            ", "C 2 = A 1 2 1                  ", "A 1 2 1            ", "C2        ", "b2   ", A,  3 }, /*  10 */
+  {  5, "C2^3  ", "I 2y            ", "C 2 = I 1 2 1                  ", "I 1 2 1            ", "C2        ", "b3   ", I,  3 }, /*  11 */
+  {  5, "C2^3  ", "A 2             ", "C 2 = A 1 1 2                  ", "A 1 1 2            ", "C2        ", "c1   ", A,  3 }, /*  12 */
+  {  5, "C2^3  ", "B 2             ", "C 2 = B 1 1 2 = B 2            ", "B 1 1 2            ", "C2        ", "c2   ", P,  3 }, /*  13 */
+  {  5, "C2^3  ", "I 2             ", "C 2 = I 1 1 2                  ", "I 1 1 2            ", "C2        ", "c3   ", I,  3 }, /*  14 */
+  {  5, "C2^3  ", "B 2x            ", "C 2 = B 2 1 1                  ", "B 2 1 1            ", "C2        ", "a1   ", P,  3 }, /*  15 */
+  {  5, "C2^3  ", "C 2x            ", "C 2 = C 2 1 1                  ", "C 2 1 1            ", "C2        ", "a2   ", C,  3 }, /*  16 */
+  {  5, "C2^3  ", "I 2x            ", "C 2 = I 2 1 1                  ", "I 2 1 1            ", "C2        ", "a3   ", I,  3 }, /*  17 */
+  {  6, "Cs^1  ", "P -2y           ", "P m = P 1 m 1                  ", "P 1 m 1            ", "Pm        ", "b    ", P,  4 }, /*  18 */
+  {  6, "Cs^1  ", "P -2            ", "P m = P 1 1 m                  ", "P 1 1 m            ", "Pm        ", "c    ", P,  4 }, /*  19 */
+  {  6, "Cs^1  ", "P -2x           ", "P m = P m 1 1                  ", "P m 1 1            ", "Pm        ", "a    ", P,  4 }, /*  20 */
+  {  7, "Cs^2  ", "P -2yc          ", "P c = P 1 c 1                  ", "P 1 c 1            ", "Pc        ", "b1   ", P,  4 }, /*  21 */
+  {  7, "Cs^2  ", "P -2yac         ", "P c = P 1 n 1                  ", "P 1 n 1            ", "Pc        ", "b2   ", P,  4 }, /*  22 */
+  {  7, "Cs^2  ", "P -2ya          ", "P c = P 1 a 1                  ", "P 1 a 1            ", "Pc        ", "b3   ", P,  4 }, /*  23 */
+  {  7, "Cs^2  ", "P -2a           ", "P c = P 1 1 a                  ", "P 1 1 a            ", "Pc        ", "c1   ", P,  4 }, /*  24 */
+  {  7, "Cs^2  ", "P -2ab          ", "P c = P 1 1 n                  ", "P 1 1 n            ", "Pc        ", "c2   ", P,  4 }, /*  25 */
+  {  7, "Cs^2  ", "P -2b           ", "P c = P 1 1 b = P b            ", "P 1 1 b            ", "Pc        ", "c3   ", P,  4 }, /*  26 */
+  {  7, "Cs^2  ", "P -2xb          ", "P c = P b 1 1                  ", "P b 1 1            ", "Pc        ", "a1   ", P,  4 }, /*  27 */
+  {  7, "Cs^2  ", "P -2xbc         ", "P c = P n 1 1                  ", "P n 1 1            ", "Pc        ", "a2   ", P,  4 }, /*  28 */
+  {  7, "Cs^2  ", "P -2xc          ", "P c = P c 1 1                  ", "P c 1 1            ", "Pc        ", "a3   ", P,  4 }, /*  29 */
+  {  8, "Cs^3  ", "C -2y           ", "C m = C 1 m 1                  ", "C 1 m 1            ", "Cm        ", "b1   ", C,  4 }, /*  30 */
+  {  8, "Cs^3  ", "A -2y           ", "C m = A 1 m 1                  ", "A 1 m 1            ", "Cm        ", "b2   ", A,  4 }, /*  31 */
+  {  8, "Cs^3  ", "I -2y           ", "C m = I 1 m 1                  ", "I 1 m 1            ", "Cm        ", "b3   ", I,  4 }, /*  32 */
+  {  8, "Cs^3  ", "A -2            ", "C m = A 1 1 m                  ", "A 1 1 m            ", "Cm        ", "c1   ", A,  4 }, /*  33 */
+  {  8, "Cs^3  ", "B -2            ", "C m = B 1 1 m = B m            ", "B 1 1 m            ", "Cm        ", "c2   ", P,  4 }, /*  34 */
+  {  8, "Cs^3  ", "I -2            ", "C m = I 1 1 m                  ", "I 1 1 m            ", "Cm        ", "c3   ", I,  4 }, /*  35 */
+  {  8, "Cs^3  ", "B -2x           ", "C m = B m 1 1                  ", "B m 1 1            ", "Cm        ", "a1   ", P,  4 }, /*  36 */
+  {  8, "Cs^3  ", "C -2x           ", "C m = C m 1 1                  ", "C m 1 1            ", "Cm        ", "a2   ", C,  4 }, /*  37 */
+  {  8, "Cs^3  ", "I -2x           ", "C m = I m 1 1                  ", "I m 1 1            ", "Cm        ", "a3   ", I,  4 }, /*  38 */
+  {  9, "Cs^4  ", "C -2yc          ", "C c = C 1 c 1                  ", "C 1 c 1            ", "Cc        ", "b1   ", C,  4 }, /*  39 */
+  {  9, "Cs^4  ", "A -2yac         ", "C c = A 1 n 1                  ", "A 1 n 1            ", "Cc        ", "b2   ", A,  4 }, /*  40 */
+  {  9, "Cs^4  ", "I -2ya          ", "C c = I 1 a 1                  ", "I 1 a 1            ", "Cc        ", "b3   ", I,  4 }, /*  41 */
+  {  9, "Cs^4  ", "A -2ya          ", "C c = A 1 a 1                  ", "A 1 a 1            ", "Cc        ", "-b1  ", A,  4 }, /*  42 */
+  {  9, "Cs^4  ", "C -2ybc         ", "C c = C 1 n 1                  ", "C 1 n 1            ", "Cc        ", "-b2  ", C,  4 }, /*  43 */
+  {  9, "Cs^4  ", "I -2yc          ", "C c = I 1 c 1                  ", "I 1 c 1            ", "Cc        ", "-b3  ", I,  4 }, /*  44 */
+  {  9, "Cs^4  ", "A -2a           ", "C c = A 1 1 a                  ", "A 1 1 a            ", "Cc        ", "c1   ", A,  4 }, /*  45 */
+  {  9, "Cs^4  ", "B -2bc          ", "C c = B 1 1 n                  ", "B 1 1 n            ", "Cc        ", "c2   ", P,  4 }, /*  46 */
+  {  9, "Cs^4  ", "I -2b           ", "C c = I 1 1 b                  ", "I 1 1 b            ", "Cc        ", "c3   ", I,  4 }, /*  47 */
+  {  9, "Cs^4  ", "B -2b           ", "C c = B 1 1 b = B b            ", "B 1 1 b            ", "Cc        ", "-c1  ", P,  4 }, /*  48 */
+  {  9, "Cs^4  ", "A -2ac          ", "C c = A 1 1 n                  ", "A 1 1 n            ", "Cc        ", "-c2  ", A,  4 }, /*  49 */
+  {  9, "Cs^4  ", "I -2a           ", "C c = I 1 1 a                  ", "I 1 1 a            ", "Cc        ", "-c3  ", I,  4 }, /*  50 */
+  {  9, "Cs^4  ", "B -2xb          ", "C c = B b 1 1                  ", "B b 1 1            ", "Cc        ", "a1   ", P,  4 }, /*  51 */
+  {  9, "Cs^4  ", "C -2xbc         ", "C c = C n 1 1                  ", "C n 1 1            ", "Cc        ", "a2   ", C,  4 }, /*  52 */
+  {  9, "Cs^4  ", "I -2xc          ", "C c = I c 1 1                  ", "I c 1 1            ", "Cc        ", "a3   ", I,  4 }, /*  53 */
+  {  9, "Cs^4  ", "C -2xc          ", "C c = C c 1 1                  ", "C c 1 1            ", "Cc        ", "-a1  ", C,  4 }, /*  54 */
+  {  9, "Cs^4  ", "B -2xbc         ", "C c = B n 1 1                  ", "B n 1 1            ", "Cc        ", "-a2  ", P,  4 }, /*  55 */
+  {  9, "Cs^4  ", "I -2xb          ", "C c = I b 1 1                  ", "I b 1 1            ", "Cc        ", "-a3  ", I,  4 }, /*  56 */
+  { 10, "C2h^1 ", "-P 2y           ", "P 2/m = P 1 2/m 1              ", "P 1 2/m 1          ", "P2/m      ", "b    ", P,  5 }, /*  57 */
+  { 10, "C2h^1 ", "-P 2            ", "P 2/m = P 1 1 2/m              ", "P 1 1 2/m          ", "P2/m      ", "c    ", P,  5 }, /*  58 */
+  { 10, "C2h^1 ", "-P 2x           ", "P 2/m = P 2/m 1 1              ", "P 2/m 1 1          ", "P2/m      ", "a    ", P,  5 }, /*  59 */
+  { 11, "C2h^2 ", "-P 2yb          ", "P 2_1/m = P 1 2_1/m 1          ", "P 1 2_1/m 1        ", "P2_1/m    ", "b    ", P,  5 }, /*  60 */
+  { 11, "C2h^2 ", "-P 2c           ", "P 2_1/m = P 1 1 2_1/m          ", "P 1 1 2_1/m        ", "P2_1/m    ", "c    ", P,  5 }, /*  61 */
+  { 11, "C2h^2 ", "-P 2xa          ", "P 2_1/m = P 2_1/m 1 1          ", "P 2_1/m 1 1        ", "P2_1/m    ", "a    ", P,  5 }, /*  62 */
+  { 12, "C2h^3 ", "-C 2y           ", "C 2/m = C 1 2/m 1              ", "C 1 2/m 1          ", "C2/m      ", "b1   ", C,  5 }, /*  63 */
+  { 12, "C2h^3 ", "-A 2y           ", "C 2/m = A 1 2/m 1              ", "A 1 2/m 1          ", "C2/m      ", "b2   ", A,  5 }, /*  64 */
+  { 12, "C2h^3 ", "-I 2y           ", "C 2/m = I 1 2/m 1              ", "I 1 2/m 1          ", "C2/m      ", "b3   ", I,  5 }, /*  65 */
+  { 12, "C2h^3 ", "-A 2            ", "C 2/m = A 1 1 2/m              ", "A 1 1 2/m          ", "C2/m      ", "c1   ", A,  5 }, /*  66 */
+  { 12, "C2h^3 ", "-B 2            ", "C 2/m = B 1 1 2/m = B 2/m      ", "B 1 1 2/m          ", "C2/m      ", "c2   ", P,  5 }, /*  67 */
+  { 12, "C2h^3 ", "-I 2            ", "C 2/m = I 1 1 2/m              ", "I 1 1 2/m          ", "C2/m      ", "c3   ", I,  5 }, /*  68 */
+  { 12, "C2h^3 ", "-B 2x           ", "C 2/m = B 2/m 1 1              ", "B 2/m 1 1          ", "C2/m      ", "a1   ", P,  5 }, /*  69 */
+  { 12, "C2h^3 ", "-C 2x           ", "C 2/m = C 2/m 1 1              ", "C 2/m 1 1          ", "C2/m      ", "a2   ", C,  5 }, /*  70 */
+  { 12, "C2h^3 ", "-I 2x           ", "C 2/m = I 2/m 1 1              ", "I 2/m 1 1          ", "C2/m      ", "a3   ", I,  5 }, /*  71 */
+  { 13, "C2h^4 ", "-P 2yc          ", "P 2/c = P 1 2/c 1              ", "P 1 2/c 1          ", "P2/c      ", "b1   ", P,  5 }, /*  72 */
+  { 13, "C2h^4 ", "-P 2yac         ", "P 2/c = P 1 2/n 1              ", "P 1 2/n 1          ", "P2/c      ", "b2   ", P,  5 }, /*  73 */
+  { 13, "C2h^4 ", "-P 2ya          ", "P 2/c = P 1 2/a 1              ", "P 1 2/a 1          ", "P2/c      ", "b3   ", P,  5 }, /*  74 */
+  { 13, "C2h^4 ", "-P 2a           ", "P 2/c = P 1 1 2/a              ", "P 1 1 2/a          ", "P2/c      ", "c1   ", P,  5 }, /*  75 */
+  { 13, "C2h^4 ", "-P 2ab          ", "P 2/c = P 1 1 2/n              ", "P 1 1 2/n          ", "P2/c      ", "c2   ", P,  5 }, /*  76 */
+  { 13, "C2h^4 ", "-P 2b           ", "P 2/c = P 1 1 2/b = P 2/b      ", "P 1 1 2/b          ", "P2/c      ", "c3   ", P,  5 }, /*  77 */
+  { 13, "C2h^4 ", "-P 2xb          ", "P 2/c = P 2/b 1 1              ", "P 2/b 1 1          ", "P2/c      ", "a1   ", P,  5 }, /*  78 */
+  { 13, "C2h^4 ", "-P 2xbc         ", "P 2/c = P 2/n 1 1              ", "P 2/n 1 1          ", "P2/c      ", "a2   ", P,  5 }, /*  79 */
+  { 13, "C2h^4 ", "-P 2xc          ", "P 2/c = P 2/c 1 1              ", "P 2/c 1 1          ", "P2/c      ", "a3   ", P,  5 }, /*  80 */
+  { 14, "C2h^5 ", "-P 2ybc         ", "P 2_1/c = P 1 2_1/c 1          ", "P 1 2_1/c 1        ", "P2_1/c    ", "b1   ", P,  5 }, /*  81 */
+  { 14, "C2h^5 ", "-P 2yn          ", "P 2_1/c = P 1 2_1/n 1          ", "P 1 2_1/n 1        ", "P2_1/c    ", "b2   ", P,  5 }, /*  82 */
+  { 14, "C2h^5 ", "-P 2yab         ", "P 2_1/c = P 1 2_1/a 1          ", "P 1 2_1/a 1        ", "P2_1/c    ", "b3   ", P,  5 }, /*  83 */
+  { 14, "C2h^5 ", "-P 2ac          ", "P 2_1/c = P 1 1 2_1/a          ", "P 1 1 2_1/a        ", "P2_1/c    ", "c1   ", P,  5 }, /*  84 */
+  { 14, "C2h^5 ", "-P 2n           ", "P 2_1/c = P 1 1 2_1/n          ", "P 1 1 2_1/n        ", "P2_1/c    ", "c2   ", P,  5 }, /*  85 */
+  { 14, "C2h^5 ", "-P 2bc          ", "P 2_1/c = P 1 1 2_1/b = P 2_1/b", "P 1 1 2_1/b        ", "P2_1/c    ", "c3   ", P,  5 }, /*  86 */
+  { 14, "C2h^5 ", "-P 2xab         ", "P 2_1/c = P 2_1/b 1 1          ", "P 2_1/b 1 1        ", "P2_1/c    ", "a1   ", P,  5 }, /*  87 */
+  { 14, "C2h^5 ", "-P 2xn          ", "P 2_1/c = P 2_1/n 1 1          ", "P 2_1/n 1 1        ", "P2_1/c    ", "a2   ", P,  5 }, /*  88 */
+  { 14, "C2h^5 ", "-P 2xac         ", "P 2_1/c = P 2_1/c 1 1          ", "P 2_1/c 1 1        ", "P2_1/c    ", "a3   ", P,  5 }, /*  89 */
+  { 15, "C2h^6 ", "-C 2yc          ", "C 2/c = C 1 2/c 1              ", "C 1 2/c 1          ", "C2/c      ", "b1   ", C,  5 }, /*  90 */
+  { 15, "C2h^6 ", "-A 2yac         ", "C 2/c = A 1 2/n 1              ", "A 1 2/n 1          ", "C2/c      ", "b2   ", A,  5 }, /*  91 */
+  { 15, "C2h^6 ", "-I 2ya          ", "C 2/c = I 1 2/a 1              ", "I 1 2/a 1          ", "C2/c      ", "b3   ", I,  5 }, /*  92 */
+  { 15, "C2h^6 ", "-A 2ya          ", "C 2/c = A 1 2/a 1              ", "A 1 2/a 1          ", "C2/c      ", "-b1  ", A,  5 }, /*  93 */
+  { 15, "C2h^6 ", "-C 2ybc         ", "C 2/c = C 1 2/n 1              ", "C 1 2/n 1          ", "C2/c      ", "-b2  ", C,  5 }, /*  94 */
+  { 15, "C2h^6 ", "-I 2yc          ", "C 2/c = I 1 2/c 1              ", "I 1 2/c 1          ", "C2/c      ", "-b3  ", I,  5 }, /*  95 */
+  { 15, "C2h^6 ", "-A 2a           ", "C 2/c = A 1 1 2/a              ", "A 1 1 2/a          ", "C2/c      ", "c1   ", A,  5 }, /*  96 */
+  { 15, "C2h^6 ", "-B 2bc          ", "C 2/c = B 1 1 2/n              ", "B 1 1 2/n          ", "C2/c      ", "c2   ", P,  5 }, /*  97 */
+  { 15, "C2h^6 ", "-I 2b           ", "C 2/c = I 1 1 2/b              ", "I 1 1 2/b          ", "C2/c      ", "c3   ", I,  5 }, /*  98 */
+  { 15, "C2h^6 ", "-B 2b           ", "C 2/c = B 1 1 2/b = B 2/b      ", "B 1 1 2/b          ", "C2/c      ", "-c1  ", P,  5 }, /*  99 */
+  { 15, "C2h^6 ", "-A 2ac          ", "C 2/c = A 1 1 2/n              ", "A 1 1 2/n          ", "C2/c      ", "-c2  ", A,  5 }, /* 100 */
+  { 15, "C2h^6 ", "-I 2a           ", "C 2/c = I 1 1 2/a              ", "I 1 1 2/a          ", "C2/c      ", "-c3  ", I,  5 }, /* 101 */
+  { 15, "C2h^6 ", "-B 2xb          ", "C 2/c = B 2/b 1 1              ", "B 2/b 1 1          ", "C2/c      ", "a1   ", P,  5 }, /* 102 */
+  { 15, "C2h^6 ", "-C 2xbc         ", "C 2/c = C 2/n 1 1              ", "C 2/n 1 1          ", "C2/c      ", "a2   ", C,  5 }, /* 103 */
+  { 15, "C2h^6 ", "-I 2xc          ", "C 2/c = I 2/c 1 1              ", "I 2/c 1 1          ", "C2/c      ", "a3   ", I,  5 }, /* 104 */
+  { 15, "C2h^6 ", "-C 2xc          ", "C 2/c = C 2/c 1 1              ", "C 2/c 1 1          ", "C2/c      ", "-a1  ", C,  5 }, /* 105 */
+  { 15, "C2h^6 ", "-B 2xbc         ", "C 2/c = B 2/n 1 1              ", "B 2/n 1 1          ", "C2/c      ", "-a2  ", P,  5 }, /* 106 */
+  { 15, "C2h^6 ", "-I 2xb          ", "C 2/c = I 2/b 1 1              ", "I 2/b 1 1          ", "C2/c      ", "-a3  ", I,  5 }, /* 107 */
+  { 16, "D2^1  ", "P 2 2           ", "P 2 2 2                        ", "P 2 2 2            ", "P222      ", "     ", P,  6 }, /* 108 */
+  { 17, "D2^2  ", "P 2c 2          ", "P 2 2 2_1                      ", "P 2 2 2_1          ", "P222_1    ", "     ", P,  6 }, /* 109 */
+  { 17, "D2^2  ", "P 2a 2a         ", "P 2_1 2 2                      ", "P 2_1 2 2          ", "P2_122    ", "cab  ", P,  6 }, /* 110 */
+  { 17, "D2^2  ", "P 2 2b          ", "P 2 2_1 2                      ", "P 2 2_1 2          ", "P22_12    ", "bca  ", P,  6 }, /* 111 */
+  { 18, "D2^3  ", "P 2 2ab         ", "P 2_1 2_1 2                    ", "P 2_1 2_1 2        ", "P2_12_12  ", "     ", P,  6 }, /* 112 */
+  { 18, "D2^3  ", "P 2bc 2         ", "P 2 2_1 2_1                    ", "P 2 2_1 2_1        ", "P22_12_1  ", "cab  ", P,  6 }, /* 113 */
+  { 18, "D2^3  ", "P 2ac 2ac       ", "P 2_1 2 2_1                    ", "P 2_1 2 2_1        ", "P2_122_1  ", "bca  ", P,  6 }, /* 114 */
+  { 19, "D2^4  ", "P 2ac 2ab       ", "P 2_1 2_1 2_1                  ", "P 2_1 2_1 2_1      ", "P2_12_12_1", "     ", P,  6 }, /* 115 */
+  { 20, "D2^5  ", "C 2c 2          ", "C 2 2 2_1                      ", "C 2 2 2_1          ", "C222_1    ", "     ", C,  6 }, /* 116 */
+  { 20, "D2^5  ", "A 2a 2a         ", "A 2_1 2 2                      ", "A 2_1 2 2          ", "A2_122    ", "cab  ", A,  6 }, /* 117 */
+  { 20, "D2^5  ", "B 2 2b          ", "B 2 2_1 2                      ", "B 2 2_1 2          ", "B22_12    ", "bca  ", P,  6 }, /* 118 */
+  { 21, "D2^6  ", "C 2 2           ", "C 2 2 2                        ", "C 2 2 2            ", "C222      ", "     ", C,  6 }, /* 119 */
+  { 21, "D2^6  ", "A 2 2           ", "A 2 2 2                        ", "A 2 2 2            ", "A222      ", "cab  ", A,  6 }, /* 120 */
+  { 21, "D2^6  ", "B 2 2           ", "B 2 2 2                        ", "B 2 2 2            ", "B222      ", "bca  ", P,  6 }, /* 121 */
+  { 22, "D2^7  ", "F 2 2           ", "F 2 2 2                        ", "F 2 2 2            ", "F222      ", "     ", F,  6 }, /* 122 */
+  { 23, "D2^8  ", "I 2 2           ", "I 2 2 2                        ", "I 2 2 2            ", "I222      ", "     ", I,  6 }, /* 123 */
+  { 24, "D2^9  ", "I 2b 2c         ", "I 2_1 2_1 2_1                  ", "I 2_1 2_1 2_1      ", "I2_12_12_1", "     ", I,  6 }, /* 124 */
+  { 25, "C2v^1 ", "P 2 -2          ", "P m m 2                        ", "P m m 2            ", "Pmm2      ", "     ", P,  7 }, /* 125 */
+  { 25, "C2v^1 ", "P -2 2          ", "P 2 m m                        ", "P 2 m m            ", "P2mm      ", "cab  ", P,  7 }, /* 126 */
+  { 25, "C2v^1 ", "P -2 -2         ", "P m 2 m                        ", "P m 2 m            ", "Pm2m      ", "bca  ", P,  7 }, /* 127 */
+  { 26, "C2v^2 ", "P 2c -2         ", "P m c 2_1                      ", "P m c 2_1          ", "Pmc2_1    ", "     ", P,  7 }, /* 128 */
+  { 26, "C2v^2 ", "P 2c -2c        ", "P c m 2_1                      ", "P c m 2_1          ", "Pcm2_1    ", "ba-c ", P,  7 }, /* 129 */
+  { 26, "C2v^2 ", "P -2a 2a        ", "P 2_1 m a                      ", "P 2_1 m a          ", "P2_1ma    ", "cab  ", P,  7 }, /* 130 */
+  { 26, "C2v^2 ", "P -2 2a         ", "P 2_1 a m                      ", "P 2_1 a m          ", "P2_1am    ", "-cba ", P,  7 }, /* 131 */
+  { 26, "C2v^2 ", "P -2 -2b        ", "P b 2_1 m                      ", "P b 2_1 m          ", "Pb2_1m    ", "bca  ", P,  7 }, /* 132 */
+  { 26, "C2v^2 ", "P -2b -2        ", "P m 2_1 b                      ", "P m 2_1 b          ", "Pm2_1b    ", "a-cb ", P,  7 }, /* 133 */
+  { 27, "C2v^3 ", "P 2 -2c         ", "P c c 2                        ", "P c c 2            ", "Pcc2      ", "     ", P,  7 }, /* 134 */
+  { 27, "C2v^3 ", "P -2a 2         ", "P 2 a a                        ", "P 2 a a            ", "P2aa      ", "cab  ", P,  7 }, /* 135 */
+  { 27, "C2v^3 ", "P -2b -2b       ", "P b 2 b                        ", "P b 2 b            ", "Pb2b      ", "bca  ", P,  7 }, /* 136 */
+  { 28, "C2v^4 ", "P 2 -2a         ", "P m a 2                        ", "P m a 2            ", "Pma2      ", "     ", P,  7 }, /* 137 */
+  { 28, "C2v^4 ", "P 2 -2b         ", "P b m 2                        ", "P b m 2            ", "Pbm2      ", "ba-c ", P,  7 }, /* 138 */
+  { 28, "C2v^4 ", "P -2b 2         ", "P 2 m b                        ", "P 2 m b            ", "P2mb      ", "cab  ", P,  7 }, /* 139 */
+  { 28, "C2v^4 ", "P -2c 2         ", "P 2 c m                        ", "P 2 c m            ", "P2cm      ", "-cba ", P,  7 }, /* 140 */
+  { 28, "C2v^4 ", "P -2c -2c       ", "P c 2 m                        ", "P c 2 m            ", "Pc2m      ", "bca  ", P,  7 }, /* 141 */
+  { 28, "C2v^4 ", "P -2a -2a       ", "P m 2 a                        ", "P m 2 a            ", "Pm2a      ", "a-cb ", P,  7 }, /* 142 */
+  { 29, "C2v^5 ", "P 2c -2ac       ", "P c a 2_1                      ", "P c a 2_1          ", "Pca2_1    ", "     ", P,  7 }, /* 143 */
+  { 29, "C2v^5 ", "P 2c -2b        ", "P b c 2_1                      ", "P b c 2_1          ", "Pbc2_1    ", "ba-c ", P,  7 }, /* 144 */
+  { 29, "C2v^5 ", "P -2b 2a        ", "P 2_1 a b                      ", "P 2_1 a b          ", "P2_1ab    ", "cab  ", P,  7 }, /* 145 */
+  { 29, "C2v^5 ", "P -2ac 2a       ", "P 2_1 c a                      ", "P 2_1 c a          ", "P2_1ca    ", "-cba ", P,  7 }, /* 146 */
+  { 29, "C2v^5 ", "P -2bc -2c      ", "P c 2_1 b                      ", "P c 2_1 b          ", "Pc2_1b    ", "bca  ", P,  7 }, /* 147 */
+  { 29, "C2v^5 ", "P -2a -2ab      ", "P b 2_1 a                      ", "P b 2_1 a          ", "Pb2_1a    ", "a-cb ", P,  7 }, /* 148 */
+  { 30, "C2v^6 ", "P 2 -2bc        ", "P n c 2                        ", "P n c 2            ", "Pnc2      ", "     ", P,  7 }, /* 149 */
+  { 30, "C2v^6 ", "P 2 -2ac        ", "P c n 2                        ", "P c n 2            ", "Pcn2      ", "ba-c ", P,  7 }, /* 150 */
+  { 30, "C2v^6 ", "P -2ac 2        ", "P 2 n a                        ", "P 2 n a            ", "P2na      ", "cab  ", P,  7 }, /* 151 */
+  { 30, "C2v^6 ", "P -2ab 2        ", "P 2 a n                        ", "P 2 a n            ", "P2an      ", "-cba ", P,  7 }, /* 152 */
+  { 30, "C2v^6 ", "P -2ab -2ab     ", "P b 2 n                        ", "P b 2 n            ", "Pb2n      ", "bca  ", P,  7 }, /* 153 */
+  { 30, "C2v^6 ", "P -2bc -2bc     ", "P n 2 b                        ", "P n 2 b            ", "Pn2b      ", "a-cb ", P,  7 }, /* 154 */
+  { 31, "C2v^7 ", "P 2ac -2        ", "P m n 2_1                      ", "P m n 2_1          ", "Pmn2_1    ", "     ", P,  7 }, /* 155 */
+  { 31, "C2v^7 ", "P 2bc -2bc      ", "P n m 2_1                      ", "P n m 2_1          ", "Pnm2_1    ", "ba-c ", P,  7 }, /* 156 */
+  { 31, "C2v^7 ", "P -2ab 2ab      ", "P 2_1 m n                      ", "P 2_1 m n          ", "P2_1mn    ", "cab  ", P,  7 }, /* 157 */
+  { 31, "C2v^7 ", "P -2 2ac        ", "P 2_1 n m                      ", "P 2_1 n m          ", "P2_1nm    ", "-cba ", P,  7 }, /* 158 */
+  { 31, "C2v^7 ", "P -2 -2bc       ", "P n 2_1 m                      ", "P n 2_1 m          ", "Pn2_1m    ", "bca  ", P,  7 }, /* 159 */
+  { 31, "C2v^7 ", "P -2ab -2       ", "P m 2_1 n                      ", "P m 2_1 n          ", "Pm2_1n    ", "a-cb ", P,  7 }, /* 160 */
+  { 32, "C2v^8 ", "P 2 -2ab        ", "P b a 2                        ", "P b a 2            ", "Pba2      ", "     ", P,  7 }, /* 161 */
+  { 32, "C2v^8 ", "P -2bc 2        ", "P 2 c b                        ", "P 2 c b            ", "P2cb      ", "cab  ", P,  7 }, /* 162 */
+  { 32, "C2v^8 ", "P -2ac -2ac     ", "P c 2 a                        ", "P c 2 a            ", "Pc2a      ", "bca  ", P,  7 }, /* 163 */
+  { 33, "C2v^9 ", "P 2c -2n        ", "P n a 2_1                      ", "P n a 2_1          ", "Pna2_1    ", "     ", P,  7 }, /* 164 */
+  { 33, "C2v^9 ", "P 2c -2ab       ", "P b n 2_1                      ", "P b n 2_1          ", "Pbn2_1    ", "ba-c ", P,  7 }, /* 165 */
+  { 33, "C2v^9 ", "P -2bc 2a       ", "P 2_1 n b                      ", "P 2_1 n b          ", "P2_1nb    ", "cab  ", P,  7 }, /* 166 */
+  { 33, "C2v^9 ", "P -2n 2a        ", "P 2_1 c n                      ", "P 2_1 c n          ", "P2_1cn    ", "-cba ", P,  7 }, /* 167 */
+  { 33, "C2v^9 ", "P -2n -2ac      ", "P c 2_1 n                      ", "P c 2_1 n          ", "Pc2_1n    ", "bca  ", P,  7 }, /* 168 */
+  { 33, "C2v^9 ", "P -2ac -2n      ", "P n 2_1 a                      ", "P n 2_1 a          ", "Pn2_1a    ", "a-cb ", P,  7 }, /* 169 */
+  { 34, "C2v^10", "P 2 -2n         ", "P n n 2                        ", "P n n 2            ", "Pnn2      ", "     ", P,  7 }, /* 170 */
+  { 34, "C2v^10", "P -2n 2         ", "P 2 n n                        ", "P 2 n n            ", "P2nn      ", "cab  ", P,  7 }, /* 171 */
+  { 34, "C2v^10", "P -2n -2n       ", "P n 2 n                        ", "P n 2 n            ", "Pn2n      ", "bca  ", P,  7 }, /* 172 */
+  { 35, "C2v^11", "C 2 -2          ", "C m m 2                        ", "C m m 2            ", "Cmm2      ", "     ", C,  7 }, /* 173 */
+  { 35, "C2v^11", "A -2 2          ", "A 2 m m                        ", "A 2 m m            ", "A2mm      ", "cab  ", A,  7 }, /* 174 */
+  { 35, "C2v^11", "B -2 -2         ", "B m 2 m                        ", "B m 2 m            ", "Bm2m      ", "bca  ", P,  7 }, /* 175 */
+  { 36, "C2v^12", "C 2c -2         ", "C m c 2_1                      ", "C m c 2_1          ", "Cmc2_1    ", "     ", C,  7 }, /* 176 */
+  { 36, "C2v^12", "C 2c -2c        ", "C c m 2_1                      ", "C c m 2_1          ", "Ccm2_1    ", "ba-c ", C,  7 }, /* 177 */
+  { 36, "C2v^12", "A -2a 2a        ", "A 2_1 m a                      ", "A 2_1 m a          ", "A2_1ma    ", "cab  ", A,  7 }, /* 178 */
+  { 36, "C2v^12", "A -2 2a         ", "A 2_1 a m                      ", "A 2_1 a m          ", "A2_1am    ", "-cba ", A,  7 }, /* 179 */
+  { 36, "C2v^12", "B -2 -2b        ", "B b 2_1 m                      ", "B b 2_1 m          ", "Bb2_1m    ", "bca  ", P,  7 }, /* 180 */
+  { 36, "C2v^12", "B -2b -2        ", "B m 2_1 b                      ", "B m 2_1 b          ", "Bm2_1b    ", "a-cb ", P,  7 }, /* 181 */
+  { 37, "C2v^13", "C 2 -2c         ", "C c c 2                        ", "C c c 2            ", "Ccc2      ", "     ", C,  7 }, /* 182 */
+  { 37, "C2v^13", "A -2a 2         ", "A 2 a a                        ", "A 2 a a            ", "A2aa      ", "cab  ", A,  7 }, /* 183 */
+  { 37, "C2v^13", "B -2b -2b       ", "B b 2 b                        ", "B b 2 b            ", "Bb2b      ", "bca  ", P,  7 }, /* 184 */
+  { 38, "C2v^14", "A 2 -2          ", "A m m 2                        ", "A m m 2            ", "Amm2      ", "     ", A,  7 }, /* 185 */
+  { 38, "C2v^14", "B 2 -2          ", "B m m 2                        ", "B m m 2            ", "Bmm2      ", "ba-c ", P,  7 }, /* 186 */
+  { 38, "C2v^14", "B -2 2          ", "B 2 m m                        ", "B 2 m m            ", "B2mm      ", "cab  ", P,  7 }, /* 187 */
+  { 38, "C2v^14", "C -2 2          ", "C 2 m m                        ", "C 2 m m            ", "C2mm      ", "-cba ", C,  7 }, /* 188 */
+  { 38, "C2v^14", "C -2 -2         ", "C m 2 m                        ", "C m 2 m            ", "Cm2m      ", "bca  ", C,  7 }, /* 189 */
+  { 38, "C2v^14", "A -2 -2         ", "A m 2 m                        ", "A m 2 m            ", "Am2m      ", "a-cb ", A,  7 }, /* 190 */
+  { 39, "C2v^15", "A 2 -2c         ", "A e m 2                        ", "A e m 2            ", "Aem2      ", "     ", A,  7 }, /* 191 */
+  { 39, "C2v^15", "B 2 -2c         ", "B m e 2                        ", "B m e 2            ", "Bme2      ", "ba-c ", P,  7 }, /* 192 */
+  { 39, "C2v^15", "B -2c 2         ", "B 2 e m                        ", "B 2 e m            ", "B2em      ", "cab  ", P,  7 }, /* 193 */
+  { 39, "C2v^15", "C -2b 2         ", "C 2 m e                        ", "C 2 m e            ", "C2me      ", "-cba ", C,  7 }, /* 194 */
+  { 39, "C2v^15", "C -2b -2b       ", "C m 2 e                        ", "C m 2 e            ", "Cm2e      ", "bca  ", C,  7 }, /* 195 */
+  { 39, "C2v^15", "A -2c -2c       ", "A e 2 m                        ", "A e 2 m            ", "Ae2m      ", "a-cb ", A,  7 }, /* 196 */
+  { 40, "C2v^16", "A 2 -2a         ", "A m a 2                        ", "A m a 2            ", "Ama2      ", "     ", A,  7 }, /* 197 */
+  { 40, "C2v^16", "B 2 -2b         ", "B b m 2                        ", "B b m 2            ", "Bbm2      ", "ba-c ", P,  7 }, /* 198 */
+  { 40, "C2v^16", "B -2b 2         ", "B 2 m b                        ", "B 2 m b            ", "B2mb      ", "cab  ", P,  7 }, /* 199 */
+  { 40, "C2v^16", "C -2c 2         ", "C 2 c m                        ", "C 2 c m            ", "C2cm      ", "-cba ", C,  7 }, /* 200 */
+  { 40, "C2v^16", "C -2c -2c       ", "C c 2 m                        ", "C c 2 m            ", "Cc2m      ", "bca  ", C,  7 }, /* 201 */
+  { 40, "C2v^16", "A -2a -2a       ", "A m 2 a                        ", "A m 2 a            ", "Am2a      ", "a-cb ", A,  7 }, /* 202 */
+  { 41, "C2v^17", "A 2 -2ac        ", "A e a 2                        ", "A e a 2            ", "Aea2      ", "     ", A,  7 }, /* 203 */
+  { 41, "C2v^17", "B 2 -2bc        ", "B b e 2                        ", "B b e 2            ", "Bbe2      ", "ba-c ", P,  7 }, /* 204 */
+  { 41, "C2v^17", "B -2bc 2        ", "B 2 e b                        ", "B 2 e b            ", "B2eb      ", "cab  ", P,  7 }, /* 205 */
+  { 41, "C2v^17", "C -2bc 2        ", "C 2 c e                        ", "C 2 c e            ", "C2ce      ", "-cba ", C,  7 }, /* 206 */
+  { 41, "C2v^17", "C -2bc -2bc     ", "C c 2 e                        ", "C c 2 e            ", "Cc2e      ", "bca  ", C,  7 }, /* 207 */
+  { 41, "C2v^17", "A -2ac -2ac     ", "A e 2 a                        ", "A e 2 a            ", "Ae2a      ", "a-cb ", A,  7 }, /* 208 */
+  { 42, "C2v^18", "F 2 -2          ", "F m m 2                        ", "F m m 2            ", "Fmm2      ", "     ", F,  7 }, /* 209 */
+  { 42, "C2v^18", "F -2 2          ", "F 2 m m                        ", "F 2 m m            ", "F2mm      ", "cab  ", F,  7 }, /* 210 */
+  { 42, "C2v^18", "F -2 -2         ", "F m 2 m                        ", "F m 2 m            ", "Fm2m      ", "bca  ", F,  7 }, /* 211 */
+  { 43, "C2v^19", "F 2 -2d         ", "F d d 2                        ", "F d d 2            ", "Fdd2      ", "     ", F,  7 }, /* 212 */
+  { 43, "C2v^19", "F -2d 2         ", "F 2 d d                        ", "F 2 d d            ", "F2dd      ", "cab  ", F,  7 }, /* 213 */
+  { 43, "C2v^19", "F -2d -2d       ", "F d 2 d                        ", "F d 2 d            ", "Fd2d      ", "bca  ", F,  7 }, /* 214 */
+  { 44, "C2v^20", "I 2 -2          ", "I m m 2                        ", "I m m 2            ", "Imm2      ", "     ", I,  7 }, /* 215 */
+  { 44, "C2v^20", "I -2 2          ", "I 2 m m                        ", "I 2 m m            ", "I2mm      ", "cab  ", I,  7 }, /* 216 */
+  { 44, "C2v^20", "I -2 -2         ", "I m 2 m                        ", "I m 2 m            ", "Im2m      ", "bca  ", I,  7 }, /* 217 */
+  { 45, "C2v^21", "I 2 -2c         ", "I b a 2                        ", "I b a 2            ", "Iba2      ", "     ", I,  7 }, /* 218 */
+  { 45, "C2v^21", "I -2a 2         ", "I 2 c b                        ", "I 2 c b            ", "I2cb      ", "cab  ", I,  7 }, /* 219 */
+  { 45, "C2v^21", "I -2b -2b       ", "I c 2 a                        ", "I c 2 a            ", "Ic2a      ", "bca  ", I,  7 }, /* 220 */
+  { 46, "C2v^22", "I 2 -2a         ", "I m a 2                        ", "I m a 2            ", "Ima2      ", "     ", I,  7 }, /* 221 */
+  { 46, "C2v^22", "I 2 -2b         ", "I b m 2                        ", "I b m 2            ", "Ibm2      ", "ba-c ", I,  7 }, /* 222 */
+  { 46, "C2v^22", "I -2b 2         ", "I 2 m b                        ", "I 2 m b            ", "I2mb      ", "cab  ", I,  7 }, /* 223 */
+  { 46, "C2v^22", "I -2c 2         ", "I 2 c m                        ", "I 2 c m            ", "I2cm      ", "-cba ", I,  7 }, /* 224 */
+  { 46, "C2v^22", "I -2c -2c       ", "I c 2 m                        ", "I c 2 m            ", "Ic2m      ", "bca  ", I,  7 }, /* 225 */
+  { 46, "C2v^22", "I -2a -2a       ", "I m 2 a                        ", "I m 2 a            ", "Im2a      ", "a-cb ", I,  7 }, /* 226 */
+  { 47, "D2h^1 ", "-P 2 2          ", "P m m m                        ", "P 2/m 2/m 2/m      ", "Pmmm      ", "     ", P,  8 }, /* 227 */
+  { 48, "D2h^2 ", "P 2 2 -1n       ", "P n n n                        ", "P 2/n 2/n 2/n      ", "Pnnn      ", "1    ", P,  8 }, /* 228 */
+  { 48, "D2h^2 ", "-P 2ab 2bc      ", "P n n n                        ", "P 2/n 2/n 2/n      ", "Pnnn      ", "2    ", P,  8 }, /* 229 */
+  { 49, "D2h^3 ", "-P 2 2c         ", "P c c m                        ", "P 2/c 2/c 2/m      ", "Pccm      ", "     ", P,  8 }, /* 230 */
+  { 49, "D2h^3 ", "-P 2a 2         ", "P m a a                        ", "P 2/m 2/a 2/a      ", "Pmaa      ", "cab  ", P,  8 }, /* 231 */
+  { 49, "D2h^3 ", "-P 2b 2b        ", "P b m b                        ", "P 2/b 2/m 2/b      ", "Pbmb      ", "bca  ", P,  8 }, /* 232 */
+  { 50, "D2h^4 ", "P 2 2 -1ab      ", "P b a n                        ", "P 2/b 2/a 2/n      ", "Pban      ", "1    ", P,  8 }, /* 233 */
+  { 50, "D2h^4 ", "-P 2ab 2b       ", "P b a n                        ", "P 2/b 2/a 2/n      ", "Pban      ", "2    ", P,  8 }, /* 234 */
+  { 50, "D2h^4 ", "P 2 2 -1bc      ", "P n c b                        ", "P 2/n 2/c 2/b      ", "Pncb      ", "1cab ", P,  8 }, /* 235 */
+  { 50, "D2h^4 ", "-P 2b 2bc       ", "P n c b                        ", "P 2/n 2/c 2/b      ", "Pncb      ", "2cab ", P,  8 }, /* 236 */
+  { 50, "D2h^4 ", "P 2 2 -1ac      ", "P c n a                        ", "P 2/c 2/n 2/a      ", "Pcna      ", "1bca ", P,  8 }, /* 237 */
+  { 50, "D2h^4 ", "-P 2a 2c        ", "P c n a                        ", "P 2/c 2/n 2/a      ", "Pcna      ", "2bca ", P,  8 }, /* 238 */
+  { 51, "D2h^5 ", "-P 2a 2a        ", "P m m a                        ", "P 2_1/m 2/m 2/a    ", "Pmma      ", "     ", P,  8 }, /* 239 */
+  { 51, "D2h^5 ", "-P 2b 2         ", "P m m b                        ", "P 2/m 2_1/m 2/b    ", "Pmmb      ", "ba-c ", P,  8 }, /* 240 */
+  { 51, "D2h^5 ", "-P 2 2b         ", "P b m m                        ", "P 2/b 2_1/m 2/m    ", "Pbmm      ", "cab  ", P,  8 }, /* 241 */
+  { 51, "D2h^5 ", "-P 2c 2c        ", "P c m m                        ", "P 2/c 2/m 2_1/m    ", "Pcmm      ", "-cba ", P,  8 }, /* 242 */
+  { 51, "D2h^5 ", "-P 2c 2         ", "P m c m                        ", "P 2/m 2/c 2_1/m    ", "Pmcm      ", "bca  ", P,  8 }, /* 243 */
+  { 51, "D2h^5 ", "-P 2 2a         ", "P m a m                        ", "P 2_1/m 2/a 2/m    ", "Pmam      ", "a-cb ", P,  8 }, /* 244 */
+  { 52, "D2h^6 ", "-P 2a 2bc       ", "P n n a                        ", "P 2/n 2_1/n 2/a    ", "Pnna      ", "     ", P,  8 }, /* 245 */
+  { 52, "D2h^6 ", "-P 2b 2n        ", "P n n b                        ", "P 2_1/n 2/n 2/b    ", "Pnnb      ", "ba-c ", P,  8 }, /* 246 */
+  { 52, "D2h^6 ", "-P 2n 2b        ", "P b n n                        ", "P 2/b 2/n 2_1/n    ", "Pbnn      ", "cab  ", P,  8 }, /* 247 */
+  { 52, "D2h^6 ", "-P 2ab 2c       ", "P c n n                        ", "P 2/c 2_1/n 2/n    ", "Pcnn      ", "-cba ", P,  8 }, /* 248 */
+  { 52, "D2h^6 ", "-P 2ab 2n       ", "P n c n                        ", "P 2_1/n 2/c 2/n    ", "Pncn      ", "bca  ", P,  8 }, /* 249 */
+  { 52, "D2h^6 ", "-P 2n 2bc       ", "P n a n                        ", "P 2/n 2/a 2_1/n    ", "Pnan      ", "a-cb ", P,  8 }, /* 250 */
+  { 53, "D2h^7 ", "-P 2ac 2        ", "P m n a                        ", "P 2/m 2/n 2_1/a    ", "Pmna      ", "     ", P,  8 }, /* 251 */
+  { 53, "D2h^7 ", "-P 2bc 2bc      ", "P n m b                        ", "P 2/n 2/m 2_1/b    ", "Pnmb      ", "ba-c ", P,  8 }, /* 252 */
+  { 53, "D2h^7 ", "-P 2ab 2ab      ", "P b m n                        ", "P 2_1/b 2/m 2/n    ", "Pbmn      ", "cab  ", P,  8 }, /* 253 */
+  { 53, "D2h^7 ", "-P 2 2ac        ", "P c n m                        ", "P 2_1/c 2/n 2/m    ", "Pcnm      ", "-cba ", P,  8 }, /* 254 */
+  { 53, "D2h^7 ", "-P 2 2bc        ", "P n c m                        ", "P 2/n 2_1/c 2/m    ", "Pncm      ", "bca  ", P,  8 }, /* 255 */
+  { 53, "D2h^7 ", "-P 2ab 2        ", "P m a n                        ", "P 2/m 2_1/a 2/n    ", "Pman      ", "a-cb ", P,  8 }, /* 256 */
+  { 54, "D2h^8 ", "-P 2a 2ac       ", "P c c a                        ", "P 2_1/c 2/c 2/a    ", "Pcca      ", "     ", P,  8 }, /* 257 */
+  { 54, "D2h^8 ", "-P 2b 2c        ", "P c c b                        ", "P 2/c 2_1/c 2/b    ", "Pccb      ", "ba-c ", P,  8 }, /* 258 */
+  { 54, "D2h^8 ", "-P 2a 2b        ", "P b a a                        ", "P 2/b 2_1/a 2/a    ", "Pbaa      ", "cab  ", P,  8 }, /* 259 */
+  { 54, "D2h^8 ", "-P 2ac 2c       ", "P c a a                        ", "P 2/c 2/a 2_1/a    ", "Pcaa      ", "-cba ", P,  8 }, /* 260 */
+  { 54, "D2h^8 ", "-P 2bc 2b       ", "P b c b                        ", "P 2/b 2/c 2_1/b    ", "Pbcb      ", "bca  ", P,  8 }, /* 261 */
+  { 54, "D2h^8 ", "-P 2b 2ab       ", "P b a b                        ", "P 2_1/b 2/a 2/b    ", "Pbab      ", "a-cb ", P,  8 }, /* 262 */
+  { 55, "D2h^9 ", "-P 2 2ab        ", "P b a m                        ", "P 2_1/b 2_1/a 2/m  ", "Pbam      ", "     ", P,  8 }, /* 263 */
+  { 55, "D2h^9 ", "-P 2bc 2        ", "P m c b                        ", "P 2/m 2_1/c 2_1/b  ", "Pmcb      ", "cab  ", P,  8 }, /* 264 */
+  { 55, "D2h^9 ", "-P 2ac 2ac      ", "P c m a                        ", "P 2_1/c 2/m 2_1/a  ", "Pcma      ", "bca  ", P,  8 }, /* 265 */
+  { 56, "D2h^10", "-P 2ab 2ac      ", "P c c n                        ", "P 2_1/c 2_1/c 2/n  ", "Pccn      ", "     ", P,  8 }, /* 266 */
+  { 56, "D2h^10", "-P 2ac 2bc      ", "P n a a                        ", "P 2/n 2_1/a 2_1/a  ", "Pnaa      ", "cab  ", P,  8 }, /* 267 */
+  { 56, "D2h^10", "-P 2bc 2ab      ", "P b n b                        ", "P 2_1/b 2/n 2_1/b  ", "Pbnb      ", "bca  ", P,  8 }, /* 268 */
+  { 57, "D2h^11", "-P 2c 2b        ", "P b c m                        ", "P 2/b 2_1/c 2_1/m  ", "Pbcm      ", "     ", P,  8 }, /* 269 */
+  { 57, "D2h^11", "-P 2c 2ac       ", "P c a m                        ", "P 2_1/c 2/a 2_1/m  ", "Pcam      ", "ba-c ", P,  8 }, /* 270 */
+  { 57, "D2h^11", "-P 2ac 2a       ", "P m c a                        ", "P 2_1/m 2/c 2_1/a  ", "Pmca      ", "cab  ", P,  8 }, /* 271 */
+  { 57, "D2h^11", "-P 2b 2a        ", "P m a b                        ", "P 2_1/m 2_1/a 2/b  ", "Pmab      ", "-cba ", P,  8 }, /* 272 */
+  { 57, "D2h^11", "-P 2a 2ab       ", "P b m a                        ", "P 2_1/b 2_1/m 2/a  ", "Pbma      ", "bca  ", P,  8 }, /* 273 */
+  { 57, "D2h^11", "-P 2bc 2c       ", "P c m b                        ", "P 2/c 2_1/m 2_1/b  ", "Pcmb      ", "a-cb ", P,  8 }, /* 274 */
+  { 58, "D2h^12", "-P 2 2n         ", "P n n m                        ", "P 2_1/n 2_1/n 2/m  ", "Pnnm      ", "     ", P,  8 }, /* 275 */
+  { 58, "D2h^12", "-P 2n 2         ", "P m n n                        ", "P 2/m 2_1/n 2_1/n  ", "Pmnn      ", "cab  ", P,  8 }, /* 276 */
+  { 58, "D2h^12", "-P 2n 2n        ", "P n m n                        ", "P 2_1/n 2/m 2_1/n  ", "Pnmn      ", "bca  ", P,  8 }, /* 277 */
+  { 59, "D2h^13", "P 2 2ab -1ab    ", "P m m n                        ", "P 2_1/m 2_1/m 2/n  ", "Pmmn      ", "1    ", P,  8 }, /* 278 */
+  { 59, "D2h^13", "-P 2ab 2a       ", "P m m n                        ", "P 2_1/m 2_1/m 2/n  ", "Pmmn      ", "2    ", P,  8 }, /* 279 */
+  { 59, "D2h^13", "P 2bc 2 -1bc    ", "P n m m                        ", "P 2/n 2_1/m 2_1/m  ", "Pnmm      ", "1cab ", P,  8 }, /* 280 */
+  { 59, "D2h^13", "-P 2c 2bc       ", "P n m m                        ", "P 2/n 2_1/m 2_1/m  ", "Pnmm      ", "2cab ", P,  8 }, /* 281 */
+  { 59, "D2h^13", "P 2ac 2ac -1ac  ", "P m n m                        ", "P 2_1/m 2/n 2_1/m  ", "Pmnm      ", "1bca ", P,  8 }, /* 282 */
+  { 59, "D2h^13", "-P 2c 2a        ", "P m n m                        ", "P 2_1/m 2/n 2_1/m  ", "Pmnm      ", "2bca ", P,  8 }, /* 283 */
+  { 60, "D2h^14", "-P 2n 2ab       ", "P b c n                        ", "P 2_1/b 2/c 2_1/n  ", "Pbcn      ", "     ", P,  8 }, /* 284 */
+  { 60, "D2h^14", "-P 2n 2c        ", "P c a n                        ", "P 2/c 2_1/a 2_1/n  ", "Pcan      ", "ba-c ", P,  8 }, /* 285 */
+  { 60, "D2h^14", "-P 2a 2n        ", "P n c a                        ", "P 2_1/n 2_1/c 2/a  ", "Pnca      ", "cab  ", P,  8 }, /* 286 */
+  { 60, "D2h^14", "-P 2bc 2n       ", "P n a b                        ", "P 2_1/n 2/a 2_1/b  ", "Pnab      ", "-cba ", P,  8 }, /* 287 */
+  { 60, "D2h^14", "-P 2ac 2b       ", "P b n a                        ", "P 2/b 2_1/n 2_1/a  ", "Pbna      ", "bca  ", P,  8 }, /* 288 */
+  { 60, "D2h^14", "-P 2b 2ac       ", "P c n b                        ", "P 2_1/c 2_1/n 2/b  ", "Pcnb      ", "a-cb ", P,  8 }, /* 289 */
+  { 61, "D2h^15", "-P 2ac 2ab      ", "P b c a                        ", "P 2_1/b 2_1/c 2_1/a", "Pbca      ", "     ", P,  8 }, /* 290 */
+  { 61, "D2h^15", "-P 2bc 2ac      ", "P c a b                        ", "P 2_1/c 2_1/a 2_1/b", "Pcab      ", "ba-c ", P,  8 }, /* 291 */
+  { 62, "D2h^16", "-P 2ac 2n       ", "P n m a                        ", "P 2_1/n 2_1/m 2_1/a", "Pnma      ", "     ", P,  8 }, /* 292 */
+  { 62, "D2h^16", "-P 2bc 2a       ", "P m n b                        ", "P 2_1/m 2_1/n 2_1/b", "Pmnb      ", "ba-c ", P,  8 }, /* 293 */
+  { 62, "D2h^16", "-P 2c 2ab       ", "P b n m                        ", "P 2_1/b 2_1/n 2_1/m", "Pbnm      ", "cab  ", P,  8 }, /* 294 */
+  { 62, "D2h^16", "-P 2n 2ac       ", "P c m n                        ", "P 2_1/c 2_1/m 2_1/n", "Pcmn      ", "-cba ", P,  8 }, /* 295 */
+  { 62, "D2h^16", "-P 2n 2a        ", "P m c n                        ", "P 2_1/m 2_1/c 2_1/n", "Pmcn      ", "bca  ", P,  8 }, /* 296 */
+  { 62, "D2h^16", "-P 2c 2n        ", "P n a m                        ", "P 2_1/n 2_1/a 2_1/m", "Pnam      ", "a-cb ", P,  8 }, /* 297 */
+  { 63, "D2h^17", "-C 2c 2         ", "C m c m                        ", "C 2/m 2/c 2_1/m    ", "Cmcm      ", "     ", C,  8 }, /* 298 */
+  { 63, "D2h^17", "-C 2c 2c        ", "C c m m                        ", "C 2/c 2/m 2_1/m    ", "Ccmm      ", "ba-c ", C,  8 }, /* 299 */
+  { 63, "D2h^17", "-A 2a 2a        ", "A m m a                        ", "A 2_1/m 2/m 2/a    ", "Amma      ", "cab  ", A,  8 }, /* 300 */
+  { 63, "D2h^17", "-A 2 2a         ", "A m a m                        ", "A 2_1/m 2/a 2/m    ", "Amam      ", "-cba ", A,  8 }, /* 301 */
+  { 63, "D2h^17", "-B 2 2b         ", "B b m m                        ", "B 2/b 2_1/m 2/m    ", "Bbmm      ", "bca  ", P,  8 }, /* 302 */
+  { 63, "D2h^17", "-B 2b 2         ", "B m m b                        ", "B 2/m 2_1/m 2/b    ", "Bmmb      ", "a-cb ", P,  8 }, /* 303 */
+  { 64, "D2h^18", "-C 2bc 2        ", "C m c e                        ", "C 2/m 2/c 2_1/e    ", "Cmce      ", "     ", C,  8 }, /* 304 */
+  { 64, "D2h^18", "-C 2bc 2bc      ", "C c m e                        ", "C 2/c 2/m 2_1/e    ", "Ccme      ", "ba-c ", C,  8 }, /* 305 */
+  { 64, "D2h^18", "-A 2ac 2ac      ", "A e m a                        ", "A 2_1/e 2/m 2/a    ", "Aema      ", "cab  ", A,  8 }, /* 306 */
+  { 64, "D2h^18", "-A 2 2ac        ", "A e a m                        ", "A 2_1/e 2/a 2/m    ", "Aeam      ", "-cba ", A,  8 }, /* 307 */
+  { 64, "D2h^18", "-B 2 2bc        ", "B b e m                        ", "B 2/b 2_1/e 2/m    ", "Bbem      ", "bca  ", P,  8 }, /* 308 */
+  { 64, "D2h^18", "-B 2bc 2        ", "B m e b                        ", "B 2/m 2_1/e 2/b    ", "Bmeb      ", "a-cb ", P,  8 }, /* 309 */
+  { 65, "D2h^19", "-C 2 2          ", "C m m m                        ", "C 2/m 2/m 2/m      ", "Cmmm      ", "     ", C,  8 }, /* 310 */
+  { 65, "D2h^19", "-A 2 2          ", "A m m m                        ", "A 2/m 2/m 2/m      ", "Ammm      ", "cab  ", A,  8 }, /* 311 */
+  { 65, "D2h^19", "-B 2 2          ", "B m m m                        ", "B 2/m 2/m 2/m      ", "Bmmm      ", "bca  ", P,  8 }, /* 312 */
+  { 66, "D2h^20", "-C 2 2c         ", "C c c m                        ", "C 2/c 2/c 2/m      ", "Cccm      ", "     ", C,  8 }, /* 313 */
+  { 66, "D2h^20", "-A 2a 2         ", "A m a a                        ", "A 2/m 2/a 2/a      ", "Amaa      ", "cab  ", A,  8 }, /* 314 */
+  { 66, "D2h^20", "-B 2b 2b        ", "B b m b                        ", "B 2/b 2/m 2/b      ", "Bbmb      ", "bca  ", P,  8 }, /* 315 */
+  { 67, "D2h^21", "-C 2b 2         ", "C m m e                        ", "C 2/m 2/m 2/e      ", "Cmme      ", "     ", C,  8 }, /* 316 */
+  { 67, "D2h^21", "-C 2b 2b        ", "C m m e                        ", "C 2/m 2/m 2/e      ", "Cmme      ", "ba-c ", C,  8 }, /* 317 */
+  { 67, "D2h^21", "-A 2c 2c        ", "A e m m                        ", "A 2/e 2/m 2/m      ", "Aemm      ", "cab  ", A,  8 }, /* 318 */
+  { 67, "D2h^21", "-A 2 2c         ", "A e m m                        ", "A 2/e 2/m 2/m      ", "Aemm      ", "-cba ", A,  8 }, /* 319 */
+  { 67, "D2h^21", "-B 2 2c         ", "B m e m                        ", "B 2/m 2/e 2/m      ", "Bmem      ", "bca  ", P,  8 }, /* 320 */
+  { 67, "D2h^21", "-B 2c 2         ", "B m e m                        ", "B 2/m 2/e 2/m      ", "Bmem      ", "a-cb ", P,  8 }, /* 321 */
+  { 68, "D2h^22", "C 2 2 -1bc      ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "1    ", C,  8 }, /* 322 */
+  { 68, "D2h^22", "-C 2b 2bc       ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "2    ", C,  8 }, /* 323 */
+  { 68, "D2h^22", "C 2 2 -1bc      ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "1ba-c", C,  8 }, /* 324 */
+  { 68, "D2h^22", "-C 2b 2c        ", "C c c e                        ", "C 2/c 2/c 2/e      ", "Ccce      ", "2ba-c", C,  8 }, /* 325 */
+  { 68, "D2h^22", "A 2 2 -1ac      ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "1cab ", A,  8 }, /* 326 */
+  { 68, "D2h^22", "-A 2a 2c        ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "2cab ", A,  8 }, /* 327 */
+  { 68, "D2h^22", "A 2 2 -1ac      ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "1-cba", A,  8 }, /* 328 */
+  { 68, "D2h^22", "-A 2ac 2c       ", "A e a a                        ", "A 2/e 2/a 2/a      ", "Aeaa      ", "2-cba", A,  8 }, /* 329 */
+  { 68, "D2h^22", "B 2 2 -1bc      ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "1bca ", P,  8 }, /* 330 */
+  { 68, "D2h^22", "-B 2bc 2b       ", "B b c b                        ", "B 2/b 2/e 2/b      ", "Bbcb      ", "2bca ", P,  8 }, /* 331 */
+  { 68, "D2h^22", "B 2 2 -1bc      ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "1a-cb", P,  8 }, /* 332 */
+  { 68, "D2h^22", "-B 2b 2bc       ", "B b e b                        ", "B 2/b 2/e 2/b      ", "Bbeb      ", "2a-cb", P,  8 }, /* 333 */
+  { 69, "D2h^23", "-F 2 2          ", "F m m m                        ", "F 2/m 2/m 2/m      ", "Fmmm      ", "     ", F,  8 }, /* 334 */
+  { 70, "D2h^24", "F 2 2 -1d       ", "F d d d                        ", "F 2/d 2/d 2/d      ", "Fddd      ", "1    ", F,  8 }, /* 335 */
+  { 70, "D2h^24", "-F 2uv 2vw      ", "F d d d                        ", "F 2/d 2/d 2/d      ", "Fddd      ", "2    ", F,  8 }, /* 336 */
+  { 71, "D2h^25", "-I 2 2          ", "I m m m                        ", "I 2/m 2/m 2/m      ", "Immm      ", "     ", I,  8 }, /* 337 */
+  { 72, "D2h^26", "-I 2 2c         ", "I b a m                        ", "I 2/b 2/a 2/m      ", "Ibam      ", "     ", I,  8 }, /* 338 */
+  { 72, "D2h^26", "-I 2a 2         ", "I m c b                        ", "I 2/m 2/c 2/b      ", "Imcb      ", "cab  ", I,  8 }, /* 339 */
+  { 72, "D2h^26", "-I 2b 2b        ", "I c m a                        ", "I 2/c 2/m 2/a      ", "Icma      ", "bca  ", I,  8 }, /* 340 */
+  { 73, "D2h^27", "-I 2b 2c        ", "I b c a                        ", "I 2/b 2/c 2/a      ", "Ibca      ", "     ", I,  8 }, /* 341 */
+  { 73, "D2h^27", "-I 2a 2b        ", "I c a b                        ", "I 2/c 2/a 2/b      ", "Icab      ", "ba-c ", I,  8 }, /* 342 */
+  { 74, "D2h^28", "-I 2b 2         ", "I m m a                        ", "I 2/m 2/m 2/a      ", "Imma      ", "     ", I,  8 }, /* 343 */
+  { 74, "D2h^28", "-I 2a 2a        ", "I m m b                        ", "I 2/m 2/m 2/b      ", "Immb      ", "ba-c ", I,  8 }, /* 344 */
+  { 74, "D2h^28", "-I 2c 2c        ", "I b m m                        ", "I 2/b 2/m 2/m      ", "Ibmm      ", "cab  ", I,  8 }, /* 345 */
+  { 74, "D2h^28", "-I 2 2b         ", "I c m m                        ", "I 2/c 2/m 2/m      ", "Icmm      ", "-cba ", I,  8 }, /* 346 */
+  { 74, "D2h^28", "-I 2 2a         ", "I m c m                        ", "I 2/m 2/c 2/m      ", "Imcm      ", "bca  ", I,  8 }, /* 347 */
+  { 74, "D2h^28", "-I 2c 2         ", "I m a m                        ", "I 2/m 2/a 2/m      ", "Imam      ", "a-cb ", I,  8 }, /* 348 */
+  { 75, "C4^1  ", "P 4             ", "P 4                            ", "P 4                ", "P4        ", "     ", P,  9 }, /* 349 */
+  { 76, "C4^2  ", "P 4w            ", "P 4_1                          ", "P 4_1              ", "P4_1      ", "     ", P,  9 }, /* 350 */
+  { 77, "C4^3  ", "P 4c            ", "P 4_2                          ", "P 4_2              ", "P4_2      ", "     ", P,  9 }, /* 351 */
+  { 78, "C4^4  ", "P 4cw           ", "P 4_3                          ", "P 4_3              ", "P4_3      ", "     ", P,  9 }, /* 352 */
+  { 79, "C4^5  ", "I 4             ", "I 4                            ", "I 4                ", "I4        ", "     ", I,  9 }, /* 353 */
+  { 80, "C4^6  ", "I 4bw           ", "I 4_1                          ", "I 4_1              ", "I4_1      ", "     ", I,  9 }, /* 354 */
+  { 81, "S4^1  ", "P -4            ", "P -4                           ", "P -4               ", "P-4       ", "     ", P, 10 }, /* 355 */
+  { 82, "S4^2  ", "I -4            ", "I -4                           ", "I -4               ", "I-4       ", "     ", I, 10 }, /* 356 */
+  { 83, "C4h^1 ", "-P 4            ", "P 4/m                          ", "P 4/m              ", "P4/m      ", "     ", P, 11 }, /* 357 */
+  { 84, "C4h^2 ", "-P 4c           ", "P 4_2/m                        ", "P 4_2/m            ", "P4_2/m    ", "     ", P, 11 }, /* 358 */
+  { 85, "C4h^3 ", "P 4ab -1ab      ", "P 4/n                          ", "P 4/n              ", "P4/n      ", "1    ", P, 11 }, /* 359 */
+  { 85, "C4h^3 ", "-P 4a           ", "P 4/n                          ", "P 4/n              ", "P4/n      ", "2    ", P, 11 }, /* 360 */
+  { 86, "C4h^4 ", "P 4n -1n        ", "P 4_2/n                        ", "P 4_2/n            ", "P4_2/n    ", "1    ", P, 11 }, /* 361 */
+  { 86, "C4h^4 ", "-P 4bc          ", "P 4_2/n                        ", "P 4_2/n            ", "P4_2/n    ", "2    ", P, 11 }, /* 362 */
+  { 87, "C4h^5 ", "-I 4            ", "I 4/m                          ", "I 4/m              ", "I4/m      ", "     ", I, 11 }, /* 363 */
+  { 88, "C4h^6 ", "I 4bw -1bw      ", "I 4_1/a                        ", "I 4_1/a            ", "I4_1/a    ", "1    ", I, 11 }, /* 364 */
+  { 88, "C4h^6 ", "-I 4ad          ", "I 4_1/a                        ", "I 4_1/a            ", "I4_1/a    ", "2    ", I, 11 }, /* 365 */
+  { 89, "D4^1  ", "P 4 2           ", "P 4 2 2                        ", "P 4 2 2            ", "P422      ", "     ", P, 12 }, /* 366 */
+  { 90, "D4^2  ", "P 4ab 2ab       ", "P 4 2_1 2                      ", "P 4 2_1 2          ", "P42_12    ", "     ", P, 12 }, /* 367 */
+  { 91, "D4^3  ", "P 4w 2c         ", "P 4_1 2 2                      ", "P 4_1 2 2          ", "P4_122    ", "     ", P, 12 }, /* 368 */
+  { 92, "D4^4  ", "P 4abw 2nw      ", "P 4_1 2_1 2                    ", "P 4_1 2_1 2        ", "P4_12_12  ", "     ", P, 12 }, /* 369 */
+  { 93, "D4^5  ", "P 4c 2          ", "P 4_2 2 2                      ", "P 4_2 2 2          ", "P4_222    ", "     ", P, 12 }, /* 370 */
+  { 94, "D4^6  ", "P 4n 2n         ", "P 4_2 2_1 2                    ", "P 4_2 2_1 2        ", "P4_22_12  ", "     ", P, 12 }, /* 371 */
+  { 95, "D4^7  ", "P 4cw 2c        ", "P 4_3 2 2                      ", "P 4_3 2 2          ", "P4_322    ", "     ", P, 12 }, /* 372 */
+  { 96, "D4^8  ", "P 4nw 2abw      ", "P 4_3 2_1 2                    ", "P 4_3 2_1 2        ", "P4_32_12  ", "     ", P, 12 }, /* 373 */
+  { 97, "D4^9  ", "I 4 2           ", "I 4 2 2                        ", "I 4 2 2            ", "I422      ", "     ", I, 12 }, /* 374 */
+  { 98, "D4^10 ", "I 4bw 2bw       ", "I 4_1 2 2                      ", "I 4_1 2 2          ", "I4_122    ", "     ", I, 12 }, /* 375 */
+  { 99, "C4v^1 ", "P 4 -2          ", "P 4 m m                        ", "P 4 m m            ", "P4mm      ", "     ", P, 13 }, /* 376 */
+  {100, "C4v^2 ", "P 4 -2ab        ", "P 4 b m                        ", "P 4 b m            ", "P4bm      ", "     ", P, 13 }, /* 377 */
+  {101, "C4v^3 ", "P 4c -2c        ", "P 4_2 c m                      ", "P 4_2 c m          ", "P4_2cm    ", "     ", P, 13 }, /* 378 */
+  {102, "C4v^4 ", "P 4n -2n        ", "P 4_2 n m                      ", "P 4_2 n m          ", "P4_2nm    ", "     ", P, 13 }, /* 379 */
+  {103, "C4v^5 ", "P 4 -2c         ", "P 4 c c                        ", "P 4 c c            ", "P4cc      ", "     ", P, 13 }, /* 380 */
+  {104, "C4v^6 ", "P 4 -2n         ", "P 4 n c                        ", "P 4 n c            ", "P4nc      ", "     ", P, 13 }, /* 381 */
+  {105, "C4v^7 ", "P 4c -2         ", "P 4_2 m c                      ", "P 4_2 m c          ", "P4_2mc    ", "     ", P, 13 }, /* 382 */
+  {106, "C4v^8 ", "P 4c -2ab       ", "P 4_2 b c                      ", "P 4_2 b c          ", "P4_2bc    ", "     ", P, 13 }, /* 383 */
+  {107, "C4v^9 ", "I 4 -2          ", "I 4 m m                        ", "I 4 m m            ", "I4mm      ", "     ", I, 13 }, /* 384 */
+  {108, "C4v^10", "I 4 -2c         ", "I 4 c m                        ", "I 4 c m            ", "I4cm      ", "     ", I, 13 }, /* 385 */
+  {109, "C4v^11", "I 4bw -2        ", "I 4_1 m d                      ", "I 4_1 m d          ", "I4_1md    ", "     ", I, 13 }, /* 386 */
+  {110, "C4v^12", "I 4bw -2c       ", "I 4_1 c d                      ", "I 4_1 c d          ", "I4_1cd    ", "     ", I, 13 }, /* 387 */
+  {111, "D2d^1 ", "P -4 2          ", "P -4 2 m                       ", "P -4 2 m           ", "P-42m     ", "     ", P, 14 }, /* 388 */
+  {112, "D2d^2 ", "P -4 2c         ", "P -4 2 c                       ", "P -4 2 c           ", "P-42c     ", "     ", P, 14 }, /* 389 */
+  {113, "D2d^3 ", "P -4 2ab        ", "P -4 2_1 m                     ", "P -4 2_1 m         ", "P-42_1m   ", "     ", P, 14 }, /* 390 */
+  {114, "D2d^4 ", "P -4 2n         ", "P -4 2_1 c                     ", "P -4 2_1 c         ", "P-42_1c   ", "     ", P, 14 }, /* 391 */
+  {115, "D2d^5 ", "P -4 -2         ", "P -4 m 2                       ", "P -4 m 2           ", "P-4m2     ", "     ", P, 14 }, /* 392 */
+  {116, "D2d^6 ", "P -4 -2c        ", "P -4 c 2                       ", "P -4 c 2           ", "P-4c2     ", "     ", P, 14 }, /* 393 */
+  {117, "D2d^7 ", "P -4 -2ab       ", "P -4 b 2                       ", "P -4 b 2           ", "P-4b2     ", "     ", P, 14 }, /* 394 */
+  {118, "D2d^8 ", "P -4 -2n        ", "P -4 n 2                       ", "P -4 n 2           ", "P-4n2     ", "     ", P, 14 }, /* 395 */
+  {119, "D2d^9 ", "I -4 -2         ", "I -4 m 2                       ", "I -4 m 2           ", "I-4m2     ", "     ", I, 14 }, /* 396 */
+  {120, "D2d^10", "I -4 -2c        ", "I -4 c 2                       ", "I -4 c 2           ", "I-4c2     ", "     ", I, 14 }, /* 397 */
+  {121, "D2d^11", "I -4 2          ", "I -4 2 m                       ", "I -4 2 m           ", "I-42m     ", "     ", I, 14 }, /* 398 */
+  {122, "D2d^12", "I -4 2bw        ", "I -4 2 d                       ", "I -4 2 d           ", "I-42d     ", "     ", I, 14 }, /* 399 */
+  {123, "D4h^1 ", "-P 4 2          ", "P 4/m m m                      ", "P 4/m 2/m 2/m      ", "P4/mmm    ", "     ", P, 15 }, /* 400 */
+  {124, "D4h^2 ", "-P 4 2c         ", "P 4/m c c                      ", "P 4/m 2/c 2/c      ", "P4/mcc    ", "     ", P, 15 }, /* 401 */
+  {125, "D4h^3 ", "P 4 2 -1ab      ", "P 4/n b m                      ", "P 4/n 2/b 2/m      ", "P4/nbm    ", "1    ", P, 15 }, /* 402 */
+  {125, "D4h^3 ", "-P 4a 2b        ", "P 4/n b m                      ", "P 4/n 2/b 2/m      ", "P4/nbm    ", "2    ", P, 15 }, /* 403 */
+  {126, "D4h^4 ", "P 4 2 -1n       ", "P 4/n n c                      ", "P 4/n 2/n 2/c      ", "P4/nnc    ", "1    ", P, 15 }, /* 404 */
+  {126, "D4h^4 ", "-P 4a 2bc       ", "P 4/n n c                      ", "P 4/n 2/n 2/c      ", "P4/nnc    ", "2    ", P, 15 }, /* 405 */
+  {127, "D4h^5 ", "-P 4 2ab        ", "P 4/m b m                      ", "P 4/m 2_1/b m      ", "P4/mbm    ", "     ", P, 15 }, /* 406 */
+  {128, "D4h^6 ", "-P 4 2n         ", "P 4/m n c                      ", "P 4/m 2_1/n c      ", "P4/mnc    ", "     ", P, 15 }, /* 407 */
+  {129, "D4h^7 ", "P 4ab 2ab -1ab  ", "P 4/n m m                      ", "P 4/n 2_1/m m      ", "P4/nmm    ", "1    ", P, 15 }, /* 408 */
+  {129, "D4h^7 ", "-P 4a 2a        ", "P 4/n m m                      ", "P 4/n 2_1/m m      ", "P4/nmm    ", "2    ", P, 15 }, /* 409 */
+  {130, "D4h^8 ", "P 4ab 2n -1ab   ", "P 4/n c c                      ", "P 4/n 2_1/c c      ", "P4/ncc    ", "1    ", P, 15 }, /* 410 */
+  {130, "D4h^8 ", "-P 4a 2ac       ", "P 4/n c c                      ", "P 4/n 2_1/c c      ", "P4/ncc    ", "2    ", P, 15 }, /* 411 */
+  {131, "D4h^9 ", "-P 4c 2         ", "P 4_2/m m c                    ", "P 4_2/m 2/m 2/c    ", "P4_2/mmc  ", "     ", P, 15 }, /* 412 */
+  {132, "D4h^10", "-P 4c 2c        ", "P 4_2/m c m                    ", "P 4_2/m 2/c 2/m    ", "P4_2/mcm  ", "     ", P, 15 }, /* 413 */
+  {133, "D4h^11", "P 4n 2c -1n     ", "P 4_2/n b c                    ", "P 4_2/n 2/b 2/c    ", "P4_2/nbc  ", "1    ", P, 15 }, /* 414 */
+  {133, "D4h^11", "-P 4ac 2b       ", "P 4_2/n b c                    ", "P 4_2/n 2/b 2/c    ", "P4_2/nbc  ", "2    ", P, 15 }, /* 415 */
+  {134, "D4h^12", "P 4n 2 -1n      ", "P 4_2/n n m                    ", "P 4_2/n 2/n 2/m    ", "P4_2/nnm  ", "1    ", P, 15 }, /* 416 */
+  {134, "D4h^12", "-P 4ac 2bc      ", "P 4_2/n n m                    ", "P 4_2/n 2/n 2/m    ", "P4_2/nnm  ", "2    ", P, 15 }, /* 417 */
+  {135, "D4h^13", "-P 4c 2ab       ", "P 4_2/m b c                    ", "P 4_2/m 2_1/b 2/c  ", "P4_2/mbc  ", "     ", P, 15 }, /* 418 */
+  {136, "D4h^14", "-P 4n 2n        ", "P 4_2/m n m                    ", "P 4_2/m 2_1/n 2/m  ", "P4_2/mnm  ", "     ", P, 15 }, /* 419 */
+  {137, "D4h^15", "P 4n 2n -1n     ", "P 4_2/n m c                    ", "P 4_2/n 2_1/m 2/c  ", "P4_2/nmc  ", "1    ", P, 15 }, /* 420 */
+  {137, "D4h^15", "-P 4ac 2a       ", "P 4_2/n m c                    ", "P 4_2/n 2_1/m 2/c  ", "P4_2/nmc  ", "2    ", P, 15 }, /* 421 */
+  {138, "D4h^16", "P 4n 2ab -1n    ", "P 4_2/n c m                    ", "P 4_2/n 2_1/c 2/m  ", "P4_2/ncm  ", "1    ", P, 15 }, /* 422 */
+  {138, "D4h^16", "-P 4ac 2ac      ", "P 4_2/n c m                    ", "P 4_2/n 2_1/c 2/m  ", "P4_2/ncm  ", "2    ", P, 15 }, /* 423 */
+  {139, "D4h^17", "-I 4 2          ", "I 4/m m m                      ", "I 4/m 2/m 2/m      ", "I4/mmm    ", "     ", I, 15 }, /* 424 */
+  {140, "D4h^18", "-I 4 2c         ", "I 4/m c m                      ", "I 4/m 2/c 2/m      ", "I4/mcm    ", "     ", I, 15 }, /* 425 */
+  {141, "D4h^19", "I 4bw 2bw -1bw  ", "I 4_1/a m d                    ", "I 4_1/a 2/m 2/d    ", "I4_1/amd  ", "1    ", I, 15 }, /* 426 */
+  {141, "D4h^19", "-I 4bd 2        ", "I 4_1/a m d                    ", "I 4_1/a 2/m 2/d    ", "I4_1/amd  ", "2    ", I, 15 }, /* 427 */
+  {142, "D4h^20", "I 4bw 2aw -1bw  ", "I 4_1/a c d                    ", "I 4_1/a 2/c 2/d    ", "I4_1/acd  ", "1    ", I, 15 }, /* 428 */
+  {142, "D4h^20", "-I 4bd 2c       ", "I 4_1/a c d                    ", "I 4_1/a 2/c 2/d    ", "I4_1/acd  ", "2    ", I, 15 }, /* 429 */
+  {143, "C3^1  ", "P 3             ", "P 3                            ", "P 3                ", "P3        ", "     ", P, 16 }, /* 430 */
+  {144, "C3^2  ", "P 31            ", "P 3_1                          ", "P 3_1              ", "P3_1      ", "     ", P, 16 }, /* 431 */
+  {145, "C3^3  ", "P 32            ", "P 3_2                          ", "P 3_2              ", "P3_2      ", "     ", P, 16 }, /* 432 */
+  {146, "C3^4  ", "R 3             ", "R 3                            ", "R 3                ", "R3        ", "H    ", R, 16 }, /* 433 */
+  {146, "C3^4  ", "P 3*            ", "R 3                            ", "R 3                ", "R3        ", "R    ", P, 16 }, /* 434 */
+  {147, "C3i^1 ", "-P 3            ", "P -3                           ", "P -3               ", "P-3       ", "     ", P, 17 }, /* 435 */
+  {148, "C3i^2 ", "-R 3            ", "R -3                           ", "R -3               ", "R-3       ", "H    ", R, 17 }, /* 436 */
+  {148, "C3i^2 ", "-P 3*           ", "R -3                           ", "R -3               ", "R-3       ", "R    ", P, 17 }, /* 437 */
+  {149, "D3^1  ", "P 3 2           ", "P 3 1 2                        ", "P 3 1 2            ", "P312      ", "     ", P, 18 }, /* 438 */
+  {150, "D3^2  ", "P 3 2=          ", "P 3 2 1                        ", "P 3 2 1            ", "P321      ", "     ", P, 18 }, /* 439 */
+  {151, "D3^3  ", "P 31 2c (0 0 1) ", "P 3_1 1 2                      ", "P 3_1 1 2          ", "P3_112    ", "     ", P, 18 }, /* 440 */
+  {152, "D3^4  ", "P 31 2=         ", "P 3_1 2 1                      ", "P 3_1 2 1          ", "P3_121    ", "     ", P, 18 }, /* 441 */
+  {153, "D3^5  ", "P 32 2c (0 0 -1)", "P 3_2 1 2                      ", "P 3_2 1 2          ", "P3_212    ", "     ", P, 18 }, /* 442 */
+  {154, "D3^6  ", "P 32 2=         ", "P 3_2 2 1                      ", "P 3_2 2 1          ", "P3_221    ", "     ", P, 18 }, /* 443 */
+  {155, "D3^7  ", "R 3 2=          ", "R 3 2                          ", "R 3 2              ", "R32       ", "H    ", R, 18 }, /* 444 */
+  {155, "D3^7  ", "P 3* 2          ", "R 3 2                          ", "R 3 2              ", "R32       ", "R    ", P, 18 }, /* 445 */
+  {156, "C3v^1 ", "P 3 -2=         ", "P 3 m 1                        ", "P 3 m 1            ", "P3m1      ", "     ", P, 19 }, /* 446 */
+  {157, "C3v^2 ", "P 3 -2          ", "P 3 1 m                        ", "P 3 1 m            ", "P31m      ", "     ", P, 19 }, /* 447 */
+  {158, "C3v^3 ", "P 3 -2=c        ", "P 3 c 1                        ", "P 3 c 1            ", "P3c1      ", "     ", P, 19 }, /* 448 */
+  {159, "C3v^4 ", "P 3 -2c         ", "P 3 1 c                        ", "P 3 1 c            ", "P31c      ", "     ", P, 19 }, /* 449 */
+  {160, "C3v^5 ", "R 3 -2=         ", "R 3 m                          ", "R 3 m              ", "R3m       ", "H    ", R, 19 }, /* 450 */
+  {160, "C3v^5 ", "P 3* -2         ", "R 3 m                          ", "R 3 m              ", "R3m       ", "R    ", P, 19 }, /* 451 */
+  {161, "C3v^6 ", "R 3 -2=c        ", "R 3 c                          ", "R 3 c              ", "R3c       ", "H    ", R, 19 }, /* 452 */
+  {161, "C3v^6 ", "P 3* -2n        ", "R 3 c                          ", "R 3 c              ", "R3c       ", "R    ", P, 19 }, /* 453 */
+  {162, "D3d^1 ", "-P 3 2          ", "P -3 1 m                       ", "P -3 1 2/m         ", "P-31m     ", "     ", P, 20 }, /* 454 */
+  {163, "D3d^2 ", "-P 3 2c         ", "P -3 1 c                       ", "P -3 1 2/c         ", "P-31c     ", "     ", P, 20 }, /* 455 */
+  {164, "D3d^3 ", "-P 3 2=         ", "P -3 m 1                       ", "P -3 2/m 1         ", "P-3m1     ", "     ", P, 20 }, /* 456 */
+  {165, "D3d^4 ", "-P 3 2=c        ", "P -3 c 1                       ", "P -3 2/c 1         ", "P-3c1     ", "     ", P, 20 }, /* 457 */
+  {166, "D3d^5 ", "-R 3 2=         ", "R -3 m                         ", "R -3 2/m           ", "R-3m      ", "H    ", R, 20 }, /* 458 */
+  {166, "D3d^5 ", "-P 3* 2         ", "R -3 m                         ", "R -3 2/m           ", "R-3m      ", "R    ", P, 20 }, /* 459 */
+  {167, "D3d^6 ", "-R 3 2=c        ", "R -3 c                         ", "R -3 2/c           ", "R-3c      ", "H    ", R, 20 }, /* 460 */
+  {167, "D3d^6 ", "-P 3* 2n        ", "R -3 c                         ", "R -3 2/c           ", "R-3c      ", "R    ", P, 20 }, /* 461 */
+  {168, "C6^1  ", "P 6             ", "P 6                            ", "P 6                ", "P6        ", "     ", P, 21 }, /* 462 */
+  {169, "C6^2  ", "P 61            ", "P 6_1                          ", "P 6_1              ", "P6_1      ", "     ", P, 21 }, /* 463 */
+  {170, "C6^3  ", "P 65            ", "P 6_5                          ", "P 6_5              ", "P6_5      ", "     ", P, 21 }, /* 464 */
+  {171, "C6^4  ", "P 62            ", "P 6_2                          ", "P 6_2              ", "P6_2      ", "     ", P, 21 }, /* 465 */
+  {172, "C6^5  ", "P 64            ", "P 6_4                          ", "P 6_4              ", "P6_4      ", "     ", P, 21 }, /* 466 */
+  {173, "C6^6  ", "P 6c            ", "P 6_3                          ", "P 6_3              ", "P6_3      ", "     ", P, 21 }, /* 467 */
+  {174, "C3h^1 ", "P -6            ", "P -6                           ", "P -6               ", "P-6       ", "     ", P, 22 }, /* 468 */
+  {175, "C6h^1 ", "-P 6            ", "P 6/m                          ", "P 6/m              ", "P6/m      ", "     ", P, 23 }, /* 469 */
+  {176, "C6h^2 ", "-P 6c           ", "P 6_3/m                        ", "P 6_3/m            ", "P6_3/m    ", "     ", P, 23 }, /* 470 */
+  {177, "D6^1  ", "P 6 2           ", "P 6 2 2                        ", "P 6 2 2            ", "P622      ", "     ", P, 24 }, /* 471 */
+  {178, "D6^2  ", "P 61 2 (0 0 -1) ", "P 6_1 2 2                      ", "P 6_1 2 2          ", "P6_122    ", "     ", P, 24 }, /* 472 */
+  {179, "D6^3  ", "P 65 2 (0 0 1)  ", "P 6_5 2 2                      ", "P 6_5 2 2          ", "P6_522    ", "     ", P, 24 }, /* 473 */
+  {180, "D6^4  ", "P 62 2c (0 0 1) ", "P 6_2 2 2                      ", "P 6_2 2 2          ", "P6_222    ", "     ", P, 24 }, /* 474 */
+  {181, "D6^5  ", "P 64 2c (0 0 -1)", "P 6_4 2 2                      ", "P 6_4 2 2          ", "P6_422    ", "     ", P, 24 }, /* 475 */
+  {182, "D6^6  ", "P 6c 2c         ", "P 6_3 2 2                      ", "P 6_3 2 2          ", "P6_322    ", "     ", P, 24 }, /* 476 */
+  {183, "C6v^1 ", "P 6 -2          ", "P 6 m m                        ", "P 6 m m            ", "P6mm      ", "     ", P, 25 }, /* 477 */
+  {184, "C6v^2 ", "P 6 -2c         ", "P 6 c c                        ", "P 6 c c            ", "P6cc      ", "     ", P, 25 }, /* 478 */
+  {185, "C6v^3 ", "P 6c -2         ", "P 6_3 c m                      ", "P 6_3 c m          ", "P6_3cm    ", "     ", P, 25 }, /* 479 */
+  {186, "C6v^4 ", "P 6c -2c        ", "P 6_3 m c                      ", "P 6_3 m c          ", "P6_3mc    ", "     ", P, 25 }, /* 480 */
+  {187, "D3h^1 ", "P -6 2          ", "P -6 m 2                       ", "P -6 m 2           ", "P-6m2     ", "     ", P, 26 }, /* 481 */
+  {188, "D3h^2 ", "P -6c 2         ", "P -6 c 2                       ", "P -6 c 2           ", "P-6c2     ", "     ", P, 26 }, /* 482 */
+  {189, "D3h^3 ", "P -6 -2         ", "P -6 2 m                       ", "P -6 2 m           ", "P-62m     ", "     ", P, 26 }, /* 483 */
+  {190, "D3h^4 ", "P -6c -2c       ", "P -6 2 c                       ", "P -6 2 c           ", "P-62c     ", "     ", P, 26 }, /* 484 */
+  {191, "D6h^1 ", "-P 6 2          ", "P 6/m m m                      ", "P 6/m 2/m 2/m      ", "P6/mmm    ", "     ", P, 27 }, /* 485 */
+  {192, "D6h^2 ", "-P 6 2c         ", "P 6/m c c                      ", "P 6/m 2/c 2/c      ", "P6/mcc    ", "     ", P, 27 }, /* 486 */
+  {193, "D6h^3 ", "-P 6c 2         ", "P 6_3/m c m                    ", "P 6_3/m 2/c 2/m    ", "P6_3/mcm  ", "     ", P, 27 }, /* 487 */
+  {194, "D6h^4 ", "-P 6c 2c        ", "P 6_3/m m c                    ", "P 6_3/m 2/m 2/c    ", "P6_3/mmc  ", "     ", P, 27 }, /* 488 */
+  {195, "T^1   ", "P 2 2 3         ", "P 2 3                          ", "P 2 3              ", "P23       ", "     ", P, 28 }, /* 489 */
+  {196, "T^2   ", "F 2 2 3         ", "F 2 3                          ", "F 2 3              ", "F23       ", "     ", F, 28 }, /* 490 */
+  {197, "T^3   ", "I 2 2 3         ", "I 2 3                          ", "I 2 3              ", "I23       ", "     ", I, 28 }, /* 491 */
+  {198, "T^4   ", "P 2ac 2ab 3     ", "P 2_1 3                        ", "P 2_1 3            ", "P2_13     ", "     ", P, 28 }, /* 492 */
+  {199, "T^5   ", "I 2b 2c 3       ", "I 2_1 3                        ", "I 2_1 3            ", "I2_13     ", "     ", I, 28 }, /* 493 */
+  {200, "Th^1  ", "-P 2 2 3        ", "P m -3                         ", "P 2/m -3           ", "Pm-3      ", "     ", P, 29 }, /* 494 */
+  {201, "Th^2  ", "P 2 2 3 -1n     ", "P n -3                         ", "P 2/n -3           ", "Pn-3      ", "1    ", P, 29 }, /* 495 */
+  {201, "Th^2  ", "-P 2ab 2bc 3    ", "P n -3                         ", "P 2/n -3           ", "Pn-3      ", "2    ", P, 29 }, /* 496 */
+  {202, "Th^3  ", "-F 2 2 3        ", "F m -3                         ", "F 2/m -3           ", "Fm-3      ", "     ", F, 29 }, /* 497 */
+  {203, "Th^4  ", "F 2 2 3 -1d     ", "F d -3                         ", "F 2/d -3           ", "Fd-3      ", "1    ", F, 29 }, /* 498 */
+  {203, "Th^4  ", "-F 2uv 2vw 3    ", "F d -3                         ", "F 2/d -3           ", "Fd-3      ", "2    ", F, 29 }, /* 499 */
+  {204, "Th^5  ", "-I 2 2 3        ", "I m -3                         ", "I 2/m -3           ", "Im-3      ", "     ", I, 29 }, /* 500 */
+  {205, "Th^6  ", "-P 2ac 2ab 3    ", "P a -3                         ", "P 2_1/a -3         ", "Pa-3      ", "     ", P, 29 }, /* 501 */
+  {206, "Th^7  ", "-I 2b 2c 3      ", "I a -3                         ", "I 2_1/a -3         ", "Ia-3      ", "     ", I, 29 }, /* 502 */
+  {207, "O^1   ", "P 4 2 3         ", "P 4 3 2                        ", "P 4 3 2            ", "P432      ", "     ", P, 30 }, /* 503 */
+  {208, "O^2   ", "P 4n 2 3        ", "P 4_2 3 2                      ", "P 4_2 3 2          ", "P4_232    ", "     ", P, 30 }, /* 504 */
+  {209, "O^3   ", "F 4 2 3         ", "F 4 3 2                        ", "F 4 3 2            ", "F432      ", "     ", F, 30 }, /* 505 */
+  {210, "O^4   ", "F 4d 2 3        ", "F 4_1 3 2                      ", "F 4_1 3 2          ", "F4_132    ", "     ", F, 30 }, /* 506 */
+  {211, "O^5   ", "I 4 2 3         ", "I 4 3 2                        ", "I 4 3 2            ", "I432      ", "     ", I, 30 }, /* 507 */
+  {212, "O^6   ", "P 4acd 2ab 3    ", "P 4_3 3 2                      ", "P 4_3 3 2          ", "P4_332    ", "     ", P, 30 }, /* 508 */
+  {213, "O^7   ", "P 4bd 2ab 3     ", "P 4_1 3 2                      ", "P 4_1 3 2          ", "P4_132    ", "     ", P, 30 }, /* 509 */
+  {214, "O^8   ", "I 4bd 2c 3      ", "I 4_1 3 2                      ", "I 4_1 3 2          ", "I4_132    ", "     ", I, 30 }, /* 510 */
+  {215, "Td^1  ", "P -4 2 3        ", "P -4 3 m                       ", "P -4 3 m           ", "P-43m     ", "     ", P, 31 }, /* 511 */
+  {216, "Td^2  ", "F -4 2 3        ", "F -4 3 m                       ", "F -4 3 m           ", "F-43m     ", "     ", F, 31 }, /* 512 */
+  {217, "Td^3  ", "I -4 2 3        ", "I -4 3 m                       ", "I -4 3 m           ", "I-43m     ", "     ", I, 31 }, /* 513 */
+  {218, "Td^4  ", "P -4n 2 3       ", "P -4 3 n                       ", "P -4 3 n           ", "P-43n     ", "     ", P, 31 }, /* 514 */
+  {219, "Td^5  ", "F -4c 2 3       ", "F -4 3 c                       ", "F -4 3 c           ", "F-43c     ", "     ", F, 31 }, /* 515 */
+  {220, "Td^6  ", "I -4bd 2c 3     ", "I -4 3 d                       ", "I -4 3 d           ", "I-43d     ", "     ", I, 31 }, /* 516 */
+  {221, "Oh^1  ", "-P 4 2 3        ", "P m -3 m                       ", "P 4/m -3 2/m       ", "Pm-3m     ", "     ", P, 32 }, /* 517 */
+  {222, "Oh^2  ", "P 4 2 3 -1n     ", "P n -3 n                       ", "P 4/n -3 2/n       ", "Pn-3n     ", "1    ", P, 32 }, /* 518 */
+  {222, "Oh^2  ", "-P 4a 2bc 3     ", "P n -3 n                       ", "P 4/n -3 2/n       ", "Pn-3n     ", "2    ", P, 32 }, /* 519 */
+  {223, "Oh^3  ", "-P 4n 2 3       ", "P m -3 n                       ", "P 4_2/m -3 2/n     ", "Pm-3n     ", "     ", P, 32 }, /* 520 */
+  {224, "Oh^4  ", "P 4n 2 3 -1n    ", "P n -3 m                       ", "P 4_2/n -3 2/m     ", "Pn-3m     ", "1    ", P, 32 }, /* 521 */
+  {224, "Oh^4  ", "-P 4bc 2bc 3    ", "P n -3 m                       ", "P 4_2/n -3 2/m     ", "Pn-3m     ", "2    ", P, 32 }, /* 522 */
+  {225, "Oh^5  ", "-F 4 2 3        ", "F m -3 m                       ", "F 4/m -3 2/m       ", "Fm-3m     ", "     ", F, 32 }, /* 523 */
+  {226, "Oh^6  ", "-F 4c 2 3       ", "F m -3 c                       ", "F 4/m -3 2/c       ", "Fm-3c     ", "     ", F, 32 }, /* 524 */
+  {227, "Oh^7  ", "F 4d 2 3 -1d    ", "F d -3 m                       ", "F 4_1/d -3 2/m     ", "Fd-3m     ", "1    ", F, 32 }, /* 525 */
+  {227, "Oh^7  ", "-F 4vw 2vw 3    ", "F d -3 m                       ", "F 4_1/d -3 2/m     ", "Fd-3m     ", "2    ", F, 32 }, /* 526 */
+  {228, "Oh^8  ", "F 4d 2 3 -1cd   ", "F d -3 c                       ", "F 4_1/d -3 2/c     ", "Fd-3c     ", "1    ", F, 32 }, /* 527 */
+  {228, "Oh^8  ", "-F 4cvw 2vw 3   ", "F d -3 c                       ", "F 4_1/d -3 2/c     ", "Fd-3c     ", "2    ", F, 32 }, /* 528 */
+  {229, "Oh^9  ", "-I 4 2 3        ", "I m -3 m                       ", "I 4/m -3 2/m       ", "Im-3m     ", "     ", I, 32 }, /* 529 */
+  {230, "Oh^10 ", "-I 4bd 2c 3     ", "I a -3 d                       ", "I 4_1/a -3 2/d     ", "Ia-3d     ", "     ", I, 32 }, /* 530 */
 };
 
 static const int symmetry_operations[] = {
@@ -8498,13 +8510,25 @@ static const int symmetry_operation_index[][2] = {
   {  96, 7197}, /* 529 */
   {  96, 7293}, /* 530 */
 };
+
+int trim_trailing_spaces(char * str, const int nchar){
+  int i = nchar;
+  while (i>-1 && str[i]==' ') str[i--]='\0';
+  return i;
+}
+
+int quote_replaces_equal(char * str, const int len){
+  int i=-1;
+  while (str[++i]!='\0' && i<len) if (str[i]=='=') str[i]='\"';
+  return i;
+}
+
 bool hall_number_ok(const int hall_number){
 	return ( 0<hall_number && hall_number<531 );
 }
-int spgdb_remove_space(char * str, const int nchar);
-int spgdb_equal_to_quote(char * str, const int len);
 
-int spgdb_get_operation(int *rot, double *trans, const int idx)
+// renamed from spgdb_get_operation
+int get_numbered_operation(int *rot, double *trans, const int idx)
 {
   int i, j, r, t, degit;
 
@@ -8536,93 +8560,64 @@ int spgdb_get_operation(int *rot, double *trans, const int idx)
   return 1;
 }
 
-void spgdb_get_operation_index(int indices[2], const int hall_number)
+// renamed from spgdb_get_operation_index
+void get_first_last_operation_number(int indices[2], const int hall_number)
 {
   indices[0] = symmetry_operation_index[hall_number][0];
   indices[1] = symmetry_operation_index[hall_number][1];
 }
 
-/* Return NULL if failed */
-Symmetry spgdb_get_spacegroup_operations(const int hall_number)
+// renamed from spgdb_get_spacegroup_operations
+Symmetry get_spacegroup_symmetry_operations(const int hall_number)
 {
   if (~hall_number_ok(hall_number)) return Symmetry();
   int mult_index[2];
-  spgdb_get_operation_index(mult_index, hall_number);
+  get_first_last_operation_number(mult_index, hall_number);
   Symmetry symmetry(mult_index[0]);
   for (int i =0; i < mult_index[0]; i++)
-	  spgdb_get_operation(symmetry.getrot(i), symmetry.gettran(i), mult_index[1]+i);
+	  get_numbered_operation(symmetry.getrot(i), symmetry.gettran(i), mult_index[1]+i);
 
   return symmetry;
 }
 
 
-SpacegroupType spgdb_get_spacegroup_type(const int hall_number)
+Spacegroup get_spacegroup(const int hall_number)
 {
-  SpacegroupType spgtype;
-  /* Return spgtype.number = 0 if hall_number is out of range. */
-  spgtype = spacegroup_types[ ( hall_number_ok(hall_number) ? hall_number : 0 ) ];
-
-  spgdb_remove_space(spgtype.schoenflies, 7);
-  int len = spgdb_remove_space(spgtype.hall_symbol, 17);
-  spgdb_equal_to_quote(spgtype.hall_symbol, len);
-  spgdb_remove_space(spgtype.international, 32);
-  spgdb_remove_space(spgtype.international_full, 20);
-  spgdb_remove_space(spgtype.international_short, 11);
-  spgdb_remove_space(spgtype.choice, 6);
-
-  return spgtype;
+  Spacegroup spg;
+  /* Return spg.number = 0 if hall_number is out of range. */
+  spg = spacegroup_types[ ( hall_number_ok(hall_number) ? hall_number : 0 ) ];
+            trim_trailing_spaces(spg.schoenflies,         7  );
+  int len = trim_trailing_spaces(spg.hall_symbol,         17 );
+            quote_replaces_equal(spg.hall_symbol,         len);
+            trim_trailing_spaces(spg.international,       32 );
+            trim_trailing_spaces(spg.international_full,  20 );
+            trim_trailing_spaces(spg.international_short, 11 );
+            trim_trailing_spaces(spg.choice,              6  );
+  return spg;
 }
 
-int spgdb_remove_space(char * str, const int nchar){
-  int i = nchar;
-  while (i>-1 && str[i]==' ') str[i--]='\0';
-  return i;
-}
-
-int spgdb_equal_to_quote(char * str, const int len){
-  int i=-1;
-  while (str[++i]!='\0' && i<len) if (str[i]=='=') str[i]='\"';
-  return i;
-}
-
-
-int spgdb_international_number_to_hall_number(const int number){
+int international_number_to_hall_number(const int number){
 	if (number>=0 && number<230){
-		SpacegroupType spgtype;
+		Spacegroup spg;
 		for (int i=1; i<531; i++){
-			spgtype = spgdb_get_spacegroup_type(i);
-			if (spgtype.number == number) return i;
+			spg = get_spacegroup(i);
+			if (spg.number == number) return i;
 		}
 	}
 	return -1;
 }
 
-int spgdb_international_to_hall_number(const std::string& itname)
+int international_string_to_hall_number(const std::string& itname)
 {
-  SpacegroupType spgtype;
+  Spacegroup spg;
   size_t n = itname.size();
   for (int i=1; i<531; i++){
-	  spgtype = spgdb_get_spacegroup_type(i);
+	  spg = get_spacegroup(i);
 	  // now check for matching international table names
-    if ( 0==itname.compare(0,n,spgtype.international      ,n<32?n:32)
-       ||0==itname.compare(0,n,spgtype.international_full ,n<20?n:20)
-       ||0==itname.compare(0,n,spgtype.international_short,n<11?n:11) )
+    if ( 0==itname.compare(0,n,spg.international      ,n<32?n:32)
+       ||0==itname.compare(0,n,spg.international_full ,n<20?n:20)
+       ||0==itname.compare(0,n,spg.international_short,n<11?n:11) )
       return i;
   }
   return 0; // no matching strings
-}
-
-size_t spgdb_get_symmetry_from_database(int *rotations, double *translations, const size_t space, const int hall_number)
-{
-  Symmetry sym;
-  sym = spgdb_get_spacegroup_operations(hall_number);
-
-  if ( sym.size()<= space ){
-    for (size_t i=0; i<sym.size(); i++){
-      sym.getrot(i, rotations + i*9);
-      sym.gettran(i, translations + i*3);
-    }
-    return sym.size();
-  }
-  return 0;
 }

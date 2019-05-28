@@ -1,3 +1,4 @@
+/*! \file */
 #ifndef __MUNKRES_H_
 #define __MUNKRES_H_
 

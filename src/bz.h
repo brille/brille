@@ -2,15 +2,8 @@
 #ifndef _BZ_CLASS_H_
 #define _BZ_CLASS_H_
 
-#include <type_traits>
-#include <limits>
-
-#include "arrayvector.h"
-#include "lattice.h"
-#include "latvec.h"
 #include "neighbours.h"
-#include "primitive.h"
-#include "primitive_transforms.h"
+#include "transform.h"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 

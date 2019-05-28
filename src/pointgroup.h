@@ -1,3 +1,4 @@
+/*! \file */
 /* Copyright (C) 2008 Atsushi Togo
  All rights reserved.
 
@@ -36,7 +37,6 @@
 #define __pointgroup_H__
 
 #include "arrayvector.h"
-#include "linear_algebra.h"
 #include "symmetry.h"
 
 typedef enum {

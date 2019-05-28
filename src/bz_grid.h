@@ -1,3 +1,4 @@
+/*! \file */
 // #ifdef _WIN32
   typedef long slong; // ssize_t is only defined for gcc?
 // #endif
@@ -5,11 +6,6 @@
 #ifndef _BZ_GRID_
 #define _BZ_GRID_
 
-#include <limits>
-
-#include "arrayvector.h"
-#include "lattice.h"
-#include "latvec.h"
 #include "bz.h"
 #include "grid.h"
 #include "grid4.h"

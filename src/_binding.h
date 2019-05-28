@@ -1,17 +1,8 @@
+/*! \file */
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
-#include <vector>
-#include <complex>
-#include <omp.h>
 
-#include "symbz.h"
-#include "arithmetic.h"
-#include "interpolation.h"
-#include "linear_algebra.h"
-#include "lattice.h"
-#include "bz.h"
-#include "grid.h"
 #include "bz_grid.h"
 
 #ifndef __BINDING_H

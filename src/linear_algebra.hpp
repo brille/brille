@@ -1,10 +1,4 @@
-// #include <iostream>
-#include "safealloc.h"
 #define ZERO_PREC 1e-10
-////////////////////////////
-// ALL NEW METHODS !!!!!! //
-////////////////////////////
-//using namespace rsm;
 
 // trace of a square matrix
 template<typename T, int N> T trace(const T *M){

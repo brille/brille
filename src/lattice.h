@@ -1,12 +1,10 @@
+/*! \file */
 #ifndef _LATTICE_CLASS_H_
 #define _LATTICE_CLASS_H_
 
-#include <math.h>
 #include <assert.h>
-#include <string>
 
 #include "linear_algebra.h"
-#include "spg_database.h"
 #include "primitive.h"
 
 
@@ -156,10 +154,29 @@ public:
   Reciprocal primitive(void) const;
 };
 
+/*! \brief Type information for Lattice and LatVec objects
+
+Some templated functions require internal variables or return types which
+depend on *which* subtype of Lattice or LatVec are provided. This traits struct
+provides the typename of an appropriate Lattice subclass and its inverse for
+those cases.
+
+The two `using` types are `type` and `star`, defined based on the templated
+typename as
+
+| template typename | type | star |
+| --- | --- | --- |
+| Direct | Direct | Reciprocal |
+| Reciprocal | Reciprocal | Direct |
+| LDVec | Direct | Reciprocal |
+| LQVec | Reciprocal | Direct |
+
+*/
 template <typename T> struct LatticeTraits{
   using type = void;
   using star = void;
 };
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<> struct LatticeTraits<Direct>{
   using type = Direct;
   using star = Reciprocal;
@@ -168,5 +185,6 @@ template<> struct LatticeTraits<Reciprocal>{
   using type = Reciprocal;
   using star = Direct;
 };
+#endif
 
 #endif

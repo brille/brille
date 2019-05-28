@@ -1,10 +1,8 @@
 /*! \file */
 #ifndef _PRIMITIVE_H_
 #define _PRIMITIVE_H_
-
 #include <array>
 #include "spg_database.h"
-
 
 const std::array<double,9> P_I_TRANSFORM{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
 const std::array<double,9> P_F_TRANSFORM{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
@@ -21,8 +19,8 @@ const std::array<int,9> B_P_TRANSFORM{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
 const std::array<int,9> C_P_TRANSFORM{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
 const std::array<int,9> R_P_TRANSFORM{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 
-/*! A class to hold transformation matricies and their inverse, with the matrix
-stored in an object is determined by a provided Centering type.
+/*! \brief A class to hold transformation matricies and their inverse, with the matrix
+stored in an object determined by a provided BravaisLetter type.
 
 For each centred real-space-filling lattice there is a transformation matrix P
 which converts its basis vectors into those of an equivalent primitive
@@ -36,34 +34,35 @@ This class holds P and P⁻¹ for a given centering type.
 */
 class PrimitiveTransform{
 private:
-  Centering cen;            //!< The Centering enum value
+  BravaisLetter bravais;    //!< The BravaisLatter enum value
   std::array<double,9> c2p; //!< The matrix taking centred lattice to the primitive lattice
-  std::array<int,9> p2c;    //!< The inverse matrix taking the primitive lattice to the centred lattice
+  std::array<int   ,9> p2c; //!< The inverse matrix taking the primitive lattice to the centred lattice
 public:
-  PrimitiveTransform(const Centering c): cen{c} { set_matrices(); };
+  PrimitiveTransform(const BravaisLetter c): bravais{c} { set_matrices(); };
+  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); };
   void set_matrices(void) {
-    switch (cen){
-      case BODY:
+    switch (bravais){
+      case I:
         c2p=P_I_TRANSFORM;
         p2c=I_P_TRANSFORM;
         break;
-      case FACE:
+      case F:
         c2p=P_F_TRANSFORM;
         p2c=F_P_TRANSFORM;
         break;
-      case A_FACE:
+      case A:
         c2p=P_A_TRANSFORM;
         p2c=A_P_TRANSFORM;
         break;
-      case B_FACE:
+      case B:
         c2p=P_B_TRANSFORM;
         p2c=B_P_TRANSFORM;
         break;
-      case C_FACE:
+      case C:
         c2p=P_C_TRANSFORM;
         p2c=C_P_TRANSFORM;
         break;
-      case R_CENTER:
+      case R:
         c2p=P_R_TRANSFORM;
         p2c=R_P_TRANSFORM;
         break;
@@ -87,15 +86,21 @@ public:
     }
   };
   //! A check if the Matrices *should* do anything, that *is not* if the centering is Primitive
-  bool does_anything() { return (cen!=PRIMITIVE);};
+  bool does_anything() { return (bravais!=P);};
   //! A check if the Matrices *shouldn't* do anything, that *is* if the centering is Primitive
-  bool does_nothing() { return (cen==PRIMITIVE); };
+  bool does_nothing()  { return (bravais==P);};
 };
 
-// create new primitive transform traits
+
+/*! \brief Type information for templated transformation functions
+
+Since the transformation matrices stored in the PrimitiveTransform type do not
+have the same internal data types, templated functions benefit from having a
+single definition of the internal types (especially in the case of changing one
+or both in the future).
+*/
 struct PrimitiveTransformTraits{
   using to = double;
   using from = int;
 };
-
 #endif
