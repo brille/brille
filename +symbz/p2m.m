@@ -48,6 +48,23 @@ else
             m = uint64( p );
         elseif contains(eltype,'int')
             m = int64(p);
+        elseif contains(eltype,'str')
+            ndim = int64(p.ndim);
+            nmel = int64(p.size);
+            if ndim>1
+                toshape = zeros(1,ndim);
+                for i=1:ndim
+                    toshape(i) = int64(p.shape{i});
+                end
+                p = p.reshape(nmel);
+            else
+                toshape = [1,nmel];
+            end
+            m = cell(toshape);
+            plist = p.tolist();
+            for i=1:numel(m)
+                m{i} = char(plist{i});
+            end            
         else
             m = double(p);
         end

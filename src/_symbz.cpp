@@ -26,15 +26,24 @@ PYBIND11_MODULE(_symbz,m){
          py::arg("a"),py::arg("b"),py::arg("c"),
          py::arg("alpha")=PI/2,py::arg("beta")=PI/2,py::arg("gamma")=PI/2,
          py::arg("HallNumber")=1)
-    .def(py::init([](py::array_t<double> lens, py::array_t<double> angs) {
+    .def(py::init([](py::array_t<double> lens, py::array_t<double> angs, int hall) {
       py::buffer_info linfo = lens.request(), ainfo = angs.request();
       if ( linfo.ndim!=1 || ainfo.ndim!=1)
         throw std::runtime_error("Number of dimensions must be one");
       if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
         throw std::runtime_error("(At least) three lengths and angles required.");
       double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-      return Lattice(lengths,angles);
-    }))
+      return Lattice(lengths,angles,hall);
+    }),py::arg("lengths"),py::arg("angles"),py::arg("HallNumber")=1)
+    .def(py::init([](py::array_t<double> vecs, int hall) {
+      py::buffer_info info = vecs.request();
+      if ( info.ndim!=2 )
+        throw std::runtime_error("Number of dimensions must be two");
+      if ( info.shape[0] != 3 || info.shape[1] != 3 )
+        throw std::runtime_error("Three three-vectors required.");
+      double *mat = (double *) info.ptr;
+      return Lattice(mat,hall);
+    }),py::arg("vectors"),py::arg("HallNumber")=1)
     .def_property_readonly("a",     &Lattice::get_a)
     .def_property_readonly("b",     &Lattice::get_b)
     .def_property_readonly("c",     &Lattice::get_c)
