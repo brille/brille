@@ -1,24 +1,27 @@
 #include "lattice.h"
 
-Lattice::Lattice(const double* latmat, const int h){
-  double l[3]={0,0,0}, a[3]={0,0,0}, n[9];
+template<class T> void latmat_to_lenang(const T* latmat, T* len, T* ang){
+  T n[9];
   // compute the dot product of each column with itself
-  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  l[i] += latmat[i*3+j]*latmat[i*3+j];
+  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  len[i] += latmat[i*3+j]*latmat[i*3+j];
   // the lattice vector lengths are the square root of this
-  for (int i=0; i<3; ++i) l[i] = std::sqrt(l[i]);
+  for (int i=0; i<3; ++i) len[i] = std::sqrt(len[i]);
   // normalize the column vectors, leaving only angle information
-  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*3+j] = latmat[i*3+j]/l[i];
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*3+j] = latmat[i*3+j]/len[i];
   // take the dot product between cyclically permuted columns: 0=1⋅2, 1=2⋅0, 2=0⋅1
-  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  a[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
+  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  ang[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
   // the lattice angles are the arccosines of these dot products of normalized lattice vectors
-  for (int i=0; i<3; ++i) a[i] = std::acos(a[i]);
+  for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
+}
 
+Lattice::Lattice(const double* latmat, const int h){
+  double l[3]={0,0,0}, a[3]={0,0,0};
+  latmat_to_lenang(latmat,l,a);
   this->set_len_pointer(l);
   this->set_ang_pointer(a);
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
-
 Lattice::Lattice(const double* lengths, const double* angles, const int h){
   this->set_len_pointer(lengths);
   this->set_ang_pointer(angles);
@@ -30,6 +33,14 @@ Lattice::Lattice(const double la, const double lb, const double lc, const double
   this->set_ang_scalars(al,bl,cl);
   this->volume = this->calculatevolume();
   this->check_hall_number(h);
+}
+Lattice::Lattice(const double* latmat, const std::string itname){
+  double l[3]={0,0,0}, a[3]={0,0,0};
+  latmat_to_lenang(latmat,l,a);
+  this->set_len_pointer(l);
+  this->set_ang_pointer(a);
+  this->volume=this->calculatevolume();
+  this->check_IT_name(itname);
 }
 Lattice::Lattice(const double *lengths, const double *angles, const std::string itname){
   this->set_len_pointer(lengths);

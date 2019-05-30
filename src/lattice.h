@@ -37,6 +37,8 @@ public:
   Lattice(const double *, const double *, const int h=1);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
   Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
+  //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
+  Lattice(const double *, const std::string);
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double *, const double *, const std::string);
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number

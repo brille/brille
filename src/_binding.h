@@ -311,10 +311,21 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
     },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
-  }
+}
 
 template<class R, class T>
-void declare_lattice_init(py::class_<T,Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
+void declare_lattice_scl_init(py::class_<T,Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
+  pclass.def(py::init<double,double,double, double,double,double, R>(),
+    py::arg( ("a/"+lenunit).c_str() ),
+    py::arg( ("b/"+lenunit).c_str() ),
+    py::arg( ("c/"+lenunit).c_str() ),
+    py::arg("alpha/radian")=PI/2,
+    py::arg("beta/radian")=PI/2,
+    py::arg("gamma/radian")=PI/2,
+    py::arg(argname.c_str())=defarg );
+}
+template<class R, class T>
+void declare_lattice_vec_init(py::class_<T,Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
   pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const R groupid){
     py::buffer_info linfo = lens.request(), ainfo = angs.request();
     if ( linfo.ndim!=1 || ainfo.ndim!=1)
@@ -326,30 +337,29 @@ void declare_lattice_init(py::class_<T,Lattice> &pclass, const std::string &lenu
   }), py::arg( ("lengths/"+lenunit).c_str() ),
       py::arg("angles/radian"), py::arg(argname.c_str())=defarg);
 }
+template<class R, class T>
+void declare_lattice_mat_init(py::class_<T,Lattice> &pclass, const std::string &argname, const R defarg){
+  pclass.def(py::init( [](py::array_t<double> vecs, const R groupid){
+    py::buffer_info info = vecs.request();
+    if ( info.ndim!=2 )
+      throw std::runtime_error("Number of dimensions must be two");
+    if ( info.shape[0] != 3 || info.shape[0] != 3 )
+      throw std::runtime_error("Three three-vectors required.");
+    double *mat = (double *) info.ptr;
+    return T(mat,groupid);
+  }), py::arg( "lattice vectors" ), py::arg(argname.c_str())=defarg);
+}
+
 
 template<class T>
 void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {
-    declare_lattice_init(pclass,lenunit,"hall",1);
-    declare_lattice_init(pclass,lenunit,"ITname","P_1");
+    declare_lattice_scl_init(pclass,lenunit,"hall",1);
+    declare_lattice_scl_init(pclass,lenunit,"ITname","P_1");
+    declare_lattice_vec_init(pclass,lenunit,"hall",1);
+    declare_lattice_vec_init(pclass,lenunit,"ITname","P_1");
+    declare_lattice_mat_init(pclass,"hall",1);
+    declare_lattice_mat_init(pclass,"ITname","P_1");
     pclass.def("star",&T::star,"Return the dual lattice");
-    // pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const int hall){
-    //   py::buffer_info linfo = lens.request(), ainfo = angs.request();
-    //   if ( linfo.ndim!=1 || ainfo.ndim!=1)
-    //     throw std::runtime_error("Number of dimensions must be one");
-    //   if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
-    //     throw std::runtime_error("(At least) three lengths and angles required.");
-    //   double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-    //   return T(lengths,angles,hall);
-    // }), py::arg( ("lengths/"+lenunit).c_str() ),
-    //     py::arg("angles/radian"), py::arg("hall")=1);
-    pclass.def(py::init<double,double,double, double,double,double, int>(),
-               py::arg( ("a/"+lenunit).c_str() ),
-               py::arg( ("b/"+lenunit).c_str() ),
-               py::arg( ("c/"+lenunit).c_str() ),
-               py::arg("alpha/radian")=PI/2,
-               py::arg("beta/radian")=PI/2,
-               py::arg("gamma/radian")=PI/2,
-               py::arg("HallNumber")=1 );
     pclass.def("xyz_transform",[](T &d){
       auto result = py::array_t<double, py::array::c_style>({3,3});
       py::buffer_info bi = result.request();
