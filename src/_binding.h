@@ -178,7 +178,8 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
+    },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
+    .def("sum_data",[](Class& cobj, const int axis){ return av2np_squeeze(cobj.sum_data(axis));});
 }
 
 template<class T>
@@ -310,7 +311,8 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1);
+    },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
+    .def("sum_data",[](Class& cobj, const int axis){ return av2np_squeeze(cobj.sum_data(axis));});
 }
 
 template<class R, class T>

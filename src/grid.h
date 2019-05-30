@@ -149,6 +149,18 @@ public:
            containing a permuted indexing scheme which orders the elements at each grid point.
   */
   ArrayVector<size_t> sort_perm(void) const;
+  /*! \brief Sum over the data array
+
+  Either add together the elements of the array stored at each mapped point
+  or add together all of the arrays.
+  @param axis The axis along which to perform the summation -- 1 adds arrays,
+              0 (or not 1, really) adds elements of each array.
+  @returns An ArrayVector with `numel()==1` for `axis=0` or `size()==1` for
+           `axis=1`
+  */
+  ArrayVector<T> sum_data(const int axis) const{
+    return this->data.sum(axis);
+  };
 protected:
   void set_size(const size_t *n);
   void calc_span();
