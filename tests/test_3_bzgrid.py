@@ -108,6 +108,22 @@ class BrillouinZoneGrid (unittest.TestCase):
         fd0 = s.BZGridQE(bz, (0.,1.,10.), (2,2,2))
         fd1 = s.BZGridQE(fd0.BrillouinZone, fd0.spec, fd0.halfN)
 
+    def test_j_data_sum(self):
+        d_lat = s.Direct((3, 3, 3), np.pi/2*np.array((1, 1, 4/3)))
+        r_lat = d_lat.star()
+        b_zone = s.BrillouinZone(r_lat)
+        bz_grid = s.BZGridQ(b_zone, halfN=(3, 3, 3))
+        q_pts = bz_grid.mapped_rlu
+        # fill with 1 at each mapped point
+        bz_grid.fill(np.ones(q_pts.shape[0]))
+        self.assertTrue(np.isclose(bz_grid.sum_data(0), q_pts.shape[0]))
+        self.assertTrue(np.isclose(bz_grid.sum_data(1), np.ones(q_pts.shape[0])).all())
+        # fill with |q| at each mapped point
+        mod_q = np.abs(bz_grid.mapped_invA)
+        bz_grid.fill(mod_q)
+        self.assertTrue(np.isclose(bz_grid.sum_data(0), mod_q.sum(0)).all())
+        self.assertTrue(np.isclose(bz_grid.sum_data(1), mod_q.sum(1)).all())
+
 
 if __name__ == '__main__':
   unittest.main()

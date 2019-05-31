@@ -42,6 +42,49 @@ template<typename T> py::array_t<T> av2np_squeeze(const ArrayVector<T>& av){
       rptr[i] = av.getvalue(i,0);
   return np;
 }
+/*! \brief Convert an ArrayVector to a numpy.ndarray, using a defined shape
+
+The ArrayVector type is always two-dimensional, but is used by MapGrid3 and
+MapGrid4 to represent higher-dimensional data stored at each mapped grid point.
+When passing back gridded information to Python, we can re-create the shape
+information in the created numpy.ndarray.
+@param av The (numel(),size()) ArrayVector
+@param inshape A (1,1+array_ndim) ArrayVector consisting of
+              (n_arrays, array_dim₀, array_dim₁, …, array_dimₙ)
+@param squeeze A flag to indicate if, for av.size()==1, whether to return a
+               (1, array_dim₀, array_dim₁, ..., array_dimₙ) or a
+               (array_dim₀, array_dim₁, ..., array_dimₙ) numpy.ndarray.
+               Or to remove all singleton dimensions from the output.
+@returns A pybind wrapped numpy.ndarray with shape
+        (av.size(), array_dim₀, array_dim₁, …, array_dimₙ)
+*/
+template<typename T>
+py::array_t<T> av2np_shape(const ArrayVector<T>& av,
+                           const ArrayVector<size_t>& inshape,
+                           const bool squeeze = false){
+  std::vector<ssize_t> outshape;
+  if (!(squeeze && av.size()==1))
+    outshape.push_back( (ssize_t)av.size() );
+  for (size_t i=1; i<inshape.size(); ++i)
+    if (!(squeeze && inshape.getvalue(i)==1))
+      outshape.push_back( (ssize_t)inshape.getvalue(i) );
+  size_t numel = 1;
+  for (ssize_t osi : outshape) numel *= (size_t)osi;
+  if (numel != av.size()*av.numel()){
+    return squeeze ? av2np_squeeze(av) : av2np(av);
+    std::string msg = "Expected " + std::to_string(numel)
+                    + " but only have " + std::to_string(av.numel()*av.size())
+                    + " (" + std::to_string(av.numel())
+                    + " × " + std::to_string(av.size()) + ")";
+    throw std::runtime_error(msg);
+  }
+  auto out = py::array_t<T,py::array::c_style>(outshape);
+  T *ptr = (T*)out.request().ptr;
+  for (size_t i=0; i<av.size(); i++)
+    for (size_t j=0; j<av.numel(); j++)
+      ptr[i*av.numel()+j] = av.getvalue(i,j);
+  return out;
+}
 
 std::string long_version(){
   using namespace symbz::version;
@@ -179,7 +222,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
     },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
-    .def("sum_data",[](Class& cobj, const int axis){ return av2np_squeeze(cobj.sum_data(axis));});
+    .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
+      return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
+    },py::arg("axis"),py::arg("squeeze")=true);
 }
 
 template<class T>
@@ -312,7 +357,9 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
     },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
-    .def("sum_data",[](Class& cobj, const int axis){ return av2np_squeeze(cobj.sum_data(axis));});
+    .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
+      return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
+    },py::arg("axis"),py::arg("squeeze")=true);
 }
 
 template<class R, class T>

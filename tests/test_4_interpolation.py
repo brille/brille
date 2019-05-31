@@ -214,20 +214,6 @@ class Interpolate (unittest.TestCase):
     antres = fe_dispersion(Q)
     self.assertTrue( np.isclose(intres,antres).all() )
 
-  def test_j_data_sum(self):
-    d = s.Direct((3, 3, 3), np.pi/2*np.array((1, 1, 4/3)))
-    r = d.star()
-    bz = s.BrillouinZone(r)
-    bzg = s.BZGridQ(bz, halfN=(3, 3, 3))
-    qpts = bzg.mapped_rlu
-    bzg.fill(sqwfunc_ones(qpts))  # fill with 1 at each mapped point
-    self.assertTrue(np.isclose(bzg.sum_data(0)[0], qpts.shape[0]))
-    self.assertTrue(np.isclose(bzg.sum_data(1), np.ones(qpts.shape[0])).all())
-    # fill with |q| at each mapped point
-    modq = np.abs(bzg.mapped_invA)
-    bzg.fill(modq)
-    self.assertTrue(np.isclose(bzg.sum_data(0), modq.sum(0)).all())
-    self.assertTrue(np.isclose(bzg.sum_data(1), modq.sum(1)).all())
 
 if __name__ == '__main__':
   unittest.main()
