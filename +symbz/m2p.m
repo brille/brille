@@ -29,7 +29,7 @@ else
         otherwise
             p = m;
     end
-    if ~isscalar(m)
+    if ~isscalar(m) && ~ischar(m)
         if verLessThan('matlab','9.5')
             p = py.numpy.array(transpose(p(:)));
             if neversqueeze || any( size(m)~=1 & size(m)~=numel(m) )

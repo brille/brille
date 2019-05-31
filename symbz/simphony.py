@@ -85,15 +85,37 @@ def voigt(x_0, x_i, y_i, params):
 
 def sho(x_0, x_i, y_i, fwhm, t_k):
     """Compute the Simple-Harmonic-Oscillator distribution."""
-    if not np.isscalar(fwhm):
-        fwhm = fwhm[0]
-    bose = x_0 / (1-np.exp(-11.602*x_0/t_k)) if np.abs(t_k) > 0 else 1.0
-    x_02 = np.repeat(x_0**2, x_i.shape[1], 1)
-    v_fl = (x_i > 0) * np.isfinite(x_i)
-    y_0 = np.zeros_like(y_i)
-    y_0[v_fl] = bose*(4/np.pi)*fwhm*x_i[v_fl]*y_i[v_fl]
-    y_0[v_fl] /= ((x_02[v_fl]-x_i[v_fl]**2)**2 + 4*fwhm**2*x_02[v_fl])
-    return y_0
+    # (partly) ensure that all inputs have the same shape:
+    if np.isscalar(fwhm):
+        fwhm = fwhm * np.ones(y_i.shape)
+    if np.isscalar(t_k):
+        t_k = t_k * np.ones(y_i.shape)
+    if x_0.ndim < x_i.ndim or (x_0.shape[1] == 1 and x_i.shape[1] > 1):
+        x_0 = np.repeat(x_0, x_i.shape[1], 1)
+    # include the Bose factor if the temperature is non-zero
+    bose = x_0 / (1-np.exp(-11.602*x_0/t_k))
+    bose[t_k == 0] = 1.0
+    # We need x₀² the same shape as xᵢ
+    x_02 = x_0**2
+    # and to ensure that only valid (finite) modes are included
+    flag = (x_i != 0) * np.isfinite(x_i)
+    # create an output array
+    y_0 = np.zeros(y_i.shape)
+    # flatten everything so that we can use logical indexing
+    # keeping the original output shape
+    outshape = y_0.shape
+    bose = bose.flatten()
+    fwhm = fwhm.flatten()
+    y_0 = y_0.flatten()
+    x_i = x_i.flatten()
+    y_i = y_i.flatten()
+    x_02 = x_02.flatten()
+    flag = flag.flatten()
+    # and actually calculate the distribution
+    part1 = bose[flag]*(4/np.pi)*fwhm[flag]*x_i[flag]*y_i[flag]
+    part2 = ((x_02[flag]-x_i[flag]**2)**2 + 4*fwhm[flag]**2*x_02[flag])
+    y_0[flag] = part1/part2
+    return y_0.reshape(outshape)
 
 
 class SymSim(object):
@@ -149,7 +171,7 @@ class SymSim(object):
         # Select only those keyword arguments which SimPhony expects:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
-        cfp_dict = {k: kwds[k] for k in cfp_keywords}
+        cfp_dict = {k: kwds[k] for k in cfp_keywords if k in kwds}
         freq, vecs = self.data.calculate_fine_phonons(grid_q, **cfp_dict)
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
@@ -159,11 +181,11 @@ class SymSim(object):
                 (freq.magnitude).reshape((n_pt, n_br, 1)),
                 vecs.reshape(n_pt, n_br, 3*n_io)
             ),
-            ax_is=2)
+            axis=2)
         self.grid.fill(frqs_vecs)
         self.parallel = parallel
 
-    def __make_grid(self, n_half=None, step=None, units='rlu', **kwds):
+    def __make_grid(self, halfN=None, step=None, units='rlu', **kwds):
         _, ion_indexes = np.unique(self.data.ion_type, return_inverse=True)
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         cell = (lattice_vectors, self.data.ion_r, ion_indexes)
@@ -172,8 +194,8 @@ class SymSim(object):
         dlat = sbz.Direct(lattice_vectors, symmetry_data['hall_number'])
         rlat = dlat.star()
         brillouin_zone = sbz.BrillouinZone(rlat)
-        if n_half is not None:
-            self.grid = sbz.BZGridQcomplex(brillouin_zone, n_half)
+        if halfN is not None:
+            self.grid = sbz.BZGridQcomplex(brillouin_zone, halfN)
         elif step is not None:
             if isinstance(step, ureg.Quantity):
                 step = (step.to('angstrom')).magnitude
@@ -181,6 +203,8 @@ class SymSim(object):
             else:
                 isrlu = units.lower() == 'rlu'
             self.grid = sbz.BZGridQcomplex(brillouin_zone, step, isrlu)
+        else:
+            raise Exception("You must provide a halfN or step keyword")
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
@@ -203,7 +227,7 @@ class SymSim(object):
         # using SymPhony.calculate.scattering.structure_factor
         # which only allows a limited number of keyword arguments
         sf_keywords = ('T', 'scale', 'dw_seed', 'dw_grid', 'calc_bose')
-        sf_dict = {k: kwargs[k] for k in sf_keywords}
+        sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
 
     def s_qw(self, q_hkl, energy, p_dict):
@@ -254,8 +278,9 @@ class SymSim(object):
         # Calculate Sᵢ(Q) after interpolating ωᵢ(Q) and ⃗ϵᵢⱼ(Q)
         s_i = self.s_q(q_hkl, **p_dict)
         # The resulting array should be (n_pt,n_br)
-        msg = f"Expected S(Q) shape ({n_pt},{n_br}) but got {s_i.shape}."
-        assert s_i.shape[0] is n_pt and s_i.shape[1] is n_br, msg
+        if s_i.shape[0] != n_pt or s_i.shape[1] != n_br:
+            msg = f"Expected S(Q) shape ({n_pt}, {n_br}) but got {s_i.shape}."
+            raise Exception(msg)
 
         omega = (self.data.freqs.to('millielectron_volt')).magnitude
         shapein = energy.shape
