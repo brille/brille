@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as pp
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+import symbz as sbz
 
 def plot_points(x,title=''):
     fig = pp.figure()
@@ -20,6 +21,13 @@ def plot_points_with_lines(x,y,title=''):
 
 def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
             color='b', edgecolor='k', linewidth=1, alpha=0.7):
+    if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
+        if Q is None:
+            if units == 'rlu':
+                Q = bz.mapped_rlu
+            elif units == 'invA':
+                Q = bz.mapped_invA
+        bz = bz.BrillouinZone
     if units == 'rlu':
         verts = bz.vertices
         faces = bz.faces

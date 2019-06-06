@@ -1,5 +1,12 @@
 function plot3(BrillouinZone_or_BZGrid,varargin)
-    defs=struct('facecolor','none','facealpha',1,'edgecolor','k','edgealpha',1,'showgrid',true,'fullgrid',false,'units','invA');
+    defs=struct('facecolor','none',...
+                'facealpha',1,...
+                'edgecolor','k',...
+                'edgealpha',1,...
+                'showgrid',true,...
+                'fullgrid',false,...
+                'units','invA',...
+                'origin',[0,0,0]);
     [~,kwds]=symbz.parse_arguments(varargin,defs,{'showgrid','fullgrid'});
     ph = ishold();
     hold on;
@@ -9,9 +16,9 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
     if isa(BrillouinZone_or_BZGrid,bztype)
         isgrid = false;
         bz = BrillouinZone_or_BZGrid;
-    elseif isa(BrillouinZone_or_BZGrid,bzgtype)
+    elseif isa(BrillouinZone_or_BZGrid,bzgtype) || isa(BrillouinZone_or_BZGrid, [bzgtype 'complex'])
         isgrid = true;
-        bz = BrillouinZone_or_BZGrid.brillouinzone;
+        bz = BrillouinZone_or_BZGrid.BrillouinZone;
     end
     assert( exist('bz','var')==1, 'The first input must be either a BrillouinZone or BZGridQ object');
     
@@ -51,7 +58,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
                 end
             end
         end
-        patch('faces',perm,'Vertices',corners,...
+        patch('faces',perm,'Vertices',corners + kwds.origin,...
               'facecolor',kwds.facecolor,'facealpha',kwds.facealpha,...
               'edgecolor',kwds.edgecolor,'edgealpha',kwds.edgealpha );
     end
@@ -62,7 +69,7 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
         else
             grid_points = double(BrillouinZone_or_BZGrid.mapped_invA);
         end
-        plotpoints3(grid_points,[],[],{'Q_x','Q_y','Q_z'});
+        plotpoints3(grid_points+kwds.origin,[],[],{'Q_x','Q_y','Q_z'});
     end
     
     view(3)

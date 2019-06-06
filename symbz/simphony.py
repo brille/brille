@@ -164,10 +164,10 @@ class SymSim(object):
         self.data = SPData
         self.scattering_lengths = scattering_lengths
 
-        self.__make_grid(**kwds)
+        # Construct the BZGrid, by default using the conventional unit cell
+        grid_q = self.__make_grid(**kwds)
 
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
-        grid_q = self.grid.mapped_rlu
         # Select only those keyword arguments which SimPhony expects:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
@@ -182,19 +182,74 @@ class SymSim(object):
                 vecs.reshape(n_pt, n_br, 3*n_io)
             ),
             axis=2)
+        # move the branches to the last dimension to make mode-sorting possible
+        # e.g., from (n_pt, n_br, 1+3*n_io) to (n_pt, 1+3*n_io, n_br)
+        frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
         self.grid.fill(frqs_vecs)
+        # self.sort_branches()
         self.parallel = parallel
 
-    def __make_grid(self, halfN=None, step=None, units='rlu', **kwds):
+    def sort_branches(self, energy_weight=1.0, angle_weight=1.0):
+        """Sort the phonon branches stored at all mapped grip points.
+
+        By comparing the difference in phonon branch energy and the angle
+        between the branch eigenvectors it is possible to determine a cost
+        matrix for assigning the branches on one grid point to those on a
+        neighbouring grid point. The Munkres' Assignment algorithm is then used
+        to determine a local branch permutation, which is ultimately used in
+        determining a global branch permutation for each grid point.
+
+        The cost for each branch-branch assignment is the weighted sum of the
+        difference in eigen energies and the angle between eigenvectors:
+
+            Cᵢⱼ = [energy_weight]*√(ωᵢ-ωⱼ)²
+                + [angle_weight]*acos(<ϵᵢ,ϵⱼ>/|ϵᵢ||ϵⱼ|)
+
+        The weights are both one by default but can be modified as necessary.
+        """
+        # The input to sort_perm indicates how many elements should be treated
+        # like (scalars, vectors, matrices) and what weight should be given to
+        # each part of the resultant cost matrix. In this case, each phonon
+        # branch consists of one energy, n_ions three-vectors, and no matrix;
+        perm = self.grid.sort_perm(1, 3*self.data.n_ions, 0,
+                                   energy_weight, angle_weight, 0)
+        frqs_vecs = np.array([x[:, y] for (x, y) in zip(self.grid.data, perm)])
+        self.grid.fill(frqs_vecs)
+        return frqs_vecs
+
+    def __get_hall_number(self):
+        # CASTEP always (?) stores the *primtive* lattice basis vectors, but
+        # we want to let the calling function use the conventional basis
+        # instead.
+        # Given the primitive lattice basis vectors and ion positions, spglib
+        # can determine *a* conventional unit cell
         _, ion_indexes = np.unique(self.data.ion_type, return_inverse=True)
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         cell = (lattice_vectors, self.data.ion_r, ion_indexes)
         symmetry_data = spglib.get_symmetry_dataset(cell)
+        return symmetry_data['hall_number']
+
+    def __get_primitive_transform(self):
+        return sbz.PrimitiveTransform(self.__get_hall_number())
+
+    def __make_grid(self, halfN=None, step=None, units='rlu',
+                    use_primitive=False, **kwds):
+        hall_number = self.__get_hall_number()
+        prim_tran = sbz.PrimitiveTransform(hall_number)
+        lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
+        # And we can check whether there's anything to do using SymBZ
+        if prim_tran.does_anything and not use_primitive:
+            lattice_vectors = np.matmul(lattice_vectors, prim_tran.invP)
         #
-        dlat = sbz.Direct(lattice_vectors, symmetry_data['hall_number'])
+        dlat = sbz.Direct(lattice_vectors, hall_number)
         rlat = dlat.star()
         brillouin_zone = sbz.BrillouinZone(rlat)
         if halfN is not None:
+            if isinstance(halfN, (tuple, list)):
+                halfN = np.array(halfN)
+            if not isinstance(halfN, np.ndarray):
+                raise Exception("halfN must be a tuple, list, or ndarray")
+            halfN = halfN.astype('uint64')
             self.grid = sbz.BZGridQcomplex(brillouin_zone, halfN)
         elif step is not None:
             if isinstance(step, ureg.Quantity):
@@ -205,30 +260,54 @@ class SymSim(object):
             self.grid = sbz.BZGridQcomplex(brillouin_zone, step, isrlu)
         else:
             raise Exception("You must provide a halfN or step keyword")
+        # We need to make sure that we pass gridded Q points in the primitive
+        # lattice, since that is what SimPhony expects:
+        grid_q = self.grid.mapped_rlu
+        if prim_tran.does_anything and not use_primitive:
+            grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
+        return grid_q
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
-        # Interpolate the previously-stored eigen values and vectors for each Q
-        frqs_vecs = self.grid.interpolate_at(q_hkl, True, self.parallel)
-        # Separate them
-        frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
-        # And reshape to what SimPhony expects
-        n_pt = q_hkl.shape[0]
-        n_br = self.data.n_branches
-        n_io = self.data.n_ions
-        frqs = frqs.reshape((n_pt, n_br))
-        vecs = vecs.reshape((n_pt, n_br, n_io, 3))
-        # Store all information in the SimPhony Data object
-        self.data.n_qpts = n_pt
-        self.data.qpts = q_hkl
-        self.data.freqs = frqs*self.data.freqs.units
-        self.data.eigenvecs = vecs
+        self.w_q(q_hkl, **kwargs)
         # Finally calculate Sᵢ(Q)
         # using SymPhony.calculate.scattering.structure_factor
         # which only allows a limited number of keyword arguments
         sf_keywords = ('T', 'scale', 'dw_seed', 'dw_grid', 'calc_bose')
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
+
+    def w_q(self, q_hkl, primitive_q=False, interpolate=True, **kwargs):
+        """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
+        prim_tran = self.__get_primitive_transform()
+        # Interpolate the previously-stored eigen values for each Q
+        if interpolate:
+            frqs_vecs = self.grid.interpolate_at(q_hkl, True, self.parallel)
+            # Go from (n_pt, 1 + 3*n_io, n_br) to (n_pt, n_br, 1+ 3*n_io)
+            frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
+            # Separate them
+            frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
+            # And reshape to what SimPhony expects
+            n_pt = q_hkl.shape[0]
+            n_br = self.data.n_branches
+            n_io = self.data.n_ions
+            frqs = frqs.reshape((n_pt, n_br))
+            vecs = vecs.reshape((n_pt, n_br, n_io, 3))
+            # Store all information in the SimPhony Data object
+            self.data.n_qpts = n_pt
+            if prim_tran.does_anything and not primitive_q:
+                q_hkl = np.array([np.matmul(prim_tran.P, x) for x in q_hkl])
+            self.data.qpts = q_hkl
+            self.data.freqs = frqs*self.data.freqs.units
+            self.data.eigenvecs = vecs
+        else:
+            if prim_tran.does_anything and not primitive_q:
+                q_hkl = np.array([np.matmul(prim_tran.P, x) for x in q_hkl])
+            cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
+                            'eta_scale', 'splitting')
+            cfp_dict = {k: kwargs[k] for k in cfp_keywords if k in kwargs}
+            self.data.calculate_fine_phonons(q_hkl, **cfp_dict)
+        return self.data.freqs
 
     def s_qw(self, q_hkl, energy, p_dict):
         """Calculate S(Q,E) for Q = (q_h, q_k, q_l) and E=energy.

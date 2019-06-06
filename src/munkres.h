@@ -36,23 +36,41 @@ public:
   */
   Munkres(size_t n, std::vector<T> cmat = std::vector<T>()) : N(n), step(1), cost(cmat){
     if (cost.size()<N*N) cost.resize(N*N);
-
-    for (size_t i=0; i<N*N; ++i) mask.push_back(marker::NORMAL);
+    // mask, rowcover, and colcover have their values set when run_assignment is called
+    mask.resize(N*N);
+    rowcover.resize(N);
+    colcover.resize(N);
+    // try to run the assignment algorithm
+    finished = run_assignment();
+  }
+  void reset(){
+    // Make sure the mask and covers are set correctly for the start of a run
+    for (size_t i=0; i<N*N; ++i) mask[i] = marker::NORMAL;
     for (size_t i=0; i<N; ++i){
-      rowcover.push_back(0);
-      colcover.push_back(0);
+      rowcover[i] = 0;
+      colcover[i] = 0;
     }
     stored_row = 0;
     stored_col = 0;
-
-    T sum = 0;
-    for (size_t i=0; i< cost.size(); ++i) sum+=abs(cost[i]);
-    finished= (sum>0) ? run_assignment() : false;
+    // We should start from the beginning:
+    // on the first step
+    step = 1;
+    // and not yet finished
+    finished = false;
   }
-  //! Start the assignment algorithm.
-  //! @returns A flag to indicate if the algorithm finished successfully
+  /*! Start the assignment algorithm.
+
+  Resets the mask matrix, cover vectors, stored indices, step, and finished state
+  before attempting to run the assignment algorithm.
+  @returns A flag to indicate if the algorithm finished successfully
+  */
   bool run_assignment(){
-    bool done = false, ok = false;
+    reset();
+    // check that we *can* perform an assignment
+    T sum = 0;
+    for (size_t i=0; i < cost.size(); ++i) sum+=abs(cost[i]);
+    // If there is cost information we're not done yet.
+    bool done = (sum>0) ? false : true;
     while (!done) {
       // show();
       switch (step) {
@@ -62,12 +80,11 @@ public:
         case 4: step_four();  break;
         case 5: step_five();  break;
         case 6: step_six();   break;
-        case 7: ok=true;
+        case 7: finished=true;
         default: done=true;
       }
     }
-    step = 1; // reset in case we feel like running this again.
-    return ok;
+    return finished;
   }
   //! Get a mutable reference to the cost matrix, useful for filling.
   std::vector<T>& get_cost(void){ return cost;}
@@ -79,13 +96,26 @@ public:
       @returns The returned flag is true if the assignment was made.
   */
   bool get_assignment(size_t* out){
-    if (!finished) finished = run_assignment();
+    if (!finished) run_assignment();
     if (finished){
       for (size_t r=0; r<N; ++r)
         for (size_t c=0; c<N; ++c)
           if (mask[r*N+c]==marker::STARED) out[r]=c;
     }
     return finished;
+  }
+  std::string to_string() const {
+    std::string x = "X", star = "*", prime = "'", blank = "";
+    std::string repr= "step=" + std::to_string(step) + "\t";
+    for (size_t c=0; c<N; ++c) repr += (colcover[c] ? x : blank) + "\t";
+    repr += "\n";
+    for (size_t r=0; r<N; ++r){
+      repr += (rowcover[r] ? x : blank) + "\t";
+      for (size_t c=0; c<N; ++c)
+        repr += std::to_string(cost[r*N+c]) + (mask[r*N+c]==PRIMED ? prime : mask[r*N+c]==STARED ? star : blank) + "\t";
+      repr += "\n";
+      }
+    return repr;
   }
 private:
   void show(){

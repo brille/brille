@@ -140,7 +140,6 @@ class BrillouinZone (unittest.TestCase):
         self.assertTrue( (bz.isinside(expected_verts)).all() )
 
         B = r.get_B_matrix()
-        print(B)
         X = np.stack( [np.matmul(B,v) for v in expected_verts])
         plot_points(X)
 

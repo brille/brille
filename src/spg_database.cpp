@@ -37,6 +37,20 @@
 #include <cstring>
 #include "spg_database.h"
 
+std::string bravais_string(const BravaisLetter b){
+  std::string repr;
+  switch (b){
+    case P: repr = "primitive";              break;
+    case A: repr = "A-face centred";         break;
+    case B: repr = "B-face centred";         break;
+    case C: repr = "C-face centred";         break;
+    case I: repr = "body centred";           break;
+    case F: repr = "face centred";           break;
+    case R: repr = "rhombohedrally centred"; break;
+  }
+  return repr;
+}
+
 /* Modifications from spglib original:
 ' CENTERING_ERROR' --> 'P'
 '       PRIMITIVE' --> 'P'

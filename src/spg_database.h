@@ -58,7 +58,7 @@ Each conventional basis is ascribed a Bravais letter, which forms part of the
 Hermann-Mauguin symbol of a space group.
 A subset of the 10 possible Bravais letters is used herein:
 
-| Bravai letter | Centring | Centring vectors |
+| Bravais letter | Centring | Centring vectors |
 | --- | --- | --- |
 | P | primitve | 0 |
 | A | A-face centred | ½bₛ+½cₛ |
@@ -71,6 +71,9 @@ A subset of the 10 possible Bravais letters is used herein:
 For further details, see http://reference.iucr.org/dictionary/Centred_lattice
 */
 enum BravaisLetter {P, A, B, C, I, F, R};
+
+std::string bravais_string(const BravaisLetter b);
+
 
 typedef struct {
   int           number;

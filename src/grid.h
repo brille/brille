@@ -148,7 +148,13 @@ public:
   @returns An ArrayVector with `numel()==shape.getvalue(0)` and `size()=data.size()`
            containing a permuted indexing scheme which orders the elements at each grid point.
   */
-  ArrayVector<size_t> sort_perm(void) const;
+  template <typename R=double>
+  ArrayVector<size_t> sort_perm(const size_t n_scalar=0,
+                                const size_t n_vector=0,
+                                const size_t n_matrix=0,
+                                const R scalar_weight=1,
+                                const R vector_weight=1,
+                                const R matrix_weight=1) const;
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
@@ -161,6 +167,11 @@ public:
   ArrayVector<T> sum_data(const int axis) const{
     return this->data.sum(axis);
   };
+  /*! \brief Return a constant reference to the data ArrayVector
+  */
+  const ArrayVector<T>& get_data() const {
+    return this->data;
+  }
 protected:
   void set_size(const size_t *n);
   void calc_span();
@@ -382,10 +393,13 @@ public:
     double weights[8];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
 
-    //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
+      // std::cout << x.to_string(i) << std::endl;
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.datapointer(i), ijk );
+      // std::cout << "\t closest index [" << std::to_string(ijk[0])
+      //           << " " << std::to_string(ijk[1])
+      //           << " " << std::to_string(ijk[2]) << "]";
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
@@ -393,9 +407,12 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (7==flg)/*+++*/{
+        // std::cout << "\t exact match!" << std::endl;
         this->sub2map(ijk,corners); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
+        // std::cout << "\t inexact match (flg="
+        //           << std::to_string(flg) << ")";
         if (!flg)/*xxx*/{
           dirs.resize(3);
           dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
@@ -412,6 +429,11 @@ public:
 
         oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
         cnt=corner_count[dirs.size()];
+        // std::cout << "\t requiring corners [ ";
+        // for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(corners[gst]) << " ";
+        // std::cout << "] with weights [";
+        // for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(weights[gst]) << " ";
+        // std::cout << "]" << std::endl;
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
           throw std::runtime_error(msg);
@@ -433,7 +455,7 @@ public:
   /*! Perform linear interpolation in parallel at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
   @param threads The number of OpenMP threads to use, `omp_get_max_threads()` if `threads`≤0
-  @returns An ArrayVector of the itnerpolated values
+  @returns An ArrayVector of the interpolated values
   @note In the event that one or more coordinates of a vector in `x` is an exact
         match for a grid point this routine will perform a lower-dimensional
         interpolation. For three exact matches the point in x *is* a grid point

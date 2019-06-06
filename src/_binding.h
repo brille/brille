@@ -11,6 +11,35 @@
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
 
+template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& sz, const std::array<T,N>& sv){
+  size_t numel = 1;
+  for (ssize_t i: sz) numel *= i;
+  if (N != numel){
+    std::string msg = "Inconsistent required shape ( ";
+    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    msg += ") and array size " + std::to_string(N);
+    throw std::runtime_error(msg);
+  }
+  auto np = py::array_t<T,py::array::c_style>(sz);
+  T *ptr = (T*) np.request().ptr;
+  for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
+  return np;
+}
+template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const std::vector<T>& sv){
+  size_t numel = 1;
+  for (ssize_t i: sz) numel *= i;
+  if (sv.size() != numel){
+    std::string msg = "Inconsistent required shape ( ";
+    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    msg += ") and vector size " + std::to_string(sv.size());
+    throw std::runtime_error(msg);
+  }
+  auto np = py::array_t<T,py::array::c_style>(sz);
+  T *ptr = (T*) np.request().ptr;
+  for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
+  return np;
+}
+
 template<typename T> py::array_t<T> av2np(const ArrayVector<T>& av){
   std::vector<ssize_t> shape(2); // ArrayVectors are 2D by default
   shape[0] = av.size();
@@ -149,7 +178,40 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       cobj.replace_data(data,shape); // no error, so this will work for sure
       // return mapExceedsNewData; // let the calling function deal with this?
     })
-    .def_property_readonly("sort_perm",[](Class& cobj){  return av2np(cobj.sort_perm()); })
+    .def_property_readonly("data",
+      /*get data*/ [](Class& cobj){
+        return av2np_shape(cobj.get_data(), cobj.data_shape(), false);
+      }
+      // ,
+      // /*set data*/[](Class& cobj, py::array_t<T,py::array::c_style> pydata){
+      //   py::buffer_info bi = pydata.request();
+      //   ssize_t ndim = bi.ndim;
+      //   size_t numel=1, numarrays=bi.shape[0];
+      //   if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel *= bi.shape[i];
+      //   ArrayVector<T> data(numel, numarrays, (T*)bi.ptr);
+      //   ArrayVector<size_t> shape(1,ndim);
+      //   for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
+      //   int mapExceedsNewData = cobj.check_map(data);
+      //   if (mapExceedsNewData) {
+      //     std::string msg = "Provided " + std::to_string(data.size())
+      //                     + " data inputs but expected "
+      //                     + std::to_string(cobj.maximum_mapping()) + "!";
+      //     throw std::runtime_error(msg);
+      //   }
+      //   cobj.replace_data(data,shape); // no error, so this will work for sure
+      // }
+    )
+    .def("sort_perm",
+      [](Class& cobj, const size_t nS, const size_t nV, const size_t nM,
+                      const double wS, const double wV, const double wM){
+      return av2np(cobj.sort_perm(nS,nV,nM,wS,wV,wM));
+    }, py::arg("number_of_scalars")=0,
+       py::arg("number_of_vector_elements")=0,
+       py::arg("number_of_matrix_elements")=0,
+       py::arg("scalar_cost_weight")=1,
+       py::arg("vector_cost_weight")=1,
+       py::arg("matrix_cost_weight")=1
+     )
     .def_property("map",
       /*get map*/ [](Class& cobj){
         std::vector<ssize_t> shape(3); // the map is 3D
@@ -187,6 +249,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         bool success = b.moveinto(Qv,qv,tauv);
         if (!success)
           throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
+        // std::cout << "Interpolate at Q=" << std::endl << Qv.to_string() << std::endl;
+        // std::cout << "with reduced q=" << std::endl << qv.to_string() << std::endl;
+        // std::cout << "and tau=" << std::endl << tauv.to_string() << std::endl;
       }
       // do the interpolation for each point in qv
       ArrayVector<T> lires;

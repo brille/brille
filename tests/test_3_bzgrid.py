@@ -88,7 +88,6 @@ class BrillouinZoneGrid (unittest.TestCase):
     #     Ntuple = (20,20,1)
     #     bzg = s.BZGrid(bz, Ntuple)
     def test_b_plot_hexagonal(self):
-        print('hexagon plot')
         d,r,bz = make_drbz(3,3,3,np.pi/2,np.pi/2,2*np.pi/3)
         Ntuple = (20,20,0)
         bzg = s.BZGridQ(bz, Ntuple)

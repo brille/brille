@@ -40,6 +40,11 @@ private:
 public:
   PrimitiveTransform(const BravaisLetter c): bravais{c} { set_matrices(); };
   PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); };
+  PrimitiveTransform(const int hall){
+    Spacegroup s = get_spacegroup(hall);
+    bravais = s.bravais;
+    set_matrices();
+  };
   void set_matrices(void) {
     switch (bravais){
       case I:
@@ -86,9 +91,13 @@ public:
     }
   };
   //! A check if the Matrices *should* do anything, that *is not* if the centering is Primitive
-  bool does_anything() { return (bravais!=P);};
+  bool does_anything() const { return (bravais!=P);};
   //! A check if the Matrices *shouldn't* do anything, that *is* if the centering is Primitive
-  bool does_nothing()  { return (bravais==P);};
+  bool does_nothing() const { return (bravais==P);};
+  std::string string_repr() const {
+    std::string repr = "<" + bravais_string(bravais) + " PrimitiveTransform object>";
+    return repr;
+  };
 };
 
 

@@ -154,4 +154,17 @@ PYBIND11_MODULE(_symbz,m){
     declare_bzgridq<std::complex<double>>(m,"complex");
     declare_bzgridqe<std::complex<double>>(m,"complex");
 
+    py::class_<PrimitiveTransform> pt(m,"PrimitiveTransform");
+    pt.def(py::init<int>(),py::arg("Hall number"));
+    pt.def_property_readonly("P",[](const PrimitiveTransform &p){
+      std::vector<ssize_t> sz={3,3};
+      return sa2np(sz,p.get_to_primitive());
+    });
+    pt.def_property_readonly("invP",[](const PrimitiveTransform &p){
+      std::vector<ssize_t> sz={3,3};
+      return sa2np(sz,p.get_from_primitive());
+    });
+    pt.def_property_readonly("does_anything",&PrimitiveTransform::does_anything);
+    pt.def_property_readonly("is_primitive",&PrimitiveTransform::does_nothing);
+    pt.def("__repr__",&PrimitiveTransform::string_repr);
 }

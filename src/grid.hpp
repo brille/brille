@@ -303,8 +303,35 @@ template<class T> T squared_distance(const std::complex<T>& A, const std::comple
   return r*r + i*i;
 }
 
+/*! \brief Determine the sorting permutation connecting neighbouring gridded
+           scalars, vectors, and/or matrices.
 
-template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
+When multiple scalars/vectors/matrices are stored at each grid point of a
+MapGrid3 object, it may be useful to identify which neighbouring values can be
+ascribed to one-another. For each pair of neighbouring values this function
+defines a cost and then uses the Munkres' Assignment algorithm to find the
+minimum-cost value-value assignment.
+In the case of scalar values, the cost Cᵃᵇᵢⱼ is |Vᵇⱼ-Vᵃᵢ|.
+For vector values, the cost is the distance between the vectors √∑ₖ(Vᵇⱼₖ-Vᵃᵢₖ)².
+And for matrix values, the cost is
+
+It may also be necessary to combine information from scalars, vectors, and or
+matrices in order to make a unique assignment. In such a case, the information
+stored at each grid point should take the form of vector values with each vector
+having elements [0,1,…,S-1,S,…,S+V-1,S+V,…,S+V+M-1] where S=`n_scalar`,
+V=`n_vector`, and M=`n_matrix`.
+
+@param n_scalar Number of scalar elements in the value vectors
+@param n_vector Number of vector elements in the value vectors
+@param n_matrix Number of matrix elements in the value vectors
+*/
+template <class T> template <class R>
+ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
+                                           const size_t n_vector,
+                                           const size_t n_matrix,
+                                           const R scalar_weight,
+                                           const R vector_weight,
+                                           const R matrix_weight) const {
   /*
     The data contained in the MapGrid3 is often multiple scalars, vectors,
     matrices, or higher-order tensors. It is often important to identify which
@@ -317,30 +344,49 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
   ArrayVector<size_t> elshape = this->data_shape(); // (data.size(),m,...,nobj) stored at each index of the data ArrayVector
   size_t span = 1;
   for(size_t i=1; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
-  // try to be clever about what we're spanning:
-  bool matspan = false;
-  size_t matsize = 0, matstart=0;
-  if (span < 11u){
-    switch ( (int) span){
-      case 4:  matspan=true; matstart=0u; matsize=2u; break;
-      case 5:  matspan=true; matstart=1u; matsize=2u; break;
-      case 9:  matspan=true; matstart=0u; matsize=3u; break;
-      case 10: matspan=true; matstart=1u; matsize=3u; break;
+
+  size_t nS=0, nV=0, nM=0;
+  if (n_scalar + n_vector + n_matrix == span){
+    nS = n_scalar;
+    nV = n_vector;
+    // check that the number of matrix elements describe a square matrix
+    double matroot = std::sqrt( (double)n_matrix );
+    if (matroot*matroot == (double)n_matrix){
+      nM = (size_t)matroot;
+    } else {
+      nM = 0;
+      nV += n_matrix;
     }
   } else {
-    double spanroot = std::sqrt( (double)span );
-    matspan = (spanroot*spanroot) == (double)span;
-    if (matspan) matsize = (size_t) spanroot;
-    if (!matspan){
-      spanroot = std::sqrt( (double)(span-1) );
-      matspan = (spanroot*spanroot) == (double)(span-1);
-      if (matspan) {
-        matsize = (size_t) spanroot;
-        matstart = 1u;
+    // try to be clever about what we're spanning:
+    if (span < 11u){
+      switch ( (int) span){
+        case 1:  nS=1; nV=0; nM=0; break;
+        case 2:  nS=0; nV=2; nM=0; break;
+        case 3:  nS=0; nV=3; nM=0; break;
+        case 4:  nS=1; nV=3; nM=0; break;
+        case 5:  nS=1; nV=0; nM=2; break;
+        case 6:  nS=0; nV=6; nM=0; break;
+        case 7:  nS=1; nV=6; nM=0; break;
+        case 8:  nS=2; nV=6; nM=0; break;
+        case 9:  nS=0; nV=0; nM=3; break;
+        case 10: nS=1; nV=0; nM=3; break;
+      }
+    } else {
+      double spanroot = std::sqrt( (double)span );
+      if (spanroot*spanroot == (double)span){
+        nS=0; nV=0; nM=(size_t)spanroot;
+      } else {
+        spanroot = std::sqrt((double)(span-1));
+        if (spanroot*spanroot == (double)(span-1)){
+          nS=1; nV=0; nM=(size_t)spanroot;
+        } else {
+          nS=1; nV=span-1; nM=0;
+        }
       }
     }
   }
-
+  if ( nS+nV+nM*nM != span) throw std::runtime_error("problem determining number of scalar, vector, matrix, elements");
 
   size_t nobj = elshape.getvalue(elshape.size()-1);
   // within each index of the data ArrayVector there are span*nobj entries.
@@ -357,14 +403,20 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
 
   // typename GridDiffTraits<T>::type *distance = new typename GridDiffTraits<T>::type[nobj*nobj]();
   typename GridDiffTraits<T>::type gdzero = typename GridDiffTraits<T>::type(0);
-  typename GridDiffTraits<T>::type tval = gdzero;
+  typename GridDiffTraits<T>::type tval = gdzero, vval = gdzero, mval = gdzero;
   Munkres<typename GridDiffTraits<T>::type> munkres(nobj);
+
+  typename GridDiffTraits<T>::type tscale = typename GridDiffTraits<T>::type(scalar_weight);
+  typename GridDiffTraits<T>::type vscale = typename GridDiffTraits<T>::type(vector_weight);
+  typename GridDiffTraits<T>::type mscale = typename GridDiffTraits<T>::type(matrix_weight);
 
   bool assigned_ok;
   size_t* assignment = new size_t[nobj]();
 
-  T* Amat = new T[matsize*matsize]();
-  T* Bmat = new T[matsize*matsize]();
+  T* Amat = new T[nM*nM]();
+  T* Bmat = new T[nM*nM]();
+  T* Avec = new T[nV]();
+  T* Bvec = new T[nV]();
   T A, B;
   for(size_t idx=0; idx<this->numel(); ++idx){
     if (this->valid_mapping(idx)){
@@ -391,35 +443,67 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
         // we have the index into this->data.size() for our current point
         // *AND* an already-sorted neighbouring point.
 
-        // calculate the cost (distance) to assign each mode from the neighbour
+        // calculate the cost to assign each mode from the neighbour
+        /* A note about indexing the data ArrayVector:
+          An earlier version of this function used indexing into the ArrayVector
+          elements like an array in Fortran,
+          e.g., [mode number]*[number of elements]+[mode element]
+          Instead, the correct way to index the ArrayVector elements is by
+          [mode_number]+[mode_element]*[number of modes]
+          due to the fact that a (N_points, N_elements, N_modes) C-style array
+          was used to create the ArrayVector
+          {with size=N_points and numel=N_elements*N_modes}
+        */
         for (size_t i=0; i<nobj; ++i)
           for (size_t j=0; j<nobj; ++j){
             tval = gdzero;
-            if (matspan){
-              if (matstart > 0){
-                A = this->data.getvalue(this_idx, i*span);
-                B = this->data.getvalue(that_idx, j*span);
-                tval += squared_distance(A,B);
-              }
-              for (size_t ki=0; ki<matspan; ++ki)
-                for (size_t kj=0; kj<matspan; ++kj){
-                  Amat[ki*matspan+kj] = this->data.getvalue(this_idx, i*span+matstart+ki*matspan+kj);
-                  Bmat[ki*matspan+kj] = this->data.getvalue(that_idx, j*span+matstart+ki*matspan+kj);
-                }
-              tval += frobenius_distance(Amat,Bmat,matspan);
-            } else {
-              for (size_t k=0; k<span; ++k) {
-                A = this->data.getvalue(this_idx, i*span+k);
-                B = this->data.getvalue(that_idx, j*span+k);
-                tval += squared_distance(A,B);
+            if (nS){
+              for (size_t k=0; k<nS; ++k){
+                A = this->data.getvalue(this_idx, i+k*nobj);
+                B = this->data.getvalue(that_idx, j+k*nobj);
+                tval += std::sqrt(squared_distance(A,B));
               }
             }
-            munkres.get_cost()[i*nobj+j] = std::sqrt(tval);
+            if (nV){
+              for (size_t k=0; k<nV; ++k){
+                Avec[k] = this->data.getvalue(this_idx, i+(nS+k)*nobj);
+                Bvec[k] = this->data.getvalue(that_idx, j+(nS+k)*nobj);
+              }
+              vval = vector_angle(nV,Avec,Bvec);
+              // vval = vector_distance(nV,Avec,Bvec);
+            }
+            if (nM){
+              for (size_t ki=0; ki<nM; ++ki)
+                for (size_t kj=0; kj<nM; ++kj){
+                  Amat[ki*nM+kj] = this->data.getvalue(this_idx, i+(nS+nV+ki*nM+kj)*nobj);
+                  Bmat[ki*nM+kj] = this->data.getvalue(that_idx, j+(nS+nV+ki*nM+kj)*nobj);
+                }
+              mval = frobenius_distance(nM,Amat,Bmat);
+            }
+            // for each i determine the cheapest j
+            munkres.get_cost()[i*nobj+j] = tscale*tval + vscale*vval + mscale*mval;
+            // // for each j determine the cheapest i
+            // munkres.get_cost()[j*nobj+i] = tscale*tval + vscale*vval + mscale*mval;
           }
         // and use the Munkres' algorithm to determine the optimal assignment
+        munkres.run_assignment();
         assigned_ok = munkres.get_assignment(assignment);
+
         if (!assigned_ok) throw std::runtime_error("The Munkres' assignment algorithm failed?!");
-        for (size_t i=0; i<nobj; ++i) perm.insert( assignment[i], this_idx, i);
+        // We want to return a *global* sorting permutation S₀ᵢ but what we
+        // have from the Munkres' algorithm is a *local* permutation mapping
+        // elements at index i (this_idx) onto elements at index j (that_idx).
+        // Thankfully the local and global permutations have a handy
+        // relationship
+        //                Sₒᵢ = S₀ⱼ[Sⱼᵢ]
+        // So, along with the arbitrary choice of S₀₁ made previously, we can
+        // find S₀ᵢ for all i.
+        for (size_t i=0; i<nobj; ++i)
+          for (size_t j=0; j<nobj; ++j)
+            if (perm.getvalue(that_idx,i)==assignment[j])
+              perm.insert(j,this_idx,i);
+        // for (size_t i=0; i<nobj; ++i)
+        //   perm.insert(assignment[perm.getvalue(that_idx, i)], this_idx, i);
         sorted.insert(true,this_idx);
       }
     }
@@ -427,5 +511,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::sort_perm() const {
   delete[] assignment;
   delete[] Amat;
   delete[] Bmat;
+  delete[] Avec;
+  delete[] Bvec;
   return perm;
 }

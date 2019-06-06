@@ -232,7 +232,7 @@ template<typename T, typename R, int N> bool is_int_matrix(const T * A, const R 
 template<typename R> bool is_int_matrix(const int *, const R){ return true; }
 
 
-template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n){
+template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B){
   // A-B
   T* AmB = safealloc<T>(n*n);
   for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
@@ -243,7 +243,7 @@ template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n
   T* mult = safealloc<T>(n*n);
   for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
     mult[i*n+j] = T(0);
-    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmB[k*n+j];
+    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmBt[k*n+j];
   }
   delete[] AmB; delete[] AmBt;
   // tr( (A-B)x(A-B)')
@@ -254,7 +254,7 @@ template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n
   return std::sqrt(tr);
 }
 
-template<typename T> T frobenius_distance(const std::complex<T>* A, const std::complex<T>* B, const size_t n){
+template<typename T> T frobenius_distance(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
   // A-B
   std::complex<T>* AmB = safealloc<std::complex<T>>(n*n);
   for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
@@ -265,13 +265,143 @@ template<typename T> T frobenius_distance(const std::complex<T>* A, const std::c
   std::complex<T>* mult = safealloc<std::complex<T>>(n*n);
   for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
     mult[i*n+j] = std::complex<T>(0);
-    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmB[k*n+j];
+    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmBt[k*n+j];
   }
   delete[] AmB; delete[] AmBt;
-  // tr( (A-B)x(A-B)')
-  std::complex<T> tr = std::complex<T>(0);
-  for (int i=0; i<n; i++) tr += mult[i*(1+n)];
+  // tr( (A-B)x(A-B)'), which is guaranteed to be real
+  T tr{0};
+  for (int i=0; i<n; ++i) tr += std::real(mult[i*(1+n)]);
   delete[] mult;
   // sqrt( tr( (A-B)x(A-B)') )
-  return std::sqrt(std::real(tr))+std::sqrt(std::imag(tr));
+  return std::sqrt(tr);
+}
+
+
+template<typename T> T vector_angle(const size_t n, const T* A, const T* B){
+  T AA=0, BB=0, AB=0;
+  for (size_t i=0; i<n; ++i){
+    AA += A[i]*A[i];
+    BB += B[i]*B[i];
+    AB += A[i]*B[i];
+  }
+  T nA, nB, c_t;
+  nA = std::sqrt(AA);
+  nB = std::sqrt(BB);
+  if (nA && nB){
+    c_t = AB/(nA*nB);
+  } else {
+    // if both are zero their angle is strictly undefined, but for our
+    // purposes it would be better to set the angle to 0 [and cos(0)=1]
+    c_t = (nA || nB) ? T(0) : T(1);
+  }
+  T act = std::abs(c_t);
+  if (approx_scalar(act, 1.0) && act>1){
+    c_t /= act;
+    act = std::abs(c_t);
+  }
+  if (act>1){
+    std::string msg = "vector angle cos(theta)="
+    + my_to_string(c_t) + " = " + my_to_string(AB) + "/("
+    + my_to_string(nA) + "×" + my_to_string(nB) + ")";
+    throw std::runtime_error(msg);
+  }
+  return std::acos(c_t);
+}
+
+template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
+  // return hermitian_angle(n,A,B);
+  return euclidean_angle(n,A,B);
+}
+
+template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
+  T AB, nA, nB, c_t;
+  // Compute the products of complex n-vectors as if they were real 2n-vectors
+  for (size_t i=0; i<n; ++i){
+    AB += std::real(A[i])*std::real(B[i]) + std::imag(A[i])*std::imag(B[i]);
+    nA += std::real(A[i])*std::real(A[i]) + std::imag(A[i])*std::imag(A[i]);
+    nB += std::real(B[i])*std::real(B[i]) + std::imag(B[i])*std::imag(B[i]);
+  }
+  nA = std::sqrt(nA);
+  nB = std::sqrt(nB);
+  if (nA && nB){
+    c_t = AB/(nA*nB);
+  } else {
+    // if both are zero their angle is strictly undefined, but for our
+    // purposes it would be better to set the angle to 0 [and cos(0)=1]
+    c_t = (nA || nB) ? T(0) : T(1);
+  }
+  T act = std::abs(c_t);
+  if (approx_scalar(act, 1.0) && act>1){
+    c_t /= act;
+    act = std::abs(c_t);
+  }
+  if (act>1){
+    std::string msg = "Complex Euclidean angle cos(theta)="
+    + my_to_string(c_t) + " = " + my_to_string(AB) + "/("
+    + my_to_string(nA) + "×" + my_to_string(nB) + ")";
+    throw std::runtime_error(msg);
+  }
+  return std::acos(c_t);
+}
+
+
+template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+  std::complex<T> h_dot{0,0};
+  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  return h_dot;
+}
+template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
+  std::complex<T> AA=hermitian_product(n,A,A);
+  std::complex<T> BB=hermitian_product(n,B,B);
+  std::complex<T> AB=hermitian_product(n,A,B);
+
+  T nAB, nA, nB, c_t;
+  nAB = std::sqrt(std::real(AB*std::conj(AB)));
+  nA = std::sqrt(std::real(A));
+  nB = std::sqrt(std::real(B));
+  if (nA && nB){
+    c_t = nAB/(nA*nB);
+  } else {
+    // if both are zero their angle is strictly undefined, but for our
+    // purposes it would be better to set the angle to 0 [and cos(0)=1]
+    c_t = (nA || nB) ? T(0) : T(1);
+  }
+  T act = std::abs(c_t);
+  if (approx_scalar(act,1.0) && act>1){
+    c_t/=act; // force close-to-one values to one, maintaining the sign
+    act = std::abs(c_t);
+  }
+  if (act>1){
+    std::string msg = "Complex Hermitian angle cos(theta)="
+    + my_to_string(c_t) + " = " + my_to_string(nAB) + "/("
+    + my_to_string(nA) + "×" + my_to_string(nB) + ")";
+    throw std::runtime_error(msg);
+  }
+  return std::acos(c_t);
+}
+
+
+template<typename T> const std::string my_to_string(const T x){
+  return (x>0?"+":"") + std::to_string(x);
+}
+template<typename T> const std::string my_to_string(const std::complex<T> x){
+  return (std::real(x)>0?"+":"") + std::to_string(std::real(x)) + (std::imag(x)>0?"+i":"-i") + std::to_string(std::abs(std::imag(x)));
+}
+
+template<typename T> T vector_distance(const size_t n, const T* a, const T* b){
+  T d, sum=0;
+  for (size_t i=0; i<n; ++i){
+    d = a[i]-b[i];
+    sum += d*d;
+  }
+  return std::sqrt(sum);
+}
+template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+  std::complex<T> d;
+  T sum=0;
+  for (size_t i=0; i<n; ++i){
+    d = a[i]-b[i];
+    sum += std::real(d*std::conj(d));
+  }
+  return std::sqrt(sum);
 }

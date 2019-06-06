@@ -94,8 +94,79 @@ template<typename T> T mod1(const T a);
 template<typename T, typename R, int N=3> bool is_int_matrix(const T * A, const R tol);
 template<typename R> bool is_int_matrix(const int *, const R);
 
-template<typename T> T frobenius_distance(const T* A, const T* B, const size_t n);
-template<typename T> T frobenius_distance(const std::complex<T>* A, const std::complex<T>* B, const size_t n);
+/*! \brief The "distance" between two matrices using the Frobenius norm
+
+The [Frobenius norm](http://mathworld.wolfram.com/FrobeniusNorm.html)
+is the matrix norm of an 𝑚×𝑛 matrix 𝑎 given by
+
+    |A|ᶠ = √∑ᵢᵐ∑ⱼⁿ|𝑎ᵢⱼ|²
+
+or, for a square matrix,
+
+    |A|ᶠ = √tr(𝑎𝑎ᴴ)
+
+where 𝑎ᴴ is the conjugate transpose of 𝑎.
+This function calculates the Frobenius norm of the matrix A-B.
+@param A A n×n square matrix
+@param B A n×n square matrix
+@returns |A|ᶠ
+*/
+template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B);
+template<typename T> T frobenius_distance(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+
+/*! \brief The general n-dimensional angle between two real-valued vectors
+
+Calculate and return the angle θ between two vectors given by
+
+    cos(θ) = <A,B>/|A||B|
+
+@param n The dimensionality of the vector space
+@param A A pointer to the first vector
+@param B A pointer to the second vector
+@returns θ
+*/
+template<typename T> T vector_angle(const size_t n, const T* A, const T* B);
+//! A convenience function calling euclidean_angle
+template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+/*! \brief The general n-dimensional Euclidean angle between two complex-valued vectors
+
+Calculate and return the Euclidean angle between to vectors in a complex vector
+space Vᶜ(≃Cₙ, n∈N, n≥2) given by
+
+    cos(θᵣ) = <A,B>ᵣ/|A||B|
+
+where the real inner product of two complex vectors is performed in the
+real vector space Vʳ (≃R₂ₙ) isometric to Vᶜ.
+
+@param n The dimensionality of the complex vector space Vᶜ
+@param A A pointer to the first complex vector
+@param B A pointer to the second complex vector
+@returns θᵣ
+*/
+template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+/*! \brief The general n-dimensional Hermitian angle between two complex-valued vectors
+
+Calculate and return the Hermitian angle between to vectors given by
+
+    cos(θₕ) = |<A,B>|/|A||B|
+
+where the inner product of two complex-valued vectors is
+[given by](https://www.mathphysicsbook.com/mathematics/abstract-algebra/generalizing-vectors/norms-of-vectors/)
+<A,B> = ¼(|A+B|²-|A-B|²+𝑖|A-𝑖B|²-𝑖|A+𝑖B|²)
+
+@param n The dimensionality of the vector space
+@param A A pointer to the first complex vector
+@param B A pointer to the second complex vector
+@returns θₕ
+*/
+template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
+
+template<typename T> const std::string my_to_string(const T x);
+template<typename T> const std::string my_to_string(const std::complex<T> x);
+
+template<typename T> T vector_distance(const size_t n, const T* a, const T* b);
+template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
 
 #include "linear_algebra.hpp"
 
