@@ -128,7 +128,7 @@ template<class T> int MapGrid3<T>::sub2map(const size_t *s, size_t *m) const {
   return 0;
 }
 template<class T> size_t MapGrid3<T>::sub2map(const size_t *s) const {
-  size_t m=0;
+  size_t m=this->maximum_mapping()+1;
   this->sub2map(s,&m);
   return m;
 }
@@ -137,6 +137,20 @@ template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t *m) const {
   if (!this->valid_mapping(l)) return -1;
   *m = size_t(this->map[l]);
   return 0;
+}
+template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t& m) const {
+  if ( l+1 > this->numel() ) return 1;
+  if (!this->valid_mapping(l)) return -1;
+  m = size_t(this->map[l]);
+  return 0;
+}
+template<class T> int MapGrid3<T>::map2lin(const size_t m, size_t& l) const {
+  if ( m > this->maximum_mapping() ) return 1;
+  for (size_t i=0; i<this->numel(); ++i) if (this->map[i]==m){
+    l = i;
+    return 0;
+  }
+  return -1;
 }
 //
 template<class T> size_t MapGrid3<T>::numel(void) const {
@@ -294,15 +308,6 @@ template<class T> T abs_diff(const std::complex<T>& A, const std::complex<T>& B)
   return std::abs( std::real(A)-std::real(B) )+std::abs(std::imag(A)-std::imag(B));
 }
 
-template<class T> T squared_distance(const T&A, const T& B){
-  return (A-B)*(A-B);
-}
-template<class T> T squared_distance(const std::complex<T>& A, const std::complex<T>& B){
-  T r = std::real(A)-std::real(B);
-  T i = std::imag(A)-std::imag(B);
-  return r*r + i*i;
-}
-
 /*! \brief Determine the sorting permutation connecting neighbouring gridded
            scalars, vectors, and/or matrices.
 
@@ -406,7 +411,7 @@ ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
   typename GridDiffTraits<T>::type tval = gdzero, vval = gdzero, mval = gdzero;
   Munkres<typename GridDiffTraits<T>::type> munkres(nobj);
 
-  typename GridDiffTraits<T>::type tscale = typename GridDiffTraits<T>::type(scalar_weight);
+  typename GridDiffTraits<T>::type sscale = typename GridDiffTraits<T>::type(scalar_weight);
   typename GridDiffTraits<T>::type vscale = typename GridDiffTraits<T>::type(vector_weight);
   typename GridDiffTraits<T>::type mscale = typename GridDiffTraits<T>::type(matrix_weight);
 
@@ -469,8 +474,15 @@ ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
                 Avec[k] = this->data.getvalue(this_idx, i+(nS+k)*nobj);
                 Bvec[k] = this->data.getvalue(that_idx, j+(nS+k)*nobj);
               }
-              vval = vector_angle(nV,Avec,Bvec);
+              /* Modify the function to take a flag which selects the vector
+                 cost function? Something like:
+                    0 --> vector_angle
+                    1 --> vector_distance
+                    2 --> 1-vector_product
+              */
+              // vval = vector_angle(nV,Avec,Bvec);
               // vval = vector_distance(nV,Avec,Bvec);
+              vval = 1-vector_product(nV,Avec,Bvec);
             }
             if (nM){
               for (size_t ki=0; ki<nM; ++ki)
@@ -481,9 +493,9 @@ ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
               mval = frobenius_distance(nM,Amat,Bmat);
             }
             // for each i determine the cheapest j
-            munkres.get_cost()[i*nobj+j] = tscale*tval + vscale*vval + mscale*mval;
+            munkres.get_cost()[i*nobj+j] = sscale*tval + vscale*vval + mscale*mval;
             // // for each j determine the cheapest i
-            // munkres.get_cost()[j*nobj+i] = tscale*tval + vscale*vval + mscale*mval;
+            // munkres.get_cost()[j*nobj+i] = sscale*tval + vscale*vval + mscale*mval;
           }
         // and use the Munkres' algorithm to determine the optimal assignment
         munkres.run_assignment();

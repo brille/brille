@@ -405,3 +405,27 @@ template<typename T> T vector_distance(const size_t n, const std::complex<T>* a,
   }
   return std::sqrt(sum);
 }
+
+template<typename T> T vector_product(const size_t n, const T* a, const T* b){
+  T h_dot{0};
+  for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
+  return h_dot;
+}
+template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+  std::complex<T> h_dot = hermitian_product(n,a,b);
+  return std::real(h_dot*std::conj(h_dot));
+}
+
+template<class T> T squared_distance(const T&A, const T& B){
+  return (A-B)*(A-B);
+}
+template<class T> T squared_distance(const std::complex<T>& A, const std::complex<T>& B){
+  T r = std::real(A)-std::real(B);
+  T i = std::imag(A)-std::imag(B);
+  return r*r + i*i;
+}
+
+template<class T> T magnitude(const T a){ return std::abs(a); }
+template<class T> T magnitude(const std::complex<T> a){
+  return std::sqrt(std::real(a*std::conj(a)));
+}

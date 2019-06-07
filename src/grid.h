@@ -110,16 +110,57 @@ public:
   int replace_data(const ArrayVector<T>& newdata);
   //! Calculate the linear index of a point given its three subscripted indices
   size_t sub2lin(const size_t i, const size_t j, const size_t k) const;
-  //! Calculate the linear index of a point given an array of its three subscripted indices
+  /*! Calculate the linear index of a point given an array of its three subscripted indices
+  @param s the subscripted index to convert
+  @param[out] l the calculated linear index
+  @returns 0 if successful, 1 if unsuccessful
+  */
   int sub2lin(const size_t *s, size_t *l) const;
-  //! Calculate the subscripted indices of a point given its linear index
+  /*! Calculate the subscripted indices of a point given its linear index
+  @param l the linear index
+  @param[out] s a pointer to store the subscripted index
+  @returns 0 if successful, 1 if unsuccessful.
+  */
   int lin2sub(const size_t  l, size_t *s) const;
-  //! Find the mapping of a point given an array of its three subscripted indices
+  /*! Find the mapping of a point given an array of its three subscripted indices
+  @param s the subscripted index
+  @param[out] m the mapped index
+  @returns 0 if successful,
+           1 if `s` is not a valid subscripted index,
+          -1 if `s` is not a valid mapping index
+  */
   int sub2map(const size_t *s, size_t *m) const;
-  //! Find the mapping of a point given an array of its three subscripted indices
+  /*! Find the mapping of a point given an array of its three subscripted indices
+  @param s the subscripted indices
+  @returns the valid mapping index or one more than the maximum mapping if s is invalid.
+  */
   size_t sub2map(const size_t *s) const;
-  //! Find the mapping of a point given its linear index
+  /*! Find the mapping of a point given its linear index
+  @param l the linear index
+  @param[out] m a pointer to store the mapping index at
+  @returns 0 if successful,
+           1 if `l` is not a valid linear index,
+          -1 if `l` is not a valid mapping index
+  */
   int lin2map(const size_t  l, size_t *m) const;
+  /*! Find the mapping of a point given its linear index
+  @param l the linear index
+  @param[out] m a reference to store the mapping index
+  @returns 0 if successful,
+           1 if `l` is not a valid linear index,
+          -1 if `l` is not a valid mapping index
+  */
+  int lin2map(const size_t  l, size_t& m) const;
+  /*! Find the linear index of a point given its mapping, by searching through
+  the mapping array -- this is almost certainly highly ineficcient and should
+  be avoided.
+  @param m the mapping index
+  @param[out] l a reference to store the linear index
+  @return 0 if `l` was found successfully,
+          1 if `m` is not a valid mapping
+         -1 if `m` is valid by `l` was not found.
+  */
+  int map2lin(const size_t m, size_t& l) const;
   //
   //! Return the total number of elements in the mapping grid
   size_t numel(void) const;
@@ -155,6 +196,105 @@ public:
                                 const R scalar_weight=1,
                                 const R vector_weight=1,
                                 const R matrix_weight=1) const;
+  /*! \brief Determine which neighbours have been sorted and, of those,
+             which can be used in partial-derivative sorting.
+
+  Given the linear index of a grid point which is itself a valid mapped point,
+  first find all valid mapped neighbouring points. For each of the valid mapped
+  neighbouring points identify if there is a second mapped point along the same
+  direction which can be used for partial-derivative sorting.
+  @param map The MapGrid3 object containing data undergoing sorting.
+  @param sorted A logical vector indicating which mapped points have been sorted
+  @param clin The linear index for the central valid-mapped-point.
+  @returns A std::vector which
+           (a) is empty, in which case no sorted neighbours exist,
+           (b) has a single map index of a sorted neighbour, in which case no
+               sorted neighbours could be used in partial-derivative sorting
+           (c) has two map indexes: a sorted neighbour *and* a second sorted
+               point suitable for partial-derivative sorting, in that order.
+           In the case of (b) or (c) there may be additional sorted neighbours.
+  */
+  std::vector<size_t> find_sorted_neighbours(const std::vector<bool>& sorted,
+                                             const size_t clin) const;
+  /*!
+  \brief Assign the elements at one point to the elements at a second point,
+         storing the permutation array.
+
+  When sorting the data stored in a grid, it is necessary to make a sorting
+  assignment based soley on the difference in values at two points if a partial
+  derivative can not be calculated.
+  @param nS the number of scalar elements per object
+  @param nV the number of vector elements per object
+  @param nM the square root of the number of matrix elements per object
+  @param scaleS weight factor for scalar cost
+  @param scaleV weight factor for vector cost
+  @param scaleM weight factor for matrix cost
+  @param span the span of the elements of one object, nS*nV*nM*nM
+  @param nobj the number of object per grid point
+  @param[out] perm the permutation per grid point
+  @param cidx the index of the central grid point
+  @param nidx the index of the neighbouring grid point, which has been sorted
+  @param vcf which vector cost function to use.
+  */
+  template<typename R>
+  bool sort_difference(const size_t, const size_t, const size_t, const R,
+                       const R, const R, const size_t, const size_t,
+                       ArrayVector<size_t>&,
+                       const size_t, const size_t,
+                       const int vcf=0) const;
+  /*!
+  \brief Use the sorted elements at two neighbouring grid points to determine
+         the sorting permutation of the elements at a third neighbouring grid
+         point using a finite differences approximation to the derivative.
+
+  Given two grid points which have been sorted and lie along a line one and two
+  steps away, respectively, from a to-be-sorted central grid point, estimate
+  the values of each sorted element at the central point and use the estimate to
+  determine an assignment permutation for the central grid point.
+
+  In general one can predict the value of a function at x if its value and
+  slope are known at a point x₀ to by y₀ and m, respectively, by
+
+      y = m (x-x₀) + y₀
+
+  The slope is the first derivative of the function and can be approximated by
+  the difference in the value of the function at two points
+
+      y = [(y₀-y₁)/(x₀-x₁)](x-x₀) + y₀
+
+  If the difference between x₀ and x₁ is the same as the difference between x
+  and x₀, as it is in our gridded system, then this simplifies to
+
+      y = 2y₀ - y₁
+
+  where y₀ is the value at the neighbouring point and y₁ is the value at the
+  next neighbouring point.
+
+  @param nS the number of scalar elements per object
+  @param nV the number of vector elements per object
+  @param nM the square root of the number of matrix elements per object
+  @param scaleS weight factor for scalar cost
+  @param scaleV weight factor for vector cost
+  @param scaleM weight factor for matrix cost
+  @param span the span of the elements of one object, nS*nV*nM*nM
+  @param nobj the number of object per grid point
+  @param[out] perm the permutation per grid point
+  @param cidx the index of the central grid point
+  @param nidx the index of the neighbouring grid point, which has been sorted
+  @param nnidx the index of the next neighbouring grid point,
+               which has also been sorted
+  @param vcf which vector cost function to use.
+  */
+  template<typename R>
+  bool sort_derivative(const size_t, const size_t, const size_t, const R,
+                       const R,  const R, const size_t, const size_t,
+                       ArrayVector<size_t>&,
+                       const size_t, const size_t, const size_t,
+                       const int vcf=0) const;
+  template<typename R>
+  ArrayVector<size_t> new_sort_perm(const size_t, const size_t, const size_t,
+                                    const R, const R, const R, const int vcf=0
+                                   ) const;
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
@@ -549,5 +689,6 @@ template<class T> struct GridDiffTraits<std::complex<T>>{
 #endif
 
 #include "grid.hpp"
+#include "grid_sorting.hpp"
 
 #endif
