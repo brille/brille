@@ -555,13 +555,13 @@ public:
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
 
     for (size_t i=0; i<x.size(); i++){
-      // std::cout << x.to_string(i) << std::endl;
+      std::cout << x.to_string(i) << std::endl;
       // find the closest grid subscripted indices to x[i]
       // flg = this->nearest_index(x.datapointer(i), ijk );
       flg = this->floor_index(x.datapointer(i), ijk );
-      // std::cout << "\t closest index [" << std::to_string(ijk[0])
-      //           << " " << std::to_string(ijk[1])
-      //           << " " << std::to_string(ijk[2]) << "]";
+      std::cout << "\t closest index [" << std::to_string(ijk[0])
+                << " " << std::to_string(ijk[1])
+                << " " << std::to_string(ijk[2]) << "]";
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
@@ -569,12 +569,12 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (7==flg)/*+++*/{
-        // std::cout << "\t exact match!" << std::endl;
+        std::cout << "\t exact match!" << std::endl;
         this->sub2map(ijk,corners); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
-        // std::cout << "\t inexact match (flg="
-        //           << std::to_string(flg) << ")";
+        std::cout << "\t inexact match (flg="
+                  << std::to_string(flg) << ")";
         if (!flg)/*xxx*/{
           dirs.resize(3);
           dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
@@ -591,11 +591,11 @@ public:
 
         oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
         cnt=corner_count[dirs.size()];
-        // std::cout << "\t requiring corners [ ";
-        // for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(corners[gst]) << " ";
-        // std::cout << "] with weights [";
-        // for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(weights[gst]) << " ";
-        // std::cout << "]" << std::endl;
+        std::cout << "\t requiring corners [ ";
+        for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(corners[gst]) << " ";
+        std::cout << "] with weights [";
+        for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(weights[gst]) << " ";
+        std::cout << "]" << std::endl;
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
           throw std::runtime_error(msg);

@@ -122,7 +122,7 @@ class ModeSorting(unittest.TestCase):
     def test_mode_crossing(self):
         """Test sorting randomly permuted crossing modes."""
         w_en = 1
-        w_vc = 0
+        w_vc = 1
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (15, 15, 15))
         q_points = bz_grid.mapped_rlu

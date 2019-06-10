@@ -247,7 +247,11 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
-    .def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto, const bool& useparallel, const int& threads){
+    .def("interpolate_at",[](Class& cobj,
+                             py::array_t<double,py::array::c_style> pyX,
+                             const bool& moveinto,
+                             const bool& useparallel,
+                             const int& threads){
       py::buffer_info bi = pyX.request();
       if ( bi.shape[bi.ndim-1] !=3 )
         throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -262,9 +266,6 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         bool success = b.moveinto(Qv,qv,tauv);
         if (!success)
           throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
-        // std::cout << "Interpolate at Q=" << std::endl << Qv.to_string() << std::endl;
-        // std::cout << "with reduced q=" << std::endl << qv.to_string() << std::endl;
-        // std::cout << "and tau=" << std::endl << tauv.to_string() << std::endl;
       }
       // do the interpolation for each point in qv
       ArrayVector<T> lires;
@@ -303,28 +304,46 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
     },py::arg("axis"),py::arg("squeeze")=true)
-    .def("nearest_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX){
+    .def("nearest_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
         throw std::runtime_error("x must be a 1-D array");
       if (xinfo.shape[0]<3)
         throw std::runtime_error("x must have three elements");
+      // Copy the python x position into an ArrayVector
+      ArrayVector<double> x_invA(3u,1u, (double*)xinfo.ptr);
+      if (isrlu){
+        // if x was provided in relative lattice units, conver it to Å⁻¹
+        BrillouinZone bz = cobj.get_brillouinzone();
+        Reciprocal rlat = bz.get_lattice();
+        LQVec<double> x_rlu(rlat,1u, (double*)xinfo.ptr);
+        x_invA = x_rlu.get_xyz();
+      }
       size_t subidx[3];
-      unsigned int flg = cobj.nearest_index((double*)xinfo.ptr, subidx);
+      unsigned int flg = cobj.nearest_index(x_invA.datapointer(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
-    },py::arg("x"))
-    .def("floor_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX){
+    },py::arg("x"),py::arg("isrlu")=true)
+    .def("floor_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
         throw std::runtime_error("x must be a 1-D array");
       if (xinfo.shape[0]<3)
         throw std::runtime_error("x must have three elements");
+      // Copy the python x position into an ArrayVector
+      ArrayVector<double> x_invA(3u,1u, (double*)xinfo.ptr);
+      if (isrlu){
+        // if x was provided in relative lattice units, conver it to Å⁻¹
+        BrillouinZone bz = cobj.get_brillouinzone();
+        Reciprocal rlat = bz.get_lattice();
+        LQVec<double> x_rlu(rlat,1u, (double*)xinfo.ptr);
+        x_invA = x_rlu.get_xyz();
+      }
       size_t subidx[3];
-      unsigned int flg = cobj.floor_index((double*)xinfo.ptr, subidx);
+      unsigned int flg = cobj.floor_index(x_invA.datapointer(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
-    },py::arg("x"));
+    },py::arg("x"),py::arg("isrlu")=true);
 }
 
 template<class T>

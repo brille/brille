@@ -156,9 +156,9 @@ class SymSim(object):
     def __init__(self, SPData,
                  scattering_lengths=None,
                  parallel=False, **kwds):
-        """Initialize a new SymSim object from an existing SimPhony object"""
+        """Initialize a new SymSim object from an existing SimPhony object."""
         if not isinstance(SPData, InterpolationData):
-            print(f"Unexpected data type {type(SPData)}, expect failures.")
+            print("Unexpected data type {}, expect failures.".format(type(SPData)))
         if not isinstance(scattering_lengths, dict):
             scattering_lengths = {k: 1 for k in np.unique(SPData.ion_type)}
         self.data = SPData
@@ -177,10 +177,8 @@ class SymSim(object):
         n_br = self.data.n_branches
         n_io = self.data.n_ions
         frqs_vecs = np.concatenate(
-            (
-                (freq.magnitude).reshape((n_pt, n_br, 1)),
-                vecs.reshape(n_pt, n_br, 3*n_io)
-            ),
+            (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
+             np.ascontiguousarray(vecs.reshape(n_pt, n_br, 3*n_io))),
             axis=2)
         # move the branches to the last dimension to make mode-sorting possible
         # e.g., from (n_pt, n_br, 1+3*n_io) to (n_pt, 1+3*n_io, n_br)
@@ -277,12 +275,12 @@ class SymSim(object):
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
 
-    def w_q(self, q_hkl, primitive_q=False, interpolate=True, **kwargs):
+    def w_q(self, q_hkl, primitive_q=False, interpolate=True, moveinto=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
         # Interpolate the previously-stored eigen values for each Q
         if interpolate:
-            frqs_vecs = self.grid.interpolate_at(q_hkl, True, self.parallel)
+            frqs_vecs = self.grid.interpolate_at(q_hkl, moveinto, self.parallel)
             # Go from (n_pt, 1 + 3*n_io, n_br) to (n_pt, n_br, 1+ 3*n_io)
             frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
             # Separate them
@@ -291,8 +289,8 @@ class SymSim(object):
             n_pt = q_hkl.shape[0]
             n_br = self.data.n_branches
             n_io = self.data.n_ions
-            frqs = frqs.reshape((n_pt, n_br))
-            vecs = vecs.reshape((n_pt, n_br, n_io, 3))
+            frqs = np.ascontiguousarray(frqs.reshape((n_pt, n_br)))
+            vecs = np.ascontiguousarray(vecs.reshape((n_pt, n_br, n_io, 3)))
             # Store all information in the SimPhony Data object
             self.data.n_qpts = n_pt
             if prim_tran.does_anything and not primitive_q:
@@ -308,6 +306,11 @@ class SymSim(object):
             cfp_dict = {k: kwargs[k] for k in cfp_keywords if k in kwargs}
             self.data.calculate_fine_phonons(q_hkl, **cfp_dict)
         return self.data.freqs
+
+    def frqs_vecs(self, q_hkl, **kwargs):
+        """Calculate and return ωᵢ(Q) and ϵᵢ(Q)"""
+        self.w_q(q_hkl, **kwargs)
+        return (self.data.freqs, self.data.eigenvecs)
 
     def s_qw(self, q_hkl, energy, p_dict):
         """Calculate S(Q,E) for Q = (q_h, q_k, q_l) and E=energy.
@@ -358,7 +361,7 @@ class SymSim(object):
         s_i = self.s_q(q_hkl, **p_dict)
         # The resulting array should be (n_pt,n_br)
         if s_i.shape[0] != n_pt or s_i.shape[1] != n_br:
-            msg = f"Expected S(Q) shape ({n_pt}, {n_br}) but got {s_i.shape}."
+            msg = "Expected S(Q) shape ({}, {}) but got {}.".format(n_pt, n_br, s_i.shape)
             raise Exception(msg)
 
         omega = (self.data.freqs.to('millielectron_volt')).magnitude
@@ -379,7 +382,7 @@ class SymSim(object):
         elif resfun in ('d', 'del', 'delta'):
             s_q_e = delta(energy, omega, s_i)
         else:
-            print(f'Unknown function {resfun}')
+            print("Unknown function {}".format(resfun))
             s_q_e = s_i
         # Sum over the n_br branches
         s_q_e = s_q_e.sum(1)
