@@ -486,20 +486,41 @@ public:
     }
     return out;
   };
-  // /*! Find the linear index of the closest grid point to a specified position
-  // @param x The test position
-  // @returns The linear index of the closest grid point -- even if `x` is out of bounds
-  // */
-  // size_t nearest_linear_index(const double *x) const {
-  //   size_t ijk[3];
-  //   int ret;
-  //   if ( (ret = nearest_index(x,ijk)) ){
-  //     // somehow indicate that we've hit one or more boundaries?
-  //   }
-  //   size_t lidx;
-  //   ret += this->sub2lin(ijk,&lidx);
-  //   return lidx;
-  // }
+  /*! Find the subscripted indices of the grid point to a specified position
+      which is smaller than the position in all coordinates.
+  @param x The test position
+  @param[out] ijk A storage location for the subscripted indices
+  @returns An integer with detailed information about if and how `x` is out of
+           bounds of the grid.
+  @note `out` encodes details about how each component of `x` is located in
+         relation to the boundaries of the grid, using its bits as flags.
+         For a given axis n, a number fₙ takes one of four
+         values {0,2ⁿ,2ⁿ⁺³,2ⁿ⁺⁶} to indicate that  `x` is between two grid points,
+         within machine precision of a grid point, smaller than the lowest grid
+         point, or larger than the highest grid point, respectively.
+         `out` is then f₀+f₁+f₂.
+  */
+  unsigned int floor_index(const double *x, size_t *ijk) const {
+    unsigned int out=0;
+    slong tmp;
+    for (int i=0; i<3; i++){
+      tmp = (slong)( floor( (x[i] - this->zero[i])/this->step[i] ) );
+      if (tmp>=0 && tmp<this->size(i)){
+        if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
+          out += 1<<i; // exact match
+      } else {
+        if (tmp<0) {
+          tmp = 0;
+          out += 1<<(3+i); // underflow
+        } else {
+          tmp = this->size(i)-1;
+          out += 1<<(6+i); // overflow
+        }
+      }
+      ijk[i] = (size_t)(tmp);
+    }
+    return out;
+  };
   //! Perform sanity checks before attempting to interpolate
   template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
     if (this->size(0)<2||this->size(1)<2||this->size(2)<2)
@@ -536,7 +557,8 @@ public:
     for (size_t i=0; i<x.size(); i++){
       // std::cout << x.to_string(i) << std::endl;
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk );
+      // flg = this->nearest_index(x.datapointer(i), ijk );
+      flg = this->floor_index(x.datapointer(i), ijk );
       // std::cout << "\t closest index [" << std::to_string(ijk[0])
       //           << " " << std::to_string(ijk[1])
       //           << " " << std::to_string(ijk[2]) << "]";
@@ -567,7 +589,7 @@ public:
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
 
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
         cnt=corner_count[dirs.size()];
         // std::cout << "\t requiring corners [ ";
         // for (size_t gst=0; gst<cnt; gst++) std::cout << std::to_string(corners[gst]) << " ";

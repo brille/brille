@@ -302,7 +302,29 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
-    },py::arg("axis"),py::arg("squeeze")=true);
+    },py::arg("axis"),py::arg("squeeze")=true)
+    .def("nearest_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX){
+      py::buffer_info xinfo = pyX.request();
+      if (xinfo.ndim!=1)
+        throw std::runtime_error("x must be a 1-D array");
+      if (xinfo.shape[0]<3)
+        throw std::runtime_error("x must have three elements");
+      size_t subidx[3];
+      unsigned int flg = cobj.nearest_index((double*)xinfo.ptr, subidx);
+      py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
+      return ret;
+    },py::arg("x"))
+    .def("floor_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX){
+      py::buffer_info xinfo = pyX.request();
+      if (xinfo.ndim!=1)
+        throw std::runtime_error("x must be a 1-D array");
+      if (xinfo.shape[0]<3)
+        throw std::runtime_error("x must have three elements");
+      size_t subidx[3];
+      unsigned int flg = cobj.floor_index((double*)xinfo.ptr, subidx);
+      py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
+      return ret;
+    },py::arg("x"));
 }
 
 template<class T>
