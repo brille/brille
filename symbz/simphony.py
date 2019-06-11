@@ -118,6 +118,49 @@ def sho(x_0, x_i, y_i, fwhm, t_k):
     return y_0.reshape(outshape)
 
 
+def standard_imaginary_vector(vecs):
+    """Standardise the imaginary vectors while preserving |Q⋅ϵ|²."""
+    assert vecs.shape[-1] == 3, "The last dimension must hold each 3-vector"
+    n_vecs = np.prod(vecs.shape[0:-1])
+    flat_v = vecs.reshape((n_vecs, 3))
+    max_idx = np.argmax(np.abs(flat_v), axis=-1)
+    standard_flat_v = np.ndarray(flat_v.shape, dtype=flat_v.dtype)
+    # standard_flat_v = np.zeros_like(flat_v)
+    for (idx, (vec, m_i)) in enumerate(zip(flat_v, max_idx)):
+        r_vec = np.real(vec)
+        i_vec = np.imag(vec)
+        # Swap the signs of all imaginary components if the maximum index
+        # of the vector is not in the ++ or -- quadrant
+        if r_vec[m_i]*i_vec[m_i] < 0:
+            # print("Swap imaginary signs")
+            i_vec *= -1
+        # Swap the signs of *all* components if the maximum index of the
+        # vector is not in the ++ quadrant
+        if r_vec[m_i] < 0:
+            # print("Swap all signs")
+            r_vec *= -1
+            i_vec *= -1
+        # Now make sure that the first index is ++
+        if r_vec[0]*r_vec[0] < 0:
+            i_vec *= -1
+        if r_vec[0] < 0:
+            r_vec *= -1
+            i_vec *= -1
+        standard_flat_v[idx] = r_vec + 1j*i_vec
+    return np.array(standard_flat_v).reshape(vecs.shape)
+
+
+def imaginary_vector_mod(vecs):
+    """Force all vector components into the ℜ(vecs)+ℑ(vecs)>=0 half-plane."""
+    vecs_real = np.real(vecs)
+    vecs_imag = np.imag(vecs)
+    to_move = vecs_real + vecs_imag < 0
+    # Since vecs is a reference to the provided array, we can modify it here
+    vecs[to_move] *= -1
+    # But still return its reference for fun
+    return vecs
+
+
 class SymSim(object):
     """
     An object to enable efficient interpolation of CASTEP-derived phonons at
@@ -176,6 +219,15 @@ class SymSim(object):
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
+        # S(Q,ω) ∝ ∑|Q⋅ϵᵢⱼ|² → the phase of ϵᵢⱼ can be dropped without issue
+        # In reality ℜ(ϵᵢⱼ)+ℑ(ϵᵢⱼ), ℜ(ϵᵢⱼ)-ℑ(ϵᵢⱼ), -ℜ(ϵᵢⱼ)+ℑ(ϵᵢⱼ),
+        # and -ℜ(ϵᵢⱼ)-ℑ(ϵᵢⱼ) correspond to S(Q,ω), S(Q,-ω), S(-Q,ω), and
+        # S(-Q,-ω) but SimPhony already drops the negative energy branches
+        # and most systems have S(Q,ω)≡S(-Q,ω).
+        # Still, attempt to be consistent with physics and only constrain ϵᵢⱼ
+        # to the ℜ(ϵᵢ)+ℑ(ϵᵢⱼ) ≥ 0 imaginary half-plane which corresponds to
+        # S(Q,ω)≡S(-Q,-ω) which is required for all systems (and theories).
+        vecs = standard_imaginary_vector(vecs)
         frqs_vecs = np.concatenate(
             (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
              np.ascontiguousarray(vecs.reshape(n_pt, n_br, 3*n_io))),
