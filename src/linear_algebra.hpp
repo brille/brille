@@ -350,6 +350,9 @@ template<typename T> std::complex<T> hermitian_product(const size_t n, const std
   for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
   return h_dot;
 }
+template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B){
+  return vector_angle(n,A,B);
+}
 template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
   std::complex<T> AA=hermitian_product(n,A,A);
   std::complex<T> BB=hermitian_product(n,B,B);
@@ -357,8 +360,8 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
 
   T nAB, nA, nB, c_t;
   nAB = std::sqrt(std::real(AB*std::conj(AB)));
-  nA = std::sqrt(std::real(A));
-  nB = std::sqrt(std::real(B));
+  nA = std::sqrt(std::real(AA));
+  nB = std::sqrt(std::real(BB));
   if (nA && nB){
     c_t = nAB/(nA*nB);
   } else {
@@ -412,7 +415,6 @@ template<typename T> T vector_product(const size_t n, const T* a, const T* b){
   return h_dot;
 }
 template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
-  for (size_t i=0; i<n; ++i) std::cout << my_to_string(a[i]) << " ";
   std::complex<T> h_dot = hermitian_product(n,a,b);
   return std::real(h_dot*std::conj(h_dot));
 }

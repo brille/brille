@@ -220,7 +220,8 @@ class SymSim(object):
         frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
         self.grid.fill(frqs_vecs,
                        scalar_elements=1,
-                       eigenvector_elements=3*n_io)
+                       eigenvector_num=n_io,
+                       eigenvector_dim=3)
         # self.sort_branches()
         self.parallel = parallel
 

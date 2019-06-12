@@ -160,6 +160,7 @@ where the inner product of two complex-valued vectors is
 @returns θₕ
 */
 template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B);
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
 
 template<typename T> const std::string my_to_string(const T x);

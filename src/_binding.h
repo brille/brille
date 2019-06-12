@@ -159,6 +159,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
                    py::array_t<T,py::array::c_style> pydata,
                    const size_t n_scalar,
                    const size_t n_eigenvector,
+                   const size_t d_eigenvector,
                    const size_t n_vector,
                    const size_t n_matrix
                  ){
@@ -182,10 +183,11 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         throw std::runtime_error(msg);
       }
       // no error, so replace_data will work (if n_* are right)
-      cobj.replace_data(data,shape,n_scalar,n_eigenvector,n_vector,n_matrix);
+      cobj.replace_data(data,shape,n_scalar,n_eigenvector,d_eigenvector,n_vector,n_matrix);
     }, py::arg("new_data"),
        py::arg("scalar_elements")=0,
-       py::arg("eigenvector_elements")=0,
+       py::arg("eigenvector_num")=0,
+       py::arg("eigenvector_dim")=0,
        py::arg("vector_elements")=0,
        py::arg("matrix_elements")=0
     )

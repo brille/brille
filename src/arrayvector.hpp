@@ -613,7 +613,8 @@ void interpolate_to(const A<T>& av,
     storing the result in the specified ArrayVector at the specified index
   @param av The ArrayVector from which arrays will be extracted
   @param nS The number of scalar elements
-  @param nE The number of eigenvector elements
+  @param nE The number of eigenvectors per array
+  @param eD The dimensionality of the eigenvectors
   @param nV The number of vector elements
   @param nM The number of matrix elements
   @param nB The number of branches per array
@@ -632,6 +633,7 @@ template<class T, class R, template<class> class A,
 void unsafe_interpolate_to(const A<T>& av,
                            const size_t nS,
                            const size_t nE,
+                           const size_t eD,
                            const size_t nV,
                            const size_t nM,
                            const size_t nB,
@@ -642,19 +644,20 @@ void unsafe_interpolate_to(const A<T>& av,
                            const size_t j) {
   S *outdata = out.datapointer(j);
   T *avidata;
-  size_t y, m=av.numel(), per_branch = nS+nE+nV+nM*nM;
+  size_t y, m=av.numel(), per_branch = nS+nE*eD+nV+nM*nM;
   // pull out the first eigenvector(s)
-  T* ev0 = new T[nE*nB];
-  T* evx = new T[nE];
+  T* ev0 = new T[nE*eD*nB];
+  T* evx = new T[nE*eD];
+  T* evd = new T[eD];
   T evmult = T(1);
-  if (nE){
+  if (nE*eD){
     for (size_t b=0; b<nB; ++b){
-      for (y=nS; y<nS+nE; ++y){
-        ev0[b*nE+(y-nS)] = av.getvalue(i[0], b+nB*y);
+      for (y=nS; y<nS+nE*eD; ++y){
+        ev0[b*nE*eD+(y-nS)] = av.getvalue(i[0], b+nB*y);
       }
     }
   }
-  // ev0 is now a (nB,nE) array of the nB eigenvectors
+  // ev0 is now a (nB,nE,eD) array of the nB eigenvectors
   T evdot;
   for (size_t x=0; x<n; ++x){
     avidata = av.datapointer(i[x]);
@@ -663,21 +666,49 @@ void unsafe_interpolate_to(const A<T>& av,
       // Scalars are first, nothing special to do:
       for (y=0; y<nS; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
       // Next come eigenvectors, which *are* special
-      if (nE){
-        for (y=nS; y<nS+nE; ++y) evx[y-nS] = avidata[b+nB*y];
-        // check if the dot product between vectors is positive
-        evmult = (inner_product(nE, ev0+b*nE, evx) >= 0) ? T(1) : T(-1);
-        // if it's not, flip the xᵗʰ eigenvector as we add its weighted value
-        for (y=nS; y<nS+nE; ++y) outdata[b+nB*y] += w[x]*(evmult*avidata[b+nB*y]);
+      if (nE*eD){
+        // copy the (nE,eD) array of eigenvectors
+        for (y=nS; y<nS+nE*eD; ++y) evx[y-nS] = avidata[b+nB*y];
+        // treat each eigenvector separately
+        for (y=0; y<nE; ++y){
+          // check if the dot product between vectors is positive
+          evmult = (inner_product(eD, ev0+b*nE*eD+y*eD, evx+y*eD) >= 0) ? T(1) : T(-1);
+          // if it's not, flip the yᵗʰ eigenvector at x as we add its weighted value
+          for (size_t z=nS+y*eD; z<nS+y*eD+eD; ++z)
+            outdata[b+nB*z] += w[x]*(evmult*avidata[b+nB*z]);
+
+          // // alternative approach: interpolate in angle space
+          // // hermitian_angle returns T for complex<T>, maybe we can get away
+          // // with using auto here
+          // auto theta = hermitian_angle(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
+          // // find ⃗d = v̂₂ - (v̂₁⋅v̂₂) v̂₁
+          // for (size_t z=0; z<eD; ++z) evd[z] = evx[y*eD+z] - std::cos(theta)*ev0[b*nE*eD+y*eD+z];
+          // // and its norm
+          // auto normD = std::sqrt(inner_product(eD, evd, evd));
+          // // the interpolated vector is v̂₁ cos(w*θ) + d̂ sin(w*θ)
+          // for (size_t z=0; z<eD; ++z)
+          //   outdata[b+nB*(nS+y*eD+z)] += ev0[(b*nE+y)*eD+z]*std::cos(w[x]*theta)
+          //                              + evd[z]*std::sin(w[x]*theta)/normD;
+        }
       }
       // vector and matrix parts are not special (yet)
-      for (y=nS+nE; y<per_branch; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
+      for (y=nS+nE*eD; y<per_branch; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
     }
   }
   // make sure each eigenvector is normalized
-  if (nE){
-
+  if (nE*eD){
+    for (size_t b=0; b<nB; ++b){
+      for (y=0; y<nE; ++y){
+        // pull out a single eigenvector
+        for (size_t z=0; z<eD; ++z) evd[z] = outdata[b+nB*(nS+y*eD+z)];
+        // find its norm
+        auto normY = std::sqrt(inner_product(eD, evd, evd));
+        // and normalize the eigenvector
+        for (size_t z=0; z<eD; ++z) outdata[b+nB*(nS+y*eD+z)] /= normY;
+      }
+    }
   }
   delete[] ev0;
   delete[] evx;
+  delete[] evd;
 }
