@@ -564,3 +564,120 @@ void unsafe_accumulate_to(const A<T>& av, const size_t n, const size_t *i, const
       outdata[y] += avidata[y]*w[x];
   }
 }
+
+
+/*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector,
+    treating the elements of each vector as a series of scalars, eigenvectors,
+    vectors, and matrices,
+    storing the result in the specified ArrayVector at the specified index
+  @param av The ArrayVector from which arrays will be extracted
+  @param nS The number of scalar elements
+  @param nE The number of eigenvector elements
+  @param nV The number of vector elements
+  @param nM The number of matrix elements
+  @param nB The number of branches per array
+  @param n The number of arrays to be extraced
+  @param i A pointer to the indices of the arrays to be extracted
+  @param w A pointer to the weights used in combining the extracted arrays
+  @param[out] out A reference to the ArrayVector where the result will be stored
+  @param j The index into out where the array will be stored
+*/
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+         class S = typename std::common_type<T,R>::type
+         >
+void interpolate_to(const A<T>& av,
+                    const size_t nS,
+                    const size_t nE,
+                    const size_t nV,
+                    const size_t nM,
+                    const size_t nB,
+                    const size_t n,
+                    const size_t *i,
+                    const R *w,
+                    A<S>& out,
+                    const size_t j) {
+  if (av.numel() != out.numel())
+    throw std::runtime_error("source and sink ArrayVectors must have same number of elements");
+  if ( j >= out.size() )
+    throw std::out_of_range("sink index out of range");
+  if (av.numel() != (nS+nE+nV+nM*nM)*nB)
+    throw std::runtime_error("Wrong number of scalar/eigenvector/vector/matrix elements or branches.");
+  for (size_t k=0;k<n;++k) if (i[k]>=av.size())
+    throw std::out_of_range("source index out of range");
+  unsafe_interpolate_to(av,nS,nE,nV,nM,nB,n,i,w,out,j);
+}
+/*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector,
+    treating the elements of each vector as a series of scalars, eigenvectors,
+    vectors, and matrices,
+    storing the result in the specified ArrayVector at the specified index
+  @param av The ArrayVector from which arrays will be extracted
+  @param nS The number of scalar elements
+  @param nE The number of eigenvector elements
+  @param nV The number of vector elements
+  @param nM The number of matrix elements
+  @param nB The number of branches per array
+  @param n The number of arrays to be extraced
+  @param i A pointer to the indices of the arrays to be extracted
+  @param w A pointer to the weights used in combining the extracted arrays
+  @param[out] out A reference to the ArrayVector where the result will be stored
+  @param j The index into out where the array will be stored
+  @note This function performs no bounds checking. Use interpolate_to if there is
+        a need to ensure no out-of-bounds access is performed.
+*/
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+         class S = typename std::common_type<T,R>::type
+         >
+void unsafe_interpolate_to(const A<T>& av,
+                           const size_t nS,
+                           const size_t nE,
+                           const size_t nV,
+                           const size_t nM,
+                           const size_t nB,
+                           const size_t n,
+                           const size_t *i,
+                           const R *w,
+                           A<S>& out,
+                           const size_t j) {
+  S *outdata = out.datapointer(j);
+  T *avidata;
+  size_t y, m=av.numel(), per_branch = nS+nE+nV+nM*nM;
+  // pull out the first eigenvector(s)
+  T* ev0 = new T[nE*nB];
+  T* evx = new T[nE];
+  T evmult = T(1);
+  if (nE){
+    for (size_t b=0; b<nB; ++b){
+      for (y=nS; y<nS+nE; ++y){
+        ev0[b*nE+(y-nS)] = av.getvalue(i[0], b+nB*y);
+      }
+    }
+  }
+  // ev0 is now a (nB,nE) array of the nB eigenvectors
+  T evdot;
+  for (size_t x=0; x<n; ++x){
+    avidata = av.datapointer(i[x]);
+    // loop over the branches. they are last index, so closest in memory :(
+    for (size_t b=0; b<nB; ++b){
+      // Scalars are first, nothing special to do:
+      for (y=0; y<nS; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
+      // Next come eigenvectors, which *are* special
+      if (nE){
+        for (y=nS; y<nS+nE; ++y) evx[y-nS] = avidata[b+nB*y];
+        // check if the dot product between vectors is positive
+        evmult = (inner_product(nE, ev0+b*nE, evx) >= 0) ? T(1) : T(-1);
+        // if it's not, flip the xᵗʰ eigenvector as we add its weighted value
+        for (y=nS; y<nS+nE; ++y) outdata[b+nB*y] += w[x]*(evmult*avidata[b+nB*y]);
+      }
+      // vector and matrix parts are not special (yet)
+      for (y=nS+nE; y<per_branch; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
+    }
+  }
+  // make sure each eigenvector is normalized
+  if (nE){
+
+  }
+  delete[] ev0;
+  delete[] evx;
+}

@@ -155,7 +155,13 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
     .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
     .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
-    .def("fill",[](Class& cobj, py::array_t<T,py::array::c_style> pydata){
+    .def("fill",[](Class& cobj,
+                   py::array_t<T,py::array::c_style> pydata,
+                   const size_t n_scalar,
+                   const size_t n_eigenvector,
+                   const size_t n_vector,
+                   const size_t n_matrix
+                 ){
       py::buffer_info bi = pydata.request();
       ssize_t ndim = bi.ndim;
       /* ndim  assumed interpolation data type  numel /
@@ -175,9 +181,14 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
                         + std::to_string(cobj.maximum_mapping()) + "!";
         throw std::runtime_error(msg);
       }
-      cobj.replace_data(data,shape); // no error, so this will work for sure
-      // return mapExceedsNewData; // let the calling function deal with this?
-    })
+      // no error, so replace_data will work (if n_* are right)
+      cobj.replace_data(data,shape,n_scalar,n_eigenvector,n_vector,n_matrix);
+    }, py::arg("new_data"),
+       py::arg("scalar_elements")=0,
+       py::arg("eigenvector_elements")=0,
+       py::arg("vector_elements")=0,
+       py::arg("matrix_elements")=0
+    )
     .def_property_readonly("data",
       /*get data*/ [](Class& cobj){
         return av2np_shape(cobj.get_data(), cobj.data_shape(), false);

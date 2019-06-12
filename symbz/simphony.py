@@ -118,48 +118,39 @@ def sho(x_0, x_i, y_i, fwhm, t_k):
     return y_0.reshape(outshape)
 
 
-def standard_imaginary_vector(vecs):
-    """Standardise the imaginary vectors while preserving |Q⋅ϵ|²."""
-    assert vecs.shape[-1] == 3, "The last dimension must hold each 3-vector"
+def standard_imaginary_vector(vecs, idx=2):
+    """Standardise the imaginary vectors while preserving |Q⋅ϵ|².
+
+    The magnitude of any complex number z = ±a±𝔦b, |z|²=a²+b², has two
+    mirror planes, σᵣ and σᵢ. For finite a and b, there are four complex
+    numbers with the same squared magnitude.
+
+    The dot product of a complex vector and a real vector is itself a complex
+    number. For a real vector Q = Q₀ê₀ + Q₁ê₁ + Q₂ê₂ and complex vector
+    ϵ = (±a₀±𝔦b₀)ê₀ + (±a₁±𝔦b₁)ê₁ + (±a₂±𝔦b₂)ê₂ which has 2⁶ = 64 possible
+    combinations of signs, there are only 16 unique values of |Q⋅ϵ|².
+
+    Eigen problem solvers typically allow for arbitrary overall sign of the
+    eigenvectors they produce, e.g., ϵ = ±(z₀ê₀ + z₁ê₁ + z₂ê₂), with the
+    sign chosen based on numeric details of the system.
+    If the eigenvectors for two neighbouring grid points have been chosen with
+    opposite signs then linear interpolation between the points will produce
+    interpolated eigenvectors with |ϵ|² < 1 and too-small |Q⋅ϵ|².
+    By forcing all eigenvectors to have their third component in the same
+    (positive real, positive imaginary) quadrant while preserving |Q⋅ϵ|² we
+    might minimise the chance of interpolating between opposite-sign
+    eigenvectors.
+    (All eigenvectors returned by SimPhony have a first component a₀+𝔦b₀)
+    """
+    def pm_one(vec):
+        return np.array([-1 if np.signbit(v) else 1 for v in vec])
+    assert vecs.shape[-1] > idx
     n_vecs = np.prod(vecs.shape[0:-1])
     flat_v = vecs.reshape((n_vecs, 3))
-    max_idx = np.argmax(np.abs(flat_v), axis=-1)
-    standard_flat_v = np.ndarray(flat_v.shape, dtype=flat_v.dtype)
-    # standard_flat_v = np.zeros_like(flat_v)
-    for (idx, (vec, m_i)) in enumerate(zip(flat_v, max_idx)):
-        r_vec = np.real(vec)
-        i_vec = np.imag(vec)
-        # Swap the signs of all imaginary components if the maximum index
-        # of the vector is not in the ++ or -- quadrant
-        if r_vec[m_i]*i_vec[m_i] < 0:
-            # print("Swap imaginary signs")
-            i_vec *= -1
-        # Swap the signs of *all* components if the maximum index of the
-        # vector is not in the ++ quadrant
-        if r_vec[m_i] < 0:
-            # print("Swap all signs")
-            r_vec *= -1
-            i_vec *= -1
-        # Now make sure that the first index is ++
-        if r_vec[0]*r_vec[0] < 0:
-            i_vec *= -1
-        if r_vec[0] < 0:
-            r_vec *= -1
-            i_vec *= -1
-        standard_flat_v[idx] = r_vec + 1j*i_vec
+    sign_r = pm_one(flat_v.real[:, idx]).reshape(n_vecs, 1)
+    sign_i = pm_one(flat_v.imag[:, idx]).reshape(n_vecs, 1)
+    standard_flat_v = sign_r*(flat_v.real) + 1j*sign_i*(flat_v.imag)
     return np.array(standard_flat_v).reshape(vecs.shape)
-
-
-def imaginary_vector_mod(vecs):
-    """Force all vector components into the ℜ(vecs)+ℑ(vecs)>=0 half-plane."""
-    vecs_real = np.real(vecs)
-    vecs_imag = np.imag(vecs)
-    to_move = vecs_real + vecs_imag < 0
-    # Since vecs is a reference to the provided array, we can modify it here
-    vecs[to_move] *= -1
-    # But still return its reference for fun
-    return vecs
-
 
 class SymSim(object):
     """
@@ -219,14 +210,6 @@ class SymSim(object):
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
-        # S(Q,ω) ∝ ∑|Q⋅ϵᵢⱼ|² → the phase of ϵᵢⱼ can be dropped without issue
-        # In reality ℜ(ϵᵢⱼ)+ℑ(ϵᵢⱼ), ℜ(ϵᵢⱼ)-ℑ(ϵᵢⱼ), -ℜ(ϵᵢⱼ)+ℑ(ϵᵢⱼ),
-        # and -ℜ(ϵᵢⱼ)-ℑ(ϵᵢⱼ) correspond to S(Q,ω), S(Q,-ω), S(-Q,ω), and
-        # S(-Q,-ω) but SimPhony already drops the negative energy branches
-        # and most systems have S(Q,ω)≡S(-Q,ω).
-        # Still, attempt to be consistent with physics and only constrain ϵᵢⱼ
-        # to the ℜ(ϵᵢ)+ℑ(ϵᵢⱼ) ≥ 0 imaginary half-plane which corresponds to
-        # S(Q,ω)≡S(-Q,-ω) which is required for all systems (and theories).
         vecs = standard_imaginary_vector(vecs)
         frqs_vecs = np.concatenate(
             (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
@@ -235,7 +218,9 @@ class SymSim(object):
         # move the branches to the last dimension to make mode-sorting possible
         # e.g., from (n_pt, n_br, 1+3*n_io) to (n_pt, 1+3*n_io, n_br)
         frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
-        self.grid.fill(frqs_vecs)
+        self.grid.fill(frqs_vecs,
+                       scalar_elements=1,
+                       eigenvector_elements=3*n_io)
         # self.sort_branches()
         self.parallel = parallel
 
