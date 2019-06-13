@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <limits>
 #include <math.h>
+#include <cmath>
 #include <complex>
 #include "safealloc.h"
 
@@ -179,6 +180,12 @@ template<class T> T squared_distance(const T&A, const T& B);
 template<class T> T squared_distance(const std::complex<T>& A, const std::complex<T>& B);
 template<class T> T magnitude(const T a);
 template<class T> T magnitude(const std::complex<T> a);
+
+template<class T> size_t encode_array_signs(const size_t n, const T* a);
+template<class T> size_t encode_array_signs(const size_t n, const std::complex<T>* a);
+
+template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, T* v1);
+template<class T> int make_eigenvectors_equivalent(const size_t n, const std::complex<T>* v0, std::complex<T> v1);
 
 #include "linear_algebra.hpp"
 

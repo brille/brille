@@ -442,3 +442,97 @@ template<class T> T magnitude(const T a){ return std::abs(a); }
 template<class T> T magnitude(const std::complex<T> a){
   return std::sqrt(std::real(a*std::conj(a)));
 }
+
+
+/*! Determine an unsigned integer that encodes the signs of a complex vector.
+
+Each element of a complex valued vector has two signs associated with it, one
+for the real part and one for the imaginary part. Some properties of the vector,
+notably the squared modulus of its dot product with a real vector, depend on
+the relative signs of each element. This function encodes the four possible
+combinations into a quaternary based system, (++,+-,-+ ,--)→(0,1,2,3)₄ and
+combines the `n` values into a single unsigned integer using 2`n` bits.
+
+As an example, a vector (+a-𝑖b, -c+𝑖d, -e-𝑖f) has signs (++,-+,--) which give
+the quaternary numbers (0,2,3)₄ ⇒ 001011₂ = 9.
+*/
+template<class T> size_t encode_array_signs(const size_t n, const std::complex<T>* a){
+  size_t signs=0;
+  for (size_t i=0; i<n; ++i){
+    if (std::signbit(std::imag(a[i]))) signs += 1 << 2*(n-1-i);
+    if (std::signbit(std::real(a[i]))) signs += 2 << 2*(n-1-i);
+  }
+  return signs;
+}
+/*! Determine an unsigned integer that encodes the signs of a real vector
+
+Less useful than it's complex-valued pair. Only really defined in case some
+system produces strictly-real eigenvectors.
+*/
+template<class T> size_t encode_array_signs(const size_t n, const T* a){
+  size_t signs=0;
+  for (size_t i=0; i<n; ++i){
+    if (std::signbit(a[i])) signs += 2 << 2*(n-1-i);
+  }
+  return signs;
+}
+
+
+template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, T* v1){
+  size_t s0, s1;
+  s0 = encode_array_signs(n,v0);
+  s1 = encode_array_signs(n,v1);
+  if (s0 == s1) return 0;
+  // the only valid permutation for real values is by 2.
+  size_t onesign, s1mod;
+  for (size_t j=0; j<n; ++j){
+    // extract a single sign quaternary
+    onesign = (s1 >> 2*(n-1-j)) - ((s1 >> 2*(n-j)) << 2*(n-j));
+    // permute it by 2
+    onesign = (onesign+2)%4;
+    // and stick it in s1mod
+    s1mod += onesign << 2*(n-1-j);
+  }
+  if (s0 == s1mod){
+    T m1{-1};
+    for (size_t j=0; j<n; ++j) v1[j] *= m1;
+    return 0;
+  }
+  return 1;
+}
+template<class T> int make_eigenvectors_equivalent(const size_t n, const std::complex<T>* v0, std::complex<T> v1){
+  size_t s0, s1;
+  s0 = encode_array_signs(n,v0);
+  s1 = encode_array_signs(n,v1);
+  if (s0 == s1) return 0;
+  // The signs of each vector are not the same, so check for equivalence:
+  size_t onesign, s1mod;
+  // we can permute each sign quaternary number up to three times
+  for (size_t i=1; i<4; ++i){
+    s1mod = 0;
+    for (size_t j=0; j<n; ++j){
+      // extract a single sign quaternary
+      onesign = (s1 >> 2*(n-1-j)) - ((s1 >> 2*(n-j)) << 2*(n-j));
+      // permute it
+      onesign = (onesign+i)%4;
+      // and stick it in s1mod
+      s1mod += onesign << 2*(n-1-j);
+    }
+    if (s0 == s1mod){
+      // The two are equivalent for our purposes, but the signs of v1 need to be changed!
+      T m1{-1};
+      switch (i){
+        case 1: // exchange the imaginary sign
+        for (size_t j=0; j<n; ++j) v1[j] = std::complex<T>(std::real(v1[j]), m1*std::imag(v1[j]));
+        break;
+        case 2: // exchange both real and imaginary signs
+        for (size_t j=0; j<n; ++j) v1[j] = std::complex<T>(m1*std::real(v1[j]), m1*std::imag(v1[j]));
+        break;
+        case 3: // exchange the real sign
+        for (size_t j=0; j<n; ++j) v1[j] = std::complex<T>(m1*std::real(v1[j]), std::imag(v1[j]));
+        break;
+      }
+      return 0;
+    }
+  }
+}

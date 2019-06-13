@@ -677,7 +677,18 @@ void unsafe_interpolate_to(const A<T>& av,
           for (size_t z=nS+y*eD; z<nS+y*eD+eD; ++z)
             outdata[b+nB*z] += w[x]*(evmult*avidata[b+nB*z]);
 
-          // // alternative approach: interpolate in angle space
+          // // First check whether the two eigenvectors have equivalent sign
+          // // permutations, and modify the second to be the same as the first
+          // // if the following returns 0, the second vector has been modified
+          // make_eigenvectors_equivalent(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
+          // for (size_t z=0; x<eD; ++z)
+          //   outdata[b+nB*(nS+y*eD+z)] += w[x]*evx[y*eD+z];
+
+          // /* alternative approach: interpolate in angle space */
+          // // First check whether the two eigenvectors have equivalent sign
+          // // permutations, and modify the second to be the same as the first
+          // // if the following returns 0, the second vector has been modified
+          // make_eigenvectors_equivalent(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
           // // hermitian_angle returns T for complex<T>, maybe we can get away
           // // with using auto here
           // auto theta = hermitian_angle(eD, ev0+b*nE*eD+y*eD, evx+y*eD);

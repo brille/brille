@@ -17,6 +17,7 @@ from scipy.special import wofz
 from scipy.stats import norm, cauchy
 
 import symbz as sbz
+from symbz.evn import degenerate_check
 
 
 def delta(x_0, x_i, y_i):
@@ -210,7 +211,8 @@ class SymSim(object):
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
-        vecs = standard_imaginary_vector(vecs)
+        # vecs = standard_imaginary_vector(vecs)
+        vecs = degenerate_check(grid_q, freq.magnitude, vecs)
         frqs_vecs = np.concatenate(
             (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
              np.ascontiguousarray(vecs.reshape(n_pt, n_br, 3*n_io))),
