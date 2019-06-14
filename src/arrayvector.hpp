@@ -99,7 +99,7 @@ template<typename T> std::string ArrayVector<T>::unsafe_to_string(const size_t f
   std::string str;
   for (i=first;i<last;i++){
     for (j=0;j<b;j++) {
-      str += std::to_string( this->getvalue(i,j) );
+      str += my_to_string( this->getvalue(i,j) );
       // if ( str.find_last_not_of('.') ){
       //   str.erase ( str.find_last_not_of('0') + 1, std::string::npos );
       //   str.erase ( str.find_last_not_of('.') + 1, std::string::npos );
@@ -645,20 +645,15 @@ void unsafe_interpolate_to(const A<T>& av,
   S *outdata = out.datapointer(j);
   T *avidata;
   size_t y, m=av.numel(), per_branch = nS+nE*eD+nV+nM*nM;
-  // pull out the first eigenvector(s)
   T* ev0 = new T[nE*eD*nB];
   T* evx = new T[nE*eD];
-  T* evd = new T[eD];
-  T evmult = T(1);
-  if (nE*eD){
-    for (size_t b=0; b<nB; ++b){
-      for (y=nS; y<nS+nE*eD; ++y){
+  T e_i_theta;
+  // pull out the first eigenvector(s)
+  if (nE*eD)
+    for (size_t b=0; b<nB; ++b)
+      for (y=nS; y<nS+nE*eD; ++y)
         ev0[b*nE*eD+(y-nS)] = av.getvalue(i[0], b+nB*y);
-      }
-    }
-  }
   // ev0 is now a (nB,nE,eD) array of the nB eigenvectors
-  T evdot;
   for (size_t x=0; x<n; ++x){
     avidata = av.datapointer(i[x]);
     // loop over the branches. they are last index, so closest in memory :(
@@ -671,43 +666,22 @@ void unsafe_interpolate_to(const A<T>& av,
         for (y=nS; y<nS+nE*eD; ++y) evx[y-nS] = avidata[b+nB*y];
         // treat each eigenvector separately
         for (y=0; y<nE; ++y){
-          // check if the dot product between vectors is positive
-          evmult = (inner_product(eD, ev0+b*nE*eD+y*eD, evx+y*eD) >= 0) ? T(1) : T(-1);
-          // if it's not, flip the yᵗʰ eigenvector at x as we add its weighted value
+          // Find the (anti) arbitrary phase eⁱᶿ between the two eigenvectors
+          e_i_theta = antiphase(hermitian_product(eD, ev0+b*nE*eD+y*eD, evx+y*eD));
+          // remove the arbitrary phase difference as we add the weighted value
           for (size_t z=nS+y*eD; z<nS+y*eD+eD; ++z)
-            outdata[b+nB*z] += w[x]*(evmult*avidata[b+nB*z]);
-
-          // // First check whether the two eigenvectors have equivalent sign
-          // // permutations, and modify the second to be the same as the first
-          // // if the following returns 0, the second vector has been modified
-          // make_eigenvectors_equivalent(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
-          // for (size_t z=0; x<eD; ++z)
-          //   outdata[b+nB*(nS+y*eD+z)] += w[x]*evx[y*eD+z];
-
-          // /* alternative approach: interpolate in angle space */
-          // // First check whether the two eigenvectors have equivalent sign
-          // // permutations, and modify the second to be the same as the first
-          // // if the following returns 0, the second vector has been modified
-          // make_eigenvectors_equivalent(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
-          // // hermitian_angle returns T for complex<T>, maybe we can get away
-          // // with using auto here
-          // auto theta = hermitian_angle(eD, ev0+b*nE*eD+y*eD, evx+y*eD);
-          // // find ⃗d = v̂₂ - (v̂₁⋅v̂₂) v̂₁
-          // for (size_t z=0; z<eD; ++z) evd[z] = evx[y*eD+z] - std::cos(theta)*ev0[b*nE*eD+y*eD+z];
-          // // and its norm
-          // auto normD = std::sqrt(inner_product(eD, evd, evd));
-          // // the interpolated vector is v̂₁ cos(w*θ) + d̂ sin(w*θ)
-          // for (size_t z=0; z<eD; ++z)
-          //   outdata[b+nB*(nS+y*eD+z)] += ev0[(b*nE+y)*eD+z]*std::cos(w[x]*theta)
-          //                              + evd[z]*std::sin(w[x]*theta)/normD;
+            outdata[b+nB*z] += w[x]*(e_i_theta*avidata[b+nB*z]);
         }
       }
       // vector and matrix parts are not special (yet)
       for (y=nS+nE*eD; y<per_branch; ++y) outdata[b+nB*y] += w[x]*avidata[b+nB*y];
     }
   }
+  delete[] ev0;
+  delete[] evx;
   // make sure each eigenvector is normalized
   if (nE*eD){
+    T* evd = new T[eD];
     for (size_t b=0; b<nB; ++b){
       for (y=0; y<nE; ++y){
         // pull out a single eigenvector
@@ -718,8 +692,6 @@ void unsafe_interpolate_to(const A<T>& av,
         for (size_t z=0; z<eD; ++z) outdata[b+nB*(nS+y*eD+z)] /= normY;
       }
     }
+    delete[] evd;
   }
-  delete[] ev0;
-  delete[] evx;
-  delete[] evd;
 }

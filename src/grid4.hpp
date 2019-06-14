@@ -118,17 +118,17 @@ template<class T> int MapGrid4<T>::lin2sub(const size_t l, size_t *s) const {
   }
   return 1;
 }
-template<class T> int MapGrid4<T>::sub2map(const size_t *s, size_t *m) const {
+template<class T> int MapGrid4<T>::sub2map(const size_t* s, size_t& m) const {
   size_t l;
   if (this->sub2lin(s,&l)) return 1;
   if (!this->valid_mapping(l)) return -1;
-  *m = size_t(this->map[l]);
+  m = size_t(this->map[l]);
   return 0;
 }
-template<class T> int MapGrid4<T>::lin2map(const size_t l, size_t *m) const {
+template<class T> int MapGrid4<T>::lin2map(const size_t l, size_t& m) const {
   if ( l+1 > this->numel() ) return 1;
   if (!this->valid_mapping(l)) return -1;
-  *m = size_t(this->map[l]);
+  m = size_t(this->map[l]);
   return 0;
 }
 //

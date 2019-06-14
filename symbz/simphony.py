@@ -20,143 +20,9 @@ import symbz as sbz
 from symbz.evn import degenerate_check
 
 
-def delta(x_0, x_i, y_i):
+class SymSim:
     """
-    Compute the δ-function.
-
-    y₀ = yᵢ×δ(x₀-xᵢ)
-    """
-    y_0 = np.zeros_like(y_i)
-    y_0[x_0 == x_i] = y_i[x_0 == x_i]
-    return y_0
-
-
-def gaussian(x_0, x_i, y_i, fwhm):
-    """Compute the normal distribution with full-width-at-half-maximum fwhm."""
-    if not np.isscalar(fwhm):
-        fwhm = fwhm[0]
-    sigma = fwhm/np.sqrt(np.log(256))
-    z_0 = (x_0-x_i)/sigma
-    y_0 = norm.pdf(z_0) * y_i
-    return y_0
-
-
-def lorentzian(x_0, x_i, y_i, fwhm):
-    """Compute the Cauchy distribution with full-width-at-half-maximum fwhm."""
-    if not np.isscalar(fwhm):
-        fwhm = fwhm[0]
-    gamma = fwhm/2
-    z_0 = (x_0-x_i)/gamma
-    y_0 = cauchy.pdf(z_0) * y_i
-    return y_0
-
-
-def voigt(x_0, x_i, y_i, params):
-    """Compute the convolution of a normal and Cauchy distribution.
-
-    The Voigt function is the exact convolution of a normal distribution (a
-    Gaussian) with full-width-at-half-max gᶠʷʰᵐ and a Cauchy distribution
-    (a Lorentzian) with full-with-at-half-max lᶠʷʰᵐ. Computing the Voigt
-    function exactly is computationally expensive, but it can be approximated
-    to (almost always nearly) machine precision quickly using the [Faddeeva
-    distribution](http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package).
-
-    The Voigt distribution is the real part of the Faddeeva distribution,
-    given an appropriate rescaling of the parameters. See, e.g.,
-    https://en.wikipedia.org/wiki/Voigt_profile.
-    """
-    if np.isscalar(params):
-        g_fwhm = params
-        l_fwhm = 0
-    else:
-        g_fwhm = params[0]
-        l_fwhm = params[1]
-    if l_fwhm == 0:
-        return gaussian(x_0, x_i, y_i, g_fwhm)
-    if g_fwhm == 0:
-        return lorentzian(x_0, x_i, y_i, l_fwhm)
-
-    area = np.sqrt(np.log(2)/np.pi)
-    gamma = g_fwhm/2
-    real_z = np.sqrt(np.log(2))*(x_0-x_i)/gamma
-    imag_z = np.sqrt(np.log(2))*np.abs(l_fwhm/g_fwhm)
-    y_0 = area*np.real(wofz(real_z + 1j*imag_z))/gamma
-    return y_0
-
-
-def sho(x_0, x_i, y_i, fwhm, t_k):
-    """Compute the Simple-Harmonic-Oscillator distribution."""
-    # (partly) ensure that all inputs have the same shape:
-    if np.isscalar(fwhm):
-        fwhm = fwhm * np.ones(y_i.shape)
-    if np.isscalar(t_k):
-        t_k = t_k * np.ones(y_i.shape)
-    if x_0.ndim < x_i.ndim or (x_0.shape[1] == 1 and x_i.shape[1] > 1):
-        x_0 = np.repeat(x_0, x_i.shape[1], 1)
-    # include the Bose factor if the temperature is non-zero
-    bose = x_0 / (1-np.exp(-11.602*x_0/t_k))
-    bose[t_k == 0] = 1.0
-    # We need x₀² the same shape as xᵢ
-    x_02 = x_0**2
-    # and to ensure that only valid (finite) modes are included
-    flag = (x_i != 0) * np.isfinite(x_i)
-    # create an output array
-    y_0 = np.zeros(y_i.shape)
-    # flatten everything so that we can use logical indexing
-    # keeping the original output shape
-    outshape = y_0.shape
-    bose = bose.flatten()
-    fwhm = fwhm.flatten()
-    y_0 = y_0.flatten()
-    x_i = x_i.flatten()
-    y_i = y_i.flatten()
-    x_02 = x_02.flatten()
-    flag = flag.flatten()
-    # and actually calculate the distribution
-    part1 = bose[flag]*(4/np.pi)*fwhm[flag]*x_i[flag]*y_i[flag]
-    part2 = ((x_02[flag]-x_i[flag]**2)**2 + 4*fwhm[flag]**2*x_02[flag])
-    y_0[flag] = part1/part2
-    return y_0.reshape(outshape)
-
-
-def standard_imaginary_vector(vecs, idx=2):
-    """Standardise the imaginary vectors while preserving |Q⋅ϵ|².
-
-    The magnitude of any complex number z = ±a±𝔦b, |z|²=a²+b², has two
-    mirror planes, σᵣ and σᵢ. For finite a and b, there are four complex
-    numbers with the same squared magnitude.
-
-    The dot product of a complex vector and a real vector is itself a complex
-    number. For a real vector Q = Q₀ê₀ + Q₁ê₁ + Q₂ê₂ and complex vector
-    ϵ = (±a₀±𝔦b₀)ê₀ + (±a₁±𝔦b₁)ê₁ + (±a₂±𝔦b₂)ê₂ which has 2⁶ = 64 possible
-    combinations of signs, there are only 16 unique values of |Q⋅ϵ|².
-
-    Eigen problem solvers typically allow for arbitrary overall sign of the
-    eigenvectors they produce, e.g., ϵ = ±(z₀ê₀ + z₁ê₁ + z₂ê₂), with the
-    sign chosen based on numeric details of the system.
-    If the eigenvectors for two neighbouring grid points have been chosen with
-    opposite signs then linear interpolation between the points will produce
-    interpolated eigenvectors with |ϵ|² < 1 and too-small |Q⋅ϵ|².
-    By forcing all eigenvectors to have their third component in the same
-    (positive real, positive imaginary) quadrant while preserving |Q⋅ϵ|² we
-    might minimise the chance of interpolating between opposite-sign
-    eigenvectors.
-    (All eigenvectors returned by SimPhony have a first component a₀+𝔦b₀)
-    """
-    def pm_one(vec):
-        return np.array([-1 if np.signbit(v) else 1 for v in vec])
-    assert vecs.shape[-1] > idx
-    n_vecs = np.prod(vecs.shape[0:-1])
-    flat_v = vecs.reshape((n_vecs, 3))
-    sign_r = pm_one(flat_v.real[:, idx]).reshape(n_vecs, 1)
-    sign_i = pm_one(flat_v.imag[:, idx]).reshape(n_vecs, 1)
-    standard_flat_v = sign_r*(flat_v.real) + 1j*sign_i*(flat_v.imag)
-    return np.array(standard_flat_v).reshape(vecs.shape)
-
-class SymSim(object):
-    """
-    An object to enable efficient interpolation of CASTEP-derived phonons at
-    arbitrary Q points.
+    Efficient interpolation of phonon intensity at arbitrary Q points.
 
     The SimPhony data classes can be used to interpolate CASTEP dynamical
     force matrices at arbitary Q points. It can then use that information to
@@ -174,34 +40,33 @@ class SymSim(object):
     first-Brillouin-zone point, q, for any arbitrary reciprocal space point, Q.
 
     The SymSim object uses lattice information from the SimPhony object and the
-    package spglib to determine the conventional unit cell used in the CASTEP
-    calculations. This unit cell information is then used to construct the
-    primitive first Brillouin zone and a SymBZ grid. The gridded-points are
-    then used by the SimPhony object to calculate ωᵢ(q) and ϵᵢⱼ(q), which are
-    placed in the SymBZ object at their respective grid points.
-    When an external request is made to the SymSim object to calculate Sᵢ(Q)
-    it first uses the filled SymBZ object to interpolate ωᵢ(Q) and ϵᵢⱼ(Q) and
-    then the SimPhony object to convert Q and ϵᵢⱼ(Q) into Sᵢ(Q).
+    package spglib to determine the conventional unit cell equivalent to that
+    used in the CASTEP calculations. This unit cell information is then used
+    to construct the primitive first Brillouin zone and a SymBZ grid. The
+    gridded-points are then used by the SimPhony object to calculate ωᵢ(q)
+    and ϵᵢⱼ(q), which are placed in the SymBZ object at their respective grid
+    points. When an external request is made to the SymSim object to calculate
+    Sᵢ(Q) it first uses the filled SymBZ object to interpolate ωᵢ(Q) and ϵᵢⱼ(Q)
+    and then the SimPhony object to convert Q and ϵᵢⱼ(Q) into Sᵢ(Q).
     The more-likely use for SymSim, however, will be in calculating S(Q,ω) in
     which case ωᵢ(Q) and Sᵢ(Q) are calculated as above and then a simple
     distribution (selected by the caller) is used to broaden each of the i
     phonon branches before combining their intensities.
-
     """
+
     def __init__(self, SPData,
                  scattering_lengths=None,
                  parallel=False, **kwds):
         """Initialize a new SymSim object from an existing SimPhony object."""
         if not isinstance(SPData, InterpolationData):
-            print("Unexpected data type {}, expect failures.".format(type(SPData)))
+            msg = "Unexpected data type {}, expect failures."
+            print(msg.format(type(SPData)))
         if not isinstance(scattering_lengths, dict):
             scattering_lengths = {k: 1 for k in np.unique(SPData.ion_type)}
         self.data = SPData
         self.scattering_lengths = scattering_lengths
-
         # Construct the BZGrid, by default using the conventional unit cell
         grid_q = self.__make_grid(**kwds)
-
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
         # Select only those keyword arguments which SimPhony expects:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
@@ -211,7 +76,6 @@ class SymSim(object):
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
-        # vecs = standard_imaginary_vector(vecs)
         vecs = degenerate_check(grid_q, freq.magnitude, vecs)
         frqs_vecs = np.concatenate(
             (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
@@ -315,18 +179,19 @@ class SymSim(object):
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
 
-    def w_q(self, q_hkl, primitive_q=False, interpolate=True, moveinto=True, **kwargs):
+    def w_q(self, q_pt,
+            primitive_q=False, interpolate=True, moveinto=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
         # Interpolate the previously-stored eigen values for each Q
         if interpolate:
-            frqs_vecs = self.grid.interpolate_at(q_hkl, moveinto, self.parallel)
+            frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
             # Go from (n_pt, 1 + 3*n_io, n_br) to (n_pt, n_br, 1+ 3*n_io)
             frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
             # Separate them
             frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
             # And reshape to what SimPhony expects
-            n_pt = q_hkl.shape[0]
+            n_pt = q_pt.shape[0]
             n_br = self.data.n_branches
             n_io = self.data.n_ions
             frqs = np.ascontiguousarray(frqs.reshape((n_pt, n_br)))
@@ -334,21 +199,21 @@ class SymSim(object):
             # Store all information in the SimPhony Data object
             self.data.n_qpts = n_pt
             if prim_tran.does_anything and not primitive_q:
-                q_hkl = np.array([np.matmul(prim_tran.P, x) for x in q_hkl])
-            self.data.qpts = q_hkl
+                q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
+            self.data.qpts = q_pt
             self.data.freqs = frqs*self.data.freqs.units
             self.data.eigenvecs = vecs
         else:
             if prim_tran.does_anything and not primitive_q:
-                q_hkl = np.array([np.matmul(prim_tran.P, x) for x in q_hkl])
+                q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
             cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                             'eta_scale', 'splitting')
             cfp_dict = {k: kwargs[k] for k in cfp_keywords if k in kwargs}
-            self.data.calculate_fine_phonons(q_hkl, **cfp_dict)
+            self.data.calculate_fine_phonons(q_pt, **cfp_dict)
         return self.data.freqs
 
     def frqs_vecs(self, q_hkl, **kwargs):
-        """Calculate and return ωᵢ(Q) and ϵᵢ(Q)"""
+        """Calculate and return ωᵢ(Q) and ϵᵢ(Q)."""
         self.w_q(q_hkl, **kwargs)
         return (self.data.freqs, self.data.eigenvecs)
 
@@ -401,7 +266,8 @@ class SymSim(object):
         s_i = self.s_q(q_hkl, **p_dict)
         # The resulting array should be (n_pt,n_br)
         if s_i.shape[0] != n_pt or s_i.shape[1] != n_br:
-            msg = "Expected S(Q) shape ({}, {}) but got {}.".format(n_pt, n_br, s_i.shape)
+            msg = "Expected S(Q) shape ({}, {}) but got {}."
+            msg = msg.format(n_pt, n_br, s_i.shape)
             raise Exception(msg)
 
         omega = (self.data.freqs.to('millielectron_volt')).magnitude
@@ -430,3 +296,102 @@ class SymSim(object):
             s_q_e = s_q_e.reshape(shapein)
 
         return s_q_e
+
+
+def delta(x_0, x_i, y_i):
+    """
+    Compute the δ-function.
+
+    y₀ = yᵢ×δ(x₀-xᵢ)
+    """
+    y_0 = np.zeros_like(y_i)
+    y_0[x_0 == x_i] = y_i[x_0 == x_i]
+    return y_0
+
+
+def gaussian(x_0, x_i, y_i, fwhm):
+    """Compute the normal distribution with full-width-at-half-maximum fwhm."""
+    if not np.isscalar(fwhm):
+        fwhm = fwhm[0]
+    sigma = fwhm/np.sqrt(np.log(256))
+    z_0 = (x_0-x_i)/sigma
+    y_0 = norm.pdf(z_0) * y_i
+    return y_0
+
+
+def lorentzian(x_0, x_i, y_i, fwhm):
+    """Compute the Cauchy distribution with full-width-at-half-maximum fwhm."""
+    if not np.isscalar(fwhm):
+        fwhm = fwhm[0]
+    gamma = fwhm/2
+    z_0 = (x_0-x_i)/gamma
+    y_0 = cauchy.pdf(z_0) * y_i
+    return y_0
+
+
+def voigt(x_0, x_i, y_i, params):
+    """Compute the convolution of a normal and Cauchy distribution.
+
+    The Voigt function is the exact convolution of a normal distribution (a
+    Gaussian) with full-width-at-half-max gᶠʷʰᵐ and a Cauchy distribution
+    (a Lorentzian) with full-with-at-half-max lᶠʷʰᵐ. Computing the Voigt
+    function exactly is computationally expensive, but it can be approximated
+    to (almost always nearly) machine precision quickly using the [Faddeeva
+    distribution](http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package).
+
+    The Voigt distribution is the real part of the Faddeeva distribution,
+    given an appropriate rescaling of the parameters. See, e.g.,
+    https://en.wikipedia.org/wiki/Voigt_profile.
+    """
+    if np.isscalar(params):
+        g_fwhm = params
+        l_fwhm = 0
+    else:
+        g_fwhm = params[0]
+        l_fwhm = params[1]
+    if l_fwhm == 0:
+        return gaussian(x_0, x_i, y_i, g_fwhm)
+    if g_fwhm == 0:
+        return lorentzian(x_0, x_i, y_i, l_fwhm)
+
+    area = np.sqrt(np.log(2)/np.pi)
+    gamma = g_fwhm/2
+    real_z = np.sqrt(np.log(2))*(x_0-x_i)/gamma
+    imag_z = np.sqrt(np.log(2))*np.abs(l_fwhm/g_fwhm)
+    y_0 = area*np.real(wofz(real_z + 1j*imag_z))/gamma
+    return y_0
+
+
+def sho(x_0, x_i, y_i, fwhm, t_k):
+    """Compute the Simple-Harmonic-Oscillator distribution."""
+    # (partly) ensure that all inputs have the same shape:
+    if np.isscalar(fwhm):
+        fwhm = fwhm * np.ones(y_i.shape)
+    if np.isscalar(t_k):
+        t_k = t_k * np.ones(y_i.shape)
+    if x_0.ndim < x_i.ndim or (x_0.shape[1] == 1 and x_i.shape[1] > 1):
+        x_0 = np.repeat(x_0, x_i.shape[1], 1)
+    # include the Bose factor if the temperature is non-zero
+    bose = x_0 / (1-np.exp(-11.602*x_0/t_k))
+    bose[t_k == 0] = 1.0
+    # We need x₀² the same shape as xᵢ
+    x_02 = x_0**2
+    # and to ensure that only valid (finite) modes are included
+    flag = (x_i != 0) * np.isfinite(x_i)
+    # create an output array
+    y_0 = np.zeros(y_i.shape)
+    # flatten everything so that we can use logical indexing
+    # keeping the original output shape
+    outshape = y_0.shape
+    bose = bose.flatten()
+    fwhm = fwhm.flatten()
+    y_0 = y_0.flatten()
+    x_i = x_i.flatten()
+    y_i = y_i.flatten()
+    x_02 = x_02.flatten()
+    flag = flag.flatten()
+    # and actually calculate the distribution
+    part1 = bose[flag]*(4/np.pi)*fwhm[flag]*x_i[flag]*y_i[flag]
+    part2 = ((x_02[flag]-x_i[flag]**2)**2 + 4*fwhm[flag]**2*x_02[flag])
+    y_0[flag] = part1/part2
+    return y_0.reshape(outshape)

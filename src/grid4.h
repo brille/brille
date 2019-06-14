@@ -110,9 +110,9 @@ public:
   //! Calculate the subscripted indices of a point given its linear index
   int lin2sub(const size_t  l, size_t *s) const;
   //! Find the mapping of a point given an array of its three subscripted indices
-  int sub2map(const size_t *s, size_t *m) const;
+  int sub2map(const size_t* s, size_t& m) const;
   //! Find the mapping of a point given its linear index
-  int lin2map(const size_t  l, size_t *m) const;
+  int lin2map(const size_t  l, size_t& m) const;
   //
   //! Return the total number of elements in the mapping grid
   size_t numel(void) const;
@@ -347,7 +347,7 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (15==flg)/*++++*/{
-        this->sub2map(ijk,corners);
+        this->sub2map(ijk,corners[0]);
         weights[0]=1.0;
       } else {
         if (0==flg)/*xxxx*/{
@@ -420,7 +420,7 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (15==flg)/*++++*/{
-        this->sub2map(ijk,corners);
+        this->sub2map(ijk,corners[0]);
         weights[0]=1.0;
       } else {
         if (0==flg)/*xxxx*/{

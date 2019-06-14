@@ -23,13 +23,6 @@ def __r_y(theta):
 def __spherical_r_theta_phi(vec):
     rho = np.sqrt(np.dot(vec, vec))
     if rho > 0:
-        # Using a spherical coordinate system has the undesirable
-        # quality that the local orthonormal coordinate system is discontinuous
-        # at the poles, which is along the z-axis normally.
-        # Since any of the axes is likely a high-symmetry direction with a high
-        # chance of hosting degenerate modes, rotate the z-axis away to
-        # an arbitrary (but constant) direction
-        vec = np.matmul(__r_z(np.pi/3), np.matmul(__r_x(np.pi/5), vec))
         theta = np.arccos(vec[2]/rho)
         phi = np.arctan2(vec[1], vec[0])
     else:
@@ -39,39 +32,51 @@ def __spherical_r_theta_phi(vec):
     return (rho, theta, phi)
 
 
+def local_xyz(vec):
+    """Return a local coordinate system based on the vector provided."""
+    e_z = vec / np.sqrt(np.dot(vec, vec))
+    e_x, e_y = __local_xy(e_z)
+    return (e_x, e_y, e_z)
+
+
 def __local_xy(vec):
-    _, theta, phi = __spherical_r_theta_phi(vec)
+    # Using a spherical coordinate system has the undesirable
+    # quality that the local orthonormal coordinate system is discontinuous
+    # at the poles, which is along the z-axis normally.
+    # Since any of the axes is likely a high-symmetry direction with a high
+    # chance of hosting degenerate modes, rotate the z-axis away to
+    # an arbitrary (but constant) direction before determining theta and phi
+    r_zx = np.matmul(__r_z(np.pi/3), __r_x(np.pi/5))
+    inv_r_zx = np.matmul(__r_x(-np.pi/5), __r_z(-np.pi/3))
+    _, theta, phi = __spherical_r_theta_phi(np.matmul(r_zx, vec))
+    # _, theta, phi = __spherical_r_theta_phi(vec)
     sin_theta = np.sin(theta)
     cos_theta = np.cos(theta)
     sin_phi = np.sin(phi)
     cos_phi = np.cos(phi)
     e_x = np.array((-sin_phi, cos_phi, 0))
-    e_y = np.array((cos_theta*cos_phi, cos_theta*sin_phi, -sin_theta))
-    return (e_x, e_y)
+    e_y = np.array((-cos_theta*cos_phi, -cos_theta*sin_phi, sin_theta))
+    return (np.matmul(inv_r_zx, e_x), np.matmul(inv_r_zx, e_y))
+    # return (e_x, e_y)
 
 
-def __set_arbitrary_xy(q_pt, e_vecs, primary_ion):
-    e_x, e_y = __local_xy(q_pt)
-    n_vecs, n_ions, n_dims = e_vecs.shape
-    if n_vecs != 2:
-        raise Exception("Only two degenerate modes allowed.")
+def __arbitrary_xy(q_pt, e_vecs, primary_ion):
+    e_x, _ = __local_xy(q_pt)
+    _, n_ions, n_dims = e_vecs.shape
     if n_dims != 3:
         raise Exception("Only three dimesnional vectors supported.")
     assert primary_ion < n_ions
-    v0_x = np.dot(e_x, e_vecs[0, primary_ion, :])
+    e_0 = e_vecs[-1, primary_ion, :]
+    v0_x = np.dot(e_x, e_0)
     if np.real(np.conj(v0_x)*v0_x) == 0:
         raise Exception("Primary ion ϵ⋅x̂ is zero!")
     phase_angle = np.arctan2(np.imag(v0_x), np.real(v0_x))
+    if np.real(v0_x)*np.cos(phase_angle)+np.imag(v0_x)*np.sin(phase_angle) < 0:
+        phase_angle = np.pi - phase_angle
     phase = np.cos(phase_angle) - 1j*np.sin(phase_angle)
     e_vecs *= phase
-    v0_y = np.dot(e_y, e_vecs[0, primary_ion, :])
-    is_ok = np.isclose(np.real(np.conj(v0_y)*v0_y), 0)
-    v1_x = np.dot(e_x, e_vecs[1, primary_ion, :])
-    is_ok &= np.isclose(np.real(np.conj(v1_x)*v1_x), 0)
-    v1_y = np.dot(e_y, e_vecs[1, primary_ion, :])
-    is_ok &= not np.isclose(np.real(np.conj(v1_y)*v1_y), 0)
-    if not is_ok:
-        raise Exception("Something wrong with applying phase factor")
+    # The only thing we could check at this point is that ϵ₀⋅x̂ is purely real.
+    # Which unfortunately does not imply anything about ϵ₀⋅ŷ, ϵ₁⋅x̂, or ϵ₁⋅ŷ.
     return e_vecs
 
 
@@ -88,9 +93,11 @@ def __check_and_fix(q_pt, e_vals, e_vecs, primary):
     degenerate = __find_degenerate(e_vals)
     while degenerate:
         d_set = degenerate.pop()
-        if d_set.size > 2:
-            raise Exception("More than two degenerate modes. Extend my code!")
-        e_vecs[d_set, :] = __set_arbitrary_xy(q_pt, e_vecs[d_set, :], primary)
+        if d_set.size == 2:
+            e_vecs[d_set, :] = __arbitrary_xy(q_pt, e_vecs[d_set, :], primary)
+        # if there are more than two degenerate modes we are likely at the
+        # zone centre or boundary, in either case we need more than one point
+        # to try and figure things out, so skip over this for now
     return e_vecs
 
 
@@ -118,4 +125,26 @@ def degenerate_check(q_pts, e_vals, e_vecs, primary=None):
                                        e_vals[i, :],
                                        e_vecs[i, :],
                                        primary)
+    return e_vecs
+
+
+def align_eigenvectors(q_pts, e_vals, e_vecs, primary=None):
+    """Align all eigenvectors such that ℑ(ϵₚ⋅x̂)≡0 at each point.
+
+    Pick a smothly-varying local coordinate system based on q for each point
+    provided and apply an arbitrary phase such that the primary ion eigenvector
+    is purely real and positive along the local x direction.
+    If a primary ion is not specified, pick one automatically which has the
+    smallest mean displacement along q̂, and therefore is most likely to have
+    a significant |ϵₚ⋅x̂|² for all q.
+    """
+    n_pts, n_modes, n_ions, n_dims = e_vecs.shape
+    assert (n_pts, n_dims) == q_pts.shape
+    assert (n_pts, n_modes) == e_vals.shape
+    if n_ions > 1 and primary is None:
+        primary = __find_primary_ion(q_pts, e_vecs)
+    else:
+        primary = 0
+    for i in range(n_pts):
+        e_vecs[i, :] = __arbitrary_xy(q_pts[i, :], e_vecs[i, :], primary)
     return e_vecs

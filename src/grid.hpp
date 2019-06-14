@@ -175,24 +175,24 @@ template<class T> int MapGrid3<T>::lin2sub(const size_t l, size_t *s) const {
   }
   return 1;
 }
-template<class T> int MapGrid3<T>::sub2map(const size_t *s, size_t *m) const {
+template<class T> int MapGrid3<T>::sub2map(const size_t *s, size_t& m) const {
   size_t l;
   if (this->sub2lin(s,&l)) return 1;
   if (!this->valid_mapping(l)) return -1;
-  *m = size_t(this->map[l]);
+  m = size_t(this->map[l]);
   return 0;
 }
 template<class T> size_t MapGrid3<T>::sub2map(const size_t *s) const {
   size_t m=this->maximum_mapping()+1;
-  this->sub2map(s,&m);
+  this->sub2map(s,m);
   return m;
 }
-template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t *m) const {
-  if ( l+1 > this->numel() ) return 1;
-  if (!this->valid_mapping(l)) return -1;
-  *m = size_t(this->map[l]);
-  return 0;
-}
+// template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t *m) const {
+//   if ( l+1 > this->numel() ) return 1;
+//   if (!this->valid_mapping(l)) return -1;
+//   *m = size_t(this->map[l]);
+//   return 0;
+// }
 template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t& m) const {
   if ( l+1 > this->numel() ) return 1;
   if (!this->valid_mapping(l)) return -1;
@@ -318,28 +318,37 @@ template<class T> bool MapGrid3<T>::is_inbounds(const size_t* s) const {
 template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t centre) const {
   ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
   ArrayVector<size_t> ijk(3u,1u);
-  this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
-  bool isz[3], ism[3]; // is the centre index 0 (isz) or the maximum (ism)
+  // get the subscripted indices of the centre position
+  this->lin2sub(centre, ijk.datapointer(0));
+  // flag vectors holding: is the centre index 0 (isz) or the maximum (ism)
+  bool isz[3], ism[3];
   for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
   for (size_t i=0; i<3u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
+  // keep track of if we *can* (or should) add each mzp vector to the centre index
   ArrayVector<bool> is_valid(1u,mzp.size());
   for (size_t i=0; i<mzp.size(); ++i){
-    // keep track of if we *can* (or should) add each mzp vector to the centre index
     is_valid.insert(true,i);
     for (size_t j=0; j<mzp.numel(); ++j){
       if (isz[j] && mzp.getvalue(i,j)<0 ) is_valid.insert(false,i);
       if (ism[j] && mzp.getvalue(i,j)>0 ) is_valid.insert(false,i);
     }
   }
+  // Check whether adding each mzp vector yields an in-bounds neighbour
+  // and whether the remaining in-bounds neighbours contain a valid mapping
+  // sub2map returns 1 if sub is out of bounds, -1 if sub is not a valid mapping
   ArrayVector<size_t> tmp(3u,1u);
+  size_t _i;
   for (size_t i=0; i<mzp.size(); ++i){
     if (is_valid.getvalue(i)){
-      for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-      is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+      for (size_t j=0; j<3u; ++j)
+        tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
+      is_valid.insert((this->sub2map(tmp.datapointer(0), _i)) ? false : true, i);
     }
   }
+  // Count how many valid neighbours are left
   size_t valid_neighbours = 0;
   for (size_t i=0; i<is_valid.size(); ++i) if (is_valid.getvalue(i)) ++valid_neighbours;
+  // So we can allocate our output
   ArrayVector<size_t> neighbours(1u,valid_neighbours);
   int oob = 0;
   size_t valid_neighbour=0;
@@ -537,7 +546,7 @@ ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
               */
               // vval = vector_angle(nV,Avec,Bvec);
               // vval = vector_distance(nV,Avec,Bvec);
-              vval = 1-vector_product(nV,Avec,Bvec);
+              vval = 1-vector_product(nV,Avec,Bvec);  // 1 - |A*⋅B|² is 0 if A==B, 1 if A⟂B
             }
             if (nM){
               for (size_t ki=0; ki<nM; ++ki)

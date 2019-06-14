@@ -349,9 +349,12 @@ two matrices.
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
 @param Nscl The number of scalars per object
+@param Neig The number of eigenvectors per object
+@param Deig The eigenvector dimensionality
 @param Nvec The number of vector elements per object
 @param Nmat The square root of the number of matrix elements per object
 @param Wscl The cost weight for scalar elements
+@param Weig The cost weight for eigvenvectors
 @param Wvec The cost weight for vectors
 @param Wmat The cost weight for matrices
 @param span The number of elements per object, `Nscl+Nvec+Nmat*Nmat`
@@ -360,6 +363,10 @@ two matrices.
                          neighbour and is where the centre permutation is stored
 @param centre_idx The index into `permutations` where the output is stored
 @param neighbour_idx The index into `permutations` to find the neighbour permutation
+@param eig_cost_func Used to select the eigenvector cost function:
+                      0 --> `vector_angle`
+                      1 --> `vector_distance`
+                      2 --> `1-vector_product`
 @param vec_cost_func Used to select the vector cost function:
                       0 --> `vector_angle`
                       1 --> `vector_distance`
@@ -370,19 +377,24 @@ template<class T, class R,
           typename=typename std::enable_if<std::is_same<typename MunkresTraits<T>::type, R>::value>::type
         >
 bool munkres_permutation(const T* centre, const T* neighbour,
-                         const size_t Nscl, const size_t Nvec, const size_t Nmat,
-                         const R Wscl, const R Wvec, const R Wmat,
+                         const size_t Nscl,
+                         const size_t Neig, const size_t Deig,
+                         const size_t Nvec, const size_t Nmat,
+                         const R Wscl, const R Weig, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
                          ArrayVector<size_t>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
+                         const int eig_cost_func = 2,
                          const int vec_cost_func = 0
                        ){
 // initialize variables
-R s_cost{0}, v_cost{0}, m_cost{0};
+R s_cost{0}, e_cost{0}, v_cost{0}, m_cost{0};
 Munkres<R> munkres(Nobj);
 size_t* assignment = new size_t[Nobj]();
+T* c_eigvec = new T[Deig]();
 T* c_vector = new T[Nvec]();
 T* c_matrix = new T[Nmat*Nmat]();
+T* n_eigvec = new T[Deig]();
 T* n_vector = new T[Nvec]();
 T* n_matrix = new T[Nmat*Nmat]();
 // calculate costs and fill the Munkres cost matrix
@@ -393,10 +405,24 @@ for (size_t i=0; i<Nobj; ++i){
       for (size_t k=0; k<Nscl; ++k)
         s_cost += magnitude(centre[i+k*Nobj] - neighbour[j+k*Nobj]);
     }
+    if (Neig*Deig){
+      e_cost = R(0);
+      for (size_t ei=0; ei<Neig; ++ei){
+        for (size_t k=0; k<Deig; ++k){
+          c_eigvec[k] =    centre[i+(Nscl+ei*Deig+k)*Nobj];
+          n_vector[k] = neighbour[i+(Nscl+ei*Deig+k)*Nobj];
+        }
+        switch (eig_cost_func){
+          case 0: e_cost +=     vector_angle(Deig,c_eigvec,n_eigvec); break;
+          case 1: e_cost +=  vector_distance(Deig,c_eigvec,n_eigvec); break;
+          case 2: e_cost += 1-vector_product(Deig,c_eigvec,n_eigvec); break;
+        }
+      }
+    }
     if (Nvec){
       for (size_t k=0; k<Nvec; ++k){
-        c_vector[k] =    centre[i+(Nscl+k)*Nobj];
-        n_vector[k] = neighbour[j+(Nscl+k)*Nobj];
+        c_vector[k] =    centre[i+(Nscl+Neig*Deig+k)*Nobj];
+        n_vector[k] = neighbour[j+(Nscl+Neig*Deig+k)*Nobj];
       }
       switch (vec_cost_func){
         case 0: v_cost =     vector_angle(Nvec,c_vector,n_vector); break;
@@ -406,18 +432,18 @@ for (size_t i=0; i<Nobj; ++i){
     }
     if (Nmat){
       for (size_t k=0; k<Nmat*Nmat; ++k){
-          c_matrix[k] =    centre[i+(Nscl+Nvec+k)*Nobj];
-          n_matrix[k] = neighbour[j+(Nscl+Nvec+k)*Nobj];
+          c_matrix[k] =    centre[i+(Nscl+Neig*Deig+Nvec+k)*Nobj];
+          n_matrix[k] = neighbour[j+(Nscl+Neig*Deig+Nvec+k)*Nobj];
       }
       m_cost = frobenius_distance(Nmat,c_matrix,n_matrix);
     }
     // for each i we want to determine the cheapest j
-    munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
+    munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Weig*e_cost + Wvec*v_cost + Wmat*m_cost;
   }
 }
 // clear variables in case assignment fails and we exit early
-delete[] c_matrix; delete[] c_vector;
-delete[] n_matrix; delete[] n_vector;
+delete[] c_matrix; delete[] c_vector; delete[] c_eigvec;
+delete[] n_matrix; delete[] n_vector; delete[] n_eigvec;
 // use the Munkres' algorithm to determine the optimal assignment
 munkres.run_assignment();
 if (!munkres.get_assignment(assignment)){

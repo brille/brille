@@ -226,16 +226,14 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
        py::arg("matrix_cost_weight")=1
     )
     .def("new_sort_perm",
-      [](Class& cobj, const size_t nS, const size_t nV, const size_t nM,
-                      const double wS, const double wV, const double wM,
-                      const int vwf){
-      return av2np(cobj.new_sort_perm(nS,nV,nM,wS,wV,wM,vwf));
-    }, py::arg("number_of_scalars")=0,
-       py::arg("number_of_vector_elements")=0,
-       py::arg("number_of_matrix_elements")=0,
-       py::arg("scalar_cost_weight")=1,
+      [](Class& cobj, const double wS, const double wE, const double wV,
+                      const double wM, const int ewf, const int vwf){
+      return av2np(cobj.new_sort_perm(wS,wE,wV,wM,ewf,vwf));
+    }, py::arg("scalar_cost_weight")=1,
+       py::arg("eigenvector_cost_weight")=1,
        py::arg("vector_cost_weight")=1,
        py::arg("matrix_cost_weight")=1,
+       py::arg("eigenvector_weight_function")=2,
        py::arg("vector_weight_function")=0
     )
     .def_property("map",

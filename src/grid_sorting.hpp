@@ -22,8 +22,14 @@ MapGrid3<T>::find_sorted_neighbours(const std::vector<bool>& sorted,
   for (size_t i=0; i<neighbours.size(); ++i){
     // sorted only contains valid-mapped point information
     // so convert from linear index to mapping index
-    if (this->lin2map(neighbours.getvalue(i), &nidx))
-      throw std::runtime_error("Could not find map index for neighbour.");
+    int ret = this->lin2map(neighbours.getvalue(i), nidx);
+    if (ret !=0){
+      std::string msg = "Could not find map index of neighbour "
+                      + std::to_string(neighbours.getvalue(i)) + " as ";
+      if (ret < 0) msg += "the mapping is invalid.";
+      if (ret > 0) msg += "the linear index is out of bounds.";
+      throw std::runtime_error(msg);
+    }
     if (sorted[nidx]){
       // make sure the output vector is empty to start:
       out.clear();
@@ -42,14 +48,14 @@ MapGrid3<T>::find_sorted_neighbours(const std::vector<bool>& sorted,
       if (possible){
         for (int j=0; j<3; ++j) nnsub[j] = nsub[j] + dir[j];
         // second, is nnsub a valid mapping index:
-        possible = 0 == this->sub2map(nnsub, &nnidx);
+        possible = 0 == this->sub2map(nnsub, nnidx);
       }
       // Now, possible tells us if nnindx has been set to a valid mapping index
       // Check whether nnidx points to an already sorted mapped point
       if (possible && sorted[nnidx]){
         std::cout << "Centre " << std::to_string(clin) << " (";
         for (int j=0; j<3; ++j) std::cout << std::to_string(csub[j]) << " ";
-        std::cout << ") " << std::endl;
+        std::cout << ") ";
         std::cout << "Neighbour ( ";
         for (int j=0; j<3; ++j) std::cout << std::to_string(nsub[j]) << " ";
         std::cout << ") ";
@@ -68,20 +74,18 @@ MapGrid3<T>::find_sorted_neighbours(const std::vector<bool>& sorted,
   // without a sorted next neighbour.
   std::cout << "Centre " << std::to_string(clin) << " (";
   for (int j=0; j<3; ++j) std::cout << std::to_string(csub[j]) << " ";
-  std::cout << ") " << std::endl;
+  std::cout << ") ";
   std::cout << "Neighbour ( ";
   for (int j=0; j<3; ++j) std::cout << std::to_string(nsub[j]) << " ";
-  std::cout << ") ";
+  std::cout << ") " << std::endl;
   return out;
 }
 
 
 
 template<class T> template<class R>
-bool MapGrid3<T>::sort_difference(const size_t nS,
-                                  const size_t nV,
-                                  const size_t nM,
-                                  const R scaleS,
+bool MapGrid3<T>::sort_difference(const R scaleS,
+                                  const R scaleE,
                                   const R scaleV,
                                   const R scaleM,
                                   const size_t span,
@@ -89,18 +93,22 @@ bool MapGrid3<T>::sort_difference(const size_t nS,
                                   ArrayVector<size_t>& perm,
                                   const size_t cidx,
                                   const size_t nidx,
+                                  const int ecf,
                                   const int vcf) const {
 return munkres_permutation(this->data.datapointer(cidx,0),
                            this->data.datapointer(nidx,0),
-                           nS, nV, nM, scaleS, scaleV, scaleM,
-                           span, nobj, perm, cidx, nidx, vcf);
+                           this->scalar_elements,
+                           this->eigenvector_num,
+                           this->eigenvector_dim,
+                           this->vector_elements,
+                           this->matrix_elements,
+                           scaleS, scaleE, scaleV, scaleM,
+                           span, nobj, perm, cidx, nidx, ecf, vcf);
 }
 
 template<class T> template<class R>
-bool MapGrid3<T>::sort_derivative(const size_t nS,
-                                  const size_t nV,
-                                  const size_t nM,
-                                  const R scaleS,
+bool MapGrid3<T>::sort_derivative(const R scaleS,
+                                  const R scaleE,
                                   const R scaleV,
                                   const R scaleM,
                                   const size_t span,
@@ -109,11 +117,12 @@ bool MapGrid3<T>::sort_derivative(const size_t nS,
                                   const size_t cidx,
                                   const size_t nidx,
                                   const size_t nnidx,
+                                  const int ecf,
                                   const int vcf) const {
-T* prediction = new T[span*nobj];
+ArrayVector<T> sorted(this->data.numel(),2u); // sorted neighbours
 T n, nn;
-// calculate the predicted value of each element of the data, ensuring that
-// the global permutation for nidx and nnidx are respected
+// Copy the data at each point, ensuring that the global permutation for
+// nidx and nnidx are respected
 size_t nn_i=0;
 bool nn_i_found;
 std::cout << "Estimate the values of modes at the centre" << std::endl;
@@ -127,32 +136,49 @@ for (size_t i=0; i<nobj; ++i){
   if (!nn_i_found)
     throw std::runtime_error("Next neighbour index not found. Has it been sorted?");
   for (size_t j=0; j<span; ++j){
-    n = this->data.getvalue(nidx, i+j*nobj);
-    nn = this->data.getvalue(nnidx,nn_i+j*nobj);
-    prediction[i] = R(2)*n - nn;
-    std::cout << "2× " << my_to_string(n) << " - " << my_to_string(nn)
-              << " = " << my_to_string(prediction[i]) << std::endl;
+    sorted.insert(this->data.getvalue(nidx, i+j*nobj), 0u, i+j*nobj);
+    sorted.insert(this->data.getvalue(nnidx,nn_i+j*nobj), 1u, i+j*nobj);
   }
 }
+std::cout << sorted.to_string();
+// calculate the predicted value of each element of the data.
+// making the prediction is a special case of linear interpolation:
+ArrayVector<T> predic(this->data.numel(),1u); // and prediction
+size_t cnt = 2u;
+size_t corners[2]{0u,1u};
+T weights[2]{2,-1};
+size_t out_i = 0u;
+unsafe_interpolate_to(sorted,
+                      this->scalar_elements,
+                      this->eigenvector_num,
+                      this->eigenvector_dim,
+                      this->vector_elements,
+                      this->matrix_elements,
+                      this->branches,
+                      cnt,corners,weights,predic,out_i);
 bool rslt;
+std::cout << predic.to_string();
+std::cout << this->data.to_string(cidx);
 // find the assignment of each *predicted* object value to those at cidx:
 rslt = munkres_permutation(this->data.datapointer(cidx,0),
-                           prediction,
-                           nS, nV, nM, scaleS, scaleV, scaleM,
-                           span, nobj, perm, cidx, nidx, vcf);
-// release the memory used by the prediction
+                           predic.datapointer(out_i,0),
+                           this->scalar_elements,
+                           this->eigenvector_num,
+                           this->eigenvector_dim,
+                           this->vector_elements,
+                           this->matrix_elements,
+                           scaleS, scaleE, scaleV, scaleM,
+                           span, nobj, perm, cidx, nidx, ecf, vcf);
 std::cout << ((rslt)?"permutation determined":"permutation failed") << std::endl;
-delete[] prediction;
 return rslt;
 }
 
 template<class T> template<typename R>
-ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const size_t n_scalar,
-                                               const size_t n_vector,
-                                               const size_t n_matrix,
-                                               const R scalar_weight,
+ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const R scalar_weight,
+                                               const R eigenv_weight,
                                                const R vector_weight,
                                                const R matrix_weight,
+                                               const int ecf,
                                                const int vcf
                                              ) const {
 //
@@ -160,52 +186,7 @@ ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const size_t n_scalar,
 ArrayVector<size_t> elshape = this->data_shape();
 size_t span = 1;
 for(size_t i=1; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
-// determine the number of scalars, vector elements, and matrix elements
-size_t nS=0, nV=0, nM=0;
-if (n_scalar + n_vector + n_matrix == span){
-  nS = n_scalar;
-  nV = n_vector;
-  // check that the number of matrix elements describe a square matrix
-  double matroot = std::sqrt( (double)n_matrix );
-  if (matroot*matroot == (double)n_matrix){
-    nM = (size_t)matroot;
-  } else {
-    nM = 0;
-    nV += n_matrix;
-  }
-} else {
-  // try to be clever about what we're spanning:
-  if (span < 11u){
-    switch ( (int) span){
-      case 1:  nS=1; nV=0; nM=0; break;
-      case 2:  nS=0; nV=2; nM=0; break;
-      case 3:  nS=0; nV=3; nM=0; break;
-      case 4:  nS=1; nV=3; nM=0; break;
-      case 5:  nS=1; nV=0; nM=2; break;
-      case 6:  nS=0; nV=6; nM=0; break;
-      case 7:  nS=1; nV=6; nM=0; break;
-      case 8:  nS=2; nV=6; nM=0; break;
-      case 9:  nS=0; nV=0; nM=3; break;
-      case 10: nS=1; nV=0; nM=3; break;
-    }
-  } else {
-    double spanroot = std::sqrt( (double)span );
-    if (spanroot*spanroot == (double)span){
-      nS=0; nV=0; nM=(size_t)spanroot;
-    } else {
-      spanroot = std::sqrt((double)(span-1));
-      if (spanroot*spanroot == (double)(span-1)){
-        nS=1; nV=0; nM=(size_t)spanroot;
-      } else {
-        nS=1; nV=span-1; nM=0;
-      }
-    }
-  }
-}
-if ( nS+nV+nM*nM != span)
-  throw std::runtime_error(
-    "problem determining number of scalar, vector, matrix, elements"
-  );
+
 // The number of objects to sort
 size_t nobj = elshape.getvalue(elshape.size()-1);
 // within each index of the data ArrayVector there are span*nobj entries.
@@ -220,8 +201,9 @@ for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
 bool firstnotfound = true;
 std::vector<size_t> nidx;
 
-typename MunkresTraits<T>::type wS, wV, wM;
+typename MunkresTraits<T>::type wS, wE, wV, wM;
 wS = typename MunkresTraits<T>::type(scalar_weight);
+wE = typename MunkresTraits<T>::type(eigenv_weight);
 wV = typename MunkresTraits<T>::type(vector_weight);
 wM = typename MunkresTraits<T>::type(matrix_weight);
 
@@ -247,15 +229,15 @@ for(size_t idx=0; idx<this->numel(); ++idx){
       // only one sorted neighbour, so punt
       if (nidx.size()==1){
         std::cout << "one neighbour" << std::endl;
-        sorted[midx] = this->sort_difference(nS,nV,nM,wS,wV,wM,span,nobj,perm,
-                                             midx,nidx[0],vcf);
+        sorted[midx] = this->sort_difference(wS,wE,wV,wM,span,nobj,perm,
+                                             midx,nidx[0],ecf,vcf);
       }
       // two sorted neighbours in a line, use the drivative method
       if (nidx.size()==2){
         std::cout << "two neighbours" << std::endl;
-        sorted[midx] = this->sort_derivative(nS,nV,nM,wS,wV,wM,span,nobj,perm,
-                                             midx,nidx[0],nidx[1],vcf);
-                                           }
+        sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
+                                             midx,nidx[0],nidx[1],ecf,vcf);
+      }
     }
   }
 }

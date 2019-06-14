@@ -193,20 +193,20 @@ public:
            1 if `s` is not a valid subscripted index,
           -1 if `s` is not a valid mapping index
   */
-  int sub2map(const size_t *s, size_t *m) const;
+  int sub2map(const size_t* s, size_t& m) const;
   /*! Find the mapping of a point given an array of its three subscripted indices
   @param s the subscripted indices
   @returns the valid mapping index or one more than the maximum mapping if s is invalid.
   */
   size_t sub2map(const size_t *s) const;
-  /*! Find the mapping of a point given its linear index
-  @param l the linear index
-  @param[out] m a pointer to store the mapping index at
-  @returns 0 if successful,
-           1 if `l` is not a valid linear index,
-          -1 if `l` is not a valid mapping index
-  */
-  int lin2map(const size_t  l, size_t *m) const;
+  // /*! Find the mapping of a point given its linear index
+  // @param l the linear index
+  // @param[out] m a pointer to store the mapping index at
+  // @returns 0 if successful,
+  //          1 if `l` is not a valid linear index,
+  //         -1 if `l` is not a valid mapping index
+  // */
+  // int lin2map(const size_t  l, size_t *m) const;
   /*! Find the mapping of a point given its linear index
   @param l the linear index
   @param[out] m a reference to store the mapping index
@@ -244,7 +244,8 @@ public:
   ArrayVector<size_t> get_N(void) const;
   /*! Determine the neighbouring grid points of a given grid linear index
   @param centre The linear index to a point in the mapping grid
-  @returns Up to 26 neighbouring linear indices, skipping points that are out of the grid
+  @returns Up to 26 neighbouring linear indices, skipping points that are out
+           of the grid or do not represent a valid mapping.
   */
   ArrayVector<size_t> get_neighbours(const size_t centre) const;
   /*! Attempt to determing a sorting permutation for each mapped point in the grid
@@ -287,10 +288,8 @@ public:
   When sorting the data stored in a grid, it is necessary to make a sorting
   assignment based soley on the difference in values at two points if a partial
   derivative can not be calculated.
-  @param nS the number of scalar elements per object
-  @param nV the number of vector elements per object
-  @param nM the square root of the number of matrix elements per object
   @param scaleS weight factor for scalar cost
+  @param scaleE weight factor for eigenvector cost
   @param scaleV weight factor for vector cost
   @param scaleM weight factor for matrix cost
   @param span the span of the elements of one object, nS*nV*nM*nM
@@ -298,14 +297,15 @@ public:
   @param[out] perm the permutation per grid point
   @param cidx the index of the central grid point
   @param nidx the index of the neighbouring grid point, which has been sorted
+  @param ecf which eigenvector cost function to use.
   @param vcf which vector cost function to use.
   */
   template<typename R>
-  bool sort_difference(const size_t, const size_t, const size_t, const R,
-                       const R, const R, const size_t, const size_t,
+  bool sort_difference(const R, const R, const R, const R,
+                       const size_t, const size_t,
                        ArrayVector<size_t>&,
                        const size_t, const size_t,
-                       const int vcf=0) const;
+                       const int ecf=2, const int vcf=0) const;
   /*!
   \brief Use the sorted elements at two neighbouring grid points to determine
          the sorting permutation of the elements at a third neighbouring grid
@@ -334,10 +334,8 @@ public:
   where y₀ is the value at the neighbouring point and y₁ is the value at the
   next neighbouring point.
 
-  @param nS the number of scalar elements per object
-  @param nV the number of vector elements per object
-  @param nM the square root of the number of matrix elements per object
   @param scaleS weight factor for scalar cost
+  @param scaleE weight factor for eigenvector cost
   @param scaleV weight factor for vector cost
   @param scaleM weight factor for matrix cost
   @param span the span of the elements of one object, nS*nV*nM*nM
@@ -347,18 +345,18 @@ public:
   @param nidx the index of the neighbouring grid point, which has been sorted
   @param nnidx the index of the next neighbouring grid point,
                which has also been sorted
+  @param ecf which eigenvector cost function to use.
   @param vcf which vector cost function to use.
   */
   template<typename R>
-  bool sort_derivative(const size_t, const size_t, const size_t, const R,
-                       const R,  const R, const size_t, const size_t,
+  bool sort_derivative(const R, const R, const R, const R,
+                       const size_t, const size_t,
                        ArrayVector<size_t>&,
                        const size_t, const size_t, const size_t,
-                       const int vcf=0) const;
+                       const int ecf=2, const int vcf=0) const;
   template<typename R>
-  ArrayVector<size_t> new_sort_perm(const size_t, const size_t, const size_t,
-                                    const R, const R, const R, const int vcf=0
-                                   ) const;
+  ArrayVector<size_t> new_sort_perm(const R, const R, const R, const R,
+                                    const int ecf=2, const int vcf=0) const;
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
@@ -629,7 +627,7 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (7==flg)/*+++*/{
-        this->sub2map(ijk,corners); // set the first "corner" to this mapped index
+        this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
         if (!flg)/*xxx*/{
@@ -707,7 +705,7 @@ public:
         throw std::runtime_error(msg_flg);
       }
       if (7 == flg)/*+++*/{
-        this->sub2map(ijk,corners); // set the first "corner" to this mapped index
+        this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
         weights[0] = 1.0; // and the weight to one
       } else {
         if (0==flg)/*xxx*/{
