@@ -86,7 +86,7 @@ public:
       printf("%3s", i==1 ? "to" :"");
       for (int j=0; j<3; ++j) printf(" % 4.2f",c2p[i*3+j]);
       printf("%5s", i==1 ? "from" : "");
-      for (int j=0; j<3; ++j) printf(" % 4.2f",p2c[i*3+j]);
+      for (int j=0; j<3; ++j) printf(" % 2d",p2c[i*3+j]);
       printf("\n");
     }
   };

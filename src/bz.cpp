@@ -203,7 +203,7 @@ ArrayVector<int> BrillouinZone::get_faces_per_vertex(void) const {
 }
 
 void BrillouinZone::print() const {
-  printf("BrillouinZone with %d vertices and %d faces\n",this->vertices_count(),this->faces_count());
+  printf("BrillouinZone with %u vertices and %u faces\n",this->vertices_count(),this->faces_count());
 }
 
 template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T> &p){

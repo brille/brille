@@ -107,7 +107,8 @@ protected:
       }
     }
     size_t n[3];
-    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] )+1; // ×2 to ensure we have an odd number of steps
+    for (int i=0; i<3; i++)
+      n[i] = 2*((size_t)std::ceil( (maxx[i]-minx[i])/d[i] ))+1; // ×2 to ensure we have an odd number of steps
     // account for using ceil:
     for (int i=0; i<3; i++) d[i] = (maxx[i]-minx[i])/n[i];
     // for interpolation purposes, we want to make sure we go one-step beyond
@@ -283,8 +284,9 @@ protected:
       }
     }
     size_t n[4];
-    for (int i=0; i<3; i++) n[i] = 2*std::ceil( (maxx[i]-minx[i])/d[i] )+1; // ×2 to ensure we have an even number of steps
-    n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] ); // 2+1-0 to ensure 2 is included
+    for (int i=0; i<3; i++)
+      n[i] = 2*((size_t)std::ceil( (maxx[i]-minx[i])/d[i] ))+1; // ×2 to ensure we have an even number of steps
+    n[3] = (size_t)std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] ); // 2+1-0 to ensure 2 is included
     // account for using ceil:
     for (int i=0; i<3; i++) d[i] = (maxx[i]-minx[i])/n[i];
     d[3] = (spec[2]+spec[1]-spec[0])/(n[3]);
@@ -315,7 +317,7 @@ protected:
       iszero[i] = 0u==in[i];
       n[i]= (iszero[i]) ? in[i]+1 : in[i];
     }
-    n[3] = std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
+    n[3] = (size_t)std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
     for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max

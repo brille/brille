@@ -263,7 +263,7 @@ private:
       if (marker::PRIMED == mask[idx]) mask[idx] = marker::STARED;
     }
     // erase all primes.
-    for (size_t i=0; i<N*N; ++i) if (marker::PRIMED==mask[i]) mask[i]==marker::NORMAL;
+    for (size_t i=0; i<N*N; ++i) if (marker::PRIMED==mask[i]) mask[i]=marker::NORMAL;
     // uncover every line
     for (size_t i=0; i<N; ++i){
       rowcover[i] = 0;

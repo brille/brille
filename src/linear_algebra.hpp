@@ -71,8 +71,8 @@ template<typename T, typename R, int N, int M> bool approx_array(const T *A, con
   }
   return answer;
 }
-template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B){return approx_array<T,R,N,N>(A,B);}
-template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R *B){return approx_array<T,R,N,1>(A,B);}
+template<typename T, typename R, int N> bool approx_matrix(const T *A, const R *B){return approx_array<T,R,N,N>(A,B);}
+template<typename T, typename R, int N> bool approx_vector(const T *A, const R *B){return approx_array<T,R,N,1>(A,B);}
 
 
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
@@ -113,7 +113,7 @@ template<typename R> void matrix_cofactor(R *C, const R *A, const int i, const i
 template<typename R> R matrix_determinant(const R *M, const int N){
   if (1==N) return M[0];
   // the determinant:
-  R d = 0.0;
+  R d{0};
   // temporary cofactor storage
   R *cof = safealloc<R>( (N-1)*(N-1) );
 
@@ -314,7 +314,7 @@ template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, co
 }
 
 template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
-  T AB, nA, nB, c_t;
+  T AB{0}, nA{0}, nB{0}, c_t;
   // Compute the products of complex n-vectors as if they were real 2n-vectors
   for (size_t i=0; i<n; ++i){
     AB += std::real(A[i])*std::real(B[i]) + std::imag(A[i])*std::imag(B[i]);

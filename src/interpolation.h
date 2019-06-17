@@ -43,7 +43,6 @@ int corners_and_weights( T<R>* that, const double* zero, const double* step, con
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
     std::vector<int> d(ndims);
-    size_t ti;
     double tmp;
     for (size_t i=0; i<ndims; ++i){
       // tmp = interpolation_direction_and_distance(zero[dirs[i]],step[dirs[i]],ijk[dirs[i]],x[dirs[i]]);
@@ -142,7 +141,6 @@ template <class R, template<class> class T>
 int floor_corners_and_weights( T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t> dirs){
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
-    size_t ti;
     double tmp;
     for (size_t i=0; i<ndims; ++i){
       tmp = zero[dirs[i]] + ((double)ijk[dirs[i]]) * step[dirs[i]];

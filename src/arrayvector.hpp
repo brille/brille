@@ -228,7 +228,7 @@ template<typename T> ArrayVector<int> ArrayVector<T>::round() const{
   ArrayVector<int> out(this->numel(),this->size());
   for (size_t i=0; i<this->size(); i++)
     for (size_t j=0; j<this->numel(); j++)
-      out.insert( std::round(this->getvalue(i,j)), i,j);
+      out.insert( (int)std::round(this->getvalue(i,j)), i,j);
   return out;
 }
 template<typename T> ArrayVector<int> ArrayVector<T>::floor() const{
