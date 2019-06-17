@@ -367,6 +367,7 @@ two matrices.
                       0 --> `vector_angle`
                       1 --> `vector_distance`
                       2 --> `1-vector_product`
+                      3 --> `abs(sin(hermitian_angle))`
 @param vec_cost_func Used to select the vector cost function:
                       0 --> `vector_angle`
                       1 --> `vector_distance`
@@ -384,66 +385,61 @@ bool munkres_permutation(const T* centre, const T* neighbour,
                          const size_t span, const size_t Nobj,
                          ArrayVector<size_t>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
-                         const int eig_cost_func = 2,
+                         const int eig_cost_func = 3,
                          const int vec_cost_func = 0
                        ){
 // initialize variables
 R s_cost{0}, e_cost{0}, v_cost{0}, m_cost{0};
 Munkres<R> munkres(Nobj);
 size_t* assignment = new size_t[Nobj]();
-T* c_eigvec = new T[Deig]();
-T* c_vector = new T[Nvec]();
-T* c_matrix = new T[Nmat*Nmat]();
-T* n_eigvec = new T[Deig]();
-T* n_vector = new T[Nvec]();
-T* n_matrix = new T[Nmat*Nmat]();
+size_t any_evm = Deig*Neig + Nvec + Nmat*Nmat;
+// TODO: change the input from (N,M,...,Nobj) to (Nobj,N,M,...)
+//       so that the per-object information is contiguous in memory.
+//       Then we can get rid of c_data and n_data completely.
+T* c_data = new T[any_evm]();
+T* n_data = new T[any_evm]();
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
   for (size_t j=0; j<Nobj; ++j){
     s_cost = R(0);
+    e_cost = R(0);
     if (Nscl){
       for (size_t k=0; k<Nscl; ++k)
         s_cost += magnitude(centre[i+k*Nobj] - neighbour[j+k*Nobj]);
     }
+    if (any_evm){
+      for (size_t k=0; k<any_evm; ++k){
+        c_data[k] =    centre[i+(Nscl+k)*Nobj];
+        n_data[k] = neighbour[j+(Nscl+k)*Nobj];
+      }
+    }
     if (Neig*Deig){
-      e_cost = R(0);
-      for (size_t ei=0; ei<Neig; ++ei){
-        for (size_t k=0; k<Deig; ++k){
-          c_eigvec[k] =    centre[i+(Nscl+ei*Deig+k)*Nobj];
-          n_vector[k] = neighbour[i+(Nscl+ei*Deig+k)*Nobj];
-        }
+      for (size_t k=0; k<Neig; ++k){
         switch (eig_cost_func){
-          case 0: e_cost +=     vector_angle(Deig,c_eigvec,n_eigvec); break;
-          case 1: e_cost +=  vector_distance(Deig,c_eigvec,n_eigvec); break;
-          case 2: e_cost += 1-vector_product(Deig,c_eigvec,n_eigvec); break;
+          case 0: e_cost +=     vector_angle(Deig,c_data+k*Deig,n_data+k*Deig); break;
+          case 1: e_cost +=  vector_distance(Deig,c_data+k*Deig,n_data+k*Deig); break;
+          case 2: e_cost += 1-vector_product(Deig,c_data+k*Deig,n_data+k*Deig); break;
+          case 3: e_cost += std::abs(std::sin(hermitian_angle(Deig,c_data+k*Deig,n_data+k*Deig))); break;
         }
       }
     }
     if (Nvec){
-      for (size_t k=0; k<Nvec; ++k){
-        c_vector[k] =    centre[i+(Nscl+Neig*Deig+k)*Nobj];
-        n_vector[k] = neighbour[j+(Nscl+Neig*Deig+k)*Nobj];
-      }
       switch (vec_cost_func){
-        case 0: v_cost =     vector_angle(Nvec,c_vector,n_vector); break;
-        case 1: v_cost =  vector_distance(Nvec,c_vector,n_vector); break;
-        case 2: v_cost = 1-vector_product(Nvec,c_vector,n_vector); break;
+        case 0: v_cost =     vector_angle(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
+        case 1: v_cost =  vector_distance(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
+        case 2: v_cost = 1-vector_product(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
       }
     }
     if (Nmat){
-      for (size_t k=0; k<Nmat*Nmat; ++k){
-          c_matrix[k] =    centre[i+(Nscl+Neig*Deig+Nvec+k)*Nobj];
-          n_matrix[k] = neighbour[j+(Nscl+Neig*Deig+Nvec+k)*Nobj];
-      }
-      m_cost = frobenius_distance(Nmat,c_matrix,n_matrix);
+      m_cost = frobenius_distance(Nmat,c_data+Neig*Deig+Nvec,n_data+Neig*Deig+Nvec);
     }
     // for each i we want to determine the cheapest j
     munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Weig*e_cost + Wvec*v_cost + Wmat*m_cost;
   }
 }
 // clear variables in case assignment fails and we exit early
-delete[] c_matrix; delete[] c_vector; delete[] c_eigvec;
-delete[] n_matrix; delete[] n_vector; delete[] n_eigvec;
+delete[] c_data;
+delete[] n_data;
 // use the Munkres' algorithm to determine the optimal assignment
 munkres.run_assignment();
 if (!munkres.get_assignment(assignment)){

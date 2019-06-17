@@ -77,5 +77,11 @@ class TestSimphony(unittest.TestCase):
         unequal_vecs = (ad_vecs > 1e-14*as_vecs) * (ad_vecs > 1e-14)
         self.assertFalse(unequal_vecs.any())
 
+    def test_b(self):
+        """Do something."""
+        i_data = load_interpolation_data('nb')
+        symsim = SymSim(i_data, halfN=(10, 10, 10))
+        print(symsim.grid.new_sort_perm())
+
 if __name__ == '__main__':
     unittest.main()

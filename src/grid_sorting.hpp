@@ -94,7 +94,7 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   const size_t cidx,
                                   const size_t nidx,
                                   const int ecf,
-                                  const int vcf) const {
+                                  const int vcf) const {                                    
 return munkres_permutation(this->data.datapointer(cidx,0),
                            this->data.datapointer(nidx,0),
                            this->scalar_elements,
