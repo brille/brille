@@ -22,14 +22,14 @@ end
 
 assert(size(omega,1)==nQ, 'The number of q points does not match the omega. Is one a py.numpy.array?');
 nMode = size(omega,2);
-assert( all(size(Sab)==[nQ,3,3,nMode]) );
+assert( all(size(Sab)==[nQ,nMode,3,3]) );
 % Calculate the neutron scattering cross section (for unpolarized neutrons)
 % given Q points and their corresponding spin-spin correlation tensors:
 
 % The following method is lifted from SpinW/sw_neutron with very minor modifications
 
 % Make sure we're only looking at the symmetric part of Sab
-p = [1,3,2,4];
+p = [1,2,4,3];
 SabS = (Sab + permute(Sab,p))/2;
 
 % Normalized scattering wavevector in xyz coordinate system.
@@ -44,16 +44,16 @@ end
 Q2(Q2==0) = 1; % avoid dividing by zero for zero-length Q.
 Qhat = bsxfun(@rdivide,Q,Q2);
 
-    
+
 
 Qhatl = repmat(permute(Qhat,[1 2 3]),[1 1 3]);
 Qhatr = repmat(permute(Qhat,[1 3 2]),[1 3 1]);
 
 % Perpendicular part of the scattering wavevector. delta(a,b) - hatQa*hatQb
 Qfact = repmat(permute(eye(3),[3 1 2])  ,[nQ,1,1])- Qhatl.*Qhatr;
-Qfact = repmat(permute(Qfact ,[1 2 3 4]),[1 1 1 nMode]);
+Qfact = repmat(permute(Qfact ,[1 4 2 3]),[1 nMode 1 1]);
 
 % Dynamical structure factor for neutron scattering
 % S: nQ x nMode.
-S = permute(sum(sum(Qfact.*SabS,2),3),[1 4 2 3]) .* repmat(FF,[1,nMode]);
+S = sum(sum(Qfact.*SabS,4),3) .* repmat(FF,[1,nMode]);
 % end

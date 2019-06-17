@@ -248,19 +248,7 @@ public:
            of the grid or do not represent a valid mapping.
   */
   ArrayVector<size_t> get_neighbours(const size_t centre) const;
-  /*! Attempt to determing a sorting permutation for each mapped point in the grid
-  by comparing the difference in values stored at neighbouring points.
-  The minimization of differences is performed via the Munkres Assignment Algorithm
-  @returns An ArrayVector with `numel()==shape.getvalue(0)` and `size()=data.size()`
-           containing a permuted indexing scheme which orders the elements at each grid point.
-  */
-  template <typename R=double>
-  ArrayVector<size_t> sort_perm(const size_t n_scalar=0,
-                                const size_t n_vector=0,
-                                const size_t n_matrix=0,
-                                const R scalar_weight=1,
-                                const R vector_weight=1,
-                                const R matrix_weight=1) const;
+
   /*! \brief Determine which neighbours have been sorted and, of those,
              which can be used in partial-derivative sorting.
 

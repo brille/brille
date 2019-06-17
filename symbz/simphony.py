@@ -81,9 +81,8 @@ class SymSim:
             (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
              np.ascontiguousarray(vecs.reshape(n_pt, n_br, 3*n_io))),
             axis=2)
-        # move the branches to the last dimension to make mode-sorting possible
-        # e.g., from (n_pt, n_br, 1+3*n_io) to (n_pt, 1+3*n_io, n_br)
-        frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
+        # fill requires input shaped (n_pt, n_br, [anything])
+        # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
         self.grid.fill(frqs_vecs,
                        scalar_elements=1,
                        eigenvector_num=n_io,
@@ -91,7 +90,7 @@ class SymSim:
         # self.sort_branches()
         self.parallel = parallel
 
-    def sort_branches(self, energy_weight=1.0, angle_weight=1.0):
+    def sort_branches(self, energy_weight=1.0, eigenvector_weight=1.0):
         """Sort the phonon branches stored at all mapped grip points.
 
         By comparing the difference in phonon branch energy and the angle
@@ -109,13 +108,12 @@ class SymSim:
 
         The weights are both one by default but can be modified as necessary.
         """
-        # The input to sort_perm indicates how many elements should be treated
-        # like (scalars, vectors, matrices) and what weight should be given to
+        # The input to sort_perm indicates what weight should be given to
         # each part of the resultant cost matrix. In this case, each phonon
         # branch consists of one energy, n_ions three-vectors, and no matrix;
-        perm = self.grid.sort_perm(1, 3*self.data.n_ions, 0,
-                                   energy_weight, angle_weight, 0)
-        frqs_vecs = np.array([x[:, y] for (x, y) in zip(self.grid.data, perm)])
+        perm = self.grid.new_sort_perm(energy_weight, eigenvector_weight, 0)
+        # FIXME Verify the following sorting permutation
+        frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
         self.grid.fill(frqs_vecs)
         return frqs_vecs
 
@@ -183,12 +181,12 @@ class SymSim:
             primitive_q=False, interpolate=True, moveinto=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
-        # Interpolate the previously-stored eigen values for each Q
         if interpolate:
+            # Interpolate the previously-stored eigen values for each Q
+            # each grid point has a (n_br, 1+3*n_io) array and interpolate_at
+            # returns an (n_pt, n_br, 1+3*n_io) array.
             frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
-            # Go from (n_pt, 1 + 3*n_io, n_br) to (n_pt, n_br, 1+ 3*n_io)
-            frqs_vecs = np.transpose(frqs_vecs, (0, 2, 1))
-            # Separate them
+            # Separate the frequencies and eigenvectors
             frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
             # And reshape to what SimPhony expects
             n_pt = q_pt.shape[0]

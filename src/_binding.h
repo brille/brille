@@ -165,11 +165,6 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
                  ){
       py::buffer_info bi = pydata.request();
       ssize_t ndim = bi.ndim;
-      /* ndim  assumed interpolation data type  numel /
-      /   1              scalar                   1   /
-      /   2              vector                shape[1]  /
-      /   3       matrix / rank 2 tensor       shape[1]*shape[2]       /
-      /   N         rank N-1 tensor            prod(shape,1,N-1)      */
       size_t numel=1, numarrays=bi.shape[0];
       if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel *= bi.shape[i];
       ArrayVector<T> data(numel, numarrays, (T*)bi.ptr);
@@ -214,17 +209,6 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       //   cobj.replace_data(data,shape); // no error, so this will work for sure
       // }
     )
-    .def("sort_perm",
-      [](Class& cobj, const size_t nS, const size_t nV, const size_t nM,
-                      const double wS, const double wV, const double wM){
-      return av2np(cobj.sort_perm(nS,nV,nM,wS,wV,wM));
-    }, py::arg("number_of_scalars")=0,
-       py::arg("number_of_vector_elements")=0,
-       py::arg("number_of_matrix_elements")=0,
-       py::arg("scalar_cost_weight")=1,
-       py::arg("vector_cost_weight")=1,
-       py::arg("matrix_cost_weight")=1
-    )
     .def("new_sort_perm",
       [](Class& cobj, const double wS, const double wE, const double wV,
                       const double wM, const int ewf, const int vwf){
@@ -233,7 +217,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
        py::arg("eigenvector_cost_weight")=1,
        py::arg("vector_cost_weight")=1,
        py::arg("matrix_cost_weight")=1,
-       py::arg("eigenvector_weight_function")=2,
+       py::arg("eigenvector_weight_function")=0,
        py::arg("vector_weight_function")=0
     )
     .def_property("map",

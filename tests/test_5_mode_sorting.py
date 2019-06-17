@@ -38,33 +38,19 @@ def mode_dispersion(Q):
     accoustic = 1.0-q_dep
     optical_0 = 1.0-q_dep/2.0  # These modes cross near the zone boundary
     optical_1 = 1.7+q_dep/4.0  # and are nearly degenerate there
-    optical_2 = 2.0-q_dep/8.0
-    modes = np.stack((accoustic, optical_0, optical_1, optical_2))
+    modes = np.stack((accoustic, optical_0, optical_1))
     return np.transpose(modes, (1, 0))
 
 
 def mode_vector(Q):
     """Make Q-varying vectors for three dispersing modes."""
     # The first mode has a vector which rotates around z, while moving along l:
-    accoustic = np.array([[np.cos(z)+np.sin(z),
-                           np.cos(z)-np.sin(z),
-                           0] for z in np.pi*Q[:, 2]])
+    accoustic = np.array([[1, 1, 0] for z in np.pi*Q[:, 2]])/np.sqrt(2)
     # The second mode has a vector which rotates around x, while moving along k
-    optical_0 = np.array([[0,
-                           np.cos(k)+np.sin(k),
-                           np.cos(k)-np.sin(k)] for k in np.pi*Q[:, 1]])
+    optical_0 = np.array([[1,-1, 0] for k in np.pi*Q[:, 1]])/np.sqrt(2)
     # The third mode has a vector which rotates around y, while moving along h
-    optical_1 = np.array([[np.cos(h)-np.sin(h),
-                           0,
-                           np.cos(h)+np.sin(h)] for h in np.pi*Q[:, 0]])
-    # The fourth mode rotates around z while moving in (110)
-    optical_2 = np.array([[np.cos(hk)-np.sin(hk),
-                           np.sin(hk)+np.cos(hk),
-                           1] for hk in np.pi*(Q[:, 0]+Q[:, 1])])
-    vectors = np.stack((accoustic/np.sqrt(2),
-                        optical_0/np.sqrt(2),
-                        optical_1/np.sqrt(2),
-                        optical_2/np.sqrt(3)))
+    optical_1 = np.array([[0, 0, 1] for h in np.pi*Q[:, 0]])/np.sqrt(2)
+    vectors = np.stack((accoustic, optical_0, optical_1))
     return np.transpose(vectors, (1, 0, 2))
 
 
@@ -80,9 +66,12 @@ class ModeSorting(unittest.TestCase):
         scalars = np.array([permutation(np.arange(5)) for _ in range(n_q)])
         # use a pre-sorted first point to make comparison easier
         scalars[0, :] = np.arange(5)
-        bz_grid.fill(scalars)
-        perm = bz_grid.sort_perm(5, 0, 0)
-        sort_res = np.array([x[y] for (x, y) in zip(scalars, perm)])
+        # we need the scalars to represent different modes, so an extra
+        # dimension is required
+        scalars = scalars.reshape(n_q, 5, 1)
+        bz_grid.fill(scalars, scalar_elements=1)
+        perm = bz_grid.new_sort_perm()
+        sort_res = np.array([x[y, :] for (x, y) in zip(scalars, perm)])
         self.assertTrue(np.isclose(sort_res, np.sort(scalars, axis=1)).all())
 
     def test_b_scalar_sorting(self):
@@ -94,8 +83,11 @@ class ModeSorting(unittest.TestCase):
         scalars = np.array([permutation(10**np.arange(5)) for _ in range(n_q)])
         # use a pre-sorted first point to make comparison easier
         scalars[0, :] = 10**np.arange(5)
-        bz_grid.fill(scalars)
-        perm = bz_grid.sort_perm(5, 0, 0)
+        # we need the scalars to represent different modes, so an extra
+        # dimension is required
+        scalars = scalars.reshape(n_q, 5, 1)
+        bz_grid.fill(scalars, scalar_elements=1)
+        perm = bz_grid.new_sort_perm()
         sort_res = np.array([x[y] for (x, y) in zip(scalars, perm)])
         self.assertTrue(np.isclose(sort_res, np.sort(scalars, axis=1)).all())
 
@@ -109,13 +101,10 @@ class ModeSorting(unittest.TestCase):
                             [1, 1, 0], [-1, 0, -1], [1, 1, 1]])
         rand_vecs = np.array([permutation(vectors) for _ in range(n_q)])
         rand_vecs[0, :] = vectors
-        # rand_vecs is (n_q, 6, 3) but we need it to be (n_q, 3, 6)
-        rand_vecs = np.transpose(rand_vecs, (0, 2, 1))
-        bz_grid.fill(rand_vecs)
-        perm = bz_grid.sort_perm(0, 3, 0)
-        sort_vecs = np.array([x[:, y] for (x, y) in zip(rand_vecs, perm)])
-        # permute the sorted vectors back for comparison with vectors
-        sort_vecs = np.transpose(sort_vecs, (0, 2, 1))
+        # rand_vecs is (n_q, 6, 3), which is what we want
+        bz_grid.fill(rand_vecs, vector_elements=3)
+        perm = bz_grid.new_sort_perm()
+        sort_vecs = np.array([x[y, :] for (x, y) in zip(rand_vecs, perm)])
         all_close = np.array([np.isclose(x, vectors) for x in sort_vecs])
         self.assertTrue(all_close.all())
 
@@ -132,21 +121,29 @@ class ModeSorting(unittest.TestCase):
         n_br = energies.shape[1]
         energies = energies.reshape((n_pt, n_br, 1))
         en_vec = np.concatenate((energies, vectors), axis=2)
-        # for sorting we need (n_pt, 4, n_br) instead of (n_pt, n_br, 4)
-        en_vec = np.transpose(en_vec, (0, 2, 1))
+        # for sorting we need (n_pt, n_br, 4), which it is
         # make a randomly permuted version of the en_vec
-        r_en_vec = np.array([x[:, permutation(range(n_br))] for x in en_vec])
+        r_en_vec = np.array([x[permutation(range(n_br)), :] for x in en_vec])
         # ensure that we can compare the sorted version by fixing the first set
         r_en_vec[0, :] = en_vec[0, :]
         # put the random version into the grid
-        bz_grid.fill(r_en_vec)
+        print(r_en_vec.shape)
+        bz_grid.fill(r_en_vec,
+                     scalar_elements=1,
+                     eigenvector_num=1,
+                     eigenvector_dim=3)
         # sort it, using that each branch has 1 energy and 3 vector elements
-        perm = bz_grid.new_sort_perm(1, 3, 0, w_en, w_vc)
-        s_en_vec = np.array([x[:, y] for (x, y) in zip(r_en_vec, perm)])
+        perm = bz_grid.new_sort_perm(scalar_cost_weight=w_en,
+                                     eigenvector_cost_weight=w_vc)
+        s_en_vec = np.array([x[y, :] for (x, y) in zip(r_en_vec, perm)])
         # before checking that the sorted result is correct, first check that
         # the sorting itself is stable:
-        bz_grid.fill(s_en_vec)
-        new_perm = bz_grid.new_sort_perm(1, 3, 0, w_en, w_vc)
+        bz_grid.fill(s_en_vec,
+                     scalar_elements=1,
+                     eigenvector_num=1,
+                     eigenvector_dim=3)
+        new_perm = bz_grid.new_sort_perm(scalar_cost_weight=w_en,
+                                         eigenvector_cost_weight=w_vc)
         # each row of new_perm should be range(n_br) if the sorting is stable
         test_stability = np.array([(x == range(n_br)).all() for x in new_perm])
         self.assertTrue(test_stability.all())

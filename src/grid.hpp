@@ -87,21 +87,22 @@ template<class T> void MapGrid3<T>::check_elements(void){
   // no matter what, shape[0] should be the number of gridded points
   if (shape.size()>2){
     // if the number of dimensions of the shape array is greater than two,
-    // the last element is the number of modes per point                     */
-    for (size_t i=1; i<this->shape.size()-1; ++i) elements *= shape.getvalue(i);
-    this->branches = shape.getvalue(shape.size()-1);
+    // the second element is the number of modes per point                    */
+    this->branches = shape.getvalue(1u);
+    for (size_t i=2u; i<this->shape.size(); ++i) elements *= shape.getvalue(i);
   } else {
     // shape is [n_points, n_elements], so there is only one mode
-    elements = shape.getvalue(1u);
     this->branches = 1u;
+    elements = shape.getvalue(1u);
   }
   if (0 == total_elements)
     this->scalar_elements = elements;
   if (total_elements && total_elements != elements){
     std::string msg ="Inconsistent element counts: "
+                    + std::to_string(total_elements) + " = "
                     + std::to_string(this->scalar_elements) + "+"
-                    + std::to_string(this->eigenvector_dim) + "×"
-                    + std::to_string(this->eigenvector_num) + "+"
+                    + std::to_string(this->eigenvector_num) + "×"
+                    + std::to_string(this->eigenvector_dim) + "+"
                     + std::to_string(this->vector_elements) + "+"
                     + std::to_string(this->matrix_elements) + "² ≠ "
                     + std::to_string(elements);
@@ -364,230 +365,3 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t c
   if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
   return neighbours;
 };
-
-template<class T> T abs_diff(const T& A, const T& B){
-  return std::abs( A - B );
-}
-template<class T> T abs_diff(const std::complex<T>& A, const std::complex<T>& B){
-  return std::abs( std::real(A)-std::real(B) )+std::abs(std::imag(A)-std::imag(B));
-}
-
-/*! \brief Determine the sorting permutation connecting neighbouring gridded
-           scalars, vectors, and/or matrices.
-
-When multiple scalars/vectors/matrices are stored at each grid point of a
-MapGrid3 object, it may be useful to identify which neighbouring values can be
-ascribed to one-another. For each pair of neighbouring values this function
-defines a cost and then uses the Munkres' Assignment algorithm to find the
-minimum-cost value-value assignment.
-In the case of scalar values, the cost Cᵃᵇᵢⱼ is |Vᵇⱼ-Vᵃᵢ|.
-For vector values, the cost is the distance between the vectors √∑ₖ(Vᵇⱼₖ-Vᵃᵢₖ)².
-And for matrix values, the cost is
-
-It may also be necessary to combine information from scalars, vectors, and or
-matrices in order to make a unique assignment. In such a case, the information
-stored at each grid point should take the form of vector values with each vector
-having elements [0,1,…,S-1,S,…,S+V-1,S+V,…,S+V+M-1] where S=`n_scalar`,
-V=`n_vector`, and M=`n_matrix`.
-
-@param n_scalar Number of scalar elements in the value vectors
-@param n_vector Number of vector elements in the value vectors
-@param n_matrix Number of matrix elements in the value vectors
-*/
-template <class T> template <class R>
-ArrayVector<size_t> MapGrid3<T>::sort_perm(const size_t n_scalar,
-                                           const size_t n_vector,
-                                           const size_t n_matrix,
-                                           const R scalar_weight,
-                                           const R vector_weight,
-                                           const R matrix_weight) const {
-  /*
-    The data contained in the MapGrid3 is often multiple scalars, vectors,
-    matrices, or higher-order tensors. It is often important to identify which
-    elements on neighbouring modes are *most likely* related to enable accurate
-    interpolation between them.
-    This function produces a sorting permutation of the stored values at each
-    point in the mapped grid. The last dimension of the data is interpreted as
-    representing different scalars/vectors/tensors to be sorted.
-  */
-  ArrayVector<size_t> elshape = this->data_shape(); // (data.size(),m,...,nobj) stored at each index of the data ArrayVector
-  size_t span = 1;
-  for(size_t i=1; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
-
-  size_t nS=0, nV=0, nM=0;
-  if (n_scalar + n_vector + n_matrix == span){
-    nS = n_scalar;
-    nV = n_vector;
-    // check that the number of matrix elements describe a square matrix
-    double matroot = std::sqrt( (double)n_matrix );
-    if (matroot*matroot == (double)n_matrix){
-      nM = (size_t)matroot;
-    } else {
-      nM = 0;
-      nV += n_matrix;
-    }
-  } else {
-    // try to be clever about what we're spanning:
-    if (span < 11u){
-      switch ( (int) span){
-        case 1:  nS=1; nV=0; nM=0; break;
-        case 2:  nS=0; nV=2; nM=0; break;
-        case 3:  nS=0; nV=3; nM=0; break;
-        case 4:  nS=1; nV=3; nM=0; break;
-        case 5:  nS=1; nV=0; nM=2; break;
-        case 6:  nS=0; nV=6; nM=0; break;
-        case 7:  nS=1; nV=6; nM=0; break;
-        case 8:  nS=2; nV=6; nM=0; break;
-        case 9:  nS=0; nV=0; nM=3; break;
-        case 10: nS=1; nV=0; nM=3; break;
-      }
-    } else {
-      double spanroot = std::sqrt( (double)span );
-      if (spanroot*spanroot == (double)span){
-        nS=0; nV=0; nM=(size_t)spanroot;
-      } else {
-        spanroot = std::sqrt((double)(span-1));
-        if (spanroot*spanroot == (double)(span-1)){
-          nS=1; nV=0; nM=(size_t)spanroot;
-        } else {
-          nS=1; nV=span-1; nM=0;
-        }
-      }
-    }
-  }
-  if ( nS+nV+nM*nM != span) throw std::runtime_error("problem determining number of scalar, vector, matrix, elements");
-
-  size_t nobj = elshape.getvalue(elshape.size()-1);
-  // within each index of the data ArrayVector there are span*nobj entries.
-  // Each object consists of span elements, and we need to skip by span to get to the next one.
-
-  // We will return the permutation of 0:nobj-1 which sorts the objects between neighbouring mapped points.
-  ArrayVector<size_t> perm( nobj, this->data.size() );
-  ArrayVector<bool> sorted(   1u, this->data.size() );
-  for(size_t i=0; i<this->data.size(); ++i) sorted.insert(false,i);
-
-  bool foundneighbour, firstnotfound = true;
-  size_t this_idx, that_idx;
-  ArrayVector<size_t> neighbours;
-
-  // typename GridDiffTraits<T>::type *distance = new typename GridDiffTraits<T>::type[nobj*nobj]();
-  typename GridDiffTraits<T>::type gdzero = typename GridDiffTraits<T>::type(0);
-  typename GridDiffTraits<T>::type tval = gdzero, vval = gdzero, mval = gdzero;
-  Munkres<typename GridDiffTraits<T>::type> munkres(nobj);
-
-  typename GridDiffTraits<T>::type sscale = typename GridDiffTraits<T>::type(scalar_weight);
-  typename GridDiffTraits<T>::type vscale = typename GridDiffTraits<T>::type(vector_weight);
-  typename GridDiffTraits<T>::type mscale = typename GridDiffTraits<T>::type(matrix_weight);
-
-  bool assigned_ok;
-  size_t* assignment = new size_t[nobj]();
-
-  T* Amat = new T[nM*nM]();
-  T* Bmat = new T[nM*nM]();
-  T* Avec = new T[nV]();
-  T* Bvec = new T[nV]();
-  T A, B;
-  for(size_t idx=0; idx<this->numel(); ++idx){
-    if (this->valid_mapping(idx)){
-      this_idx = this->map[idx];
-      if (firstnotfound){
-        // the first valid mapping gets an arbitrarily assigned permutation
-          for(size_t j=0; j<nobj; ++j) perm.insert(j, this_idx, j);
-          firstnotfound = false;
-          sorted.insert(true,this_idx);
-      } else { //the normal part of the loop
-        // look for a neighbouring already-sorted point
-        neighbours = this->get_neighbours(idx);
-        // printf("linear indexed neighbours of %u are:\n",idx); neighbours.print();
-        foundneighbour = false;
-        for(size_t j=0; j<neighbours.size(); ++j){
-          if (this->valid_mapping(neighbours.getvalue(j))){
-            that_idx = this->map[neighbours.getvalue(j)];
-            if (sorted.getvalue(that_idx)) foundneighbour = true;
-            // printf("linear indexed neighbour %u has mapping %u %s been sorted\n",neighbours.getvalue(j),that_idx, foundneighbour ? "and has" : "but has not");
-          }
-          if (foundneighbour) break;
-        }
-        if (!foundneighbour) throw std::runtime_error("something has gone wrong in sort_perm. no already-sorted neighbours!");
-        // we have the index into this->data.size() for our current point
-        // *AND* an already-sorted neighbouring point.
-
-        // calculate the cost to assign each mode from the neighbour
-        /* A note about indexing the data ArrayVector:
-          An earlier version of this function used indexing into the ArrayVector
-          elements like an array in Fortran,
-          e.g., [mode number]*[number of elements]+[mode element]
-          Instead, the correct way to index the ArrayVector elements is by
-          [mode_number]+[mode_element]*[number of modes]
-          due to the fact that a (N_points, N_elements, N_modes) C-style array
-          was used to create the ArrayVector
-          {with size=N_points and numel=N_elements*N_modes}
-        */
-        for (size_t i=0; i<nobj; ++i)
-          for (size_t j=0; j<nobj; ++j){
-            tval = gdzero;
-            if (nS){
-              for (size_t k=0; k<nS; ++k){
-                A = this->data.getvalue(this_idx, i+k*nobj);
-                B = this->data.getvalue(that_idx, j+k*nobj);
-                tval += std::sqrt(squared_distance(A,B));
-              }
-            }
-            if (nV){
-              for (size_t k=0; k<nV; ++k){
-                Avec[k] = this->data.getvalue(this_idx, i+(nS+k)*nobj);
-                Bvec[k] = this->data.getvalue(that_idx, j+(nS+k)*nobj);
-              }
-              /* Modify the function to take a flag which selects the vector
-                 cost function? Something like:
-                    0 --> vector_angle
-                    1 --> vector_distance
-                    2 --> 1-vector_product
-              */
-              // vval = vector_angle(nV,Avec,Bvec);
-              // vval = vector_distance(nV,Avec,Bvec);
-              vval = 1-vector_product(nV,Avec,Bvec);  // 1 - |A*⋅B|² is 0 if A==B, 1 if A⟂B
-            }
-            if (nM){
-              for (size_t ki=0; ki<nM; ++ki)
-                for (size_t kj=0; kj<nM; ++kj){
-                  Amat[ki*nM+kj] = this->data.getvalue(this_idx, i+(nS+nV+ki*nM+kj)*nobj);
-                  Bmat[ki*nM+kj] = this->data.getvalue(that_idx, j+(nS+nV+ki*nM+kj)*nobj);
-                }
-              mval = frobenius_distance(nM,Amat,Bmat);
-            }
-            // for each i determine the cheapest j
-            munkres.get_cost()[i*nobj+j] = sscale*tval + vscale*vval + mscale*mval;
-            // // for each j determine the cheapest i
-            // munkres.get_cost()[j*nobj+i] = sscale*tval + vscale*vval + mscale*mval;
-          }
-        // and use the Munkres' algorithm to determine the optimal assignment
-        munkres.run_assignment();
-        assigned_ok = munkres.get_assignment(assignment);
-
-        if (!assigned_ok) throw std::runtime_error("The Munkres' assignment algorithm failed?!");
-        // We want to return a *global* sorting permutation S₀ᵢ but what we
-        // have from the Munkres' algorithm is a *local* permutation mapping
-        // elements at index i (this_idx) onto elements at index j (that_idx).
-        // Thankfully the local and global permutations have a handy
-        // relationship
-        //                Sₒᵢ = S₀ⱼ[Sⱼᵢ]
-        // So, along with the arbitrary choice of S₀₁ made previously, we can
-        // find S₀ᵢ for all i.
-        for (size_t i=0; i<nobj; ++i)
-          for (size_t j=0; j<nobj; ++j)
-            if (perm.getvalue(that_idx,i)==assignment[j])
-              perm.insert(j,this_idx,i);
-        // for (size_t i=0; i<nobj; ++i)
-        //   perm.insert(assignment[perm.getvalue(that_idx, i)], this_idx, i);
-        sorted.insert(true,this_idx);
-      }
-    }
-  }
-  delete[] assignment;
-  delete[] Amat;
-  delete[] Bmat;
-  delete[] Avec;
-  delete[] Bvec;
-  return perm;
-}

@@ -39,7 +39,8 @@ MapGrid3<T>::find_sorted_neighbours(const std::vector<bool>& sorted,
       if (this->lin2sub(neighbours.getvalue(i), nsub))
         throw std::runtime_error("Could not find subscripted index for neighbour.");
       // determine the direction from the centre to the neighbour:
-      for (int j=0; j<3; ++j) dir[j] = nsub[j]-csub[j];
+      // for (int j=0; j<3; ++j) dir[j] = nsub[j]-csub[j];
+      for (int j=0; j<3; ++j) dir[j] = (nsub[j]>csub[j]) ? 1 : (nsub[j]<csub[j]) ? -1 : 0;
       // chech whether there *could* be a second nearest neighbour one more
       // step in the same direction as the first:
       possible = true;
@@ -137,8 +138,8 @@ for (size_t i=0; i<nobj; ++i){
   if (!nn_i_found)
     throw std::runtime_error("Next neighbour index not found. Has it been sorted?");
   for (size_t j=0; j<span; ++j){
-    sorted.insert(this->data.getvalue(nidx, i+j*nobj), 0u, i+j*nobj);
-    sorted.insert(this->data.getvalue(nnidx,nn_i+j*nobj), 1u, i+j*nobj);
+    sorted.insert(this->data.getvalue(nidx,    i*span+j), 0u, i*span+j);
+    sorted.insert(this->data.getvalue(nnidx,nn_i*span+j), 1u, i*span+j);
   }
 }
 // std::cout << sorted.to_string();
@@ -183,13 +184,13 @@ ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const R scalar_weight,
                                                const int vcf
                                              ) const {
 //
-// elshape --> (data.size(),m,...,nobj) stored at each index of the data
-ArrayVector<size_t> elshape = this->data_shape();
-size_t span = 1;
-for(size_t i=1; i<elshape.size()-1; ++i) span *= elshape.getvalue(i);
-
-// The number of objects to sort
-size_t nobj = elshape.getvalue(elshape.size()-1);
+// elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
+// or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
+size_t nobj = this->branches;
+size_t span = this->scalar_elements
+            + this->eigenvector_num*this->eigenvector_dim
+            + this->vector_elements
+            + this->matrix_elements*this->matrix_elements;
 // within each index of the data ArrayVector there are span*nobj entries.
 
 // We will return the permutations of 0:nobj-1 which sort the objects globally
@@ -228,17 +229,18 @@ for(size_t idx=0; idx<this->numel(); ++idx){
         throw std::runtime_error(
           "Logic error. Too few or too many sorted neighbours found.");
       // only one sorted neighbour, so punt
-      if (nidx.size()==1){
+      if (nidx.size()>0){
+      // if (nidx.size()==1){
         // std::cout << "one neighbour" << std::endl;
         sorted[midx] = this->sort_difference(wS,wE,wV,wM,span,nobj,perm,
                                              midx,nidx[0],ecf,vcf);
       }
-      // two sorted neighbours in a line, use the drivative method
-      if (nidx.size()==2){
-        // std::cout << "two neighbours" << std::endl;
-        sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
-                                             midx,nidx[0],nidx[1],ecf,vcf);
-      }
+      // // two sorted neighbours in a line, use the drivative method
+      // if (nidx.size()==2){
+      //   // std::cout << "two neighbours" << std::endl;
+      //   sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
+      //                                        midx,nidx[0],nidx[1],ecf,vcf);
+      // }
     }
   }
 }

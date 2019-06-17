@@ -385,61 +385,63 @@ bool munkres_permutation(const T* centre, const T* neighbour,
                          const size_t span, const size_t Nobj,
                          ArrayVector<size_t>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
-                         const int eig_cost_func = 3,
+                         const int eig_cost_func = 0,
                          const int vec_cost_func = 0
                        ){
+/* An earlier version of this function took `centre` and `neighbour` arrays
+   which were effectively [span, Nobj] 2D arrays. This has the unfortunate
+   property that individual objects were not contiguous in memory but instead
+   had a stride equal to Nobj.
+   Now this function requires arrays which are [Nobj, span], placing each
+   object in contiguous memory and eliminating the need to copy sub-object
+   vector/matrices into contiguous memory before calling subroutines.
+*/
 // initialize variables
 R s_cost{0}, e_cost{0}, v_cost{0}, m_cost{0};
 Munkres<R> munkres(Nobj);
-size_t* assignment = new size_t[Nobj]();
+size_t *assignment = new size_t[Nobj]();
 size_t any_evm = Deig*Neig + Nvec + Nmat*Nmat;
-// TODO: change the input from (N,M,...,Nobj) to (Nobj,N,M,...)
-//       so that the per-object information is contiguous in memory.
-//       Then we can get rid of c_data and n_data completely.
-T* c_data = new T[any_evm]();
-T* n_data = new T[any_evm]();
+const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
   for (size_t j=0; j<Nobj; ++j){
+    c_i = centre+i*span;
+    n_j = neighbour+j*span;
     s_cost = R(0);
     e_cost = R(0);
     if (Nscl){
       for (size_t k=0; k<Nscl; ++k)
-        s_cost += magnitude(centre[i+k*Nobj] - neighbour[j+k*Nobj]);
-    }
-    if (any_evm){
-      for (size_t k=0; k<any_evm; ++k){
-        c_data[k] =    centre[i+(Nscl+k)*Nobj];
-        n_data[k] = neighbour[j+(Nscl+k)*Nobj];
-      }
+        s_cost += magnitude(c_i[k] - n_j[k]);
+      c_i += Nscl;
+      n_j += Nscl;
     }
     if (Neig*Deig){
       for (size_t k=0; k<Neig; ++k){
         switch (eig_cost_func){
-          case 0: e_cost +=     vector_angle(Deig,c_data+k*Deig,n_data+k*Deig); break;
-          case 1: e_cost +=  vector_distance(Deig,c_data+k*Deig,n_data+k*Deig); break;
-          case 2: e_cost += 1-vector_product(Deig,c_data+k*Deig,n_data+k*Deig); break;
-          case 3: e_cost += std::abs(std::sin(hermitian_angle(Deig,c_data+k*Deig,n_data+k*Deig))); break;
+          case 0: e_cost += std::abs(std::sin(hermitian_angle(Deig, c_i+k*Deig, n_j+k*Deig))); break;
+          case 1: e_cost +=  vector_distance(Deig, c_i+k*Deig, n_j+k*Deig); break;
+          case 2: e_cost += 1-vector_product(Deig, c_i+k*Deig, n_j+k*Deig); break;
         }
       }
+      c_i += Neig*Deig;
+      n_j += Neig*Deig;
     }
     if (Nvec){
       switch (vec_cost_func){
-        case 0: v_cost =     vector_angle(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
-        case 1: v_cost =  vector_distance(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
-        case 2: v_cost = 1-vector_product(Nvec,c_data+Neig*Deig,n_data+Neig*Deig); break;
+        case 0: v_cost =     vector_angle(Nvec, c_i, n_j); break;
+        case 1: v_cost =  vector_distance(Nvec, c_i, n_j); break;
+        case 2: v_cost = 1-vector_product(Nvec, c_i, n_j); break;
       }
+      c_i += Nvec;
+      n_j += Nvec;
     }
     if (Nmat){
-      m_cost = frobenius_distance(Nmat,c_data+Neig*Deig+Nvec,n_data+Neig*Deig+Nvec);
+      m_cost = frobenius_distance(Nmat, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Weig*e_cost + Wvec*v_cost + Wmat*m_cost;
   }
 }
-// clear variables in case assignment fails and we exit early
-delete[] c_data;
-delete[] n_data;
 // use the Munkres' algorithm to determine the optimal assignment
 munkres.run_assignment();
 if (!munkres.get_assignment(assignment)){
