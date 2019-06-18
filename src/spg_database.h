@@ -39,6 +39,7 @@
 
 #include<iostream>
 #include<string>
+#include<cstring>
 #include "symmetry.h"
 
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
@@ -74,24 +75,59 @@ enum BravaisLetter {P, A, B, C, I, F, R};
 
 std::string bravais_string(const BravaisLetter b);
 
-
-typedef struct {
-  int           number;
-  char          schoenflies[7];
-  char          hall_symbol[17];
-  char          international[32];
-  char          international_full[20];
-  char          international_short[11];
-  char          choice[6];
+class Spacegroup{
+public:
+  int number;
+  std::string schoenflies;
+  std::string hall_symbol;
+  std::string international;
+  std::string international_full;
+  std::string international_short;
+  std::string choice;
   BravaisLetter bravais;
-  int           pointgroup_number;
-} Spacegroup;
+  int pointgroup_number;
+  int hall_number;
+  // Initializers
+  Spacegroup(): number(0), bravais(P), pointgroup_number(0), hall_number(0) {};
+  Spacegroup(int no, const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch, BravaisLetter br, int pno):
+    number(no), bravais(br), pointgroup_number(pno) {
+      deal_with_strings(sf, hs, its, itf, ith, ch);
+      set_hall_number();
+  };
+  Spacegroup(int _hall_number) { set_from_hall_number(_hall_number); };
+  //
+  int get_hall_number(void) const { return this->hall_number; };
+  int get_international_table_number(void) const { return this->number; };
+  int get_pointgroup_number(void) const { return this->pointgroup_number; };
+  std::string get_schoenflies_symbol(void) const {return this->schoenflies; };
+  std::string get_hall_symbol(void) const {return this->hall_symbol; };
+  std::string get_international_table_symbol(void) const {return this->international; };
+  std::string get_international_table_full(void) const {return this->international_full; };
+  std::string get_international_table_short(void) const {return this->international_short; };
+  std::string get_choice(void) const {return this->choice; };
+  std::string string_repr(void) const {
+    std::string repr;
+    repr += " IT(" + std::to_string(this->number) + "): "
+          + this->international;
+    if (this->choice.size()>0)
+      repr += " [" + this->choice + "]";
+    repr += ";";
+    repr += " Hall(" + std::to_string(this->hall_number) + "): "
+          + this->hall_symbol;
+    std::string left("< Spacegroup --"), right(" >");
+    return left + repr + right;
+  }
+private:
+  void deal_with_strings(const char*, const char*, const char*, const char*, const char*, const char*);
+  void set_hall_number(void);
+  void set_from_hall_number(const int);
+};
 
 bool hall_number_ok(const int hall_number);
 Symmetry get_spacegroup_symmetry_operations(const int hall_number);
-Spacegroup get_spacegroup(const int hall_number);
 
 int international_number_to_hall_number(const int number);
 int international_string_to_hall_number(const std::string& itname);
+int hall_symbol_to_hall_number(const std::string& hsymbol);
 
 #endif

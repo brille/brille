@@ -64,7 +64,7 @@ std::string bravais_string(const BravaisLetter b){
 2019-05-28 G Tucker */
 
 /* In Hall symbols (3rd column), '=' is used instead of '"'. */
-static const Spacegroup spacegroup_types[] = {
+static const Spacegroup ALL_SPACEGROUPS[] = {
   {  0, "      ", "                ", "                               ", "                   ", "          ", "     ", P,  0 }, /*   0 */
   {  1, "C1^1  ", "P 1             ", "P 1                            ", "P 1                ", "P1        ", "     ", P,  1 }, /*   1 */
   {  2, "Ci^1  ", "-P 1            ", "P -1                           ", "P -1               ", "P-1       ", "     ", P,  2 }, /*   2 */
@@ -598,7 +598,7 @@ static const Spacegroup spacegroup_types[] = {
   {230, "Oh^10 ", "-I 4bd 2c 3     ", "I a -3 d                       ", "I 4_1/a -3 2/d     ", "Ia-3d     ", "     ", I, 32 }, /* 530 */
 };
 
-static const int symmetry_operations[] = {
+static const int ALL_SPACEGROUP_SYMMETRY_OPERATIONS[] = {
   0       ,  /* dummy */
   16484   ,  /*    1 (  1) [  1, 0, 0, 0, 1, 0, 0, 0, 1,  0, 0, 0] */
   16484   ,  /*    2 (  2) [  1, 0, 0, 0, 1, 0, 0, 0, 1,  0, 0, 0] */
@@ -7990,8 +7990,8 @@ static const int symmetry_operations[] = {
   9392095 ,  /* 7388 (530) [ -1, 0, 0, 0, 0, 1, 0,-1, 0,  3, 3, 9] */
 };
 
-// Each symmetry_operation_index[hall_number] is [number_of_operations, index_of_first_operation]
-static const int symmetry_operation_index[][2] = {
+// Each SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[hall_number] is [number_of_operations, index_of_first_operation]
+static const int SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[][2] = {
   {   0,    0}, /*   0 */
   {   1,    1}, /*   1 */
   {   2,    2}, /*   2 */
@@ -8525,18 +8525,6 @@ static const int symmetry_operation_index[][2] = {
   {  96, 7293}, /* 530 */
 };
 
-int trim_trailing_spaces(char * str, const int nchar){
-  int i = nchar;
-  while (i>-1 && str[i]==' ') str[i--]='\0';
-  return i;
-}
-
-int quote_replaces_equal(char * str, const int len){
-  int i=-1;
-  while (str[++i]!='\0' && i<len) if (str[i]=='=') str[i]='\"';
-  return i;
-}
-
 bool hall_number_ok(const int hall_number){
 	return ( 0<hall_number && hall_number<531 );
 }
@@ -8554,7 +8542,7 @@ int get_numbered_operation(int *rot, double *trans, const int idx)
   /* group operations. In principle, octal numerical system can be used */
   /* for translation, but duodecimal system is more convenient. */
 
-  r = symmetry_operations[idx] % 19683; /* 19683 = 3**9 */
+  r = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] % 19683; /* 19683 = 3**9 */
   degit = 6561; /* 6561 = 3**8 */
   for ( i = 0; i < 3; i++ ) {
     for ( j = 0; j < 3; j++ ) {
@@ -8564,7 +8552,7 @@ int get_numbered_operation(int *rot, double *trans, const int idx)
     }
   }
 
-  t = symmetry_operations[idx] / 19683; /* 19683 = 3**9 */
+  t = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] / 19683; /* 19683 = 3**9 */
   degit = 144;
   for ( i = 0; i < 3; i++ ) {
     trans[i] = ( (double) ( ( t % ( degit * 12 ) ) / degit ) ) / 12;
@@ -8577,8 +8565,8 @@ int get_numbered_operation(int *rot, double *trans, const int idx)
 // renamed from spgdb_get_operation_index
 void get_first_last_operation_number(int indices[2], const int hall_number)
 {
-  indices[0] = symmetry_operation_index[hall_number][0];
-  indices[1] = symmetry_operation_index[hall_number][1];
+  indices[0] = SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[hall_number][0];
+  indices[1] = SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[hall_number][1];
 }
 
 // renamed from spgdb_get_spacegroup_operations
@@ -8594,27 +8582,11 @@ Symmetry get_spacegroup_symmetry_operations(const int hall_number)
   return symmetry;
 }
 
-
-Spacegroup get_spacegroup(const int hall_number)
-{
-  Spacegroup spg;
-  /* Return spg.number = 0 if hall_number is out of range. */
-  spg = spacegroup_types[ ( hall_number_ok(hall_number) ? hall_number : 0 ) ];
-            trim_trailing_spaces(spg.schoenflies,         7  );
-  int len = trim_trailing_spaces(spg.hall_symbol,         17 );
-            quote_replaces_equal(spg.hall_symbol,         len);
-            trim_trailing_spaces(spg.international,       32 );
-            trim_trailing_spaces(spg.international_full,  20 );
-            trim_trailing_spaces(spg.international_short, 11 );
-            trim_trailing_spaces(spg.choice,              6  );
-  return spg;
-}
-
 int international_number_to_hall_number(const int number){
 	if (number>=0 && number<230){
 		Spacegroup spg;
 		for (int i=1; i<531; i++){
-			spg = get_spacegroup(i);
+			spg = ALL_SPACEGROUPS[i];
 			if (spg.number == number) return i;
 		}
 	}
@@ -8626,12 +8598,69 @@ int international_string_to_hall_number(const std::string& itname)
   Spacegroup spg;
   size_t n = itname.size();
   for (int i=1; i<531; i++){
-	  spg = get_spacegroup(i);
+	  spg = ALL_SPACEGROUPS[i];
 	  // now check for matching international table names
-    if ( 0==itname.compare(0,n,spg.international      ,n<32?n:32)
-       ||0==itname.compare(0,n,spg.international_full ,n<20?n:20)
-       ||0==itname.compare(0,n,spg.international_short,n<11?n:11) )
+    if ( 0==itname.compare(spg.international      )
+       ||0==itname.compare(spg.international_full )
+       ||0==itname.compare(spg.international_short) )
       return i;
   }
   return 0; // no matching strings
+}
+
+int hall_symbol_to_hall_number(const std::string& hsymbol){
+  Spacegroup spg;
+  size_t n = hsymbol.size();
+  for (int i=1; i<531; i++){
+    spg = ALL_SPACEGROUPS[i];
+    // only accept exact matches
+    if (0==hsymbol.compare(spg.hall_symbol)) return i;
+  }
+  return 0; // no exact matches
+}
+
+
+std::string trim(const std::string& str,
+                 const std::string& whitespace = " \t")
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos)
+        return ""; // no content
+
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
+}
+
+std::string quote_replaces_equal(std::string str){
+  for (int i=0; i<str.size(); ++i) if (str[i]=='=') str[i]='\"';
+  return str;
+}
+
+void Spacegroup::deal_with_strings(const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch){
+  this->schoenflies         = trim(std::string( sf));
+  this->hall_symbol         = quote_replaces_equal(trim(std::string(hs)));
+  this->international       = trim(std::string(its));
+  this->international_full  = trim(std::string(itf));
+  this->international_short = trim(std::string(ith));
+  this->choice              = trim(std::string( ch));
+}
+
+void Spacegroup::set_hall_number(void){
+  this->hall_number = hall_symbol_to_hall_number(this->hall_symbol);
+}
+
+void Spacegroup::set_from_hall_number(const int hn){
+  this->hall_number = hall_number_ok(hn) ? hn : 0;
+  Spacegroup spg = ALL_SPACEGROUPS[this->hall_number];
+  this->number              = spg.number;
+  this->schoenflies         = spg.schoenflies;
+  this->hall_symbol         = spg.hall_symbol;
+  this->international       = spg.international;
+  this->international_full  = spg.international_full;
+  this->international_short = spg.international_short;
+  this->choice              = spg.choice;
+  this->bravais             = spg.bravais;
+  this->pointgroup_number   = spg.pointgroup_number;
 }

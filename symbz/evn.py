@@ -105,7 +105,7 @@ def __find_primary_ion(q_pts, e_vecs):
     n_pts, n_modes, n_ions, n_dims = e_vecs.shape
     q_dot_v = q_pts.reshape(n_pts, 1, 1, n_dims) * e_vecs
     q_v_norm = np.sqrt(np.sum(q_dot_v*np.conj(q_dot_v), axis=3))
-    ion_q_v = np.mean(q_v_norm.reshape(n_modes*n_dims, n_ions), axis=0)
+    ion_q_v = np.real(np.mean(q_v_norm.reshape(n_pts*n_modes, n_ions), axis=0))
     # The ion with smallest <|q⋅ϵ|> is most likely to have q⟂ϵ for any
     # given grid point (maybe?)
     return np.argmin(ion_q_v)

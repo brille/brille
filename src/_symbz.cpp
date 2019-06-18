@@ -52,6 +52,7 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("gamma", &Lattice::get_gamma)
     .def_property_readonly("volume",&Lattice::get_volume)
     .def_property("hall",&Lattice::get_hall,&Lattice::set_hall)
+    .def_property_readonly("spacegroup",&Lattice::get_spacegroup_object)
     .def("fill_covariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
       py::buffer_info bi = cmt.request();
       if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
@@ -167,4 +168,17 @@ PYBIND11_MODULE(_symbz,m){
     pt.def_property_readonly("does_anything",&PrimitiveTransform::does_anything);
     pt.def_property_readonly("is_primitive",&PrimitiveTransform::does_nothing);
     pt.def("__repr__",&PrimitiveTransform::string_repr);
+
+    py::class_<Spacegroup> spg(m,"Spacegroup");
+    spg.def(py::init<int>(),py::arg("Hall number"));
+    spg.def_property_readonly("hall_number", &Spacegroup::get_hall_number);
+    spg.def_property_readonly("international_table_number", &Spacegroup::get_international_table_number);
+    spg.def_property_readonly("pointgroup_number", &Spacegroup::get_pointgroup_number);
+    spg.def_property_readonly("schoenflies_symbol", &Spacegroup::get_schoenflies_symbol);
+    spg.def_property_readonly("hall_symbol", &Spacegroup::get_hall_symbol);
+    spg.def_property_readonly("international_table_symbol", &Spacegroup::get_international_table_symbol);
+    spg.def_property_readonly("international_table_full", &Spacegroup::get_international_table_full);
+    spg.def_property_readonly("international_table_short", &Spacegroup::get_international_table_short);
+    spg.def_property_readonly("choice", &Spacegroup::get_choice);
+    spg.def("__repr__",&Spacegroup::string_repr);
 }

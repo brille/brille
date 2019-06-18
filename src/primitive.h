@@ -41,7 +41,7 @@ public:
   PrimitiveTransform(const BravaisLetter c): bravais{c} { set_matrices(); };
   PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); };
   PrimitiveTransform(const int hall){
-    Spacegroup s = get_spacegroup(hall);
+    Spacegroup s(hall);
     bravais = s.bravais;
     set_matrices();
   };

@@ -296,7 +296,7 @@ void Reciprocal::print(){
 
 Direct Direct::primitive(void) const{
   double plm[9], lm[9];
-  PrimitiveTransform P(get_spacegroup(this->hall));
+  PrimitiveTransform P(this->hall);
   if (P.does_anything()){
     this->get_lattice_matrix(lm);
     std::array<double,9> Parray = P.get_to_primitive();

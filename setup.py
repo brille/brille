@@ -4,9 +4,9 @@ import sys
 import platform
 import subprocess
 
+from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from distutils.version import LooseVersion
 from write_version_info import get_version_info
 
 

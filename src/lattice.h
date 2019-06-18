@@ -92,6 +92,8 @@ public:
   int get_hall() const {return hall;};
   //! Set the symmetry of the Lattice by changing the Hall number
   int set_hall(const int h) { check_hall_number(h); return hall; };
+  //! Return the Hall name of the Lattice
+  Spacegroup get_spacegroup_object() const { return Spacegroup(hall); };
 protected:
   double unitvolume() const;
   Lattice inner_star() const;

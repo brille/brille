@@ -416,13 +416,38 @@ for (size_t i=0; i<Nobj; ++i){
       n_j += Nscl;
     }
     if (Neig*Deig){
-      for (size_t k=0; k<Neig; ++k){
-        switch (eig_cost_func){
-          case 0: e_cost += std::abs(std::sin(hermitian_angle(Deig, c_i+k*Deig, n_j+k*Deig))); break;
-          case 1: e_cost +=  vector_distance(Deig, c_i+k*Deig, n_j+k*Deig); break;
-          case 2: e_cost += 1-vector_product(Deig, c_i+k*Deig, n_j+k*Deig); break;
-        }
+      /* As long as the eigenvectors at each grid point are the eigenvectors of
+         a Hermitian matrix (for which H=H†, † ≡ complex conjugate transpose)
+         then the *entire* Neig*Deig dimensional eigenvectors at a given grid
+         point *are* orthogonal, and equivalent-mode eigenvectors at neighbouring
+         grid points should be least-orthogonal.
+
+         If ⃗a and ⃗b are eigenvectors of D with eigenvalues α and β,
+         respectively, then (using Einstein summation notation)
+         <D ⃗a, ⃗b > = (Dᵢⱼaⱼ)† bᵢ = Dᵢⱼ* aⱼ* bᵢ = aⱼ* Dᵢⱼ* bᵢ = < ⃗a, D† ⃗b >
+         and, since D ⃗a = α ⃗a and D† ⃗b = D ⃗b = β ⃗b,
+         < α ⃗a, ⃗b > = < ⃗a, β ⃗b > → (α-β)< ⃗a, ⃗b > = 0.
+         ∴ < ⃗a, ⃗b > = 0 for non-degenerate solutions to D ϵ = ω² ϵ.
+         For degenerate solutions, eigenvalue solvers still tend to return an
+         arbitrary linear combination c₀ ⃗a + s₁ ⃗b and s₀ ⃗a + c₁ ⃗b which are
+         still orthogonal.
+
+         It stands to reason that at nearby grid points the orthogonality will
+         only be approximate, and we can instead try to identify the any
+         least-orthogonal modes as being equivalent.
+      */
+      switch(eig_cost_func){
+        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig*Deig, c_i, n_j)));
+        case 1: e_cost = vector_distance(Neig*Deig, c_i, n_j);
+        case 2: e_cost = 1-vector_product(Neig*Deig, c_i, n_j);
       }
+      // for (size_t k=0; k<Neig; ++k){
+      //   switch (eig_cost_func){
+      //     case 0: e_cost += std::abs(std::sin(hermitian_angle(Deig, c_i+k*Deig, n_j+k*Deig))); break;
+      //     case 1: e_cost +=  vector_distance(Deig, c_i+k*Deig, n_j+k*Deig); break;
+      //     case 2: e_cost += 1-vector_product(Deig, c_i+k*Deig, n_j+k*Deig); break;
+      //   }
+      // }
       c_i += Neig*Deig;
       n_j += Neig*Deig;
     }
