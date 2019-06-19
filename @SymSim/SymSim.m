@@ -40,5 +40,6 @@ classdef SymSim < handle
       obj.pyobj = py.symbz.simphony.SymSim(pysimphony, pyargs(pykwds{:}));
     end % intializer
     sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
+    wq  = w_q(obj,qh,qk,ql,varargin)
   end % methods
 end % classdef

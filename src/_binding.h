@@ -220,6 +220,17 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
        py::arg("eigenvector_weight_function")=0,
        py::arg("vector_weight_function")=0
     )
+    .def("centre_sort_perm",
+      [](Class& cobj, const double wS, const double wE, const double wV,
+                      const double wM, const int ewf, const int vwf){
+      return av2np(cobj.centre_sort_perm(wS,wE,wV,wM,ewf,vwf));
+    }, py::arg("scalar_cost_weight")=1,
+       py::arg("eigenvector_cost_weight")=1,
+       py::arg("vector_cost_weight")=1,
+       py::arg("matrix_cost_weight")=1,
+       py::arg("eigenvector_weight_function")=0,
+       py::arg("vector_weight_function")=0
+    )
     .def_property("map",
       /*get map*/ [](Class& cobj){
         std::vector<ssize_t> shape(3); // the map is 3D

@@ -2,12 +2,34 @@
     to help with this task.
 */
 
+template<class T> std::vector<size_t> MapGrid3<T>::find_unsorted_neighbours(
+  const std::vector<bool>& sorted, const size_t centre_map_idx) const {
+  size_t centre_lin_idx;
+  if (this->map2lin(centre_map_idx,centre_lin_idx))
+    throw std::runtime_error("Mapping index has no corresponding linear index.");
+  // get a listing of all in-bounds mapped neighbour linear indices
+  ArrayVector<size_t> neighbours = this->get_neighbours(centre_lin_idx);
+  size_t n_map_idx;
+  std::vector<size_t> out;
+  out.reserve(neighbours.size());
+  for (size_t i=0; i<neighbours.size(); ++i){
+    // sorted only contains valid-mapped point information
+    // so convert from linear index to mapping index
+    int ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
+    if (ret !=0){
+      std::string msg = "Could not find map index of neighbour "
+                      + std::to_string(neighbours.getvalue(i)) + " as ";
+      if (ret < 0) msg += "the mapping is invalid.";
+      if (ret > 0) msg += "the linear index is out of bounds.";
+      throw std::runtime_error(msg);
+    }
+    if (!sorted[n_map_idx]) out.push_back(n_map_idx);
+  }
+  return out;
+}
 
-
-template<class T>
-std::vector<size_t>
-MapGrid3<T>::find_sorted_neighbours(const std::vector<bool>& sorted,
-                                    const size_t clin) const {
+template<class T> std::vector<size_t> MapGrid3<T>::find_sorted_neighbours(
+  const std::vector<bool>& sorted, const size_t clin) const {
   // get a listing of all in-bounds neighbour linear indexes
   ArrayVector<size_t> neighbours = this->get_neighbours(clin);
   size_t nidx, nnidx;
@@ -135,8 +157,12 @@ for (size_t i=0; i<nobj; ++i){
       nn_i = j;
       nn_i_found = true;
     }
-  if (!nn_i_found)
-    throw std::runtime_error("Next neighbour index not found. Has it been sorted?");
+  if (!nn_i_found){
+    std::string msg = "Next neighbour index not found.\n";
+    msg += "perm[n]  = " + perm.to_string(nidx) + "\n";
+    msg += "perm[nn] = " + perm.to_string(nnidx);
+    throw std::runtime_error(msg);
+  }
   for (size_t j=0; j<span; ++j){
     sorted.insert(this->data.getvalue(nidx,    i*span+j), 0u, i*span+j);
     sorted.insert(this->data.getvalue(nnidx,nn_i*span+j), 1u, i*span+j);
@@ -229,20 +255,139 @@ for(size_t idx=0; idx<this->numel(); ++idx){
         throw std::runtime_error(
           "Logic error. Too few or too many sorted neighbours found.");
       // only one sorted neighbour, so punt
-      if (nidx.size()>0){
-      // if (nidx.size()==1){
+      // if (nidx.size()>0){
+      if (nidx.size()==1){
         // std::cout << "one neighbour" << std::endl;
         sorted[midx] = this->sort_difference(wS,wE,wV,wM,span,nobj,perm,
                                              midx,nidx[0],ecf,vcf);
       }
-      // // two sorted neighbours in a line, use the drivative method
-      // if (nidx.size()==2){
-      //   // std::cout << "two neighbours" << std::endl;
-      //   sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
-      //                                        midx,nidx[0],nidx[1],ecf,vcf);
-      // }
+      // two sorted neighbours in a line, use the drivative method
+      if (nidx.size()==2){
+        // std::cout << "two neighbours" << std::endl;
+        sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
+                                             midx,nidx[0],nidx[1],ecf,vcf);
+      }
     }
   }
 }
 return perm;
+}
+
+
+template<class T> template<typename R>
+ArrayVector<size_t> MapGrid3<T>::centre_sort_perm(const R scalar_weight,
+                                                  const R eigenv_weight,
+                                                  const R vector_weight,
+                                                  const R matrix_weight,
+                                                  const int ecf,
+                                                  const int vcf
+) const {
+//
+// elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
+// or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
+size_t nobj = this->branches;
+size_t span = this->scalar_elements
+            + this->eigenvector_num*this->eigenvector_dim
+            + this->vector_elements
+            + this->matrix_elements*this->matrix_elements;
+// within each index of the data ArrayVector there are span*nobj entries.
+
+// We will return the permutations of 0:nobj-1 which sort the objects globally
+ArrayVector<size_t> perm( nobj, this->data.size() );
+// We need to keep track of which objects have been sorted thus far
+std::vector<bool> sorted(this->data.size());
+for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
+
+typename MunkresTraits<T>::type wS, wE, wV, wM;
+wS = typename MunkresTraits<T>::type(scalar_weight);
+wE = typename MunkresTraits<T>::type(eigenv_weight);
+wV = typename MunkresTraits<T>::type(vector_weight);
+wM = typename MunkresTraits<T>::type(matrix_weight);
+
+size_t mapidx;
+size_t subidx[3];
+// Start from the Γ point. It should always be a valid mapped point.
+// The grid centre along each direction is the ((2N+1)/2 + 1)ᵗʰ entry, but we count from 0 so (2N+1)/2
+for (int i=0; i<3; ++i) subidx[i] = this->size(i) >> 1;
+if (this->sub2map(subidx, mapidx))
+  throw std::runtime_error("Γ is not a mapped point.");
+// The first point gets an arbitrary assignment
+for (size_t j=0; j<nobj; ++j) perm.insert(j, mapidx, j);
+// Sort ±neighbours the same way; [1 0 0] & [-1 0 0], [1 1 0] & [-1 -1 0] …
+/* We could try some fancy stuff looking for q = -q pairs, but
+   a) the way find_unsorted_neighbours works, they should always be equal
+      distance from the start and end of the returned vector, e.g., if
+      all three dimensions are present, i & 26-i are -q & +q pairs for the
+      neighbours of Γ
+   b) Treating them the same way only entails finding their sorting permutation
+      *relative* to Γ (and not the reverse) -- so the order in which we visit
+      the neighbours doesn't matter.                                          */
+std::vector<size_t> unsorted_neighbours = this->find_unsorted_neighbours(sorted, mapidx);
+size_t num_sorted = 0; // Γ already sorted, but this is effectively an index
+for (size_t n_mapidx: unsorted_neighbours){
+  sorted[n_mapidx] = this->sort_difference(wS,wE,wV,wM,span,nobj,perm,n_mapidx,mapidx,ecf,vcf);
+  if (!sorted[n_mapidx]) throw std::runtime_error("Failed to sort Γ neighbour.");
+  ++num_sorted;
+}
+// with the immediate neighbours sorted, start a recursive search (from each to
+// be extra sure that we reach everywhere in the Brillouin zone.
+std::vector<bool> locked(this->data.size());
+for (size_t i=0; i<this->data.size(); ++i) locked[i] = false;
+for (size_t n_mapidx: unsorted_neighbours){
+  num_sorted += this->sort_recursion(n_mapidx,wS,wE,wV,wM,ecf,vcf,span,nobj,perm,sorted,locked);
+}
+if (num_sorted < this->data.size())
+  throw std::runtime_error("Recursive sorting failed to find all grid points.");
+if (num_sorted > this->data.size())
+  std::cout << "Sorted " << std::to_string(num_sorted) << " grid points but only "
+            << std::to_string(this->data.size()) << " points are mapped."
+            << std::endl;
+  // throw std::runtime_error("Recursive sorting visited some grid points more than once.");
+return perm;
+}
+
+template<class T> template<class R>
+size_t MapGrid3<T>::sort_recursion(const size_t centre,
+                                   const R wS, const R wE, const R wV, const R wM,
+                                   const int ecf, const int vcf,
+                                   const size_t span, const size_t nobj,
+                                   ArrayVector<size_t>& perm,
+                                   std::vector<bool>& sorted,
+                                   std::vector<bool>& locked) const {
+// std::cout << "Recursive sorting" << std::endl;
+std::vector<size_t> unsorted_neighbours = this->find_unsorted_neighbours(sorted, centre);
+std::vector<size_t> sorted_neighbours;
+size_t nlin, num_sorted=0;
+bool success=false;
+for (size_t nmap: unsorted_neighbours){
+  // When this gets parallelised two threads might have overlapping neighbours
+  // Don't bother doing anything if another thread got to this neighbour after
+  // unsorted_neighbours was called.
+  if (sorted[nmap]||locked[nmap]) break;
+  locked[nmap] = true;
+  this->map2lin(nmap, nlin);
+  sorted_neighbours = this->find_sorted_neighbours(sorted, nlin);
+  if (sorted_neighbours.size()<1)
+    throw std::runtime_error("No sorted neighbours.");
+  if (sorted_neighbours.size()>2)
+    throw std::runtime_error("Too many sorted neighbours.");
+  if (sorted_neighbours.size()==1)
+    success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
+                                    sorted_neighbours[0],
+                                    ecf, vcf);
+  if (sorted_neighbours.size()==2)
+    success = this->sort_derivative(wS, wE, wV, wM, span, nobj, perm, nmap,
+                                    sorted_neighbours[0], sorted_neighbours[1],
+                                    ecf, vcf);
+  // if (!success) throw std::runtime_error("Failed to find permutation.");
+  // Don't throw here, maybe we can sort from a different direction?
+  sorted[nmap] = success;
+  if (success) num_sorted++;
+  locked[nmap] = false;
+}
+// All neighbours of map_idx sorted, so now sort all of their neighbours in turn
+for (size_t un: unsorted_neighbours)
+  num_sorted += this->sort_recursion(un, wS, wE, wV, wM, ecf, vcf, span, nobj, perm, sorted, locked);
+
+return num_sorted;
 }

@@ -111,7 +111,8 @@ class SymSim:
         # The input to sort_perm indicates what weight should be given to
         # each part of the resultant cost matrix. In this case, each phonon
         # branch consists of one energy, n_ions three-vectors, and no matrix;
-        perm = self.grid.new_sort_perm(energy_weight, eigenvector_weight, 0)
+        # perm = self.grid.new_sort_perm(energy_weight, eigenvector_weight, 0)
+        perm = self.grid.centre_sort_perm(energy_weight, eigenvector_weight, 0)
         # FIXME Verify the following sorting permutation
         frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
         self.grid.fill(frqs_vecs)
@@ -261,14 +262,21 @@ class SymSim:
             # Prevent SimPhony from performing the Bose correction twice
             p_dict['calc_bose'] = False
         # Calculate Sᵢ(Q) after interpolating ωᵢ(Q) and ⃗ϵᵢⱼ(Q)
-        s_i = self.s_q(q_hkl, **p_dict)
+        if 'unique_q' in p_dict and p_dict['unique_q']:
+            # Avoid repeated Q entries for, e.g., (Q,E) maps
+            # Finding unique points is 𝒪(q_hkl.shape[0])
+            uq_hkl, u_inv = np.unique(q_hkl, return_inverse=True, axis=0)
+            s_i = self.s_q(uq_hkl, **p_dict)[u_inv]
+            omega = (self.data.freqs.to('millielectron_volt')).magnitude[u_inv]
+        else:
+            s_i = self.s_q(q_hkl, **p_dict)
+            omega = (self.data.freqs.to('millielectron_volt')).magnitude
         # The resulting array should be (n_pt,n_br)
         if s_i.shape[0] != n_pt or s_i.shape[1] != n_br:
             msg = "Expected S(Q) shape ({}, {}) but got {}."
             msg = msg.format(n_pt, n_br, s_i.shape)
             raise Exception(msg)
 
-        omega = (self.data.freqs.to('millielectron_volt')).magnitude
         shapein = energy.shape
         energy = energy.flatten()[:, None]
         # ωᵢ(Q)  is (n_pt,n_br)

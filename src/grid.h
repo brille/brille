@@ -269,6 +269,8 @@ public:
   */
   std::vector<size_t> find_sorted_neighbours(const std::vector<bool>& sorted,
                                              const size_t clin) const;
+  std::vector<size_t> find_unsorted_neighbours(const std::vector<bool>& sorted,
+                                             const size_t centre_map_idx) const;
   /*!
   \brief Assign the elements at one point to the elements at a second point,
          storing the permutation array.
@@ -345,6 +347,21 @@ public:
   template<typename R>
   ArrayVector<size_t> new_sort_perm(const R, const R, const R, const R,
                                     const int ecf=2, const int vcf=0) const;
+  template<typename R>
+  size_t sort_recursion(const size_t centre,
+                        const R wS, const R wE, const R wV, const R wM,
+                        const int ecf, const int vcf,
+                        const size_t span, const size_t nobj,
+                        ArrayVector<size_t>& perm,
+                        std::vector<bool>& sorted,
+                        std::vector<bool>& locked) const;
+  template<typename R>
+  ArrayVector<size_t> centre_sort_perm(const R scalar_weight,
+                                       const R eigenv_weight,
+                                       const R vector_weight,
+                                       const R matrix_weight,
+                                       const int ecf,
+                                       const int vcf) const;
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
