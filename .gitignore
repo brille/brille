@@ -31,7 +31,10 @@ nosetests.xml
 # Doc
 .buildinfo
 .doctrees
+
+# Various build directories
 *build
+*dist
 
 # autotools
 AUTHORS
@@ -62,4 +65,3 @@ stamp-h1
 autoscan.log
 configure.scan
 test-driver
-
