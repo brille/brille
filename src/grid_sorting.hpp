@@ -120,7 +120,7 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   const size_t nidx,
                                   const int ecf,
                                   const int vcf) const {
-return munkres_permutation(this->data.datapointer(cidx,0),
+return sm_permutation(this->data.datapointer(cidx,0),
                            this->data.datapointer(nidx,0),
                            this->scalar_elements,
                            this->eigenvector_num,
@@ -188,7 +188,7 @@ bool rslt;
 // std::cout << predic.to_string();
 // std::cout << this->data.to_string(cidx) << std::endl;
 // find the assignment of each *predicted* object value to those at cidx:
-rslt = munkres_permutation(this->data.datapointer(cidx,0),
+rslt = sm_permutation(this->data.datapointer(cidx,0),
                            predic.datapointer(out_i,0),
                            this->scalar_elements,
                            this->eigenvector_num,
@@ -229,11 +229,11 @@ for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
 bool firstnotfound = true;
 std::vector<size_t> nidx;
 
-typename MunkresTraits<T>::type wS, wE, wV, wM;
-wS = typename MunkresTraits<T>::type(scalar_weight);
-wE = typename MunkresTraits<T>::type(eigenv_weight);
-wV = typename MunkresTraits<T>::type(vector_weight);
-wM = typename MunkresTraits<T>::type(matrix_weight);
+typename CostTraits<T>::type wS, wE, wV, wM;
+wS = typename CostTraits<T>::type(scalar_weight);
+wE = typename CostTraits<T>::type(eigenv_weight);
+wV = typename CostTraits<T>::type(vector_weight);
+wM = typename CostTraits<T>::type(matrix_weight);
 
 size_t midx;
 // std::cout << "Start the sorting" << std::endl;
@@ -298,11 +298,11 @@ ArrayVector<size_t> perm( nobj, this->data.size() );
 std::vector<bool> sorted(this->data.size());
 for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
 
-typename MunkresTraits<T>::type wS, wE, wV, wM;
-wS = typename MunkresTraits<T>::type(scalar_weight);
-wE = typename MunkresTraits<T>::type(eigenv_weight);
-wV = typename MunkresTraits<T>::type(vector_weight);
-wM = typename MunkresTraits<T>::type(matrix_weight);
+typename CostTraits<T>::type wS, wE, wV, wM;
+wS = typename CostTraits<T>::type(scalar_weight);
+wE = typename CostTraits<T>::type(eigenv_weight);
+wV = typename CostTraits<T>::type(vector_weight);
+wM = typename CostTraits<T>::type(matrix_weight);
 
 size_t mapidx;
 size_t subidx[3];
@@ -371,14 +371,14 @@ for (size_t nmap: unsorted_neighbours){
     throw std::runtime_error("No sorted neighbours.");
   if (sorted_neighbours.size()>2)
     throw std::runtime_error("Too many sorted neighbours.");
-  if (sorted_neighbours.size()==1)
+  // if (sorted_neighbours.size()==1)
     success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
                                     sorted_neighbours[0],
                                     ecf, vcf);
-  if (sorted_neighbours.size()==2)
-    success = this->sort_derivative(wS, wE, wV, wM, span, nobj, perm, nmap,
-                                    sorted_neighbours[0], sorted_neighbours[1],
-                                    ecf, vcf);
+  // if (sorted_neighbours.size()==2)
+  //   success = this->sort_derivative(wS, wE, wV, wM, span, nobj, perm, nmap,
+  //                                   sorted_neighbours[0], sorted_neighbours[1],
+  //                                   ecf, vcf);
   // if (!success) throw std::runtime_error("Failed to find permutation.");
   // Don't throw here, maybe we can sort from a different direction?
   sorted[nmap] = success;

@@ -11,7 +11,7 @@ typedef long slong; // ssize_t is only defined for gcc?
 // #include <memory>
 
 #include "unsignedtosigned.h"
-#include "munkres.h"
+#include "permutation.h"
 
 // A grid is a 3 (or 4) dimensional object that for a given index, e.g.,
 // [i][j][k], contains the (linear) index into a second ArrayVector object.

@@ -1,4 +1,7 @@
 /* This file started life as lap.h from https://github.com/src-d/lapjv */
+#ifndef _LAPJV_H
+#define _LAPJV_H
+
 #include <cassert>
 #include <cstdio>
 #include <limits>
@@ -223,7 +226,7 @@ find_umins(
 /// @param v out dual variables, column reduction numbers / size dim
 /// @return achieved minimum assignment cost
 template <typename idx, typename cost>
-cost lap(int dim, const cost *restrict assign_cost, bool verbose,
+cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
          idx *restrict rowsol, idx *restrict colsol,
          cost *restrict u, cost *restrict v) {
   auto free = std::unique_ptr<idx[]>(new idx[dim]);     // list of unassigned rows.
@@ -469,3 +472,5 @@ cost lap(int dim, const cost *restrict assign_cost, bool verbose,
 
   return lapcost;
 }
+
+#endif
