@@ -120,11 +120,10 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   const size_t nidx,
                                   const int ecf,
                                   const int vcf) const {
-return sm_permutation(this->data.datapointer(cidx,0),
+return jv_permutation(this->data.datapointer(cidx,0),
                            this->data.datapointer(nidx,0),
                            this->scalar_elements,
-                           this->eigenvector_num,
-                           this->eigenvector_dim,
+                           this->eigvec_elements,
                            this->vector_elements,
                            this->matrix_elements,
                            scaleS, scaleE, scaleV, scaleM,
@@ -176,10 +175,14 @@ size_t cnt = 2u;
 size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
 size_t out_i = 0u;
+const size_t eigvec_dim = 3u;
+const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
+if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
+  throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
 unsafe_interpolate_to(sorted,
                       this->scalar_elements,
-                      this->eigenvector_num,
-                      this->eigenvector_dim,
+                      eigvec_cnt,
+                      eigvec_dim,
                       this->vector_elements,
                       this->matrix_elements,
                       this->branches,
@@ -188,11 +191,10 @@ bool rslt;
 // std::cout << predic.to_string();
 // std::cout << this->data.to_string(cidx) << std::endl;
 // find the assignment of each *predicted* object value to those at cidx:
-rslt = sm_permutation(this->data.datapointer(cidx,0),
+rslt = jv_permutation(this->data.datapointer(cidx,0),
                            predic.datapointer(out_i,0),
                            this->scalar_elements,
-                           this->eigenvector_num,
-                           this->eigenvector_dim,
+                           this->eigvec_elements,
                            this->vector_elements,
                            this->matrix_elements,
                            scaleS, scaleE, scaleV, scaleM,
@@ -214,7 +216,7 @@ ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const R scalar_weight,
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
 size_t nobj = this->branches;
 size_t span = this->scalar_elements
-            + this->eigenvector_num*this->eigenvector_dim
+            + this->eigvec_elements
             + this->vector_elements
             + this->matrix_elements*this->matrix_elements;
 // within each index of the data ArrayVector there are span*nobj entries.
@@ -287,7 +289,7 @@ ArrayVector<size_t> MapGrid3<T>::centre_sort_perm(const R scalar_weight,
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
 size_t nobj = this->branches;
 size_t span = this->scalar_elements
-            + this->eigenvector_num*this->eigenvector_dim
+            + this->eigvec_elements
             + this->vector_elements
             + this->matrix_elements*this->matrix_elements;
 // within each index of the data ArrayVector there are span*nobj entries.
@@ -371,14 +373,18 @@ for (size_t nmap: unsorted_neighbours){
     throw std::runtime_error("No sorted neighbours.");
   if (sorted_neighbours.size()>2)
     throw std::runtime_error("Too many sorted neighbours.");
+  success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
+                                  sorted_neighbours[0],
+                                  ecf, vcf);
   // if (sorted_neighbours.size()==1)
-    success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
-                                    sorted_neighbours[0],
-                                    ecf, vcf);
+  //   success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
+  //                                   sorted_neighbours[0],
+  //                                   ecf, vcf);
   // if (sorted_neighbours.size()==2)
   //   success = this->sort_derivative(wS, wE, wV, wM, span, nobj, perm, nmap,
   //                                   sorted_neighbours[0], sorted_neighbours[1],
   //                                   ecf, vcf);
+
   // if (!success) throw std::runtime_error("Failed to find permutation.");
   // Don't throw here, maybe we can sort from a different direction?
   sorted[nmap] = success;

@@ -67,8 +67,7 @@ two matrices.
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
 @param Nscl The number of scalars per object
-@param Neig The number of eigenvectors per object
-@param Deig The eigenvector dimensionality
+@param Neig The number of eigenvector elements per object
 @param Nvec The number of vector elements per object
 @param Nmat The square root of the number of matrix elements per object
 @param Wscl The cost weight for scalar elements
@@ -97,7 +96,7 @@ template<class T, class R,
         >
 bool munkres_permutation(const T* centre, const T* neighbour,
                          const size_t Nscl,
-                         const size_t Neig, const size_t Deig,
+                         const size_t Neig,
                          const size_t Nvec, const size_t Nmat,
                          const R Wscl, const R Weig, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
@@ -118,7 +117,7 @@ bool munkres_permutation(const T* centre, const T* neighbour,
 R s_cost{0}, e_cost{0}, v_cost{0}, m_cost{0};
 Munkres<R> munkres(Nobj);
 size_t *assignment = new size_t[Nobj]();
-size_t any_evm = Deig*Neig + Nvec + Nmat*Nmat;
+size_t any_evm = Neig + Nvec + Nmat*Nmat;
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
@@ -133,10 +132,10 @@ for (size_t i=0; i<Nobj; ++i){
       c_i += Nscl;
       n_j += Nscl;
     }
-    if (Neig*Deig){
+    if (Neig){
       /* As long as the eigenvectors at each grid point are the eigenvectors of
          a Hermitian matrix (for which H=H†, † ≡ complex conjugate transpose)
-         then the *entire* Neig*Deig dimensional eigenvectors at a given grid
+         then the *entire* Neig dimensional eigenvectors at a given grid
          point *are* orthogonal, and equivalent-mode eigenvectors at neighbouring
          grid points should be least-orthogonal.
 
@@ -155,19 +154,12 @@ for (size_t i=0; i<Nobj; ++i){
          least-orthogonal modes as being equivalent.
       */
       switch(eig_cost_func){
-        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig*Deig, c_i, n_j)));
-        case 1: e_cost = vector_distance(Neig*Deig, c_i, n_j);
-        case 2: e_cost = 1-vector_product(Neig*Deig, c_i, n_j);
+        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig, c_i, n_j))); break;
+        case 1: e_cost = vector_distance(Neig, c_i, n_j); break;
+        case 2: e_cost = 1-vector_product(Neig, c_i, n_j); break;
       }
-      // for (size_t k=0; k<Neig; ++k){
-      //   switch (eig_cost_func){
-      //     case 0: e_cost += std::abs(std::sin(hermitian_angle(Deig, c_i+k*Deig, n_j+k*Deig))); break;
-      //     case 1: e_cost +=  vector_distance(Deig, c_i+k*Deig, n_j+k*Deig); break;
-      //     case 2: e_cost += 1-vector_product(Deig, c_i+k*Deig, n_j+k*Deig); break;
-      //   }
-      // }
-      c_i += Neig*Deig;
-      n_j += Neig*Deig;
+      c_i += Neig;
+      n_j += Neig;
     }
     if (Nvec){
       switch (vec_cost_func){
@@ -207,7 +199,7 @@ return true;
 /*! \brief Use Junker-Volgenant algorithm to determine a permutation
 
 For two arrays of data, located in memory at `centre` and `neighbour`, and each
-representing `Nobj` sets of  `Nscl` scalars, `Neig`×`Deig` eigenvector elements,
+representing `Nobj` sets of  `Nscl` scalars, `Neig` eigenvector elements,
 `Nvec` vector elements, and `Nmat` matrix elements,
 determine the sorting permutation that maps the elements at `centre` onto the
 same global mapping as the sorting permutation already stored at
@@ -216,10 +208,10 @@ same global mapping as the sorting permutation already stored at
 
 Each array of data to be compared must be formatted as:
 
-      [ 0{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
-        1{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
+      [ 0{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
+        1{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
         ⋮
-        Nobj-1{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)} ]
+        Nobj-1{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)} ]
 
 The function constructs an `Nobj`×`Nobj` cost matrix, where each element is
 given by
@@ -249,8 +241,7 @@ two matrices.
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
 @param Nscl The number of scalars per object
-@param Neig The number of eigenvectors per object
-@param Deig The eigenvector dimensionality
+@param Neig The number of eigenvector elements per object
 @param Nvec The number of vector elements per object
 @param Nmat The square root of the number of matrix elements per object
 @param Wscl The cost weight for scalar elements
@@ -278,7 +269,7 @@ template<class T, class R,
         >
 bool jv_permutation(const T* centre, const T* neighbour,
                     const size_t Nscl,
-                    const size_t Neig, const size_t Deig,
+                    const size_t Neig,
                     const size_t Nvec, const size_t Nmat,
                     const R Wscl, const R Weig, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
@@ -303,7 +294,7 @@ R* vsol = new R[Nobj];
 int* rowsol = new int[Nobj];
 int* colsol = new int[Nobj];
 
-size_t any_evm = Deig*Neig + Nvec + Nmat*Nmat;
+size_t any_evm = Neig + Nvec + Nmat*Nmat;
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
@@ -318,14 +309,14 @@ for (size_t i=0; i<Nobj; ++i){
       c_i += Nscl;
       n_j += Nscl;
     }
-    if (Neig*Deig){
+    if (Neig){
       switch(eig_cost_func){
-        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig*Deig, c_i, n_j)));
-        case 1: e_cost = vector_distance(Neig*Deig, c_i, n_j);
-        case 2: e_cost = 1-vector_product(Neig*Deig, c_i, n_j);
+        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig, c_i, n_j)));
+        case 1: e_cost = vector_distance(Neig, c_i, n_j);
+        case 2: e_cost = 1-vector_product(Neig, c_i, n_j);
       }
-      c_i += Neig*Deig;
-      n_j += Neig*Deig;
+      c_i += Neig;
+      n_j += Neig;
     }
     if (Nvec){
       switch (vec_cost_func){
@@ -373,7 +364,7 @@ return true;
 /*! \brief Use a Stable Matching algorithm to determine a permutation
 
 For two arrays of data, located in memory at `centre` and `neighbour`, and each
-representing `Nobj` sets of  `Nscl` scalars, `Neig`×`Deig` eigenvector elements,
+representing `Nobj` sets of  `Nscl` scalars, `Neig` eigenvector elements,
 `Nvec` vector elements, and `Nmat` matrix elements,
 determine the sorting permutation that maps the elements at `centre` onto the
 same global mapping as the sorting permutation already stored at
@@ -382,10 +373,10 @@ same global mapping as the sorting permutation already stored at
 
 Each array of data to be compared must be formatted as:
 
-      [ 0{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
-        1{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
+      [ 0{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
+        1{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)}
         ⋮
-        Nobj-1{(0…Nscl-1)(0…Deig*Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)} ]
+        Nobj-1{(0…Nscl-1)(0…Neig-1)(0…Nvec-1)(0…Nmat*Nmat-1)} ]
 
 The function constructs an `Nobj`×`Nobj` cost matrix, where each element is
 given by
@@ -415,8 +406,7 @@ two matrices.
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
 @param Nscl The number of scalars per object
-@param Neig The number of eigenvectors per object
-@param Deig The eigenvector dimensionality
+@param Neig The number of eigenvector elements per object
 @param Nvec The number of vector elements per object
 @param Nmat The square root of the number of matrix elements per object
 @param Wscl The cost weight for scalar elements
@@ -444,7 +434,7 @@ template<class T, class R,
         >
 bool sm_permutation(const T* centre, const T* neighbour,
                     const size_t Nscl,
-                    const size_t Neig, const size_t Deig,
+                    const size_t Neig,
                     const size_t Nvec, const size_t Nmat,
                     const R Wscl, const R Weig, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
@@ -467,7 +457,7 @@ R* cost = new R[Nobj*Nobj];
 size_t* rowsol = new size_t[Nobj];
 size_t* colsol = new size_t[Nobj];
 
-size_t any_evm = Deig*Neig + Nvec + Nmat*Nmat;
+size_t any_evm = Neig + Nvec + Nmat*Nmat;
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
@@ -482,14 +472,15 @@ for (size_t i=0; i<Nobj; ++i){
       c_i += Nscl;
       n_j += Nscl;
     }
-    if (Neig*Deig){
+    if (Neig){
       switch(eig_cost_func){
-        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig*Deig, c_i, n_j)));
-        case 1: e_cost = vector_distance(Neig*Deig, c_i, n_j);
-        case 2: e_cost = 1-vector_product(Neig*Deig, c_i, n_j);
+        case 0: e_cost = std::abs(std::sin(hermitian_angle(Neig, c_i, n_j))); break;
+        case 1: e_cost = vector_distance(Neig, c_i, n_j); break;
+        case 2: e_cost = 1-vector_product(Neig, c_i, n_j); break;
+        default: std::cout << "Unknown eigenvector cost function. None used." << std::endl;
       }
-      c_i += Neig*Deig;
-      n_j += Neig*Deig;
+      c_i += Neig;
+      n_j += Neig;
     }
     if (Nvec){
       switch (vec_cost_func){

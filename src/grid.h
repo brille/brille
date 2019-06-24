@@ -31,8 +31,7 @@ protected:
   ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
   ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
   size_t scalar_elements;      //!< The number of scalars contained per data array
-  size_t eigenvector_num;      //!< The number of normalized eigenvectors contained per data array
-  size_t eigenvector_dim;      //!< The dimensionality of the eigenvectors (typically 3)
+  size_t eigvec_elements;      //!< The number of normalized eigenvectors elements contained per data array
   size_t vector_elements;      //!< The number of vector elements contained per data array
   size_t matrix_elements;      //!< The number of matrix elements contained per data array
   size_t branches;             //!< The number of branches contained per data array
@@ -40,24 +39,21 @@ public:
   // constructors
   MapGrid3(const size_t *n=default_n): map(nullptr), data(0,0), shape(1,0),
     scalar_elements(0),
-    eigenvector_num(0),
-    eigenvector_dim(0),
+    eigvec_elements(0),
     vector_elements(0),
     matrix_elements(0),
     branches(0)
     { this->set_size(n); };
   MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr),
     scalar_elements(0),
-    eigenvector_num(0),
-    eigenvector_dim(0),
+    eigvec_elements(0),
     vector_elements(0),
     matrix_elements(0),
     branches(0)
     { this->set_size(n); this->replace_data(av); };
   MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr),
     scalar_elements(0),
-    eigenvector_num(0),
-    eigenvector_dim(0),
+    eigvec_elements(0),
     vector_elements(0),
     matrix_elements(0),
     branches(0)
@@ -67,8 +63,7 @@ public:
     this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
     for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
     this->scalar_elements = other.scalar_elements;
-    this->eigenvector_num = other.eigenvector_num;
-    this->eigenvector_dim = other.eigenvector_dim;
+    this->eigvec_elements = other.eigvec_elements;
     this->vector_elements = other.vector_elements;
     this->matrix_elements = other.matrix_elements;
     this->branches = other.branches;
@@ -86,8 +81,7 @@ public:
       this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
       for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
       this->scalar_elements = other.scalar_elements;
-      this->eigenvector_num = other.eigenvector_num;
-      this->eigenvector_dim = other.eigenvector_dim;
+      this->eigvec_elements = other.eigvec_elements;
       this->vector_elements = other.vector_elements;
       this->matrix_elements = other.matrix_elements;
       this->branches = other.branches;
@@ -140,36 +134,34 @@ public:
   @param newdata the new ArrayVector of data to be stored
   @param newshape the shape information of each array in `newdata`
   @param new_scalar_elements The number of scalar elements contained each newdata array
-  @param new_eigenvector_num The number of eigenvector elements contained each newdata array
+  @param new_eigvec_elements The number of eigenvector elements contained each newdata array
   @param new_vector_elements The number of vector elements contained each newdata array
   @param new_matrix_elements The number of matrix elements contained each newdata array
   @note `newshape` provides information about the N dimensions and extent of
         each array in `newdata`, the following four unsigned integers provide
         information on how many scalar, eigenvector, vector, and matrix elements
         (in that order) are contained within the N-1 dimensions of each array.
-        `new_scalar_elements`+`new_eigenvector_num`+`new_vector_elements`+
+        `new_scalar_elements`+`new_eigvec_elements`+`new_vector_elements`+
         `new_matrix_elements`×`new_matrix_elements` must be equal to the
         product of newshape[1:N-1].
   */
   int replace_data(const ArrayVector<T>& newdata,
                    const ArrayVector<size_t>& newshape,
                    const size_t new_scalar_elements=0,
-                   const size_t new_eigenvector_num=0,
-                   const size_t new_eigenvector_dim=0,
+                   const size_t new_eigvec_elements=0,
                    const size_t new_vector_elements=0,
                    const size_t new_matrix_elements=0);
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
   @param new_scalar_elements The number of scalar elements contained each newdata vector
-  @param new_eigenvector_num The number of eigenvector elements contained each newdata vector
+  @param new_eigvec_elements The number of eigenvector elements contained each newdata vector
   @param new_vector_elements The number of vector elements contained each newdata vector
   @param new_matrix_elements The number of matrix elements contained each newdata vector
   @note This version of the method assumes each array in `newdata` is a vector
   */
   int replace_data(const ArrayVector<T>& newdata,
                    const size_t new_scalar_elements=0,
-                   const size_t new_eigenvector_num=0,
-                   const size_t new_eigenvector_dim=0,
+                   const size_t new_eigvec_elements=0,
                    const size_t new_vector_elements=0,
                    const size_t new_matrix_elements=0);
   //! Calculate the linear index of a point given its three subscripted indices
@@ -620,6 +612,10 @@ public:
     int oob=0;
     double weights[8];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
+    const size_t eigvec_dim=3u;
+    const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
+    if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
+      throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
 
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
@@ -662,8 +658,8 @@ public:
       // and set that ArrayVector as element i of the output ArrayVector
       unsafe_interpolate_to(this->data,
                             this->scalar_elements,
-                            this->eigenvector_num,
-                            this->eigenvector_dim,
+                            eigvec_cnt,
+                            eigvec_dim,
                             this->vector_elements,
                             this->matrix_elements,
                             this->branches,
@@ -698,6 +694,10 @@ public:
     double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
+    const size_t eigvec_dim=3u;
+    const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
+    if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
+      throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
 
 #pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs)
     for (slong si=0; si<xsize; si++){
@@ -741,8 +741,8 @@ public:
       // and set that ArrayVector as element i of the output ArrayVector
       unsafe_interpolate_to(this->data,
                             this->scalar_elements,
-                            this->eigenvector_num,
-                            this->eigenvector_dim,
+                            eigvec_cnt,
+                            eigvec_dim,
                             this->vector_elements,
                             this->matrix_elements,
                             this->branches,

@@ -108,6 +108,23 @@ class ModeSorting(unittest.TestCase):
         all_close = np.array([np.isclose(x, vectors) for x in sort_vecs])
         self.assertTrue(all_close.all())
 
+    def test_d_scalar_vector(self):
+        """Test sorting randomly permuted scalars and vectors."""
+        _, b_z = make_rbz((1, 1, 1))
+        bz_grid = s.BZGridQ(b_z, (10, 0, 0))
+        q_points = bz_grid.mapped_rlu
+        n_q = q_points.shape[0]
+        scalars = 10**np.arange(3).reshape(3, 1)
+        vectors = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        sca_vec = np.concatenate((scalars, vectors), axis=1)
+        r_gsv = np.array([permutation(sca_vec) for _ in range(n_q)])
+        bz_grid.fill(r_gsv, scalar_elements=1, eigenvector_num=1, eigenvector_dim=3)
+        perm = bz_grid.centre_sort_perm()
+        sort_gsv = np.array([x[y, :] for x, y in zip(r_gsv, perm)])
+        all_close = np.isclose(np.diff(sort_gsv, axis=0), 0).all()
+        self.assertTrue(all_close)
+
+
     def test_mode_crossing(self):
         """Test sorting randomly permuted crossing modes."""
         w_en = 1

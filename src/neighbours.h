@@ -15,4 +15,6 @@ combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0,0).
 */
 ArrayVector<int> make_relative_neighbour_indices4(const int extent=1);
 
+ArrayVector<int> make_relative_neighbour_indices_prime(const int extent=1);
+
 #endif

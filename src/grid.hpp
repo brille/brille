@@ -81,7 +81,7 @@ template<class T> int MapGrid3<T>::check_map(void) const {
 template<class T> void MapGrid3<T>::check_elements(void){
   size_t elements = 1u;
   size_t total_elements = this->scalar_elements
-                        + this->eigenvector_num * this->eigenvector_dim
+                        + this->eigvec_elements
                         + this->vector_elements
                         + this->matrix_elements * this->matrix_elements;
   // no matter what, shape[0] should be the number of gridded points
@@ -101,8 +101,7 @@ template<class T> void MapGrid3<T>::check_elements(void){
     std::string msg ="Inconsistent element counts: "
                     + std::to_string(total_elements) + " = "
                     + std::to_string(this->scalar_elements) + "+"
-                    + std::to_string(this->eigenvector_num) + "×"
-                    + std::to_string(this->eigenvector_dim) + "+"
+                    + std::to_string(this->eigvec_elements) + "+"
                     + std::to_string(this->vector_elements) + "+"
                     + std::to_string(this->matrix_elements) + "² ≠ "
                     + std::to_string(elements);
@@ -113,15 +112,13 @@ template<class T>
 int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
                               const ArrayVector<size_t>& newshape,
                               const size_t new_scalar_elements,
-                              const size_t new_eigenvector_num,
-                              const size_t new_eigenvector_dim,
+                              const size_t new_eigvec_elements,
                               const size_t new_vector_elements,
                               const size_t new_matrix_elements){
   this->data =  newdata;
   this->shape = newshape;
   this->scalar_elements = new_scalar_elements;
-  this->eigenvector_num = new_eigenvector_num;
-  this->eigenvector_dim = new_eigenvector_dim;
+  this->eigvec_elements = new_eigvec_elements;
   this->vector_elements = new_vector_elements;
   this->matrix_elements = new_matrix_elements;
   this->check_elements();
@@ -130,8 +127,7 @@ int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
 template<class T>
 int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
                               const size_t new_scalar_elements,
-                              const size_t new_eigenvector_num,
-                              const size_t new_eigenvector_dim,
+                              const size_t new_eigvec_elements,
                               const size_t new_vector_elements,
                               const size_t new_matrix_elements){
   ArrayVector<size_t> shape(1,2);
@@ -140,8 +136,7 @@ int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
   return this->replace_data(newdata,
                             shape,
                             new_scalar_elements,
-                            new_eigenvector_num,
-                            new_eigenvector_dim,
+                            new_eigvec_elements,
                             new_vector_elements,
                             new_matrix_elements);
 }
@@ -317,7 +312,7 @@ template<class T> bool MapGrid3<T>::is_inbounds(const size_t* s) const {
 
 
 template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t centre) const {
-  ArrayVector<int> mzp = make_relative_neighbour_indices(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
+  ArrayVector<int> mzp = make_relative_neighbour_indices_prime(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
   ArrayVector<size_t> ijk(3u,1u);
   // get the subscripted indices of the centre position
   this->lin2sub(centre, ijk.datapointer(0));

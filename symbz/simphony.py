@@ -13,7 +13,7 @@ from simphony.data.interpolation import InterpolationData
 from simphony.calculate.scattering import structure_factor
 from simphony import ureg    # avoid creating a second Pint UnitRegistry
 
-from scipy.special import wofz
+from scipy import special
 from scipy.stats import norm, cauchy
 
 import symbz as sbz
@@ -54,9 +54,10 @@ class SymSim:
     phonon branches before combining their intensities.
     """
 
+    # pylint: disable=r0913,r0914
     def __init__(self, SPData,
-                 scattering_lengths=None,
-                 parallel=False, **kwds):
+                 scattering_lengths=None, cell_is_primitive=None,
+                 hall_number=None, parallel=False, **kwds):
         """Initialize a new SymSim object from an existing SimPhony object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -65,6 +66,9 @@ class SymSim:
             scattering_lengths = {k: 1 for k in np.unique(SPData.ion_type)}
         self.data = SPData
         self.scattering_lengths = scattering_lengths
+        self.hall_number = hall_number
+        self.data_cell_is_primitive = cell_is_primitive
+        self.__check_if_cell_is_primitive()
         # Construct the BZGrid, by default using the conventional unit cell
         grid_q = self.__make_grid(**kwds)
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
@@ -85,12 +89,11 @@ class SymSim:
         # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
         self.grid.fill(frqs_vecs,
                        scalar_elements=1,
-                       eigenvector_num=n_io,
-                       eigenvector_dim=3)
+                       eigenvector_elements=3*n_io)
         # self.sort_branches()
         self.parallel = parallel
 
-    def sort_branches(self, energy_weight=1.0, eigenvector_weight=1.0):
+    def sort_branches(self, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
         """Sort the phonon branches stored at all mapped grip points.
 
         By comparing the difference in phonon branch energy and the angle
@@ -111,38 +114,61 @@ class SymSim:
         # The input to sort_perm indicates what weight should be given to
         # each part of the resultant cost matrix. In this case, each phonon
         # branch consists of one energy, n_ions three-vectors, and no matrix;
-        # perm = self.grid.new_sort_perm(energy_weight, eigenvector_weight, 0)
-        perm = self.grid.centre_sort_perm(energy_weight, eigenvector_weight, 0)
-        # FIXME Verify the following sorting permutation
+        perm = self.grid.centre_sort_perm(
+            scalar_cost_weight=energy_weight,
+            eigenvector_cost_weight=eigenvector_weight,
+            vector_cost_weight=0,
+            matrix_cost_weight=0,
+            eigenvector_weight_function=weight_function)
         frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
-        self.grid.fill(frqs_vecs)
+        self.grid.fill(frqs_vecs,
+                       scalar_elements=1,
+                       eigenvector_elements=3*self.data.n_ions)
         return frqs_vecs
 
-    def __get_hall_number(self):
-        # CASTEP always (?) stores the *primtive* lattice basis vectors, but
-        # we want to let the calling function use the conventional basis
-        # instead.
-        # Given the primitive lattice basis vectors and ion positions, spglib
-        # can determine *a* conventional unit cell
+    def __check_if_cell_is_primitive(self):
+        # CASTEP can calculate in a standard, non-standard, primitive, or
+        # non-primitive cell. Try to be clever about how its stored cell
+        # relates to the one a calling function will use.
         _, ion_indexes = np.unique(self.data.ion_type, return_inverse=True)
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         cell = (lattice_vectors, self.data.ion_r, ion_indexes)
-        symmetry_data = spglib.get_symmetry_dataset(cell)
-        return symmetry_data['hall_number']
+        # spglib can come to our rescue here a bit
+        prim_lv, _, _ = spglib.find_primitive(cell)
+        if (prim_lv == lattice_vectors).all():
+            if self.data_cell_is_primitive is None:
+                self.data_cell_is_primitive = True
+            if not self.data_cell_is_primitive:
+                msg = "Cell vectors and positions seem to represent a "
+                msg += "primitive lattice but a set flag indicates otherwise."
+                raise Exception(msg)
+        else:
+            # eventually we could try to get *really* clever and look for
+            # rotation/transformation matrices which SymBZ doesn't know about
+            if self.data_cell_is_primitive is None:
+                self.data_cell_is_primitive = False
+            if self.data_cell_is_primitive:
+                msg = "Cell vectors and positions seem not to represent a "
+                msg += "primitive lattice but a set flag indicates otherwise."
+                raise Exception(msg)
+        # while we're here with cell defined, check for its Hall number:
+        if self.hall_number is None:
+            symmetry_data = spglib.get_symmetry_dataset(cell)
+            self.hall_number = symmetry_data['hall_number']
 
+    # pylint: disable=no-member
     def __get_primitive_transform(self):
-        return sbz.PrimitiveTransform(self.__get_hall_number())
+        return sbz.PrimitiveTransform(self.hall_number)
 
-    def __make_grid(self, halfN=None, step=None, units='rlu',
-                    use_primitive=False, **kwds):
-        hall_number = self.__get_hall_number()
-        prim_tran = sbz.PrimitiveTransform(hall_number)
+    # pylint: disable=c0103,w0613,no-member
+    def __make_grid(self, halfN=None, step=None, units='rlu', **kwds):
+        prim_tran = self.__get_primitive_transform()
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         # And we can check whether there's anything to do using SymBZ
-        if prim_tran.does_anything and not use_primitive:
+        if prim_tran.does_anything and self.data_cell_is_primitive:
             lattice_vectors = np.matmul(lattice_vectors, prim_tran.invP)
         #
-        dlat = sbz.Direct(lattice_vectors, hall_number)
+        dlat = sbz.Direct(lattice_vectors, self.hall_number)
         rlat = dlat.star()
         brillouin_zone = sbz.BrillouinZone(rlat)
         if halfN is not None:
@@ -164,7 +190,7 @@ class SymSim:
         # We need to make sure that we pass gridded Q points in the primitive
         # lattice, since that is what SimPhony expects:
         grid_q = self.grid.mapped_rlu
-        if prim_tran.does_anything and not use_primitive:
+        if prim_tran.does_anything and self.data_cell_is_primitive:
             grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
         return grid_q
 
@@ -178,8 +204,7 @@ class SymSim:
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
 
-    def w_q(self, q_pt,
-            primitive_q=False, interpolate=True, moveinto=True, **kwargs):
+    def w_q(self, q_pt, interpolate=True, moveinto=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
         if interpolate:
@@ -188,6 +213,7 @@ class SymSim:
             # returns an (n_pt, n_br, 1+3*n_io) array.
             frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
             # Separate the frequencies and eigenvectors
+            # pylint: disable=w0632
             frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
             # And reshape to what SimPhony expects
             n_pt = q_pt.shape[0]
@@ -197,13 +223,13 @@ class SymSim:
             vecs = np.ascontiguousarray(vecs.reshape((n_pt, n_br, n_io, 3)))
             # Store all information in the SimPhony Data object
             self.data.n_qpts = n_pt
-            if prim_tran.does_anything and not primitive_q:
+            if prim_tran.does_anything and self.data_cell_is_primitive:
                 q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
             self.data.qpts = q_pt
             self.data.freqs = frqs*self.data.freqs.units
             self.data.eigenvecs = vecs
         else:
-            if prim_tran.does_anything and not primitive_q:
+            if prim_tran.does_anything and self.data_cell_is_primitive:
                 q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
             cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                             'eta_scale', 'splitting')
@@ -242,17 +268,16 @@ class SymSim:
         as keyword arguments to simphony.calculate.scattering.structure_factor.
 
         """
+        res_par_tem = ('delta',)
         if 'resfun' in p_dict and 'param' in p_dict:
-            resfun = p_dict['resfun'].replace(' ', '').lower()
-            params = p_dict['param']
-        else:
-            resfun = 'delta'
+            res_par_tem = (p_dict['resfun'].replace(' ', '').lower(),
+                           p_dict['param'])
         n_pt = energy.size
         n_br = self.data.n_branches
         # Check if we might perform the Bose factor correction twice:
         # Replicate SimPhony's behaviour of calc_bose=True by default,
         # and T=5 by default.
-        if resfun in ('s', 'sho', 'simpleharmonicoscillator'):
+        if res_par_tem[0] in ('s', 'sho', 'simpleharmonicoscillator'):
             # pull out T, or 5 if it's not present
             temp_k = p_dict['T'] if 'T' in p_dict else 5
             # keep T if calc_bose is present and True
@@ -261,12 +286,13 @@ class SymSim:
                 temp_k = temp_k if p_dict['calc_bose'] else 0
             # Prevent SimPhony from performing the Bose correction twice
             p_dict['calc_bose'] = False
+            res_par_tem = (*res_par_tem, temp_k)
         # Calculate Sᵢ(Q) after interpolating ωᵢ(Q) and ⃗ϵᵢⱼ(Q)
         if 'unique_q' in p_dict and p_dict['unique_q']:
             # Avoid repeated Q entries for, e.g., (Q,E) maps
             # Finding unique points is 𝒪(q_hkl.shape[0])
-            uq_hkl, u_inv = np.unique(q_hkl, return_inverse=True, axis=0)
-            s_i = self.s_q(uq_hkl, **p_dict)[u_inv]
+            q_hkl, u_inv = np.unique(q_hkl, return_inverse=True, axis=0)
+            s_i = self.s_q(q_hkl, **p_dict)[u_inv]
             omega = (self.data.freqs.to('millielectron_volt')).magnitude[u_inv]
         else:
             s_i = self.s_q(q_hkl, **p_dict)
@@ -283,25 +309,42 @@ class SymSim:
         # Sᵢ(Q)  is (n_pt,n_br)
         # energy is (n_pt,1) [instead of (n_pt,)]
 
-        if resfun in ('s', 'sho', 'simpleharmonicoscillator'):
-            s_q_e = sho(energy, omega, s_i, params, temp_k)
-        elif resfun in ('g', 'gauss', 'gaussian'):
-            s_q_e = gaussian(energy, omega, s_i, params)
-        elif resfun in ('l', 'lor', 'lorentz', 'lorentzian'):
-            s_q_e = lorentzian(energy, omega, s_i, params)
-        elif resfun in ('v', 'voi', 'voigt'):
-            s_q_e = voigt(energy, omega, s_i, params)
-        elif resfun in ('d', 'del', 'delta'):
-            s_q_e = delta(energy, omega, s_i)
-        else:
-            print("Unknown function {}".format(resfun))
-            s_q_e = s_i
-        # Sum over the n_br branches
-        s_q_e = s_q_e.sum(1)
+        # Broaden and then sum over the n_br branches
+        s_q_e = broaden_modes(energy, omega, s_i, res_par_tem).sum(1)
         if s_q_e.shape != shapein:
             s_q_e = s_q_e.reshape(shapein)
-
         return s_q_e
+
+
+def broaden_modes(energy, omega, s_i, res_par_tem):
+    """Compute S(Q,E) for a number of dispersion relations and intensities.
+
+    Given any number of dispersion relations, ω(Q), and the intensities of the
+    modes which they represent, S(Q), plus energy-broadening information in
+    the form of a function name plus parameters (if required), calculate S(Q,E)
+    at the provided energy positions.
+
+    The energy positions must have shape (Npoints,).
+    The dispersion and intensities must have been precalculated and should have
+    shape similar to (Npoints, Nmodes). This function calls one of five
+    available broadening functions, a simple harmonic oscillator, gaussian,
+    lorentzian, voigt, or delta function.
+    The retuned S(Q,E) array will have shape (Npoints, Nmodes).
+    """
+    if res_par_tem[0] in ('s', 'sho', 'simpleharmonicoscillator'):
+        s_q_e = sho(energy, omega, s_i, res_par_tem[1], res_par_tem[2])
+    elif res_par_tem[0] in ('g', 'gauss', 'gaussian'):
+        s_q_e = gaussian(energy, omega, s_i, res_par_tem[1])
+    elif res_par_tem[0] in ('l', 'lor', 'lorentz', 'lorentzian'):
+        s_q_e = lorentzian(energy, omega, s_i, res_par_tem[1])
+    elif res_par_tem[0] in ('v', 'voi', 'voigt'):
+        s_q_e = voigt(energy, omega, s_i, res_par_tem[1])
+    elif res_par_tem[0] in ('d', 'del', 'delta'):
+        s_q_e = delta(energy, omega, s_i)
+    else:
+        print("Unknown function {}".format(res_par_tem[0]))
+        s_q_e = s_i
+    return s_q_e
 
 
 def delta(x_0, x_i, y_i):
@@ -310,7 +353,8 @@ def delta(x_0, x_i, y_i):
 
     y₀ = yᵢ×δ(x₀-xᵢ)
     """
-    y_0 = np.zeros_like(y_i)
+    y_0 = np.zeros(y_i.shape, dtype=y_i.dtype)
+    # y_0 = np.zeros_like(y_i)
     y_0[x_0 == x_i] = y_i[x_0 == x_i]
     return y_0
 
@@ -364,7 +408,8 @@ def voigt(x_0, x_i, y_i, params):
     gamma = g_fwhm/2
     real_z = np.sqrt(np.log(2))*(x_0-x_i)/gamma
     imag_z = np.sqrt(np.log(2))*np.abs(l_fwhm/g_fwhm)
-    y_0 = area*np.real(wofz(real_z + 1j*imag_z))/gamma
+    # pylint: disable=no-member
+    y_0 = area*np.real(special.wofz(real_z + 1j*imag_z))/gamma
     return y_0
 
 

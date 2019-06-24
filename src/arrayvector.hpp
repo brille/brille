@@ -626,6 +626,59 @@ void interpolate_to(const A<T>& av,
   @note This function performs no bounds checking. Use interpolate_to if there is
         a need to ensure no sink-of-bounds access is performed.
 */
+
+// template<class T, class R, template<class> class A,
+//          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+//          class S = typename std::common_type<T,R>::type
+//          >
+// void unsafe_interpolate_to(const A<T>& source,
+//                            const size_t Nscl,
+//                            const size_t Neig,
+//                            const size_t Deig,
+//                            const size_t Nvec,
+//                            const size_t Nmat,
+//                            const size_t Nobj,
+//                            const size_t Narr,
+//                            const size_t *Isrc,
+//                            const R *weights,
+//                            A<S>& sink,
+//                            const size_t Jsnk) {
+//   S *sink_j = sink.datapointer(Jsnk);
+//   T *source_i, *source_0 = source.datapointer(Isrc[0]);
+//   size_t offset, span = Nscl+Neig*Deig+Nvec+Nmat*Nmat;
+//   T e_i_theta;
+//   for (size_t x=0; x<Narr; ++x){
+//     source_i = source.datapointer(Isrc[x]);
+//     // loop over the modes. they are the first index and farthest in memory
+//     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
+//       // Scalars are first, nothing special to do:
+//       for (size_t Iscl=0; Iscl<Nscl; ++Iscl)
+//         sink_j[Iobj*span + Iscl] += weights[x]*source_i[Iobj*span + Iscl];
+//       // Eigenvectors are next
+//       for (size_t Ieig=0; Ieig<Neig; ++Ieig){
+//         offset = Iobj*span + Nscl + Ieig*Deig;
+//         // find the arbitrary phase eⁱᶿ between different-object eigenvectors
+//         e_i_theta = antiphase(hermitian_product(Deig, source_0+offset, source_i+offset));
+//         // remove the arbitrary phase as we add the weighted value
+//         for(size_t Jeig=0; Jeig<Deig; ++Jeig)
+//           sink_j[offset+Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
+//       }
+//       // Vector and Matrix parts of each object are treated as scalars:
+//       for (size_t Ivecmat = Nscl+Neig*Deig; Ivecmat<span; ++Ivecmat)
+//         sink_j[Iobj*span + Ivecmat] += weights[x]*source_i[Iobj*span + Ivecmat];
+//     }
+//   }
+//   // make sure each eigenvector is normalized
+//   if (Neig*Deig){
+//     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
+//       for (size_t Ieig=0; Ieig<Neig; ++Ieig){
+//         offset = Iobj*span + Nscl +Ieig*Deig;
+//         auto normI = std::sqrt(inner_product(Deig, sink_j+offset, sink_j+offset));
+//         for (size_t Jeig=0; Jeig<Deig; ++Jeig) sink_j[offset+Jeig] /= normI;
+//       }
+//     }
+//   }
+// }
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
@@ -654,14 +707,12 @@ void unsafe_interpolate_to(const A<T>& source,
       for (size_t Iscl=0; Iscl<Nscl; ++Iscl)
         sink_j[Iobj*span + Iscl] += weights[x]*source_i[Iobj*span + Iscl];
       // Eigenvectors are next
-      for (size_t Ieig=0; Ieig<Neig; ++Ieig){
-        offset = Iobj*span + Nscl + Ieig*Deig;
-        // find the arbitrary phase eⁱᶿ between different-object eigenvectors
-        e_i_theta = antiphase(hermitian_product(Deig, source_0+offset, source_i+offset));
-        // remove the arbitrary phase as we add the weighted value
-        for(size_t Jeig=0; Jeig<Deig; ++Jeig)
-          sink_j[offset+Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
-      }
+      offset = Iobj*span + Nscl;
+      // find the arbitrary phase eⁱᶿ between different-object eigenvectors
+      e_i_theta = antiphase(hermitian_product(Neig*Deig, source_0+offset, source_i+offset));
+      // remove the arbitrary phase as we add the weighted value
+      for(size_t Jeig=0; Jeig<Neig*Deig; ++Jeig)
+        sink_j[offset+Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
       // Vector and Matrix parts of each object are treated as scalars:
       for (size_t Ivecmat = Nscl+Neig*Deig; Ivecmat<span; ++Ivecmat)
         sink_j[Iobj*span + Ivecmat] += weights[x]*source_i[Iobj*span + Ivecmat];
@@ -670,11 +721,9 @@ void unsafe_interpolate_to(const A<T>& source,
   // make sure each eigenvector is normalized
   if (Neig*Deig){
     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
-      for (size_t Ieig=0; Ieig<Neig; ++Ieig){
-        offset = Iobj*span + Nscl +Ieig*Deig;
-        auto normI = std::sqrt(inner_product(Deig, sink_j+offset, sink_j+offset));
-        for (size_t Jeig=0; Jeig<Deig; ++Jeig) sink_j[offset+Jeig] /= normI;
-      }
+      offset = Iobj*span + Nscl;
+      auto normI = std::sqrt(inner_product(Neig*Deig, sink_j+offset, sink_j+offset));
+      for (size_t Jeig=0; Jeig<Neig*Deig; ++Jeig) sink_j[offset+Jeig] /= normI;
     }
   }
 }
