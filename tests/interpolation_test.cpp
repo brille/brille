@@ -72,7 +72,7 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-0.5,0.5);
 
-  int nQ = 10000;
+  int nQ = 10;//10000;
   double* rawQ = new double[nQ*3]();
   for (int i=0; i<3*nQ; ++i) rawQ[i] = distribution(generator);
   LQVec<double> Q(r,nQ,rawQ);
@@ -117,7 +117,7 @@ TEST_CASE("BrillouinZoneGrid3 Sorting","[munkres]"){
   newshape.insert( 4u, 3u );
   bzg.replace_data( f_of_Q_mats( Qmap ), newshape ); // maybe mapped_hkl instead?
 
-  ArrayVector<size_t> sortperm = bzg.sort_perm();
+  ArrayVector<size_t> sortperm = bzg.centre_sort_perm();
 }
 
 ArrayVector<double> fe_dispersion(const ArrayVector<double>& Q){
@@ -146,6 +146,7 @@ TEST_CASE("primitive BrillouinZoneGrid3 Interpolation","[interpolation]"){
   bzg.replace_data( fe_dispersion(bzg.get_mapped_xyz()) );
 
   LQVec<double> Q=LQVec<double>(r,bzg.get_mapped_hkl());
+
   ArrayVector<std::complex<double>> intres;
   SECTION("Single-thread interpolation"){
     intres = bzg.linear_interpolate_at(Q);

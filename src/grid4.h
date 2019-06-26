@@ -118,6 +118,10 @@ public:
   size_t numel(void) const;
   //! Return the number of elements in the mapping grid along a given dimension
   size_t size(const size_t i) const;
+  // //! Return the span of elements neccessary to move between neighbouring points
+  // size_t span(const size_t i) const;
+  //! Return the stride (in bytes) necessary to move between neighbouring points
+  size_t stride(const size_t i) const;
   //! Change the size of the mapping grid given four new sizes
   size_t resize(const size_t n0, const size_t n1, const size_t n2, const size_t n3);
   //! Change the size of the mapping grid given an array of the new sizes

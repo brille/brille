@@ -138,6 +138,12 @@ template<class T> size_t MapGrid4<T>::numel(void) const {
 template<class T> size_t MapGrid4<T>::size(const size_t i) const {
   return (i<4u && N!=nullptr) ? N[i] : 0;
 }
+// template<class T> size_t MapGrid4<T>::span(const size_t i) const {
+//   return (i<4u && span!=nullptr) ? span[i] : 0;
+// }
+template<class T> size_t MapGrid4<T>::stride(const size_t i) const {
+  return sizeof(T)*( (i<4u && span!=nullptr) ? span[i] : 0);
+}
 //
 template<class T> size_t MapGrid4<T>::resize(const size_t n0, const size_t n1, const size_t n2, const size_t n3) {
   size_t old_numel = this->numel();

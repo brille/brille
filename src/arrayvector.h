@@ -6,6 +6,7 @@
 #include<string>
 #include<cmath>
 #include<functional>
+#include<vector>
 #include "linear_algebra.h"
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
@@ -56,6 +57,67 @@ public:
   ArrayVector(size_t m=0, size_t n=0, const T* d=nullptr) : M(m), N(n){
       if (m*n) data = safealloc<T>(m*n);
       if (d && m*n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+  };
+  /*! ArrayVector contstructor taking shape and stride information for the case
+      of a non-contiguous and/or non-row-ordered array at the provided pointer.
+      @param d a pointer to the n*m block of data, to be copied
+      @param shape a vector of sizes along each dimension of the input array
+      @param strides a vector of strides along each dimension of the input array
+      @note The strides vector must indicate the number of bytes necessary to
+            move from one point to the next along a given dimension of the input
+            data array. The ArrayVector is strictly two dimensional and
+            therefore a convention must be adopted for converting the
+            D-dimensional input array [D=s.size()].
+            This constructor will attempt to combine the 2ⁿᵈ through Dᵗʰ
+            dimensions such that (n,m) = (s[0],s[1]*…*s[D-1])
+  */
+  template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
+  ArrayVector(const T* d, const std::vector<Integer>& shape, const std::vector<Integer>& strides){
+    if (shape.size()>0 && shape.size()==strides.size()){
+      this->N = static_cast<size_t>(shape[0]);
+      Integer nel=1; for (size_t i=1; i<shape.size(); ++i) nel *= shape[i];
+      this->M = static_cast<size_t>(nel);
+      if (this->N*this->M) this->data = safealloc<T>(this->N*this->M);
+      if (d && this->N*this->M){
+        // we want to copy-in the data to a row-ordered array (and flatten it)
+        // so calculate the span along each dimension of that row-ordered array
+        std::vector<size_t> spans(shape.size());
+        spans[shape.size()-1]=1u;
+        for (int i=shape.size()-2; i>-1; --i) spans[i] = spans[i+1]*shape[i+1];
+        // if the calculated spans and input strides are equivalent, we can
+        // skip calculating indicies:
+        bool roword = true;
+        for (int i=0; i<strides.size(); ++i)
+          roword &= strides[i]/sizeof(T) == spans[i];
+        // std::cout << "New ArrayVector constructor passed"
+        //           << (roword ? " " : " non " ) << "row-ordered data."
+        //           << std::endl;
+        // std::cout << "Since input spans = [";
+        // for (int q=0; q<strides.size(); ++q) std::cout << " " << std::to_string(strides[q]/sizeof(T));
+        // std::cout << " ]\n and output spans = [";
+        // for (int q=0; q<spans.size(); ++q) std::cout << " " << std::to_string(spans[q]);
+        // std::cout << " ]" << std::endl;
+        if (roword){
+          for (size_t i=0; i<this->N*this->M; ++i) this->data[i] = d[i];
+        } else {
+          size_t tmp, lin, idx;
+          // loop over all linear indicies
+          // calculate the subscripted indices using our new row-ordered span
+          // and then calculate the linear index into the input data using
+          // the provided strides -- remembering to convert from bytes to index
+          for (size_t i=0; i<this->N*this->M; ++i){
+            tmp = i;
+            lin = 0;
+            for (size_t j=0; j<shape.size(); ++j){
+              idx  = tmp/spans[j];
+              tmp -= idx*spans[j];
+              lin += idx*strides[j]/sizeof(T);
+            }
+            this->data[i] = d[lin];
+          }
+        } // end if not row-ordered and contiguous
+      } // end if input data is not null and N*M>0
+    } // end if shape and strides contain equal number of elements
   };
   /*! Type converting ArrayVector constructor
       @param m the number of elements within each array

@@ -91,9 +91,9 @@ template<class T> void MapGrid3<T>::check_elements(void){
     this->branches = shape.getvalue(1u);
     for (size_t i=2u; i<this->shape.size(); ++i) elements *= shape.getvalue(i);
   } else {
-    // shape is [n_points, n_elements], so there is only one mode
+    // shape is [n_points, n_elements] or [n_points,], so there is only one mode
     this->branches = 1u;
-    elements = shape.getvalue(1u);
+    elements = shape.size() > 1 ? shape.getvalue(1u) : 1u;
   }
   if (0 == total_elements)
     this->scalar_elements = elements;
@@ -131,8 +131,8 @@ int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
                               const size_t new_vector_elements,
                               const size_t new_matrix_elements){
   ArrayVector<size_t> shape(1,2);
-  shape.insert(0,newdata.size());
-  shape.insert(1,newdata.numel());
+  shape.insert(newdata.size(),0);
+  shape.insert(newdata.numel(),1);
   return this->replace_data(newdata,
                             shape,
                             new_scalar_elements,
@@ -209,6 +209,12 @@ template<class T> size_t MapGrid3<T>::numel(void) const {
 }
 template<class T> size_t MapGrid3<T>::size(const size_t i) const {
   return (i<3u && N!=nullptr) ? N[i] : 0;
+}
+// template<class T> size_t MapGrid3<T>::span(const size_t i) const {
+//   return (i<3u && span!=nullptr) ? span[i] : 0;
+// }
+template<class T> size_t MapGrid3<T>::stride(const size_t i) const {
+  return sizeof(T)*((i<3u && span!=nullptr) ? span[i] : 0);
 }
 //
 template<class T> size_t MapGrid3<T>::resize(const size_t n0, const size_t n1, const size_t n2) {

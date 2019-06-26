@@ -6,6 +6,7 @@ typedef long slong; // ssize_t is only defined for gcc?
 #include "latvec.h"
 #include "neighbours.h"
 #include "interpolation.h"
+#include <tuple>
 #include <omp.h>
 // #include <complex>
 // #include <memory>
@@ -222,6 +223,10 @@ public:
   size_t numel(void) const;
   //! Return the number of elements in the mapping grid along a given dimension
   size_t size(const size_t i) const;
+  // //! Return the span of elements neccessary to move between neighbouring points
+  // size_t span(const size_t i) const;
+  //! Return the stride (in bytes) necessary to move between neighbouring points
+  size_t stride(const size_t i) const;
   //! Change the size of the mapping grid given three new sizes
   size_t resize(const size_t n0, const size_t n1, const size_t n2);
   //! Change the size of the mapping grid given an array of the new sizes
@@ -287,7 +292,7 @@ public:
                        const size_t, const size_t,
                        ArrayVector<size_t>&,
                        const size_t, const size_t,
-                       const int ecf=2, const int vcf=0) const;
+                       const int ecf, const int vcf) const;
   /*!
   \brief Use the sorted elements at two neighbouring grid points to determine
          the sorting permutation of the elements at a third neighbouring grid
@@ -335,10 +340,7 @@ public:
                        const size_t, const size_t,
                        ArrayVector<size_t>&,
                        const size_t, const size_t, const size_t,
-                       const int ecf=2, const int vcf=0) const;
-  template<typename R>
-  ArrayVector<size_t> new_sort_perm(const R, const R, const R, const R,
-                                    const int ecf=2, const int vcf=0) const;
+                       const int ecf, const int vcf) const;
   template<typename R>
   size_t sort_recursion(const size_t centre,
                         const R wS, const R wE, const R wV, const R wM,
@@ -347,13 +349,40 @@ public:
                         ArrayVector<size_t>& perm,
                         std::vector<bool>& sorted,
                         std::vector<bool>& locked) const;
-  template<typename R>
-  ArrayVector<size_t> centre_sort_perm(const R scalar_weight,
-                                       const R eigenv_weight,
-                                       const R vector_weight,
-                                       const R matrix_weight,
-                                       const int ecf,
-                                       const int vcf) const;
+  template<typename R=double>
+  ArrayVector<size_t> centre_sort_perm(const R scalar_weight=R(1),
+                                       const R eigenv_weight=R(1),
+                                       const R vector_weight=R(1),
+                                       const R matrix_weight=R(1),
+                                       const int ecf=0,
+                                       const int vcf=0) const;
+  //
+  std::tuple<std::vector<size_t>,std::vector<size_t>,std::vector<size_t>>
+  classify_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
+  //
+  template<class R>
+  bool multi_sort_derivative(const R scales[4], const int funcs[2],
+    const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+    const size_t cidx, const std::vector<size_t> nidx,
+    const std::vector<size_t> nnidx, const size_t no_pairs) const;
+  //
+  template<class R>
+  bool multi_sort_difference(const R weights[4], const int funcs[2],
+    const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+    const size_t cidx, const std::vector<size_t> nidx) const;
+  //
+  template<class R> size_t multi_sort_recursion(const size_t centre,
+    const R weights[4], const int funcs[2], const size_t spobj[2],
+    ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+    std::vector<bool>& locked) const;
+  //
+  template<typename R=double>
+  ArrayVector<size_t> multi_sort_perm(
+    const R scalar_weight=R(1),
+    const R eigenv_weight=R(1),
+    const R vector_weight=R(1),
+    const R matrix_weight=R(1),
+    const int ecf=0, const int vcf=0) const ;
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
@@ -612,15 +641,10 @@ public:
     int oob=0;
     double weights[8];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
-    const size_t eigvec_dim=3u;
-    const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
-    if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
-      throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
-
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
-      // flg = this->nearest_index(x.datapointer(i), ijk );
-      flg = this->floor_index(x.datapointer(i), ijk );
+      flg = this->nearest_index(x.datapointer(i), ijk );
+      // flg = this->floor_index(x.datapointer(i), ijk );
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
@@ -645,7 +669,9 @@ public:
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
 
-        oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        // oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        cnt = corner_count[dirs.size()];
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
           throw std::runtime_error(msg);
@@ -658,8 +684,7 @@ public:
       // and set that ArrayVector as element i of the output ArrayVector
       unsafe_interpolate_to(this->data,
                             this->scalar_elements,
-                            eigvec_cnt,
-                            eigvec_dim,
+                            this->eigvec_elements,
                             this->vector_elements,
                             this->matrix_elements,
                             this->branches,
@@ -694,11 +719,6 @@ public:
     double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
-    const size_t eigvec_dim=3u;
-    const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
-    if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
-      throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
-
 #pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
@@ -741,8 +761,7 @@ public:
       // and set that ArrayVector as element i of the output ArrayVector
       unsafe_interpolate_to(this->data,
                             this->scalar_elements,
-                            eigvec_cnt,
-                            eigvec_dim,
+                            this->eigvec_elements,
                             this->vector_elements,
                             this->matrix_elements,
                             this->branches,

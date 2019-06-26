@@ -16,13 +16,6 @@ ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH = os.path.join(ADDPATH, 'Debug')
 sys.path.append(ADDPATH)
-# Now the actual search for the module
-if find_spec('symbz') is not None and find_spec('symbz._symbz') is not None:
-    import symbz
-elif find_spec('_symbz') is not None:
-    import _symbz as symbz
-else:
-    raise Exception("Required symbz module not found!")
 # We need to find the pure-python submodule symbz.simphony:
 sys.path.append(os.path.split(os.getcwd())[0])
 if find_spec('symbz') is not None and find_spec('symbz.simphony') is not None:
@@ -30,12 +23,20 @@ if find_spec('symbz') is not None and find_spec('symbz.simphony') is not None:
 else:
     raise Exception("Required symbz.simphony module not found!")
 
+
 def load_interpolation_data(named):
+    """Load a data file from the tests folder."""
     test_spec = find_spec('tests')
     if test_spec is None:
         raise Exception('Could not locate the tests module directory')
     seed = os.path.join(test_spec.submodule_search_locations[0], named)
     return InterpolationData(seed)
+
+
+def hermitian_product(v_0, v_1, first=None, last=None):
+    """Find the hermitian product between two sets of vectors."""
+    return np.dot(np.conj(v_0[first:last].flatten()), v_1[first:last].flatten())
+
 
 class TestSimphony(unittest.TestCase):
     """A TestCase object class to run tests of the SymSim object."""
@@ -62,7 +63,8 @@ class TestSimphony(unittest.TestCase):
         symsim = SymSim(i_data, halfN=(2, 2, 2))
 
         q_rlu = symsim.grid.mapped_rlu
-        int_freq, int_vecs = symsim.frqs_vecs(q_rlu, interpolate=True, moveinto=False)
+        int_freq, int_vecs = symsim.frqs_vecs(q_rlu, interpolate=True,
+                                              moveinto=False)
         sim_freq, sim_vecs = symsim.frqs_vecs(q_rlu, interpolate=False)
 
         ad_freq = np.abs(int_freq - sim_freq).magnitude
@@ -72,16 +74,22 @@ class TestSimphony(unittest.TestCase):
         unequal_freq = (ad_freq > 1e-14*as_freq) * (ad_freq > 1e-14)
         self.assertFalse(unequal_freq.any())
 
-        ad_vecs = np.abs(int_vecs - sim_vecs)
-        as_vecs = np.abs(int_vecs + sim_vecs)
-        unequal_vecs = (ad_vecs > 1e-14*as_vecs) * (ad_vecs > 1e-14)
-        self.assertFalse(unequal_vecs.any())
+        # The vectors only need to be equal up to an arbitrary phase
+        # which is equivalent to saying that the inner product between
+        # equal ion eigenvectors for each branch should have ||ϵ⋅ϵ||²≡1
+        n_pt, n_br, n_io, n_d = int_vecs.shape
+        int_vecs = int_vecs.reshape(n_pt*n_br*n_io, n_d)
+        sim_vecs = sim_vecs.reshape(n_pt*n_br*n_io, n_d)
+        product = [hermitian_product(x, y) for x, y in zip(int_vecs, sim_vecs)]
+
+        self.assertTrue(np.isclose(np.abs(product), 1).all())
 
     def test_b(self):
         """Do something."""
         i_data = load_interpolation_data('nb')
         symsim = SymSim(i_data, halfN=(10, 10, 10))
-        print(symsim.grid.new_sort_perm())
+        print(symsim.grid.centre_sort_perm())
+
 
 if __name__ == '__main__':
     unittest.main()

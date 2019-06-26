@@ -107,13 +107,13 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("vertices_invA",      [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
     .def_property_readonly("vertices_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
     .def_property_readonly("faces_per_vertex",   [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
-    .def("isinside",[](BrillouinZone &b, py::array_t<double, py::array::c_style> p){
+    .def("isinside",[](BrillouinZone &b, py::array_t<double> p){
       py::buffer_info bi = p.request();
       ssize_t ndim = bi.ndim;
       if ( bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional points is required");
       ssize_t npts = 1;
       if (ndim > 1)  for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
-      LQVec<double> pv( b.get_lattice(), npts, (double*) bi.ptr ); // this is a copy :(
+      LQVec<double> pv( b.get_lattice(), (double*) bi.ptr, bi.shape, bi.strides); // this is a copy :(
       ArrayVector<bool> resultv = b.isinside(pv);
       std::vector<ssize_t> outshape(ndim>1 ? ndim-1 : 1);
       if (ndim > 1){
@@ -126,13 +126,13 @@ PYBIND11_MODULE(_symbz,m){
       for (size_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
       return result;
     },py::arg("points"))
-    .def("moveinto",[](BrillouinZone &b, py::array_t<double, py::array::c_style> Q){
+    .def("moveinto",[](BrillouinZone &b, py::array_t<double> Q){
       py::buffer_info bi = Q.request();
       ssize_t ndim=bi.ndim;
       if (bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional Q points is required");
       ssize_t npts = 1;
       if (ndim > 1) for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
-      LQVec<double> Qv( b.get_lattice(), npts, (double*) bi.ptr); // memcopy
+      LQVec<double> Qv( b.get_lattice(),(double*) bi.ptr, bi.shape, bi.strides); // memcopy
       LQVec<double> qv(b.get_lattice(), npts); // output
       LQVec<int>  tauv(b.get_lattice(), npts); // output
       bool success = b.moveinto(Qv,qv,tauv);

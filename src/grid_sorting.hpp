@@ -2,6 +2,69 @@
     to help with this task.
 */
 
+template<class T>
+std::tuple<std::vector<size_t>,std::vector<size_t>,std::vector<size_t>>
+MapGrid3<T>::classify_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const {
+  size_t centre_lin_idx, n_map_idx, nn_map_idx;
+  size_t csub[3], nsub[3], nnsub[3];
+  if (this->map2lin(centre_map_idx,centre_lin_idx))
+    throw std::runtime_error("Mapping index has no corresponding linear index.");
+  if (this->lin2sub(centre_lin_idx, csub))
+    throw std::runtime_error("Could not find subscripted index for centre point.");
+  // get a listing of all in-bounds mapped neighbour linear indices
+  ArrayVector<size_t> neighbours = this->get_neighbours(centre_lin_idx);
+  std::vector<size_t> sorted_neighbours;
+  std::vector<size_t> sorted_next_neighbours;
+  std::vector<size_t> unsorted_neighbours;
+  sorted_neighbours.reserve(neighbours.size());
+  sorted_next_neighbours.reserve(neighbours.size());
+  unsorted_neighbours.reserve(neighbours.size());
+  int ret;
+  int dir[3];
+  bool possible;
+  for (size_t i=0; i<neighbours.size(); ++i){
+    // sorted only contains valid-mapped point information
+    // so convert from linear index to mapping index
+    ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
+    if (ret !=0){
+      std::string msg = "Could not find map index of neighbour "
+                      + std::to_string(neighbours.getvalue(i)) + " as ";
+      if (ret < 0) msg += "the mapping is invalid.";
+      if (ret > 0) msg += "the linear index is out of bounds.";
+      throw std::runtime_error(msg);
+    }
+    if (sorted[n_map_idx]){
+      // store this already sorted neighbour's mapped index
+      sorted_neighbours.push_back(n_map_idx);
+      // get the subscripted index for the sorted neighbour
+      if (this->lin2sub(neighbours.getvalue(i), nsub))
+        throw std::runtime_error("Could not find subscripted index for neighbour.");
+      // determine the direction from the centre to the neighbour:
+      for (int j=0; j<3; ++j) dir[j] = (nsub[j]>csub[j]) ? 1 : (nsub[j]<csub[j]) ? -1 : 0;
+      // chech whether there *could* be a second nearest neighbour one more
+      // step in the same direction as the first:
+      possible = true;
+      // first, can we represent nsub+dir as a size_t (will it stay positive)
+      for (int j=0; j<3; ++j) possible &= (nsub[j]>0 || dir[j]>=0);
+      if (possible){
+        for (int j=0; j<3; ++j) nnsub[j] = nsub[j] + dir[j];
+        // second, is nnsub a valid mapping index:
+        possible = 0 == this->sub2map(nnsub, nn_map_idx);
+      }
+      // Now, possible tells us if nnindx has been set to a valid mapping index
+      // Check whether nnidx points to an already sorted mapped point
+      sorted_next_neighbours.push_back(
+        (possible && sorted[nn_map_idx]) ? nn_map_idx : n_map_idx
+      );
+    }
+    else unsorted_neighbours.push_back(n_map_idx);
+  }
+  /* We now have three vectors containing the mapped indices of unsorted nearest
+     neighbours, sorted nearest neighbours, and sorted next-nearest neighbours
+     and will return all three as a single tuple */
+  return std::make_tuple(unsorted_neighbours, sorted_neighbours, sorted_next_neighbours);
+}
+
 template<class T> std::vector<size_t> MapGrid3<T>::find_unsorted_neighbours(
   const std::vector<bool>& sorted, const size_t centre_map_idx) const {
   size_t centre_lin_idx;
@@ -76,16 +139,6 @@ template<class T> std::vector<size_t> MapGrid3<T>::find_sorted_neighbours(
       // Now, possible tells us if nnindx has been set to a valid mapping index
       // Check whether nnidx points to an already sorted mapped point
       if (possible && sorted[nnidx]){
-        // std::cout << "Centre " << std::to_string(clin) << " (";
-        // for (int j=0; j<3; ++j) std::cout << std::to_string(csub[j]) << " ";
-        // std::cout << ") ";
-        // std::cout << "Neighbour ( ";
-        // for (int j=0; j<3; ++j) std::cout << std::to_string(nsub[j]) << " ";
-        // std::cout << ") ";
-        // std::cout << "Next Neighbour ( ";
-        // for (int j=0; j<3; ++j) std::cout << std::to_string(nnsub[j]) << " ";
-        // std::cout << ")" << std::endl;
-
         // if it does, add it to the output array and finish.
         out.push_back(nnidx);
         return out;
@@ -96,13 +149,6 @@ template<class T> std::vector<size_t> MapGrid3<T>::find_sorted_neighbours(
   // but no sorted next neighbours. So we return the out vector which is empty
   // in the case of no sorted neighbours, or has the last-found neighbour
   // without a sorted next neighbour.
-
-  // std::cout << "Centre " << std::to_string(clin) << " (";
-  // for (int j=0; j<3; ++j) std::cout << std::to_string(csub[j]) << " ";
-  // std::cout << ") ";
-  // std::cout << "Neighbour ( ";
-  // for (int j=0; j<3; ++j) std::cout << std::to_string(nsub[j]) << " ";
-  // std::cout << ") " << std::endl;
   return out;
 }
 
@@ -175,14 +221,9 @@ size_t cnt = 2u;
 size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
 size_t out_i = 0u;
-const size_t eigvec_dim = 3u;
-const size_t eigvec_cnt = this->eigvec_elements/eigvec_dim;
-if (eigvec_cnt*eigvec_dim != this->eigvec_elements)
-  throw std::runtime_error("Expected 3-D eigenvectors. Please extend.");
 unsafe_interpolate_to(sorted,
                       this->scalar_elements,
-                      eigvec_cnt,
-                      eigvec_dim,
+                      this->eigvec_elements,
                       this->vector_elements,
                       this->matrix_elements,
                       this->branches,
@@ -202,79 +243,6 @@ rslt = jv_permutation(this->data.datapointer(cidx,0),
 // std::cout << ((rslt)?"permutation determined":"permutation failed") << std::endl;
 return rslt;
 }
-
-template<class T> template<typename R>
-ArrayVector<size_t> MapGrid3<T>::new_sort_perm(const R scalar_weight,
-                                               const R eigenv_weight,
-                                               const R vector_weight,
-                                               const R matrix_weight,
-                                               const int ecf,
-                                               const int vcf
-                                             ) const {
-//
-// elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
-// or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
-size_t nobj = this->branches;
-size_t span = this->scalar_elements
-            + this->eigvec_elements
-            + this->vector_elements
-            + this->matrix_elements*this->matrix_elements;
-// within each index of the data ArrayVector there are span*nobj entries.
-
-// We will return the permutations of 0:nobj-1 which sort the objects globally
-ArrayVector<size_t> perm( nobj, this->data.size() );
-// We need to keep track of which objects have been sorted thus far
-std::vector<bool> sorted(this->data.size());
-// To start with, none have been:
-for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
-
-bool firstnotfound = true;
-std::vector<size_t> nidx;
-
-typename CostTraits<T>::type wS, wE, wV, wM;
-wS = typename CostTraits<T>::type(scalar_weight);
-wE = typename CostTraits<T>::type(eigenv_weight);
-wV = typename CostTraits<T>::type(vector_weight);
-wM = typename CostTraits<T>::type(matrix_weight);
-
-size_t midx;
-// std::cout << "Start the sorting" << std::endl;
-for(size_t idx=0; idx<this->numel(); ++idx){
-  if (this->valid_mapping(idx)){
-    midx = this->map[idx];
-    // std::cout << "linear index " << std::to_string(idx) << " mapping index "
-    //           << std::to_string(midx) << std::endl;
-    if (firstnotfound){
-      // the first valid mapping gets an arbitrarily assigned permutation
-        for(size_t j=0; j<nobj; ++j) perm.insert(j, midx, j);
-        firstnotfound = false;
-        sorted[midx]=true;
-    } else { //the normal part of the loop
-      // std::cout << "look for neighbours" << std::endl;
-      // look for a neighbouring already-sorted point
-      nidx = this->find_sorted_neighbours(sorted, idx);
-      if (nidx.size()<1 || nidx.size()>2)
-        throw std::runtime_error(
-          "Logic error. Too few or too many sorted neighbours found.");
-      // only one sorted neighbour, so punt
-      // if (nidx.size()>0){
-      if (nidx.size()==1){
-        // std::cout << "one neighbour" << std::endl;
-        sorted[midx] = this->sort_difference(wS,wE,wV,wM,span,nobj,perm,
-                                             midx,nidx[0],ecf,vcf);
-      }
-      // two sorted neighbours in a line, use the drivative method
-      if (nidx.size()==2){
-        // std::cout << "two neighbours" << std::endl;
-        sorted[midx] = this->sort_derivative(wS,wE,wV,wM,span,nobj,perm,
-                                             midx,nidx[0],nidx[1],ecf,vcf);
-      }
-    }
-  }
-}
-return perm;
-}
-
 
 template<class T> template<typename R>
 ArrayVector<size_t> MapGrid3<T>::centre_sort_perm(const R scalar_weight,
@@ -397,3 +365,451 @@ for (size_t un: unsorted_neighbours)
 
 return num_sorted;
 }
+
+
+
+template<class T> template<typename R>
+ArrayVector<size_t> MapGrid3<T>::multi_sort_perm(
+  const R scalar_weight, const R eigenv_weight, const R vector_weight,
+  const R matrix_weight, const int ecf, const int vcf
+) const {
+//
+typename CostTraits<T>::type weights[4];
+weights[0] = typename CostTraits<T>::type(scalar_weight);
+weights[1] = typename CostTraits<T>::type(eigenv_weight);
+weights[2] = typename CostTraits<T>::type(vector_weight);
+weights[3] = typename CostTraits<T>::type(matrix_weight);
+//
+int funcs[2]{ecf,vcf};
+// elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
+// or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
+size_t nobj = this->branches;
+size_t span = this->scalar_elements
+            + this->eigvec_elements
+            + this->vector_elements
+            + this->matrix_elements*this->matrix_elements;
+size_t spobj[2]{span,nobj};
+// within each index of the data ArrayVector there are span*nobj entries.
+
+// We will return the permutations of 0:nobj-1 which sort the objects globally
+ArrayVector<size_t> perm( nobj, this->data.size() );
+// We need to keep track of which objects have been sorted thus far
+std::vector<bool> sorted(this->data.size());
+std::vector<bool> locked(this->data.size());
+for (size_t i=0; i<this->data.size(); ++i){sorted[i] = false;locked[i] = false;}
+
+
+size_t mapidx;
+size_t subidx[3];
+// Start from the Γ point. It should always be a valid mapped point.
+// The grid centre along each direction is the ((2N+1)/2 + 1)ᵗʰ entry, but we count from 0 so (2N+1)/2
+for (int i=0; i<3; ++i) subidx[i] = this->size(i) >> 1;
+if (this->sub2map(subidx, mapidx))
+  throw std::runtime_error("Γ is not a mapped point.");
+// The first point gets an arbitrary assignment
+for (size_t j=0; j<nobj; ++j) perm.insert(j, mapidx, j);
+sorted[mapidx] = true;
+size_t num_sorted = 1;
+// kick off the recursive sorting from here:
+num_sorted += this->multi_sort_recursion(mapidx, weights, funcs, spobj, perm, sorted, locked);
+if (num_sorted < this->data.size()){
+  std::string msg = "Recursive sorting found only "
+                  + std::to_string(num_sorted) + " of "
+                  + std::to_string(this->data.size()) + " grid points.";
+  throw std::runtime_error(msg);
+}
+if (num_sorted > this->data.size())
+  std::cout << "Sorted " << std::to_string(num_sorted) << " grid points but only "
+            << std::to_string(this->data.size()) << " points are mapped."
+            << std::endl;
+bool all_sorted = true;
+for (size_t i=0; i<sorted.size(); ++i) all_sorted &= sorted[i];
+int ntimes = 1;
+while (!all_sorted && ntimes<100){
+  std::cout << "Not all grid points sorted " << std::to_string(ntimes) << "." <<std::endl;
+  for (size_t i=0; i<sorted.size(); ++i)
+    if (!sorted[i])
+      num_sorted += this->multi_sort_recursion(i,weights,funcs,spobj,perm,sorted,locked);
+  //
+  all_sorted = true;
+  for (size_t i=0; i<sorted.size(); ++i) all_sorted &= sorted[i];
+  ++ntimes;
+}
+return perm;
+}
+
+/*! \brief Sort objects on a grid recursively.
+
+The centre point provided should be unsorted. This function finds its sorted
+and unsorted neighbours, sorts the centre based on the sorted neighbours, and
+then calls itself with each unsorted neighbour index in turn.
+*/
+template<class T> template<class R> size_t MapGrid3<T>::multi_sort_recursion(
+  const size_t centre, const R weights[4], const int funcs[2], const size_t spobj[2],
+  ArrayVector<size_t>& perm, std::vector<bool>& sorted, std::vector<bool>& locked
+) const {
+  std::vector<size_t> up_next, n_idx, nn_idx;
+  size_t num_sorted = 0;
+  if (locked[centre]) return num_sorted;
+  locked[centre] = true;
+  std::tie(up_next, n_idx, nn_idx) = this->classify_neighbours(sorted, centre);
+  if (!sorted[centre]){
+    size_t n_d = 0;
+    bool success;
+    if (n_idx.size()==nn_idx.size())
+      for(size_t i=0; i<n_idx.size(); ++i) if(nn_idx[i]!=n_idx[i]) ++n_d;
+    if (n_d<0){ // use derivative based sorting whenever possible
+      std::cout << "multi_sort_derivative" << std::endl;
+      success = this->multi_sort_derivative(weights, funcs, spobj, perm, sorted, centre, n_idx, nn_idx, n_d);
+    }
+    else{
+      std::cout << "multi_sort_difference" << std::endl;
+      success = this->multi_sort_difference(weights, funcs, spobj, perm, sorted, centre, n_idx);
+    }
+    sorted[centre] = success;
+    if (success) ++num_sorted;
+  }
+  for (size_t unsorted: up_next)
+    num_sorted += this->multi_sort_recursion(unsorted, weights, funcs, spobj, perm, sorted, locked);
+  return num_sorted;
+}
+
+
+template<class T> template<class R>
+bool MapGrid3<T>::multi_sort_difference(
+  const R weights[4], const int funcs[2], const size_t spobj[2],
+  ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+  const size_t cidx, const std::vector<size_t> nidx
+) const {
+  ArrayVector<size_t> tperm(perm.numel(), nidx.size()+1);
+  for (size_t i=0; i<nidx.size(); ++i){
+    for (size_t j=0; j<perm.numel(); ++j)
+      tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
+    jv_permutation(this->data.datapointer(cidx,0),
+                   this->data.datapointer(nidx[i],0),
+                   this->scalar_elements,
+                   this->eigvec_elements,
+                   this->vector_elements,
+                   this->matrix_elements,
+                   weights[0], weights[1], weights[2], weights[3],
+                   spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
+                 );
+  }
+  // now tperm has the permutations calculated for the centre position based
+  // on each sorted neighbour in turn stored from 0 to nidx.size()-1.
+  /* In a perfect world all permutations would agree with each other, but this
+  seems unlikely for all cases. So we need to check. */
+  auto uncounted = std::unique_ptr<bool[]>(new bool[nidx.size()]);
+  auto frequency = std::unique_ptr<size_t[]>(new size_t[nidx.size()]);
+  auto equiv_to  = std::unique_ptr<size_t[]>(new size_t[nidx.size()]);
+  bool all_agree;
+  for (size_t i=0; i<nidx.size(); ++i){
+    uncounted[i] = true;
+    frequency[i] = 0u;
+    equiv_to[i] = 0u;
+  }
+  for (size_t i=0; i<nidx.size()-1; ++i){
+    if (uncounted[i]){
+      equiv_to[i] = i;
+      for (size_t j=i+1; j<nidx.size(); ++j){
+        if (uncounted[j]){
+          all_agree = true;
+          for (size_t k=0; k<perm.numel(); ++k){
+            all_agree &= tperm.getvalue(i,k) == tperm.getvalue(j,k);
+            if (!all_agree) break;
+          }
+          if (all_agree){
+            uncounted[j] = false;
+            ++frequency[i];
+            equiv_to[j] = i;
+          }
+        }
+      }
+    }
+  }
+  size_t hfidx=0, hf=0;
+  for (size_t i=0; i<nidx.size(); ++i)
+    if (frequency[i]>hf){
+      hf = frequency[i];
+      hfidx = i;
+    }
+  // we pick the highest-frequency permutation to be the right one
+  for (size_t i=0; i<perm.numel(); ++i) perm.insert(tperm.getvalue(hfidx,i),cidx,i);
+  // if the frequency is nidx.size()-1 (since we skipped j==i) then all
+  // permutations agree; otherwise we need to reset the sort-flag for some
+  // neighbours since we want to be able to interpolate between *any* 2+ points
+  // in the grid, so all sorting permutations *must* be in agreement.
+  /*
+  This seems dangerous as there might be situations where two or more enclaves
+  develop and a never-ending skirmish develops on their border(s).
+  */
+  if (hf < nidx.size()-1){
+    std::cout << "Only " << std::to_string(hf+1) << " of " << nidx.size()
+              << " neighbours agree on sorting permutation: " << std::endl
+              << tperm.to_string(0,nidx.size()-1) << std::endl;
+    for (size_t i=0; i<nidx.size(); ++i){
+      if (equiv_to[i]!=hfidx) sorted[nidx[i]] = false;
+    }
+  }
+  return true;
+}
+
+template<class T> template<class R>
+bool MapGrid3<T>::multi_sort_derivative(
+  const R scales[4], const int funcs[2], const size_t spobj[2],
+  ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+  const size_t cidx, const std::vector<size_t> nidx,
+  const std::vector<size_t> nnidx, const size_t no_pairs
+) const {
+ArrayVector<T> sdat(this->data.numel(),2*no_pairs); // sorted n and nn
+// Copy the data at each point, ensuring that the global permutation for
+// nidx and nnidx are respected
+size_t nn_i, cnt=0;
+bool nn_i_found;
+size_t nobj = spobj[1], span = spobj[0];
+auto n2p_idx = std::unique_ptr<size_t[]>(new size_t[no_pairs]);
+for (size_t p=0; p<nidx.size(); ++p){
+  if (nidx[p]!=nnidx[p]){ // the only indication if a next neighbour exists
+    if (cnt >= no_pairs){
+      std::string msg = "Too many derivative pairs found!";
+      throw std::runtime_error(msg);
+    }
+    for (size_t i=0; i<nobj; ++i){
+      nn_i_found = false;
+      for (size_t j=0; j<nobj; ++j){
+        if (perm.getvalue(nnidx[p],j) == perm.getvalue(nidx[p],i)){
+          nn_i = j;
+          nn_i_found = true;
+        }
+      }
+      if (!nn_i_found){
+        std::string msg = "Next neighbour index not found.\n";
+        msg += "perm[n]  = " + perm.to_string(nidx[p]) + "\n";
+        msg += "perm[nn] = " + perm.to_string(nnidx[p]);
+        throw std::runtime_error(msg);
+      }
+      for (size_t j=0; j<span; ++j){
+        sdat.insert(this->data.getvalue( nidx[p],   i*span+j), 2*cnt+0u, i*span+j);
+        sdat.insert(this->data.getvalue(nnidx[p],nn_i*span+j), 2*cnt+1u, i*span+j);
+      }
+    }
+    n2p_idx[cnt++] = p;
+  }
+}
+ArrayVector<T> predic(this->data.numel(),no_pairs);
+cnt = 2u;
+size_t corners[2]{0u,1u};
+T weights[2]{2,-1};
+for (size_t i=0; i<no_pairs; ++i){
+  corners[0] = 2*i;
+  corners[1] = 2*i+1;
+  unsafe_interpolate_to(sdat, this->scalar_elements, this->eigvec_elements,
+  this->vector_elements, this->matrix_elements, this->branches, cnt, corners,
+  weights, predic, i);
+}
+// The derivative-based permutations have been performed, now determine the
+// permutations for each neighbour/next-neighbour pair.
+ArrayVector<size_t> tperm(perm.numel(), no_pairs+1);
+for (size_t i=0; i<no_pairs; ++i){
+  for (size_t j=0; j<perm.numel(); ++j)
+    tperm.insert(perm.getvalue(nidx[n2p_idx[i]],j),no_pairs,j);
+  jv_permutation(this->data.datapointer(cidx,0),
+                 predic.datapointer(i,0),
+                 this->scalar_elements,
+                 this->eigvec_elements,
+                 this->vector_elements,
+                 this->matrix_elements,
+                 scales[0], scales[1], scales[2], scales[3],
+                 spobj[0], spobj[1], tperm, i, no_pairs, funcs[0], funcs[1]
+               );
+}
+// now tperm has the permutations calculated for the centre position based
+// on each sorted neighbour in turn stored from 0 to nidx.size()-1.
+/* In a perfect world all permutations would agree with each other, but this
+seems unlikely for all cases. So we need to check. */
+auto uncounted = std::unique_ptr<bool[]>(new bool[no_pairs]);
+auto frequency = std::unique_ptr<size_t[]>(new size_t[no_pairs]);
+auto equiv_to  = std::unique_ptr<size_t[]>(new size_t[no_pairs]);
+bool all_agree;
+for (size_t i=0; i<no_pairs; ++i){
+  uncounted[i] = true;
+  frequency[i] = 0u;
+  equiv_to[i] = 0u;
+}
+for (size_t i=0; i<no_pairs-1; ++i){
+  if (uncounted[i]){
+    equiv_to[i] = i;
+    for (size_t j=i+1; j<no_pairs; ++j){
+      if (uncounted[j]){
+        all_agree = true;
+        for (size_t k=0; k<perm.numel(); ++k){
+          all_agree &= tperm.getvalue(i,k) == tperm.getvalue(j,k);
+          if (!all_agree) break;
+        }
+        if (all_agree){
+          uncounted[j] = false;
+          ++frequency[i];
+          equiv_to[j] = i;
+        }
+      }
+    }
+  }
+}
+size_t hfidx=0, hf=0;
+for (size_t i=0; i<no_pairs; ++i)
+  if (frequency[i]>hf){
+    hf = frequency[i];
+    hfidx = i;
+  }
+// we pick the highest-frequency permutation to be the right one
+for (size_t i=0; i<perm.numel(); ++i) perm.insert(tperm.getvalue(hfidx,i),cidx,i);
+// if the frequency is no_pairs-1 (since we skipped j==i) then all
+// permutations agree; otherwise we need to reset the sort-flag for some
+// neighbours since we want to be able to interpolate between *any* 2+ points
+// in the grid, so all sorting permutations *must* be in agreement.
+/*
+This seems dangerous as there might be situations where two or more enclaves
+develop and a never-ending skirmish develops on their border(s).
+*/
+if (hf < no_pairs-1){
+  std::cout << "Only " << std::to_string(hf+1) << " of " << no_pairs
+            << "nearest and next-nearest neighbours agree "
+            << "on sorting permutation: " << std::endl
+            << tperm.to_string(0,no_pairs) << std::endl;
+  for (size_t i=0; i<no_pairs; ++i){
+    if (equiv_to[i]!=hfidx) sorted[nidx[n2p_idx[i]]] = false;
+  }
+}
+return true;
+}
+
+// template<class T> template<class R>
+// bool MapGrid3<T>::multi_sort_derivative(
+//   const R scales[4], const int funcs[2], const size_t spobj[2],
+//   ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+//   const size_t cidx, const std::vector<size_t> nidx,
+//   const std::vector<size_t> nnidx, const size_t no_pairs
+// ) const {
+// int out_count=0;
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// ArrayVector<T> sdat(this->data.numel(),2*nidx.size()); // sorted n and nn
+// // Copy the data at each point, ensuring that the global permutation for
+// // nidx and nnidx are respected
+// size_t nn_i, cnt=0;
+// bool nn_i_found;
+// size_t nobj = spobj[1], span = spobj[0];
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// for (size_t p=0; p<nidx.size(); ++p){
+//   for (size_t i=0; i<nobj; ++i){
+//     nn_i_found = false;
+//     for (size_t j=0; j<nobj; ++j){
+//       if (perm.getvalue(nnidx[p],j) == perm.getvalue(nidx[p],i)){
+//         nn_i = j;
+//         nn_i_found = true;
+//       }
+//     }
+//     if (!nn_i_found){
+//       std::string msg = "Next neighbour index not found.\n";
+//       msg += "perm[n]  = " + perm.to_string(nidx[p]) + "\n";
+//       msg += "perm[nn] = " + perm.to_string(nnidx[p]);
+//       throw std::runtime_error(msg);
+//     }
+//     for (size_t j=0; j<span; ++j){
+//       sdat.insert(this->data.getvalue( nidx[p],   i*span+j), 2*cnt+0u, i*span+j);
+//       sdat.insert(this->data.getvalue(nnidx[p],nn_i*span+j), 2*cnt+1u, i*span+j);
+//     }
+//   }
+// }
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// ArrayVector<T> predic(this->data.numel(),nidx.size());
+// cnt = 2u;
+// size_t corners[2]{0u,1u};
+// T weights[2]{2,-1};
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// for (size_t i=0; i<nidx.size(); ++i){
+//   corners[0] = 2*i;
+//   corners[1] = 2*i+1;
+//   unsafe_interpolate_to(sdat, this->scalar_elements, this->eigvec_elements,
+//   this->vector_elements, this->matrix_elements, this->branches, cnt, corners,
+//   weights, predic, i);
+// }
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// // The derivative-based permutations have been performed, now determine the
+// // permutations for each neighbour/next-neighbour pair.
+// ArrayVector<size_t> tperm(perm.numel(), nidx.size()+1);
+// for (size_t i=0; i<nidx.size(); ++i){
+//   for (size_t j=0; j<perm.numel(); ++j)
+//     tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
+//   jv_permutation(this->data.datapointer(cidx,0),
+//                  predic.datapointer(i,0),
+//                  this->scalar_elements,
+//                  this->eigvec_elements,
+//                  this->vector_elements,
+//                  this->matrix_elements,
+//                  scales[0], scales[1], scales[2], scales[3],
+//                  spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
+//                );
+// }
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// // now tperm has the permutations calculated for the centre position based
+// // on each sorted neighbour in turn stored from 0 to nidx.size()-1.
+// /* In a perfect world all permutations would agree with each other, but this
+// seems unlikely for all cases. So we need to check. */
+// auto uncounted = std::unique_ptr<bool[]>(new bool[nidx.size()]);
+// auto frequency = std::unique_ptr<size_t[]>(new size_t[nidx.size()]);
+// auto equiv_to  = std::unique_ptr<size_t[]>(new size_t[nidx.size()]);
+// bool all_agree;
+// for (size_t i=0; i<nidx.size(); ++i){
+//   uncounted[i] = true;
+//   frequency[i] = 0u;
+//   equiv_to[i] = 0u;
+// }
+// for (size_t i=0; i<nidx.size()-1; ++i){
+//   if (uncounted[i]){
+//     equiv_to[i] = i;
+//     for (size_t j=i+1; j<nidx.size(); ++j){
+//       if (uncounted[j]){
+//         all_agree = true;
+//         for (size_t k=0; k<perm.numel(); ++k){
+//           all_agree &= tperm.getvalue(i,k) == tperm.getvalue(j,k);
+//           if (!all_agree) break;
+//         }
+//         if (all_agree){
+//           uncounted[j] = false;
+//           ++frequency[i];
+//           equiv_to[j] = i;
+//         }
+//       }
+//     }
+//   }
+// }
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// size_t hfidx=0, hf=0;
+// for (size_t i=0; i<nidx.size(); ++i)
+//   if (frequency[i]>hf){
+//     hf = frequency[i];
+//     hfidx = i;
+//   }
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// // we pick the highest-frequency permutation to be the right one
+// for (size_t i=0; i<perm.numel(); ++i) perm.insert(tperm.getvalue(hfidx,i),cidx,i);
+// // if the frequency is nidx.size()-1 (since we skipped j==i) then all
+// // permutations agree; otherwise we need to reset the sort-flag for some
+// // neighbours since we want to be able to interpolate between *any* 2+ points
+// // in the grid, so all sorting permutations *must* be in agreement.
+// /*
+// This seems dangerous as there might be situations where two or more enclaves
+// develop and a never-ending skirmish develops on their border(s).
+// */
+// std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
+// if (hf < nidx.size()-1){
+//   std::cout << "Only " << std::to_string(hf+1) << " of " << std::to_string(nidx.size())
+//             << "nearest and next-nearest neighbours agree "
+//             << "on sorting permutation: " << std::endl
+//             << tperm.to_string(0,nidx.size()-1) << std::endl;
+//   for (size_t i=0; i<nidx.size(); ++i){
+//     if (equiv_to[i]!=hfidx) sorted[nidx[i]] = false;
+//   }
+// }
+// return true;
+// }

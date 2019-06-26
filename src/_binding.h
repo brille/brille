@@ -134,18 +134,20 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     std::string pyclass_name = std::string("BZGridQ") + typestr;
     py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
     // Initializer (BrillouinZone, [half-]Number_of_steps vector)
-    .def(py::init([](BrillouinZone &b, py::array_t<size_t,py::array::c_style> pyN){
+    .def(py::init([](BrillouinZone &b, py::array_t<size_t> pyN){
       py::buffer_info bi = pyN.request();
       if (bi.ndim != 1) throw std::runtime_error("halfN must be a 1-D array");
       if (bi.shape[0] < 3) throw std::runtime_error("halfN must have three elements");
+      if (bi.strides[0]!=sizeof(size_t)) throw std::runtime_error("halfN must be contiguous");
       Class cobj( b, (size_t*)bi.ptr );
       return cobj;
     }),py::arg("brillouinzone"),py::arg("halfN"))
     // Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
-    .def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pyD, const bool& isrlu){
+    .def(py::init([](BrillouinZone &b, py::array_t<double> pyD, const bool& isrlu){
       py::buffer_info bi = pyD.request();
       if (bi.ndim != 1) throw std::runtime_error("stepsize must be a 1-D array");
       if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
+      if (bi.strides[0]!=sizeof(double)) throw std::runtime_error("stepsize must be contiguous");
       return Class( b, (double*)bi.ptr, isrlu ? 1 : 0 );
     }),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true)
     .def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
@@ -156,7 +158,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
     .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
     .def("fill",[](Class& cobj,
-                   py::array_t<T,py::array::c_style> pydata,
+                   py::array_t<T> pydata,
                    const size_t n_scalar,
                    const size_t n_eigenvector,
                    const size_t n_vector,
@@ -164,9 +166,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
                  ){
       py::buffer_info bi = pydata.request();
       ssize_t ndim = bi.ndim;
-      size_t numel=1, numarrays=bi.shape[0];
-      if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel *= bi.shape[i];
-      ArrayVector<T> data(numel, numarrays, (T*)bi.ptr);
+      ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
       ArrayVector<size_t> shape(1,ndim);
       for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
       int mapExceedsNewData = cobj.check_map(data);
@@ -207,10 +207,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       //   cobj.replace_data(data,shape); // no error, so this will work for sure
       // }
     )
-    .def("new_sort_perm",
+    .def("multi_sort_perm",
       [](Class& cobj, const double wS, const double wE, const double wV,
                       const double wM, const int ewf, const int vwf){
-      return av2np(cobj.new_sort_perm(wS,wE,wV,wM,ewf,vwf));
+      return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
     }, py::arg("scalar_cost_weight")=1,
        py::arg("eigenvector_cost_weight")=1,
        py::arg("vector_cost_weight")=1,
@@ -242,17 +242,19 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
           throw std::runtime_error("Something has gone horribly wrong with getting the map.");
         return np;
       },
-      /*set map*/ [](Class& cobj, py::array_t<slong,py::array::c_style> pymap){
+      /*set map*/ [](Class& cobj, py::array_t<slong> pymap){
         py::buffer_info bi = pymap.request();
         if (bi.ndim != 3) throw std::runtime_error("The mapping must be a 3 dimensional array");
         for (size_t i=0; i<3; ++i) if (bi.shape[i]!=cobj.size(i))
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
+        for (size_t i=0; i<3; ++i) if (bi.strides[i]!=cobj.stride(i))
+          throw std::runtime_error("The new map strides must match the old map");
         if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
     .def("interpolate_at",[](Class& cobj,
-                             py::array_t<double,py::array::c_style> pyX,
+                             py::array_t<double> pyX,
                              const bool& moveinto,
                              const bool& useparallel,
                              const int& threads){
@@ -263,7 +265,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
       BrillouinZone b = cobj.get_brillouinzone();
       Reciprocal lat = b.get_lattice();
-      LQVec<double> qv(lat,npts, (double*)bi.ptr ); //memcopy
+      LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
       if (moveinto){
         LQVec<double> Qv(qv); // second memcopy
         LQVec<int>  tauv(lat,npts); // filled by moveinto
@@ -308,19 +310,19 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
     },py::arg("axis"),py::arg("squeeze")=true)
-    .def("nearest_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool isrlu){
+    .def("nearest_map_index",[](Class& cobj, py::array_t<double> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
         throw std::runtime_error("x must be a 1-D array");
       if (xinfo.shape[0]<3)
         throw std::runtime_error("x must have three elements");
       // Copy the python x position into an ArrayVector
-      ArrayVector<double> x_invA(3u,1u, (double*)xinfo.ptr);
+      ArrayVector<double> x_invA((double*)xinfo.ptr, xinfo.shape, xinfo.strides);
       if (isrlu){
         // if x was provided in relative lattice units, conver it to Å⁻¹
         BrillouinZone bz = cobj.get_brillouinzone();
         Reciprocal rlat = bz.get_lattice();
-        LQVec<double> x_rlu(rlat,1u, (double*)xinfo.ptr);
+        LQVec<double> x_rlu(rlat, x_invA);
         x_invA = x_rlu.get_xyz();
       }
       size_t subidx[3];
@@ -328,19 +330,19 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
     },py::arg("x"),py::arg("isrlu")=true)
-    .def("floor_map_index",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool isrlu){
+    .def("floor_map_index",[](Class& cobj, py::array_t<double> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
         throw std::runtime_error("x must be a 1-D array");
       if (xinfo.shape[0]<3)
         throw std::runtime_error("x must have three elements");
       // Copy the python x position into an ArrayVector
-      ArrayVector<double> x_invA(3u,1u, (double*)xinfo.ptr);
+      ArrayVector<double> x_invA((double*)xinfo.ptr, xinfo.shape, xinfo.strides);
       if (isrlu){
         // if x was provided in relative lattice units, conver it to Å⁻¹
         BrillouinZone bz = cobj.get_brillouinzone();
         Reciprocal rlat = bz.get_lattice();
-        LQVec<double> x_rlu(rlat,1u, (double*)xinfo.ptr);
+        LQVec<double> x_rlu(rlat,x_invA);
         x_invA = x_rlu.get_xyz();
       }
       size_t subidx[3];
@@ -356,24 +358,28 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     std::string pyclass_name = std::string("BZGridQE") + typestr;
     py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
     // Initializer (BrillouinZone, [half-]Number_of_steps vector)
-    .def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pySpec, py::array_t<size_t,py::array::c_style> pyN){
+    .def(py::init([](BrillouinZone &b, py::array_t<double> pySpec, py::array_t<size_t> pyN){
       py::buffer_info b0 = pySpec.request();
       if (b0.ndim!=1) throw std::runtime_error("spec must be a 1-D array");
       if (b0.shape[0]<3) throw std::runtime_error("spec must have three elements");
+      if (b0.strides[0]!=sizeof(double)) throw std::runtime_error("spec must be contiguous");
       py::buffer_info bi = pyN.request();
       if (bi.ndim != 1) throw std::runtime_error("halfN must be a 1-D array");
       if (bi.shape[0] < 3) throw std::runtime_error("halfN must have three elements");
+      if (bi.strides[0]!=sizeof(size_t)) throw std::runtime_error("halfN must be contiguous");
       Class cobj( b, (double*)b0.ptr, (size_t*)bi.ptr );
       return cobj;
     }),py::arg("brillouinzone"),py::arg("spec"),py::arg("halfN"))
     // Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
-    .def(py::init([](BrillouinZone &b, py::array_t<double,py::array::c_style> pySpec, py::array_t<double,py::array::c_style> pyD, const bool& isrlu){
+    .def(py::init([](BrillouinZone &b, py::array_t<double> pySpec, py::array_t<double> pyD, const bool& isrlu){
       py::buffer_info b0 = pySpec.request();
       if (b0.ndim!=1) throw std::runtime_error("spec must be a 1-D array");
       if (b0.shape[0]<3) throw std::runtime_error("spec must have three elements");
+      if (b0.strides[0]!=sizeof(double)) throw std::runtime_error("spec must be contiguous");
       py::buffer_info bi = pyD.request();
       if (bi.ndim != 1) throw std::runtime_error("stepsize must be a 1-D array");
       if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
+      if (bi.strides[0]!=sizeof(double)) throw std::runtime_error("stepsize must be contiguous");
       return Class( b, (double*)b0.ptr, (double*)bi.ptr, isrlu ? 1 : 0 );
     }),py::arg("brillouinzone"),py::arg("spec"),py::arg("step"),py::arg("rlu")=true)
     .def_property_readonly("N",    [](const Class& cobj){return av2np_squeeze(cobj.get_N());} )
@@ -388,12 +394,10 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyzw());} )
     .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkle());} )
     .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyzw());} )
-    .def("fill",[](Class& cobj, py::array_t<T,py::array::c_style> pydata){
+    .def("fill",[](Class& cobj, py::array_t<T> pydata){
       py::buffer_info bi = pydata.request();
       ssize_t ndim = bi.ndim;
-      size_t numel=1, numarrays=bi.shape[0];
-      if (ndim > 1) for (ssize_t i=1; i<ndim; ++i) numel *= bi.shape[i];
-      ArrayVector<T> data(numel, numarrays, (T*)bi.ptr);
+      ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
       ArrayVector<size_t> shape(1,ndim);
       for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
       int mapExceedsNewData = cobj.check_map(data);
@@ -422,11 +426,13 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         if (bi.ndim != 4) throw std::runtime_error("The mapping must be a 4 dimensional array");
         for (size_t i=0; i<4; ++i) if (bi.shape[i]!=cobj.size(i))
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
+        for (size_t i=0; i<4; ++i) if (bi.strides[i]!=cobj.stride(i))
+          throw std::runtime_error("The new map strides must match the old map");
         if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
-    .def("interpolate_at",[](Class& cobj, py::array_t<double,py::array::c_style> pyX, const bool& moveinto, const bool& useparallel, const int& threads){
+    .def("interpolate_at",[](Class& cobj, py::array_t<double> pyX, const bool& moveinto, const bool& useparallel, const int& threads){
       py::buffer_info bi = pyX.request();
       if ( bi.shape[bi.ndim-1] !=4 )
         throw std::runtime_error("Interpolation requires one or more 4-vectors");
@@ -434,7 +440,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
       BrillouinZone b = cobj.get_brillouinzone();
       Reciprocal lat = b.get_lattice();
-      ArrayVector<double> qEv(4u,npts, (double*)bi.ptr ); //memcopy
+      ArrayVector<double> qEv((double*)bi.ptr, bi.shape, bi.strides); //memcopy
       if (moveinto){
         LQVec<double> Qv(lat, qEv, 0); // 0 ==> truncate qEv such that it has numel()==3.
         LQVec<double> qv(lat,npts); // filled by moveinto

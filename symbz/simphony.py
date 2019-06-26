@@ -82,9 +82,8 @@ class SymSim:
         n_io = self.data.n_ions
         vecs = degenerate_check(grid_q, freq.magnitude, vecs)
         frqs_vecs = np.concatenate(
-            (np.ascontiguousarray((freq.magnitude).reshape((n_pt, n_br, 1))),
-             np.ascontiguousarray(vecs.reshape(n_pt, n_br, 3*n_io))),
-            axis=2)
+            ((freq.magnitude).reshape((n_pt, n_br, 1)),
+             vecs.reshape(n_pt, n_br, 3*n_io)), axis=2)
         # fill requires input shaped (n_pt, n_br, [anything])
         # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
         self.grid.fill(frqs_vecs,
@@ -114,7 +113,8 @@ class SymSim:
         # The input to sort_perm indicates what weight should be given to
         # each part of the resultant cost matrix. In this case, each phonon
         # branch consists of one energy, n_ions three-vectors, and no matrix;
-        perm = self.grid.centre_sort_perm(
+        # perm = self.grid.centre_sort_perm(
+        perm = self.grid.multi_sort_perm(
             scalar_cost_weight=energy_weight,
             eigenvector_cost_weight=eigenvector_weight,
             vector_cost_weight=0,
@@ -214,13 +214,13 @@ class SymSim:
             frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
             # Separate the frequencies and eigenvectors
             # pylint: disable=w0632
-            frqs, vecs = np.split(frqs_vecs, np.array([1]), axis=2)
+            frqs, vecs = np.split(frqs_vecs, (1,), axis=2)
             # And reshape to what SimPhony expects
             n_pt = q_pt.shape[0]
             n_br = self.data.n_branches
             n_io = self.data.n_ions
-            frqs = np.ascontiguousarray(frqs.reshape((n_pt, n_br)))
-            vecs = np.ascontiguousarray(vecs.reshape((n_pt, n_br, n_io, 3)))
+            frqs = np.ascontiguousarray(frqs.reshape(n_pt, n_br))
+            vecs = np.ascontiguousarray(vecs.reshape(n_pt, n_br, n_io, 3))
             # Store all information in the SimPhony Data object
             self.data.n_qpts = n_pt
             if prim_tran.does_anything and self.data_cell_is_primitive:
