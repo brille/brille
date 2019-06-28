@@ -83,20 +83,13 @@ public:
         // so calculate the span along each dimension of that row-ordered array
         std::vector<size_t> spans(shape.size());
         spans[shape.size()-1]=1u;
-        for (int i=shape.size()-2; i>-1; --i) spans[i] = spans[i+1]*shape[i+1];
+        for (int i=static_cast<int>(shape.size())-2; i>-1; --i)
+          spans[i] = spans[i+1]*shape[i+1];
         // if the calculated spans and input strides are equivalent, we can
         // skip calculating indicies:
         bool roword = true;
         for (int i=0; i<strides.size(); ++i)
           roword &= strides[i]/sizeof(T) == spans[i];
-        // std::cout << "New ArrayVector constructor passed"
-        //           << (roword ? " " : " non " ) << "row-ordered data."
-        //           << std::endl;
-        // std::cout << "Since input spans = [";
-        // for (int q=0; q<strides.size(); ++q) std::cout << " " << std::to_string(strides[q]/sizeof(T));
-        // std::cout << " ]\n and output spans = [";
-        // for (int q=0; q<spans.size(); ++q) std::cout << " " << std::to_string(spans[q]);
-        // std::cout << " ]" << std::endl;
         if (roword){
           for (size_t i=0; i<this->N*this->M; ++i) this->data[i] = d[i];
         } else {

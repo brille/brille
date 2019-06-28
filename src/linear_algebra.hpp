@@ -38,12 +38,17 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b){
   }
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
   bool answer;
-  if ( my_abs(a) <= 100*Ttol && my_abs(b) <= 100*Rtol )
-    answer = my_abs(a-b) < 100*(useTtol ? Ttol :Rtol);
+  if ( my_abs(a) <= 1000*Ttol && my_abs(b) <= 1000*Rtol )
+    answer = my_abs(a-b) < 1000*(useTtol ? Ttol :Rtol);
   else
-    answer = my_abs(a-b) < 100*(useTtol ? Ttol :Rtol)*my_abs(a+b);
+    answer = my_abs(a-b) < 1000*(useTtol ? Ttol :Rtol)*my_abs(a+b);
+  // if (!answer){
+  //   std::cout << std::to_string(a) << " != " << std::to_string(b);
+  //   std::cout << " since |a-b| = " << std::to_string(my_abs(a-b));
+  //   std::cout << " ≥ " << std::to_string(1000*(useTtol ? Ttol :Rtol));
+  //   std::cout << " or " << std::to_string(1000*(useTtol ? Ttol :Rtol)*my_abs(a+b)) << std::endl;
+  // }
   return answer;
-  // return ( my_abs(a-b) > 100*(useTtol ? Ttol :Rtol)*my_abs(a+b) ) ? false : true;
 }
 template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B){
   bool isfpT, isfpR;

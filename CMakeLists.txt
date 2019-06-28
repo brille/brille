@@ -45,6 +45,11 @@ set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
 add_subdirectory(lib/pybind11)
 pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
+if(MSVC)
+		if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+			target_link_options(_symbz PUBLIC /DEBUG)
+		endif()
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
 	add_dependencies(_symbz write_version_info)

@@ -7,6 +7,7 @@ typedef long slong; // ssize_t is only defined for gcc?
 #include "neighbours.h"
 #include "interpolation.h"
 #include <tuple>
+#include <queue>
 #include <omp.h>
 // #include <complex>
 // #include <memory>
@@ -360,8 +361,17 @@ public:
   std::tuple<std::vector<size_t>,std::vector<size_t>,std::vector<size_t>>
   classify_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
   //
+  std::tuple<std::vector<size_t>,std::vector<size_t>>
+  classify_sorted_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
+  //
   template<class R>
   bool multi_sort_derivative(const R scales[4], const int funcs[2],
+    const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+    const size_t cidx, const std::vector<size_t> nidx,
+    const std::vector<size_t> nnidx, const size_t no_pairs) const;
+  //
+  template<class R>
+  bool multi_sort_derivative_all(const R scales[4], const int funcs[2],
     const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     const size_t cidx, const std::vector<size_t> nidx,
     const std::vector<size_t> nnidx, const size_t no_pairs) const;
@@ -374,7 +384,12 @@ public:
   template<class R> size_t multi_sort_recursion(const size_t centre,
     const R weights[4], const int funcs[2], const size_t spobj[2],
     ArrayVector<size_t>& perm, std::vector<bool>& sorted,
-    std::vector<bool>& locked) const;
+    std::vector<bool>& locked, std::vector<size_t>& visited) const;
+  //
+  template<class R> size_t multi_sort(const size_t centre, const R weights[4],
+    const int funcs[2], const size_t spobj[2], ArrayVector<size_t>& perm,
+    std::vector<bool>& sorted, std::vector<bool>& locked,
+    std::vector<size_t>& visited) const;
   //
   template<typename R=double>
   ArrayVector<size_t> multi_sort_perm(
@@ -553,7 +568,7 @@ public:
          point, or larger than the highest grid point, respectively.
          `out` is then f₀+f₁+f₂.
   */
-  unsigned int nearest_index(const double *x, size_t *ijk) const {
+  unsigned int nearest_index(const double *x, size_t *ijk, unsigned int mask=0u) const {
     unsigned int out=0;
     slong tmp;
     for (int i=0; i<3; i++){
@@ -564,10 +579,16 @@ public:
       } else {
         if (tmp<0) {
           tmp = 0;
-          out += 1<<(3+i); // underflow
+          if ((mask>>i)%2 == 1) // underflow allowed
+            out += 1<<i; // exact match to avoid out-of-bounds interpolation
+          else
+            out += 1<<(3+i); // underflow
         } else {
           tmp = this->size(i)-1;
-          out += 1<<(6+i); // overflow
+          if ((mask>>i)%2 == 1) // overflow allowed
+            out += 1<<i; // exact match to avoid out-of-bounds interpolation
+          else
+            out += 1<<(6+i); // overflow
         }
       }
       ijk[i] = (size_t)(tmp);
@@ -588,7 +609,7 @@ public:
          point, or larger than the highest grid point, respectively.
          `out` is then f₀+f₁+f₂.
   */
-  unsigned int floor_index(const double *x, size_t *ijk) const {
+  unsigned int floor_index(const double *x, size_t *ijk, unsigned int mask=0u) const {
     unsigned int out=0;
     slong tmp;
     for (int i=0; i<3; i++){
@@ -599,10 +620,16 @@ public:
       } else {
         if (tmp<0) {
           tmp = 0;
-          out += 1<<(3+i); // underflow
+          if ((mask>>i)%2 == 1) // underflow allowed
+            out += 1<<i; // exact match to avoid out-of-bounds interpolation
+          else
+            out += 1<<(3+i); // underflow
         } else {
           tmp = this->size(i)-1;
-          out += 1<<(6+i); // overflow
+          if ((mask>>i)%2 == 1) // overflow allowed
+            out += 1<<i; // exact match to avoid out-of-bounds interpolation
+          else
+            out += 1<<(6+i); // overflow
         }
       }
       ijk[i] = (size_t)(tmp);
@@ -610,14 +637,38 @@ public:
     return out;
   };
   //! Perform sanity checks before attempting to interpolate
-  template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
-    if (this->size(0)<2||this->size(1)<2||this->size(2)<2)
-      throw std::runtime_error("Interpolation is only possible on grids with at least two elements in each dimension");
+  template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x){
+    unsigned int mask=0u;
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
-    return 0;
+    if (this->size(0)<2||this->size(1)<2||this->size(2)<2){
+      size_t ijk[3];
+      bool allok = true;
+      unsigned int flg;
+      std::vector<int> must_be_in_bounds;
+      for (int i=0; i<3; ++i){
+        if (this->size(i)<2)
+          mask += 1<<i;
+        else
+          must_be_in_bounds.push_back(i);
+      }
+      for (size_t i=0; i<x.size(); ++i){
+        flg = this->nearest_index(x.datapointer(i), ijk, mask);
+        allok &= 0==(flg>>3);
+        if (!allok) break;
+      }
+      if (!allok){
+        std::string msg = "Interpolation on a grid with shape [";
+        for (size_t i=0; i<3; ++i) msg += " " + std::to_string(this->size(i));
+        msg += " ] can only be performed for points with dot(x, [";
+        for (size_t i=0; i<3; ++i) msg += (this->size(i)<2 ? " 0" : " 1");
+        msg += " ]) within the grid limits.";
+        throw std::runtime_error(msg);
+      }
+    }
+    return mask;
   }
   //! Perform linear interpolation at the specified points expressed in a Reciprocal lattice
   template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
@@ -634,7 +685,7 @@ public:
         is used, and for no exact matches the method uses trilinear interpolation.
   */
   template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
-    this->check_before_interpolating(x);
+    unsigned int mask = this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3], cnt;
     unsigned int flg;
@@ -643,8 +694,8 @@ public:
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk );
-      // flg = this->floor_index(x.datapointer(i), ijk );
+      flg = this->nearest_index(x.datapointer(i), ijk, mask);
+      // flg = this->floor_index(x.datapointer(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
@@ -708,7 +759,7 @@ public:
         is used, and for no exact matches the method uses trilinear interpolation.
   */
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x, const int threads){
-    this->check_before_interpolating(x);
+    unsigned int mask = this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
 
     (threads>0) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
@@ -723,7 +774,7 @@ public:
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk );
+      flg = this->nearest_index(x.datapointer(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
       if (flg > 7){
         std::string msg_flg = "grid.h::parallel_linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);

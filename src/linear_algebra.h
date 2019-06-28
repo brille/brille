@@ -7,6 +7,7 @@
 #endif
 
 #include <stdio.h>
+#include <iostream>
 #include <type_traits>
 #include <limits>
 #include <math.h>

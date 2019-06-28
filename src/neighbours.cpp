@@ -55,7 +55,7 @@ ArrayVector<int> make_relative_neighbour_indices_prime(const int extent){
     }
   }
   for (int e0=0; e0<2; ++e0){
-    for (int e1=1; e1<3; ++e1){
+    for (int e1=e0+1; e1<3; ++e1){
       for (int k=min; k<max; ++k){
         for (int j=min; j<max; ++j){
           for (int i=0; i<3; ++i) tmp[i]=0;

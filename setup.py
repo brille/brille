@@ -53,10 +53,12 @@ class CMakeBuild(build_ext):
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
-            build_args += ['--', '/m']
+            else:
+                cmake_args += ['-A', 'Win32']
+            build_args += ['--', '/m:4']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            build_args += ['--', '-j2']
+            build_args += ['--', '-j4']
 
         env = os.environ.copy()
         cxxflags = '{} -DVERSION_INFO=\\"{}\\"'.format(
