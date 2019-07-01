@@ -271,7 +271,7 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   LQVec<int> taui;
   ArrayVector<double> q_dot_facenrm;
   ArrayVector<int> Nhkl;
-  int maxat = 0;
+  size_t maxat = 0;
   int maxnm = 0;
   size_t count =0;
   for (size_t i=0; i<Qsl.size(); i++){

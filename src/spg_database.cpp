@@ -8572,7 +8572,7 @@ void get_first_last_operation_number(int indices[2], const int hall_number)
 // renamed from spgdb_get_spacegroup_operations
 Symmetry get_spacegroup_symmetry_operations(const int hall_number)
 {
-  if (~hall_number_ok(hall_number)) return Symmetry();
+  if (!hall_number_ok(hall_number)) return Symmetry();
   int mult_index[2];
   get_first_last_operation_number(mult_index, hall_number);
   Symmetry symmetry(mult_index[0]);

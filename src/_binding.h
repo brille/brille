@@ -286,7 +286,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       if (cobj.data_ndim() > 1){
         ArrayVector<size_t> data_shape = cobj.data_shape();
         // the shape of each element is data_shape[1,...,data_ndim-1]
-        for (ssize_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
       }
       size_t total_elements = 1;
       for (ssize_t osi : outshape) total_elements *= osi;
@@ -450,7 +450,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
         // replace the first three elements of qEv with qv in absolute units.
         ArrayVector<double> qv_invA = qv.get_xyz();
-        for (size_t i=0; i<npts; ++i) for(size_t j=0; j<3u; ++j) qEv.insert(qv_invA.getvalue(i,j), i,j);
+        for (ssize_t i=0; i<npts; ++i) for(size_t j=0; j<3u; ++j) qEv.insert(qv_invA.getvalue(i,j), i,j);
       }
       // do the interpolation for each point in qv
       ArrayVector<T> lires;
@@ -465,7 +465,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       if (cobj.data_ndim() > 1){
         ArrayVector<size_t> data_shape = cobj.data_shape();
         // the shape of each element is data_shape[1,...,data_ndim-1]
-        for (ssize_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
       }
       size_t total_elements = 1;
       for (ssize_t osi : outshape) total_elements *= osi;
@@ -510,8 +510,8 @@ void declare_lattice_vec_init(py::class_<T,Lattice> &pclass, const std::string &
       throw std::runtime_error("Number of dimensions must be one");
     if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
       throw std::runtime_error("(At least) three lengths and angles required.");
-    double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-    return T(lengths,angles,groupid);
+    return T((double*) linfo.ptr, linfo.strides,
+             (double*) ainfo.ptr, ainfo.strides, groupid);
   }), py::arg( ("lengths/"+lenunit).c_str() ),
       py::arg("angles/radian"), py::arg(argname.c_str())=defarg);
 }
@@ -523,11 +523,9 @@ void declare_lattice_mat_init(py::class_<T,Lattice> &pclass, const std::string &
       throw std::runtime_error("Number of dimensions must be two");
     if ( info.shape[0] != 3 || info.shape[0] != 3 )
       throw std::runtime_error("Three three-vectors required.");
-    double *mat = (double *) info.ptr;
-    return T(mat,groupid);
+    return T((double *) info.ptr, info.strides, groupid);
   }), py::arg( "lattice vectors" ), py::arg(argname.c_str())=defarg);
 }
-
 
 template<class T>
 void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {

@@ -32,8 +32,8 @@ PYBIND11_MODULE(_symbz,m){
         throw std::runtime_error("Number of dimensions must be one");
       if ( linfo.shape[0] < 3 || ainfo.shape[0] < 3 )
         throw std::runtime_error("(At least) three lengths and angles required.");
-      double *lengths = (double *) linfo.ptr, *angles = (double *) ainfo.ptr;
-      return Lattice(lengths,angles,hall);
+      return Lattice((double*) linfo.ptr, linfo.strides,
+                     (double*) ainfo.ptr, ainfo.strides, hall);
     }),py::arg("lengths"),py::arg("angles"),py::arg("HallNumber")=1)
     .def(py::init([](py::array_t<double> vecs, int hall) {
       py::buffer_info info = vecs.request();
@@ -41,8 +41,7 @@ PYBIND11_MODULE(_symbz,m){
         throw std::runtime_error("Number of dimensions must be two");
       if ( info.shape[0] != 3 || info.shape[1] != 3 )
         throw std::runtime_error("Three three-vectors required.");
-      double *mat = (double *) info.ptr;
-      return Lattice(mat,hall);
+      return Lattice((double*) info.ptr, info.strides, hall);
     }),py::arg("vectors"),py::arg("HallNumber")=1)
     .def_property_readonly("a",     &Lattice::get_a)
     .def_property_readonly("b",     &Lattice::get_b)
@@ -53,12 +52,12 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("volume",&Lattice::get_volume)
     .def_property("hall",&Lattice::get_hall,&Lattice::set_hall)
     .def_property_readonly("spacegroup",&Lattice::get_spacegroup_object)
-    .def("fill_covariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
-      py::buffer_info bi = cmt.request();
-      if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
-      if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
-      l.get_covariant_metric_tensor( (double *) bi.ptr);
-    })
+    // .def("fill_covariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
+    //   py::buffer_info bi = cmt.request();
+    //   if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
+    //   if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
+    //   l.get_covariant_metric_tensor( (double *) bi.ptr);
+    // })
     .def("get_covariant_metric_tensor",[](Lattice &l){
       auto result = py::array_t<double, py::array::c_style >({3,3});
       py::buffer_info bi = result.request();
@@ -66,12 +65,12 @@ PYBIND11_MODULE(_symbz,m){
       l.get_covariant_metric_tensor( cmt );
       return result;
     })
-    .def("fill_contravariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
-      py::buffer_info bi = cmt.request();
-      if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
-      if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
-      l.get_contravariant_metric_tensor( (double *) bi.ptr);
-    })
+    // .def("fill_contravariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
+    //   py::buffer_info bi = cmt.request();
+    //   if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
+    //   if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
+    //   l.get_contravariant_metric_tensor( (double *) bi.ptr);
+    // })
     .def("get_contravariant_metric_tensor",[](Lattice &l){
       auto result = py::array_t<double, py::array::c_style >({3,3});
       py::buffer_info bi = result.request();
@@ -81,6 +80,7 @@ PYBIND11_MODULE(_symbz,m){
     .def("star",[](Lattice &l){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
     .def("issame",&Lattice::issame)
     .def("__eq__",&Lattice::issame)
+    .def("isapprox",&Lattice::isapprox)
     .def("isstar",[](Lattice &l, Lattice a){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
     .def("__repr__",&Lattice::string_repr)
     ;
@@ -123,7 +123,7 @@ PYBIND11_MODULE(_symbz,m){
       }
       auto result = py::array_t<bool, py::array::c_style>(outshape);
       bool *rptr = (bool *) result.request().ptr;
-      for (size_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
+      for (ssize_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
       return result;
     },py::arg("points"))
     .def("moveinto",[](BrillouinZone &b, py::array_t<double> Q){
@@ -141,7 +141,7 @@ PYBIND11_MODULE(_symbz,m){
       auto tout = py::array_t<int, py::array::c_style>(bi.shape);
       double *qptr = (double *) qout.request().ptr;
       int *tptr = (int *) tout.request().ptr;
-      for (size_t i=0; i<npts; ++i){
+      for (ssize_t i=0; i<npts; ++i){
         for (size_t j=0; j<3u; ++j){
           qptr[3u*i+j] = qv.getvalue(i,j);
           tptr[3u*i+j] = tauv.getvalue(i,j);

@@ -19,6 +19,19 @@ def plot_points_with_lines(x,y,title=''):
     axs.set_title(title)
     pp.show()
 
+def vector_angle(v_0, v_1, normal=np.array([0, 0, 1])):
+    """Calculate the angle between two vectors, given a vector normal."""
+    hat_0 = v_0/np.sqrt(np.dot(v_0, v_0))
+    hat_1 = v_1/np.sqrt(np.dot(v_1, v_1))
+    dot01 = np.dot(hat_0, hat_1)
+    crs01 = np.cross(hat_0, hat_1)
+    x_vec = dot01*hat_0
+    y_vec = hat_1 - x_vec
+    y_len = np.sqrt(np.dot(y_vec, y_vec)) * np.sign(np.dot(crs01, normal))
+    ang01 = np.arctan2(y_len, dot01)
+    return ang01 if ang01 >= 0 else ang01 + 2*np.pi
+
+
 def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
             color='b', edgecolor='k', linewidth=1, alpha=0.7):
     if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
@@ -50,7 +63,7 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
     for i, f_i in enumerate(faces):
         for j, v_j in enumerate(verts):
             if not (vpf[i] == j).any():
-                if np.abs(np.dot(v_j-f_i/2, f_i)) < 1e-14:
+                if np.abs(np.dot(v_j-f_i/2, f_i)) < 1e-15:
                     vpf[i] = np.append(vpf[i], j)
 
     patches = [np.array([verts[j, :] for j in i]) for i in vpf]
@@ -63,22 +76,12 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
         this_patch = patches[idx] - faces[idx]/2
         n_verts = len(this_patch)
         perm = np.array(range(n_verts))
-        count = 0
-        while count < 10000:
-            count = count + 1
-            p_t_p = this_patch[perm]
-            notok = np.array(
-                [np.dot(
-                    np.cross(p_t_p[i-1], p_t_p[i]), faces[idx]
-                ) < 0 for i in range(n_verts)])
-            if not notok.any():
-                break
-            notok_idx = notok.nonzero()[0]
-            if len(notok_idx) > 1:
-                swap = notok_idx[1]
-            else:
-                swap = np.random.randint(n_verts)
-            perm[[notok_idx[0], swap]] = perm[[swap, notok_idx[0]]]
+        windings = np.array([
+            [vector_angle(x, y, faces[idx]) for x in this_patch]
+            for y in this_patch])
+        windings[windings == 0] = 1e3
+        for i in range(1, n_verts):
+            perm[i] = np.argmin(windings[perm[i-1]])
         patches[idx] = patches[idx][perm]+origin
 
     xyz_min = np.array([x.min() for x in np.vsplit(verts.transpose(), 3)])

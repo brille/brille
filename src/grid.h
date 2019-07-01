@@ -699,7 +699,9 @@ public:
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
-        std::string msg_flg = "grid.h::linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
+        std::string msg_flg = "grid.h::linear_interpolate_at";
+        msg_flg += " Unsure what to do with flg = " + std::to_string(flg);
+        msg_flg += " when mask = " + std::to_string(mask);
         throw std::runtime_error(msg_flg);
       }
       if (7==flg)/*+++*/{

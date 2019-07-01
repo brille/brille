@@ -135,7 +135,11 @@ class SymSim:
         cell = (lattice_vectors, self.data.ion_r, ion_indexes)
         # spglib can come to our rescue here a bit
         prim_lv, _, _ = spglib.find_primitive(cell)
-        if (prim_lv == lattice_vectors).all():
+        # if (prim_lv == lattice_vectors).all():
+        # pylint: disable=no-member
+        if sbz.Direct(lattice_vectors).isapprox(sbz.Direct(prim_lv), 1e-10):
+            # check for approximate equivalence of lattice parameters instead
+            # of equivalent lattice vectors as spglib may introduce a rotation
             if self.data_cell_is_primitive is None:
                 self.data_cell_is_primitive = True
             if not self.data_cell_is_primitive:
@@ -166,7 +170,11 @@ class SymSim:
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         # And we can check whether there's anything to do using SymBZ
         if prim_tran.does_anything and self.data_cell_is_primitive:
-            lattice_vectors = np.matmul(lattice_vectors, prim_tran.invP)
+            # this multiplication is backwards compared to, e.g.,
+            # https://atztogo.github.io/spglib/definition.html#space-group-operation-and-change-of-basis
+            # where the lattice_vectors form the columns of a matrix and here
+            # they form the rows
+            lattice_vectors = np.matmul(prim_tran.invP.transpose(1, 0), lattice_vectors)
         #
         dlat = sbz.Direct(lattice_vectors, self.hall_number)
         rlat = dlat.star()

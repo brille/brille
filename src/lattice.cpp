@@ -1,30 +1,16 @@
 #include "lattice.h"
 
-template<class T> void latmat_to_lenang(const T* latmat, T* len, T* ang){
-  T n[9];
-  // compute the dot product of each column with itself
-  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  len[i] += latmat[i*3+j]*latmat[i*3+j];
-  // the lattice vector lengths are the square root of this
-  for (int i=0; i<3; ++i) len[i] = std::sqrt(len[i]);
-  // normalize the column vectors, leaving only angle information
-  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*3+j] = latmat[i*3+j]/len[i];
-  // take the dot product between cyclically permuted columns: 0=1⋅2, 1=2⋅0, 2=0⋅1
-  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  ang[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
-  // the lattice angles are the arccosines of these dot products of normalized lattice vectors
-  for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
-}
-
 Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0};
-  latmat_to_lenang(latmat,l,a);
-  this->set_len_pointer(l);
-  this->set_ang_pointer(a);
+  latmat_to_lenang(latmat,3,1,l,a); // (3,1) -> assume row-ordered matrix
+  this->set_len_pointer(l,1);
+  this->set_ang_pointer(a,1);
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
 Lattice::Lattice(const double* lengths, const double* angles, const int h){
-  this->set_len_pointer(lengths);
-  this->set_ang_pointer(angles);
+  this->set_len_pointer(lengths,1);
+  this->set_ang_pointer(angles,1);
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
@@ -36,15 +22,15 @@ Lattice::Lattice(const double la, const double lb, const double lc, const double
 }
 Lattice::Lattice(const double* latmat, const std::string itname){
   double l[3]={0,0,0}, a[3]={0,0,0};
-  latmat_to_lenang(latmat,l,a);
-  this->set_len_pointer(l);
-  this->set_ang_pointer(a);
+  latmat_to_lenang(latmat,3,1,l,a);
+  this->set_len_pointer(l,1);
+  this->set_ang_pointer(a,1);
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }
 Lattice::Lattice(const double *lengths, const double *angles, const std::string itname){
-  this->set_len_pointer(lengths);
-  this->set_ang_pointer(angles);
+  this->set_len_pointer(lengths,1);
+  this->set_ang_pointer(angles,1);
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }
@@ -53,12 +39,6 @@ Lattice::Lattice(const double la, const double lb, const double lc, const double
   this->set_ang_scalars(al,bl,cl);
   this->volume = this->calculatevolume();
   this->check_IT_name(itname);
-}
-void Lattice::set_len_pointer(const double *lvec){
-  for (int i=0;i<3;i++) this->len[i] = lvec[i];
-}
-void Lattice::set_ang_pointer(const double *avec){
-  for (int i=0;i<3;i++) this->ang[i] = avec[i];
 }
 void Lattice::set_len_scalars(const double a, const double b, const double c){
   this->len[0] = a;
@@ -167,6 +147,47 @@ bool Lattice::issame(const Lattice lat) const{
   }
   return true;
 }
+
+bool Lattice::isapprox(const Lattice lat, const double tol) const {
+  return this->ispermutation(lat)==0 ? false : true;
+}
+int Lattice::ispermutation(const Lattice lat, const double tol) const {
+  const double *a1 = this->ang;
+  const double *l1 = this->len;
+  const double *a2 = lat.ang;
+  const double *l2 = lat.len;
+  double dif, sum;
+  bool perm_equiv = true;
+  // check if the a,b,c axes are permuted
+  for (int j=0; j<3; ++j){
+    perm_equiv = true;
+    for (int i=0; i<3; i++){
+      dif = my_abs(l1[i]-l2[(i+j)%3]);
+      sum = my_abs(l1[i]+l2[(i+j)%3]);
+      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+      dif = my_abs(a1[i]-a2[(i+j)%3]);
+      sum = my_abs(a1[i]+a2[(i+j)%3]);
+      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+    }
+    if (perm_equiv) return j+1;
+  }
+  // antipermutations are possible too
+  int ap[3]{0,2,1};
+  for (int j=0; j<3; ++j){
+    perm_equiv = true;
+    for (int i=0; i<3; i++){
+      dif = my_abs(l1[i]-l2[ap[(i+j)%3]]);
+      sum = my_abs(l1[i]+l2[ap[(i+j)%3]]);
+      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+      dif = my_abs(a1[i]-a2[ap[(i+j)%3]]);
+      sum = my_abs(a1[i]+a2[ap[(i+j)%3]]);
+      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+    }
+    if (perm_equiv) return -j-1;
+  }
+  return 0;
+}
+
 
 void Lattice::print(){
   printf("(%g %g %g) " ,this->len[0], this->len[1], this->len[2]);
