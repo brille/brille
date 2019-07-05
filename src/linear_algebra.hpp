@@ -354,6 +354,16 @@ template<typename T> T hermitian_product(const size_t n, const T* a, const T* b)
   for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
+template<typename T> std::complex<T> hermitian_product(const size_t n, const T* a, const std::complex<T>* b){
+  std::complex<T> h_dot{0,0};
+  for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
+  return h_dot;
+}
+template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b){
+  std::complex<T> h_dot{0,0};
+  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  return h_dot;
+}
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> h_dot{0,0};
   for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
@@ -422,6 +432,14 @@ template<typename T> T vector_product(const size_t n, const T* a, const T* b){
   T h_dot{0};
   for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
+}
+template<typename T> T vector_product(const size_t n, const T* a, const std::complex<T>* b){
+  std::complex<T> h_dot = hermitian_product(n,a,b);
+  return std::real(h_dot*std::conj(h_dot));
+}
+template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const T* b){
+  std::complex<T> h_dot = hermitian_product(n,a,b);
+  return std::real(h_dot*std::conj(h_dot));
 }
 template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> h_dot = hermitian_product(n,a,b);

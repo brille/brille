@@ -212,6 +212,13 @@ class SymSim:
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
         return structure_factor(self.data, self.scattering_lengths, **sf_dict)
 
+    def dw(self, q_hkl, T=0):
+        """Calculates the Debye-Waller factor using the Brillouin zone grid."""
+        DWfactor = self.grid.debye_waller(q_hkl,
+                                          self.data.ion_mass.to('meV*s**2/angstrom**2').magnitude,
+                                          T)
+        return DWfactor
+
     def w_q(self, q_pt, interpolate=True, moveinto=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()

@@ -1,21 +1,29 @@
-from importlib import util
+"""Provides functionality for drawing first Brillouin zones in 3D."""
 import numpy as np
 import matplotlib.pyplot as pp
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import symbz as sbz
 
-def plot_points(x,title=''):
+# pylint: disable=c0103
+def plot_points(x, title=''):
+    """Plot the N points contained in the (N,3) ndarray x."""
     fig = pp.figure()
     axs = Axes3D(fig)
-    axs.scatter(x[:,0],x[:,1],x[:,2],s=10)
+    axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
     axs.set_title(title)
     pp.show()
-def plot_points_with_lines(x,y,title=''):
+
+def plot_points_with_lines(x, y, title=''):
+    """Plot the N points contained in the (N,3) ndarray x with lines y.
+
+    The M line segments defined by the (M+1,3) ndarray y are drawn before the
+    points in x.
+    """
     fig = pp.figure()
     axs = Axes3D(fig)
-    axs.plot(y[:,0],y[:,1],y[:,2])
-    axs.scatter(x[:,0],x[:,1],x[:,2],s=10)
+    axs.plot(y[:, 0], y[:, 1], y[:, 2])
+    axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
     axs.set_title(title)
     pp.show()
 
@@ -31,9 +39,25 @@ def vector_angle(v_0, v_1, normal=np.array([0, 0, 1])):
     ang01 = np.arctan2(y_len, dot01)
     return ang01 if ang01 >= 0 else ang01 + 2*np.pi
 
-
+# pylint: disable=r0912,r0913,r0914,r0915
 def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
             color='b', edgecolor='k', linewidth=1, alpha=0.7):
+    """Plot a BrillouinZone or BZGridQ[complex] object.
+
+    Draw the faces of a first Brillouin zone with color, edgecolor, linewidth,
+    and alpha specified. The plotting units are selectable via the keyword
+    `units` with valid values 'rlu', 'invA', or 'primitive' and are relative
+    lattice units of the reciprocal space spanning lattice, inverse ångstrom,
+    or relative lattice units of the primitive reciprocal space spanning
+    lattice, respectively. The face vectors defining the Brillouin zone can be
+    drawn as well if the keyword `face_vectors` is set to True.
+
+    If a (N,3) numpy.ndarray is provided via the keyword `Q` it will be treated
+    as points in the specified units of reciprocal space.
+    If a BZGridQ or BZGridQcomplex object is provided and `Q` is omitted or
+    None, then the mapped grid points in 'rlu' or 'invA' will be set to `Q`.
+    """
+    # pylint: disable=no-member
     if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
         if Q is None:
             if units == 'rlu':
@@ -80,6 +104,8 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
             [vector_angle(x, y, faces[idx]) for x in this_patch]
             for y in this_patch])
         windings[windings == 0] = 1e3
+        # or just set the diagonal to a large value?
+        # windings[np.diag_indices(n_verts)] = 1e3
         for i in range(1, n_verts):
             perm[i] = np.argmin(windings[perm[i-1]])
         patches[idx] = patches[idx][perm]+origin

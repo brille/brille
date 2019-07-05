@@ -410,6 +410,12 @@ public:
   ArrayVector<T> sum_data(const int axis) const{
     return this->data.sum(axis);
   };
+  template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
+  ArrayVector<S> debye_waller_sum(const LQVec<R>& Q, const R beta) const;
+  template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
+  ArrayVector<S> debye_waller_sum(const ArrayVector<R>& Q, const R t_K) const;
+  template<class R, template<class> class A, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
+  ArrayVector<S> debye_waller(const A<R>& Q, const std::vector<R>& M, const R t_K) const;
   /*! \brief Return a constant reference to the data ArrayVector
   */
   const ArrayVector<T>& get_data() const {
@@ -852,5 +858,6 @@ template<class T> struct GridDiffTraits<std::complex<T>>{
 
 #include "grid.hpp"
 #include "grid_sorting.hpp"
+#include "grid_sums.hpp"
 
 #endif

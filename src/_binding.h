@@ -349,7 +349,27 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       unsigned int flg = cobj.floor_index(x_invA.datapointer(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
-    },py::arg("x"),py::arg("isrlu")=true);
+    },py::arg("x"),py::arg("isrlu")=true)
+    .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
+      // handle Q
+      py::buffer_info bi = pyQ.request();
+      if ( bi.shape[bi.ndim-1] !=3 )
+        throw std::runtime_error("debye_waller requires one or more 3-vectors");
+      ssize_t npts = 1;
+      if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+      BrillouinZone b = cobj.get_brillouinzone();
+      Reciprocal lat = b.get_lattice();
+      LQVec<double> cQ(lat, (double*)bi.ptr, bi.shape, bi.strides); //memcopy
+      // handle the masses
+      py::buffer_info mi = pyM.request();
+      if ( mi.ndim != 1u )
+        throw std::runtime_error("debey_waller requires masses as a 1-D vector.");
+      size_t span = mi.strides[0]/sizeof(double);
+      std::vector<double> masses(mi.shape[0]);
+      double * mass_ptr = (double*) mi.ptr;
+      for (size_t i=0; i<mi.shape[0]; ++i) masses.push_back(mass_ptr[i*span]);
+      return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
+    }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"));
 }
 
 template<class T>
