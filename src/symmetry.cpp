@@ -14,63 +14,71 @@
 |                          if the old and new sizes are non-zero.             |
 |   size                   return the number of motions the object can store. |
 \*****************************************************************************/
-bool Symmetry::set(const unsigned int i, const int *r, const double *t){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) this->R[i*N+j] = r[j];
-  for(unsigned int j=0; j<3; j++) this->T[i*N+j] = t[j];
+size_t Symmetry::add(const int *r, const double *t){
+  std::array<int,9> newR;
+  std::array<double,3> newT;
+  for (size_t i=0; i<9; ++i) newR[i]=r[i];
+  for (size_t i=0; i<3; ++i) newT[i]=t[i];
+  return this->add(newR,newT);
+}
+size_t Symmetry::add(const std::array<int,9>& r, const std::array<double,3>& t){
+  this->R.push_back(r);
+  this->T.push_back(t);
+  return this->size();
+}
+bool Symmetry::set(const size_t i, const int *r, const double *t){
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) this->R[i][j] = r[j];
+  for(size_t j=0; j<3; j++) this->T[i][j] = t[j];
   return true;
 }
-bool Symmetry::setrot(const unsigned int i, const int *r){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) this->R[i*N+j] = r[j];
+bool Symmetry::setrot(const size_t i, const int *r){
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) this->R[i][j] = r[j];
   return true;
 }
-bool Symmetry::settran(const unsigned int i, const double *t){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<3; j++) this->T[i*N+j] = t[j];
+bool Symmetry::settran(const size_t i, const double *t){
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<3; j++) this->T[i][j] = t[j];
   return true;
 }
-bool Symmetry::get(const unsigned int i, int *r, double *t){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) r[j]=this->R[i*N+j];
-  for(unsigned int j=0; j<3; j++) t[j]=this->T[i*N+j];
+bool Symmetry::get(const size_t i, int *r, double *t) const {
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
+  for(size_t j=0; j<3; j++) t[j]=this->T[i][j];
   return true;
 }
-bool Symmetry::getrot(const unsigned int i, int *r){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) r[j]=this->R[i*N+j];
+bool Symmetry::getrot(const size_t i, int *r) const {
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
   return true;
 }
-bool Symmetry::gettran(const unsigned int i, double *t){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<3; j++) t[j]=this->T[i*N+j];
+bool Symmetry::gettran(const size_t i, double *t) const {
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<3; j++) t[j]=this->T[i][j];
   return true;
 }
-int    * Symmetry::getrot (const unsigned int i){ return (i<N) ? this->R + i*9 : nullptr; }
-double * Symmetry::gettran(const unsigned int i){ return (i<N) ? this->T + i*3 : nullptr; }
-unsigned int Symmetry::resize(const unsigned int newsize){
-  bool std = newsize>0;
-  int    *newR = nullptr;
-  double *newT = nullptr;
-  // allocate a new block of memory
-  if (std) {
-    newR = new int [newsize*9]();
-    newT = new double [newsize*3]();
-  }
-  if (this->N) { // copy-over data :(
-    unsigned int smallerN = this->N < newsize ? this->N : newsize;
-    for (unsigned int i=0; i<smallerN*9; i++) newR[i] = this->R[i];
-    for (unsigned int i=0; i<smallerN*3; i++) newT[i] = this->T[i];
-    // hand-back the chunk of memory which data points to
-    delete[] this->R;
-    delete[] this->T;
-  }
-  // and set data to the newdata pointer;
-  this->N = newsize;
-  if (std) {
-    this->R = newR;
-    this->T = newT;
-  }
+int    * Symmetry::getrot (const size_t i) {
+  return (i<this->size()) ? this->R[i].data() : nullptr;
+}
+double * Symmetry::gettran(const size_t i) {
+  return (i<this->size()) ? this->T[i].data() : nullptr;
+}
+const int    * Symmetry::getrot (const size_t i) const {
+  return (i<this->size()) ? this->R[i].data() : nullptr;
+}
+const double * Symmetry::gettran(const size_t i) const {
+  return (i<this->size()) ? this->T[i].data() : nullptr;
+}
+std::array<int,9> Symmetry::getrotarray(const size_t i) const {
+  return (i<this->size()) ? this->R[i] : std::array<int,9>({0,0,0,0,0,0,0,0,0});
+}
+std::array<double,3> Symmetry::gettranarray(const size_t i) const {
+  return (i<this->size()) ? this->T[i] : std::array<double,3>({0,0,0});
+}
+size_t Symmetry::resize(const size_t newsize){
+  this->R.resize(newsize);
+  this->T.resize(newsize);
   return newsize;
 }
 
@@ -83,34 +91,35 @@ unsigned int Symmetry::resize(const unsigned int newsize){
 |            -- this causes a memory copy if the old and new sizes are finite.|
 |   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
-bool  PointSymmetry::set(const unsigned int i, const int *r){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) this->R[i*N+j] = r[j];
+size_t PointSymmetry::add(const int *r){
+  std::array<int,9> newR;
+  for (size_t i=0; i<9; ++i) newR[i] = r[i];
+  return this->add(newR);
+}
+size_t PointSymmetry::add(const std::array<int,9>& r){
+  this->R.push_back(r);
+  return this->R.size();
+}
+bool PointSymmetry::set(const size_t i, const int *r){
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) this->R[i][j] = r[j];
   return true;
 }
-bool  PointSymmetry::get(const unsigned int i, int *r){
-  if ( i>=N ) return false;
-  for(unsigned int j=0; j<9; j++) r[j]=this->R[i*N+j];
+bool PointSymmetry::get(const size_t i, int *r) const {
+  if ( i>=this->size() ) return false;
+  for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
   return true;
 }
-int * PointSymmetry::get(const unsigned int i){ return (i<N) ? this->R+i*9 : nullptr; }
-unsigned int PointSymmetry::resize(const unsigned int newsize){
-  bool std = newsize>0;
-  int    *newR = nullptr;
-  // allocate a new block of memory
-  if (std) {
-    newR = new int [newsize*9]();
-  }
-  if (this->N) { // copy-over data :(
-    unsigned int smallerN = this->N < newsize ? this->N : newsize;
-    for (unsigned int i=0; i<smallerN*9; i++) newR[i] = this->R[i];
-    // hand-back the chunk of memory which data points to
-    delete[] this->R;
-  }
-  // and set data to the newdata pointer;
-  this->N = newsize;
-  if (std) {
-    this->R = newR;
-  }
-  return newsize;
+int * PointSymmetry::get(const size_t i) {
+  return (i<this->size()) ? this->R[i].data() : nullptr;
+}
+const int * PointSymmetry::get(const size_t i) const {
+  return (i<this->size()) ? this->R[i].data() : nullptr;
+}
+std::array<int,9> PointSymmetry::getarray(const size_t i) const {
+  return (i<this->size()) ? this->R[i] : std::array<int,9>({0,0,0,0,0,0,0,0,0});
+}
+size_t PointSymmetry::resize(const size_t newsize){
+  this->R.resize(newsize);
+  return this->R.size();
 }

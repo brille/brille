@@ -2,6 +2,9 @@
 #ifndef _SYMMETRY_H_
 #define _SYMMETRY_H_
 
+#include <vector>
+#include <array>
+
 /*****************************************************************************\
 | Symmetry class                                                              |
 |-----------------------------------------------------------------------------|
@@ -21,22 +24,28 @@
 |   size                   return the number of motions the object can store. |
 \*****************************************************************************/
 class Symmetry{
-  unsigned int N;
-  int         *R;
-  double      *T;
+  std::vector<std::array<int,9>> R;
+  std::vector<std::array<double,3>> T;
 public:
-  Symmetry(unsigned int n=0): N(n), R(nullptr), T(nullptr) { if (N){ R = new int [N*9](); T = new double [N*3](); } };
-  ~Symmetry(){ if (N){ delete[] R; delete[] T; } };
-  unsigned int size() { return N; };
-  bool     set(const unsigned int i, const int *r, const double *t);
-  bool     setrot(const unsigned int i, const int *r);
-  bool     settran(const unsigned int i, const double *t);
-  bool     get(const unsigned int i, int *r, double *t);
-  bool     getrot(const unsigned int i, int *r);
-  bool     gettran(const unsigned int i, double *t);
-  int    * getrot(const unsigned int i);
-  double * gettran(const unsigned int i);
-  unsigned int resize(const unsigned int i);
+  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n);};
+  size_t               size() const { return R.size(); };
+  size_t               add(const int *r, const double *t)                      ;
+  size_t               add(const std::array<int,9>&, const std::array<double,3>&);
+  bool                 set(const size_t i, const int *r, const double *t)      ;
+  bool                 setrot(const size_t i, const int *r)                    ;
+  bool                 settran(const size_t i, const double *t)                ;
+  bool                 get(const size_t i, int *r, double *t)             const;
+  bool                 getrot(const size_t i, int *r)                     const;
+  bool                 gettran(const size_t i, double *t)                 const;
+  int *                getrot(const size_t i)                                  ;
+  double *             gettran(const size_t i)                                 ;
+  const int *          getrot(const size_t i)                             const;
+  const double *       gettran(const size_t i)                            const;
+  std::array<int,9>    getrotarray(const size_t i)                        const;
+  std::array<double,3> gettranarray(const size_t i)                       const;
+  size_t               resize(const size_t i)                                  ;
+  const std::vector<std::array<int,9>>& getallrots(void) const { return this->R; };
+  const std::vector<std::array<double,3>>& getalltrans(void) const { return this->T; };
 };
 
 
@@ -53,16 +62,20 @@ public:
 |   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
 class PointSymmetry{
-  unsigned int N;
-  int         *R;
+  std::vector<std::array<int,9>> R;
 public:
-  PointSymmetry(unsigned int n=0): N(n), R(nullptr) {if (N) R = new int[N*9](); };
-  ~PointSymmetry(){ if (N) delete[] R; };
-  unsigned int size(){ return N; };
-  bool  get(const unsigned int i, int *r);
-  bool  set(const unsigned int i, const int *r);
-  int * get(const unsigned int i);
-  unsigned int resize(const unsigned int newsize);
+  PointSymmetry(size_t n=0): R(n) { R.resize(n); };
+  PointSymmetry(std::vector<std::array<int,9>>& rots): R(rots);
+  size_t            size() const { return R.size(); };
+  size_t            add(const int *r)                                          ;
+  size_t            add(const std::array<int,9>&)                              ;
+  bool              get(const size_t i, int *r)                           const;
+  bool              set(const size_t i, const int *r)                          ;
+  int *             get(const size_t i)                                        ;
+  const int *       get(const size_t i)                                   const;
+  std::array<int,9> getarray(const size_t i)                              const;
+  size_t            resize(const size_t newsize)                               ;
+  const std::vector<std::array<int,9>>& getall(void) const { return this->R; };
 };
 
 

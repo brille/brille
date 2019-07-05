@@ -36,34 +36,12 @@
 #ifndef __pointgroup_H__
 #define __pointgroup_H__
 
-#include "arrayvector.h"
+#include <vector>
+#include <array>
 #include "symmetry.h"
 
-typedef enum {
-  HOLOHEDRY_NONE,
-  TRICLI,
-  MONOCLI,
-  ORTHO,
-  TETRA,
-  TRIGO,
-  HEXA,
-  CUBIC,
-} Holohedry;
-
-typedef enum {
-  LAUE_NONE,
-  LAUE1,
-  LAUE2M,
-  LAUEMMM,
-  LAUE4M,
-  LAUE4MMM,
-  LAUE3,
-  LAUE3M,
-  LAUE6M,
-  LAUE6MMM,
-  LAUEM3,
-  LAUEM3M,
-} Laue;
+enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};
+enum class Laue {_, _1, _2m, _mmm, _4m, _4mmm, _3, _3m, _6m, _6mmm, _m3, _m3m};
 
 typedef struct {
   int number;
@@ -73,10 +51,12 @@ typedef struct {
   Laue laue;
 } Pointgroup;
 
-Pointgroup ptg_get_transformation_matrix(int *transform_mat, SPGCONST int *rotations, const int num_rotations);
+Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations);
 Pointgroup ptg_get_pointgroup(const int pointgroup_number);
-PointSymmetry ptg_get_pointsymmetry(SPGCONST int *rotations, const int num_rotations);
+PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations);
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal);
+
+std::vector<std::array<int,3>> rotation_axis_and_perpendicular_vectors(const int* rot);
 
 #endif

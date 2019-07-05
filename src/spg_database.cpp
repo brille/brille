@@ -8570,7 +8570,7 @@ void get_first_last_operation_number(int indices[2], const int hall_number)
 }
 
 // renamed from spgdb_get_spacegroup_operations
-Symmetry get_spacegroup_symmetry_operations(const int hall_number)
+Symmetry get_spacegroup_symmetry(const int hall_number)
 {
   if (!hall_number_ok(hall_number)) return Symmetry();
   int mult_index[2];
@@ -8580,6 +8580,12 @@ Symmetry get_spacegroup_symmetry_operations(const int hall_number)
 	  get_numbered_operation(symmetry.getrot(i), symmetry.gettran(i), mult_index[1]+i);
 
   return symmetry;
+}
+
+PointSymmetry get_pointgroup_symmetry(const int hall_number, const int time_reversal){
+  if (!hall_number_ok(hall_number)) return PointSymmetry();
+  Symmetry sym = get_spacegroup_symmetry(const int hall_number);
+  return PointSymmetry(get_unique_rotations(sym.getallrots(),time_reversal));
 }
 
 int international_number_to_hall_number(const int number){
