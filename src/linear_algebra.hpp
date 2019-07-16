@@ -12,12 +12,9 @@ template<typename T, int N, int M> void copy_array(T *D, const T *S){ for (int i
 template<typename T, int N> void copy_matrix(T *M, const T *A){ copy_array<T,N,N>(M,A); }
 template<typename T, int N> void copy_vector(T *V, const T *A){ copy_array<T,N,1>(V,A); }
 
-// absolute value of a scalar
-template<typename T> T my_abs(const T a){ return (a<0 ? T(-1)*a : a); }
-
 // element-wise checking of approximate equality
 template<typename T, int N, int M> bool equal_array(const T *A, const T *B, const T tol){
-  for (int i=0; i<N*M; i++) if ( my_abs(A[i]-B[i]) > tol ) return false;
+  for (int i=0; i<N*M; i++) if ( std::abs(A[i]-B[i]) > tol ) return false;
   return true;
 }
 template<typename T, int N> bool equal_matrix(const T *A, const T *B, const T tol){ return equal_array<T,N,N>(A,B,tol); }
@@ -38,19 +35,19 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b){
   }
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
   bool answer;
-  if ( my_abs(a) <= 1000*Ttol && my_abs(b) <= 1000*Rtol )
-    answer = my_abs(a-b) < 1000*(useTtol ? Ttol :Rtol);
+  if ( std::abs(a) <= 1000*Ttol && std::abs(b) <= 1000*Rtol )
+    answer = std::abs(a-b) < 1000*(useTtol ? Ttol :Rtol);
   else
-    answer = my_abs(a-b) < 1000*(useTtol ? Ttol :Rtol)*my_abs(a+b);
+    answer = std::abs(a-b) < 1000*(useTtol ? Ttol :Rtol)*std::abs(a+b);
   // if (!answer){
   //   std::cout << std::to_string(a) << " != " << std::to_string(b);
-  //   std::cout << " since |a-b| = " << std::to_string(my_abs(a-b));
+  //   std::cout << " since |a-b| = " << std::to_string(std::abs(a-b));
   //   std::cout << " ≥ " << std::to_string(1000*(useTtol ? Ttol :Rtol));
-  //   std::cout << " or " << std::to_string(1000*(useTtol ? Ttol :Rtol)*my_abs(a+b)) << std::endl;
+  //   std::cout << " or " << std::to_string(1000*(useTtol ? Ttol :Rtol)*std::abs(a+b)) << std::endl;
   // }
   return answer;
 }
-template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B){
+template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B){
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;
   isfpR = std::is_floating_point<R>::value;
@@ -69,15 +66,15 @@ template<typename T, typename R, int N, int M> bool approx_array(const T *A, con
   bool answer=true;
   for (int i=0; i<N*M; i++){
     // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-    if ( my_abs(A[i]) <= 100*Ttol && my_abs(B[i]) <= 100*Rtol )
-      answer = my_abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol);
+    if ( std::abs(A[i]) <= 100*Ttol && std::abs(B[i]) <= 100*Rtol )
+      answer &= std::abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol);
     else
-      answer = my_abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol)*my_abs(A[i]+B[i]);
+      answer &= std::abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol)*std::abs(A[i]+B[i]);
   }
   return answer;
 }
-template<typename T, typename R, int N> bool approx_matrix(const T *A, const R *B){return approx_array<T,R,N,N>(A,B);}
-template<typename T, typename R, int N> bool approx_vector(const T *A, const R *B){return approx_array<T,R,N,1>(A,B);}
+template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B){return approx_array<T,R>(N,N,A,B);}
+template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B){return approx_array<T,R>(N,1,A,B);}
 
 
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
@@ -88,6 +85,30 @@ template<typename T, typename R, typename S, int N, int I, int M> void multiply_
 template<typename T, typename R, typename S, int N> void multiply_matrix_matrix(T *C, const R *A, const S *B){ multiply_arrays<T,R,S,N,N,N>(C,A,B); }
 template<typename T, typename R, typename S, int N> void multiply_matrix_vector(T *C, const R *A, const S *b){ multiply_arrays<T,R,S,N,N,1>(C,A,b); }
 template<typename T, typename R, typename S, int N> void multiply_vector_matrix(T *C, const R *a, const S *B){ multiply_arrays<T,R,S,1,N,N>(C,a,B); }
+
+
+// array multiplication specialization for non-complex * complex arrays.
+template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B){
+  size_t i,j,k;
+  for (i=0;i<n*m;i++) C[i]=T(0);
+  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*B[k*m+j];
+}
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const R* A, const std::complex<S>* B){
+  size_t i,j,k;
+  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += static_cast<S>(A[i*l+k])*B[k*m+j];
+}
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const S* B){
+  size_t i,j,k;
+  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*static_cast<R>(B[k*m+j]);
+}
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const std::complex<S>* B){
+  size_t i,j,k;
+  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*B[k*m+j];
+}
+
 
 // array element-wise addition
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B){ for (int i=0; i<N*M; i++) C[i] = T(A[i]+B[i]); }
@@ -154,7 +175,7 @@ template<typename R> void matrix_adjoint(R *A, const R *M, const int N){
 // the inverse is, yet again, only defined for square matrices (with non-zero determinants)
 template<typename R> R matrix_determinant_and_inverse(R *invM, const R *M, const R tol, const int N){
   R d = matrix_determinant(M,N);
-  if (my_abs(d) > tol ){
+  if (std::abs(d) > tol ){
     // the matrix is *not* singular and has an inverse
     matrix_adjoint(invM,M,N); // at this point invM is the Adjoint(M)
     // The inv(M) = adjoint(M)/det(M)
@@ -164,7 +185,7 @@ template<typename R> R matrix_determinant_and_inverse(R *invM, const R *M, const
   }
   return d;
 }
-template<typename R> bool matrix_inverse(R *invM, const R *M, R tol, const int N){ return ( my_abs( matrix_determinant_and_inverse(invM, M, tol, N) ) > tol) ; }
+template<typename R> bool matrix_inverse(R *invM, const R *M, R tol, const int N){ return ( std::abs( matrix_determinant_and_inverse(invM, M, tol, N) ) > tol) ; }
 
 template<typename T, int N> bool similar_matrix(T *M, const T *A, const T *B, const T tol){
   T *C = safealloc<T>(N*N);
@@ -231,7 +252,7 @@ template<typename T> T mod1(const T a){
 }
 
 template<typename T, typename R, int N> bool is_int_matrix(const T * A, const R tol){
-  for (int i=0; i<N*N; i++) if ( my_abs(my_cast<int,T>(A[i]) - A[i]) > tol ) return false;
+  for (int i=0; i<N*N; i++) if ( std::abs(my_cast<int,T>(A[i]) - A[i]) > tol ) return false;
   return true;
 }
 template<typename R> bool is_int_matrix(const int *, const R){ return true; }
@@ -404,10 +425,20 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
 
 
 template<typename T> const std::string my_to_string(const T x){
-  return (x>0?"+":"") + std::to_string(x);
+  std::ostringstream streamobj;
+  streamobj << std::fixed;
+  streamobj << std::setprecision(4);
+  streamobj << (x<0 ? "-" : " ") << std::abs<T>(x);
+  return streamobj.str();
 }
 template<typename T> const std::string my_to_string(const std::complex<T> x){
-  return (std::real(x)>0?"+":"") + std::to_string(std::real(x)) + (std::imag(x)>0?"+i":"-i") + std::to_string(std::abs(std::imag(x)));
+  T r = std::real(x), i=std::imag(x);
+  std::ostringstream streamobj;
+  streamobj << std::fixed;
+  streamobj << std::setprecision(4);
+  streamobj << (r<0 ? "-" : " ") << std::abs(r);
+  streamobj << (std::signbit(i) ? "-i" : "+i") << std::abs(i);
+  return streamobj.str();
 }
 
 template<typename T> T vector_distance(const size_t n, const T* a, const T* b){

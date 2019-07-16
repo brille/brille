@@ -216,3 +216,13 @@ L<S> operator*(const std::array<R,9>& m, const L<T>& a){
     multiply_matrix_vector<S,R,T,3>(out.datapointer(i), m.data(), a.datapointer(i) );
   return out;
 }
+
+// -LatVec
+template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
+L<T> operator-(const L<T>& a){
+  L<T> out(a.get_lattice(),a.size());
+  for (size_t i=0; i<a.size(); ++i)
+    for (size_t j=0; j<a.numel(); ++j)
+      out.insert( -a.getvalue(i,j), i,j);
+  return out;
+}

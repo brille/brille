@@ -8,10 +8,13 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <cmath>
+
 #include <type_traits>
 #include <limits>
 #include <math.h>
-#include <cmath>
 #include <complex>
 #include "safealloc.h"
 
@@ -29,18 +32,15 @@ template<typename T, int N, int M> void copy_array(T *D, const T *S);
 template<typename T, int N=3> void copy_matrix(T *M, const T *A);
 template<typename T, int N=3> void copy_vector(T *V, const T *A);
 
-//! absolute value of a scalar
-template<typename T> T my_abs(const T a);
-
 //! element-wise checking of approximate equality
 template<typename T, int N, int M> bool equal_array(const T *A, const T *B, const T tol=0);
 template<typename T, int N=3> bool equal_matrix(const T *A, const T *B, const T tol=0);
 template<typename T, int N=3> bool equal_vector(const T *A, const T *B, const T tol=0);
 
 template<typename T, typename R> bool approx_scalar(const T a, const R b);
-template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B);
-template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B);
-template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R *B);
+template<typename T, typename R> bool approx_array(const int N, const int M,const T *A, const R *B);
+template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B);
+template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B);
 
 
 //! array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
@@ -48,6 +48,16 @@ template<typename T, typename R, typename S, int N, int I, int M> void multiply_
 template<typename T, typename R, typename S, int N=3> void multiply_matrix_matrix(T *C, const R *A, const S *B);
 template<typename T, typename R, typename S, int N=3> void multiply_matrix_vector(T *C, const R *A, const S *b);
 template<typename T, typename R, typename S, int N=3> void multiply_vector_matrix(T *C, const R *a, const S *B);
+
+// array multiplication with specializations for complex array type(s)
+template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B);
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const R* A, const std::complex<S>* B);
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const S* B);
+template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const std::complex<S>* B);
+// specializations for matrix*matrix, matrix*vector, and vector*matrix
+template<class T, class R, class S> void mul_mat_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, n, A, B);};
+template<class T, class R, class S> void mul_mat_vec(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, 1, A, B);};
+template<class T, class R, class S> void mul_vec_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, 1, n, n, A, B);};
 
 //! array element-wise addition
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B);
@@ -193,6 +203,7 @@ template<class T> size_t encode_array_signs(const size_t n, const std::complex<T
 
 template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, T* v1);
 template<class T> int make_eigenvectors_equivalent(const size_t n, const std::complex<T>* v0, std::complex<T> v1);
+
 
 #include "linear_algebra.hpp"
 

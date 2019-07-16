@@ -643,7 +643,7 @@ public:
     return out;
   };
   //! Perform sanity checks before attempting to interpolate
-  template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x){
+  template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x) const {
     unsigned int mask=0u;
     if (this->data.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
@@ -677,9 +677,9 @@ public:
     return mask;
   }
   //! Perform linear interpolation at the specified points expressed in a Reciprocal lattice
-  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LQVec<R>& x) const {return this->linear_interpolate_at(x.get_xyz());}
   //! Perform linear interpolation at the specified points expressed in a Direct lattice
-  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x){return this->linear_interpolate_at(x.get_xyz());}
+  template<typename R> ArrayVector<T> linear_interpolate_at(const LDVec<R>& x) const {return this->linear_interpolate_at(x.get_xyz());}
   /*! Perform linear interpolation at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
   @returns An ArrayVector of the itnerpolated values
@@ -690,7 +690,7 @@ public:
         interpolation is performed, for one exact match bilinear 2D interpolation
         is used, and for no exact matches the method uses trilinear interpolation.
   */
-  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x) const {
     unsigned int mask = this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
     size_t corners[8], ijk[3], cnt;
@@ -752,9 +752,9 @@ public:
     return out;
   };
   //! Perform linear interpolation in parallel at the specified points expressed in a Reciprocal lattice
-  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LQVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LQVec<R>& x, const int threads) const {return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
   //! Perform linear interpolation in parallel at the specified points expressed in a Direct lattice
-  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LDVec<R>& x, const int threads){return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LDVec<R>& x, const int threads) const {return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
   /*! Perform linear interpolation in parallel at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
   @param threads The number of OpenMP threads to use, `omp_get_max_threads()` if `threads`≤0
@@ -766,7 +766,7 @@ public:
         interpolation is performed, for one exact match bilinear 2D interpolation
         is used, and for no exact matches the method uses trilinear interpolation.
   */
-  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x, const int threads){
+  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x, const int threads) const {
     unsigned int mask = this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
 

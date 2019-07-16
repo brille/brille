@@ -142,8 +142,8 @@ bool Lattice::issame(const Lattice lat) const{
   const double *l2 = lat.len;
   double eps = 2*std::numeric_limits<double>::epsilon();
   for (int i=0; i<3; i++){
-    if ( my_abs(l1[i]-l2[i]) > eps*my_abs(l1[i]+l2[i]) ) return false;
-    if ( my_abs(a1[i]-a2[i]) > eps*my_abs(a1[i]+a2[i]) ) return false;
+    if ( std::abs(l1[i]-l2[i]) > eps*std::abs(l1[i]+l2[i]) ) return false;
+    if ( std::abs(a1[i]-a2[i]) > eps*std::abs(a1[i]+a2[i]) ) return false;
   }
   return true;
 }
@@ -162,11 +162,11 @@ int Lattice::ispermutation(const Lattice lat, const double tol) const {
   for (int j=0; j<3; ++j){
     perm_equiv = true;
     for (int i=0; i<3; i++){
-      dif = my_abs(l1[i]-l2[(i+j)%3]);
-      sum = my_abs(l1[i]+l2[(i+j)%3]);
+      dif = std::abs(l1[i]-l2[(i+j)%3]);
+      sum = std::abs(l1[i]+l2[(i+j)%3]);
       if ( dif > tol*sum || dif > tol ) perm_equiv = false;
-      dif = my_abs(a1[i]-a2[(i+j)%3]);
-      sum = my_abs(a1[i]+a2[(i+j)%3]);
+      dif = std::abs(a1[i]-a2[(i+j)%3]);
+      sum = std::abs(a1[i]+a2[(i+j)%3]);
       if ( dif > tol*sum || dif > tol ) perm_equiv = false;
     }
     if (perm_equiv) return j+1;
@@ -176,11 +176,11 @@ int Lattice::ispermutation(const Lattice lat, const double tol) const {
   for (int j=0; j<3; ++j){
     perm_equiv = true;
     for (int i=0; i<3; i++){
-      dif = my_abs(l1[i]-l2[ap[(i+j)%3]]);
-      sum = my_abs(l1[i]+l2[ap[(i+j)%3]]);
+      dif = std::abs(l1[i]-l2[ap[(i+j)%3]]);
+      sum = std::abs(l1[i]+l2[ap[(i+j)%3]]);
       if ( dif > tol*sum || dif > tol ) perm_equiv = false;
-      dif = my_abs(a1[i]-a2[ap[(i+j)%3]]);
-      sum = my_abs(a1[i]+a2[ap[(i+j)%3]]);
+      dif = std::abs(a1[i]-a2[ap[(i+j)%3]]);
+      sum = std::abs(a1[i]+a2[ap[(i+j)%3]]);
       if ( dif > tol*sum || dif > tol ) perm_equiv = false;
     }
     if (perm_equiv) return -j-1;

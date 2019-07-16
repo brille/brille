@@ -4,6 +4,9 @@
 
 #include "neighbours.h"
 #include "transform.h"
+#include "pointgroup.h"
+#include <iostream>
+#include <algorithm>
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -23,6 +26,12 @@ class BrillouinZone {
   ArrayVector<double> vertices;     //!< The coordinates of the first Brillouin zone vertices in an orthonormal frame
   ArrayVector<int> faces;           //!< The reciprocal lattice points defining the first Brillouin zone faces -- twice the actual face vectors
   ArrayVector<int> faces_per_vertex;//!< The indexes of the three faces providing the intersection for each vertex
+  ArrayVector<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
+  ArrayVector<double> ir_vertices;     //!< The coordinates of the irreducible Brillouin zone vertices in an orthonormal frame
+  ArrayVector<double> ir_face_normals; //!< The reciprocal lattice points defining the irreducible Brillouin zone faces.
+  ArrayVector<double> ir_face_points;  //!< A point on each face of the irreducible Brillouin zone.
+  ArrayVector<int> ir_faces_per_vertex;//!< The indexes of the three irreducible faces providing the intersection for each irreducible vertex
+
 public:
   /*!
   @param lat A Reciprocal lattice
@@ -31,13 +40,68 @@ public:
                 search in τ-index. The default indicates that (̄1̄1̄1),
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
   */
-  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1): outerlattice(lat) {
+  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, int time_reversal=0, int wedge_search=1): outerlattice(lat) {
     lattice = toprim ? lat.primitive() : lat;
     this->vertex_search(extent);
+    if (wedge_search) this->wedge_search(time_reversal);
   }
-  void set_vertices(ArrayVector<double> newverts);
-  void set_faces(ArrayVector<int> newfaces);
-  void set_faces_per_vertex(ArrayVector<int> newfpv);
+  //! Returns the lattice passed in at construction
+  const Reciprocal get_lattice() const { return this->outerlattice;};
+  //! Returns the lattice actually used to find the Brillouin zone vertices,
+  //! which may be a primitive lattice depending on the flag at creation
+  const Reciprocal get_primitive_lattice() const { return this->lattice;};
+  //
+  void set_vertices(const ArrayVector<double> newverts);
+  void set_faces(const ArrayVector<int> newfaces);
+  void set_faces_per_vertex(const ArrayVector<int> newfpv);
+  void set_ir_wedge_normals(const LQVec<double>&);
+  void set_ir_vertices(const LQVec<double>&);
+  void set_ir_face_normals(const LQVec<double>&);
+  void set_ir_face_points(const LQVec<double>&);
+  // void set_ir_wedge_normals(const ArrayVector<double>);
+  // void set_ir_vertices(const ArrayVector<double>&);
+  // void set_ir_face_normals(const ArrayVector<double>&);
+  // void set_ir_face_points(const ArrayVector<double>&);
+  void set_ir_faces_per_vertex(const ArrayVector<int>&);
+  //! Returns the number of vertices defining the first Brillouin zone
+  size_t vertices_count() const { return vertices.size();};
+  //! Returns the number of reciprocal lattice points defining the first Brillouin zone
+  size_t faces_count() const { return faces.size();};
+  //! Returns the vertices as LQVec objects expressed in the construction-input lattice
+  LQVec<double>    get_vertices() const;
+  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the construction-input lattice
+  LQVec<int>       get_faces() const ;
+  //! Returns the vertices as LQVec objects expressed in the zone-defining lattice
+  LQVec<double>    get_primitive_vertices() const;
+  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the zone-defining lattice
+  LQVec<int>       get_primitive_faces() const ;
+  /*! \brief Returns the indexes into the reciprocal lattice points array for
+  the three which produced each intersection vertex
+
+  @note In systems with more than three faces adjacent to a vertex the
+  BrillouinZone object will find the correct vertices but will not return
+  all neighbouring-face indexes for each vertex.
+  This is problematic when attempting to invert the information returned here,
+  e.g., when constructing 3-D patches for visualisation of the Brillouin zone
+  facets. Thankfully, one can overcome this issue by recalling that the dot
+  product of all vertices on a facet minus a point on the facet with the
+  facet normal is zero -- `dot(vertices-faces/2,faces)==0`.
+  */
+  ArrayVector<int> get_faces_per_vertex() const;
+  LQVec<double> get_ir_wedge_normals() const;
+  LQVec<double> get_primitive_ir_wedge_normals() const;
+  LQVec<double> get_ir_vertices() const;
+  LQVec<double> get_ir_face_normals() const;
+  LQVec<double> get_ir_face_points() const;
+  LQVec<double> get_primitive_ir_vertices() const;
+  LQVec<double> get_primitive_ir_face_normals() const;
+  LQVec<double> get_primitive_ir_face_points() const;
+  ArrayVector<int> get_ir_faces_per_vertex() const;
+  //! Print a representation of the object to the console
+  void print() const;
+  //
+  void wedge_search(const int time_reversal=0);
+  void irreducible_vertex_search(void);
   /*! \brief Search for the vertices defining the first Brillouin zone
 
     Search through all combinations of three planes from `extent`*(̄1̄1̄1) to
@@ -51,38 +115,6 @@ public:
   */
   void vertex_search(const int extent=1);
   // void vertex_search_xyz(const int extent=1);
-  //! Returns the number of vertices defining the first Brillouin zone
-  size_t vertices_count() const { return vertices.size();};
-  //! Returns the number of reciprocal lattice points defining the first Brillouin zone
-  size_t faces_count() const { return faces.size();};
-  //! Returns the lattice passed in at construction
-  const Reciprocal get_lattice() const { return this->outerlattice;};
-  //! Returns the lattice actually used to find the Brillouin zone vertices,
-  //! which may be a primitive lattice depending on the flag at creation
-  const Reciprocal get_primitive_lattice() const { return this->lattice;};
-  //! Returns the vertices as LQVec objects expressed in the construction-input lattice
-  LQVec<double>    get_vertices() const;
-  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the construction-input lattice
-  LQVec<int>       get_faces() const ;
-  //! Returns the vertices as LQVec objects expressed in the zone-defining lattice
-  LQVec<double>    get_primitive_vertices() const;
-  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the zone-defining lattice
-  LQVec<int>       get_primitive_faces() const ;
-  /*! \brief Returns the indexes into the reciprocal lattice points array for
-       the three which produced each intersection vertex
-
-  @note In systems with more than three faces adjacent to a vertex the
-        BrillouinZone object will find the correct vertices but will not return
-        all neighbouring-face indexes for each vertex.
-        This is problematic when attempting to invert the information returned here,
-        e.g., when constructing 3-D patches for visualisation of the Brillouin zone
-        facets. Thankfully, one can overcome this issue by recalling that the dot
-        product of all vertices on a facet minus a point on the facet with the
-        facet normal is zero -- `dot(vertices-faces/2,faces)==0`.
-  */
-  ArrayVector<int> get_faces_per_vertex() const;
-  //! Print a representation of the object to the console
-  void print() const;
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
   bool isprimitive(void) const {return !(lattice.issame(outerlattice));};
 
@@ -91,13 +123,19 @@ public:
     @returns An ArrayVector<bool> with each 1-element array indicating if the
              associated Q point is inside of the Brillouin zone.
   */
-  template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p);
+  template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
+  template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p) const;
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
     @param[in] Q A reference to LQVec list of Q points
     @param[out] q The reduced reciprocal lattice vectors
     @param[out] tau The reciprocal lattice zone centres
   */
   bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau);
+  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R, const int time_reversal=0) const ;
+private:
+  bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
+  bool wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num);
+  bool ir_wedge_is_ok(const LQVec<double>& normals);
 };
 
 /*! \brief Determine whether a given point is between a plane and the origin
@@ -141,10 +179,25 @@ bool between_origin_and_plane(const LQVec<double> *p,
   @param[out] iat A LQVec to hold the intersection point, if it exists
   @param idx Where the intersection point should be stored in `iat`
 */
-bool three_plane_intersection(const LQVec<double> *n,
-                              const LQVec<double> *p,
-                              const ArrayVector<double> *xyz,
+bool three_plane_intersection(const LQVec<double>& n,
+                              const LQVec<double>& p,
+                              const ArrayVector<double>& xyz,
                               const int i, const int j, const int k,
-                              LQVec<double> *iat, const int idx=0);
-
+                              LQVec<double>& iat, const int idx=0);
+bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                  const LQVec<double>& nj, const LQVec<double>& pj,
+                  const LQVec<double>& nk, const LQVec<double>& pk,
+                  LQVec<double>& intersect, const int idx);
+bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                  const LQVec<double>& nj, const LQVec<double>& pj,
+                  const LQVec<double>& nk,
+                  LQVec<double>& intersect, const int idx);
+bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                  const LQVec<double>& nj,
+                  const LQVec<double>& nk,
+                  LQVec<double>& intersect, const int idx);
+bool intersect_at(const LQVec<double>& ni,
+                  const LQVec<double>& nj,
+                  const LQVec<double>& nk,
+                  LQVec<double>& intersect, const int idx);
 #endif

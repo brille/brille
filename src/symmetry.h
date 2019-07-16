@@ -64,8 +64,8 @@ public:
 class PointSymmetry{
   std::vector<std::array<int,9>> R;
 public:
-  PointSymmetry(size_t n=0): R(n) { R.resize(n); };
-  PointSymmetry(std::vector<std::array<int,9>>& rots): R(rots);
+  PointSymmetry(size_t n=0): R(n) { R.resize(n);};
+  PointSymmetry(std::vector<std::array<int,9>>& rots): R(rots){ this->sort(); };
   size_t            size() const { return R.size(); };
   size_t            add(const int *r)                                          ;
   size_t            add(const std::array<int,9>&)                              ;
@@ -75,7 +75,14 @@ public:
   const int *       get(const size_t i)                                   const;
   std::array<int,9> getarray(const size_t i)                              const;
   size_t            resize(const size_t newsize)                               ;
+  void              sort(const int ad=0)                                       ;
   const std::vector<std::array<int,9>>& getall(void) const { return this->R; };
+  std::vector<int> orders(void) const;
+  std::vector<int> isometries(void) const;
+  std::vector<std::array<int,3>> axes(void) const;
+
+  void print(const size_t i) const;
+  void print(void) const;
 };
 
 

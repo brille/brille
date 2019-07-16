@@ -75,8 +75,28 @@ public:
   template<typename R> bool samelattice(const LQVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LDVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  // extract overloads preserving lattice information
+  //! Return the ith single-array LDVec
+  LDVec<T> extract(const size_t i=0) const ;
+  LDVec<T> first(const size_t num) const;
+  /*! Return a collection of arrays from the LDVec
+    @param n the number of arrays to return
+    @param i a pointer to the first index of the n arrays to return
+    @returns A LDVec containing the n arrays
+  */
+  LDVec<T> extract(const size_t n, const size_t *i) const;
+  /*! Return a collection of arrays from the LDVec
+    @param idx a reference to an LDVec containing the to-be-returned indices
+    @returns A LDVec containing the indicies indicated by idx
+  */
+  LDVec<T> extract(const ArrayVector<size_t>& idx) const;
+  /*! Return a collection of arrays from the LDVec
+    @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
+    @returns An LDVec containing the indicies indicated by tfvec
+  */
+  LDVec<T> extract(const ArrayVector<bool>& idx) const;
   //! extract the 3-vector with index `i`
-  LDVec get(const size_t i) const;
+  LDVec<T> get(const size_t i) const;
   //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
   ArrayVector<T> get_hkl() const;
   //! Extract the coordinates in *an* orthonormal frame
@@ -176,8 +196,28 @@ public:
   template<typename R> bool samelattice(const LDVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LQVec<R> &vec) const { return false; };
   template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  // extract overloads preserving lattice information
+  //! Return the ith single-array LQVec
+  LQVec<T> extract(const size_t i=0) const ;
+  LQVec<T> first(const size_t num) const;
+  /*! Return a collection of arrays from the LQVec
+    @param n the number of arrays to return
+    @param i a pointer to the first index of the n arrays to return
+    @returns A LQVec containing the n arrays
+  */
+  LQVec<T> extract(const size_t n, const size_t *i) const;
+  /*! Return a collection of arrays from the LQVec
+    @param idx a reference to an LQVec containing the to-be-returned indices
+    @returns A LQVec containing the indicies indicated by idx
+  */
+  LQVec<T> extract(const ArrayVector<size_t>& idx) const;
+  /*! Return a collection of arrays from the LQVec
+    @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
+    @returns An LQVec containing the indicies indicated by tfvec
+  */
+  LQVec<T> extract(const ArrayVector<bool>& idx) const;
   //! Extract the 3-vector with index `i`
-  LQVec get(const size_t i) const;
+  LQVec<T> get(const size_t i) const;
   //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)
   ArrayVector<T> get_hkl() const;
   /*! Extract the coordinates in an orthonormal frame with its first axis, x,

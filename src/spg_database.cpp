@@ -8532,8 +8532,6 @@ bool hall_number_ok(const int hall_number){
 // renamed from spgdb_get_operation
 int get_numbered_operation(int *rot, double *trans, const int idx)
 {
-  int i, j, r, t, degit;
-
   /* A space group operation is compressed using ternary numerical system for */
   /* rotation and duodecimal system for translation. This is achieved because */
   /* each element of rotation matrix can have only one of {-1,0,1}, and */
@@ -8542,22 +8540,35 @@ int get_numbered_operation(int *rot, double *trans, const int idx)
   /* group operations. In principle, octal numerical system can be used */
   /* for translation, but duodecimal system is more convenient. */
 
-  r = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] % 19683; /* 19683 = 3**9 */
-  degit = 6561; /* 6561 = 3**8 */
-  for ( i = 0; i < 3; i++ ) {
-    for ( j = 0; j < 3; j++ ) {
-		// was rot[i][j] --> rot[i+3*j]
-      rot[i+3*j] = ( r % ( degit * 3 ) ) / degit - 1;
-      degit /= 3;
-    }
-  }
+  // powers of 3: 3⁹, 3⁸, 3⁷, 3⁶, 3⁵, 3⁴, 3³, 3², 3¹, 3⁰
+  int p3[10]{19683, 6561, 2187, 729, 243, 81, 27, 9, 3, 1};
+  int r = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] % p3[0]; // % 3⁹
+  for (int i=0; i<9; ++i)
+    rot[i] = (r%p3[i])/p3[i+1] - 1;
 
-  t = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] / 19683; /* 19683 = 3**9 */
-  degit = 144;
-  for ( i = 0; i < 3; i++ ) {
-    trans[i] = ( (double) ( ( t % ( degit * 12 ) ) / degit ) ) / 12;
-    degit /= 12;
-  }
+
+  // powers of 12: 12³, 12², 12¹, 12⁰
+  int p12[4]{1728, 144, 12, 1};
+  int t = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] / p3[0];
+  for (int i=0; i<3; ++i)
+    trans[i] = static_cast<double>((t%p12[i])/p12[i+1])/12.0;
+
+  // int i, j, r, t, degit;
+  // r = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] % 19683; /* 19683 = 3**9 */
+  // degit = 6561; /* 6561 = 3**8 */
+  // for ( i = 0; i < 3; i++ ) {
+  //   for ( j = 0; j < 3; j++ ) {
+	// 	// was rot[i][j] --> rot[3*i+j]
+  //     rot[3*i+j] = ( r % ( degit * 3 ) ) / degit - 1;
+  //     degit /= 3;
+  //   }
+  // }
+  // t = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] / 19683; /* 19683 = 3**9 */
+  // degit = 144;
+  // for ( i = 0; i < 3; i++ ) {
+  //   trans[i] = ( (double) ( ( t % ( degit * 12 ) ) / degit ) ) / 12;
+  //   degit /= 12;
+  // }
 
   return 1;
 }
@@ -8584,8 +8595,9 @@ Symmetry get_spacegroup_symmetry(const int hall_number)
 
 PointSymmetry get_pointgroup_symmetry(const int hall_number, const int time_reversal){
   if (!hall_number_ok(hall_number)) return PointSymmetry();
-  Symmetry sym = get_spacegroup_symmetry(const int hall_number);
-  return PointSymmetry(get_unique_rotations(sym.getallrots(),time_reversal));
+  Symmetry sym = get_spacegroup_symmetry(hall_number);
+  std::vector<std::array<int,9>> uniqrots= get_unique_rotations(sym.getallrots(),time_reversal);
+  return PointSymmetry(uniqrots);
 }
 
 int international_number_to_hall_number(const int number){

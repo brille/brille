@@ -25,6 +25,12 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t i) cons
   }
   throw std::out_of_range("The requested element of the ArrayVector does not exist");
 }
+template<typename T> ArrayVector<T> ArrayVector<T>::first(const size_t num) const {
+  size_t stop = num < this->size() ? num : this->size();
+  ArrayVector<T> out(this->numel(), stop);
+  for (size_t j=0; j<stop; j++) out.set(j, this->datapointer(j) );
+  return out;
+}
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, const size_t *i) const {
   bool allinbounds = true;
   ArrayVector<T> out(this->numel(),0u);
@@ -44,6 +50,21 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
     out.resize(idx.size());
     for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx.getvalue(j)) );
   }
+  return out;
+}
+template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bool>& tf) const{
+  if (tf.numel() != 1u || tf.size() != this->size()){
+    std::string msg = "Extracting an ArrayVector by logical indexing requires";
+    msg += " an ArrayVector<bool> with numel()==1";
+    msg += " and size()==ArrayVector.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (size_t i=0; i<tf.size(); ++i) if (tf.getvalue(i,0)) ++nout;
+  ArrayVector<T> out(this->numel(),nout);
+  size_t idx = 0;
+  for (size_t i=0; i<tf.size(); ++i)
+    if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
   return out;
 }
 template<typename T> bool ArrayVector<T>::get(const size_t i, T* out) const {
@@ -115,6 +136,12 @@ template<typename T> std::string ArrayVector<T>::to_string() const {
 }
 template<typename T> std::string ArrayVector<T>::to_string(const size_t i) const {
   return this->unsafe_to_string(i,i+1,"");
+}
+template<typename T> std::string ArrayVector<T>::to_string(const std::string &after) const {
+  return this->unsafe_to_string(0,this->size(), after);
+}
+template<typename T> std::string ArrayVector<T>::to_string(const size_t i, const std::string &after) const {
+  return this->unsafe_to_string(i,i+1, after);
 }
 template<typename T> std::string ArrayVector<T>::to_string(const size_t first, const size_t last, const std::string &after) const {
   if (first<this->size() && last<this->size())
@@ -190,39 +217,193 @@ template<typename T> T ArrayVector<T>::norm(const size_t i) const {
 }
 
 
-template<typename T> bool ArrayVector<T>::arealltrue(void) const {
-  for (size_t i=0; i<this->size(); i++)
+template<typename T> bool ArrayVector<T>::all_true(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
     for (size_t j=0; j<this->numel(); j++)
       if (!this->getvalue(i,j)) return false;
   return true;
 }
-template<typename T> bool ArrayVector<T>::areanytrue(void) const {
-  for (size_t i=0; i<this->size(); i++)
+template<typename T> size_t ArrayVector<T>::count_true(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  size_t count = 0;
+  for (size_t i=0; i<upto; i++)
+    for (size_t j=0; j<this->numel(); j++)
+      if (this->getvalue(i,j)) ++count;
+  return count;
+}
+template<typename T> bool ArrayVector<T>::any_true(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
     for (size_t j=0; j<this->numel(); j++)
       if (this->getvalue(i,j)) return true;
   return false;
 }
-template<typename T> bool ArrayVector<T>::areallpositive(void) const {
-  for (size_t i=0; i<this->size(); i++)
+template<typename T> bool ArrayVector<T>::all_positive(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
     for (size_t j=0; j<this->numel(); j++)
       if (this->getvalue(i,j)<0) return false;
   return true;
 }
-template<typename T> bool ArrayVector<T>::areallzero(void) const {
-  for (size_t i=0; i<this->size(); i++)
+template<typename T> bool ArrayVector<T>::all_zero(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
     for (size_t j=0; j<this->numel(); j++)
       if (this->getvalue(i,j)) return false;
   return true;
 }
-template<typename T> bool ArrayVector<T>::areallapprox(const T val) const {
+template<typename T> bool ArrayVector<T>::all_approx(const T val, const size_t n) const {
   T p,m, tol=2*std::numeric_limits<T>::epsilon();
-  for (size_t i=0; i<this->size(); i++)
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
     for (size_t j=0; j<this->numel(); j++){
       m = std::abs(this->getvalue(i,j) - val);
       p = std::abs(this->getvalue(i,j) + val);
       if (m>p*tol && m>tol) return false;
     }
   return true;
+}
+template<typename T> bool ArrayVector<T>::none_approx(const T val, const size_t n) const{
+  size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; ++i)
+  for (size_t j=0; j<this->numel(); ++j)
+  if (approx_scalar(this->getvalue(i,j), val)) return false;
+  return true;
+}
+template<typename T> bool ArrayVector<T>::all_approx(const std::string& expr, const T val, const size_t n) const{
+  size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  if (!expr.compare("lt") || !expr.compare("<")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) > val) return false;
+    return true;
+  }
+  if (!expr.compare("gt") || !expr.compare(">")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return false;
+    return true;
+  }
+  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val) return false;
+    return true;
+  }
+  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val) return false;
+    return true;
+  }
+  if (!expr.compare("!le") || !expr.compare("!<=") || !expr.compare("!≤")){
+    size_t n_approx=0, n_more=0;
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val)) ++n_approx;
+    else if (this->getvalue(i,j) > val)  ++n_more;
+    return (n_more > 0 || n_approx==upto);
+  }
+  if (!expr.compare("!ge") || !expr.compare("!>=") || !expr.compare("!≥")){
+    size_t n_approx=0, n_less=0;
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val)) ++n_approx;
+    else if (this->getvalue(i,j) < val)  ++n_less;
+    return (n_less > 0 || n_approx==upto);
+  }
+  if (!expr.compare("eq") || !expr.compare("==")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (!approx_scalar(this->getvalue(i,j), val)) return false;
+    return true;
+  }
+  std::string msg = "Unknown comparator " + expr;
+  throw std::runtime_error(msg);
+}
+template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, const T val, const size_t n) const{
+  T p,m, tol=2*std::numeric_limits<T>::epsilon();
+  size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  if (!expr.compare("lt") || !expr.compare("<")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val) return true;
+    return false;
+  }
+  if (!expr.compare("gt") || !expr.compare(">")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val) return true;
+    return false;
+  }
+  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return true;
+    return false;
+  }
+  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return true;
+    return false;
+  }
+  if (!expr.compare("eq") || !expr.compare("==")){
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
+    if (approx_scalar(this->getvalue(i,j), val)) return true;
+    return false;
+  }
+  std::string msg = "Unknown comparator " + expr;
+  throw std::runtime_error(msg);
+}
+template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const T val, const size_t n) const{
+  T p,m, tol=2*std::numeric_limits<T>::epsilon();
+  size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  ArrayVector<bool> out(1u, this->size());
+  for (size_t i=0; i<this->size(); ++i) out.insert(false, i);
+  bool onearray;
+  if (!expr.compare("lt") || !expr.compare("<")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) > val)
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("gt") || !expr.compare(">")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val)
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val)
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val)
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("eq") || !expr.compare("==")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), val))
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  std::string msg = "Unknown comparator " + expr;
+  throw std::runtime_error(msg);
 }
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{
@@ -269,6 +450,55 @@ template<typename T> ArrayVector<T> ArrayVector<T>::sum( const int dim ) const {
       break;
   }
   return out;
+}
+template<typename T> ArrayVector<bool> ArrayVector<T>::is_unique(void) const{
+  ArrayVector<bool> isu(1u,this->size());
+  // assume all are unique to start
+  for (size_t i=0; i<this->size(); ++i) isu.insert(true,i);
+  // and only check from the second array onwards against those of lower index
+  for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
+  if (isu.getvalue(j) && approx_vector(this->numel(), this->datapointer(i), this->datapointer(j))){
+    isu.insert(false,i);
+    break;
+  }
+  return isu;
+}
+template<typename T> ArrayVector<size_t> ArrayVector<T>::unique_idx(void) const{
+  ArrayVector<size_t> isu(1u,this->size());
+  // assume all are unique to start
+  for (size_t i=0; i<this->size(); ++i) isu.insert(i,i);
+  // and only check from the second array onwards against those of lower index
+  for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
+  if (j==isu.getvalue(j) && approx_vector(this->numel(), this->datapointer(i), this->datapointer(j))){
+    isu.insert(j,i);
+    break;
+  }
+  return isu;
+}
+
+/*! Extract elements of an ArrayVector while preserving its (sub)class type */
+template<class T, template<class> class L,typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type>
+L<T> extract(L<T>& source, ArrayVector<bool>& idx){
+  if (idx.numel()!=1u || idx.size() != source.size()){
+    std::string msg = "Extracting an ArrayVector by logical indexing requires";
+    msg += " an ArrayVector<bool> with numel()==1";
+    msg += " and size()==ArrayVector.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (size_t i=0; i<idx.size(); ++i) if (idx.getvalue(i,0)) ++nout;
+  L<T> sink(source);
+  sink.resize(nout);
+  size_t at = 0;
+  for (size_t i=0; i<idx.size(); ++i)
+    if (idx.getvalue(i,0)) sink.set(at++, source.datapointer(i));
+  return sink;
+}
+template<class T, template<class> class A,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type>
+A<T> unique(A<T>& source){
+  ArrayVector<bool> uniquesorce = source.is_unique();
+  return extract(source, uniquesorce);
 }
 
 template<class T, class R, template<class> class A,

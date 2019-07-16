@@ -1,4 +1,7 @@
 #include "symmetry.h"
+#include <iostream>
+#include "pointgroup.h"
+#include <algorithm>
 
 /*****************************************************************************\
 | Symmetry class Member functions:                                            |
@@ -122,4 +125,44 @@ std::array<int,9> PointSymmetry::getarray(const size_t i) const {
 size_t PointSymmetry::resize(const size_t newsize){
   this->R.resize(newsize);
   return this->R.size();
+}
+void PointSymmetry::print(const size_t i) const {
+  for (size_t j=0; j<3u; ++j){
+    for (size_t k=0; k<3u; ++k) std::cout << " " << R[i][j*3u+k];
+    std::cout << std::endl;
+  }
+}
+void PointSymmetry::print(void) const {
+  for (size_t i=0; i<this->R.size(); ++i){
+    this->print(i);
+    std::cout << std::endl;
+  }
+}
+void PointSymmetry::sort(const int ad) {
+  if (ad<0)
+  std::sort(this->R.begin(), this->R.end(),
+    [](std::array<int,9> a, std::array<int,9> b){
+      return rotation_order(a.data()) > rotation_order(b.data());
+  });
+  else
+  std::sort(this->R.begin(), this->R.end(),
+    [](std::array<int,9> a, std::array<int,9> b){
+      return rotation_order(a.data()) < rotation_order(b.data());
+  });
+}
+
+std::vector<int> PointSymmetry::orders(void) const {
+  std::vector<int> o;
+  for (auto r: this->R) o.push_back(rotation_order(r.data()));
+  return o;
+}
+std::vector<int> PointSymmetry::isometries(void) const {
+  std::vector<int> i;
+  for (auto r: this->R) i.push_back(isometry_value(r.data()));
+  return i;
+}
+std::vector<std::array<int,3>> PointSymmetry::axes(void) const {
+  std::vector<std::array<int,3>> ax;
+  for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[0]);
+  return ax;
 }

@@ -1,4 +1,52 @@
-
+template<typename T> LQVec<T> LQVec<T>::extract(const size_t i) const {
+  if (i<this->size()){
+    LQVec<T> out(this->get_lattice(),1u,this->datapointer(i));
+    return out;
+  }
+  throw std::out_of_range("The requested element of the ArrayVector does not exist");
+}
+template<typename T> LQVec<T> LQVec<T>::first(const size_t num) const {
+  size_t stop = num < this->size() ? num : this->size();
+  LQVec<T> out(this->get_lattice(), stop);
+  for (size_t j=0; j<stop; j++) out.set(j, this->datapointer(j) );
+  return out;
+}
+template<typename T> LQVec<T> LQVec<T>::extract(const size_t n, const size_t *i) const {
+  bool allinbounds = true;
+  LQVec<T> out(this->get_lattice(),0u);
+  for (size_t j=0; j<n; j++) if ( !(i[j]<this->size()) ){ allinbounds=false; break; }
+  if (allinbounds){
+    out.resize(n);
+    for (size_t j=0; j<n; j++) out.set(j, this->datapointer(i[j]) );
+  }
+  return out;
+}
+template<typename T> LQVec<T> LQVec<T>::extract(const ArrayVector<size_t>& idx) const{
+  bool allinbounds = true;
+  LQVec<T> out(this->get_lattice(),0u);
+  if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+  for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
+  if (allinbounds){
+    out.resize(idx.size());
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx.getvalue(j)) );
+  }
+  return out;
+}
+template<typename T> LQVec<T> LQVec<T>::extract(const ArrayVector<bool>& tf) const{
+  if (tf.numel() != 1u || tf.size() != this->size()){
+    std::string msg = "Extracting an LQVec by logical indexing requires";
+    msg += " an ArrayVector<bool> with numel()==1";
+    msg += " and size()==LQVec.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (size_t i=0; i<tf.size(); ++i) if (tf.getvalue(i,0)) ++nout;
+  LQVec<T> out(this->get_lattice(),nout);
+  size_t idx = 0;
+  for (size_t i=0; i<tf.size(); ++i)
+    if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
+  return out;
+}
 
 template<typename T> LQVec<T> LQVec<T>::get(const size_t i) const {
   LQVec<T> out(this->get_lattice(), i<this->size() ? 1u : 0u );

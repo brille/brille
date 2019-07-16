@@ -41,6 +41,7 @@
 #include<string>
 #include<cstring>
 #include "symmetry.h"
+#include "pointgroup.h"
 
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
 
@@ -125,7 +126,7 @@ private:
 
 bool hall_number_ok(const int hall_number);
 Symmetry get_spacegroup_symmetry(const int hall_number);
-PointSymmetry get_pointgroup_symmetry(const int hall_number const int time_reversal=1);
+PointSymmetry get_pointgroup_symmetry(const int hall_number, const int time_reversal=0);
 
 int international_number_to_hall_number(const int number);
 int international_string_to_hall_number(const std::string& itname);

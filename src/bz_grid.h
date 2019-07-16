@@ -81,6 +81,84 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
   };
+  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const int time_reversal) const{
+    LQVec<R> ir_q(x.get_lattice(), x.size());
+    LQVec<int> tau(x.get_lattice(), x.size());
+    std::vector<std::array<int,9>> rots(x.size());
+    BrillouinZone bz = this->get_brillouinzone();
+
+    std::string msg;
+    if (!bz.ir_moveinto(x, ir_q, tau, rots, time_reversal)){
+      msg = "Moving all points into the irreducible Brillouin zone failed.";
+      throw std::runtime_error(msg);
+    }
+    ArrayVector<T> ir_result;
+    if (nthreads > 1){ // change this to != 1?
+      ir_result = this->InterpolateGrid3<T>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads);
+    } else {
+      ir_result = this->InterpolateGrid3<T>::linear_interpolate_at(ir_q.get_xyz());
+    }
+
+    // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
+    // the interpolation needs to be rotated.
+    if (this->eigvec_elements || this->vector_elements || this->matrix_elements){
+      if (this->eigvec_elements % 3){
+        msg = "Eigenvectors should consist of 3 elements (per ion) for each branch: ";
+        msg += std::to_string(this->eigvec_elements) + "%3 != 0";
+        throw std::runtime_error(msg);
+      }
+      if (this->vector_elements %3){
+        msg = "Vectors should consist of 3N elements for each branch: ";
+        msg += std::to_string(this->vector_elements) + "%3 != 0";
+        throw std::runtime_error(msg);
+      }
+      if (this->matrix_elements != 0u && this->matrix_elements != 3u){
+        msg = "Matrices should be 3x3 for each branch:";
+        std::string m = std::to_string(this->matrix_elements);
+        msg += m + "x" + m + " != 3x3";
+        throw std::runtime_error(msg);
+      }
+      size_t ne = this->eigvec_elements/3u;
+      size_t nv = this->vector_elements/3u;
+      size_t nm = this->matrix_elements/3u;
+      size_t sp = this->scalar_elements + ne*3u + nv*3u + nm*9u;
+      T tmp_v[3];
+      T tmp_m[9];
+      std::vector<std::array<int,9>> invR;
+      if (nm){
+        // only allocate and calculate invR if we need it
+        invR.resize(rots.size());
+        for (size_t i=0; i<rots.size(); ++i)
+          matrix_inverse(invR[i].data(), rots[i].data());
+      }
+
+      size_t offset;
+      for (size_t i=0; i<ir_result.size(); ++i){
+        for (size_t b=0; b<this->branches; ++b){
+          // we can skip the scalar elements, as they do not rotate.
+          offset = b*sp + this->scalar_elements;
+          for (size_t v=0; v<ne; ++v){
+            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
+            for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
+          }
+          offset += ne*3u;
+          for (size_t v=0; v<nv; ++v){
+            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
+            for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
+          }
+          offset += nv*3u;
+          for (size_t m=0; m<nm; ++m){
+            // we want R*M*R⁻¹.
+            // first calculate M*R⁻¹, storing in tmp_m
+            mul_mat_mat(tmp_m, 3u, ir_result.datapointer(i, offset+m*9u), invR[i].data());
+            // next calculate R*tmp_m, storing back in the ir_result array
+            mul_mat_mat(ir_result.datapointer(i, offset+m*9u), 3u, rots[i].data(), tmp_m);
+          }
+        }
+      }
+    }
+    return ir_result;
+  };
 protected:
   /*! Determines and sets the properties of the underlying grid from three step sizes
     @param d_in A pointer to the three step sizes
@@ -166,9 +244,13 @@ protected:
   void truncate_grid_to_brillouin_zone(){
     LQVec<double> hkl(this->brillouinzone.get_lattice(),this->get_grid_hkl());
     ArrayVector<bool> inbz = this->brillouinzone.isinside(hkl);
-    ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
+    ArrayVector<bool> inir = this->brillouinzone.isinside_wedge(hkl);
+    ArrayVector<bool> keep(1u, hkl.size());
+    // keep those points that are inside the 1st Brillouin zone and the irreducible wedge
+    for (size_t i=0; i<hkl.size(); ++i) keep.insert(inbz.getvalue(i)&&inir.getvalue(i), i);
+    ArrayVector<bool> orig(keep); // an unmodified copy so that we don't grow beyond 1-neighbour
     for (size_t i=0; i<hkl.size(); ++i)
-        if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
+        if (!orig.getvalue(i) && orig.extract(this->get_neighbours(i)).any_true())
           keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
     slong kept = 0;
     for (size_t i=0; i<hkl.size(); ++i)
@@ -352,7 +434,7 @@ protected:
     ArrayVector<bool> inbz = this->brillouinzone.isinside(hkl);
     ArrayVector<bool> keep = inbz; // keep those points that are inside the 1st Brillouin zone
     for (size_t i=0; i<hkl.size(); ++i)
-        if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).areanytrue())
+        if (!inbz.getvalue(i) && inbz.extract(this->get_neighbours(i)).any_true())
           keep.insert(true,i); // and any out-of-zone points with at least one neighbour in-zone
     slong kept = 0;
     for (size_t i=0; i<hkl.size(); ++i)

@@ -106,28 +106,28 @@ static int inversion[9]= {-1, 0, 0,  0,-1, 0,  0, 0,-1};
 	 faster(?) to check which of the possible rotation axes remains stationary.
 */
 static int rot_axes[][3] = {
-	{ 1, 0, 0}, { 0, 1, 0}, { 0, 0, 1}, { 0, 1, 1}, { 1, 0, 1}, /* 5*/
-	{ 1, 1, 0}, { 0, 1,-1}, {-1, 0, 1}, { 1,-1, 0}, { 1, 1, 1}, /*10*/
-	{-1, 1, 1}, { 1,-1, 1}, { 1, 1,-1}, { 0, 1, 2}, { 2, 0, 1}, /*15*/
-	{ 1, 2, 0}, { 0, 2, 1}, { 1, 0, 2}, { 2, 1, 0}, { 0,-1, 2}, /*20*/
-	{ 2, 0,-1}, {-1, 2, 0}, { 0,-2, 1}, { 1, 0,-2}, {-2, 1, 0}, /*25*/
-	{ 2, 1, 1}, { 1, 2, 1}, { 1, 1, 2}, { 2,-1,-1}, {-1, 2,-1}, /*30*/
-	{-1,-1, 2}, { 2, 1,-1}, {-1, 2, 1}, { 1,-1, 2}, { 2,-1, 1}, /*35*/
-	{ 1, 2,-1}, {-1, 1, 2}, { 3, 1, 2}, { 2, 3, 1}, { 1, 2, 3}, /*40*/
-	{ 3, 2, 1}, { 1, 3, 2}, { 2, 1, 3}, { 3,-1, 2}, { 2, 3,-1}, /*45*/
-	{-1, 2, 3}, { 3,-2, 1}, { 1, 3,-2}, {-2, 1, 3}, { 3,-1,-2}, /*50*/
-	{-2, 3,-1}, {-1,-2, 3}, { 3,-2,-1}, {-1, 3,-2}, {-2,-1, 3}, /*55*/
-	{ 3, 1,-2}, {-2, 3, 1}, { 1,-2, 3}, { 3, 2,-1}, {-1, 3, 2}, /*60*/
-	{ 2,-1, 3}, { 1, 1, 3}, {-1, 1, 3}, { 1,-1, 3}, {-1,-1, 3}, /*65*/
-	{ 1, 3, 1}, {-1, 3, 1}, { 1, 3,-1}, {-1, 3,-1}, { 3, 1, 1}, /*70*/
-	{ 3, 1,-1}, { 3,-1, 1}, { 3,-1,-1},
+	/* 0*/ { 1, 0, 0}, { 0, 1, 0}, { 0, 0, 1}, { 0, 1, 1}, { 1, 0, 1}, /* 4*/
+	/* 5*/ { 1, 1, 0}, { 0, 1,-1}, {-1, 0, 1}, { 1,-1, 0}, { 1, 1, 1}, /* 9*/
+	/*10*/ {-1, 1, 1}, { 1,-1, 1}, { 1, 1,-1}, { 0, 1, 2}, { 2, 0, 1}, /*14*/
+	/*15*/ { 1, 2, 0}, { 0, 2, 1}, { 1, 0, 2}, { 2, 1, 0}, { 0,-1, 2}, /*19*/
+	/*20*/ { 2, 0,-1}, {-1, 2, 0}, { 0,-2, 1}, { 1, 0,-2}, {-2, 1, 0}, /*24*/
+	/*25*/ { 2, 1, 1}, { 1, 2, 1}, { 1, 1, 2}, { 2,-1,-1}, {-1, 2,-1}, /*29*/
+	/*30*/ {-1,-1, 2}, { 2, 1,-1}, {-1, 2, 1}, { 1,-1, 2}, { 2,-1, 1}, /*34*/
+	/*35*/ { 1, 2,-1}, {-1, 1, 2}, { 3, 1, 2}, { 2, 3, 1}, { 1, 2, 3}, /*39*/
+	/*40*/ { 3, 2, 1}, { 1, 3, 2}, { 2, 1, 3}, { 3,-1, 2}, { 2, 3,-1}, /*44*/
+	/*45*/ {-1, 2, 3}, { 3,-2, 1}, { 1, 3,-2}, {-2, 1, 3}, { 3,-1,-2}, /*49*/
+	/*50*/ {-2, 3,-1}, {-1,-2, 3}, { 3,-2,-1}, {-1, 3,-2}, {-2,-1, 3}, /*54*/
+	/*55*/ { 3, 1,-2}, {-2, 3, 1}, { 1,-2, 3}, { 3, 2,-1}, {-1, 3, 2}, /*59*/
+	/*60*/ { 2,-1, 3}, { 1, 1, 3}, {-1, 1, 3}, { 1,-1, 3}, {-1,-1, 3}, /*64*/
+	/*65*/ { 1, 3, 1}, {-1, 3, 1}, { 1, 3,-1}, {-1, 3,-1}, { 3, 1, 1}, /*69*/
+	/*70*/ { 3, 1,-1}, { 3,-1, 1}, { 3,-1,-1},
 };
 
 static int get_pointgroup_number_by_rotations(const int *rotations,const int num_rotations);
 static int get_pointgroup_number(const PointSymmetry & pointsym);
 static int get_pointgroup_class_table(int table[10], const PointSymmetry & pointsym);
 static int isometry_type(const int *rot);
-static int rotation_order(const int *rot);
+int rotation_order(const int *rot);
 static int get_rotation_axis(const int *rot);
 static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const int rot_order);
 static int laue2m(int axes[3], const PointSymmetry & pointsym);
@@ -287,8 +287,13 @@ static int isometry_type(const int *rot){
   }
   return rot_type;
 }
-static int rotation_order(const int *rot){
-	int oders[] = {6,4,3,2,1,1,2,3,4,6};
+int isometry_value(const int *rot){
+	int values[] = {-6,-4,-3,-2,-1,1,2,3,4,6};
+	int isometry = isometry_type(rot);
+	return (isometry>=0) ? values[isometry] : 0;
+}
+int rotation_order(const int *rot){
+	int orders[] = {6,4,3,2,1,1,2,3,4,6};
 	int isometry = isometry_type(rot);
 	return (isometry>=0) ? orders[isometry] : 0;
 }
@@ -501,6 +506,17 @@ static int get_rotation_axis(const int *proper_rot)
 	return axis;
 }
 
+
+static int orthogonal_to_axis(int ortho_axes[], const int axis){
+	int num_ortho=0;
+	int vec[3], dot;
+	for (int i=0; i<NUM_ROT_AXES; ++i){
+		dot = 0;
+		for (int j=0; j<3; ++j) dot += rot_axes[i][j]*rot_axes[axis][j];
+		if (0==dot) ortho_axes[num_ortho++] = i;
+	}
+	return num_ortho;
+}
 /*! \brief Determine which of the unique rotation axes are orthogonal to a given
 proper rotation of specified order.
 
@@ -513,8 +529,8 @@ static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const in
 {
   int i, num_ortho_axis=0;
   int vec[3];
-  int sum_rot[9]={1,0,0, 0,1,0, 0,0,1}, rot[9]={1,0,0, 0,1,0, 0,0,1};
-  for (i = 0; i < rot_order - 1; i++) {
+  int sum_rot[9]={0,0,0, 0,0,0, 0,0,0}, rot[9]={1,0,0, 0,1,0, 0,0,1};
+  for (i = 0; i < rot_order; i++) {
     multiply_matrix_matrix(rot, proper_rot, rot);
     add_matrix(sum_rot, rot, sum_rot);
   }
@@ -542,7 +558,7 @@ static void set_transformation_matrix(int *tmat, const int *axes){
 }
 
 
-static std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
+std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
 {
 	const int N = rotations.size();
 	std::vector<std::array<int,9>> rot_tmp;
@@ -598,7 +614,7 @@ int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, con
 
 std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot){
 	int prop_rot[9];
-	std::array<std::array<int,3>,3> out = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+	std::array<std::array<int,3>,3> out {{ {{0, 0, 0}}, {{0, 0, 0}}, {{0, 0, 0}} }};
 
 	get_proper_rotation(prop_rot, rot);
 	int axis = get_rotation_axis(prop_rot);
@@ -606,14 +622,13 @@ std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const in
 
 	out[0] = {rot_axes[axis][0], rot_axes[axis][1], rot_axes[axis][2]};
 	int ortho[NUM_ROT_AXES], norm[NUM_ROT_AXES];
-	int northo = get_orthogonal_axis(ortho, prop_rot, rotation_order(rot));
-
+	int northo = orthogonal_to_axis(ortho, axis);
 	for (int i=0; i<northo; ++i) norm[i] = vector_norm_squared(rot_axes[ortho[i]]);
 
 	int idx=0;
 	for (int j=1; j<3; ++j){
 		for (int i=0; i<northo; ++i) if (norm[i] < norm[idx]) idx = i;
-		out[j] = {rot_axes[ortho[idx]][0], rot_axes[ortho[idx]][1], rot_axes[ortho[idx]][2]};
+		for (int k=0; k<3; ++k) out[j][k] = rot_axes[ortho[idx]][k];
 		norm[idx] = 100; // none of rot_axes have squared norm above 14.
 	}
 	return out;

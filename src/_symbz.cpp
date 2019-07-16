@@ -4,6 +4,7 @@
 #include "version_info.h"
 
 #include "_binding.h"
+// #include <pybind11/stl.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
@@ -98,15 +99,34 @@ PYBIND11_MODULE(_symbz,m){
   });
 
   py::class_<BrillouinZone> bz(m,"BrillouinZone");
-  bz.def(py::init<Reciprocal,bool,int>(),py::arg("lattice"),py::arg("use_primitive")=true,py::arg("search_length")=1)
+  bz.def(py::init<Reciprocal,bool,int,int,int>(),
+         py::arg("lattice"),
+         py::arg("use_primitive")=true,
+         py::arg("search_length")=1,
+         py::arg("time_reversal_symmetry")=0,
+         py::arg("wedge_search")=1
+       )
     .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
-    .def_property_readonly("faces",              [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-    .def_property_readonly("faces_invA",         [](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-    .def_property_readonly("faces_primitive",    [](const BrillouinZone &b){return av2np(b.get_primitive_faces().get_hkl());})
-    .def_property_readonly("vertices",           [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
-    .def_property_readonly("vertices_invA",      [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
-    .def_property_readonly("vertices_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
-    .def_property_readonly("faces_per_vertex",   [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+    .def_property_readonly("faces",                    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+    .def_property_readonly("faces_invA",               [](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+    .def_property_readonly("faces_primitive",          [](const BrillouinZone &b){return av2np(b.get_primitive_faces().get_hkl());})
+    .def_property_readonly("vertices",                 [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
+    .def_property_readonly("vertices_invA",            [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+    .def_property_readonly("vertices_primitive",       [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
+    .def_property_readonly("faces_per_vertex",         [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+    .def_property_readonly("wedge_normals",            [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_hkl());})
+    .def_property_readonly("wedge_normals_invA",       [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_xyz());})
+    .def_property_readonly("wedge_normals_primitive",  [](const BrillouinZone &b){return av2np(b.get_primitive_ir_wedge_normals().get_hkl());})
+    .def_property_readonly("ir_vertices",              [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_hkl());})
+    .def_property_readonly("ir_face_normals",          [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_hkl());})
+    .def_property_readonly("ir_face_points",           [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_hkl());})
+    .def_property_readonly("ir_vertices_invA",         [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_xyz());})
+    .def_property_readonly("ir_face_normals_invA",     [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_xyz());})
+    .def_property_readonly("ir_face_points_invA",      [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_xyz());})
+    .def_property_readonly("ir_vertices_primitive",    [](const BrillouinZone &b){return av2np(b.get_primitive_ir_vertices().get_hkl());})
+    .def_property_readonly("ir_face_normals_primitive",[](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_normals().get_hkl());})
+    .def_property_readonly("ir_face_points_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_points().get_hkl());})
+    .def_property_readonly("ir_faces_per_vertex",      [](const BrillouinZone &b){return av2np(b.get_ir_faces_per_vertex());})
     .def("isinside",[](BrillouinZone &b, py::array_t<double> p){
       py::buffer_info bi = p.request();
       ssize_t ndim = bi.ndim;
@@ -181,4 +201,40 @@ PYBIND11_MODULE(_symbz,m){
     spg.def_property_readonly("international_table_short", &Spacegroup::get_international_table_short);
     spg.def_property_readonly("choice", &Spacegroup::get_choice);
     spg.def("__repr__",&Spacegroup::string_repr);
+
+    py::class_<Symmetry> sym(m, "Symmetry");
+    sym.def(py::init([](int hall){return get_spacegroup_symmetry(hall);}),py::arg("Hall number"));
+    sym.def_property_readonly("size",&Symmetry::size);
+    sym.def_property_readonly("W",[](Symmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
+      return sva2np(sz, ps.getallrots());
+    });
+    sym.def_property_readonly("w",[](Symmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
+      return sva2np(sz, ps.getalltrans());
+    });
+
+    py::class_<PointSymmetry> psym(m, "PointSymmetry");
+    psym.def(py::init(
+      [](int hall, int time_reversal){
+        return get_pointgroup_symmetry(hall, time_reversal);
+      }
+    ),py::arg("Hall_number"),py::arg("time_reversal")=0);
+    psym.def_property_readonly("size",&PointSymmetry::size);
+    psym.def_property_readonly("W",[](PointSymmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
+      return sva2np(sz, ps.getall());
+    });
+    psym.def_property_readonly("order",[](PointSymmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size())};
+      return sv2np(sz, ps.orders());
+    });
+    psym.def_property_readonly("isometry",[](PointSymmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size())};
+      return sv2np(sz, ps.isometries());
+    });
+    psym.def_property_readonly("axis",[](PointSymmetry& ps){
+      std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
+      return sva2np(sz, ps.axes());
+    });
 }

@@ -129,18 +129,22 @@ public:
   ArrayVector(const ArrayVector<T>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
-    T *d = vec.datapointer();
-    if (m*n) data = safealloc<T>(m*n);
-    if (d && m*n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+    if (m*n){
+      T *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
+      data = safealloc<T>(m*n);
+      if (d) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+    }
   };
   //! Type converting copy constructor
   template<class R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
   ArrayVector(const ArrayVector<R>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
-    R *d = vec.datapointer();
-    if (m*n) data = safealloc<T>(m*n);
-    if (d && m*n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+    if (m*n){
+      R *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
+      data = safealloc<T>(m*n);
+      if (d) for(size_t i=0; i<m*n; i++) data[i] = static_cast<T>(d[i]);
+    }
   };
   // Assignment operator
   ArrayVector<T>& operator=(const ArrayVector<T>& other){
@@ -177,6 +181,7 @@ public:
   T getvalue(const size_t i=0, const size_t j=0) const;
   //! Return the ith single-array ArrayVector
   ArrayVector<T> extract(const size_t i=0) const ;
+  ArrayVector<T> first(const size_t num) const;
   /*! Return a collection of arrays from the ArrayVector
     @param n the number of arrays to return
     @param i a pointer to the first index of the n arrays to return
@@ -188,6 +193,11 @@ public:
     @returns An ArrayVector containing the indicies indicated by idx
   */
   ArrayVector<T> extract(const ArrayVector<size_t>& idx) const;
+  /*! Return a collection of arrays from the ArrayVector
+    @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
+    @returns An ArrayVector containing the indicies indicated by tfvec
+  */
+  ArrayVector<T> extract(const ArrayVector<bool>& idx) const;
   /*! Copy-out a single array
     @param i the index of the array to copy
     @param[out] out a pointer where the array will be copied
@@ -243,10 +253,13 @@ public:
     @note This method performs no bounds checking. Use to_string to include bounds checking on first and last
   */
   std::string unsafe_to_string(const size_t first, const size_t last, const std::string &after="\n") const;
-  //! Return a std::string containing all arrays
   std::string to_string() const;
   //! Return a std::string containing the ith array
   std::string to_string(const size_t i) const;
+  //! Return a std::string containing all arrays with specified seperator
+  std::string to_string(const std::string &) const;
+  //! Return a std::string containing the ith array with specified following string
+  std::string to_string(const size_t i, const std::string &) const;
   /*! Return a subset of the contents of the ArrayVector as a std::string
     @param first The index of the first array to convert
     @param last The index of the last array to convert
@@ -267,17 +280,22 @@ public:
   */
   size_t refresh(size_t newnumel, size_t newsize=0u);
   //! Returns true if all elements evaluate to true.
-  bool arealltrue(void) const;
+  bool all_true(const size_t n=0) const;
+  size_t count_true(const size_t n=0) const;
   //! Returns true if any elements evaluate to true.
-  bool areanytrue(void) const;
+  bool any_true(const size_t n=0) const;
   //! Returns true if all elements are greater or equal to zero
-  bool areallpositive(void) const;
+  bool all_positive(const size_t n=0) const;
   //! Returns true if all elements evaluate to false
-  bool areallzero(void) const;
+  bool all_zero(const size_t n=0) const;
   /*! Returns true if all elements are approximately equal to the passed value
     @param val The comparison value, the type of which determines comparision precision
   */
-  bool areallapprox(const T val) const;
+  bool all_approx(const T val, const size_t n=0) const;
+  bool none_approx(const T val, const size_t n=0) const;
+  bool all_approx(const std::string& expr, const T val, const size_t n=0) const;
+  bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
+  ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
   //! Round all elements using std::round
   ArrayVector<int> round() const;
   //! Find the floor of all elements using std::floor
@@ -290,6 +308,9 @@ public:
           dim!=1 sums over the arrays, returning a one-element ArrayVector
   */
   ArrayVector<T> sum( const int dim=0 ) const;
+  ArrayVector<bool> is_unique(void) const;
+  ArrayVector<size_t> unique_idx(void) const;
+  ArrayVector<T> unique(void) const;
   //! Ensure that a second ArrayVector object is consistent for binary operations
   template<typename R, typename=typename std::enable_if<std::is_convertible<T,R>::value||std::is_convertible<R,T>::value>::type>
   AVSizeInfo consistency_check(const ArrayVector<R>& b) const {

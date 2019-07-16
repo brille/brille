@@ -40,7 +40,8 @@ def vector_angle(v_0, v_1, normal=np.array([0, 0, 1])):
     return ang01 if ang01 >= 0 else ang01 + 2*np.pi
 
 # pylint: disable=r0912,r0913,r0914,r0915
-def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
+def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
+            face_vectors=False,
             color='b', edgecolor='k', linewidth=1, alpha=0.7):
     """Plot a BrillouinZone or BZGridQ[complex] object.
 
@@ -58,6 +59,8 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
     None, then the mapped grid points in 'rlu' or 'invA' will be set to `Q`.
     """
     # pylint: disable=no-member
+    fig = pp.figure()
+    axs = Axes3D(fig)
     if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
         if Q is None:
             if units == 'rlu':
@@ -65,43 +68,95 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
             elif units == 'invA':
                 Q = bz.mapped_invA
         bz = bz.BrillouinZone
-    if units == 'rlu':
-        verts = bz.vertices
-        faces = bz.faces
-    elif units == 'primitive':
-        verts = bz.vertices_primitive
-        faces = bz.faces_primitive
-    else:
-        verts = bz.vertices_invA
-        faces = bz.faces_invA
     if origin is not None and not isinstance(origin, np.ndarray):
         origin = np.array(origin)
     if origin is None or origin.size != 3 or origin.ndim > 1:
         origin = np.array((0, 0, 0))
+    # we always draw the 1st Brillouin zone
+    if units == 'rlu':
+        verts = bz.vertices
+        norms = bz.faces
+    elif units == 'primitive':
+        verts = bz.vertices_primitive
+        norms = bz.faces_primitive
+    else:
+        verts = bz.vertices_invA
+        norms = bz.faces_invA
+    bzcolor = color if not irreducible else "w"
+    bzedgecolor = edgecolor if not irreducible else "0.75"
+    bzlinestyle = '-' if not irreducible else '--'
+    bzalpha = alpha if not irreducible else 0
+
+    # the 1st Brillouin zone has on-face points equal to half the normals
+    polybz, xyz_min, xyz_max = _make_poly_collection(verts, norms, norms/2,
+                                                     bz.faces_per_vertex,
+                                                     origin=origin,
+                                                     color=bzcolor,
+                                                     edgecolor=bzedgecolor,
+                                                     linestyle=bzlinestyle,
+                                                     linewidth=linewidth,
+                                                     alpha=bzalpha)
+    if irreducible:
+        if units == 'rlu':
+            ir_verts = bz.ir_vertices
+            ir_norms = bz.ir_face_normals
+            ir_point = bz.ir_face_points
+        elif units == 'primitive':
+            ir_verts = bz.ir_vertices_primitive
+            ir_norms = bz.ir_face_normals_primitive
+            ir_point = bz.ir_face_points_primitive
+        else:
+            ir_verts = bz.ir_vertices_invA
+            ir_norms = bz.ir_face_normals_invA
+            ir_point = bz.ir_face_points_invA
+        if ir_verts.size > 0:
+            polyir, _, _ = _make_poly_collection(ir_verts, ir_norms, ir_point,
+                                                 bz.ir_faces_per_vertex,
+                                                 origin=origin,
+                                                 color=color,
+                                                 edgecolor=edgecolor,
+                                                 linestyle='-',
+                                                 linewidth=linewidth,
+                                                 alpha=alpha)
+            axs.add_collection3d(polyir)
+    axs.add_collection3d(polybz)
+    if face_vectors:
+        fvecs = [np.array([[0, 0, 0], p]) for p in point]
+        # fvecs = [np.array([[0, 0, 0], point[i]])
+        #          for i in range(point.shape[0])]
+        lcol = Line3DCollection(fvecs)
+        axs.add_collection3d(lcol)
+    axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
+    axs.set_ylim(bottom=xyz_min[1], top=xyz_max[1])
+    axs.set_zlim(bottom=xyz_min[2], top=xyz_max[2])
+    if isinstance(Q, np.ndarray) and Q.ndim == 2 and Q.shape[1] == 3:
+        axs.scatter(Q[:, 0], Q[:, 1], Q[:, 2])
+    axs.set_aspect('equal','box')
+    pp.show()
+
+def _make_poly_collection(verts, norms, point, fpv, origin=None,
+                          color='b', edgecolor='k',
+                          linestyle='-', linewidth=1, alpha=0.5):
     # We have the three faces contributing to each vertex
-    fpv = bz.faces_per_vertex
     # for plotting we want the opposite -- the vertices contributing per face
-    vpf = [(fpv == i).any(1).nonzero()[0] for i in range(len(faces))]
+    vpf = [(fpv == i).any(1).nonzero()[0] for i in range(len(norms))]
     # if a vertex is on the edge of more than three faces, we miss N-3 here.
     # try to search for any missing vertices for each face:
-    for i, f_i in enumerate(faces):
+    for i, (n_i, p_i) in enumerate(zip(norms, point)):
         for j, v_j in enumerate(verts):
             if not (vpf[i] == j).any():
-                if np.abs(np.dot(v_j-f_i/2, f_i)) < 1e-15:
+                if np.abs(np.dot(v_j-p_i, n_i)) < 1e-15:
                     vpf[i] = np.append(vpf[i], j)
 
     patches = [np.array([verts[j, :] for j in i]) for i in vpf]
-    # patches = [np.array([verts[vpf[i][j], :] for j in range(len(vpf[i]))])
-    #            for i in range(len(vpf))]
-
     # the coordinates of the patch vertices need to be sorted.
-    for idx in range(faces.shape[0]):
-        # the face vectors are twice the patch-centre vector
-        this_patch = patches[idx] - faces[idx]/2
+    for idx in range(norms.shape[0]):
+        # find the patch points relative to their centroid
+        this_patch = patches[idx] - np.mean(patches[idx], axis=0)
         n_verts = len(this_patch)
         perm = np.array(range(n_verts))
         windings = np.array([
-            [vector_angle(x, y, faces[idx]) for x in this_patch]
+            [vector_angle(x, y, norms[idx]) for x in this_patch]
             for y in this_patch])
         windings[windings == 0] = 1e3
         # or just set the diagonal to a large value?
@@ -115,26 +170,11 @@ def plot_bz(bz, origin=None, Q=None, units='invA', face_vectors=False,
     dif = xyz_max-xyz_min
     xyz_min -= dif/20
     xyz_max += dif/20
-
-    fig = pp.figure()
-    axs = Axes3D(fig)
     collection = Poly3DCollection(patches, edgecolor=edgecolor,
-                                  linewidth=linewidth, alpha=alpha)
+                                  linestyle=linestyle, linewidth=linewidth,
+                                  alpha=alpha)
     collection.set_facecolor(color)
-    axs.add_collection3d(collection)
-
-    if face_vectors:
-        fvecs = [np.array([[0, 0, 0], faces[i]/2])
-                 for i in range(faces.shape[0])]
-        lcol = Line3DCollection(fvecs)
-        axs.add_collection3d(lcol)
-    axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
-    axs.set_ylim(bottom=xyz_min[1], top=xyz_max[1])
-    axs.set_zlim(bottom=xyz_min[2], top=xyz_max[2])
-    if isinstance(Q, np.ndarray) and Q.ndim == 2 and Q.shape[1] == 3:
-        axs.scatter(Q[:, 0], Q[:, 1], Q[:, 2])
-    pp.show()
-
+    return (collection, xyz_min, xyz_max)
 
 def __cube(p_0, p_1):
     """Return the patches of a cube bounded by points p_0 and p_1."""

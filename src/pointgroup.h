@@ -57,6 +57,8 @@ PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotation
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal);
 
-std::vector<std::array<int,3>> rotation_axis_and_perpendicular_vectors(const int* rot);
-
+int isometry_value(const int *rot);
+int rotation_order(const int *rot);
+std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot);
+std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>&, const int);
 #endif

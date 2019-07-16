@@ -2,6 +2,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
+#include <thread>
 
 #include "bz_grid.h"
 
@@ -37,6 +38,25 @@ template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const 
   auto np = py::array_t<T,py::array::c_style>(sz);
   T *ptr = (T*) np.request().ptr;
   for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
+  return np;
+}
+template<typename T, size_t N>
+py::array_t<T> sva2np(const std::vector<ssize_t>&sz,
+                      const std::vector<std::array<T,N>>& sva)
+{
+  size_t numel = 1;
+  for (ssize_t i: sz) numel *= i;
+  if (sva.size()*N != numel){
+    std::string msg = "Inconsistent required shape ( ";
+    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    msg += ") and vector<array<" + std::to_string(N) + "> size ";
+    msg += std::to_string(sva.size()) + ".";
+    throw std::runtime_error(msg);
+  }
+  auto np = py::array_t<T, py::array::c_style>(sz);
+  T *ptr = (T*) np.request().ptr;
+  size_t i=0;
+  for (std::array<T,N> array: sva) for (T value: array) ptr[i++]=value;
   return np;
 }
 
@@ -307,6 +327,52 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
     },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
+    //
+    .def("ir_interpolate_at",[](Class& cobj,
+                             py::array_t<double> pyX,
+                             const bool& time_reversal,
+                             const bool& useparallel,
+                             const int& threads){
+      py::buffer_info bi = pyX.request();
+      if ( bi.shape[bi.ndim-1] !=3 )
+        throw std::runtime_error("Interpolation requires one or more 3-vectors");
+      ssize_t npts = 1;
+      if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+      BrillouinZone b = cobj.get_brillouinzone();
+      Reciprocal lat = b.get_lattice();
+      LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
+
+      int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
+      // perform the interpolation and rotate and vectors/tensors afterwards
+      ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads, time_reversal ? 1 : 0);
+      // and then make sure we return an numpy array of appropriate size:
+      std::vector<ssize_t> outshape;
+      for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
+      if (cobj.data_ndim() > 1){
+        ArrayVector<size_t> data_shape = cobj.data_shape();
+        // the shape of each element is data_shape[1,...,data_ndim-1]
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+      }
+      size_t total_elements = 1;
+      for (ssize_t osi : outshape) total_elements *= osi;
+      if (total_elements != lires.numel()*lires.size() ){
+        std::cout << "outshape: (";
+        for (ssize_t osi : outshape) std::cout << osi << "," ;
+        std::cout << "\b)" << std::endl;
+        std::string msg = "Why do we expect " + std::to_string(total_elements)
+                        + " but only get back " + std::to_string(lires.numel()*lires.size())
+                        + " (" + std::to_string(lires.numel())
+                        + " × " + std::to_string(lires.size()) + ")";
+        throw std::runtime_error(msg);
+      }
+      auto liout = py::array_t<T,py::array::c_style>(outshape);
+      T *rptr = (T*) liout.request().ptr;
+      for (size_t i =0; i< lires.size(); i++)
+        for (size_t j=0; j< lires.numel(); j++)
+          rptr[i*lires.numel()+j] = lires.getvalue(i,j);
+      return liout;
+    },py::arg("Q"),py::arg("time_reversal")=false,py::arg("useparallel")=false,py::arg("threads")=-1)
+    //
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
     },py::arg("axis"),py::arg("squeeze")=true)
