@@ -85,21 +85,19 @@ template<typename T> LDVec<double> LQVec<T>::star() const {
 //     return tmp.star();
 // }
 template<typename T> LQVec<double> LQVec<T>::cross(const size_t i, const size_t j) const {
-    bool bothok = (i<this->size() && j<this->size() && 3u==this->numel());
+  bool bothok = (i<this->size() && j<this->size() && 3u==this->numel());
   LQVec<double> out(this->get_lattice(), bothok? 1u : 0u);
+  if (bothok){
+    double *rlucross = safealloc<double>(3);
+    vector_cross<double,T,T,3>(rlucross, this->datapointer(i), this->datapointer(j));
 
-    if (bothok){
-        double *rlucross = safealloc<double>(3);
-        vector_cross<double,T,T,3>(rlucross, this->datapointer(i), this->datapointer(j));
+    Reciprocal rlat = this->get_lattice();
+    LDVec<double> ldv( rlat.star(), 1u, rlucross);
+    ldv *= rlat.get_volume()/2.0/PI;
+    out =  ldv.star();
 
-        Reciprocal rlat = this->get_lattice();
-
-        LDVec<double> ldv( rlat.star(), 1u, rlucross);
-        ldv *= rlat.get_volume()/2.0/PI;
-        out =  ldv.star();
-
-        delete[] rlucross;
-    }
+    delete[] rlucross;
+  }
   return out;
 }
 

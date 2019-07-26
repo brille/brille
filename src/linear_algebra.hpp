@@ -20,12 +20,12 @@ template<typename T, int N, int M> bool equal_array(const T *A, const T *B, cons
 template<typename T, int N> bool equal_matrix(const T *A, const T *B, const T tol){ return equal_array<T,N,N>(A,B,tol); }
 template<typename T, int N> bool equal_vector(const T *A, const T *B, const T tol){ return equal_array<T,N,1>(A,B,tol); }
 
-template<typename T, typename R> bool approx_scalar(const T a, const R b){
+template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol){
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;
   isfpR = std::is_floating_point<R>::value;
-  T Ttol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*1000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*1000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
   if ( isfpT || isfpR ){
     if (isfpT && isfpR){
@@ -35,10 +35,10 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b){
   }
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
   bool answer;
-  if ( std::abs(a) <= 1000*Ttol && std::abs(b) <= 1000*Rtol )
-    answer = std::abs(a-b) < 1000*(useTtol ? Ttol :Rtol);
+  if ( std::abs(a) <= Ttol && std::abs(b) <= Rtol )
+    answer = std::abs(a-b) < (useTtol ? Ttol :Rtol);
   else
-    answer = std::abs(a-b) < 1000*(useTtol ? Ttol :Rtol)*std::abs(a+b);
+    answer = std::abs(a-b) < (useTtol ? Ttol :Rtol)*std::abs(a+b);
   // if (!answer){
   //   std::cout << std::to_string(a) << " != " << std::to_string(b);
   //   std::cout << " since |a-b| = " << std::to_string(std::abs(a-b));
@@ -47,12 +47,12 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b){
   // }
   return answer;
 }
-template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B){
+template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B, const int tol){
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;
   isfpR = std::is_floating_point<R>::value;
-  T Ttol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*1000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*1000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
   if ( isfpT || isfpR ){
     if (isfpT && isfpR){
@@ -66,15 +66,15 @@ template<typename T, typename R> bool approx_array(const int N, const int M, con
   bool answer=true;
   for (int i=0; i<N*M; i++){
     // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-    if ( std::abs(A[i]) <= 100*Ttol && std::abs(B[i]) <= 100*Rtol )
-      answer &= std::abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol);
+    if ( std::abs(A[i]) <= Ttol && std::abs(B[i]) <= Rtol )
+      answer &= std::abs(A[i]-B[i]) < (useTtol ? Ttol :Rtol);
     else
-      answer &= std::abs(A[i]-B[i]) < 100*(useTtol ? Ttol :Rtol)*std::abs(A[i]+B[i]);
+      answer &= std::abs(A[i]-B[i]) < (useTtol ? Ttol :Rtol)*std::abs(A[i]+B[i]);
   }
   return answer;
 }
-template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B){return approx_array<T,R>(N,N,A,B);}
-template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B){return approx_array<T,R>(N,1,A,B);}
+template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
+template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
 
 
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
@@ -601,4 +601,17 @@ template<class T> T antiphase(const T z){
 }
 template<class T> std::complex<T> antiphase(const std::complex<T> z){
   return std::polar(T(1),-std::arg(z));
+}
+
+template<class T, class R, class S = typename std::common_type<T,R>::type>
+S coth_over_en(const T en, const R beta){
+  S Sen = static_cast<S>(en);
+  S Sbeta = static_cast<S>(beta);
+  S den = std::tanh(Sen*Sbeta/S(2))*Sen;
+  return S(1)/den;
+}
+template<class T, class R, class S = typename std::common_type<T,R>::type>
+S coth_over_en(const std::complex<T> en, const R beta){
+  S den = static_cast<S>(std::real(std::tanh(en*beta*0.5)*en));
+  return S(1)/den;
 }

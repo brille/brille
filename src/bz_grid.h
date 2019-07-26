@@ -10,6 +10,8 @@
 #include "grid.h"
 #include "grid4.h"
 
+#include "triangulation.h"
+
 // TODO: Be clever about the map/grid creation (like spglib)?
 
 /*! \brief A class to hold both a BrillouinZone and InterpolateGrid3
@@ -38,6 +40,15 @@ public:
           or N[i] = 1 if n[i]==0
   */
   BrillouinZoneGrid3(const BrillouinZone bz, const size_t *n): brillouinzone(bz) { this->determine_map_step(n); };
+  /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
+      instead of a orthogonal grid.
+      @param bz The BrillouinZone object
+      @param vol The maximum tetrahedron volume
+      @param isrlu A flag to indicate if vol is in units of rlu (isrlu=1) or inverse angstrom (isrlu=0)
+      @note If vol is in relative lattice units an absolute volume will be
+            determined using the unit cell volume of the underlying lattice.
+  */
+  BrillouinZoneGrid3(const BrillouinZone bz, const double vol, const int isrlu=1): brillouinzone(bz) {this->determine_map_tri(vol, isrlu);};
   //! Return the BrillouinZone object contained
   const BrillouinZone get_brillouinzone() const { return this->brillouinzone; };
   /*! Return the grid points of the InterpolateGrid3 object in relative lattice units
@@ -233,6 +244,17 @@ protected:
     this->truncate_grid_to_brillouin_zone();
   };
 
+  void determine_map_tri(const double vol, const int isrlu){
+    ArrayVector<double> verts = this->brillouinzone.get_ir_vertices().get_xyz();
+    double vol_invA = (isrlu) ? this->brillouinzone.get_lattice().get_volume()*vol : vol;
+    // auto tri = triangulate(verts, this->brillouinzone.get_ir_verts_per_face(), vol_invA);
+    // if (vol_invA > 0){
+    //
+    // } else {
+    //
+    // }
+  }
+
   /*! \brief Remove unusable grid points
 
     Utilizing methods of the BrillouinZone object, determine which grid points
@@ -286,6 +308,16 @@ public:
           or N[i] = 1 if n[i]==0
   */
   BrillouinZoneGrid4(const BrillouinZone bz, const double *spec, const size_t *n): brillouinzone(bz) { this->determine_map_step(spec,n); };
+  // /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
+  //     instead of a orthogonal grid.
+  //     @param spec The energy specification, expected of the form [Emin,Estep,Emax]
+  //     @param bz The BrillouinZone object
+  //     @param vol The maximum tetrahedron volume
+  //     @param isrlu A flag to indicate if vol is in units of rlu (isrlu=1) or inverse angstrom (isrlu=0)
+  //     @note If vol is in relative lattice units an absolute volume will be
+  //           determined using the unit cell volume of the underlying lattice.
+  // */
+  // BrillouinZoneGrid4(const BrillouinZone bz, const double *spec, const double vol, const int isrlu=1): brillouinzone(bz) {};
   //! Return the BrillouinZone object contained
   const BrillouinZone get_brillouinzone() const { return this->brillouinzone; };
   /*! Return the Q part of the grid points of the InterpolateGrid4 object in relative lattice units

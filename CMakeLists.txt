@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 2.8.12)
+# if (MSVC)
+# 	set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake")
+# 	message("Toolchain file: ${CMAKE_TOOLCHAIN_FILE}")
+# endif()
+
 project(symbz)
 
 set(CMAKE_MACOSX_RPATH 1)
@@ -32,14 +37,17 @@ execute_process(COMMAND python -c "from write_version_info import print_version_
 message("Building for version ${SYMBZ_VERSION}")
 
 # Source code
-include_directories("${PROJECT_SOURCE_DIR}/src")
+include_directories("${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/lib")
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
             ${PROJECT_SOURCE_DIR}/src/bz.cpp
             ${PROJECT_SOURCE_DIR}/src/lattice.cpp
             ${PROJECT_SOURCE_DIR}/src/neighbours.cpp
             ${PROJECT_SOURCE_DIR}/src/pointgroup.cpp
             ${PROJECT_SOURCE_DIR}/src/spg_database.cpp
-            ${PROJECT_SOURCE_DIR}/src/symmetry.cpp)
+            ${PROJECT_SOURCE_DIR}/src/symmetry.cpp
+						${PROJECT_SOURCE_DIR}/lib/tetgen/tetgen.cxx
+						${PROJECT_SOURCE_DIR}/lib/tetgen/predicates.cxx
+		)
 
 # Python c++ bindings
 add_subdirectory(lib/pybind11)
@@ -114,6 +122,12 @@ else()
 	target_link_libraries(_symbz PUBLIC "-fopenmp")
 endif()
 
+# The Computational Geometry Algorithms Library is used for Triangulating
+# the (irreducible) Brillouin zone.
+# find_package(CGAL)
+# target_link_libraries(_symbz PUBLIC CGAL::CGAL)
+find_package(CGAL REQUIRED COMPONENTS Core)
+target_link_libraries(_symbz PRIVATE CGAL::CGAL CGAL::CGAL_Core)
 
 
 # first we can indicate the documentation build as an option and set it to ON by default

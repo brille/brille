@@ -1,5 +1,6 @@
 #include "bz.h"
 
+//#define VERBOSE_OUTPUT
 
 void BrillouinZone::set_vertices(const ArrayVector<double> newverts){
   if (newverts.numel()!=3u) throw std::runtime_error("BrillouinZone objects only take 3-D vectors for vertices");
@@ -78,6 +79,10 @@ void BrillouinZone::set_ir_faces_per_vertex(const ArrayVector<int>& x){
   this->ir_faces_per_vertex = x;
 }
 
+void BrillouinZone::set_ir_verts_per_face(const std::vector<std::vector<int>>& x){
+  this->ir_verts_per_face = x;
+}
+
 LQVec<double> BrillouinZone::get_vertices(void) const {
   LQVec<double> lqverts(this->lattice,this->vertices);
   if (this->isprimitive())
@@ -115,6 +120,9 @@ LQVec<double> BrillouinZone::get_ir_face_points() const {
 }
 ArrayVector<int> BrillouinZone::get_ir_faces_per_vertex() const {
   return ArrayVector<int>(this->ir_faces_per_vertex);
+}
+std::vector<std::vector<int>> BrillouinZone::get_ir_verts_per_face() const{
+  return this->ir_verts_per_face;
 }
 //
 LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
@@ -166,9 +174,11 @@ void BrillouinZone::wedge_search(const int time_reversal){
   for (std::array<int,9> R: rotations) orders.push_back(rotation_order(R.data()));
   int max_order=0;
   for (int o: orders) if (o>max_order) max_order = o;
+#ifdef VERBOSE_OUTPUT
   std::cout << "Rotation orders:";
   for (int o: orders) std::cout << " " << o;
   std::cout << std::endl;
+#endif
   //
   std::array<std::array<int,3>,3> axis_plane_vecs;
   LQVec<double> u(this->outerlattice,rotations.size());
@@ -220,6 +230,7 @@ void BrillouinZone::wedge_search(const int time_reversal){
   double* ui_dot_uj = new double[u.size()*u.size()]();
   for (size_t i=0; i<u.size(); ++i) for (size_t j=0; j<u.size(); ++j) ui_dot_uj[i*u.size()+j] = u.dot(i,j)/10;
 
+#ifdef VERBOSE_OUTPUT
   std::cout << "unique(u):\n";
   for (size_t i=0; i<u.size(); ++i)
   if (u_equiv_idx.getvalue(i)==i)
@@ -234,6 +245,7 @@ void BrillouinZone::wedge_search(const int time_reversal){
       std::cout << std::endl;
     }
   }
+#endif
   // Two rotations with ûᵢ⋅ûⱼ ≠ 0 should have (Rⁿv̂ᵢ)⋅(Rᵐv̂ⱼ) = 1 for some n,m.
   // To start with, assume that n and m are 0 and find the v̂ᵢ such
   // that v̂ᵢ⋅(ûᵢ×ûⱼ)=1
@@ -285,9 +297,11 @@ void BrillouinZone::wedge_search(const int time_reversal){
   for (size_t i=0; i<u.size(); ++i)
   if (u_equiv_idx.getvalue(i)!=i) v.set(i,v.get(u_equiv_idx.getvalue(i)));
 
+#ifdef VERBOSE_OUTPUT
   std::cout << "u_equiv_idx = " << u_equiv_idx.to_string(" ") << std::endl;
   std::cout << "u =\n" << u.to_string();
   std::cout << "v =\n" << v.to_string();
+#endif
 
   // We now have for every rotation a consistent vector in the rotation plane.
   // It's time to use ̂u, ̂v, R, and order(R) to find/add the wedge normals
@@ -298,8 +312,9 @@ void BrillouinZone::wedge_search(const int time_reversal){
   int order;
   for (size_t j=0; j<rotations.size(); ++j){
     order = orders[j];
+#ifdef VERBOSE_OUTPUT
     std::cout << "r, u: " << order << " (" << u.to_string(j,") \n");
-
+#endif
     accepted=false;
     if (2==order){
       // the single normal version of add_wedge_normal_check allows for the
@@ -323,7 +338,9 @@ void BrillouinZone::wedge_search(const int time_reversal){
       }
     }
   }
+#ifdef VERBOSE_OUTPUT
   std::cout << "wedge_search finished" << std::endl;
+#endif
   if (total_found == 1){
     this->set_ir_wedge_normals(normals.get(0));
     this->irreducible_vertex_search();
@@ -331,81 +348,113 @@ void BrillouinZone::wedge_search(const int time_reversal){
   // otherwise set_ir_wedge_normals and irreducible_vertex_search are called by add_wedge_normal_check
 }
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
+#ifdef VERBOSE_OUTPUT
   for(int i=0; i<30; ++i) std::cout << " ";
   std::cout << "Considering " << n.to_string(0,"... ");
+#endif
   if (norm(n).all_approx(0.0)){
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; zero-length." << std::endl;
+#endif
     return false;
   }
   if (num==0){
+#ifdef VERBOSE_OUTPUT
     std::cout << "accepted; first normal." << std::endl;
+#endif
     normals.set(num, n.get(0));
     num=num+1;
     return true;
   }
   if (norm(cross(normals.first(num), n)).any_approx("==",0.)){
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; already present" << std::endl;
+#endif
     return false;
   }
   normals.set(num,  n.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+1))){
+#ifdef VERBOSE_OUTPUT
     std::cout << "accepted" << std::endl;
+#endif
     num=num+1;
     return true;
   }
   normals.set(num, -n.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+1))){
+#ifdef VERBOSE_OUTPUT
     std::cout << "accepted (*-1)" << std::endl;
+#endif
     num=num+1;
     return true;
   }
+#ifdef VERBOSE_OUTPUT
   std::cout << "rejected; would cause null wedge" << std::endl;
+#endif
   return false;
 }
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num){
+#ifdef VERBOSE_OUTPUT
   for(int i=0; i<30; ++i) std::cout << " ";
   std::cout << "Considering " << n0.to_string(0," and ") << n1.to_string(0,"... ");
+#endif
   bool p0=false, p1=false;
   if (num>0){
     p0 = norm(cross(normals.first(num), n0)).any_approx("==",0.);
     p1 = norm(cross(normals.first(num), n1)).any_approx("==",0.);
   }
   if (p0 && p1){
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; already present" << std::endl;
+#endif
     return false;
   }
   if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx("==",1.)){
     normals.set(num,  n1.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
+#ifdef VERBOSE_OUTPUT
       std::cout << "accepted n1 (n0 already present)" << std::endl;
+#endif
       num=num+1;
       return true;
     }
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; n0 already present, n1 causes null wedge" << std::endl;
+#endif
     return false;
   }
   if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx("==",1.)){
     normals.set(num,  n0.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
+#ifdef VERBOSE_OUTPUT
       std::cout << "accepted n0 (n1 already present)" << std::endl;
+#endif
       num=num+1;
       return true;
     }
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; n1 already present, n0 causes null wedge" << std::endl;
+#endif
     return false;
   }
   if (num>0 && (p0 || p1)){
+#ifdef VERBOSE_OUTPUT
     std::cout << "rejected; inverse of one already present" << std::endl;
+#endif
     return false;
   }
   normals.set(num,   n0.get(0));
   normals.set(num+1, n1.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+2))){
+#ifdef VERBOSE_OUTPUT
     std::cout << "accepted +n0 & +n1" << std::endl;
+#endif
     num=num+2;
     return true;
   }
+#ifdef VERBOSE_OUTPUT
   std::cout << "rejected; would cause null wedge" << std::endl;
+#endif
   return false;
 }
 bool BrillouinZone::ir_wedge_is_ok(const LQVec<double>& normals){
@@ -444,55 +493,126 @@ bool BrillouinZone::ir_wedge_is_ok(const LQVec<double>& normals){
   return !approx_scalar(volume, 0.0);
 }
 
-std::vector<std::vector<int>> fpv_to_vpf(LQVec<double>& verts, ArrayVector<int>& fpv){
-  // we need to go from faces_per_vertex to vertices_per_face
-  size_t max_face=0;
-  for (size_t i=0; i<fpv.size(); ++i) for (size_t j=0; j<fpv.numel(); ++j) if (fpv.getvalue(i,j)>max_face) max_face = fpv.getvalue(i,j);
-  std::vector<bool> present(max_face+1);
-  for (size_t i=0; i<present.size(); ++i) present[i]=false;
-  for (size_t i=0; i<fpv.size(); ++i) for (size_t j=0; j<fpv.numel(); ++j) present[fpv.getvalue(i,j)] = true;
-
-  std::vector<std::vector<int>> vpf(max_face+1);
-  bool tmp;
-  for (size_t i=0; i<present.size(); ++i) if (present[i])
-  for (size_t j=0; j<fpv.size(); ++j){
-    tmp = false;
-    for (size_t k=0; k<fpv.numel(); ++k) if (fpv.getvalue(j,k)==i) tmp=true;
-    if (tmp) vpf[i].push_back(j);
+std::vector<double> winding_angles(const LQVec<double>& vecs, const size_t i, const LQVec<double>& n){
+  // vecs should be normalized already
+  std::vector<double> angles(vecs.size());
+  double dotij, y_len, angij;
+  LQVec<double> crsij, x, y;
+  for (size_t j=0; j<vecs.size(); ++j){
+    if (j == i){
+      angles[j] = 0.0;
+      continue;
+    }
+    dotij = vecs.dot(i,j);
+    crsij = vecs.cross(i,j);
+    x = dotij * vecs.get(i);
+    y = vecs.get(j) - x;
+    y_len = y.norm(0) * (std::signbit(dot(crsij, n).getvalue(0)) ? -1 : 1);
+    angij = std::atan2(y_len, dotij);
+    angles[j] = angij < 0 ? angij+2*PI : angij;
   }
-  // std::vector<ArrayVector<int>> av_vpf;
-  // for (auto i: vpf){
-  //   if (i.size()) av_vpf.push_back(ArrayVector<int>(1u, i.size(), i.data()));
-  //   else av_vpf.push_back(ArrayVector<int>(1u,0u));
-  // }
-  return vpf;
+  return angles;
+}
+std::vector<std::vector<int>> sort_polygons(const LQVec<double>& verts, const LQVec<double>& norms, std::vector<std::vector<int>>& unsorted_vpp){
+  std::vector<std::vector<int>> sorted_vpp(norms.size());
+  LQVec<double> facet_verts(verts.get_lattice(), 0u), facet_centre, facet_normal;
+  std::vector<int> facet, perm;
+  std::vector<double> angles;
+  double min_angle;
+  size_t min_idx;
+  for (size_t j=0; j<norms.size(); ++j){
+    facet = unsorted_vpp[j];
+    facet_normal = norms.get(j)/norms.norm(j);
+    facet_verts.resize(facet.size());
+    for (size_t i=0; i<facet.size(); ++i) facet_verts.set(i, verts.get(facet[i]));
+    facet_centre = sum(facet_verts)/static_cast<double>(facet.size());
+    facet_verts -= facet_centre; // these are now on-face vectors to each vertex
+    facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
+    perm.resize(facet.size());
+    perm[0] = 0; // always start with whichever vertex is first
+    for (size_t i=1; i<facet.size(); ++i){
+      angles = winding_angles(facet_verts, perm[i-1], facet_normal);
+      min_angle = 1e3;
+      min_idx=facet.size()+1;
+      for (size_t k=0; k<facet.size(); ++k)
+        if (!approx_scalar(angles[k], 0.0) && angles[k] < min_angle){
+          min_idx=k;
+          min_angle = angles[k];
+        }
+      if (min_idx >= facet.size()) throw std::runtime_error("Error finding minimum winding angle polygon vertex");
+      perm[i] = min_idx;
+    }
+    for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
+  }
+  return sorted_vpp;
 }
 
-ArrayVector<bool> keep_vertex(LQVec<double>& verts, ArrayVector<int>& fpv){
-  std::vector<std::vector<int>> vpf = fpv_to_vpf(verts, fpv);
-  ArrayVector<bool> vert_ok(1u, verts.size());
-  for (size_t i=0; i<verts.size(); ++i) vert_ok.insert(false, i);
-  LQVec<double> face_verts(verts.get_lattice(),0u);
-  ArrayVector<bool> isunique;
-
-  std::vector<std::vector<size_t>> equal(verts.size());
-  for (size_t i=0; i<verts.size(); ++i) for (size_t j=0; j<verts.size(); ++j)
-  if (i!=j && verts.isapprox(i,j)) equal[i].push_back(j);
-
-  for (auto face: vpf){
-    if (face.size()==0) continue;
-    face_verts.resize(face.size());
-    for (size_t i=0; i<face.size(); ++i) face_verts.set(i, verts.extract(face[i]));
-    isunique = face_verts.is_unique();
-    if (isunique.count_true() > 2){ //more checking to do
-      for (size_t i=0; i<face.size(); ++i) if (isunique.getvalue(i)) vert_ok.insert(true, face[i]);
-    }
+std::vector<std::vector<int>>
+keep_unique_vertex_and_polygon_planes(
+  LQVec<double>& verts,
+  ArrayVector<int>& ppv,
+  LQVec<double>& norms,
+  LQVec<double>& points){
+  // first look for vertices that are equivalent -- that is points where more than three planes interesect
+  ArrayVector<bool> unique_flag(1u,verts.size());
+  std::vector<size_t> uniqueidx;
+  for (size_t i=0; i<verts.size(); ++i){
+    unique_flag.insert(true, i);
+    uniqueidx.push_back(i);
   }
-  // // now actually purge the equal vertices
-  // for (size_t i=0; i<verts.size(); ++i) if (vert_ok.getvalue(i))
-  // for (size_t j: equal[i]) vert_ok.insert(false, j);
+  for (size_t i=1; i<verts.size(); ++i)
+    for (size_t j=0; j<i; ++j)
+      if (unique_flag.getvalue(j))
+        if (approx_vector(3, verts.datapointer(i), verts.datapointer(j), 3)){
+          unique_flag.insert(false, i);
+          uniqueidx[i]=j;
+        }
+  std::vector<size_t> mapidx(verts.size());
+  size_t no_unique=0;
+  for (size_t i=0; i<verts.size(); ++i)
+    mapidx[i] = unique_flag.getvalue(i) ? no_unique++ : mapidx[uniqueidx[i]];
+  std::vector<std::vector<int>> ppv_extended(no_unique);
+  //for (size_t i=0; i<no_unique; ++i) fpv_extended[i]=std::vector<int>();
+  bool already_present;
+  int tmp;
+  for (size_t i=0; i<verts.size(); ++i)
+    for (size_t j=0; j<3; ++j){
+      already_present=false;
+      tmp = ppv.getvalue(i,j);
+      for (auto k: ppv_extended[mapidx[i]]) if (k == tmp) already_present=true;
+      if (!already_present) ppv_extended[mapidx[i]].push_back(tmp);
+    }
 
-  return vert_ok;
+  // with the planes per vertex extended to include all 3-plane intersections yielding the same vertes
+  // we now can go from planes_per_vertex tao vertices_per_plane
+  size_t max_plane=0;
+  for (size_t i=0; i<ppv.size(); ++i) for (size_t j=0; j<ppv.numel(); ++j)
+  if (ppv.getvalue(i,j)>max_plane) max_plane = ppv.getvalue(i,j);
+  // Each vector of ppv_extended contains 3+ faces which intersect at the vertex
+  std::vector<std::vector<int>> vpp(max_plane+1);
+  for (size_t i=0; i<ppv_extended.size(); ++i)
+    for (auto face: ppv_extended[i]){
+      // ensure that we don't somehow list a vertex multiple times for one face
+      already_present=false;
+      for (auto vert: vpp[face]) if (vert == i) already_present = false;
+      if (!already_present) vpp[face].push_back(i);
+    }
+
+  // with vpp we can easily check whether a plane has a polygon face
+  // (and keeping line or point faces isn't necessary)
+  ArrayVector<bool> is_polygon(1u, vpp.size());
+  for (size_t i=0; i<vpp.size(); ++i)
+    is_polygon.insert(vpp[i].size()>2 ? true : false, i);
+  // the ArrayVector allows for easy extraction of the polygon planes
+  norms = extract(norms, is_polygon);
+  points = extract(points, is_polygon);
+  // and extract the unique vertices, and unique planes_per_vertex:
+  verts = extract(verts, unique_flag);
+  ppv = extract(ppv, unique_flag);
+  // finally, return the vertices per plane vector<vector> for polygon planes
+  std::vector<std::vector<int>> polygon_vpp;
+  for (auto i: vpp) if (i.size()>2) polygon_vpp.push_back(i);
+  return polygon_vpp;
 }
 
 void BrillouinZone::irreducible_vertex_search(void){
@@ -715,42 +835,33 @@ void BrillouinZone::irreducible_vertex_search(void){
     all_ijk.insert(ir_face_mapped[i03.getvalue(i,2)]-1, vert_idx, 2);
     all_verts.set(vert_idx++, vertices03.extract(i));
   }
+  // four lists now combined into one.
+  //      all_ijk   -- (N,3) array of which three planes intersected at a vertex
+  //      all_verts -- (N,) vector of intersection vertex locations
+  //      all_norms -- (N,) vector of plane normals (indexed by all_ijk)
+  //      all_point -- (N,) vector of on-plane points (indexed by all_ijk)
 
+  ArrayVector<bool> keep;
   // Find which vertices are inside the irreducible wedge
-  ArrayVector<bool> in_wedge = this->isinside_wedge(all_verts);
-  all_verts = extract(all_verts, in_wedge);
-  all_ijk   = extract(all_ijk,   in_wedge);
-  // and which vertices only contribute to zero-area faces
-  ArrayVector<bool> keep = keep_vertex(all_verts, all_ijk);
+  keep = this->isinside_wedge(all_verts);
+  // and pull out those vertices and their intersecting plane indices
   all_verts = extract(all_verts, keep);
   all_ijk   = extract(all_ijk,   keep);
-  // and remove unused normals and in-plane points:
-  std::vector<bool> still_contributes;
-  for (size_t i=0; i<all_norms.size(); ++i) still_contributes.push_back(false);
-  for (size_t i=0; i<all_ijk.size(); ++i) for (size_t j=0; j<3u; ++j) still_contributes[all_ijk.getvalue(i,j)] = true;
-  size_t n_contribute = 0;
-  for (bool tf: still_contributes) if (tf) ++n_contribute;
-  LQVec<double> in_norms(bzfaces.get_lattice(), n_contribute);
-  LQVec<double> in_point(bzfaces.get_lattice(), n_contribute);
-
-  std::vector<size_t> face_mapped;
-  for (size_t i=0; i<all_norms.size(); ++i) face_mapped.push_back(0);
-  face_idx = 0;
-  size_t idx;
-  for (size_t i=0; i<all_ijk.size(); ++i) for (size_t j=0; j<3u; ++j){
-    idx = all_ijk.getvalue(i,j);
-    if (0==face_mapped[idx]){
-      in_norms.set(face_idx, all_norms.extract(idx));
-      in_point.set(face_idx, all_norms.extract(idx));
-      face_mapped[idx] = ++face_idx;
-    }
-    all_ijk.insert(face_mapped[idx]-1, i,j);
-  }
+  // find and keep just the unique vertices (all_verts and all_ijk modified)
+  // and the polygon-face planes (all_norms and all_point modified)
+  // returning the unique vertex index list for each polygon-faced plane
+  std::vector<std::vector<int>> vertex_per_plane = keep_unique_vertex_and_polygon_planes(all_verts, all_ijk, all_norms, all_point);
+  // make sure that the vertices per plane are arranged with increasing
+  // winding angle around the plane normal -- that is the dot product of
+  // the normal with the cross product of any two sequential indexed vertices
+  // is positive
+  vertex_per_plane = sort_polygons(all_verts, all_norms, vertex_per_plane);
 
   this->set_ir_vertices(all_verts);
-  this->set_ir_face_normals(in_norms);
-  this->set_ir_face_points(in_point);
+  this->set_ir_face_normals(all_norms);
+  this->set_ir_face_points(all_point);
   this->set_ir_faces_per_vertex(all_ijk);
+  this->set_ir_verts_per_face(vertex_per_plane);
 }
 
 void BrillouinZone::vertex_search(const int extent){

@@ -198,8 +198,9 @@ template<typename T> template<typename R> bool ArrayVector<T>::isapprox(const Ar
   return true;
 }
 template<typename T> bool ArrayVector<T>::isapprox(const size_t i, const size_t j) const {
-  for (size_t k=0; k<this->numel(); k++) if (!approx_scalar(this->getvalue(i,k),this->getvalue(j,k))) return false;
-  return true;
+  return approx_vector(this->numel(), this->datapointer(i), this->datapointer(j));
+  // for (size_t k=0; k<this->numel(); k++) if (!approx_scalar(this->getvalue(i,k),this->getvalue(j,k))) return false;
+  // return true;
 }
 
 template<typename T> void ArrayVector<T>::cross(const size_t i, const size_t j, T* out) const {
@@ -884,6 +885,54 @@ void unsafe_interpolate_to(const A<T>& source,
       offset = Iobj*span + Nscl;
       auto normI = std::sqrt(inner_product(Neig, sink_j+offset, sink_j+offset));
       for (size_t Jeig=0; Jeig<Neig; ++Jeig) sink_j[offset+Jeig] /= normI;
+    }
+  }
+}
+
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+         class S = typename std::common_type<T,R>::type
+         >
+void new_unsafe_interpolate_to(const A<T>& source,
+                           const std::array<unsigned, 4>& nEl,
+                           const size_t nObj,
+                           const size_t nAr,
+                           const size_t* iSrc,
+                           const std::vector<R>& weights,
+                           A<S>& sink,
+                           const size_t iSnk)
+{
+  S *sink_i = sink.datapointer(iSnk);
+  T *source_i, *source_0 = source.datapointer(iSrc[0]);
+  size_t offset, span = nEl[0]+nEl[1]+nEl[2]+nEl[3]*nEl[3];
+  T e_i_theta;
+  for (size_t x=0; x<nAr; ++x){
+    source_i = source.datapointer(iSrc[x]);
+    // loop over the objects (modes)
+    for (size_t iObj=0; iObj<nObj; ++iObj){
+      // find the weighted sum of each scalar
+      for (size_t iSc=0; iSc < nEl[0]; ++iSc)
+        sink_i[iObj*span + iSc] += weights[x]*source_i[iObj*span + iSc];
+      if (nEl[1]){
+        // eigenvectors require special treatment since they can have an arbitrary phase difference
+        offset = iObj*span + nEl[0];
+        // find the arbitrary phase eⁱᶿ between different-object eigenvectors
+        e_i_theta = antiphase(hermitian_product(nEl[1], source_0+offset, source_i+offset));
+        // remove the arbitrary phase while adding the weighted value
+        for (size_t iEv=0; iEv<nEl[1]; ++iEv)
+          sink_i[offset+iEv] += weights[x]*(e_i_theta*source_i[offset+iEv]);
+      }
+      // vector and matrix elements are treated as scalars
+      for (size_t iVM=nEl[0]+nEl[1]; iVM<span; ++iVM)
+        sink_i[iObj*span + iVM] += weights[x]*source_i[iObj*span + iVM];
+    }
+  }
+  // ensure the eigenvectors are still normalized
+  if (nEl[1]){
+    for (size_t iObj=0; iObj<nObj; ++iObj){
+      offset = iObj*span + nEl[0];
+      auto normI = std::sqrt(inner_product(nEl[1], sink_i+offset, sink_i+offset));
+      for (size_t iEv=0; iEv<nEl[1]; ++iEv) sink_i[offset+iEv]/=normI;
     }
   }
 }

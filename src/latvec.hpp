@@ -41,8 +41,12 @@ template<class T, class R, template<class> class L1, template<class> class L2,
         >
 ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
   bool issame = a.samelattice(b);
-  if (!( issame || a.starlattice(b) ))
+  if (!( issame || a.starlattice(b) )){
+    // std::cout << a.get_lattice().string_repr() << std::endl;
+    // std::cout << "is not equal to" << std::endl;
+    // std::cout << b.get_lattice().string_repr() << std::endl;
     throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
+  }
   AVSizeInfo si = a.consistency_check(b);
   if (si.m!=3u) throw std::runtime_error("Lattice dot product is only defined for three vectors");
   if (si.scalara||si.scalarb) throw std::runtime_error("Lattice dot product requires two three-vectors");
@@ -224,5 +228,46 @@ L<T> operator-(const L<T>& a){
   for (size_t i=0; i<a.size(); ++i)
     for (size_t j=0; j<a.numel(); ++j)
       out.insert( -a.getvalue(i,j), i,j);
+  return out;
+}
+
+
+// sum(ArrayVector)
+template<class T, template<class> class L,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value&&!std::is_base_of<LatVec,L<T>>::value>::type
+        >
+L<T> sum(const L<T>& a, const int dim=0){
+  T tmp;
+  L<T> out;
+  switch (dim){
+    case 1:
+      out.refresh(1u, a.size());
+      for (size_t i=0; i<a.size(); ++i){
+        tmp = T(0);
+        for (size_t j=0; j<a.numel(); ++j) tmp += a.getvalue(i,j);
+        out.insert(tmp, i, 0);
+      }
+      break;
+    default:
+      out.refresh(a.numel(), 1u);
+      for (size_t j=0; j<a.numel(); ++j){
+        tmp = T(0);
+        for (size_t i=0; i<a.size(); ++i) tmp += a.getvalue(i, j);
+        out.insert(tmp, 0, j);
+      }
+      break;
+    }
+return out;
+}
+// sum(LatVec)
+template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
+L<T> sum(const L<T>& a){
+  T tmp;
+  L<T> out(a.get_lattice(), 1u);
+  for (size_t j=0; j<a.numel(); ++j){
+    tmp = T(0);
+    for (size_t i=0; i<a.size(); ++i) tmp += a.getvalue(i, j);
+    out.insert(tmp, 0, j);
+  }
   return out;
 }

@@ -196,4 +196,53 @@ int floor_corners_and_weights(const T<R>* that, const double* zero, const double
     return oob;
 }
 
+template<typename T> T triangle_area(const ArrayVector<T>& a, const ArrayVector<T>& b, const ArrayVector<T>& c){
+  T ab, bc, ac, s;
+  ab = (a-b).norm(0);
+  bc = (b-c).norm(0);
+  ac = (a-c).norm(0);
+  s = (ab+bc+ac)/2.0;
+  return std::sqrt(s*(s-ab)*(s-bc)*(s-ac)); // Heron's formula
+}
+template<typename T> T tetrahedron_volume(const ArrayVector<T>& a, const ArrayVector<T>& b, const ArrayVector<T>& c, const ArrayVector<T>& d){
+  ArrayVector<T> dumb(3u, 4u);
+  dumb.set(0, b-a);
+  dumb.set(1, c-a);
+  dumb.set(2, d-a);
+  vector_cross(dumb.datapointer(3), dumb.datapointer(1), dumb.datapointer(2));
+  return std::abs(dumb.dot(0,3)/6.0); // abs so that we don't have to worry about the permutation
+}
+
+template<typename T> std::vector<double> tetrahedron_weights(const ArrayVector<T>& p, const ArrayVector<T>& v){
+  std::vector<double> weights(v.size());
+  if (v.size()==1){
+    weights[0] = 1.0;
+    return weights;
+  }
+  T volume;
+  switch (v.size()){
+    case 2:
+      volume = (v.extract(1)-v.extract(0)).norm(0);
+      weights[0] = (v.extract(1)-p).norm(0)/volume;
+      weights[1] = (v.extract(0)-p).norm(0)/volume;
+      break;
+    case 3:
+      volume = triangle_area(v.extract(0), v.extract(1), v.extract(2));
+      weights[0] = triangle_area(p, v.extract(1), v.extract(2))/volume;
+      weights[1] = triangle_area(v.extract(0), p, v.extract(2))/volume;
+      weights[2] = triangle_area(v.extract(0), v.extract(1), p)/volume;
+      break;
+    case 4:
+      volume = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), v.extract(3));
+      weights[0] = tetrahedron_volume(p, v.extract(1), v.extract(2), v.extract(3))/volume;
+      weights[1] = tetrahedron_volume(v.extract(0), p, v.extract(2), v.extract(3))/volume;
+      weights[2] = tetrahedron_volume(v.extract(0), v.extract(1), p, v.extract(3))/volume;
+      weights[3] = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), p)/volume;
+      break;
+    default:
+      throw std::runtime_error("interpolation.tetrahedron_weights: this should be impossible.");
+  }
+  return weights;
+}
+
 #endif

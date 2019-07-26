@@ -133,6 +133,7 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
         axs.scatter(Q[:, 0], Q[:, 1], Q[:, 2])
     axs.set_aspect('equal','box')
     pp.show()
+    return axs
 
 def _make_poly_collection(verts, norms, point, fpv, origin=None,
                           color='b', edgecolor='k',

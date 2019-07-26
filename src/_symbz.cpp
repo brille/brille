@@ -4,7 +4,7 @@
 #include "version_info.h"
 
 #include "_binding.h"
-// #include <pybind11/stl.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
@@ -127,6 +127,7 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("ir_face_normals_primitive",[](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_normals().get_hkl());})
     .def_property_readonly("ir_face_points_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_points().get_hkl());})
     .def_property_readonly("ir_faces_per_vertex",      [](const BrillouinZone &b){return av2np(b.get_ir_faces_per_vertex());})
+    .def_property_readonly("ir_verts_per_face", &BrillouinZone::get_ir_verts_per_face)
     .def("isinside",[](BrillouinZone &b, py::array_t<double> p){
       py::buffer_info bi = p.request();
       ssize_t ndim = bi.ndim;
@@ -174,6 +175,9 @@ PYBIND11_MODULE(_symbz,m){
     declare_bzgridqe<double>(m,"");
     declare_bzgridq<std::complex<double>>(m,"complex");
     declare_bzgridqe<std::complex<double>>(m,"complex");
+
+    declare_bzmeshq<double>(m,"");
+    declare_bzmeshq<std::complex<double>>(m,"complex");
 
     py::class_<PrimitiveTransform> pt(m,"PrimitiveTransform");
     pt.def(py::init<int>(),py::arg("Hall number"));

@@ -37,8 +37,22 @@ class CMakeBuild(build_ext):
     def build_extension(self, ext):
         extdir = os.path.dirname(self.get_ext_fullpath(ext.name))
         extdir = os.path.abspath(extdir)
-        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                      '-DPYTHON_EXECUTABLE=' + sys.executable]
+        cmake_args = []
+        if platform.system() == "Windows":
+            if sys.maxsize > 2**32:
+                cmake_args += ['-A', 'x64']
+            else:
+                cmake_args += ['-A', 'Win32']
+            if 'VCPKG' not in os.environ:
+                msg = 'CGAL installed via vcpkg '
+                msg += '(https://github.com/Microsoft/vcpkg) '
+                msg += ' is required.'
+                raise Exception(msg)
+            vcpkg = os.environ['VCPKG'] + '\\scripts\\buildsystems\\vcpkg.cmake'
+            cmake_args += ['-DCMAKE_TOOLCHAIN_FILE=' + vcpkg]
+
+        cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
@@ -51,10 +65,6 @@ class CMakeBuild(build_ext):
             cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
             cmake_args += [cmake_lib_out_dir.format(cfg.upper(), extdir)]
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            if sys.maxsize > 2**32:
-                cmake_args += ['-A', 'x64']
-            else:
-                cmake_args += ['-A', 'Win32']
             build_args += ['--', '/m:4']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]

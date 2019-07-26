@@ -31,6 +31,7 @@ class BrillouinZone {
   ArrayVector<double> ir_face_normals; //!< The reciprocal lattice points defining the irreducible Brillouin zone faces.
   ArrayVector<double> ir_face_points;  //!< A point on each face of the irreducible Brillouin zone.
   ArrayVector<int> ir_faces_per_vertex;//!< The indexes of the three irreducible faces providing the intersection for each irreducible vertex
+  std::vector<std::vector<int>> ir_verts_per_face; //!< The vertex indices for each face of the irreducible Brillouin zone
 
 public:
   /*!
@@ -63,6 +64,7 @@ public:
   // void set_ir_face_normals(const ArrayVector<double>&);
   // void set_ir_face_points(const ArrayVector<double>&);
   void set_ir_faces_per_vertex(const ArrayVector<int>&);
+  void set_ir_verts_per_face(const std::vector<std::vector<int>>&);
   //! Returns the number of vertices defining the first Brillouin zone
   size_t vertices_count() const { return vertices.size();};
   //! Returns the number of reciprocal lattice points defining the first Brillouin zone
@@ -97,6 +99,7 @@ public:
   LQVec<double> get_primitive_ir_face_normals() const;
   LQVec<double> get_primitive_ir_face_points() const;
   ArrayVector<int> get_ir_faces_per_vertex() const;
+  std::vector<std::vector<int>> get_ir_verts_per_face() const;
   //! Print a representation of the object to the console
   void print() const;
   //

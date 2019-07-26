@@ -1,16 +1,16 @@
-
-template<class T, class R, class S = typename std::common_type<T,R>::type>
-S coth_over_en(const T en, const R beta){
-  S Sen = static_cast<S>(en);
-  S Sbeta = static_cast<S>(beta);
-  S den = std::tanh(Sen*Sbeta/S(2))*Sen;
-  return S(1)/den;
-}
-template<class T, class R, class S = typename std::common_type<T,R>::type>
-S coth_over_en(const std::complex<T> en, const R beta){
-  S den = static_cast<S>(std::real(std::tanh(en*beta*0.5)*en));
-  return S(1)/den;
-}
+// 
+// template<class T, class R, class S = typename std::common_type<T,R>::type>
+// S coth_over_en(const T en, const R beta){
+//   S Sen = static_cast<S>(en);
+//   S Sbeta = static_cast<S>(beta);
+//   S den = std::tanh(Sen*Sbeta/S(2))*Sen;
+//   return S(1)/den;
+// }
+// template<class T, class R, class S = typename std::common_type<T,R>::type>
+// S coth_over_en(const std::complex<T> en, const R beta){
+//   S den = static_cast<S>(std::real(std::tanh(en*beta*0.5)*en));
+//   return S(1)/den;
+// }
 
 template<class T>
 template<class R, class S>
