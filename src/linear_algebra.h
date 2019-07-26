@@ -182,6 +182,7 @@ template<typename T> std::complex<T> hermitian_product(const size_t n, const std
 template<typename T> const std::string my_to_string(const T x);
 template<typename T> const std::string my_to_string(const std::complex<T> x);
 
+
 template<typename T> T vector_distance(const size_t n, const T* a, const T* b);
 template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
 
