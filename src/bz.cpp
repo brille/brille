@@ -84,69 +84,110 @@ void BrillouinZone::set_ir_verts_per_face(const std::vector<std::vector<int>>& x
 }
 
 LQVec<double> BrillouinZone::get_vertices(void) const {
-  LQVec<double> lqverts(this->lattice,this->vertices);
-  if (this->isprimitive())
-    lqverts = transform_from_primitive(this->outerlattice,lqverts);
+  LQVec<double> lqverts(this->lattice, 0u);
+  if (this->vertices.size()){
+    lqverts = LQVec<double>(this->lattice, this->vertices);
+    if (this->isprimitive())
+      lqverts = transform_from_primitive(this->outerlattice,lqverts);
+  }
   return lqverts;
 }
 LQVec<double> BrillouinZone::get_primitive_vertices(void) const {
-  return LQVec<double>(this->lattice, this->vertices);
+  LQVec<double> lqverts(this->lattice, 0u);
+  if (this->vertices.size())
+    lqverts = LQVec<double>(this->lattice, this->vertices);
+  return lqverts;
 }
 LQVec<int>    BrillouinZone::get_faces   (void) const {
-  LQVec<int> lqfaces(this->lattice,this->faces);
-  if (this->isprimitive())
-    lqfaces = transform_from_primitive(this->outerlattice,lqfaces);
+  LQVec<int> lqfaces(this->lattice, 0u);
+  if (this->faces.size()){
+    lqfaces = LQVec<int>(this->lattice, this->faces);
+    if (this->isprimitive())
+      lqfaces = transform_from_primitive(this->outerlattice,lqfaces);
+  }
   return lqfaces;
 }
 LQVec<int> BrillouinZone::get_primitive_faces(void) const {
-  return LQVec<int>(this->lattice, this->faces   );
+  LQVec<int> lqfaces(this->lattice, 0u);
+  if (this->faces.size())
+    lqfaces = LQVec<int>(this->lattice, this->faces);
+  return lqfaces;
 }
 ArrayVector<int> BrillouinZone::get_faces_per_vertex(void) const {
-  ArrayVector<int> out = this->faces_per_vertex; // make sure we return a copy, not the internal object
+  ArrayVector<int> out(3u, 0u);
+  if (this->faces_per_vertex.size())
+    out = this->faces_per_vertex; // make sure we return a copy, not the internal object
   return out;
 }
 //
 LQVec<double> BrillouinZone::get_ir_wedge_normals(void) const {
-  return LQVec<double>(this->outerlattice, this->ir_wedge_normals);
+  LQVec<double> out(this->outerlattice, 0u);
+  if (this->ir_wedge_normals.size())
+    out = LQVec<double>(this->outerlattice, this->ir_wedge_normals);
+  return out;
 }
 LQVec<double> BrillouinZone::get_ir_vertices() const {
-  return LQVec<double>(this->outerlattice, this->ir_vertices);
+  LQVec<double> out(this->outerlattice, 0u);
+  if (this->ir_vertices.size())
+    out = LQVec<double>(this->outerlattice, this->ir_vertices);
+  return out;
 }
 LQVec<double> BrillouinZone::get_ir_face_normals() const {
-  return LQVec<double>(this->outerlattice, this->ir_face_normals);
+  LQVec<double> out(this->outerlattice, 0u);
+  if (this->ir_face_normals.size())
+    out = LQVec<double>(this->outerlattice, this->ir_face_normals);
+  return out;
 }
 LQVec<double> BrillouinZone::get_ir_face_points() const {
-  return LQVec<double>(this->outerlattice, this->ir_face_points);
+  LQVec<double> out(this->outerlattice, 0u);
+  if (this->ir_face_points.size())
+    out = LQVec<double>(this->outerlattice, this->ir_face_points);
+  return out;
 }
 ArrayVector<int> BrillouinZone::get_ir_faces_per_vertex() const {
-  return ArrayVector<int>(this->ir_faces_per_vertex);
+  ArrayVector<int> out(3u, 0u);
+  if (this->ir_faces_per_vertex.size())
+    out = ArrayVector<int>(this->ir_faces_per_vertex);
+  return out;
 }
 std::vector<std::vector<int>> BrillouinZone::get_ir_verts_per_face() const{
   return this->ir_verts_per_face;
 }
 //
 LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
-  LQVec<double> lqwn(this->outerlattice, this->ir_wedge_normals);
-  if (this->isprimitive())
-    lqwn = transform_to_primitive(this->outerlattice, lqwn);
+  LQVec<double> lqwn(this->outerlattice, 0u);
+  if (this->ir_wedge_normals.size()){
+    lqwn = LQVec<double>(this->outerlattice, this->ir_wedge_normals);
+    if (this->isprimitive())
+      lqwn = transform_to_primitive(this->outerlattice, lqwn);
+  }
   return lqwn;
 }
 LQVec<double> BrillouinZone::get_primitive_ir_vertices() const {
-  LQVec<double> x(this->outerlattice, this->ir_vertices);
-  if (this->isprimitive())
-    x = transform_to_primitive(this->outerlattice, x);
+  LQVec<double> x(this->outerlattice, 0u);
+  if (this->ir_vertices.size()){
+    x = LQVec<double>(this->outerlattice, this->ir_vertices);
+    if (this->isprimitive())
+      x = transform_to_primitive(this->outerlattice, x);
+  }
   return x;
 }
 LQVec<double> BrillouinZone::get_primitive_ir_face_normals() const {
-  LQVec<double> x(this->outerlattice, this->ir_face_normals);
-  if (this->isprimitive())
-    x = transform_to_primitive(this->outerlattice, x);
+  LQVec<double> x(this->outerlattice, 0u);
+  if (this->ir_face_normals.size()){
+    x = LQVec<double>(this->outerlattice, this->ir_face_normals);
+    if (this->isprimitive())
+      x = transform_to_primitive(this->outerlattice, x);
+  }
   return x;
 }
 LQVec<double> BrillouinZone::get_primitive_ir_face_points() const {
-  LQVec<double> x(this->outerlattice, this->ir_face_points);
-  if (this->isprimitive())
-    x = transform_to_primitive(this->outerlattice, x);
+  LQVec<double> x(this->outerlattice, 0u);
+  if (this->ir_face_points.size()){
+    x = LQVec<double>(this->outerlattice, this->ir_face_points);
+    if (this->isprimitive())
+      x = transform_to_primitive(this->outerlattice, x);
+  }
   return x;
 }
 //

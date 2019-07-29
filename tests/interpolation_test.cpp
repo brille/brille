@@ -89,7 +89,7 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   // printf("\nRounded difference:\n");
   // diff.round().print();
 
-  REQUIRE( diff.round().areallzero() ); // this is not a great test :(
+  REQUIRE( diff.round().all_zero() ); // this is not a great test :(
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
   REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
@@ -97,7 +97,7 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
 
   intres = bzg.parallel_linear_interpolate_at(Q,0);
   diff = intres - antres;
-  REQUIRE( diff.round().areallzero() ); // this is not a great test :(
+  REQUIRE( diff.round().all_zero() ); // this is not a great test :(
   for (size_t i=0; i<diff.size(); ++i)
   for (size_t j=0; j<diff.numel(); ++j)
   REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );

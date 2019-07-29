@@ -104,7 +104,7 @@ PYBIND11_MODULE(_symbz,m){
          py::arg("use_primitive")=true,
          py::arg("search_length")=1,
          py::arg("time_reversal_symmetry")=0,
-         py::arg("wedge_search")=1
+         py::arg("wedge_search")=0
        )
     .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
     .def_property_readonly("faces",                    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})

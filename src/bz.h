@@ -41,10 +41,18 @@ public:
                 search in τ-index. The default indicates that (̄1̄1̄1),
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
   */
-  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, int time_reversal=0, int wedge_search=1): outerlattice(lat) {
+  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, int time_reversal=0, int wedge_search=0): outerlattice(lat) {
     lattice = toprim ? lat.primitive() : lat;
     this->vertex_search(extent);
-    if (wedge_search) this->wedge_search(time_reversal);
+    if (wedge_search)
+      this->wedge_search(time_reversal);
+    else {
+      this->ir_vertices = ArrayVector<double>(3u, 0u);
+      this->ir_face_normals = ArrayVector<double>(3u, 0u);
+      this->ir_face_points = ArrayVector<double>(3u, 0u);
+      this->ir_faces_per_vertex = ArrayVector<int>(3u, 0u);
+      this->ir_verts_per_face = std::vector<std::vector<int>>();
+    }
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};

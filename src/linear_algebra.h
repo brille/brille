@@ -42,6 +42,10 @@ template<typename T, typename R> bool approx_array(const int N, const int M,cons
 template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol=1);
 template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol=1);
 
+template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B, const int tol=1);
+template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B, const int tol=1);
+template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R *B, const int tol=1);
+
 
 //! array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
 template<typename T, typename R, typename S, int N, int I, int M> void multiply_arrays(T *C, const R *A, const S *B);

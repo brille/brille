@@ -37,7 +37,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   LQVec<int> tau(r,nQ);
 
   REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
-  REQUIRE( bz.isinside(q).arealltrue() );
+  REQUIRE( bz.isinside(q).all_true() );
   LQVec<double> Qmq = Q-q;
   LQVec<double> Qmqmtau = Q-(q+tau);
   for (size_t i=0; i<Q.size(); ++i)
