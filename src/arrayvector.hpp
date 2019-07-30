@@ -67,6 +67,19 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bo
     if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
   return out;
 }
+template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<bool>& t) const{
+  if (t.size() != this->size()){
+    std::string msg = "Extracting an ArrayVector by logical indexing requires";
+    msg += " a std::vector<bool> with size()==ArrayVector.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (auto i: t) if (i) ++nout;
+  ArrayVector<T> o(this->numel(),nout);
+  size_t j = 0;
+  for (size_t i=0; i<t.size(); ++i) if (t[i]) o.set(j++, this->datapointer(i));
+  return o;
+}
 template<typename T> bool ArrayVector<T>::get(const size_t i, T* out) const {
   if (i>this->size()-1) return false;
   for (size_t j=0; j<this->numel(); j++) out[j]= this->getvalue(i,j);

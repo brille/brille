@@ -244,6 +244,13 @@ void Direct::get_xyz_transform(double *toxyz) const {
   delete[] B;
 }
 
+void Direct::get_inverse_xyz_transform(double *fromxyz) const{
+  double toxyz[9];
+  this->get_xyz_transform(toxyz);
+  if(!matrix_inverse(fromxyz, toxyz))
+    throw std::runtime_error("xyz_transform matrix has zero determinant");
+}
+
 void Reciprocal::get_lattice_matrix(double *latmat) const{
   Direct d = this->star();
   double m[9];
@@ -286,6 +293,12 @@ void Reciprocal::get_xyz_transform(double *toxyz) const {
   // the original spglib used x along a and y in the (a,b) plane
   // here we're going with x along astar and y in the (astar, bstar) plane -- this is the "B-matrix"
   this->get_B_matrix(toxyz);
+}
+void Reciprocal::get_inverse_xyz_transform(double *fromxyz) const {
+  double toxyz[9];
+  this->get_xyz_transform(toxyz);
+  if(!matrix_inverse(fromxyz, toxyz))
+    throw std::runtime_error("xyz_transform matrix has zero determinant");
 }
 
 // We have to define these separately from Lattice since Lattice.star() doesn't exist.

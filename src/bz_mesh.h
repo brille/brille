@@ -19,7 +19,7 @@ public:
             determined using the unit cell volume of the underlying lattice.
   */
   BrillouinZoneMesh3(const BrillouinZone bz, const double max_size_invA=-1., const double min_angle=20.0, const double max_angle=-1.0, const double max_ratio=-1., const int max_points=-1):
-    Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_verts_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
+    Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
     brillouinzone(bz) {};
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;};

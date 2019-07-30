@@ -107,27 +107,59 @@ PYBIND11_MODULE(_symbz,m){
          py::arg("wedge_search")=0
        )
     .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
-    .def_property_readonly("faces",                    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
-    .def_property_readonly("faces_invA",               [](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
-    .def_property_readonly("faces_primitive",          [](const BrillouinZone &b){return av2np(b.get_primitive_faces().get_hkl());})
+    // access the polyhedra directly
+    .def_property_readonly("polyhedron",&BrillouinZone::get_polyhedron)
+    .def_property_readonly("ir_polyhedron",&BrillouinZone::get_ir_polyhedron)
+    // first Brillouin zone polyhedron
+    .def_property_readonly("normals",                  [](const BrillouinZone &b){return av2np(b.get_normals().get_hkl());})
+    .def_property_readonly("normals_invA",             [](const BrillouinZone &b){return av2np(b.get_normals().get_xyz());})
+    .def_property_readonly("normals_primitive",        [](const BrillouinZone &b){return av2np(b.get_primitive_normals().get_hkl());})
+    .def_property_readonly("points",                   [](const BrillouinZone &b){return av2np(b.get_points().get_hkl());})
+    .def_property_readonly("points_invA",              [](const BrillouinZone &b){return av2np(b.get_points().get_xyz());})
+    .def_property_readonly("points_primitive",         [](const BrillouinZone &b){return av2np(b.get_primitive_points().get_hkl());})
     .def_property_readonly("vertices",                 [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
     .def_property_readonly("vertices_invA",            [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
     .def_property_readonly("vertices_primitive",       [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
-    .def_property_readonly("faces_per_vertex",         [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+    .def_property_readonly("faces_per_vertex",  &BrillouinZone::get_faces_per_vertex)
+    .def_property_readonly("vertices_per_face", &BrillouinZone::get_vertices_per_face)
+    // irreducible first Brillouin zone polyhedron
+    .def_property_readonly("ir_normals",                  [](const BrillouinZone &b){return av2np(b.get_ir_normals().get_hkl());})
+    .def_property_readonly("ir_normals_invA",             [](const BrillouinZone &b){return av2np(b.get_ir_normals().get_xyz());})
+    .def_property_readonly("ir_normals_primitive",        [](const BrillouinZone &b){return av2np(b.get_ir_primitive_normals().get_hkl());})
+    .def_property_readonly("ir_points",                   [](const BrillouinZone &b){return av2np(b.get_ir_points().get_hkl());})
+    .def_property_readonly("ir_points_invA",              [](const BrillouinZone &b){return av2np(b.get_ir_points().get_xyz());})
+    .def_property_readonly("ir_points_primitive",         [](const BrillouinZone &b){return av2np(b.get_ir_primitive_points().get_hkl());})
+    .def_property_readonly("ir_vertices",                 [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_hkl());})
+    .def_property_readonly("ir_vertices_invA",            [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_xyz());})
+    .def_property_readonly("ir_vertices_primitive",       [](const BrillouinZone &b){return av2np(b.get_ir_primitive_vertices().get_hkl());})
+    .def_property_readonly("ir_faces_per_vertex",  &BrillouinZone::get_ir_faces_per_vertex)
+    .def_property_readonly("ir_vertices_per_face", &BrillouinZone::get_ir_vertices_per_face)
+    // irreducible reciprocal space wedge
     .def_property_readonly("wedge_normals",            [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_hkl());})
     .def_property_readonly("wedge_normals_invA",       [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_xyz());})
     .def_property_readonly("wedge_normals_primitive",  [](const BrillouinZone &b){return av2np(b.get_primitive_ir_wedge_normals().get_hkl());})
-    .def_property_readonly("ir_vertices",              [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_hkl());})
-    .def_property_readonly("ir_face_normals",          [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_hkl());})
-    .def_property_readonly("ir_face_points",           [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_hkl());})
-    .def_property_readonly("ir_vertices_invA",         [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_xyz());})
-    .def_property_readonly("ir_face_normals_invA",     [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_xyz());})
-    .def_property_readonly("ir_face_points_invA",      [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_xyz());})
-    .def_property_readonly("ir_vertices_primitive",    [](const BrillouinZone &b){return av2np(b.get_primitive_ir_vertices().get_hkl());})
-    .def_property_readonly("ir_face_normals_primitive",[](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_normals().get_hkl());})
-    .def_property_readonly("ir_face_points_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_points().get_hkl());})
-    .def_property_readonly("ir_faces_per_vertex",      [](const BrillouinZone &b){return av2np(b.get_ir_faces_per_vertex());})
-    .def_property_readonly("ir_verts_per_face", &BrillouinZone::get_ir_verts_per_face)
+    // // old methods
+    // .def_property_readonly("faces",                    [](const BrillouinZone &b){return av2np(b.get_faces().get_hkl());})
+    // .def_property_readonly("faces_invA",               [](const BrillouinZone &b){return av2np(b.get_faces().get_xyz());})
+    // .def_property_readonly("faces_primitive",          [](const BrillouinZone &b){return av2np(b.get_primitive_faces().get_hkl());})
+    // .def_property_readonly("vertices",                 [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
+    // .def_property_readonly("vertices_invA",            [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+    // .def_property_readonly("vertices_primitive",       [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
+    // .def_property_readonly("faces_per_vertex",         [](const BrillouinZone &b){return av2np(b.get_faces_per_vertex());})
+    // .def_property_readonly("wedge_normals",            [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_hkl());})
+    // .def_property_readonly("wedge_normals_invA",       [](const BrillouinZone &b){return av2np(b.get_ir_wedge_normals().get_xyz());})
+    // .def_property_readonly("wedge_normals_primitive",  [](const BrillouinZone &b){return av2np(b.get_primitive_ir_wedge_normals().get_hkl());})
+    // .def_property_readonly("ir_vertices",              [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_hkl());})
+    // .def_property_readonly("ir_face_normals",          [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_hkl());})
+    // .def_property_readonly("ir_face_points",           [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_hkl());})
+    // .def_property_readonly("ir_vertices_invA",         [](const BrillouinZone &b){return av2np(b.get_ir_vertices().get_xyz());})
+    // .def_property_readonly("ir_face_normals_invA",     [](const BrillouinZone &b){return av2np(b.get_ir_face_normals().get_xyz());})
+    // .def_property_readonly("ir_face_points_invA",      [](const BrillouinZone &b){return av2np(b.get_ir_face_points().get_xyz());})
+    // .def_property_readonly("ir_vertices_primitive",    [](const BrillouinZone &b){return av2np(b.get_primitive_ir_vertices().get_hkl());})
+    // .def_property_readonly("ir_face_normals_primitive",[](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_normals().get_hkl());})
+    // .def_property_readonly("ir_face_points_primitive", [](const BrillouinZone &b){return av2np(b.get_primitive_ir_face_points().get_hkl());})
+    // .def_property_readonly("ir_faces_per_vertex",      [](const BrillouinZone &b){return av2np(b.get_ir_faces_per_vertex());})
+    // .def_property_readonly("ir_verts_per_face", &BrillouinZone::get_ir_verts_per_face)
     .def("isinside",[](BrillouinZone &b, py::array_t<double> p){
       py::buffer_info bi = p.request();
       ssize_t ndim = bi.ndim;
@@ -241,4 +273,8 @@ PYBIND11_MODULE(_symbz,m){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
       return sva2np(sz, ps.axes());
     });
+
+    // declare_polyhedron<CentredPolyhedron>(m, "C");
+    // declare_polyhedron<FullPolyhedron>(m, "");
+    declare_polyhedron<Polyhedron>(m, "");
 }

@@ -198,6 +198,11 @@ public:
     @returns An ArrayVector containing the indicies indicated by tfvec
   */
   ArrayVector<T> extract(const ArrayVector<bool>& idx) const;
+  /*! Return a collection of arrays from the ArrayVector
+    @param tfvec a reference to an std::vector<bool> with true for the to-be-returned indices
+    @returns An ArrayVector containing the indicies indicated by tfvec
+  */
+  ArrayVector<T> extract(const std::vector<bool>& idx) const;
   /*! Copy-out a single array
     @param i the index of the array to copy
     @param[out] out a pointer where the array will be copied

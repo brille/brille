@@ -160,7 +160,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
        py::arg("min_angle")=20.,
        py::arg("max_angle")=-1.,
        py::arg("min_ratio")=-1.,
-       py::arg("max_points")=-1       
+       py::arg("max_points")=-1
       )
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
   .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_mesh_hkl());})
@@ -277,10 +277,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       if (bi.strides[0]!=sizeof(double)) throw std::runtime_error("stepsize must be contiguous");
       return Class( b, (double*)bi.ptr, isrlu ? 1 : 0 );
     }),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true)
-    // Initializer (BrillouinZone, tetrahedron volume, flag_for_whether_volume_is_in_rlu_or_inverse_angstrom)
-    .def(py::init([](BrillouinZone &b, const double& vol, const bool& isrlu){
-      return Class( b, vol, isrlu ? 1 : 0 );
-    }),py::arg("brillouinzone"),py::arg("volume"),py::arg("rlu")=true)
+    // // Initializer (BrillouinZone, tetrahedron volume, flag_for_whether_volume_is_in_rlu_or_inverse_angstrom)
+    // .def(py::init([](BrillouinZone &b, const double& vol, const bool& isrlu){
+    //   return Class( b, vol, isrlu ? 1 : 0 );
+    // }),py::arg("brillouinzone"),py::arg("volume"),py::arg("rlu")=true)
     .def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
     .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze((cobj.get_N()-1)/2);})
     .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
@@ -750,4 +750,14 @@ void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &l
     pclass.def("primitive",&T::primitive,"Return the primitive lattice");
 }
 
+template<class T>
+void declare_polyhedron(py::module &m, const std::string &typestr) {
+    std::string pyclass_name = std::string("Polyhedron") + typestr;
+    py::class_<T>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
+    .def_property_readonly("vertices",[](const T& o){return av2np(o.get_vertices());})
+    .def_property_readonly("points",[](const T& o){return av2np(o.get_points());})
+    .def_property_readonly("normals",[](const T& o){return av2np(o.get_normals());})
+    .def_property_readonly("vertices_per_face",&T::get_vertices_per_face)
+    .def_property_readonly("faces_per_vertex",&T::get_faces_per_vertex);
+  }
 #endif

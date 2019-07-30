@@ -7,6 +7,7 @@
 #include "pointgroup.h"
 #include <iostream>
 #include <algorithm>
+#include "polyhedron.h"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -21,18 +22,9 @@
 class BrillouinZone {
   Reciprocal lattice;               //!< The primitive reciprocal lattice
   Reciprocal outerlattice;          //!< The lattice passed in at construction
-//  ArrayVector<double> position;
-//  ArrayVector<int> type;
-  ArrayVector<double> vertices;     //!< The coordinates of the first Brillouin zone vertices in an orthonormal frame
-  ArrayVector<int> faces;           //!< The reciprocal lattice points defining the first Brillouin zone faces -- twice the actual face vectors
-  ArrayVector<int> faces_per_vertex;//!< The indexes of the three faces providing the intersection for each vertex
+  Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
+  Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
   ArrayVector<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
-  ArrayVector<double> ir_vertices;     //!< The coordinates of the irreducible Brillouin zone vertices in an orthonormal frame
-  ArrayVector<double> ir_face_normals; //!< The reciprocal lattice points defining the irreducible Brillouin zone faces.
-  ArrayVector<double> ir_face_points;  //!< A point on each face of the irreducible Brillouin zone.
-  ArrayVector<int> ir_faces_per_vertex;//!< The indexes of the three irreducible faces providing the intersection for each irreducible vertex
-  std::vector<std::vector<int>> ir_verts_per_face; //!< The vertex indices for each face of the irreducible Brillouin zone
-
 public:
   /*!
   @param lat A Reciprocal lattice
@@ -46,72 +38,107 @@ public:
     this->vertex_search(extent);
     if (wedge_search)
       this->wedge_search(time_reversal);
-    else {
-      this->ir_vertices = ArrayVector<double>(3u, 0u);
-      this->ir_face_normals = ArrayVector<double>(3u, 0u);
-      this->ir_face_points = ArrayVector<double>(3u, 0u);
-      this->ir_faces_per_vertex = ArrayVector<int>(3u, 0u);
-      this->ir_verts_per_face = std::vector<std::vector<int>>();
-    }
+    else
+      this->ir_polyhedron = this->polyhedron;
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};
   //! Returns the lattice actually used to find the Brillouin zone vertices,
   //! which may be a primitive lattice depending on the flag at creation
   const Reciprocal get_primitive_lattice() const { return this->lattice;};
-  //
-  void set_vertices(const ArrayVector<double> newverts);
-  void set_faces(const ArrayVector<int> newfaces);
-  void set_faces_per_vertex(const ArrayVector<int> newfpv);
-  void set_ir_wedge_normals(const LQVec<double>&);
-  void set_ir_vertices(const LQVec<double>&);
-  void set_ir_face_normals(const LQVec<double>&);
-  void set_ir_face_points(const LQVec<double>&);
-  // void set_ir_wedge_normals(const ArrayVector<double>);
-  // void set_ir_vertices(const ArrayVector<double>&);
-  // void set_ir_face_normals(const ArrayVector<double>&);
-  // void set_ir_face_points(const ArrayVector<double>&);
-  void set_ir_faces_per_vertex(const ArrayVector<int>&);
-  void set_ir_verts_per_face(const std::vector<std::vector<int>>&);
   //! Returns the number of vertices defining the first Brillouin zone
-  size_t vertices_count() const { return vertices.size();};
+  size_t vertices_count() const { return this->get_vertices().size();};
   //! Returns the number of reciprocal lattice points defining the first Brillouin zone
-  size_t faces_count() const { return faces.size();};
-  //! Returns the vertices as LQVec objects expressed in the construction-input lattice
-  LQVec<double>    get_vertices() const;
-  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the construction-input lattice
-  LQVec<int>       get_faces() const ;
-  //! Returns the vertices as LQVec objects expressed in the zone-defining lattice
-  LQVec<double>    get_primitive_vertices() const;
-  //! Returns the defining reciprocal lattice points as LQVec objects expressed in the zone-defining lattice
-  LQVec<int>       get_primitive_faces() const ;
-  /*! \brief Returns the indexes into the reciprocal lattice points array for
-  the three which produced each intersection vertex
-
-  @note In systems with more than three faces adjacent to a vertex the
-  BrillouinZone object will find the correct vertices but will not return
-  all neighbouring-face indexes for each vertex.
-  This is problematic when attempting to invert the information returned here,
-  e.g., when constructing 3-D patches for visualisation of the Brillouin zone
-  facets. Thankfully, one can overcome this issue by recalling that the dot
-  product of all vertices on a facet minus a point on the facet with the
-  facet normal is zero -- `dot(vertices-faces/2,faces)==0`.
-  */
-  ArrayVector<int> get_faces_per_vertex() const;
+  size_t faces_count() const { return this->get_points().size();};
+  // irreducible reciprocal space wedge
+  void set_ir_wedge_normals(const LQVec<double>&);
   LQVec<double> get_ir_wedge_normals() const;
   LQVec<double> get_primitive_ir_wedge_normals() const;
-  LQVec<double> get_ir_vertices() const;
-  LQVec<double> get_ir_face_normals() const;
-  LQVec<double> get_ir_face_points() const;
-  LQVec<double> get_primitive_ir_vertices() const;
-  LQVec<double> get_primitive_ir_face_normals() const;
-  LQVec<double> get_primitive_ir_face_points() const;
-  ArrayVector<int> get_ir_faces_per_vertex() const;
-  std::vector<std::vector<int>> get_ir_verts_per_face() const;
-  //! Print a representation of the object to the console
+  /*!
+  Set the first Brillouin zone polyhedron from its vertices, central facet plane
+  points, and either the three intersecting planes which gave each vertex or
+  all intersecting planes which give each vertex as well as all vertices which
+  form a corner of each facet plane polygon.
+  @param vertices All vertices in the polyhedron
+  @param points All (τ/2) plane points which define the facets of the polyhedron
+  @param fpv An ArrayVector<int> with three facet-plane indices for each vertex
+  @param fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
+  @param vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
+  */
+  template<typename... A> void set_polyhedron(const LQVec<double>&, const LQVec<double>&, A...);
+  /*!
+  Set the irreducible first Brillouin zone polyhedron from its vertices, facet
+  plane points, facet plane normals, and either the three intersecting planes
+  which gave each vertex or all intersecting planes which give each vertex as
+  well as all vertices which form a corner of each facet plane polygon.
+  @param vertices All vertices in the polyhedron
+  @param points A point on each of the planes which define the facets of the polyhedron
+  @param normals The normal direction which, along with the on-plane-point, defines each facet plane
+  @param fpv An ArrayVector<int> with three facet-plane indices for each vertex
+  @param fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
+  @param vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
+  */
+  template<typename... A> void set_ir_polyhedron(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, A...);
+  //! Returns the first Brillouin zone polyhedron
+  Polyhedron get_polyhedron(void) const;
+  //! Returns the vertices of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_vertices(void) const;
+  //! Returns the on-plane points (τ/2) of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_points(void) const;
+  //! Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_normals(void) const;
+  //! Returns the vertices of the first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_primitive_vertices(void) const;
+  //! Returns the on-plane points (τ/2) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_primitive_points(void) const;
+  //! Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_primitive_normals(void) const;
+  //! Returns the `points` and `normals` indices for each vertex of the first Brillouin zone polyhedron
+  std::vector<std::vector<int>> get_faces_per_vertex(void) const;
+  //! Returns the vertex indices for each facet of the first Brillouin zone polyhedron
+  std::vector<std::vector<int>> get_vertices_per_face(void) const;
+  //! Returns the irreducible first Brillouin zone polyhedron
+  Polyhedron get_ir_polyhedron(void) const;
+  //! Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_ir_vertices(void) const;
+  //! Returns the on-plane points of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_ir_points(void) const;
+  //! Returns the normals of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_ir_normals(void) const;
+  //! Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_ir_primitive_vertices(void) const;
+  //! Returns the on-plane points of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_ir_primitive_points(void) const;
+  //! Returns the normals of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors
+  LQVec<double> get_ir_primitive_normals(void) const;
+  //! Returns the `points` and `normals` indices for each vertex of the irreducible first Brillouin zone polyhedron
+  std::vector<std::vector<int>> get_ir_faces_per_vertex(void) const;
+  //! Returns the vertex indices for each facet of the irreducible first Brillouin zone polyhedron
+  std::vector<std::vector<int>> get_ir_vertices_per_face(void) const;
+  //! Print a representation of the object to std::cout
   void print() const;
-  //
+  /*!
+  Using the pointgroup symmetry opperations of the conventional unit cell,
+  this method defines *an* irreducible section of reciprocal space.
+  The irreducible section bounds a solid angle N and consequently the full
+  reciprocal space is 4π/N larger than the irreducible wedge.
+  As the selected irreducible section is related by symmetry to the rest of
+  reciprocal space there are (at least) 4π/N - 1 equivalent other choices for
+  the irreducible wedge.
+  */
   void wedge_search(const int time_reversal=0);
+  /*!
+  With the first Brillouin zone and *an* irreducible section of reciprocal space
+  already identified, this method finds all intersections of combinations of
+  three planes (nBz,nIr) = {(0,3), (1,2), (2,1), and (3,0)} where nBz are the
+  number of intersecting first Brillouin zone facet planes and nIr are the
+  number of intersecting irreducible reciprocal space wedge planes.
+  Once all combinations of intersection points are found, those within the
+  first Brillouin zone *and* the irreducible reciprocal space wedge define the
+  irreducible first Brillouin zone.
+  @note the (3,0) intersection points *are* the first Brillouin zone vertices
+  and the (0,3) intersection points are all identically ⃗0.
+  */
   void irreducible_vertex_search(void);
   /*! \brief Search for the vertices defining the first Brillouin zone
 
@@ -135,6 +162,11 @@ public:
              associated Q point is inside of the Brillouin zone.
   */
   template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
+  /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
+  @param p A reference to a LQVec list of Q points to be checked
+  @returns An ArrayVector<bool> with each 1-element array indicating if the
+           associated Q point is inside our irreducible reciprocal space.
+  */
   template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p) const;
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
     @param[in] Q A reference to LQVec list of Q points
@@ -142,6 +174,15 @@ public:
     @param[out] tau The reciprocal lattice zone centres
   */
   bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau);
+  /*! \brief Find q, τ, and R∈G such that Q = Rq + τ, where τ is a reciprocal
+             lattice vector and R is a pointgroup symmetry operation of the
+             conventional unit cell pointgroup, G.
+    @param [in] Q a refernce to a LQVec list of Q points
+    @param [out] q The irreducible reduced reciprocal lattice vectors
+    @param [out] τ The conventional reciprocal lattice zone centres
+    @param [out] R The conventional lattice pointgroup operations
+    @param time_reveral A flag to indicate if time reversal symmetry should be added to pointgroups lacking inversion symmetry
+  */
   bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R, const int time_reversal=0) const ;
 private:
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
@@ -195,18 +236,66 @@ bool three_plane_intersection(const LQVec<double>& n,
                               const ArrayVector<double>& xyz,
                               const int i, const int j, const int k,
                               LQVec<double>& iat, const int idx=0);
+/*! \brief Find the intersection point of three planes, if it exists.
+
+From the normal vector and on-plane point describing three planes, determine
+if an intersection point exists (and is not too far from the origin), if so
+calculate the intersection pointd and store it in `intersect` at `idx`.
+@param ni A LQVec<double> reference to the normal for plane `i`
+@param pi A LQVec<double> reference to the on-plane point for plane `i`
+@param nj A LQVec<double> reference to the normal for plane `j`
+@param pj A LQVec<double> reference to the on-plane point for plane `j`
+@param nk A LQVec<double> reference to the normal for plane `k`
+@param pk A LQVec<double> reference to the on-plane point for plane `k`
+@param[out] intersect A LQVec<double> reference to a list of intersection points
+@param idx The location in `intersect` where the found intersection point should
+           be stored, if it exists and is not too far from the origin.
+*/
 bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
                   const LQVec<double>& nj, const LQVec<double>& pj,
                   const LQVec<double>& nk, const LQVec<double>& pk,
                   LQVec<double>& intersect, const int idx);
+/*! \brief A specialization where one plane passes through the origin
+
+@param ni A LQVec<double> reference to the normal for plane `i`
+@param pi A LQVec<double> reference to the on-plane point for plane `i`
+@param nj A LQVec<double> reference to the normal for plane `j`
+@param pj A LQVec<double> reference to the on-plane point for plane `j`
+@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec<double> reference to a list of intersection points
+@param idx The location in `intersect` where the found intersection point should
+           be stored, if it exists and is not too far from the origin.
+*/
 bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
                   const LQVec<double>& nj, const LQVec<double>& pj,
                   const LQVec<double>& nk,
                   LQVec<double>& intersect, const int idx);
+/*! \brief A specialization where two planes pass through the origin
+
+@param ni A LQVec<double> reference to the normal for plane `i`
+@param pi A LQVec<double> reference to the on-plane point for plane `i`
+@param nj A LQVec<double> reference to the normal for plane `j`, which passes through the origin
+@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec<double> reference to a list of intersection points
+@param idx The location in `intersect` where the found intersection point should
+           be stored, if it exists and is not too far from the origin.
+*/
 bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
                   const LQVec<double>& nj,
                   const LQVec<double>& nk,
                   LQVec<double>& intersect, const int idx);
+/*! \brief A (trivial) specialization where three planes pass through the origin
+
+@param ni A LQVec<double> reference to the normal for plane `i`, which passes through the origin
+@param nj A LQVec<double> reference to the normal for plane `j`, which passes through the origin
+@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec<double> reference to a list of intersection points
+@param idx The location in `intersect` where the found intersection point should
+           be stored, if it exists and is not too far from the origin.
+@note The intersection point of three non-degenerate planes passing through the
+      origin *is* the origin. Degenerate planes do not intersect at a point, so
+      this function will return false for degenerate inputs.
+*/
 bool intersect_at(const LQVec<double>& ni,
                   const LQVec<double>& nj,
                   const LQVec<double>& nk,

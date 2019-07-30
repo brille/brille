@@ -1,4 +1,28 @@
-
+// [ArrayVector] dot
+template<class T, class R, template<class> class L1, template<class> class L2,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L1<T>>::value&&!std::is_base_of<LatVec,L1<T>>::value>::type,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,L2<R>>::value&&!std::is_base_of<LatVec,L2<R>>::value>::type,
+         class S = typename std::common_type<T,R>::type>
+ArrayVector<S> dot(const L1<T> &a, const L2<R> &b){
+  AVSizeInfo si = a.consistency_check(b);
+  if (si.scalara||si.scalarb) throw std::runtime_error("dot product requires two vectors");
+  ArrayVector<double> out(1,si.n);
+  double tmp=0;
+  for (size_t i=0; i<si.n; i++) {
+    for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
+    out.insert(tmp, i);
+  }
+  return out;
+}
+// [ArrayVector] norm
+template<class T, template<class> class L,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type
+        >
+ArrayVector<double> norm(const L<T> &a){
+  ArrayVector<double> out = dot(a,a);
+  for (size_t i=0; i<out.size(); ++i) out.insert(sqrt(out.getvalue(i)),i);
+  return out;
+}
 
 template<typename T,typename R> double same_lattice_dot(const R* x, const T* y, const double* len, const double* ang){
   double out = double(x[0])*double(y[0])*len[0]*len[0]
@@ -66,15 +90,16 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
   }
   return out;
 }
-// norm
-template<class T, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type
-        >
-ArrayVector<double> norm(const L<T> &a){
-  ArrayVector<double> out = dot(a,a);
-  for (size_t i=0; i<out.size(); ++i) out.insert(sqrt(out.getvalue(i)),i);
-  return out;
-}
+// // [LatVec] norm
+// template<class T, template<class> class L,
+//          typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type
+//         >
+// ArrayVector<double> norm(const L<T> &a){
+//   ArrayVector<double> out = dot(a,a);
+//   for (size_t i=0; i<out.size(); ++i) out.insert(sqrt(out.getvalue(i)),i);
+//   return out;
+// }
+
 
 // star
 template<class T, template <class R> class L,

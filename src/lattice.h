@@ -197,6 +197,8 @@ public:
   Reciprocal star() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
   void get_xyz_transform(double *toxyz) const;
+  //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
+  void get_inverse_xyz_transform(double *fromxyz) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
   //! Always false
@@ -224,6 +226,8 @@ public:
   void get_B_matrix(double *mt) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
   void get_xyz_transform(double *toxyz) const;
+  //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
+  void get_inverse_xyz_transform(double *fromxyz) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
   //! Always false

@@ -136,6 +136,12 @@ public:
   template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
   //! Check whether two vectors in the object are approximately the same
   bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+  //! Round all elements using std::round
+  LDVec<int> round() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::round()); };
+  //! Find the floor of all elements using std::floor
+  LDVec<int> floor() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::floor()); };
+  //! Find the ceiling of all elements using std::ceil
+  LDVec<int> ceil() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::ceil()); };
 protected:
   void check_arrayvector(const int);
 };
@@ -259,6 +265,12 @@ public:
   template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
   //! Check whether two vectors in the object are approximately the same.
   bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+  //! Round all elements using std::round
+  LQVec<int> round() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::round()); };
+  //! Find the floor of all elements using std::floor
+  LQVec<int> floor() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::floor()); };
+  //! Find the ceiling of all elements using std::ceil
+  LQVec<int> ceil() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::ceil()); };
 protected:
   void check_arrayvector(const int);
 };

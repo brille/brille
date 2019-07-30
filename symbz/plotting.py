@@ -5,43 +5,42 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import symbz as sbz
 
-# pylint: disable=c0103
-def plot_points(x, title=''):
-    """Plot the N points contained in the (N,3) ndarray x."""
-    fig = pp.figure()
-    axs = Axes3D(fig)
-    axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
-    axs.set_title(title)
-    pp.show()
+def _check_axes(axs=None):
+    if axs is None:
+        if pp.get_fignums() and isinstance(pp.gca(), Axes3D):
+            axs = pp.gca()
+        else:
+            axs = Axes3D(pp.figure())
+    return axs
 
-def plot_points_with_lines(x, y, title=''):
+
+# pylint: disable=c0103
+def plot_points(x, axs=None, title=None, show=True):
+    """Plot the N points contained in the (N,3) ndarray x."""
+    axs = _check_axes(axs)
+    axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
+    if title is not None:
+        axs.set_title(title)
+    if show:
+        pp.show()
+
+def plot_points_with_lines(x, y, axs=None, title=None, show=True):
     """Plot the N points contained in the (N,3) ndarray x with lines y.
 
     The M line segments defined by the (M+1,3) ndarray y are drawn before the
     points in x.
     """
-    fig = pp.figure()
-    axs = Axes3D(fig)
+    axs = _check_axes(axs)
     axs.plot(y[:, 0], y[:, 1], y[:, 2])
     axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
-    axs.set_title(title)
-    pp.show()
-
-def vector_angle(v_0, v_1, normal=np.array([0, 0, 1])):
-    """Calculate the angle between two vectors, given a vector normal."""
-    hat_0 = v_0/np.sqrt(np.dot(v_0, v_0))
-    hat_1 = v_1/np.sqrt(np.dot(v_1, v_1))
-    dot01 = np.dot(hat_0, hat_1)
-    crs01 = np.cross(hat_0, hat_1)
-    x_vec = dot01*hat_0
-    y_vec = hat_1 - x_vec
-    y_len = np.sqrt(np.dot(y_vec, y_vec)) * np.sign(np.dot(crs01, normal))
-    ang01 = np.arctan2(y_len, dot01)
-    return ang01 if ang01 >= 0 else ang01 + 2*np.pi
+    if title is not None:
+        axs.set_title(title)
+    if show:
+        pp.show()
 
 # pylint: disable=r0912,r0913,r0914,r0915
-def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
-            face_vectors=False,
+def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=False,
+            face_vectors=False, show=True,
             color='b', edgecolor='k', linewidth=1, alpha=0.7):
     """Plot a BrillouinZone or BZGridQ[complex] object.
 
@@ -59,8 +58,7 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
     None, then the mapped grid points in 'rlu' or 'invA' will be set to `Q`.
     """
     # pylint: disable=no-member
-    fig = pp.figure()
-    axs = Axes3D(fig)
+    axs = _check_axes(axs)
     if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
         if Q is None:
             if units == 'rlu':
@@ -75,21 +73,18 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
     # we always draw the 1st Brillouin zone
     if units == 'rlu':
         verts = bz.vertices
-        norms = bz.faces
     elif units == 'primitive':
         verts = bz.vertices_primitive
-        norms = bz.faces_primitive
     else:
         verts = bz.vertices_invA
-        norms = bz.faces_invA
     bzcolor = color if not irreducible else "w"
     bzedgecolor = edgecolor if not irreducible else "0.75"
     bzlinestyle = '-' if not irreducible else '--'
     bzalpha = alpha if not irreducible else 0
 
     # the 1st Brillouin zone has on-face points equal to half the normals
-    polybz, xyz_min, xyz_max = _make_poly_collection(verts, norms, norms/2,
-                                                     bz.faces_per_vertex,
+    polybz, xyz_min, xyz_max = _make_poly_collection(verts,
+                                                     bz.vertices_per_face,
                                                      origin=origin,
                                                      color=bzcolor,
                                                      edgecolor=bzedgecolor,
@@ -99,19 +94,13 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
     if irreducible:
         if units == 'rlu':
             ir_verts = bz.ir_vertices
-            ir_norms = bz.ir_face_normals
-            ir_point = bz.ir_face_points
         elif units == 'primitive':
             ir_verts = bz.ir_vertices_primitive
-            ir_norms = bz.ir_face_normals_primitive
-            ir_point = bz.ir_face_points_primitive
         else:
             ir_verts = bz.ir_vertices_invA
-            ir_norms = bz.ir_face_normals_invA
-            ir_point = bz.ir_face_points_invA
         if ir_verts.size > 0:
-            polyir, _, _ = _make_poly_collection(ir_verts, ir_norms, ir_point,
-                                                 bz.ir_faces_per_vertex,
+            polyir, _, _ = _make_poly_collection(ir_verts,
+                                                 bz.ir_vertices_per_face,
                                                  origin=origin,
                                                  color=color,
                                                  edgecolor=edgecolor,
@@ -121,9 +110,16 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
             axs.add_collection3d(polyir)
     axs.add_collection3d(polybz)
     if face_vectors:
-        fvecs = [np.array([[0, 0, 0], p]) for p in point]
-        # fvecs = [np.array([[0, 0, 0], point[i]])
-        #          for i in range(point.shape[0])]
+        if units == 'rlu':
+            norms = bz.normals
+            point = bz.points
+        elif units == 'primitive':
+            norms = bz.normals_primitive
+            point = bz.points_primitive
+        else:
+            norms = bz.normals_invA
+            point = bz.points_invA
+        fvecs = [np.array([p, p+n]) for p, n in zip(point, norms)]
         lcol = Line3DCollection(fvecs)
         axs.add_collection3d(lcol)
     axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
@@ -131,49 +127,32 @@ def plot_bz(bz, origin=None, Q=None, units='invA', irreducible=False,
     axs.set_zlim(bottom=xyz_min[2], top=xyz_max[2])
     if isinstance(Q, np.ndarray) and Q.ndim == 2 and Q.shape[1] == 3:
         axs.scatter(Q[:, 0], Q[:, 1], Q[:, 2])
-    axs.set_aspect('equal','box')
-    pp.show()
+    axs.set_aspect('equal', 'box')
+    if show:
+        pp.show()
     return axs
 
-def _make_poly_collection(verts, norms, point, fpv, origin=None,
-                          color='b', edgecolor='k',
+def _make_poly_collection(verts, vpf, origin=None, color='b', edgecolor='k',
                           linestyle='-', linewidth=1, alpha=0.5):
-    # We have the three faces contributing to each vertex
-    # for plotting we want the opposite -- the vertices contributing per face
-    vpf = [(fpv == i).any(1).nonzero()[0] for i in range(len(norms))]
-    # if a vertex is on the edge of more than three faces, we miss N-3 here.
-    # try to search for any missing vertices for each face:
-    for i, (n_i, p_i) in enumerate(zip(norms, point)):
-        for j, v_j in enumerate(verts):
-            if not (vpf[i] == j).any():
-                if np.abs(np.dot(v_j-p_i, n_i)) < 1e-15:
-                    vpf[i] = np.append(vpf[i], j)
-
+    # vpf lists the ordered vertices which make up each facet
+    # for each facet, pick-out the vertices which define its polygon face
     patches = [np.array([verts[j, :] for j in i]) for i in vpf]
-    # the coordinates of the patch vertices need to be sorted.
-    for idx in range(norms.shape[0]):
-        # find the patch points relative to their centroid
-        this_patch = patches[idx] - np.mean(patches[idx], axis=0)
-        n_verts = len(this_patch)
-        perm = np.array(range(n_verts))
-        windings = np.array([
-            [vector_angle(x, y, norms[idx]) for x in this_patch]
-            for y in this_patch])
-        windings[windings == 0] = 1e3
-        # or just set the diagonal to a large value?
-        # windings[np.diag_indices(n_verts)] = 1e3
-        for i in range(1, n_verts):
-            perm[i] = np.argmin(windings[perm[i-1]])
-        patches[idx] = patches[idx][perm]+origin
-
+    # if an origin has been provided, add it to the patches
+    if origin is not None and origin.ndim == 1 and origin.shape[0] == 3:
+        for p in patches:
+            p += origin
+    # find the extent of the patches
     xyz_min = np.array([x.min() for x in np.vsplit(verts.transpose(), 3)])
     xyz_max = np.array([x.max() for x in np.vsplit(verts.transpose(), 3)])
+    # plus some nice-for-plotting padding
     dif = xyz_max-xyz_min
     xyz_min -= dif/20
     xyz_max += dif/20
+    # and create the collection of polygons in 3D
     collection = Poly3DCollection(patches, edgecolor=edgecolor,
                                   linestyle=linestyle, linewidth=linewidth,
                                   alpha=alpha)
+    # which requires that the face color be set after the fact
     collection.set_facecolor(color)
     return (collection, xyz_min, xyz_max)
 
