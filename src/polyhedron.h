@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "arrayvector.h"
+#include "debug.h"
 
 template <typename T>
 std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, const ArrayVector<T>& n){
@@ -70,7 +71,8 @@ public:
              const ArrayVector<double>& p,
              const ArrayVector<int>& fpv):
   vertices(v), points(p), normals(p/norm(p)) {
-    this->extend_unique_faces_per_vertex(fpv);
+    this->keep_unique_vertices();
+    this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
     this->sort_polygons();
   };
@@ -86,7 +88,8 @@ public:
              const ArrayVector<double>& n,
              const ArrayVector<int>& fpv):
   vertices(v), points(p), normals(n) {
-    this->extend_unique_faces_per_vertex(fpv);
+    this->keep_unique_vertices();
+    this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
     this->sort_polygons();
   };
@@ -118,44 +121,106 @@ public:
   ArrayVector<double> get_normals(void) const { return normals; };
   std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; };
   std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; };
-protected:
-  void extend_unique_faces_per_vertex(const ArrayVector<int>& fpv){
-    // first look for vertices that are equivalent -- that is points where more than three planes interesect
-    std::vector<bool> uniqueflg;
-    std::vector<size_t> uniqueidx;
-    for (size_t i=0; i<this->vertices.size(); ++i){
-      uniqueflg.push_back(true);
-      uniqueidx.push_back(i);
-    }
-    int tol_multiplier = 3; // a tuning parameter, 3 seems to work OK.
-    for (size_t i=1; i<this->vertices.size(); ++i)
-      for (size_t j=0; j<i; ++j){
-        if (uniqueflg[j] && approx_vector(this->vertices.numel(), this->vertices.datapointer(i), this->vertices.datapointer(j), tol_multiplier)){
-          uniqueflg[i]=false;
-          uniqueidx[i]=j;
-        }
-        if (!uniqueflg[i]) break;
-      }
-    std::vector<size_t> mapidx(this->vertices.size());
-    size_t no_unique=0;
-    for (size_t i=0; i<this->vertices.size(); ++i)
-      mapidx[i] = uniqueflg[i] ? no_unique++ : mapidx[uniqueidx[i]];
-    std::vector<std::vector<int>> fpv_ext(no_unique);
-    bool already_present;
-    int tmp;
-    for (size_t i=0; i<this->vertices.size(); ++i)
-      for (size_t j=0; j<3; ++j){
-        already_present=false;
-        tmp = fpv.getvalue(i,j);
-        for (auto k: fpv_ext[mapidx[i]]) if (k == tmp) already_present=true;
-        if (!already_present) fpv_ext[mapidx[i]].push_back(tmp);
-      }
-
-    // and extract the unique vertices, and unique planes_per_vertex:
-    this->vertices = this->vertices.extract(uniqueflg);
-    this->faces_per_vertex = fpv_ext;
+  std::string string_repr(void) const {
+    size_t nv = vertices.size(), nf=points.size();
+    std::string repr = "Polyhedron with ";
+    repr += std::to_string(nv) + " " + (1==nv?"vertex":"vertices") + " and ";
+    repr += std::to_string(nf) + " " + (1==nf?"facet":"facets");
+    return repr;
   };
+  double get_volume(void) const {
+    /* per, e.g., http://wwwf.imperial.ac.uk/~rn/centroid.pdf
+
+    For a polyhedron with N triangular faces, each with ordered vertices
+    (aᵢ, bᵢ, cᵢ), one can define nᵢ = (bᵢ-aᵢ)×(cᵢ-aᵢ) for each face and then
+    find that the volume of the polyhedron is V = 1/6 ∑ᵢ₌₁ᴺ aᵢ⋅ nᵢ
+
+    In our case here the polyhedron faces are likely not triangular, but we can
+    subdivide each n-polygon face into n-2 triangles relatively easily.
+    Furthermore, we can ensure that the vertex order is correct by comparing
+    the triangle-normal to our already-stored facet normals.
+    */
+    double volume{0.}, subvol;
+    double n[3];
+    std::array<int,3> tri;
+    ArrayVector<double> a(3u, 1u), ba(3u, 1u), ca(3u, 1u);
+    for (size_t f=0; f<normals.size(); ++f){
+      a = this->vertices.extract(vertices_per_face[f][0]);
+      for (int i=1; i<vertices_per_face[f].size()-1; ++i){ // loop over triangles
+        ba = this->vertices.extract(vertices_per_face[f][ i ]) - a;
+        ca = this->vertices.extract(vertices_per_face[f][i+1]) - a;
+        vector_cross(n, ba.datapointer(0), ca.datapointer(0));
+        subvol = vector_dot(a.datapointer(0), n);
+        if (vector_dot(n, normals.datapointer(f)) < 0) subvol *= -1.0;
+        volume += subvol;
+      }
+    }
+    return volume/6.0; // not-forgetting the factor of 1/6
+  };
+protected:
+  void keep_unique_vertices(void){
+    // status_update(">");
+    std::vector<bool> flg;
+    for (size_t i=0; i<vertices.size(); ++i) flg.push_back(true);
+    int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
+    size_t n = vertices.numel();
+    for (size_t i=1; i<vertices.size(); ++i) for (size_t j=0; j<i; ++j)
+      if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.datapointer(i), vertices.datapointer(j), t);
+    this->vertices = this->vertices.extract(flg);
+    // status_update("<");
+  }
+  void find_all_faces_per_vertex(void){
+    // status_update(">");
+    ArrayVector<double> vmp;
+    std::vector<std::vector<int>> fpv(vertices.size());
+    ArrayVector<bool> isonplane(1u, points.size());
+    for (size_t i=0; i<vertices.size(); ++i){
+      isonplane = dot(normals, vertices.extract(i) - points).is_approx("==",0.);
+      for (size_t j=0; j<points.size(); ++j) if (isonplane.getvalue(j)) fpv[i].push_back(static_cast<int>(j));
+    }
+    this->faces_per_vertex = fpv;
+    // status_update("<");
+  }
+  // void extend_unique_faces_per_vertex(const ArrayVector<int>& fpv){
+  //   status_update(">");
+  //   // first look for vertices that are equivalent -- that is points where more than three planes interesect
+  //   std::vector<bool> uniqueflg;
+  //   std::vector<size_t> uniqueidx;
+  //   for (size_t i=0; i<this->vertices.size(); ++i){
+  //     uniqueflg.push_back(true);
+  //     uniqueidx.push_back(i);
+  //   }
+  //   int tol_multiplier = 3; // a tuning parameter, 3 seems to work OK.
+  //   for (size_t i=1; i<this->vertices.size(); ++i)
+  //     for (size_t j=0; j<i; ++j){
+  //       if (uniqueflg[j] && approx_vector(this->vertices.numel(), this->vertices.datapointer(i), this->vertices.datapointer(j), tol_multiplier)){
+  //         uniqueflg[i]=false;
+  //         uniqueidx[i]=j;
+  //       }
+  //       if (!uniqueflg[i]) break;
+  //     }
+  //   std::vector<size_t> mapidx(this->vertices.size());
+  //   size_t no_unique=0;
+  //   for (size_t i=0; i<this->vertices.size(); ++i)
+  //     mapidx[i] = uniqueflg[i] ? no_unique++ : mapidx[uniqueidx[i]];
+  //   std::vector<std::vector<int>> fpv_ext(no_unique);
+  //   bool already_present;
+  //   int tmp;
+  //   for (size_t i=0; i<this->vertices.size(); ++i)
+  //     for (size_t j=0; j<3; ++j){
+  //       already_present=false;
+  //       tmp = fpv.getvalue(i,j);
+  //       for (auto k: fpv_ext[mapidx[i]]) if (k == tmp) already_present=true;
+  //       if (!already_present) fpv_ext[mapidx[i]].push_back(tmp);
+  //     }
+  //
+  //   // and extract the unique vertices, and unique planes_per_vertex:
+  //   this->vertices = this->vertices.extract(uniqueflg);
+  //   this->faces_per_vertex = fpv_ext;
+  //   status_update("<");
+  // };
   void polygon_vertices_per_face(void) {
+    // status_update(">");
     bool already_present;
     // We have 3+ faces per vertex, so we can now find the vertices per face
     std::vector<std::vector<int>> vpf(this->points.size());
@@ -167,20 +232,18 @@ protected:
         if (!already_present) vpf[face].push_back(i);
       }
       // additionally, we only want to keep faces which describe polygons
-    ArrayVector<bool> is_polygon(1u, vpf.size());
-    for (size_t i=0; i<vpf.size(); ++i)
-      is_polygon.insert(vpf[i].size()>2 ? true : false, i);
-    this->prune_faces(is_polygon);
+    std::vector<bool> is_polygon;
+    for (size_t i=0; i<vpf.size(); ++i) is_polygon.push_back(vpf[i].size()>2);
+    this->points = this->points.extract(is_polygon);
+    this->normals = this->normals.extract(is_polygon);
     // plus cut-down the vertices_per_face vector
     std::vector<std::vector<int>> polygon_vpf;
     for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);
     this->vertices_per_face = polygon_vpf;
-  };
-  void prune_faces(ArrayVector<bool>& keep){
-    this->points = this->points.extract(keep);
-    this->normals = this->normals.extract(keep);
+    // status_update("<");
   };
   void sort_polygons(void){
+    // status_update(">");
     std::vector<std::vector<int>> sorted_vpp(this->points.size());
     ArrayVector<double> facet_verts(3u, 0u), facet_centre, facet_normal;
     std::vector<int> facet, perm;
@@ -213,6 +276,7 @@ protected:
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
     }
     this->vertices_per_face = sorted_vpp;
+    // status_update("<");
   };
 };
 

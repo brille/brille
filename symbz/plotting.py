@@ -78,7 +78,7 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=False,
     else:
         verts = bz.vertices_invA
     bzcolor = color if not irreducible else "w"
-    bzedgecolor = edgecolor if not irreducible else "0.75"
+    bzedgecolor = edgecolor if not irreducible else "0.5"
     bzlinestyle = '-' if not irreducible else '--'
     bzalpha = alpha if not irreducible else 0
 

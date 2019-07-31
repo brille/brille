@@ -1,14 +1,18 @@
+
 template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){
-    std::string msg = "ArrayVector<T>::datapointer(" + std::to_string(i)
-    + "," + std::to_string(j) +")" + " but size()="
-    + std::to_string(this->size()) + " and numel()="
-    + std::to_string(this->numel());
-    throw std::domain_error(msg);
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += "\n Attempting to access the pointer to element " +std::to_string(j);
+    msg += " of array " + std::to_string(i) + " but the ArrayVector holds ";
+    msg += std::to_string(this->size()) + " arrays each with ";
+    msg += std::to_string(this->numel()) + " elements";
+    throw std::out_of_range(msg);
   }
   ptr = this->data + (i*this->numel() + j);
-  if (!ptr) throw std::runtime_error("Attempting to access uninitialized datapointer");
+  if (!ptr){
+    throw std::runtime_error("Attempting to access uninitialized datapointer");
+  }
   return ptr;
 }
 
@@ -23,7 +27,10 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t i) cons
     ArrayVector<T> out(this->numel(),1u,this->datapointer(i));
     return out;
   }
-  throw std::out_of_range("The requested element of the ArrayVector does not exist");
+  std::string msg = "The requested element " + std::to_string(i);
+  msg += " is out of bounds for an ArrayVector with size()= ";
+  msg += std::to_string(this->size());
+  throw std::out_of_range(msg);
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::first(const size_t num) const {
   size_t stop = num < this->size() ? num : this->size();
@@ -44,7 +51,9 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, cons
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<size_t>& idx) const{
   bool allinbounds = true;
   ArrayVector<T> out(this->numel(),0u);
-  if (idx.numel() != 1u) throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+  if (idx.numel() != 1u){
+    throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+  }
   for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
   if (allinbounds){
     out.resize(idx.size());
@@ -120,8 +129,12 @@ template<typename T> void ArrayVector<T>::print(const size_t first, const size_t
   const char * fmt = std::is_floating_point<T>::value ? " % g " : " % d ";
   if (first<this->size() && last<this->size())
     this->printformatted(fmt,first,last+1,after);
-  else
-    printf("Attempted to print elements %u to %u of size()=%u ArrayVector!\n",first,last,this->size());
+  else {
+    std::string msg = "Attempted to print elements ";
+    msg += std::to_string(first) + " to " + std::to_string(last);
+    msg += " of size()= " + std::to_string(this->size()) + " ArrayVector";
+    throw std::out_of_range(msg);
+  }
 }
 
 template<typename T> void ArrayVector<T>::printheader(const char* name) const {
@@ -217,9 +230,16 @@ template<typename T> bool ArrayVector<T>::isapprox(const size_t i, const size_t 
 }
 
 template<typename T> void ArrayVector<T>::cross(const size_t i, const size_t j, T* out) const {
-  if (this->numel()!=3u) throw std::domain_error("cross is only defined for 3-D vectors");
+  if (this->numel()!=3u){
+    throw std::domain_error("cross is only defined for 3-D vectors");
+  }
   if (i<this->size()&&j<this->size())  vector_cross(out,this->datapointer(i,0),this->datapointer(j,0));
-  else throw std::domain_error("attempted to access out of bounds memory");
+  else {
+    std::string msg = "Attempted to access elements " + std::to_string(i);
+    msg += " and " + std::to_string(j) + " of a " + std::to_string(this->size());
+    msg += "-element ArrayVector";
+    throw std::out_of_range(msg);
+  }
 }
 template<typename T> T ArrayVector<T>::dot(const size_t i, const size_t j) const {
   T out = 0;
@@ -326,7 +346,8 @@ template<typename T> bool ArrayVector<T>::all_approx(const std::string& expr, co
     if (!approx_scalar(this->getvalue(i,j), val)) return false;
     return true;
   }
-  std::string msg = "Unknown comparator " + expr;
+  std::string msg = __PRETTY_FUNCTION__;
+  msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);
 }
 template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, const T val, const size_t n) const{
@@ -357,7 +378,8 @@ template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, co
     if (approx_scalar(this->getvalue(i,j), val)) return true;
     return false;
   }
-  std::string msg = "Unknown comparator " + expr;
+  std::string msg = __PRETTY_FUNCTION__;
+  msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);
 }
 template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const T val, const size_t n) const{
@@ -416,7 +438,8 @@ template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::stri
     }
     return out;
   }
-  std::string msg = "Unknown comparator " + expr;
+  std::string msg = __PRETTY_FUNCTION__;
+  msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);
 }
 
@@ -521,7 +544,9 @@ template<class T, class R, template<class> class A,
          >
 A<S> dot(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
-  if (si.scalara^si.scalarb) throw std::runtime_error("ArrayVector dot requires equal numel()");
+  if (si.scalara^si.scalarb){
+    throw std::runtime_error("ArrayVector dot requires equal numel()");
+  }
   A<S> out(1u,si.n);
   S tmp;
   for (size_t i=0; i<si.n; ++i){
@@ -603,15 +628,17 @@ A<S> operator+(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
   A<S> out = si.aorb ? A<S>(a) : A<S>(b);
   out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  // if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
-  //   printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
-  //   printf("OneVector   %3d %3d\n",si.oneveca?1:0,si.onevecb?1:0);
-  //   printf("ArrayScalar %3d %3d\n",si.scalara?1:0,si.scalarb?1:0);
-  //   printf("-----------------------\n");
-  //   printf("chosen      %3d %3d\n",si.aorb?1:0,si.aorb?0:1);
-  //   printf("size()      %3u %3u %3u\n",a.size(), b.size(), out.size());
-  //   printf("numel()     %3u %3u %3u\n",a.numel(), b.numel(), out.numel());
-  // }
+  #ifdef SUPER_VERBOSE
+  if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
+    printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
+    printf("OneVector   %3d %3d\n",si.oneveca?1:0,si.onevecb?1:0);
+    printf("ArrayScalar %3d %3d\n",si.scalara?1:0,si.scalarb?1:0);
+    printf("-----------------------\n");
+    printf("chosen      %3d %3d\n",si.aorb?1:0,si.aorb?0:1);
+    printf("size()      %3u %3u %3u\n",a.size(), b.size(), out.size());
+    printf("numel()     %3u %3u %3u\n",a.numel(), b.numel(), out.numel());
+  }
+  #endif
   for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
   return out;
 }
@@ -779,9 +806,15 @@ template<class T, class R, template<class> class A,
          class S = typename std::common_type<T,R>::type
          >
 void accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, A<S>& out, const size_t j) {
-  if (av.numel() != out.numel()) throw std::runtime_error("source and sink ArrayVectors must have same number of elements");
-  if ( j >= out.size() ) throw std::out_of_range("sink index out of range");
-  for (size_t k=0;k<n;++k) if (i[k]>=av.size()) throw std::out_of_range("source index out of range");
+  if (av.numel() != out.numel()){
+    throw std::runtime_error("source and sink ArrayVectors must have same number of elements");
+  }
+  if ( j >= out.size() ){
+    throw std::out_of_range("sink index out of range");
+  }
+  for (size_t k=0;k<n;++k) if (i[k]>=av.size()){
+    throw std::out_of_range("source index out of range");
+  }
   unsafe_accumulate_to(av,n,i,w,out,j);
 }
 /*! Combine multiple weighted arrays from one ArrayVector into a single-array ArrayVector,
@@ -842,14 +875,18 @@ void interpolate_to(const A<T>& av,
                     const R *w,
                     A<S>& out,
                     const size_t j) {
-  if (av.numel() != out.numel())
+  if (av.numel() != out.numel()){
     throw std::runtime_error("source and sink ArrayVectors must have same number of elements");
-  if ( j >= out.size() )
+  }
+  if ( j >= out.size() ){
     throw std::out_of_range("sink index out of range");
-  if (av.numel() != (nS+nE+nV+nM*nM)*nB)
+  }
+  if (av.numel() != (nS+nE+nV+nM*nM)*nB){
     throw std::runtime_error("Wrong number of scalar/eigenvector/vector/matrix elements or branches.");
-  for (size_t k=0;k<n;++k) if (i[k]>=av.size())
+  }
+  for (size_t k=0;k<n;++k) if (i[k]>=av.size()){
     throw std::out_of_range("source index out of range");
+  }
   unsafe_interpolate_to(av,nS,nE,nV,nM,nB,n,i,w,out,j);
 }
 template<class T, class R, template<class> class A,

@@ -11,6 +11,8 @@
 #include <CGAL/Delaunay_triangulation_3.h>
 // Tetgen header
 #include "tetgen/tetgen.h"
+// debugging output
+#include "debug.h"
 /*--------------------------------- TYPEDEFS ---------------------------------*/
 // for CGAL Delaunay (re)Triangulation w/ Fast_location and an index per point
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
@@ -78,14 +80,6 @@ struct Auto_count : public CGAL::cpp98::unary_function<const Delaunay::Point&,st
     return std::make_pair(p,i++);
   }
 };
-
-#define VERBOSE_MESHING
-
-inline static void status_update(const std::string& status){
-  #ifdef VERBOSE_MESHING
-  std::cout << status << std::endl;
-  #endif
-}
 
 template <typename T>
 Delaunay triangulate(const ArrayVector<T>& verts,

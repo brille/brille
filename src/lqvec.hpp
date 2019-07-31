@@ -3,7 +3,10 @@ template<typename T> LQVec<T> LQVec<T>::extract(const size_t i) const {
     LQVec<T> out(this->get_lattice(),1u,this->datapointer(i));
     return out;
   }
-  throw std::out_of_range("The requested element of the ArrayVector does not exist");
+  std::string msg = "The requested element " + std::to_string(i);
+  msg += " is out of bounds for a LQVec with size()= ";
+  msg += std::to_string(this->size());
+  throw std::out_of_range(msg);
 }
 template<typename T> LQVec<T> LQVec<T>::first(const size_t num) const {
   size_t stop = num < this->size() ? num : this->size();

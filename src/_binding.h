@@ -758,6 +758,7 @@ void declare_polyhedron(py::module &m, const std::string &typestr) {
     .def_property_readonly("points",[](const T& o){return av2np(o.get_points());})
     .def_property_readonly("normals",[](const T& o){return av2np(o.get_normals());})
     .def_property_readonly("vertices_per_face",&T::get_vertices_per_face)
-    .def_property_readonly("faces_per_vertex",&T::get_faces_per_vertex);
+    .def_property_readonly("faces_per_vertex",&T::get_faces_per_vertex)
+    .def_property_readonly("volume",&T::get_volume);
   }
 #endif

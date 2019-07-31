@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include "polyhedron.h"
+#include "debug.h"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -36,10 +37,10 @@ public:
   BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, int time_reversal=0, int wedge_search=0): outerlattice(lat) {
     lattice = toprim ? lat.primitive() : lat;
     this->vertex_search(extent);
-    if (wedge_search)
-      this->wedge_search(time_reversal);
-    else
-      this->ir_polyhedron = this->polyhedron;
+    // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
+    // set the irreducible wedge now as the search will do nothing.
+    this->ir_polyhedron = this->polyhedron;
+    if (wedge_search) this->wedge_search(time_reversal);
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};
@@ -185,6 +186,7 @@ public:
   */
   bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R, const int time_reversal=0) const ;
 private:
+  void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
   bool wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num);
   bool ir_wedge_is_ok(const LQVec<double>& normals);

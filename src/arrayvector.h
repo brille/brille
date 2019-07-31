@@ -8,6 +8,7 @@
 #include<functional>
 #include<vector>
 #include "linear_algebra.h"
+#include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides status_update()
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 
@@ -326,7 +327,9 @@ public:
     si.onevecb = b.size() ==1u;
     si.scalarb = b.numel()==1u;
     si.singular = si.scalarb && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
-    if (!(si.scalara^si.scalarb) && a.numel()!=b.numel()) throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+    if (!(si.scalara^si.scalarb) && a.numel()!=b.numel()){
+      throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+    }
     si.n = si.oneveca ? b.size() : a.size();
     si.m = si.scalara? b.numel() : a.numel();
     if (si.oneveca^si.onevecb){
@@ -346,10 +349,14 @@ public:
     si.onevecb = b.size()==1u;
     si.scalarb = b.numel()==1u;
     si.singular = si.scalarb && b.numel()!=a.numel(); // if both have numel==1 don't set the singular flag
-    if (!si.scalarb && a.numel()!=b.numel()) throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+    if (!si.scalarb && a.numel()!=b.numel()){
+      throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+    }
     si.n = a.size();
     si.m = a.numel();
-    if (!si.onevecb && b.size()!=a.size()) throw std::runtime_error("equal sized or second-singular arrays required");
+    if (!si.onevecb && b.size()!=a.size()){
+      throw std::runtime_error("equal sized or second-singular arrays required");
+    }
     si.aorb = true; // this doesn't matter here but will later
     return si;
   };
