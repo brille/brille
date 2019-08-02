@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Run tests of SymSim and Simphony."""
+"""Run tests of SymEu and Euphonic."""
 import os
 import sys
 import unittest
-from simphony.data.interpolation import InterpolationData
+from euphonic.data.interpolation import InterpolationData
 try:
     from importlib.util import find_spec
 except ImportError:
@@ -16,12 +16,12 @@ ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH = os.path.join(ADDPATH, 'Debug')
 sys.path.append(ADDPATH)
-# We need to find the pure-python submodule symbz.simphony:
+# We need to find the pure-python submodule symbz.euphonic:
 sys.path.append(os.path.split(os.getcwd())[0])
-if find_spec('symbz') is not None and find_spec('symbz.simphony') is not None:
-    from symbz.simphony import SymSim
+if find_spec('symbz') is not None and find_spec('symbz.euphonic') is not None:
+    from symbz.euphonic import SymEu
 else:
-    raise Exception("Required symbz.simphony module not found!")
+    raise Exception("Required symbz.euphonic module not found!")
 
 
 def load_interpolation_data(named):
@@ -38,8 +38,8 @@ def hermitian_product(v_0, v_1, first=None, last=None):
     return np.dot(np.conj(v_0[first:last].flatten()), v_1[first:last].flatten())
 
 
-class TestSimphony(unittest.TestCase):
-    """A TestCase object class to run tests of the SymSim object."""
+class TestEuphonic(unittest.TestCase):
+    """A TestCase object class to run tests of the SymEu object."""
 
     def test_a(self):
         """Test whether SimPhony gives the same result *at* grid points.
@@ -60,7 +60,7 @@ class TestSimphony(unittest.TestCase):
         intensity calculations.
         """
         i_data = load_interpolation_data('nb')
-        symsim = SymSim(i_data, halfN=(2, 2, 2))
+        symsim = SymEu(i_data, halfN=(2, 2, 2))
 
         q_rlu = symsim.grid.mapped_rlu
         int_freq, int_vecs = symsim.frqs_vecs(q_rlu, interpolate=True,
@@ -87,7 +87,7 @@ class TestSimphony(unittest.TestCase):
     def test_b(self):
         """Do something."""
         i_data = load_interpolation_data('nb')
-        symsim = SymSim(i_data, halfN=(10, 10, 10))
+        symsim = SymEu(i_data, halfN=(10, 10, 10))
         print(symsim.grid.centre_sort_perm())
 
 

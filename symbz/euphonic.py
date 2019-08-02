@@ -1,5 +1,5 @@
 """
-Define a class SymSim to act as the interface between SymBZ and SimPhony.
+Define a class SymEu to act as the interface between SymBZ and Euphonic.
 
 Thus enabling efficient interpolation of CASTEP-derived phonons at arbitrary
 Q points.
@@ -7,24 +7,21 @@ Q points.
 import numpy as np
 import spglib
 
-# from simphony.data.bands import BandsData
-# from simphony.data.phonon import PhononData
-from simphony.data.interpolation import InterpolationData
-from simphony.calculate.scattering import structure_factor
-from simphony import ureg    # avoid creating a second Pint UnitRegistry
-
 from scipy import special
 from scipy.stats import norm, cauchy
+
+from euphonic.data.interpolation import InterpolationData
+from euphonic import ureg    # avoid creating a second Pint UnitRegistry
 
 import symbz as sbz
 from symbz.evn import degenerate_check
 
 
-class SymSim:
+class SymEu:
     """
     Efficient interpolation of phonon intensity at arbitrary Q points.
 
-    The SimPhony data classes can be used to interpolate CASTEP dynamical
+    The Euphonic data classes can be used to interpolate CASTEP dynamical
     force matrices at arbitary Q points. It can then use that information to
     determine eigen values (excitation energy) and eigen vectors
     (ion displacements) for the 3×[number of ions] phonon branches. Finally
@@ -39,16 +36,16 @@ class SymSim:
     symmetry of the primitive lattice to find an equivalent
     first-Brillouin-zone point, q, for any arbitrary reciprocal space point, Q.
 
-    The SymSim object uses lattice information from the SimPhony object and the
+    The SymEu object uses lattice information from the Euphonic object and the
     package spglib to determine the conventional unit cell equivalent to that
     used in the CASTEP calculations. This unit cell information is then used
     to construct the primitive first Brillouin zone and a SymBZ grid. The
-    gridded-points are then used by the SimPhony object to calculate ωᵢ(q)
+    gridded-points are then used by the Euphonic object to calculate ωᵢ(q)
     and ϵᵢⱼ(q), which are placed in the SymBZ object at their respective grid
-    points. When an external request is made to the SymSim object to calculate
+    points. When an external request is made to the SymEu object to calculate
     Sᵢ(Q) it first uses the filled SymBZ object to interpolate ωᵢ(Q) and ϵᵢⱼ(Q)
-    and then the SimPhony object to convert Q and ϵᵢⱼ(Q) into Sᵢ(Q).
-    The more-likely use for SymSim, however, will be in calculating S(Q,ω) in
+    and then the Euphonic object to convert Q and ϵᵢⱼ(Q) into Sᵢ(Q).
+    The more-likely use for SymEu, however, will be in calculating S(Q,ω) in
     which case ωᵢ(Q) and Sᵢ(Q) are calculated as above and then a simple
     distribution (selected by the caller) is used to broaden each of the i
     phonon branches before combining their intensities.
@@ -58,7 +55,7 @@ class SymSim:
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
                  hall_number=None, parallel=False, **kwds):
-        """Initialize a new SymSim object from an existing SimPhony object."""
+        """Initialize a new SymEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
             print(msg.format(type(SPData)))
@@ -72,7 +69,7 @@ class SymSim:
         # Construct the BZGrid, by default using the conventional unit cell
         grid_q = self.__make_grid(**kwds)
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
-        # Select only those keyword arguments which SimPhony expects:
+        # Select only those keyword arguments which Euphonic expects:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
         cfp_dict = {k: kwds[k] for k in cfp_keywords if k in kwds}
@@ -197,7 +194,7 @@ class SymSim:
         else:
             raise Exception("You must provide a halfN or step keyword")
         # We need to make sure that we pass gridded Q points in the primitive
-        # lattice, since that is what SimPhony expects:
+        # lattice, since that is what Euphonic expects:
         grid_q = self.grid.mapped_rlu
         if prim_tran.does_anything and self.data_cell_is_primitive:
             grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
@@ -207,11 +204,11 @@ class SymSim:
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
         self.w_q(q_hkl, **kwargs)
         # Finally calculate Sᵢ(Q)
-        # using SymPhony.calculate.scattering.structure_factor
+        # using InterpolationData.calculate_structure_factor
         # which only allows a limited number of keyword arguments
         sf_keywords = ('T', 'scale', 'dw_seed', 'dw_grid', 'calc_bose')
         sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
-        return structure_factor(self.data, self.scattering_lengths, **sf_dict)
+        return self.data.calculate_structure_factor(self.scattering_lengths, **sf_dict)
 
     def dw(self, q_hkl, T=0):
         """Calculates the Debye-Waller factor using the Brillouin zone grid."""
@@ -232,13 +229,13 @@ class SymSim:
             # Separate the frequencies and eigenvectors
             # pylint: disable=w0632
             frqs, vecs = np.split(frqs_vecs, (1,), axis=2)
-            # And reshape to what SimPhony expects
+            # And reshape to what Euphonic expects
             n_pt = q_pt.shape[0]
             n_br = self.data.n_branches
             n_io = self.data.n_ions
             frqs = np.ascontiguousarray(frqs.reshape(n_pt, n_br))
             vecs = np.ascontiguousarray(vecs.reshape(n_pt, n_br, n_io, 3))
-            # Store all information in the SimPhony Data object
+            # Store all information in the Euphonic Data object
             self.data.n_qpts = n_pt
             if prim_tran.does_anything and self.data_cell_is_primitive:
                 q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
@@ -281,8 +278,8 @@ class SymSim:
         The Simple Harmonic Oscillator function looks for an additional key,
         'T', in p_dict to optionally include the temperature.
 
-        Additional keys in p_dict are allowed and are passed on to SimPhony
-        as keyword arguments to simphony.calculate.scattering.structure_factor.
+        Additional keys in p_dict are allowed and are passed on to Euphonic
+        as keyword arguments to the calculate_structure_factor method.
 
         """
         res_par_tem = ('delta',)
@@ -292,7 +289,7 @@ class SymSim:
         n_pt = energy.size
         n_br = self.data.n_branches
         # Check if we might perform the Bose factor correction twice:
-        # Replicate SimPhony's behaviour of calc_bose=True by default,
+        # Replicate Euphonic's behaviour of calc_bose=True by default,
         # and T=5 by default.
         if res_par_tem[0] in ('s', 'sho', 'simpleharmonicoscillator'):
             # pull out T, or 5 if it's not present
@@ -301,7 +298,7 @@ class SymSim:
             # discard T if calc_bose is present and False
             if 'calc_bose' in p_dict:
                 temp_k = temp_k if p_dict['calc_bose'] else 0
-            # Prevent SimPhony from performing the Bose correction twice
+            # Prevent Euphonic from performing the Bose correction twice
             p_dict['calc_bose'] = False
             res_par_tem = (*res_par_tem, temp_k)
         # Calculate Sᵢ(Q) after interpolating ωᵢ(Q) and ⃗ϵᵢⱼ(Q)
