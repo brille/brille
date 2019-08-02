@@ -36,9 +36,9 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b, const 
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
   bool answer;
   if ( std::abs(a) <= Ttol && std::abs(b) <= Rtol )
-    answer = std::abs(a-b) < (useTtol ? Ttol :Rtol);
+    answer = std::abs(a-b) <= (useTtol ? Ttol :Rtol);
   else
-    answer = std::abs(a-b) < (useTtol ? Ttol :Rtol)*std::abs(a+b);
+    answer = std::abs(a-b) <= (useTtol ? Ttol :Rtol)*std::abs(a+b);
   // if (!answer){
   //   std::cout << std::to_string(a) << " != " << std::to_string(b);
   //   std::cout << " since |a-b| = " << std::to_string(std::abs(a-b));
@@ -67,9 +67,9 @@ template<typename T, typename R> bool approx_array(const int N, const int M, con
   for (int i=0; i<N*M; i++){
     // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
     if ( std::abs(A[i]) <= Ttol && std::abs(B[i]) <= Rtol )
-      answer &= std::abs(A[i]-B[i]) < (useTtol ? Ttol :Rtol);
+      answer &= std::abs(A[i]-B[i]) <= (useTtol ? Ttol :Rtol); // we need <= in case T and R are integer, otherwise this is *always* false since 0 !< 0
     else
-      answer &= std::abs(A[i]-B[i]) < (useTtol ? Ttol :Rtol)*std::abs(A[i]+B[i]);
+      answer &= std::abs(A[i]-B[i]) <= (useTtol ? Ttol :Rtol)*std::abs(A[i]+B[i]);
   }
   return answer;
 }

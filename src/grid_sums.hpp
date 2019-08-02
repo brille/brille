@@ -1,4 +1,4 @@
-// 
+//
 // template<class T, class R, class S = typename std::common_type<T,R>::type>
 // S coth_over_en(const T en, const R beta){
 //   S Sen = static_cast<S>(en);
@@ -25,16 +25,16 @@ ArrayVector<S> MapGrid3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_
   const S kB   = 8.617333252E-2; // meV⋅K⁻¹
   if (Q.numel() != 3)
     throw std::runtime_error("Debye-Waller factor requires 3-vector Q.");
-  if (this->scalar_elements != 1u)
+  if (this->elements[0] != 1u)
     throw std::runtime_error("Debye-Waller factor requires one scalar (energy) per mode.");
-  size_t nIons = this->eigvec_elements / 3u;
-  if (0 == nIons || this->eigvec_elements*3u != nIons)
+  size_t nIons = this->elements[1] / 3u;
+  if (0 == nIons || this->elements[1]*3u != nIons)
     throw std::runtime_error("Debye-Waller factor requires 3-vector eigenvector(s).");
   size_t nQ = Q.size();
   ArrayVector<S> WdQ(nIons,nQ); // Wᵈ(Q) has nIons entries per Q point
 
   S coth_en, Q_dot_e_2;
-  size_t span = 1u + nIons*3u + this->vector_elements + this->matrix_elements*this->matrix_elements;
+  size_t span = 1u + nIons*3u + this->elements[2] + this->elements[3]*this->elements[3];
   size_t nq = this->shape.getvalue(0u);
 
   const S beta = kB*t_K; // meV
@@ -78,8 +78,8 @@ ArrayVector<S> MapGrid3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_
 template<class T>
 template<class R, template<class> class A, class S>
 ArrayVector<S> MapGrid3<T>::debye_waller(const A<R>& Q, const std::vector<R>& M, const R t_K) const {
-  size_t nIons = this->eigvec_elements / 3u;
-  if (0 == nIons || this->eigvec_elements*3u != nIons)
+  size_t nIons = this->elements[1] / 3u;
+  if (0 == nIons || this->elements[1]*3u != nIons)
     throw std::runtime_error("Debye-Waller factor requires 3-vector eigenvector(s).");
   if (M.size() != nIons)
     throw std::runtime_error("Debye-Waller factor requires an equal number of ions and masses.");

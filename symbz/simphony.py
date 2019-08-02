@@ -86,9 +86,11 @@ class SymSim:
              vecs.reshape(n_pt, n_br, 3*n_io)), axis=2)
         # fill requires input shaped (n_pt, n_br, [anything])
         # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
-        self.grid.fill(frqs_vecs,
-                       scalar_elements=1,
-                       eigenvector_elements=3*n_io)
+        # We need to help the interpolation method by telling it how many
+        # scalar, eigen-vector, vector, and matrix elements there are in
+        # each [anything]
+        elements = (1, 3*n_io, 0, 0) # scalar, eigenvector, vector, matrix
+        self.grid.fill(frqs_vecs, elements)
         # self.sort_branches()
         self.parallel = parallel
 
@@ -121,9 +123,8 @@ class SymSim:
             matrix_cost_weight=0,
             eigenvector_weight_function=weight_function)
         frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
-        self.grid.fill(frqs_vecs,
-                       scalar_elements=1,
-                       eigenvector_elements=3*self.data.n_ions)
+        elements = (1, 3*self.data.n_ions, 0, 0)
+        self.grid.fill(frqs_vecs, elements)
         return frqs_vecs
 
     def __check_if_cell_is_primitive(self):
@@ -219,14 +220,15 @@ class SymSim:
                                           T)
         return DWfactor
 
-    def w_q(self, q_pt, interpolate=True, time_reversal=False, **kwargs):
+    def w_q(self, q_pt, moveinto=True, interpolate=True, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
         if interpolate:
             # Interpolate the previously-stored eigen values for each Q
             # each grid point has a (n_br, 1+3*n_io) array and interpolate_at
             # returns an (n_pt, n_br, 1+3*n_io) array.
-            frqs_vecs = self.grid.ir_interpolate_at(q_pt, time_reversal, self.parallel)
+            # frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
+            frqs_vecs = self.grid.ir_interpolate_at(q_pt, self.parallel, do_not_move_points=(not moveinto))
             # Separate the frequencies and eigenvectors
             # pylint: disable=w0632
             frqs, vecs = np.split(frqs_vecs, (1,), axis=2)

@@ -79,66 +79,53 @@ template<class T> int MapGrid3<T>::check_map(void) const {
 }
 //
 template<class T> void MapGrid3<T>::check_elements(void){
-  size_t elements = 1u;
-  size_t total_elements = this->scalar_elements
-                        + this->eigvec_elements
-                        + this->vector_elements
-                        + this->matrix_elements * this->matrix_elements;
+  size_t total_elements = 1u;
+  // scalar + eigenvector + vector + matrix*matrix elements
+  size_t known_elements = static_cast<size_t>(this->elements[0])
+                        + static_cast<size_t>(this->elements[1])
+                        + static_cast<size_t>(this->elements[2])
+                        + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
   // no matter what, shape[0] should be the number of gridded points
   if (shape.size()>2){
     // if the number of dimensions of the shape array is greater than two,
     // the second element is the number of modes per point                    */
     this->branches = shape.getvalue(1u);
-    for (size_t i=2u; i<this->shape.size(); ++i) elements *= shape.getvalue(i);
+    for (size_t i=2u; i<this->shape.size(); ++i) total_elements *= shape.getvalue(i);
   } else {
     // shape is [n_points, n_elements] or [n_points,], so there is only one mode
     this->branches = 1u;
-    elements = shape.size() > 1 ? shape.getvalue(1u) : 1u;
+    total_elements = shape.size() > 1 ? shape.getvalue(1u) : 1u;
   }
-  if (0 == total_elements)
-    this->scalar_elements = elements;
-  if (total_elements && total_elements != elements){
+  if (0 == known_elements)
+    this->elements[0] = total_elements;
+  if (known_elements && known_elements != total_elements){
     std::string msg ="Inconsistent element counts: "
-                    + std::to_string(total_elements) + " = "
-                    + std::to_string(this->scalar_elements) + "+"
-                    + std::to_string(this->eigvec_elements) + "+"
-                    + std::to_string(this->vector_elements) + "+"
-                    + std::to_string(this->matrix_elements) + "² ≠ "
-                    + std::to_string(elements);
+                    + std::to_string(known_elements) + " = "
+                    + std::to_string(this->elements[0]) + "+"
+                    + std::to_string(this->elements[1]) + "+"
+                    + std::to_string(this->elements[2]) + "+"
+                    + std::to_string(this->elements[3]) + "² ≠ "
+                    + std::to_string(total_elements);
     throw std::runtime_error(msg);
   }
 }
 template<class T>
 int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
                               const ArrayVector<size_t>& newshape,
-                              const size_t new_scalar_elements,
-                              const size_t new_eigvec_elements,
-                              const size_t new_vector_elements,
-                              const size_t new_matrix_elements){
+                              const std::array<unsigned, 4>& new_elements){
   this->data =  newdata;
   this->shape = newshape;
-  this->scalar_elements = new_scalar_elements;
-  this->eigvec_elements = new_eigvec_elements;
-  this->vector_elements = new_vector_elements;
-  this->matrix_elements = new_matrix_elements;
+  this->elements = new_elements;
   this->check_elements();
   return this->check_map();
 }
 template<class T>
 int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
-                              const size_t new_scalar_elements,
-                              const size_t new_eigvec_elements,
-                              const size_t new_vector_elements,
-                              const size_t new_matrix_elements){
+                              const std::array<unsigned, 4>& new_elements){
   ArrayVector<size_t> shape(1,2);
   shape.insert(newdata.size(),0);
   shape.insert(newdata.numel(),1);
-  return this->replace_data(newdata,
-                            shape,
-                            new_scalar_elements,
-                            new_eigvec_elements,
-                            new_vector_elements,
-                            new_matrix_elements);
+  return this->replace_data(newdata, shape, new_elements);
 }
 //
 template<class T> size_t MapGrid3<T>::sub2lin(const size_t i, const size_t j, const size_t k) const {

@@ -936,7 +936,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
   return out;
 }
 
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R) const {
+bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
   bool isouter = this->outerlattice.issame(Q.get_lattice());
   bool isinner = this->lattice.issame(Q.get_lattice());
   if (!(isouter||isinner))
@@ -964,8 +964,6 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   // this->inside_wedge
   // const bool constructing{false};
 
-  // by chance some Q points might already be in the IR-Bz:
-  ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
   size_t nQ = Q.size();
   // ensure q, tau, and R can hold one for each Q.
   q.resize(nQ);
@@ -977,6 +975,10 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   std::array<int,9> Ri, Rj, RE={1,0,0, 0,1,0, 0,0,1};
   ArrayVector<double> q_dot_bz_normals;
   ArrayVector<int> Nhkl;
+  // by chance some Q points might already be in the IR-Bz:
+  ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
+  // if they are we need to ensure that R is set to RE for them:
+  for (size_t i=0; i<R.size(); ++i) R[i] = RE;
 
   size_t count, count1, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
   int maxnm = 0;
@@ -1042,12 +1044,26 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
     // the identity element. Let's look for Rⱼ instead.
     for (size_t j=0; j<nR; ++j){
       multiply_matrix_matrix(Rj.data(), psym.get(j), Ri.data());
+      // std::cout << "( ";
+      // for (auto iii: psym.getarray(j)) std::cout << " " << my_to_string(iii);
+      // std::cout << " ) x (";
+      // for (auto iii: Ri) std::cout << " " << my_to_string(iii);
+      // std::cout << " ) = (";
+      // for (auto iii: Rj) std::cout << " " << my_to_string(iii);
       if (approx_matrix(3, RE.data(), Rj.data())){
+        // std::cout << " ) ok" << std::endl;
         R[i] = psym.getarray(j);
         break;
       }
+      // std::cout << " )" << std::endl;
     }
   }
+  // std::cout << "All per point rotations:" << std::endl;
+  // for (auto r: R){
+  //   std::cout << "(";
+  //   for (auto i: r) std::cout << " " << my_to_string(i);
+  //   std::cout << " )" << std::endl;;
+  // }
   if (!in_bz.all_true() || !in_ir.all_true()){
     std::string msg;
     for (size_t i=0; i<nQ; ++i)

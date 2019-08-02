@@ -875,10 +875,7 @@ template<class T, class R, template<class> class A,
          class S = typename std::common_type<T,R>::type
          >
 void interpolate_to(const A<T>& av,
-                    const size_t nS,
-                    const size_t nE,
-                    const size_t nV,
-                    const size_t nM,
+                    const std::array<unsigned,4>& Nel,
                     const size_t nB,
                     const size_t n,
                     const size_t *i,
@@ -891,60 +888,57 @@ void interpolate_to(const A<T>& av,
   if ( j >= out.size() ){
     throw std::out_of_range("sink index out of range");
   }
-  if (av.numel() != (nS+nE+nV+nM*nM)*nB){
+  if (av.numel() != (Nel[0]+Nel[1]+Nel[2]+Nel[3]*Nel[3])*nB){
     throw std::runtime_error("Wrong number of scalar/eigenvector/vector/matrix elements or branches.");
   }
   for (size_t k=0;k<n;++k) if (i[k]>=av.size()){
     throw std::out_of_range("source index out of range");
   }
-  unsafe_interpolate_to(av,nS,nE,nV,nM,nB,n,i,w,out,j);
+  unsafe_interpolate_to(av,Nel,nB,n,i,w,out,j);
 }
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
          >
 void unsafe_interpolate_to(const A<T>& source,
-                           const size_t Nscl,
-                           const size_t Neig,
-                           const size_t Nvec,
-                           const size_t Nmat,
+                           const std::array<unsigned,4>& Nel,
                            const size_t Nobj,
                            const size_t Narr,
                            const size_t *Isrc,
-                           const R *weights,
+                           const R *weights,   /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!! THIS IS WHY THERE ARE TWO VERSION OF unsafe_interpolate_to!!!!!!!!!!!!!!*/
                            A<S>& sink,
                            const size_t Jsnk) {
   S *sink_j = sink.datapointer(Jsnk);
   T *source_i, *source_0 = source.datapointer(Isrc[0]);
-  size_t offset, span = Nscl+Neig+Nvec+Nmat*Nmat;
+  size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2])+static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
   T e_i_theta;
   for (size_t x=0; x<Narr; ++x){
     source_i = source.datapointer(Isrc[x]);
     // loop over the modes. they are the first index and farthest in memory
     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
       // Scalars are first, nothing special to do:
-      for (size_t Iscl=0; Iscl<Nscl; ++Iscl)
+      for (size_t Iscl=0; Iscl<Nel[0]; ++Iscl)
         sink_j[Iobj*span + Iscl] += weights[x]*source_i[Iobj*span + Iscl];
-      if (Neig){
+      if (Nel[1]){
         // Eigenvectors are next
-        offset = Iobj*span + Nscl;
+        offset = Iobj*span + Nel[0];
         // find the arbitrary phase eⁱᶿ between different-object eigenvectors
-        e_i_theta = antiphase(hermitian_product(Neig, source_0+offset, source_i+offset));
+        e_i_theta = antiphase(hermitian_product(Nel[1], source_0+offset, source_i+offset));
         // remove the arbitrary phase as we add the weighted value
-        for(size_t Jeig=0; Jeig<Neig; ++Jeig)
+        for(size_t Jeig=0; Jeig<Nel[1]; ++Jeig)
           sink_j[offset+Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
       }
       // Vector and Matrix parts of each object are treated as scalars:
-      for (size_t Ivecmat = Nscl+Neig; Ivecmat<span; ++Ivecmat)
+      for (size_t Ivecmat = Nel[0]+Nel[1]; Ivecmat<span; ++Ivecmat)
         sink_j[Iobj*span + Ivecmat] += weights[x]*source_i[Iobj*span + Ivecmat];
     }
   }
   // make sure each eigenvector is normalized
-  if (Neig){
+  if (Nel[1]){
     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
-      offset = Iobj*span + Nscl;
-      auto normI = std::sqrt(inner_product(Neig, sink_j+offset, sink_j+offset));
-      for (size_t Jeig=0; Jeig<Neig; ++Jeig) sink_j[offset+Jeig] /= normI;
+      offset = Iobj*span + Nel[0];
+      auto normI = std::sqrt(inner_product(Nel[1], sink_j+offset, sink_j+offset));
+      for (size_t Jeig=0; Jeig<Nel[1]; ++Jeig) sink_j[offset+Jeig] /= normI;
     }
   }
 }
@@ -964,7 +958,7 @@ void new_unsafe_interpolate_to(const A<T>& source,
 {
   S *sink_i = sink.datapointer(iSnk);
   T *source_i, *source_0 = source.datapointer(iSrc[0]);
-  size_t offset, span = nEl[0]+nEl[1]+nEl[2]+nEl[3]*nEl[3];
+  size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
   T e_i_theta;
   for (size_t x=0; x<nAr; ++x){
     source_i = source.datapointer(iSrc[x]);

@@ -92,17 +92,29 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
   };
-  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads) const{
+  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
     BrillouinZone bz = this->get_brillouinzone();
 
     std::string msg;
-    if (!bz.ir_moveinto(x, ir_q, tau, rots)){
+    if (no_move){
+      // a special mode for testing wehere no specified points are moved
+      // it is imperitive that the provided x points remain *inwide* the mapped
+      // grid points, which is beyond the scope of this method to check.
+      ir_q = x;
+      for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
+    } else if (!bz.ir_moveinto(x, ir_q, tau, rots)){
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
+    // std::cout << "All per point rotations:" << std::endl;
+    // for (auto r: rots){
+    //   std::cout << "(";
+    //   for (auto i: r) std::cout << " " << my_to_string(i);
+    //   std::cout << " )" << std::endl;;
+    // }
     ArrayVector<T> ir_result;
     if (nthreads > 1){ // change this to != 1?
       ir_result = this->InterpolateGrid3<T>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads);
@@ -112,32 +124,31 @@ public:
 
     // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
     // the interpolation needs to be rotated.
-    if (this->eigvec_elements || this->vector_elements || this->matrix_elements){
-      if (this->eigvec_elements % 3){
+    if (this->elements[1] || this->elements[2] || this->elements[3]){
+      if (this->elements[1] % 3){
         msg = "Eigenvectors should consist of 3 elements (per ion) for each branch: ";
-        msg += std::to_string(this->eigvec_elements) + "%3 != 0";
+        msg += std::to_string(this->elements[1]) + "%3 != 0";
         throw std::runtime_error(msg);
       }
-      if (this->vector_elements %3){
+      if (this->elements[2] %3){
         msg = "Vectors should consist of 3N elements for each branch: ";
-        msg += std::to_string(this->vector_elements) + "%3 != 0";
+        msg += std::to_string(this->elements[2]) + "%3 != 0";
         throw std::runtime_error(msg);
       }
-      if (this->matrix_elements != 0u && this->matrix_elements != 3u){
+      if (this->elements[3] != 0u && this->elements[3] != 3u){
         msg = "Matrices should be 3x3 for each branch:";
-        std::string m = std::to_string(this->matrix_elements);
+        std::string m = std::to_string(this->elements[3]);
         msg += m + "x" + m + " != 3x3";
         throw std::runtime_error(msg);
       }
-      size_t ne = this->eigvec_elements/3u;
-      size_t nv = this->vector_elements/3u;
-      size_t nm = this->matrix_elements/3u;
-      size_t sp = this->scalar_elements + ne*3u + nv*3u + nm*9u;
+      size_t ne = this->elements[1]/3u;
+      size_t nv = this->elements[2]/3u;
+      size_t nm = this->elements[3]/3u;
+      size_t sp = this->elements[0] + ne*3u + nv*3u + nm*9u;
       T tmp_v[3];
       T tmp_m[9];
       std::vector<std::array<int,9>> invR;
-      if (nm){
-        // only allocate and calculate invR if we need it
+      if (nm){ // only allocate and calculate invR if we need it
         invR.resize(rots.size());
         for (size_t i=0; i<rots.size(); ++i)
           matrix_inverse(invR[i].data(), rots[i].data());
@@ -147,17 +158,13 @@ public:
       for (size_t i=0; i<ir_result.size(); ++i){
         for (size_t b=0; b<this->branches; ++b){
           // we can skip the scalar elements, as they do not rotate.
-          offset = b*sp + this->scalar_elements;
-          for (size_t v=0; v<ne; ++v){
+          offset = b*sp + this->elements[0];
+          // eigenvectors and regular vectors rotate the same way
+          for (size_t v=0; v<(ne+nv); ++v){
             mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
             for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
           }
-          offset += ne*3u;
-          for (size_t v=0; v<nv; ++v){
-            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
-            for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
-          }
-          offset += nv*3u;
+          offset += (ne+nv)*3u;
           for (size_t m=0; m<nm; ++m){
             // we want R*M*R⁻¹.
             // first calculate M*R⁻¹, storing in tmp_m

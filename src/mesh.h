@@ -87,16 +87,13 @@ public:
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
   @param newshape the shape information of each array in `newdata`
-  @param new_scalar_elements The number of scalar elements contained each newdata array
-  @param new_eigvec_elements The number of eigenvector elements contained each newdata array
-  @param new_vector_elements The number of vector elements contained each newdata array
-  @param new_matrix_elements The number of matrix elements contained each newdata array
+  @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
   @note `newshape` provides information about the N dimensions and extent of
         each array in `newdata`, the following four unsigned integers provide
         information on how many scalar, eigenvector, vector, and matrix elements
         (in that order) are contained within the N-1 dimensions of each array.
-        `new_scalar_elements`+`new_eigvec_elements`+`new_vector_elements`+
-        `new_matrix_elements`×`new_matrix_elements` must be equal to the
+        `new_elements[0]`+`new_elements[1]`+`new_elements[2]`+
+        `new_elements[3]`×`new_elements[3]` must be equal to the
         product of newshape[1:N-1].
   */
   int replace_data(const ArrayVector<T>& newdata,
@@ -104,10 +101,7 @@ public:
                    const std::array<unsigned,4>& new_elements={0,0,0,0});
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
-  @param new_scalar_elements The number of scalar elements contained each newdata vector
-  @param new_eigvec_elements The number of eigenvector elements contained each newdata vector
-  @param new_vector_elements The number of vector elements contained each newdata vector
-  @param new_matrix_elements The number of matrix elements contained each newdata vector
+  @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
   @note This version of the method assumes each array in `newdata` is a vector
   */
   int replace_data(const ArrayVector<T>& newdata, const std::array<unsigned,4>& new_elements={0,0,0,0});

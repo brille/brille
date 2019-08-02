@@ -287,33 +287,28 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
     .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
     .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
-    .def("fill",[](Class& cobj,
-                   py::array_t<T> pydata,
-                   const size_t n_scalar,
-                   const size_t n_eigenvector,
-                   const size_t n_vector,
-                   const size_t n_matrix
-                 ){
-      py::buffer_info bi = pydata.request();
+    .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
+      py::buffer_info bi;
+      // copy-in the elements array
+      bi = pyel.request();
+      if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
+      std::array<unsigned, 4> el{0,0,0,0};
+      int* intel = (int*)bi.ptr;
+      for (ssize_t i=0; i<bi.shape[0] && i<4; ++i) el[i] = static_cast<unsigned>(intel[i]);
+      // copy-in the data ArrayVector
+      bi = pydata.request();
       ssize_t ndim = bi.ndim;
       ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
-      ArrayVector<size_t> shape(1,ndim);
-      for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
-      int mapExceedsNewData = cobj.check_map(data);
-      if (mapExceedsNewData) {
+      if (cobj.check_map(data) /*non-zero indicates too-many data*/){
         std::string msg = "Provided " + std::to_string(data.size())
                         + " data inputs but expected "
                         + std::to_string(cobj.maximum_mapping()) + "!";
         throw std::runtime_error(msg);
       }
-      // no error, so replace_data will work (if n_* are right)
-      cobj.replace_data(data,shape,n_scalar,n_eigenvector,n_vector,n_matrix);
-    }, py::arg("new_data"),
-       py::arg("scalar_elements")=0,
-       py::arg("eigenvector_elements")=0,
-       py::arg("vector_elements")=0,
-       py::arg("matrix_elements")=0
-    )
+      ArrayVector<size_t> shape(1, ndim);
+      for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], static_cast<size_t>(i));
+      cobj.replace_data(data, shape, el);
+    }, py::arg("data"), py::arg("elements"))
     .def_property_readonly("data",
       /*get data*/ [](Class& cobj){
         return av2np_shape(cobj.get_data(), cobj.data_shape(), false);
@@ -441,7 +436,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def("ir_interpolate_at",[](Class& cobj,
                              py::array_t<double> pyX,
                              const bool& useparallel,
-                             const int& threads){
+                             const int& threads, const bool& no_move){
       py::buffer_info bi = pyX.request();
       if ( bi.shape[bi.ndim-1] !=3 )
         throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -453,7 +448,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 
       int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
       // perform the interpolation and rotate and vectors/tensors afterwards
-      ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads);
+      ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads, no_move);
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -480,7 +475,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1)
+    },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
     //
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);

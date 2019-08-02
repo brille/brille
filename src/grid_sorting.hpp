@@ -229,10 +229,7 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   const int vcf) const {
 return jv_permutation(this->data.datapointer(cidx,0),
                            this->data.datapointer(nidx,0),
-                           this->scalar_elements,
-                           this->eigvec_elements,
-                           this->vector_elements,
-                           this->matrix_elements,
+                           this->elements,
                            scaleS, scaleE, scaleV, scaleM,
                            span, nobj, perm, cidx, nidx, ecf, vcf);
 }
@@ -283,10 +280,7 @@ size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
 size_t out_i = 0u;
 unsafe_interpolate_to(sorted,
-                      this->scalar_elements,
-                      this->eigvec_elements,
-                      this->vector_elements,
-                      this->matrix_elements,
+                      this->elements,
                       this->branches,
                       cnt,corners,weights,predic,out_i);
 bool rslt;
@@ -295,10 +289,7 @@ bool rslt;
 // find the assignment of each *predicted* object value to those at cidx:
 rslt = jv_permutation(this->data.datapointer(cidx,0),
                            predic.datapointer(out_i,0),
-                           this->scalar_elements,
-                           this->eigvec_elements,
-                           this->vector_elements,
-                           this->matrix_elements,
+                           this->elements,
                            scaleS, scaleE, scaleV, scaleM,
                            span, nobj, perm, cidx, nidx, ecf, vcf);
 // std::cout << ((rslt)?"permutation determined":"permutation failed") << std::endl;
@@ -317,10 +308,10 @@ ArrayVector<size_t> MapGrid3<T>::centre_sort_perm(const R scalar_weight,
 // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
 size_t nobj = this->branches;
-size_t span = this->scalar_elements
-            + this->eigvec_elements
-            + this->vector_elements
-            + this->matrix_elements*this->matrix_elements;
+size_t span = static_cast<size_t>(this->elements[0])
+            + static_cast<size_t>(this->elements[1])
+            + static_cast<size_t>(this->elements[2])
+            + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
 // within each index of the data ArrayVector there are span*nobj entries.
 
 // We will return the permutations of 0:nobj-1 which sort the objects globally
@@ -445,10 +436,10 @@ int funcs[2]{ecf,vcf};
 // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
 size_t nobj = this->branches;
-size_t span = this->scalar_elements
-            + this->eigvec_elements
-            + this->vector_elements
-            + this->matrix_elements*this->matrix_elements;
+size_t span = static_cast<size_t>(this->elements[0])
+            + static_cast<size_t>(this->elements[1])
+            + static_cast<size_t>(this->elements[2])
+            + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
 size_t spobj[2]{span,nobj};
 // within each index of the data ArrayVector there are span*nobj entries.
 
@@ -619,10 +610,7 @@ bool MapGrid3<T>::multi_sort_difference(
       tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
     jv_permutation(this->data.datapointer(cidx,0),
                    this->data.datapointer(nidx[i],0),
-                   this->scalar_elements,
-                   this->eigvec_elements,
-                   this->vector_elements,
-                   this->matrix_elements,
+                   this->elements,
                    weights[0], weights[1], weights[2], weights[3],
                    spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
                  );
@@ -738,8 +726,7 @@ T weights[2]{2,-1};
 for (size_t i=0; i<no_pairs; ++i){
   corners[0] = 2*i;
   corners[1] = 2*i+1;
-  unsafe_interpolate_to(sdat, this->scalar_elements, this->eigvec_elements,
-  this->vector_elements, this->matrix_elements, this->branches, cnt, corners,
+  unsafe_interpolate_to(sdat, this->elements, this->branches, cnt, corners,
   weights, predic, i);
 }
 // The derivative-based permutations have been performed, now determine the
@@ -750,10 +737,7 @@ for (size_t i=0; i<no_pairs; ++i){
     tperm.insert(perm.getvalue(nidx[n2p_idx[i]],j),no_pairs,j);
   jv_permutation(this->data.datapointer(cidx,0),
                  predic.datapointer(i,0),
-                 this->scalar_elements,
-                 this->eigvec_elements,
-                 this->vector_elements,
-                 this->matrix_elements,
+                 this->elements,
                  scales[0], scales[1], scales[2], scales[3],
                  spobj[0], spobj[1], tperm, i, no_pairs, funcs[0], funcs[1]
                );
@@ -852,8 +836,7 @@ T weights[2]{2,-1};
 for (size_t i=0; i<nidx.size(); ++i){
   corners[0] = 2*i;
   corners[1] = 2*i+1;
-  unsafe_interpolate_to(sdat, this->scalar_elements, this->eigvec_elements,
-  this->vector_elements, this->matrix_elements, this->branches, cnt, corners,
+  unsafe_interpolate_to(sdat, this->elements, this->branches, cnt, corners,
   weights, predic, i);
 }
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
@@ -865,10 +848,7 @@ for (size_t i=0; i<nidx.size(); ++i){
     tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
   jv_permutation(this->data.datapointer(cidx,0),
                  predic.datapointer(i,0),
-                 this->scalar_elements,
-                 this->eigvec_elements,
-                 this->vector_elements,
-                 this->matrix_elements,
+                 this->elements,
                  scales[0], scales[1], scales[2], scales[3],
                  spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
                );
