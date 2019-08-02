@@ -92,14 +92,14 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
   };
-  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const int time_reversal) const{
+  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
     BrillouinZone bz = this->get_brillouinzone();
 
     std::string msg;
-    if (!bz.ir_moveinto(x, ir_q, tau, rots, time_reversal)){
+    if (!bz.ir_moveinto(x, ir_q, tau, rots)){
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }

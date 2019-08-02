@@ -179,8 +179,17 @@ public:
   int get_hall() const {return hall;};
   //! Set the symmetry of the Lattice by changing the Hall number
   int set_hall(const int h) { check_hall_number(h); return hall; };
-  //! Return the Hall name of the Lattice
+  //! Return the Spacegroup object of the Lattice
   Spacegroup get_spacegroup_object() const { return Spacegroup(hall); };
+  //! Return the Spacegroup symmetry operation object of the Lattice
+  Symmetry get_spacegroup_symmetry() const { return make_spacegroup_symmetry_object(hall); };
+  //! Return the Pointgroup Symmetry operation object of the Lattice
+  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const { return make_pointgroup_symmetry_object(hall, time_reversal); };
+  //! Check whether the pointgroup has the space-inversion operator, ̄1.
+  bool has_space_inversion() const {
+    PointSymmetry ps = make_pointgroup_symmetry_object(hall, 0); // don't add time-reversal symmetry.
+    return ps.has_space_inversion();
+  }
 };
 
 /*! \brief A space-spanning Lattice that exists in real space

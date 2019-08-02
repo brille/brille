@@ -72,9 +72,9 @@ A subset of the 10 possible Bravais letters is used herein:
 
 For further details, see http://reference.iucr.org/dictionary/Centred_lattice
 */
-enum BravaisLetter {P, A, B, C, I, F, R};
+enum class Bravais {_, P, A, B, C, I, F, R};
 
-std::string bravais_string(const BravaisLetter b);
+std::string bravais_string(const Bravais b);
 
 class Spacegroup{
 public:
@@ -85,12 +85,12 @@ public:
   std::string international_full;
   std::string international_short;
   std::string choice;
-  BravaisLetter bravais;
+  Bravais bravais;
   int pointgroup_number;
   int hall_number;
   // Initializers
-  Spacegroup(): number(0), bravais(P), pointgroup_number(0), hall_number(0) {};
-  Spacegroup(int no, const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch, BravaisLetter br, int pno):
+  Spacegroup(): number(0), bravais(Bravais::_), pointgroup_number(0), hall_number(0) {};
+  Spacegroup(int no, const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch, Bravais br, int pno):
     number(no), bravais(br), pointgroup_number(pno) {
       deal_with_strings(sf, hs, its, itf, ith, ch);
       set_hall_number();
@@ -125,8 +125,8 @@ private:
 };
 
 bool hall_number_ok(const int hall_number);
-Symmetry get_spacegroup_symmetry(const int hall_number);
-PointSymmetry get_pointgroup_symmetry(const int hall_number, const int time_reversal=0);
+Symmetry make_spacegroup_symmetry_object(const int hall_number);
+PointSymmetry make_pointgroup_symmetry_object(const int hall_number, const int time_reversal=0);
 
 int international_number_to_hall_number(const int number);
 int international_string_to_hall_number(const std::string& itname);

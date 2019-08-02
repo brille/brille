@@ -607,7 +607,7 @@ static int _internal_pointgroup_rotations(int *rotations, const int max_size, co
 }
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
-	Symmetry sym = get_spacegroup_symmetry(hall_number);
+	Symmetry sym = make_spacegroup_symmetry_object(hall_number);
 	int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallrots(), is_time_reversal);
 	return num_unique;
 }

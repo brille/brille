@@ -52,6 +52,17 @@ std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, c
 //   return angles;
 // }
 
+template<class T> std::vector<T> reverse(const std::vector<T>& x){
+  std::vector<T> r;
+  for (size_t i = x.size(); i--;) r.push_back(x[i]);
+  return r;
+}
+template<class T> std::vector<std::vector<T>> reverse_each(const std::vector<std::vector<T>>& x){
+  std::vector<std::vector<T>> r;
+  for (auto i: x) r.push_back(reverse(i));
+  return r;
+}
+
 class Polyhedron{
 protected:
   ArrayVector<double> vertices;
@@ -116,6 +127,100 @@ public:
     this->vertices_per_face = other.get_vertices_per_face();
     return *this;
   };
+  Polyhedron mirror(void) const {
+    // return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
+    return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, this->vertices_per_face);
+  };
+  Polyhedron operator+(const Polyhedron& other) const {
+    size_t d = this->vertices.numel();
+    if (other.vertices.numel() != d) throw std::runtime_error("Only equal dimensionality polyhedra can be combined.");
+    // combine all vertices, points, and normals; adjusting the fpv and vpf indexing
+    size_t tvn = this->vertices.size(), ovn = other.vertices.size();
+    size_t tfn = this->points.size(), ofn = other.points.size();
+    ArrayVector<double> v(d, tvn+ovn);
+    ArrayVector<double> p(d, tfn+ofn), n(d, tfn+ofn);
+    for (size_t i=0; i<tvn; ++i) v.set(i,     this->vertices.extract(i));
+    for (size_t i=0; i<ovn; ++i) v.set(tvn+i, other.vertices.extract(i));
+    for (size_t i=0; i<tfn; ++i) p.set(i,     this->points.extract(i));
+    for (size_t i=0; i<ofn; ++i) p.set(tfn+i, other.points.extract(i));
+    for (size_t i=0; i<tfn; ++i) n.set(i,     this->normals.extract(i));
+    for (size_t i=0; i<ofn; ++i) n.set(tfn+i, other.normals.extract(i));
+    std::vector<std::vector<int>> fpv(this->faces_per_vertex), vpf(this->vertices_per_face);
+    fpv.resize(tvn+ovn); vpf.resize(tfn+ofn);
+    for (size_t i=0; i<ovn; ++i) for (auto j: other.faces_per_vertex[i]) fpv[tvn+i].push_back(tfn+j);
+    for (size_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(tvn+j);
+
+    // // look for equivalent vertices to remove
+    // std::vector<bool> flg; std::vector<size_t> idx, map;
+    // for (size_t i=0; i<v.size(); ++i){ flg.push_back(true); idx.push_back(i);}
+    // int t = 3; //tolerance multiplier
+    // for (size_t i=1; i<v.size(); ++i) for (size_t j=0; j<i; ++j){
+    //   if (flg[i]&&flg[j]) flg[i]=!approx_vector(d, v.datapointer(i), v.datapointer(j), t);
+    //   if (!flg[i]){ idx[i]=j; break; }
+    // }
+    // // combine the fpv for equivalent non-unique vertices
+    // bool notpresent;
+    // for (size_t i=0; i<v.size(); ++i) if (flg[i])
+    //   for (size_t j=i+1; j<v.size(); ++j) if (i==idx[j])
+    //     for (auto fj: fpv[j]){
+    //       notpresent = true;
+    //       for (auto fi: fpv[i]) if (fi==fj) notpresent = false;
+    //       if (notpresent) fpv[i].push_back(fj);
+    //     }
+    // // we want map[i] to give the entry of the *extracted* unique vertices
+    // size_t num=0;
+    // for (size_t i=0; i<v.size(); ++i) map.push_back(flg[i]?num++:map[idx[i]]);
+    // // extract the unique vertices
+    // v = v.extract(flg);
+    // // and the unique fpv:
+    // std::vector<std::vector<int>> ufpv;
+    // for (size_t i=0; i<v.size(); ++i) if (flg[i]) ufpv.push_back(fpv[i]);
+    // // and replace the vertex indices in vpf using the map
+    // for (size_t i=0; i<p.size(); ++i) for (size_t j=0; j<vpf[i].size(); ++i) if (!flg[vpf[i][j]]) vpf[i][j] = map[vpf[i][j]];
+    //
+    // // look for equivalent facets to remove
+    // flg.resize(0); idx.resize(0); map.resize(0);
+    // for (size_t i=0; i<p.size(); ++i){ flg.push_back(true); idx.push_back(i);}
+    // for (size_t i=1; i<p.size(); ++i) for (size_t j=0; j<i; ++j){
+    //   if (flg[i]&&flg[j]) flg[i] = !(approx_vector(d, p.datapointer(i), p.datapointer(j), t)&&approx_vector(d, n.datapointer(i), n.datapointer(j), t));
+    //   if (!flg[i]){ idx[i]=j; break; }
+    // }
+    // // combine the vpf for equivalent non-unique facets
+    // for (size_t i=0; i<p.size(); ++i) if (flg[i])
+    // for (size_t j=i+1; j<p.size(); ++j) if (i==idx[j])
+    // for (auto vj: vpf[j]){
+    //   notpresent = true;
+    //   for (auto vi: vpf[i]) if (vi==vj) notpresent = false;
+    //   if (notpresent) vpf[i].push_back(vj);
+    // }
+    // num = 0; for (size_t i=0; i<p.size(); ++i) map.push_back(flg[i]?num++:map[idx[i]]);
+    // p = p.extract(flg);
+    // n = n.extract(flg);
+    // std::vector<std::vector<int>> uvpf;
+    // for (size_t i=0; i<p.size(); ++i) if (flg[i]) uvpf.push_back(vpf[i]);
+    // for (size_t i=0; i<v.size(); ++i) for (size_t j=0; j<ufpv[i].size(); ++i) if (!flg[ufpv[i][j]]) ufpv[i][j] = map[ufpv[i][j]];
+    //
+    // // finally, double check that vpf and fpv only contain unique entries
+    // vpf.resize(0); fpv.resize(0);
+    // for (auto i: uvpf){
+    //   vpf.push_back(std::vector<int>());
+    //   for (auto j: i){
+    //     notpresent = true;
+    //     for (auto k: vpf.back()) if (j==k) notpresent = false;
+    //     if (notpresent) vpf.back().push_back(j);
+    //   }
+    // }
+    // for (auto i: ufpv){
+    //   fpv.push_back(std::vector<int>());
+    //   for (auto j: i){
+    //     notpresent = true;
+    //     for (auto k: fpv.back()) if (j==k) notpresent = false;
+    //     if (notpresent) fpv.back().push_back(j);
+    //   }
+    // }
+
+    return Polyhedron(v,p,n, fpv, vpf);
+  }
   ArrayVector<double> get_vertices(void) const { return vertices; };
   ArrayVector<double> get_points(void) const { return points; };
   ArrayVector<double> get_normals(void) const { return normals; };
@@ -169,6 +274,9 @@ protected:
     this->vertices = this->vertices.extract(flg);
     // status_update("<");
   }
+  // This is the function which is bad for non-convex polyhedra, since it
+  // assigns all faces with n⋅(v-p)=0 to a vertex irrespective of whether two
+  // faces have opposite direction normals.
   void find_all_faces_per_vertex(void){
     // status_update(">");
     ArrayVector<double> vmp;
@@ -182,60 +290,63 @@ protected:
     // status_update("<");
   }
   // void extend_unique_faces_per_vertex(const ArrayVector<int>& fpv){
-  //   status_update(">");
+  //   // status_update(">");
   //   // first look for vertices that are equivalent -- that is points where more than three planes interesect
-  //   std::vector<bool> uniqueflg;
-  //   std::vector<size_t> uniqueidx;
-  //   for (size_t i=0; i<this->vertices.size(); ++i){
-  //     uniqueflg.push_back(true);
-  //     uniqueidx.push_back(i);
+  //   std::vector<bool> flg; std::vector<size_t> idx;
+  //   for (size_t i=0; i<vertices.size(); ++i) flg.push_back(true);
+  //   int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
+  //   size_t n = vertices.numel();
+  //   for (size_t i=1; i<vertices.size(); ++i) for (size_t j=0; j<i; ++j){
+  //     if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.datapointer(i), vertices.datapointer(j), t);
+  //     idx.push_back(flg[i] ? i : j); << This won't work as anticipated. it *adds* an entry for every j
+  //     if (!flg[i]) break;
   //   }
-  //   int tol_multiplier = 3; // a tuning parameter, 3 seems to work OK.
-  //   for (size_t i=1; i<this->vertices.size(); ++i)
-  //     for (size_t j=0; j<i; ++j){
-  //       if (uniqueflg[j] && approx_vector(this->vertices.numel(), this->vertices.datapointer(i), this->vertices.datapointer(j), tol_multiplier)){
-  //         uniqueflg[i]=false;
-  //         uniqueidx[i]=j;
-  //       }
-  //       if (!uniqueflg[i]) break;
-  //     }
-  //   std::vector<size_t> mapidx(this->vertices.size());
-  //   size_t no_unique=0;
-  //   for (size_t i=0; i<this->vertices.size(); ++i)
-  //     mapidx[i] = uniqueflg[i] ? no_unique++ : mapidx[uniqueidx[i]];
-  //   std::vector<std::vector<int>> fpv_ext(no_unique);
-  //   bool already_present;
-  //   int tmp;
-  //   for (size_t i=0; i<this->vertices.size(); ++i)
-  //     for (size_t j=0; j<3; ++j){
-  //       already_present=false;
-  //       tmp = fpv.getvalue(i,j);
-  //       for (auto k: fpv_ext[mapidx[i]]) if (k == tmp) already_present=true;
-  //       if (!already_present) fpv_ext[mapidx[i]].push_back(tmp);
-  //     }
-  //
-  //   // and extract the unique vertices, and unique planes_per_vertex:
-  //   this->vertices = this->vertices.extract(uniqueflg);
-  //   this->faces_per_vertex = fpv_ext;
-  //   status_update("<");
+  //   // extract the unique vertices
+  //   this->vertices = this->vertices.extract(flg);
+  //   // idx[i] gives the entry of vertices which is unique.
+  //   // we want map[i] to give the entry of the *extracted* unique vertices
+  //   std::vector<size_t> map; size_t num=0;
+  //   for (size_t i=0; i<vertices.size(); ++i) map.push_back(flg[i]?num++:map[idx[i]]);
+  //   // so that we can find all facets on wich each vertex sits:
+  //   std::vector<std::vector<int>> ext(num);
+  //   bool already_present; int tmp;
+  //   for (size_t i=0; i<fpv.size(); ++i) for (size_t j=0; j<3u; ++j){
+  //     already_present = false;
+  //     tmp = fpv.getvalue(i,j);
+  //     for (auto k: ext[map[i]]) if (k==tmp) already_present = true;
+  //     if (!already_present) ext[map[i]].push_back(tmp);
+  //   }
+  //   // save the combined facets per vertex information:
+  //   this->faces_per_vertex = ext;
+  //   // status_update("<");
   // };
   void polygon_vertices_per_face(void) {
     // status_update(">");
-    bool already_present;
+    bool flag = true;
     // We have 3+ faces per vertex, so we can now find the vertices per face
     std::vector<std::vector<int>> vpf(this->points.size());
-    for (size_t i=0; i<this->faces_per_vertex.size(); ++i)
-      for (auto face: this->faces_per_vertex[i]){
-        // ensure that we don't somehow list a vertex multiple times for one face
-        already_present=false;
-        for (auto vert: vpf[face]) if (vert == i) already_present = false;
-        if (!already_present) vpf[face].push_back(i);
+    for (size_t i=0; i<vertices.size(); ++i){
+      for (auto facet: faces_per_vertex[i]){
+        flag = true;
+        for (auto vertex: vpf[facet]) if (vertex==i) flag = false;
+        if (flag) vpf[facet].push_back(i);
       }
-      // additionally, we only want to keep faces which describe polygons
+    }
+
+    // additionally, we only want to keep faces which describe polygons
     std::vector<bool> is_polygon;
     for (size_t i=0; i<vpf.size(); ++i) is_polygon.push_back(vpf[i].size()>2);
     this->points = this->points.extract(is_polygon);
     this->normals = this->normals.extract(is_polygon);
+
+    // we should modify faces_per_vertex here, to ensure its indexing is correct
+    size_t count = 0, max=vpf.size(); std::vector<size_t> map;
+    for (size_t i=0; i<max; ++i) map.push_back(is_polygon[i] ? count++ : max);
+    std::vector<std::vector<int>> reduced_fpv(faces_per_vertex.size());
+    for (size_t i=0; i<faces_per_vertex.size(); ++i)
+    for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(map[facet]);
+    this->faces_per_vertex = reduced_fpv;
+
     // plus cut-down the vertices_per_face vector
     std::vector<std::vector<int>> polygon_vpf;
     for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);

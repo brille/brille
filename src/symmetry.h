@@ -80,6 +80,7 @@ public:
   std::vector<int> orders(void) const;
   std::vector<int> isometries(void) const;
   std::vector<std::array<int,3>> axes(void) const;
+  bool has_space_inversion() const;
 
   void print(const size_t i) const;
   void print(void) const;

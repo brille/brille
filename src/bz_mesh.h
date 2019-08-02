@@ -34,14 +34,14 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
   };
-  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const int time_reversal) const{
+  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
     BrillouinZone bz = this->get_brillouinzone();
 
     std::string msg;
-    if (!bz.ir_moveinto(x, ir_q, tau, rots, time_reversal)){
+    if (!bz.ir_moveinto(x, ir_q, tau, rots)){
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
@@ -78,8 +78,7 @@ public:
       T tmp_v[3];
       T tmp_m[9];
       std::vector<std::array<int,9>> invR;
-      if (nm){
-        // only allocate and calculate invR if we need it
+      if (nm){ // only allocate and calculate invR if we need it
         invR.resize(rots.size());
         for (size_t i=0; i<rots.size(); ++i)
           matrix_inverse(invR[i].data(), rots[i].data());
@@ -90,16 +89,12 @@ public:
         for (size_t b=0; b<this->branches; ++b){
           // we can skip the scalar elements, as they do not rotate.
           offset = b*sp + this->elements[0];
-          for (size_t v=0; v<ne; ++v){
+          // eigenvectors and regular vectors rotate the same way
+          for (size_t v=0; v<(ne+nv); ++v){
             mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
             for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
           }
-          offset += ne*3u;
-          for (size_t v=0; v<nv; ++v){
-            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
-            for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
-          }
-          offset += nv*3u;
+          offset += (ne+nv)*3u;
           for (size_t m=0; m<nm; ++m){
             // we want R*M*R⁻¹.
             // first calculate M*R⁻¹, storing in tmp_m

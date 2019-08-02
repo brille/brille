@@ -43,7 +43,10 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
   this->ir_polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), nref.get_xyz(), args...);
 }
 Polyhedron BrillouinZone::get_polyhedron(void) const {return this->polyhedron;};
-Polyhedron BrillouinZone::get_ir_polyhedron(void) const {return this->ir_polyhedron;};
+Polyhedron BrillouinZone::get_ir_polyhedron(void) const {
+  // without space inversion or time reversal symmetry, double the polyhedron
+  return has_inversion ? ir_polyhedron : ir_polyhedron + ir_polyhedron.mirror();
+};
 
 // first Brillouin zone
 LQVec<double> BrillouinZone::get_vertices(void) const {
@@ -96,7 +99,8 @@ std::vector<std::vector<int>> BrillouinZone::get_vertices_per_face(void) const {
 }
 // irreducible first Brillouin zone
 LQVec<double> BrillouinZone::get_ir_vertices(void) const {
-  ArrayVector<double> v = this->ir_polyhedron.get_vertices(); // in the outerlattice xyz coordinate system
+  Polyhedron irp = this->get_ir_polyhedron();
+  ArrayVector<double> v = irp.get_vertices();
   LQVec<double> lv(this->outerlattice, v.size());
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
@@ -110,7 +114,8 @@ LQVec<double> BrillouinZone::get_ir_primitive_vertices(void) const {
   return v;
 }
 LQVec<double> BrillouinZone::get_ir_points(void) const {
-  ArrayVector<double> p = this->ir_polyhedron.get_points();
+  Polyhedron irp = this->get_ir_polyhedron();
+  ArrayVector<double> p = irp.get_points();
   LQVec<double> lp(this->outerlattice, p.size());
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
@@ -124,7 +129,8 @@ LQVec<double> BrillouinZone::get_ir_primitive_points(void) const {
   return p;
 }
 LQVec<double> BrillouinZone::get_ir_normals(void) const {
-  ArrayVector<double> n = this->ir_polyhedron.get_normals();
+  Polyhedron irp = this->get_ir_polyhedron();
+  ArrayVector<double> n = irp.get_normals();
   LQVec<double> ln(this->outerlattice, n.size());
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
@@ -138,10 +144,10 @@ LQVec<double> BrillouinZone::get_ir_primitive_normals(void) const {
   return n;
 }
 std::vector<std::vector<int>> BrillouinZone::get_ir_faces_per_vertex(void) const {
-  return this->ir_polyhedron.get_faces_per_vertex();
+  return this->get_ir_polyhedron().get_faces_per_vertex();
 }
 std::vector<std::vector<int>> BrillouinZone::get_ir_vertices_per_face(void) const {
-  return this->ir_polyhedron.get_vertices_per_face();
+  return this->get_ir_polyhedron().get_vertices_per_face();
 }
 
 // irreducible reciprocal space
@@ -177,14 +183,14 @@ void BrillouinZone::print() const {
   printf("BrillouinZone with %u vertices and %u faces\n",this->vertices_count(),this->faces_count());
 }
 
-void BrillouinZone::wedge_search(const int time_reversal){
+void BrillouinZone::wedge_search(){
   std::string update_msg;
   /*
   The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
   our `outerlattice`. Consequently we must work in the outerlattice here.
   */
-  PointSymmetry psym = get_pointgroup_symmetry(this->outerlattice.get_hall(), time_reversal);
+  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   // extract the symmetry operations with rotation axes: (not 1 or ̄1)
   std::vector<std::array<int,9>> rotations;
   for (size_t i=0; i<psym.size(); ++i)
@@ -456,7 +462,7 @@ void BrillouinZone::shrink_and_prune_outside(const size_t cnt, LQVec<double>& vr
   }
 }
 
-void BrillouinZone::irreducible_vertex_search(void){
+void BrillouinZone::irreducible_vertex_search(){
   /* We need to check for three-plane intersections for all combinations of two
      1st Brillouin zone planes and one irreducible reciprocal space normal and
      two irreducible reciprocal space normals and one 1st Brillouin zone plane.
@@ -685,7 +691,8 @@ void BrillouinZone::irreducible_vertex_search(void){
 
   ArrayVector<bool> keep;
   // Find which vertices are inside the irreducible wedge
-  keep = this->isinside_wedge(all_verts);
+  const bool constructing{true}; // here we *are* building-up the irreducible Brillouin zone
+  keep = this->isinside_wedge(all_verts, constructing);
   // and pull out those vertices and their intersecting plane indices
   all_verts = extract(all_verts, keep);
   all_ijk   = extract(all_ijk,   keep);
@@ -889,7 +896,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p
   return out;
 }
 
-template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec<T> &p) const {
+template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec<T> &p, const bool constructing) const {
   bool isouter = this->outerlattice.issame(p.get_lattice());
   bool isinner = this->lattice.issame(p.get_lattice());
   if (!(isouter||isinner))
@@ -900,16 +907,36 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
     normals = this->get_ir_wedge_normals();
   else
     normals = this->get_primitive_ir_wedge_normals();
-  if (normals.size())
+  if (normals.size()){
+    // If a pointgroup has inversion symmetry then for every point, p, there is
+    // an equivalent point, -p. This indicates that a point p is already in
+    // the irreducible wedge if it has n̂ᵢ⋅p ≥ 0 for all irredudible-bounding-
+    // plane normals, ̂nᵢ, *or* the opposite -- n̂ᵢ⋅ p ≤ 0 for all ̂nᵢ.
+    // Since we are interested in enforcing a smallest-possible irreducible
+    // Brillouin zone, we want to exclude the all n̂ᵢ⋅ p ≤ 0 half of the
+    // reciprocal wedge precisely because they are equivalent.
+    // It is only in the case where a pointgroup *does not have* space-inversion
+    // symmetry and time-reversal symmetry is to be excluded that we can allow
+    // n̂ᵢ⋅ p ≤ 0 to be a valid in-wedge solution.
+    // The ArrayVector all_approx method has a special switched execution path
+    // for checking whether all values are ≤ or ≥ a value simultaneously
+
+    // when constructing the irreducible Brillouin zone we need to only consider
+    // the ≥0 case so that we end up with a convex polyhedron. The ir_polyhedron
+    // accessor method mirrors the half-polyhedron in this case, so when
+    // identifying whether a point is inside of the irreducible Brillouin zone
+    // we must allow for the ≤0 case as well.
+    std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
     for (size_t i=0; i<p.size(); ++i)
-      out.insert(dot(normals, p.get(i)).all_approx(">=",0.), i);
-  else
+      out.insert(dot(normals, p.get(i)).all_approx(cmp,0.), i);
+  } else {
     for (size_t i=0; i<p.size(); ++i)
       out.insert(true, i); // with no normals *all* points are "inside" the wedge
+  }
   return out;
 }
 
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R, const int time_reversal) const {
+bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R) const {
   bool isouter = this->outerlattice.issame(Q.get_lattice());
   bool isinner = this->lattice.issame(Q.get_lattice());
   if (!(isouter||isinner))
@@ -921,15 +948,21 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   */
   // get_pointgroup_symmetry constructs the PointSymmetry object from a vector<array<int,9>>
   // the PointSymmetry constructor automatically sorts the operations in this case.
-  PointSymmetry psym = get_pointgroup_symmetry(this->outerlattice.get_hall(), time_reversal);
+  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+  //PointSymmetry psym = make_pointgroup_symmetry_object(this->outerlattice.get_hall(), time_reversal);
   int max_order= rotation_order(psym.get(psym.size()-1)); // since they're sorted
 
-  LQVec<double> bz_points = isouter ? this->get_points() : this->get_primitive_points();
-  LQVec<double> bz_normals = isouter ? this->get_normals() : this->get_primitive_normals();
+  LQVec<double> bz_points = this->get_points();
+  LQVec<double> bz_normals =  this->get_normals();
   LQVec<int> bz_tau = (2.0*bz_points).round(); // the BZ points are each τ/2
 
-  LQVec<double> ir_normals = isouter ? this->get_ir_wedge_normals() : this->get_primitive_ir_wedge_normals();
+  LQVec<double> ir_normals = this->get_ir_wedge_normals();
   ArrayVector<double> bz_tau_len = norm(bz_tau);
+
+  // We're not building up the irreducible Brillouin zone here.
+  // We can skip this as false is the default value for constructing in
+  // this->inside_wedge
+  // const bool constructing{false};
 
   // by chance some Q points might already be in the IR-Bz:
   ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
@@ -945,12 +978,11 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   ArrayVector<double> q_dot_bz_normals;
   ArrayVector<int> Nhkl;
 
-  size_t count, count1, count2, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
+  size_t count, count1, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
   int maxnm = 0;
   for (size_t i=0; i<nQ; ++i){
     count = 0;
     count1= 0;
-    count2= 0;
     qi = Q.get(i);
     taui = 0*tau.get(i);
     Ri = RE;

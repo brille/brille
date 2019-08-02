@@ -191,7 +191,6 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.get_data(), cobj.data_shape(), false);})
   .def("interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
-                           const bool& time_reversal,
                            const bool& useparallel,
                            const int& threads){
     py::buffer_info bi = pyX.request();
@@ -205,7 +204,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
 
     int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
     // perform the interpolation and rotate and vectors/tensors afterwards
-    ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads, time_reversal ? 1 : 0);
+    ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads);
     // and then make sure we return an numpy array of appropriate size:
     std::vector<ssize_t> outshape;
     for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -232,7 +231,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       for (size_t j=0; j< lires.numel(); j++)
         rptr[i*lires.numel()+j] = lires.getvalue(i,j);
     return liout;
-  },py::arg("Q"),py::arg("time_reversal")=false,py::arg("useparallel")=false,py::arg("threads")=-1)
+  },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1)
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
     // handle Q
     py::buffer_info bi = pyQ.request();
@@ -441,7 +440,6 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     //
     .def("ir_interpolate_at",[](Class& cobj,
                              py::array_t<double> pyX,
-                             const bool& time_reversal,
                              const bool& useparallel,
                              const int& threads){
       py::buffer_info bi = pyX.request();
@@ -455,7 +453,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
 
       int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
       // perform the interpolation and rotate and vectors/tensors afterwards
-      ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads, time_reversal ? 1 : 0);
+      ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads);
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -482,7 +480,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("Q"),py::arg("time_reversal")=false,py::arg("useparallel")=false,py::arg("threads")=-1)
+    },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1)
     //
     .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
       return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
@@ -759,6 +757,7 @@ void declare_polyhedron(py::module &m, const std::string &typestr) {
     .def_property_readonly("normals",[](const T& o){return av2np(o.get_normals());})
     .def_property_readonly("vertices_per_face",&T::get_vertices_per_face)
     .def_property_readonly("faces_per_vertex",&T::get_faces_per_vertex)
-    .def_property_readonly("volume",&T::get_volume);
+    .def_property_readonly("volume",&T::get_volume)
+    .def_property_readonly("mirror",&T::mirror);
   }
 #endif

@@ -166,3 +166,9 @@ std::vector<std::array<int,3>> PointSymmetry::axes(void) const {
   for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[0]);
   return ax;
 }
+
+bool PointSymmetry::has_space_inversion() const {
+  // space inversion means that a pointgroup operation has isometry -1.
+  for (auto op: this->R) if (-1 == isometry_value(op.data())) return true;
+  return false;
+}

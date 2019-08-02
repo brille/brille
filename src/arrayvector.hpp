@@ -346,6 +346,16 @@ template<typename T> bool ArrayVector<T>::all_approx(const std::string& expr, co
     if (!approx_scalar(this->getvalue(i,j), val)) return false;
     return true;
   }
+  if (!expr.compare("<=|>=") || !expr.compare("≤|≥") || !expr.compare(">=|<=") || !expr.compare("≥|≤")){
+    bool allle=true, allge=true, ijneq;
+    for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j){
+      ijneq = !approx_scalar(this->getvalue(i,j), val);
+      if (allle && ijneq && this->getvalue(i,j) > val) allle = false;
+      if (allge && ijneq && this->getvalue(i,j) < val) allge = false;
+      if (!(allle||allge)) return false;
+    }
+    return true;
+  }
   std::string msg = __PRETTY_FUNCTION__;
   msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);

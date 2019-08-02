@@ -26,6 +26,8 @@ class BrillouinZone {
   Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
   Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
   ArrayVector<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
+  bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
+  bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
 public:
   /*!
   @param lat A Reciprocal lattice
@@ -34,13 +36,14 @@ public:
                 search in τ-index. The default indicates that (̄1̄1̄1),
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
   */
-  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, int time_reversal=0, int wedge_search=0): outerlattice(lat) {
+  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, bool tr=false, bool wedge_search=true): outerlattice(lat), time_reversal(tr) {
     lattice = toprim ? lat.primitive() : lat;
+    this->has_inversion = this->time_reversal || lat.has_space_inversion();
     this->vertex_search(extent);
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
-    if (wedge_search) this->wedge_search(time_reversal);
+    if (wedge_search) this->wedge_search();
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};
@@ -127,7 +130,7 @@ public:
   reciprocal space there are (at least) 4π/N - 1 equivalent other choices for
   the irreducible wedge.
   */
-  void wedge_search(const int time_reversal=0);
+  void wedge_search();
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
   already identified, this method finds all intersections of combinations of
@@ -140,7 +143,7 @@ public:
   @note the (3,0) intersection points *are* the first Brillouin zone vertices
   and the (0,3) intersection points are all identically ⃗0.
   */
-  void irreducible_vertex_search(void);
+  void irreducible_vertex_search();
   /*! \brief Search for the vertices defining the first Brillouin zone
 
     Search through all combinations of three planes from `extent`*(̄1̄1̄1) to
@@ -168,7 +171,7 @@ public:
   @returns An ArrayVector<bool> with each 1-element array indicating if the
            associated Q point is inside our irreducible reciprocal space.
   */
-  template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p) const;
+  template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p, const bool constructing=false) const;
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
     @param[in] Q A reference to LQVec list of Q points
     @param[out] q The reduced reciprocal lattice vectors
@@ -182,9 +185,8 @@ public:
     @param [out] q The irreducible reduced reciprocal lattice vectors
     @param [out] τ The conventional reciprocal lattice zone centres
     @param [out] R The conventional lattice pointgroup operations
-    @param time_reveral A flag to indicate if time reversal symmetry should be added to pointgroups lacking inversion symmetry
   */
-  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R, const int time_reversal=0) const ;
+  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>> R) const ;
 private:
   void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
