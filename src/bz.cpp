@@ -44,8 +44,16 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
 }
 Polyhedron BrillouinZone::get_polyhedron(void) const {return this->polyhedron;};
 Polyhedron BrillouinZone::get_ir_polyhedron(void) const {
-  // without space inversion or time reversal symmetry, double the polyhedron
-  return has_inversion ? ir_polyhedron : ir_polyhedron + ir_polyhedron.mirror();
+  // if the spacegroup has space inversion or time reversal symmetry,
+  // return the already-computed irreducible polyhedron unmodified
+  if (this->has_inversion) return this->ir_polyhedron;
+  // otherwise, make sure that the irreducible polyhedron is smaller than the
+  // first Brillouin zone before mirroring it:
+  if (this->ir_polyhedron.get_volume() < this->polyhedron.get_volume()/2.0)
+    return this->ir_polyhedron + this->ir_polyhedron.mirror();
+  // if the irreducible polyhedron is not less than half the volume of the
+  // first Brillouin zone, mirroring it *should* produce the 1st Brillouin zone
+  return this->polyhedron;
 };
 
 // first Brillouin zone

@@ -212,33 +212,46 @@ template<typename T> T tetrahedron_volume(const ArrayVector<T>& a, const ArrayVe
   vector_cross(dumb.datapointer(3), dumb.datapointer(1), dumb.datapointer(2));
   return std::abs(dumb.dot(0,3)/6.0); // abs so that we don't have to worry about the permutation
 }
-
+/*
+  For between 1 and 4 vertices of a tetrahedron, v, determine the linear
+  inerpolation weight with with each vertex contributes at a point, p.
+  The required relationship between p and the vertices depends on the number
+  of supplied vertices:
+    v.size()  requisite relationship
+    --------  -----------------------------------------------------------------
+       1        p-v ≡ ⃗0
+       2        p must lie on the line between v[0] and v[1]
+       3        p must lie within the triangle formed by v[0], v[1], and v[2]
+       4        p must lie within the volume of the tetrahedron
+*/
 template<typename T> std::vector<double> tetrahedron_weights(const ArrayVector<T>& p, const ArrayVector<T>& v){
   std::vector<double> weights(v.size());
   if (v.size()==1){
     weights[0] = 1.0;
     return weights;
   }
-  T volume;
   switch (v.size()){
-    case 2:
-      volume = (v.extract(1)-v.extract(0)).norm(0);
-      weights[0] = (v.extract(1)-p).norm(0)/volume;
-      weights[1] = (v.extract(0)-p).norm(0)/volume;
+    case 2:{
+      T len = (v.extract(1)-v.extract(0)).norm(0);
+      weights[0] = (v.extract(1)-p).norm(0)/len;
+      weights[1] = (v.extract(0)-p).norm(0)/len;
       break;
-    case 3:
-      volume = triangle_area(v.extract(0), v.extract(1), v.extract(2));
-      weights[0] = triangle_area(p, v.extract(1), v.extract(2))/volume;
-      weights[1] = triangle_area(v.extract(0), p, v.extract(2))/volume;
-      weights[2] = triangle_area(v.extract(0), v.extract(1), p)/volume;
+    }
+    case 3:{
+      T area = triangle_area(v.extract(0), v.extract(1), v.extract(2));
+      weights[0] = triangle_area(p, v.extract(1), v.extract(2))/area;
+      weights[1] = triangle_area(v.extract(0), p, v.extract(2))/area;
+      weights[2] = triangle_area(v.extract(0), v.extract(1), p)/area;
       break;
-    case 4:
-      volume = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), v.extract(3));
-      weights[0] = tetrahedron_volume(p, v.extract(1), v.extract(2), v.extract(3))/volume;
-      weights[1] = tetrahedron_volume(v.extract(0), p, v.extract(2), v.extract(3))/volume;
-      weights[2] = tetrahedron_volume(v.extract(0), v.extract(1), p, v.extract(3))/volume;
-      weights[3] = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), p)/volume;
+    }
+    case 4:{
+      T vol = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), v.extract(3));
+      weights[0] = tetrahedron_volume(p, v.extract(1), v.extract(2), v.extract(3))/vol;
+      weights[1] = tetrahedron_volume(v.extract(0), p, v.extract(2), v.extract(3))/vol;
+      weights[2] = tetrahedron_volume(v.extract(0), v.extract(1), p, v.extract(3))/vol;
+      weights[3] = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), p)/vol;
       break;
+    }
     default:
       throw std::runtime_error("interpolation.tetrahedron_weights: this should be impossible.");
   }

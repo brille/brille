@@ -47,7 +47,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include<boost/noncopyable.hpp>
+// #include<boost/noncopyable.hpp>
 
 // The types 'intptr_t' and 'uintptr_t' are signed and unsigned integer types,
 //   respectively. They are guaranteed to be the same width as a pointer.
@@ -118,11 +118,9 @@ public:
   //   number of sides (edges).  The points of the polygon must be given in
   //   either counterclockwise or clockwise order and they form a ring, so
   //   every two consecutive points forms an edge of the polygon.
-  struct polygon : public boost::noncopyable{
-  // typedef struct {
+  struct polygon{
     int *vertexlist;
     int numberofvertices;
-  // } polygon;
     polygon(): vertexlist(nullptr), numberofvertices(0) {};
     ~polygon(){
       if (vertexlist) delete [] vertexlist;
@@ -133,12 +131,10 @@ public:
   //   points floating in it.  Each facet consists of a list of polygons and
   //   a list of hole points (which lie strictly inside holes).
   struct facet {
-  // typedef struct {
     polygon *polygonlist;
     int numberofpolygons;
     REAL *holelist;
     int numberofholes;
-  // } facet;
     facet(): polygonlist(nullptr), numberofpolygons(0), holelist(nullptr), numberofholes(0) {};
     ~facet(){
       if (polygonlist) delete [] polygonlist;
@@ -154,10 +150,8 @@ public:
   //   be -1 if it is a ray, in this case, the unit normal of this ray is
   //   given in 'vnormal'.
   struct voroedge {
-  // typedef struct {
     int v1, v2;
     REAL vnormal[3];
-  // } voroedge;
   };
 
   // A "vorofacet" is an facet of the Voronoi diagram. It corresponds to a
@@ -168,10 +162,8 @@ public:
   //   list of Voronoi edges, 'elist[0]' saves the number of Voronoi edges
   //   (including rays) of this facet.
   struct vorofacet {
-  //typedef struct {
     int c1, c2;
     int *elist;
-  //} vorofacet;
     vorofacet(): elist(nullptr) {};
     ~vorofacet(){
       if (elist) delete [] elist;
@@ -182,11 +174,9 @@ public:
   // Additional parameters associated with an input (or mesh) vertex.
   //   These informations are provided by CAD libraries.
   struct pointparam {
-  //typedef struct {
     REAL uv[2];
     int tag;
     int type; // 0, 1, or 2.
-  //} pointparam;
   };
 
   // Callback functions for meshing PSCs.
@@ -545,19 +535,6 @@ public:
     }
 
     if (facetlist != (facet *) NULL) {
-      // facet *f;
-      // polygon *p;
-      // for (i = 0; i < numberoffacets; i++) {
-      //   f = &facetlist[i];
-      //   for (j = 0; j < f->numberofpolygons; j++) {
-      //     p = &f->polygonlist[j];
-      //     delete [] p->vertexlist;
-      //   }
-      //   delete [] f->polygonlist;
-      //   if (f->holelist != (REAL *) NULL) {
-      //     delete [] f->holelist;
-      //   }
-      // }
       delete [] facetlist;
     }
     if (facetmarkerlist != (int *) NULL) {
@@ -583,15 +560,12 @@ public:
       delete [] vedgelist;
     }
     if (vfacetlist != (vorofacet *) NULL) {
-      for (i = 0; i < numberofvfacets; i++) {
-        delete [] vfacetlist[i].elist;
-      }
+      // for (i = 0; i < numberofvfacets; i++) {
+      //   delete [] vfacetlist[i].elist;
+      // }
       delete [] vfacetlist;
     }
     if (vcelllist != (int **) NULL) {
-      // for (i = 0; i < numberofvcells; i++) {
-      //   delete [] vcelllist[i];
-      // }
       delete [] vcelllist;
     }
   }

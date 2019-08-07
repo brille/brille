@@ -1,9 +1,9 @@
-classdef SymSim < handle
+classdef SymEu < handle
   properties
     pyobj
   end
   methods
-    function obj = SymSim(pysimphony, varargin)
+    function obj = SymEu(euphonic, varargin)
       kdef = struct('scattering_lengths',[], ...
                     'parallel',true, ...
                     'halfN',[], ...
@@ -18,9 +18,9 @@ classdef SymSim < handle
                     'use_primitive',false ...
                     );
       [~,kwds] = symbz.parse_arguments(varargin,kdef);
-      % Verify that pysimphony is a InterpolationData object:
-      assert( isa(pysimphony,...
-          'py.simphony.data.interpolation.InterpolationData') )
+      % Verify that euphonic is a InterpolationData object:
+      assert( isa(euphonic,...
+          'py.euphonic.data.interpolation.InterpolationData') )
       % Find the key names which have non-empty values:
       keys = fieldnames(kwds);
       i = 1;
@@ -37,7 +37,7 @@ classdef SymSim < handle
         pykwds{2*(i-1)+1} = keys{i};
         pykwds{2*(i-1)+2} = symbz.m2p(kwds.(keys{i}));
       end
-      obj.pyobj = py.symbz.simphony.SymSim(pysimphony, pyargs(pykwds{:}));
+      obj.pyobj = py.symbz.euphonic.SymEu(euphonic, pyargs(pykwds{:}));
     end % intializer
     sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
     wq  = w_q(obj,qh,qk,ql,varargin)

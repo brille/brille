@@ -66,6 +66,13 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=False,
             elif units == 'invA':
                 Q = bz.mapped_invA
         bz = bz.BrillouinZone
+    if isinstance(bz, (sbz.BZMeshQcomplex, sbz.BZMeshQ)):
+        if Q is None:
+            if units == 'rlu':
+                Q = bz.rlu
+            elif units == 'invA':
+                Q = bz.invA
+        bz = bz.BrillouinZone
     if origin is not None and not isinstance(origin, np.ndarray):
         origin = np.array(origin)
     if origin is None or origin.size != 3 or origin.ndim > 1:

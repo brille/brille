@@ -165,6 +165,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
   .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_mesh_hkl());})
   .def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_mesh_xyz());})
+  .def_property_readonly("tetrahedra",[](const Class& cobj){return av2np(cobj.get_mesh_tetrehedra());})
   .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
     py::buffer_info bi;
     // copy-in the elements array

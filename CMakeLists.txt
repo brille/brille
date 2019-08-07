@@ -122,14 +122,6 @@ else()
 	target_link_libraries(_symbz PUBLIC "-fopenmp")
 endif()
 
-# The Computational Geometry Algorithms Library is used for Triangulating
-# the (irreducible) Brillouin zone.
-# find_package(CGAL)
-# target_link_libraries(_symbz PUBLIC CGAL::CGAL)
-find_package(CGAL REQUIRED COMPONENTS Core)
-target_link_libraries(_symbz PRIVATE CGAL::CGAL CGAL::CGAL_Core)
-
-
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" OFF)
 

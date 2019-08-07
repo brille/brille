@@ -16,7 +16,7 @@
 
 template<class T> class Mesh3{
 protected:
-  Delaunay mesh;
+  TetrahedralTriangulation mesh;
   ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
   ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
   std::array<unsigned,4> elements; //! The number of [scalar, normalized eigenvector, vector, matrix] elements per data array
@@ -53,18 +53,11 @@ public:
     return *this;
   };
   //! Return the number of mesh vertices
-  size_t size() const { return static_cast<size_t>(this->mesh.number_of_vertices()); };
+  size_t size() const { return this->mesh.number_of_vertices(); };
   //! Return the positions of all vertices in the mesh
-  ArrayVector<double> get_mesh_xyz() const{
-    ArrayVector<double> xyz(3u, this->mesh.number_of_vertices());
-    Delaunay::Finite_vertices_iterator vit;
-    for (vit = this->mesh.finite_vertices_begin(); vit != this->mesh.finite_vertices_end(); ++vit){
-      if (vit->info() >= xyz.size()) throw std::out_of_range("too many vertices in get_mesh_xyz");
-      auto p = vit->point();
-      for (size_t i=0; i<3u; ++i) xyz.insert(p[i], vit->info(), i);
-    }
-    return xyz;
-  };
+  const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); };
+  //! Return the tetrahedron indices of the mesh
+  const ArrayVector<size_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();};
   //! Return a constant reference to the data ArrayVector
   const ArrayVector<T>& get_data() const { return this->data; };
   //! Return the number of dimensions of each array in the `data` ArrayVector

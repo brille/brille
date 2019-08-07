@@ -195,6 +195,11 @@ public:
   */
   ArrayVector<T> extract(const ArrayVector<size_t>& idx) const;
   /*! Return a collection of arrays from the ArrayVector
+    @param idx a reference to a standard vector containing the to-be-returned indices
+    @returns An ArrayVector containing the indicies indicated by idx
+  */
+  ArrayVector<T> extract(const std::vector<size_t>& idx) const;
+  /*! Return a collection of arrays from the ArrayVector
     @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
     @returns An ArrayVector containing the indicies indicated by tfvec
   */

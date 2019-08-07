@@ -64,68 +64,16 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_a
   this->check_before_interpolating(x);
   ArrayVector<T> out(this->data.numel(), x.size());
 
-  Delaunay::Point point;
-  Delaunay::Cell_handle cell;
-  // Delaunay::Vertex vertex;
-  Delaunay::Locate_type type;
-  int v0, v1;
-  size_t corners[4];
-  ArrayVector<double> verts(3u, 4u);
+  const ArrayVector<double>& positions = this->mesh.get_vertex_positions();
+  std::vector<size_t> vertices; // should become corners
+
+  ArrayVector<double> xi(3u, 1u);
   std::vector<double> weights;
   for (size_t i=0; i<x.size(); ++i){
-    point = Delaunay::Point(x.getvalue(i,0), x.getvalue(i,1), x.getvalue(i,2));
-    cell = this->mesh.locate(point, type, v0, v1);
-    switch (type){
-      case Delaunay::VERTEX: // v0 is the index into cell of the exactly-matching vertex
-        {
-          verts.resize(1u);
-          auto vertex = cell->vertex(v0);
-          corners[0] = vertex->info();
-          point = vertex->point();
-          for (size_t j=0; j<3; ++j) verts.insert(point[j], 0, j);
-        }
-        break;
-      case Delaunay::EDGE: // v0 and v1 index into cell of the vertices forming the line the point is on
-        {
-          verts.resize(2u);
-          auto vertex = cell->vertex(v0);
-          corners[0] = vertex->info();
-          point = vertex->point();
-          for (size_t j=0; j<3; ++j) verts.insert(point[j], 0, j);
-          vertex = cell->vertex(v1);
-          corners[1] = vertex->info();
-          point = vertex->point();
-          for (size_t j=0; j<3; ++j) verts.insert(point[j], 1, j);
-        }
-        break;
-      case Delaunay::FACET: // v0 is the vertex opposite the triangular face in which the point lies (v1 is meaningless)
-        {
-          verts.resize(3u);
-          v1=0; // abuse v1 as a counter
-          for (int k=0; k<4; ++k) if (k != v0) {
-            auto vertex = cell->vertex(k);
-            corners[v1] = vertex->info();
-            for (size_t j=0; j<3; ++j) verts.insert(point[j], v1, j);
-            ++v1;
-          }
-        }
-        break;
-      case Delaunay::CELL: // the point is within the volume of the cell (v0 and v1 are meaningless)
-        {
-          verts.resize(4u);
-          for (int k=0; k<4; ++k){
-            auto vertex = cell->vertex(k);
-            corners[k] = vertex->info();
-            for (size_t j=0; j<3; ++j) verts.insert(point[j], k, j);
-          }
-        }
-        break;
-      case Delaunay::OUTSIDE_CONVEX_HULL:
-      default:
-        throw std::runtime_error("Mesh3<T>::interpolate_at: This should not be possible");
-    }
-    weights = tetrahedron_weights(x.extract(i), verts);
-    new_unsafe_interpolate_to(this->data, this->elements, this->branches, verts.size(), corners, weights, out, i);
+    xi = x.extract(i);
+    vertices = this->mesh.locate_for_interpolation(xi);
+    weights = tetrahedron_weights(xi, positions.extract(vertices));
+    new_unsafe_interpolate_to(this->data, this->elements, this->branches, vertices, weights, out, i);
   }
   return out;
 }

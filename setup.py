@@ -43,13 +43,6 @@ class CMakeBuild(build_ext):
                 cmake_args += ['-A', 'x64']
             else:
                 cmake_args += ['-A', 'Win32']
-            if 'VCPKG' not in os.environ:
-                msg = 'CGAL installed via vcpkg '
-                msg += '(https://github.com/Microsoft/vcpkg) '
-                msg += ' is required.'
-                raise Exception(msg)
-            vcpkg = os.environ['VCPKG'] + '\\scripts\\buildsystems\\vcpkg.cmake'
-            cmake_args += ['-DCMAKE_TOOLCHAIN_FILE=' + vcpkg]
 
         cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                        '-DPYTHON_EXECUTABLE=' + sys.executable]

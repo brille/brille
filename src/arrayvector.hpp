@@ -61,6 +61,21 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
   }
   return out;
 }
+template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<size_t>& idx) const{
+  bool allinbounds = true;
+  ArrayVector<T> out(this->numel(),0u);
+  for (auto j: idx) if (j>=this->size()) {
+    std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
+    for (auto i: idx) msg += " " + std::to_string(i);
+    msg += " ] but size() = " + std::to_string(this->size());
+    throw std::out_of_range(msg);
+  }
+  if (allinbounds){
+    out.resize(idx.size());
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx[j]) );
+  }
+  return out;
+}
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bool>& tf) const{
   if (tf.numel() != 1u || tf.size() != this->size()){
     std::string msg = "Extracting an ArrayVector by logical indexing requires";
@@ -950,8 +965,7 @@ template<class T, class R, template<class> class A,
 void new_unsafe_interpolate_to(const A<T>& source,
                            const std::array<unsigned, 4>& nEl,
                            const size_t nObj,
-                           const size_t nAr,
-                           const size_t* iSrc,
+                           const std::vector<size_t>& iSrc,
                            const std::vector<R>& weights,
                            A<S>& sink,
                            const size_t iSnk)
@@ -960,7 +974,7 @@ void new_unsafe_interpolate_to(const A<T>& source,
   T *source_i, *source_0 = source.datapointer(iSrc[0]);
   size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
   T e_i_theta;
-  for (size_t x=0; x<nAr; ++x){
+  for (size_t x: iSrc){
     source_i = source.datapointer(iSrc[x]);
     // loop over the objects (modes)
     for (size_t iObj=0; iObj<nObj; ++iObj){

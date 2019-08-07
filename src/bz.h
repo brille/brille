@@ -28,6 +28,7 @@ class BrillouinZone {
   ArrayVector<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
   bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
   bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
+  bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
 public:
   /*!
   @param lat A Reciprocal lattice
@@ -37,7 +38,8 @@ public:
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
   */
   BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, bool tr=false, bool wedge_search=true): outerlattice(lat), time_reversal(tr) {
-    lattice = toprim ? lat.primitive() : lat;
+    this->lattice = toprim ? lat.primitive() : lat;
+    this->is_primitive = !(this->lattice.issame(this->outerlattice));
     this->has_inversion = this->time_reversal || lat.has_space_inversion();
     this->vertex_search(extent);
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
@@ -158,7 +160,7 @@ public:
   void vertex_search(const int extent=1);
   // void vertex_search_xyz(const int extent=1);
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
-  bool isprimitive(void) const {return !(lattice.issame(outerlattice));};
+  bool isprimitive(void) const {return this->is_primitive;};
 
   /*! \brief Determine whether points are inside of the first Brillouin zone
     @param p A reference to a LQVec list of Q points to be checked

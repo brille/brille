@@ -1,4 +1,4 @@
-function plot3(BrillouinZone_or_BZGrid,varargin)
+function plot3(bzSTAR,varargin)
     defs=struct('facecolor','none',...
                 'facealpha',1,...
                 'edgecolor','k',...
@@ -10,71 +10,48 @@ function plot3(BrillouinZone_or_BZGrid,varargin)
     [~,kwds]=symbz.parse_arguments(varargin,defs,{'showgrid','fullgrid'});
     ph = ishold();
     hold on;
-    
-    bztype = 'py.symbz._symbz.BrillouinZone';
+
     bzgtype = 'py.symbz._symbz.BZGridQ';
-    if isa(BrillouinZone_or_BZGrid,bztype)
-        isgrid = false;
-        bz = BrillouinZone_or_BZGrid;
-    elseif isa(BrillouinZone_or_BZGrid,bzgtype) || isa(BrillouinZone_or_BZGrid, [bzgtype 'complex'])
-        isgrid = true;
-        bz = BrillouinZone_or_BZGrid.BrillouinZone;
+    isgrid = isa(bzSTAR,bzgtype) || isa(bzSTAR, [bzgtype 'complex']);
+    bzmtype = 'py.symbz._symbz.BZMeshQ';
+    ismesh = isa(bzSTAR, bzmtype) || isa(bzSTAR, [bzmtype 'complex']);
+    bztype = 'py.symbz._symbz.BrillouinZone';
+    if isa(bzSTAR, bztype)
+        bz = bzSTAR;
+    elseif isgrid || ismesh;
+        bz = bzSTAR.BrillouinZone;
     end
-    assert( exist('bz','var')==1, 'The first input must be either a BrillouinZone or BZGridQ object');
-    
+    assert( exist('bz','var')==1, 'The first input must be a symbz.BrillouinZone or symbz.BZ* object');
+
     % pull out MATLAB versions of python numpy arrays
     if strcmpi(kwds.units,'rlu')
-        faces = double(bz.faces)/2;
+        faces = double(bz.points);
         verts = double(bz.vertices);
     else
-        faces = double(bz.faces_invA)/2;
+        faces = double(bz.points_invA);
         verts = double(bz.vertices_invA);
     end
-    f_p_v = int32(bz.faces_per_vertex) +1 ; % +1 to convert from C to MATLAB indexing
-    
+
+    v_p_f = bz.vertices_per_face;
     for i=1:size(faces,1)
-        this_f_v = any( f_p_v == i, 2);
-        % If a corner has N>3 faces adjacent to it, we will miss it for
-        % N-3 of those faces, but we can still find it now:
-        extras = abs(mtimesx_mex(verts-faces(i,:),faces(i,:)'))<1e-14;
-        % Make sure we keep only those which are unique
-        corners = unique( verts(this_f_v|extras,:), 'rows' );
-        % to draw a patch, we need to sort the corners
-        % we want dot( cross( corner(i)-dot(corner(i),faces(i)), corner(i+1)-dot(corner(i+1),faces(i)) ) , faces(i)) > 0 
-        % for all corners
-        n = faces(i,:) ./ norm(faces(i,:));
-        % find the vectors from the face-centre to the corners
-        perpc = corners - faces(i,:); 
-        % if the cross product between each perpc is always positive
-        % then we've fulfilled our goal
-        nc = size(perpc,1);
-        perm = 1:nc;
-        for j=1:nc-1
-            for k=j+1:nc
-                if dot( cross( perpc(perm(j),:), perpc(perm(k),:)), n ) < 0
-                    tmp = perm(j);
-                    perm(j) = perm(k);
-                    perm(k) = tmp;
-                end
-            end
-        end
-        patch('faces',perm,'Vertices',corners + kwds.origin,...
-              'facecolor',kwds.facecolor,'facealpha',kwds.facealpha,...
-              'edgecolor',kwds.edgecolor,'edgealpha',kwds.edgealpha );
+        perm = symbz.p2m(py.numpy.array(v_p_f(i))) + 1; % +1 converts indexing
+        patch('faces', perm, 'vertices', verts+kwds.origin, ...
+              'facecolor', kwds.facecolor, 'facealpha', kwds.facealpha, ...
+              'edgecolor', kwds.edgecolor, 'edgealpha', kwds.edgealpha);
     end
-    
-    if isgrid && kwds.showgrid
-        if kwds.fullgrid
-            grid_points = double(BrillouinZone_or_BZGrid.invA);
+
+    if (isgrid || ismesh) && kwds.showgrid
+        if ismesh || kwds.fullgrid
+            grid_points = double(bzSTAR.invA);
         else
-            grid_points = double(BrillouinZone_or_BZGrid.mapped_invA);
+            grid_points = double(bzSTAR.mapped_invA);
         end
         plotpoints3(grid_points+kwds.origin,[],[],{'Q_x','Q_y','Q_z'});
     end
-    
+
     view(3)
     axis equal
-    
+
     if ~ph
         hold off;
     end
