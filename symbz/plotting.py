@@ -184,3 +184,20 @@ def __cube(p_0, p_1):
                     [2, 6, 7, 3]])  # (110)-(111)-(011)-(010)
     patches = [verts[x] for x in idx]
     return patches
+
+def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
+    """Plot a polyhedron"""
+    # pylint: disable=no-member
+    axs = _check_axes(axs)
+    # the 1st Brillouin zone has on-face points equal to half the normals
+    coll, xyz_min, xyz_max = _make_poly_collection(poly.vertices,
+                                                   poly.vertices_per_face,
+                                                   **kwds)
+    axs.add_collection3d(coll)
+    if setlims:
+        axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
+        axs.set_ylim(bottom=xyz_min[1], top=xyz_max[1])
+        axs.set_zlim(bottom=xyz_min[2], top=xyz_max[2])
+    if show:
+        pp.show()
+    return axs

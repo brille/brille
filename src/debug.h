@@ -60,6 +60,12 @@ private:
   #endif
 #endif
 
+#if defined(VERBOSE_DEBUG) || defined(DEBUG)
+  #define debug_exec(...) __VA_ARGS__
+#else
+  #define debug_exec(...)
+#endif
+
 
 
 #endif //_DEBUG_H_

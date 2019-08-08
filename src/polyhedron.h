@@ -131,6 +131,16 @@ public:
     // return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
     return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, this->vertices_per_face);
   };
+  template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
+    ArrayVector<double> newv(3u, this->vertices.size()), newp(3u, this->points.size()), newn(3u, this->normals.size());
+    for (size_t i=0; i<this->vertices.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), this->vertices.datapointer(i));
+    for (size_t i=0; i<this->points.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), this->points.datapointer(i));
+    for (size_t i=0; i<this->normals.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), this->normals.datapointer(i));
+    return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+  };
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
     if (other.vertices.numel() != d) throw std::runtime_error("Only equal dimensionality polyhedra can be combined.");

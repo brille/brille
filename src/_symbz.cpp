@@ -109,7 +109,8 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("lattice", [](const BrillouinZone &b){ return b.get_lattice();} )
     // access the polyhedra directly
     .def_property_readonly("polyhedron",&BrillouinZone::get_polyhedron)
-    .def_property_readonly("ir_polyhedron",&BrillouinZone::get_ir_polyhedron)
+    .def_property_readonly("ir_polyhedron",[](const BrillouinZone &b){return b.get_ir_polyhedron(true);})
+    .def_property_readonly("ir_polyhedron_generated",[](const BrillouinZone &b){return b.get_ir_polyhedron(false);})
     // first Brillouin zone polyhedron
     .def_property_readonly("normals",                  [](const BrillouinZone &b){return av2np(b.get_normals().get_hkl());})
     .def_property_readonly("normals_invA",             [](const BrillouinZone &b){return av2np(b.get_normals().get_xyz());})

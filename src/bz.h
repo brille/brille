@@ -45,7 +45,30 @@ public:
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
-    if (wedge_search) this->wedge_search();
+    if (wedge_search){
+      status_update("Search for irreducible reciprocal space");
+      this->wedge_search(/*prefer_basis_vectors = */ true, /*parallel_ok = */ true);
+      PointSymmetry pg = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
+      Polyhedron irp = this->get_ir_polyhedron();
+      Polyhedron bzp = this->get_polyhedron();
+      // if the number of symmetry operations in the pointgroup times the
+      // volume of the found irreducible Brillouin Zone is not the volume
+      // of the full first Brillouin zone, then something has gone wrong.
+      if(!approx_scalar(pg.size()*irp.get_volume(), bzp.get_volume())){
+        status_update("Re-search for irreducible reciprocal space");
+        this->wedge_search(/*prefer_basis_vectors = */ false, /*parallel_ok = */ false);
+        irp = this->get_ir_polyhedron();
+      }
+      if(!approx_scalar(pg.size()*irp.get_volume(), bzp.get_volume())){
+        status_update("Re-Re-search for irreducible reciprocal space");
+        this->wedge_search(/*prefer_basis_vectors = */ false, /*parallel_ok = */ true);
+        irp = this->get_ir_polyhedron();
+      }
+      if(!approx_scalar(pg.size()*irp.get_volume(), bzp.get_volume())){
+        std::string msg = "Error finding the irreducible Brillouin zone";
+        throw std::runtime_error(msg);
+      }
+    }
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};
@@ -104,7 +127,7 @@ public:
   //! Returns the vertex indices for each facet of the first Brillouin zone polyhedron
   std::vector<std::vector<int>> get_vertices_per_face(void) const;
   //! Returns the irreducible first Brillouin zone polyhedron
-  Polyhedron get_ir_polyhedron(void) const;
+  Polyhedron get_ir_polyhedron(const bool true_ir=true) const;
   //! Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
   LQVec<double> get_ir_vertices(void) const;
   //! Returns the on-plane points of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
@@ -132,7 +155,7 @@ public:
   reciprocal space there are (at least) 4π/N - 1 equivalent other choices for
   the irreducible wedge.
   */
-  void wedge_search();
+  void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
   already identified, this method finds all intersections of combinations of

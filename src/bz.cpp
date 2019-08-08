@@ -43,7 +43,8 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
   this->ir_polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), nref.get_xyz(), args...);
 }
 Polyhedron BrillouinZone::get_polyhedron(void) const {return this->polyhedron;};
-Polyhedron BrillouinZone::get_ir_polyhedron(void) const {
+Polyhedron BrillouinZone::get_ir_polyhedron(const bool true_ir) const {
+  if (!true_ir) return this->ir_polyhedron;
   // if the spacegroup has space inversion or time reversal symmetry,
   // return the already-computed irreducible polyhedron unmodified
   if (this->has_inversion) return this->ir_polyhedron;
@@ -191,8 +192,8 @@ void BrillouinZone::print() const {
   printf("BrillouinZone with %u vertices and %u faces\n",this->vertices_count(),this->faces_count());
 }
 
-void BrillouinZone::wedge_search(){
-  std::string update_msg;
+void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool parallel_ok){
+  debug_exec(std::string update_msg;)
   /*
   The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
@@ -211,15 +212,14 @@ void BrillouinZone::wedge_search(){
   }
   // sort the rotations by their orders
   std::sort(rotations.begin(), rotations.end(), [](std::array<int,9> a, std::array<int,9> b){
-    return rotation_order(a.data()) < rotation_order(b.data());
+    return rotation_order(a.data()) < rotation_order(b.data()); // > for high to low, < for low to high
   });
   std::vector<int> orders;
   for (std::array<int,9> R: rotations) orders.push_back(rotation_order(R.data()));
   int max_order=0;
   for (int o: orders) if (o>max_order) max_order = o;
 
-  update_msg = "Rotation orders:";
-  for (int o: orders) update_msg += " " + std::to_string(o);
+  debug_exec(update_msg = "Rotation orders:"; for (int o: orders) update_msg += " " + std::to_string(o);)
   status_update(update_msg);
 
   //
@@ -233,19 +233,14 @@ void BrillouinZone::wedge_search(){
     for (size_t j=0; j<3; ++j){
       u.insert(static_cast<double>(axis_plane_vecs[0][j]),i,j);
       x.insert(static_cast<double>(axis_plane_vecs[1][j]),i,j);
-      y.insert(static_cast<double>(axis_plane_vecs[2][j]),i,j);
+      // y.insert(static_cast<double>(axis_plane_vecs[2][j]),i,j);
     }
   }
   // check for zero-length rotation axes *before* trying to normalize them
   ArrayVector<bool> nonzero = norm(u).is_approx(">",0.);
   u = u.extract(nonzero);
   x = x.extract(nonzero);
-  // y = y.extract(nonzero);
   y = cross(u,x); // in case the basis is not orthogonal
-  // make sure we're dealing with unit vectors
-  // u = u/norm(u);
-  // x = x/norm(x);
-  // y = y/norm(y);
 
   // find the unique rotation axes: (here we want to equate u and -u later)
   ArrayVector<size_t> u_equiv_idx = u.unique_idx();
@@ -257,8 +252,10 @@ void BrillouinZone::wedge_search(){
     for (size_t idx: unique_idx) if (u_equiv_idx.getvalue(i)==idx) is_in_unique_idx=true;
     if (!is_in_unique_idx) unique_idx.push_back(i);
   }
-  if (unique_idx.size() != u.is_unique().count_true()) //this should only be in for debugging
-  throw std::runtime_error("Unique count is off.");
+  debug_exec(\
+  if (unique_idx.size() != u.is_unique().count_true())\
+    throw std::runtime_error("Unique count is off.");\
+  )
 
   // Verify that we have a right-handed rotation axis for each matrix
   LQVec<double> Rx(this->outerlattice, 1u);
@@ -273,17 +270,19 @@ void BrillouinZone::wedge_search(){
   double* ui_dot_uj = new double[u.size()*u.size()]();
   for (size_t i=0; i<u.size(); ++i) for (size_t j=0; j<u.size(); ++j) ui_dot_uj[i*u.size()+j] = u.dot(i,j)/10;
 
-  update_msg = "unique(u):\n";
-  for (size_t i=0; i<u.size(); ++i)
-  if (u_equiv_idx.getvalue(i)==i) update_msg += u.to_string(i) + "\n";
-  update_msg += "dot(ui, uj)\n";
-  for (size_t i=0; i<u.size(); ++i)
-    if (u_equiv_idx.getvalue(i)==i){
-      for (size_t j=0; j<u.size(); ++j)
-      if (u_equiv_idx.getvalue(j)==j)
-      update_msg += approx_scalar(ui_dot_uj[i*u.size()+j],0.) ? " 0" : " x";
-      update_msg += "\n";
-    }
+  debug_exec(\
+  update_msg = "unique(u):\n";\
+  for (size_t i=0; i<u.size(); ++i)\
+  if (u_equiv_idx.getvalue(i)==i) update_msg += u.to_string(i) + "\n";\
+  update_msg += "dot(ui, uj)\n";\
+  for (size_t i=0; i<u.size(); ++i)\
+    if (u_equiv_idx.getvalue(i)==i){\
+      for (size_t j=0; j<u.size(); ++j)\
+      if (u_equiv_idx.getvalue(j)==j)\
+      update_msg += approx_scalar(ui_dot_uj[i*u.size()+j],0.) ? " 0" : " x";\
+      update_msg += "\n";\
+    }\
+  )
   status_update(update_msg);
 
   // Two rotations with ûᵢ⋅ûⱼ ≠ 0 should have (Rⁿv̂ᵢ)⋅(Rᵐv̂ⱼ) = 1 for some n,m.
@@ -292,47 +291,61 @@ void BrillouinZone::wedge_search(){
   std::vector<bool> handled;
   for (size_t i=0; i<u.size(); ++i) handled.push_back(false);
   // we need a place to stash the cross product of uᵢ and uⱼ
-  LQVec<double> n(this->outerlattice, 1u);
+  LQVec<double> primitive_basis(this->lattice, 3u);
+  for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) primitive_basis.insert(i==j?1:0,i,j);
+  LQVec<double> xyz = transform_from_primitive(this->outerlattice, primitive_basis);
+  status_update("basis vectors\n", xyz.to_string());
+
   // why not just stash away the v̂ᵢ now?
   LQVec<double> v(x); // copy x
-  for (size_t i=0; i<u.size()-1; ++i)
-  if(u_equiv_idx.getvalue(i)==i)
-  for (size_t j=i+1; j<u.size(); ++j)
-  if(u_equiv_idx.getvalue(j)==j){
-    if (!approx_scalar(ui_dot_uj[i*u.size()+j], 0.0)){
-      if (!handled[i] && handled[j]){
-        n = u.cross(i,j); // this is why we need to skip non-unique axes.
-        // v.set(i, n/norm(n));
-        v.set(i, n);
-        // we don't want to just set vᵢ to vⱼ in case of, e.g., [100],[010],[111]
-        // where [100]×[111] is [0̄11] and [010]×[111] is [10̄1]
-        if (v.dot(i,j) < 0) v.set(i, -v.get(i));
+  bool u_parallel_v;
+  for (size_t i=  0; i<u.size()-1; ++i) if(u_equiv_idx.getvalue(i) == i)
+  for (size_t j=i+1; j<u.size()  ; ++j) if(u_equiv_idx.getvalue(j) == j)
+  if (!approx_scalar(ui_dot_uj[i*u.size()+j], 0.0)){
+    if (!handled[i]){
+      if (prefer_basis_vectors){
+      for (int k=3; k--;)
+        if (!handled[i] && dot(u.extract(i), xyz.extract(k)).all_approx(0.)){
+          v.set(i, xyz.extract(k));
+          handled[i] = true;
+        }
+      }
+      if (!handled[i]){
+        v.set(i, u.cross(i,j));
         handled[i] = true;
       }
-      if (!handled[i] && !handled[j]){
-        n = u.cross(i,j); // this is why we need to skip non-unique axes.
-        // v.set(i, n/norm(n));
-        v.set(i, n);
-        handled[i] = true;
+      if (handled[j] && !approx_scalar(v.dot(i, j), 0.) && v.dot(i, j)<0)
+        v.set(i, -v.get(i));
+    }
+    if (!handled[j]) {
+      if (prefer_basis_vectors){
+        for (int k=3; k--;)
+        if (!handled[j] && dot(u.extract(j), xyz.extract(k)).all_approx(0.)){
+          v.set(j, xyz.extract(k));
+          handled[j] = true;
+        }
       }
-      if (handled[i] && !handled[j]){
+      if (!handled[j]){
+        /* If j has been handled already, we don't want to just set  vᵢ to vⱼ
+        in case of, e.g., [100],[010],[111] where [100]×[111] is [0̄11]
+        and [010]×[111] is [10̄1]                                           */
         // protect against v ∥ u
-        if (!approx_scalar(norm(cross(v.get(i), u.get(j))).getvalue(0)/10, 0.0))
+        u_parallel_v = approx_scalar(norm(cross(v.get(i), u.get(j))).getvalue(0)/10, 0.0);
+        if (!(parallel_ok ^ u_parallel_v)){
           v.set(j, v.get(i));
-        else{
-          n = u.cross(i,j);
-          // v.set(i, n/norm(n));
-          v.set(i, n);
-          if (v.dot(i,j) < 0) v.set(i, -v.get(i));
+        } else {
+          v.set(j, u.cross(i,j));
         }
         handled[j] = true;
       }
+      if (!approx_scalar(v.dot(i, j), 0.) && v.dot(i, j) < 0)
+        v.set(j, -v.get(j));
     }
   }
   delete[] ui_dot_uj;
   /* for the case where three rotations have ûᵢ⋅ûⱼ=0, ûᵢ⋅ûₖ≠0, ûⱼ⋅ûₖ≠0
     the above will set vᵢ=v̂ₖ=ûᵢ×ûₖ and v̂ⱼ=ûⱼ×ûₖ and we assume (hope?) that
-    there exists some Rₖⁿv̂ₖ=ûⱼ×ûₖ.     */
+    there exists some Rₙv̂ₖ=ûⱼ×ûₖ.     */
   // Now go back through and copy the unique (a,b) values to the non-uniques.
   for (size_t i=0; i<u.size(); ++i)
   if (u_equiv_idx.getvalue(i)!=i) v.set(i,v.get(u_equiv_idx.getvalue(i)));
@@ -346,6 +359,17 @@ void BrillouinZone::wedge_search(){
   LQVec<double> normals(this->outerlattice, 2*rotations.size());
   LQVec<double> vj(this->outerlattice, max_order);
   size_t total_found=0;
+  /* If there is only one unique rotation axis then we are guaranteed to get
+     the *wrong* irreducible wedge by this method if the pointgroup has ̄1 as
+     a symmetry elelement. Since we're implicitly assuming this we will always
+     end up with double the real irreducible zone whether ̄1 is present or not.*/
+  size_t unq_count=0;
+  for (size_t i=0; i<u.size(); ++i) if (u_equiv_idx.getvalue(i)==i) ++unq_count;
+  if (unq_count == 1){
+    // find the unique one, and insert it as a wedge normal:
+    for (size_t i=0; i<u.size(); ++i) if (u_equiv_idx.getvalue(i)==i)
+    this->wedge_normal_check(u.get(i), normals, total_found);
+  }
   bool accepted=false;
   int order;
   for (size_t j=0; j<rotations.size(); ++j){
@@ -358,12 +382,12 @@ void BrillouinZone::wedge_search(){
       // both u×v and u×Rv (as Rv = -v for a 2-fold axis).
       accepted = this->wedge_normal_check(cross(u.get(j), v.get(j)), normals, total_found); // increments total_found if adding was a success
       //// but a 2-fold axis could always(?) be folded 90 degrees away too(?)
-      if (!accepted)
-        accepted = this->wedge_normal_check(v.get(j), normals, total_found);
+      if (!accepted) this->wedge_normal_check(v.get(j), normals, total_found);
     } else {
       vj.set(0, v.get(j));
       for (int k=1; k<order; ++k)
         multiply_matrix_vector(vj.datapointer(k), rotations[j].data(), vj.datapointer(k-1));
+      status_update("R^n v\n", vj.to_string());
       // consecutive acceptable normals *must* point into the irreducible wedge
       // and we need to check between Rⁿ⁻¹v and Rⁿv=Iv=v, so k and (k+1)%n
       for (int k=0; k<order; ++k){
