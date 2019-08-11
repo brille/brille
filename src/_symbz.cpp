@@ -217,6 +217,14 @@ PYBIND11_MODULE(_symbz,m){
     spg.def_property_readonly("choice", &Spacegroup::get_choice);
     spg.def("__repr__",&Spacegroup::string_repr);
 
+    py::class_<Pointgroup> pg(m, "Pointgroup");
+    pg.def(py::init<int>(), py::arg("Pointgroup number"));
+    pg.def_property_readonly("number",&Pointgroup::get_number);
+    pg.def_property_readonly("symbol",&Pointgroup::get_symbol);
+    pg.def_property_readonly("holohedry",&Pointgroup::get_holohedry_string);
+    pg.def_property_readonly("laue",&Pointgroup::get_laue_string);
+    pg.def("__repr__",&Pointgroup::to_string);
+
     py::class_<Symmetry> sym(m, "Symmetry");
     sym.def(py::init([](int hall){return make_spacegroup_symmetry_object(hall);}),py::arg("Hall number"));
     sym.def_property_readonly("size",&Symmetry::size);

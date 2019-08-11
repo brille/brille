@@ -51,8 +51,8 @@
 
 typedef struct {
   int table[10];
-  char symbol[6];
-  char schoenflies[4];
+  std::string symbol;
+  std::string schoenflies;
   Holohedry holohedry;
   Laue laue;
 } PointgroupType;
@@ -93,6 +93,39 @@ static PointgroupType pointgroup_data[33] = {
   {/*31*/{0,6,0,6,0,1,3,8,0,0},"-43m ","Td ",Holohedry::cubic     ,Laue::_m3m ,},
   {/*32*/{0,6,8,9,1,1,9,8,6,0},"m-3m ","Oh ",Holohedry::cubic     ,Laue::_m3m ,}
 };
+
+std::string my_to_string(const Holohedry& h){
+  std::string str;
+  switch(h){
+    case Holohedry::triclinic:  str = "triclinic";  break;
+    case Holohedry::monoclinic: str = "monoclinic"; break;
+    case Holohedry::orthogonal: str = "orthogonal"; break;
+    case Holohedry::tetragonal: str = "tetragonal"; break;
+    case Holohedry::trigonal:   str = "trigonal";   break;
+    case Holohedry::hexagonal:  str = "hexagonal";  break;
+    case Holohedry::cubic:      str = "cubic";      break;
+    default: str = "Holohedry Error";
+  }
+  return str;
+}
+std::string my_to_string(const Laue& l){
+  std::string str;
+  switch(l){
+    case Laue::_1:    str="1";    break;
+    case Laue::_2m:   str="2m";   break;
+    case Laue::_mmm:  str="mmm";  break;
+    case Laue::_4m:   str="4m";   break;
+    case Laue::_4mmm: str="4mmm"; break;
+    case Laue::_3:    str="3";    break;
+    case Laue::_3m:   str="3m";   break;
+    case Laue::_6m:   str="6m";   break;
+    case Laue::_6mmm: str="6mmm"; break;
+    case Laue::_m3:   str="m3";   break;
+    case Laue::_m3m:  str="m3m";  break;
+    default: str = "Laue Error";
+  }
+  return str;
+}
 
 static int identity[9] = { 1, 0, 0,  0, 1, 0,  0, 0, 1};
 static int inversion[9]= {-1, 0, 0,  0,-1, 0,  0, 0,-1};
@@ -148,34 +181,22 @@ Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotation
   for (i=0; i<9; i++) transform_mat[i]=0;
 
   pg_num = get_pointgroup_number_by_rotations(rotations, num_rotations);
-
+  pointgroup = Pointgroup(pg_num);
   if (pg_num > 0) {
-    pointgroup = ptg_get_pointgroup(pg_num);
     pointsym = ptg_get_pointsymmetry(rotations, num_rotations);
     get_axes(axes, pointgroup.laue, pointsym);
     set_transformation_matrix(transform_mat, axes);
-  } else {
-    pointgroup.number = 0;
   }
   return pointgroup;
 }
 
-Pointgroup ptg_get_pointgroup(const int pointgroup_number)
-{
-  int i;
-  Pointgroup pointgroup;
-  PointgroupType pointgroup_type;
-
-  pointgroup.number = pointgroup_number;
-  pointgroup_type = pointgroup_data[pointgroup_number];
-  strcpy(pointgroup.symbol, pointgroup_type.symbol);
-  strcpy(pointgroup.schoenflies, pointgroup_type.schoenflies);
-  for (i = 0; i < 5; i++) if (pointgroup.symbol[i] == ' ') pointgroup.symbol[i] = '\0';
-  for (i = 0; i < 3; i++) if (pointgroup.schoenflies[i] == ' ') pointgroup.schoenflies[i] = '\0';
-	pointgroup.holohedry = pointgroup_type.holohedry;
-  pointgroup.laue = pointgroup_type.laue;
-
-  return pointgroup;
+void Pointgroup::setup(void){
+  if (number<0 || number>=33) throw std::runtime_error("Invalid pointgroup number");
+  PointgroupType pgt = pointgroup_data[this->number];
+  this->symbol = pgt.symbol;
+  this->schoenflies = pgt.schoenflies;
+  this->holohedry = pgt.holohedry;
+  this->laue = pgt.laue;
 }
 
 PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations)

@@ -46,26 +46,21 @@ private:
   #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 
-#ifdef VERBOSE_DEBUG
-  static DebugPrinter _debug_printer("");
-  #define status_update(...) _debug_printer.println(__PRETTY_FUNCTION__, __VA_ARGS__)
-  #define verbose_status_update(...) _debug_printer.println(__PRETTY_FUNCTION__, __VA_ARGS__)
-#else
-  #define verbose_status_update(...)
-  #ifdef DEBUG
-    static DebugPrinter _debug_printer("");
-    #define status_update(...) _debug_printer.println("", __VA_ARGS__)
-  #else
-    #define status_update(...)
-  #endif
-#endif
-
 #if defined(VERBOSE_DEBUG) || defined(DEBUG)
+  static DebugPrinter _debug_printer("");
+  #ifdef DEBUG
+    #define status_update(...) _debug_printer.println("", __VA_ARGS__)
+    #define verbose_status_update(...)
+  #endif
+  #ifdef VERBOSE_DEBUG
+    #define status_update(...) _debug_printer.println(__PRETTY_FUNCTION__, __VA_ARGS__)
+    #define verbose_status_update(...) _debug_printer.println(__PRETTY_FUNCTION__, __VA_ARGS__)
+  #endif
   #define debug_exec(...) __VA_ARGS__
 #else
+  #define status_update(...)
+  #define verbose_status_update(...)
   #define debug_exec(...)
 #endif
-
-
 
 #endif //_DEBUG_H_

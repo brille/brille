@@ -115,9 +115,10 @@ public:
     repr += ";";
     repr += " Hall(" + std::to_string(this->hall_number) + "): "
           + this->hall_symbol;
-    std::string left("< Spacegroup --"), right(" >");
+    std::string left("< Spacegroup "), right(" >");
     return left + repr + right;
   }
+  Pointgroup get_pointgroup(void) const {return Pointgroup(this->pointgroup_number);};
 private:
   void deal_with_strings(const char*, const char*, const char*, const char*, const char*, const char*);
   void set_hall_number(void);

@@ -41,18 +41,42 @@
 #include "symmetry.h"
 
 enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};
+std::string my_to_string(const Holohedry& h);
 enum class Laue {_, _1, _2m, _mmm, _4m, _4mmm, _3, _3m, _6m, _6mmm, _m3, _m3m};
+std::string my_to_string(const Laue& l);
 
-typedef struct {
+class Pointgroup{
+public:
   int number;
-  char symbol[6];
-  char schoenflies[4];
+  std::string symbol;
+  std::string schoenflies;
   Holohedry holohedry;
   Laue laue;
-} Pointgroup;
+  // Initializers:
+  Pointgroup(): number(0), holohedry(Holohedry::_), laue(Laue::_){};
+  Pointgroup(const int no): number(no) {setup();};
+  Pointgroup(const int no, const std::string& sym, const std::string& sch, const Holohedry& h, const Laue& l):
+    number(no), symbol(sym), schoenflies(sch), holohedry(h), laue(l) {};
+  std::string to_string(void) const {
+    std::string str = "<Pointgroup";
+    str += " " + symbol;
+    str += " " + schoenflies;
+    str += " " + my_to_string(holohedry);
+    str += " " + my_to_string(laue);
+    return str+">";
+  }
+  int get_number(void) const {return number;};
+  std::string get_symbol(void) const { return symbol; };
+  std::string get_schoenflies(void) const { return schoenflies; };
+  Holohedry get_holonedry(void) const { return holohedry; };
+  Laue get_laue(void) const { return laue; };
+  std::string get_holohedry_string(void) const { return my_to_string(holohedry); };
+  std::string get_laue_string(void) const { return my_to_string(laue); };
+protected:
+  void setup(void);
+};
 
 Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations);
-Pointgroup ptg_get_pointgroup(const int pointgroup_number);
 PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations);
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal);
