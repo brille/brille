@@ -230,11 +230,11 @@ PYBIND11_MODULE(_symbz,m){
     sym.def_property_readonly("size",&Symmetry::size);
     sym.def_property_readonly("W",[](Symmetry& ps){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
-      return sva2np(sz, ps.getallrots());
+      return sva2np(sz, ps.getallr());
     });
     sym.def_property_readonly("w",[](Symmetry& ps){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
-      return sva2np(sz, ps.getalltrans());
+      return sva2np(sz, ps.getallt());
     });
 
     py::class_<PointSymmetry> psym(m, "PointSymmetry");
@@ -260,6 +260,9 @@ PYBIND11_MODULE(_symbz,m){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
       return sva2np(sz, ps.axes());
     });
+    psym.def_property_readonly("generate",&PointSymmetry::generate);
+    psym.def_property_readonly("generators",&PointSymmetry::generators);
+    psym.def_property_readonly("nfolds",&PointSymmetry::nfolds);
 
     // declare_polyhedron<CentredPolyhedron>(m, "C");
     // declare_polyhedron<FullPolyhedron>(m, "");

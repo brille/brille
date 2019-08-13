@@ -210,7 +210,7 @@ PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotation
   for (int i = 1; i < num_rotations; i++) {
     isunique = true;
     for (int j = 0; j < num_rotations; j++)
-      if ( equal_matrix(rotations+i*9, pointsym.get(j)) ){
+      if ( equal_matrix(rotations+i*9, pointsym.data(j)) ){
        isunique = false;
        break;
 	  }
@@ -261,7 +261,7 @@ static int get_pointgroup_class_table(int table[10], const PointSymmetry & point
   int i, rot_type;
   for (i = 0; i < 10; i++) { table[i] = 0; }
   for (i = 0; i < pointsym.size(); i++) {
-    rot_type = isometry_type(pointsym.get(i));
+    rot_type = isometry_type(pointsym.data(i));
     if (rot_type == -1) {
       return 0;
     } else {
@@ -346,7 +346,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
   int ortho_axes[NUM_ROT_AXES];
 
   for (i = 0; i < pointsym.size(); i++) {
-    get_proper_rotation(prop_rot, pointsym.get(i));
+    get_proper_rotation(prop_rot, pointsym.data(i));
     // Find the first two-fold rotation
 		// det(prop_rot)==1, so two-fold has tr==-1 for 2 and ̄2.
 		if (trace(prop_rot)==-1){
@@ -412,7 +412,7 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
   int ortho_axes[NUM_ROT_AXES];
 
   for (i = 0; i < pointsym.size(); i++) {
-    get_proper_rotation(prop_rot, pointsym.get(i));
+    get_proper_rotation(prop_rot, pointsym.data(i));
     /* For order=4, look for a four-fold rotation, which has tr(W)==1 */
     if (rot_order == 4 && trace(prop_rot)==1) {
       axes[2] = get_rotation_axis(prop_rot);
@@ -478,7 +478,7 @@ static int lauennn(int axes[3], const PointSymmetry & pointsym, const int rot_or
   count = 0;
 	// look for three two-fold or four-fold axes
   for (i = 0; i < pointsym.size(); i++) {
-    get_proper_rotation(prop_rot, pointsym.get(i));
+    get_proper_rotation(prop_rot, pointsym.data(i));
 		tr = trace(prop_rot);
 		// two-fold rotations have tr(W)==-1, four-fold have tr(W)==1
 		if ((tr == -1 && rot_order == 2) || (tr==1 && rot_order==4)){
@@ -629,7 +629,7 @@ static int _internal_pointgroup_rotations(int *rotations, const int max_size, co
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
 	Symmetry sym = make_spacegroup_symmetry_object(hall_number);
-	int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallrots(), is_time_reversal);
+	int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallr(), is_time_reversal);
 	return num_unique;
 }
 

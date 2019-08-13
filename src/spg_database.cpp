@@ -8589,7 +8589,7 @@ Symmetry make_spacegroup_symmetry_object(const int hall_number)
   get_first_last_operation_number(mult_index, hall_number);
   Symmetry symmetry(mult_index[0]);
   for (int i =0; i < mult_index[0]; i++)
-	  get_numbered_operation(symmetry.getrot(i), symmetry.gettran(i), mult_index[1]+i);
+	  get_numbered_operation(symmetry.rdata(i), symmetry.tdata(i), mult_index[1]+i);
 
   return symmetry;
 }
@@ -8597,7 +8597,7 @@ Symmetry make_spacegroup_symmetry_object(const int hall_number)
 PointSymmetry make_pointgroup_symmetry_object(const int hall_number, const int time_reversal){
   if (!hall_number_ok(hall_number)) return PointSymmetry();
   Symmetry sym = make_spacegroup_symmetry_object(hall_number);
-  std::vector<std::array<int,9>> uniqrots= get_unique_rotations(sym.getallrots(),time_reversal);
+  std::vector<std::array<int,9>> uniqrots= get_unique_rotations(sym.getallr(),time_reversal);
   return PointSymmetry(uniqrots);
 }
 

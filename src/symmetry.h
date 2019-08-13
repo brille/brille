@@ -4,6 +4,30 @@
 
 #include <vector>
 #include <array>
+#include "linear_algebra.h"
+
+template<class T> using Matrix = std::array<T,9>;
+template<class T> using Vector = std::array<T,3>;
+template<class T> using Matrices = std::vector<Matrix<T>>;
+template<class T> using Vectors = std::vector<Vector<T>>;
+
+// class Motion{
+//   Matrix<int> W;
+//   Vector<double> w;
+// public:
+//   Motion(): W({1,0,0, 0,1,0, 0,0,1}), w({0.,0.,0.}) {};
+//   Motion(const Matrix<int>& X): W(X), w({0.,0.,0.}) {};
+//   Motion(const Vector<double>& x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {};
+//   Motion(const Matrix<int>& X, const Vector<double>& x): W(X), w(x) {};
+//   Motion operator*(const Motion& m) const;
+//   template<class T, typename S/*=promotion stuff*/>
+//   Vector<S> operator*(const Vector<T>& x) const;
+//   Matrix<int> rotation(void) const;
+//   Vector<double> translation(void) const;
+//   const Matrix<int>& rotation(void) const;
+//   const Vector<double>& translation(void) const;
+// }
+// using Motions = std::vector<Motion>;
 
 /*****************************************************************************\
 | Symmetry class                                                              |
@@ -24,28 +48,26 @@
 |   size                   return the number of motions the object can store. |
 \*****************************************************************************/
 class Symmetry{
-  std::vector<std::array<int,9>> R;
-  std::vector<std::array<double,3>> T;
+  Matrices<int> R;
+  Vectors<double> T;
 public:
-  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n);};
-  size_t               size() const { return R.size(); };
-  size_t               add(const int *r, const double *t)                      ;
-  size_t               add(const std::array<int,9>&, const std::array<double,3>&);
-  bool                 set(const size_t i, const int *r, const double *t)      ;
-  bool                 setrot(const size_t i, const int *r)                    ;
-  bool                 settran(const size_t i, const double *t)                ;
-  bool                 get(const size_t i, int *r, double *t)             const;
-  bool                 getrot(const size_t i, int *r)                     const;
-  bool                 gettran(const size_t i, double *t)                 const;
-  int *                getrot(const size_t i)                                  ;
-  double *             gettran(const size_t i)                                 ;
-  const int *          getrot(const size_t i)                             const;
-  const double *       gettran(const size_t i)                            const;
-  std::array<int,9>    getrotarray(const size_t i)                        const;
-  std::array<double,3> gettranarray(const size_t i)                       const;
-  size_t               resize(const size_t i)                                  ;
-  const std::vector<std::array<int,9>>& getallrots(void) const { return this->R; };
-  const std::vector<std::array<double,3>>& getalltrans(void) const { return this->T; };
+  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n); };
+  const Matrices<int>&   getallr(void)               const { return this->R;  };
+  const Vectors<double>& getallt(void)               const { return this->T;  };
+  size_t                 size(void)                  const { return R.size(); };
+  size_t                 resize(const size_t i)                                ;
+  size_t                 add(const int *r, const double *t)                    ;
+  size_t                 add(const Matrix<int>&, const Vector<double>&)        ;
+  bool                   set(const size_t i, const int *r, const double *t)    ;
+  bool                   get(const size_t i, int *r, double *t)           const;
+  int *                  rdata(const size_t i)                                 ;
+  double *               tdata(const size_t i)                                 ;
+  const int *            rdata(const size_t i)                            const;
+  const double *         tdata(const size_t i)                            const;
+  Matrix<int>            getr(const size_t i)                             const;
+  Vector<double>         gett(const size_t i)                             const;
+  // const Matrix<int>&     getr(const size_t i)                             const;
+  // const Vector<double>&  gett(const size_t i)                             const;
 };
 
 
@@ -62,28 +84,37 @@ public:
 |   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
 class PointSymmetry{
-  std::vector<std::array<int,9>> R;
+  Matrices<int> R;
 public:
   PointSymmetry(size_t n=0): R(n) { R.resize(n);};
-  PointSymmetry(std::vector<std::array<int,9>>& rots): R(rots){ this->sort(); };
-  size_t            size() const { return R.size(); };
-  size_t            add(const int *r)                                          ;
-  size_t            add(const std::array<int,9>&)                              ;
-  bool              get(const size_t i, int *r)                           const;
-  bool              set(const size_t i, const int *r)                          ;
-  int *             get(const size_t i)                                        ;
-  const int *       get(const size_t i)                                   const;
-  std::array<int,9> getarray(const size_t i)                              const;
-  size_t            resize(const size_t newsize)                               ;
-  void              sort(const int ad=0)                                       ;
-  const std::vector<std::array<int,9>>& getall(void) const { return this->R; };
-  std::vector<int> orders(void) const;
-  std::vector<int> isometries(void) const;
-  std::vector<std::array<int,3>> axes(void) const;
-  bool has_space_inversion() const;
-
-  void print(const size_t i) const;
-  void print(void) const;
+  PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); };
+  const Matrices<int>& getall(void)                  const { return this->R;  };
+  size_t               size(void)                    const { return R.size(); };
+  size_t               resize(const size_t newsize)                            ;
+  size_t               add(const int *r)                                       ;
+  size_t               add(const Matrix<int>&)                                 ;
+  bool                 get(const size_t i, int *r)                        const;
+  bool                 set(const size_t i, const int *r)                       ;
+  int *                data(const size_t i)                                    ;
+  const int *          data(const size_t i)                               const;
+  Matrix<int>          pop(const size_t i=0)                                   ;
+  size_t               erase(const size_t i)                                   ;
+  bool                 has(const Matrix<int>&)                            const;
+  Matrix<int>          get(const size_t i)                                const;
+  // const Matrix<int>&   get(const size_t i)                                const;
+  void                 sort(const int ad=0)                                    ;
+  int                  order(const size_t i)                              const;
+  std::vector<int>     orders(void)                                       const;
+  int                  isometry(const size_t i)                           const;
+  std::vector<int>     isometries(void)                                   const;
+  Vector<int>          axis(const size_t i)                               const;
+  Vectors<int>         axes(void)                                         const;
+  bool                 has_space_inversion(void)                          const;
+  void                 print(const size_t i)                              const;
+  void                 print(void)                                        const;
+  PointSymmetry        generate(void)                                     const; //
+  PointSymmetry        generators(void)                                   const; //
+  PointSymmetry        nfolds(void)                                       const; //
 };
 
 

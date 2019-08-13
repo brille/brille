@@ -6,25 +6,24 @@
 /*****************************************************************************\
 | Symmetry class Member functions:                                            |
 |-----------------------------------------------------------------------------|
-|   set, setrot, settran   copy a given matrix and/or vector into R and/or T  |
-|                          for the motion i.                                  |
-|   get, getrot, gettran   copy the rotation and/or translation of motion i   |
-|                          into the provided matrix and/or vector.            |
-|   getrot, gettran        return a pointer to the first element of the       |
-|                          rotation or translation of motion i.               |
-|   resize                 grow or shrink the number of motions that the      |
-|                          object can hold -- this necessitates a memory copy |
-|                          if the old and new sizes are non-zero.             |
-|   size                   return the number of motions the object can store. |
+|   set             copy a given matrix and vector into R and T for motion i. |
+|   get             copy the rotation and translation of motion i into the    |
+|                   provided matrix and/or vector.                            |
+|   rdata, tdata    return a pointer to the first element of the rotation or  |
+|                   translation of motion i.                                  |
+|   resize          grow or shrink the number of motions that the object can  |
+|                   hold -- this necessitates a memory copy if the old and    |
+|                   new sizes are non-zero.                                   |
+|   size            return the number of motions the object can store.        |
 \*****************************************************************************/
 size_t Symmetry::add(const int *r, const double *t){
-  std::array<int,9> newR;
-  std::array<double,3> newT;
+  Matrix<int> newR;
+  Vector<double> newT;
   for (size_t i=0; i<9; ++i) newR[i]=r[i];
   for (size_t i=0; i<3; ++i) newT[i]=t[i];
   return this->add(newR,newT);
 }
-size_t Symmetry::add(const std::array<int,9>& r, const std::array<double,3>& t){
+size_t Symmetry::add(const Matrix<int>& r, const Vector<double>& t){
   this->R.push_back(r);
   this->T.push_back(t);
   return this->size();
@@ -35,50 +34,40 @@ bool Symmetry::set(const size_t i, const int *r, const double *t){
   for(size_t j=0; j<3; j++) this->T[i][j] = t[j];
   return true;
 }
-bool Symmetry::setrot(const size_t i, const int *r){
-  if ( i>=this->size() ) return false;
-  for(size_t j=0; j<9; j++) this->R[i][j] = r[j];
-  return true;
-}
-bool Symmetry::settran(const size_t i, const double *t){
-  if ( i>=this->size() ) return false;
-  for(size_t j=0; j<3; j++) this->T[i][j] = t[j];
-  return true;
-}
 bool Symmetry::get(const size_t i, int *r, double *t) const {
   if ( i>=this->size() ) return false;
   for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
   for(size_t j=0; j<3; j++) t[j]=this->T[i][j];
   return true;
 }
-bool Symmetry::getrot(const size_t i, int *r) const {
-  if ( i>=this->size() ) return false;
-  for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
-  return true;
-}
-bool Symmetry::gettran(const size_t i, double *t) const {
-  if ( i>=this->size() ) return false;
-  for(size_t j=0; j<3; j++) t[j]=this->T[i][j];
-  return true;
-}
-int    * Symmetry::getrot (const size_t i) {
+int    * Symmetry::rdata (const size_t i) {
   return (i<this->size()) ? this->R[i].data() : nullptr;
 }
-double * Symmetry::gettran(const size_t i) {
+double * Symmetry::tdata(const size_t i) {
   return (i<this->size()) ? this->T[i].data() : nullptr;
 }
-const int    * Symmetry::getrot (const size_t i) const {
+const int    * Symmetry::rdata(const size_t i) const {
   return (i<this->size()) ? this->R[i].data() : nullptr;
 }
-const double * Symmetry::gettran(const size_t i) const {
+const double * Symmetry::tdata(const size_t i) const {
   return (i<this->size()) ? this->T[i].data() : nullptr;
 }
-std::array<int,9> Symmetry::getrotarray(const size_t i) const {
-  return (i<this->size()) ? this->R[i] : std::array<int,9>({0,0,0,0,0,0,0,0,0});
+Matrix<int> Symmetry::getr(const size_t i) const {
+  return (i<this->size()) ? this->R[i] : Matrix<int>({0,0,0,0,0,0,0,0,0});
 }
-std::array<double,3> Symmetry::gettranarray(const size_t i) const {
-  return (i<this->size()) ? this->T[i] : std::array<double,3>({0,0,0});
+Vector<double> Symmetry::gett(const size_t i) const {
+  return (i<this->size()) ? this->T[i] : Vector<double>({0,0,0});
 }
+// const Matrix<int>& Symmetry::getr(const size_t i) const {
+//   if (i>=this->size())
+//     throw std::out_of_range("The requested symmetry operation is out of range");
+//   return this->R[i];
+// }
+// const Vector<double>& Symmetry::gett(const size_t i) const {
+//   if (i>=this->size())
+//     throw std::out_of_range("The requested symmetry operation is out of range");
+//   return this->T[i];
+// }
 size_t Symmetry::resize(const size_t newsize){
   this->R.resize(newsize);
   this->T.resize(newsize);
@@ -87,19 +76,13 @@ size_t Symmetry::resize(const size_t newsize){
 
 /*****************************************************************************\
 | PointSymmetry class Member functions:                                       |
-|-----------------------------------------------------------------------------|
-|   set      copy a given matrix into R at index i.                           |
-|   get      copy the rotation at index i into the provided matrix.           |
-|   resize   grow or shrink the number of rotations that the object can hold  |
-|            -- this causes a memory copy if the old and new sizes are finite.|
-|   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
 size_t PointSymmetry::add(const int *r){
-  std::array<int,9> newR;
+  Matrix<int> newR;
   for (size_t i=0; i<9; ++i) newR[i] = r[i];
   return this->add(newR);
 }
-size_t PointSymmetry::add(const std::array<int,9>& r){
+size_t PointSymmetry::add(const Matrix<int>& r){
   this->R.push_back(r);
   return this->R.size();
 }
@@ -113,15 +96,20 @@ bool PointSymmetry::get(const size_t i, int *r) const {
   for(size_t j=0; j<9; j++) r[j]=this->R[i][j];
   return true;
 }
-int * PointSymmetry::get(const size_t i) {
+int * PointSymmetry::data(const size_t i) {
   return (i<this->size()) ? this->R[i].data() : nullptr;
 }
-const int * PointSymmetry::get(const size_t i) const {
+const int * PointSymmetry::data(const size_t i) const {
   return (i<this->size()) ? this->R[i].data() : nullptr;
 }
-std::array<int,9> PointSymmetry::getarray(const size_t i) const {
-  return (i<this->size()) ? this->R[i] : std::array<int,9>({0,0,0,0,0,0,0,0,0});
+Matrix<int> PointSymmetry::get(const size_t i) const {
+  return (i<this->size()) ? this->R[i] : Matrix<int>({0,0,0,0,0,0,0,0,0});
 }
+// const Matrix<int>& PointSymmetry::get(const size_t i) const {
+//   if (i>=this->size())
+//     throw std::out_of_range("The requested symmetry operation is out of range");
+//   return this->R[i];
+// }
 size_t PointSymmetry::resize(const size_t newsize){
   this->R.resize(newsize);
   return this->R.size();
@@ -138,17 +126,21 @@ void PointSymmetry::print(void) const {
     std::cout << std::endl;
   }
 }
-void PointSymmetry::sort(const int ad) {
-  if (ad<0)
-  std::sort(this->R.begin(), this->R.end(),
-    [](std::array<int,9> a, std::array<int,9> b){
-      return rotation_order(a.data()) > rotation_order(b.data());
-  });
-  else
-  std::sort(this->R.begin(), this->R.end(),
-    [](std::array<int,9> a, std::array<int,9> b){
-      return rotation_order(a.data()) < rotation_order(b.data());
-  });
+void PointSymmetry::sort(const int mode) {
+  auto oup = [](Matrix<int> a, Matrix<int> b){ return rotation_order(a.data()) < rotation_order(b.data());};
+  auto odw = [](Matrix<int> a, Matrix<int> b){ return rotation_order(a.data()) > rotation_order(b.data());};
+  auto iup = [](Matrix<int> a, Matrix<int> b){ return isometry_value(a.data()) < isometry_value(b.data());};
+  auto idw = [](Matrix<int> a, Matrix<int> b){ return isometry_value(a.data()) > isometry_value(b.data());};
+  switch(mode){
+    // sort by isometry, decreasing
+    case -2: std::sort(this->R.begin(),this->R.end(),idw); break;
+    // sort by order, decreasing
+    case -1: std::sort(this->R.begin(),this->R.end(),odw); break;
+    // sort by isometry, increasing
+    case  2: std::sort(this->R.begin(),this->R.end(),iup); break;
+    // sort by order, increasing
+    default: std::sort(this->R.begin(),this->R.end(),oup);
+  }
 }
 
 std::vector<int> PointSymmetry::orders(void) const {
@@ -161,8 +153,8 @@ std::vector<int> PointSymmetry::isometries(void) const {
   for (auto r: this->R) i.push_back(isometry_value(r.data()));
   return i;
 }
-std::vector<std::array<int,3>> PointSymmetry::axes(void) const {
-  std::vector<std::array<int,3>> ax;
+Vectors<int> PointSymmetry::axes(void) const {
+  Vectors<int> ax;
   for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[0]);
   return ax;
 }
@@ -171,4 +163,113 @@ bool PointSymmetry::has_space_inversion() const {
   // space inversion means that a pointgroup operation has isometry -1.
   for (auto op: this->R) if (-1 == isometry_value(op.data())) return true;
   return false;
+}
+
+bool PointSymmetry::has(const Matrix<int>& m) const {
+  for (auto r: R) if (approx_matrix(m.data(), r.data())) return true;
+  return false;
+}
+Matrix<int> PointSymmetry::pop(const size_t i) {
+  Matrix<int> out = this->get(i);
+  this->erase(i);
+  return out;
+}
+size_t PointSymmetry::erase(const size_t i){
+  if (i>=this->size())
+    throw std::out_of_range("The requested symmetry operation is out of range");
+  this->R.erase(this->R.begin()+i);
+  return this->size();
+}
+int PointSymmetry::order(const size_t i) const {
+  if (i>=this->size())
+    throw std::out_of_range("The requested symmetry operation is out of range");
+  return rotation_order(this->R[i].data());
+}
+int PointSymmetry::isometry(const size_t i) const {
+  if (i>=this->size())
+    throw std::out_of_range("The requested symmetry operation is out of range");
+  return isometry_value(this->R[i].data());
+}
+Vector<int> PointSymmetry::axis(const size_t i) const {
+  if (i>=this->size())
+    throw std::out_of_range("The requested symmetry operation is out of range");
+  return rotation_axis_and_perpendicular_vectors(this->R[i].data())[0];
+}
+PointSymmetry PointSymmetry::generate(void) const {
+  Matrix<int> x, y, E{1,0,0, 0,1,0, 0,0,1}; // E, the identity operation
+  PointSymmetry gen;
+  gen.add(E); // any generated operations always need the identity operation
+  size_t gensize;
+  for (size_t i=0; i<this->size(); ++i){
+    x = E;
+    // for each of R, R¹,…, Rⁿ⁻¹
+    for (int count=this->order(i); count--;){ // post-decrimate to run the loop count times
+      multiply_matrix_matrix(y.data(), this->data(i), x.data());
+      x = y;
+      // multiply Rⁱ by the operators in gen
+      gensize = gen.size(); // only multiply against pre-existing operations
+      for (size_t j=0; j<gensize; ++j){
+        multiply_matrix_matrix(y.data(), x.data(), gen.data(j));
+        // and add them to gen if they are not already present
+        if (!gen.has(y)) gen.add(y);
+      }
+    }
+  }
+  return gen;
+}
+PointSymmetry PointSymmetry::generators(void) const {
+  PointSymmetry listA(this->getall()), listB, listC;
+  while (listA.size()){
+    // move the first element of A to B
+    listB.add(listA.get(0));
+    // use the operations in B as generators
+    listC = listB.generate();
+    // remove from A all generated operations (in C)
+    for (size_t i=0; i<listA.size(); listC.has(listA.get(i))?listA.erase(i):++i);
+  }
+  // listA is empty, listB contains at least the generators
+  // for each element of B, use all other elements to generate operations C
+  // if the skipped element is in C, remove it from B as it is not a generator
+  for (size_t i=0; i<listB.size(); listC.has(listB.get(i))?listB.erase(i):++i){
+    listA.resize(0); // empty-out A again
+    // copy every element but i from B to A
+    for (size_t j=0; j<listB.size(); ++j) if (i!=j) listA.add(listB.get(j));
+    // use the reduced list as generators
+    listC = listA.generate();
+  }
+  // listB now contains a complete set of generators (which might not be unique for the pointgroup)
+  return listB;
+}
+PointSymmetry PointSymmetry::nfolds(void) const {
+  Vectors<int> all_axis = this->axes();
+  std::vector<size_t> eqv_idx(this->size());
+  std::vector<size_t> unq_idx;
+  Vectors<int> unq_axis;
+  bool isunique;
+  for (size_t i=0; i<this->size(); ++i){
+    isunique = true;
+    for (auto j: unq_idx) if (approx_vector(all_axis[j].data(), all_axis[i].data())){
+      eqv_idx[i] = j;
+      isunique = false;
+      break;
+    }
+    if (isunique){
+      unq_idx.push_back(i);
+      eqv_idx[i]=i;
+      unq_axis.push_back(all_axis[i]);
+    }
+  }
+  // equal-valued entries of eqv_idx have the same stationary axis
+  // but the order of the selected unique rotation may not be what we want
+  size_t idx;
+  for (size_t i=0; i<unq_idx.size(); ++i){
+    idx = unq_idx[i];
+    for (size_t j=0; j<this->size(); ++j)
+    if (idx == eqv_idx[j] && this->order(j) > this->order(unq_idx[i]))
+    unq_idx[i] = j;
+  }
+  // now each unique index points to a symmetry operation of highest order along its axis
+  PointSymmetry out;
+  for (auto i: unq_idx) out.add(this->get(i));
+  return out;
 }
