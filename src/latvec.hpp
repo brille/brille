@@ -100,6 +100,20 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
 //   return out;
 // }
 
+// [LatVec] cat
+template<class T, class R, template<class> class L,
+         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
+         class S = typename std::common_type<T,R>::type>
+L<S> cat(const L<T>& a, const L<R>& b){
+  if (!a.samelattice(b))
+    throw std::runtime_error("LatVec cat requires vectors in the same lattice.");
+  L<S> out(a.get_lattice(), a.size()+b.size());
+  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<3u; ++j)
+    out.insert( static_cast<S>(a.getvalue(i,j)), i, j);
+  for (size_t i=0; i<b.size(); ++i) for (size_t j=0; j<3u; ++j)
+    out.insert( static_cast<S>(b.getvalue(i,j)), a.size()+i, j);
+  return out;
+}
 
 // star
 template<class T, template <class R> class L,

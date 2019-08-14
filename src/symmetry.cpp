@@ -142,6 +142,50 @@ void PointSymmetry::sort(const int mode) {
     default: std::sort(this->R.begin(),this->R.end(),oup);
   }
 }
+void PointSymmetry::permute(const std::vector<size_t>& p){
+  std::string msg;
+  std::vector<size_t> o(this->size());
+  std::iota(o.begin(), o.end(), 0u); // 0, 1, 2, …, size()-1
+  std::vector<size_t> d, s=p;
+  std::sort(s.begin(), s.end()); // set_difference requires *sorted* ranges
+  std::set_difference(s.begin(), s.end(), o.begin(), o.end(), std::inserter(d, d.begin()));
+  if (d.size() || p.size()!=this->size()){
+    msg="The provided permutation vector [";
+    for (auto x: p) msg += " " + std::to_string(x);
+    msg += " ] is invalid because ";
+    if (d.size()){
+      msg += "it contains extra values {";
+      for (auto x: d) msg += " " + std::to_string(x);
+      msg += " }";
+    }
+    if (d.size() && p.size()!=this->size()) msg += " and ";
+    if (p.size()!=this->size()) msg += std::to_string(p.size()) + " != "  + std::to_string(this->size());
+    throw std::runtime_error(msg);
+  }
+  if (!std::includes(o.begin(), o.end(), s.begin(), s.end()))
+    std::cout << "Not all of p is in (1:size())-1" << std::endl;
+  // swapping requires we have the inverse permutation
+  for (size_t i=0; i<p.size(); ++i) s[p[i]] = i;
+  Matrix<int> tM;
+  size_t tI;
+  for (size_t i=0; i<this->size();){
+    if (s[i]==i) {
+      ++i;
+    } else {
+      std::swap(this->R[i], this->R[s[i]]);
+      std::swap(s[i], s[s[i]]);
+    }
+  }
+  // confirm that the permuting worked:
+  if (!std::is_sorted(d.begin(), d.end())){
+    msg="Undoing the permutation [";
+    for (auto x: p) msg += " " + std::to_string(x);
+    msg +=" ] failed. End result is [";
+    for (auto x: d) msg += " " + std::to_string(x);
+    msg +=" ]";
+    throw std::runtime_error(msg);
+  }
+}
 
 std::vector<int> PointSymmetry::orders(void) const {
   std::vector<int> o;
@@ -195,6 +239,16 @@ Vector<int> PointSymmetry::axis(const size_t i) const {
     throw std::out_of_range("The requested symmetry operation is out of range");
   return rotation_axis_and_perpendicular_vectors(this->R[i].data())[0];
 }
+Vector<int> PointSymmetry::perpendicular_axis(const size_t i) const {
+  if (i>=this->size())
+    throw std::out_of_range("The requested symmetry operation is out of range");
+  return rotation_axis_and_perpendicular_vectors(this->R[i].data())[1];
+}
+Vectors<int> PointSymmetry::perpendicular_axes(void) const {
+  Vectors<int> ax;
+  for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[1]);
+  return ax;
+}
 PointSymmetry PointSymmetry::generate(void) const {
   Matrix<int> x, y, E{1,0,0, 0,1,0, 0,0,1}; // E, the identity operation
   PointSymmetry gen;
@@ -240,7 +294,7 @@ PointSymmetry PointSymmetry::generators(void) const {
   // listB now contains a complete set of generators (which might not be unique for the pointgroup)
   return listB;
 }
-PointSymmetry PointSymmetry::nfolds(void) const {
+PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   Vectors<int> all_axis = this->axes();
   std::vector<size_t> eqv_idx(this->size());
   std::vector<size_t> unq_idx;
@@ -268,8 +322,28 @@ PointSymmetry PointSymmetry::nfolds(void) const {
     if (idx == eqv_idx[j] && this->order(j) > this->order(unq_idx[i]))
     unq_idx[i] = j;
   }
-  // now each unique index points to a symmetry operation of highest order along its axis
+  /* Now each unique index points to a symmetry operation of highest order along
+     its unique axis. What is not determined at this point is whether each
+     symmetry operation is N or ̄N -- both of which are of order N.
+     In order to ensure we return just the rotation part of any symmetry
+     operation, we must multiply any rotoinversion operations by the inversion
+     operation.*/
+  int onebar[9]{-1,0,0, 0,-1,0, 0,0,-1};
   PointSymmetry out;
-  for (auto i: unq_idx) out.add(this->get(i));
+  for (auto i: unq_idx)
+  if (this->order(i) > min_order){
+    out.add(this->get(i));
+    if (this->isometry(i) < 0)
+      multiply_matrix_matrix(out.data(out.size()-1), onebar, this->data(i));
+  }
+  out.sort(); // double-check that the orders are sorted
+  return out;
+}
+PointSymmetry PointSymmetry::higher(const int min_order) const {
+  PointSymmetry out;
+  for (size_t i=0; i<this->size(); ++i)
+  if (this->order(i) > min_order)
+  out.add(this->get(i));
+  out.sort();
   return out;
 }

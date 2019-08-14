@@ -4,7 +4,7 @@
 #include <string>
 
 // #define VERBOSE_DEBUG
-// #define DEBUG // comment-out for no debugging output
+#define DEBUG // comment-out for no debugging output
 
 class DebugPrinter{
   std::string last_function; // replace this with the stack?

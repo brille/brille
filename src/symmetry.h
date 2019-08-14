@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <array>
+#include <algorithm>
+#include <numeric>
 #include "linear_algebra.h"
 
 template<class T> using Matrix = std::array<T,9>;
@@ -103,6 +105,7 @@ public:
   Matrix<int>          get(const size_t i)                                const;
   // const Matrix<int>&   get(const size_t i)                                const;
   void                 sort(const int ad=0)                                    ;
+  void                 permute(const std::vector<size_t>&)                     ;
   int                  order(const size_t i)                              const;
   std::vector<int>     orders(void)                                       const;
   int                  isometry(const size_t i)                           const;
@@ -112,9 +115,12 @@ public:
   bool                 has_space_inversion(void)                          const;
   void                 print(const size_t i)                              const;
   void                 print(void)                                        const;
-  PointSymmetry        generate(void)                                     const; //
-  PointSymmetry        generators(void)                                   const; //
-  PointSymmetry        nfolds(void)                                       const; //
+  PointSymmetry        generate(void)                                     const;
+  PointSymmetry        generators(void)                                   const;
+  PointSymmetry        nfolds(const int min_order=0)                      const;
+  Vector<int>          perpendicular_axis(const size_t i)                 const;
+  Vectors<int>         perpendicular_axes(void)                           const;
+  PointSymmetry        higher(const int min_order=0)                      const;
 };
 
 

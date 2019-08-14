@@ -124,6 +124,16 @@ template<typename T> bool ArrayVector<T>::set(const size_t i, const ArrayVector<
   for (size_t j=0; j<this->numel(); j++) this->insert( in.getvalue(0,j), i,j) ;
   return true;
 }
+template<typename T> bool ArrayVector<T>::set(const size_t i, const std::vector<T>& in){
+  if (i>this->size()-1 || this->numel()!=in.size()) return false;
+  for (size_t j=0; j<this->numel(); ++j) this->insert(in[j], i, j);
+  return true;
+}
+template<typename T>template<size_t Nel> bool ArrayVector<T>::set(const size_t i, const std::array<T,Nel>& in){
+  if (i>this->size()-1 || this->numel()!=Nel) return false;
+  for (size_t j=0; j<this->numel(); ++j) this->insert(in[j], i, j);
+  return true;
+}
 template<typename T> bool ArrayVector<T>::insert(const T in, const size_t i, const size_t j){
   bool inrange = i<this->size() && j<this->numel();
   if (inrange) this->data[i*this->numel()+j] = in;
@@ -579,6 +589,21 @@ A<S> dot(const A<T>& a, const A<R>& b){
     for (size_t j=0; j<si.m; ++j) tmp+= a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
     out.insert(tmp,i,0);
   }
+  return out;
+}
+
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value && !std::is_base_of<LatVec,A<R>>::value>::type,
+         class S = typename std::common_type<T,R>::type>
+A<S> cat(const A<T>& a, const A<R>& b){
+  if (a.numel() != b.numel())
+    throw std::runtime_error("ArrayVector cat requies equal numel()");
+  A<S> out(a.numel(), a.size()+b.size());
+  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
+    out.insert( static_cast<S>(a.getvalue(i,j)), i, j);
+  for (size_t i=0; i<b.size(); ++i) for (size_t j=0; j<b.numel(); ++j)
+    out.insert( static_cast<S>(b.getvalue(i,j)), a.size()+i, j);
   return out;
 }
 

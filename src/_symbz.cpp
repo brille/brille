@@ -120,6 +120,8 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("points_primitive",         [](const BrillouinZone &b){return av2np(b.get_primitive_points().get_hkl());})
     .def_property_readonly("vertices",                 [](const BrillouinZone &b){return av2np(b.get_vertices().get_hkl());})
     .def_property_readonly("vertices_invA",            [](const BrillouinZone &b){return av2np(b.get_vertices().get_xyz());})
+    .def_property_readonly("half_edge_points",         [](const BrillouinZone &b){return av2np(b.get_half_edges().get_hkl());})
+    .def_property_readonly("half_edge_points_invA",    [](const BrillouinZone &b){return av2np(b.get_half_edges().get_xyz());})
     .def_property_readonly("vertices_primitive",       [](const BrillouinZone &b){return av2np(b.get_primitive_vertices().get_hkl());})
     .def_property_readonly("faces_per_vertex",  &BrillouinZone::get_faces_per_vertex)
     .def_property_readonly("vertices_per_face", &BrillouinZone::get_vertices_per_face)
@@ -262,7 +264,7 @@ PYBIND11_MODULE(_symbz,m){
     });
     psym.def_property_readonly("generate",&PointSymmetry::generate);
     psym.def_property_readonly("generators",&PointSymmetry::generators);
-    psym.def_property_readonly("nfolds",&PointSymmetry::nfolds);
+    psym.def("nfolds",&PointSymmetry::nfolds);
 
     // declare_polyhedron<CentredPolyhedron>(m, "C");
     // declare_polyhedron<FullPolyhedron>(m, "");

@@ -107,6 +107,15 @@ LQVec<double> BrillouinZone::get_primitive_normals(void) const {
   if (this->isprimitive()) n = transform_to_primitive(this->outerlattice, n);
   return n;
 }
+LQVec<double> BrillouinZone::get_half_edges(void) const{
+  ArrayVector<double> h = this->polyhedron.get_half_edges();
+  LQVec<double> lh(this->outerlattice, h.size());
+  double fromxyz[9];
+  this->outerlattice.get_inverse_xyz_transform(fromxyz);
+  for (size_t i=0; i<h.size(); ++i)
+  multiply_matrix_vector(lh.datapointer(i), fromxyz, h.datapointer(i));
+  return lh;
+}
 std::vector<std::vector<int>> BrillouinZone::get_faces_per_vertex(void) const {
   return this->polyhedron.get_faces_per_vertex();
 }
@@ -199,8 +208,8 @@ void BrillouinZone::print() const {
   printf("BrillouinZone with %u vertices and %u faces\n",this->vertices_count(),this->faces_count());
 }
 
-#include "bz_wedge_0.cpp"
-//#include "bz_wedge_1.cpp"
+// #include "bz_wedge_0.cpp"
+#include "bz_wedge_1.cpp"
 
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
@@ -313,7 +322,7 @@ void BrillouinZone::irreducible_vertex_search(){
   size_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
   size_t n03 = 0;
   for (int i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
-  status_update("Will check {" + std::to_string(n21) + ", "
+  status_update(" Checking {" + std::to_string(n21) + ", "
                 + std::to_string(n12) + ", "
                 + std::to_string(n03) +"} {2:1, 1:2, 0:3} zone:wedge 3-plane"
                 + " intersection points");
@@ -538,7 +547,7 @@ void BrillouinZone::irreducible_vertex_search(){
   // and facet planes which are polygons, plus finds the vertex to facet
   // and facet to vertex indexing required for, e.g., plotting
   this->set_ir_polyhedron(all_verts, all_point, all_norms, all_ijk);
-  status_update("found a " + this->ir_polyhedron.string_repr());
+  status_update(" Found a " + this->ir_polyhedron.string_repr());
 }
 
 void BrillouinZone::vertex_search(const int extent){

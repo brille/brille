@@ -127,6 +127,8 @@ public:
   LQVec<double> get_points(void) const;
   //! Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
   LQVec<double> get_normals(void) const;
+  //! Returns the half-edge points of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
+  LQVec<double> get_half_edges(void) const;
   //! Returns the vertices of the first Brillouin zone polyhedron expressed as primitive unit cell vectors
   LQVec<double> get_primitive_vertices(void) const;
   //! Returns the on-plane points (τ/2) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors

@@ -236,11 +236,39 @@ public:
   ArrayVector<double> get_normals(void) const { return normals; };
   std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; };
   std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; };
+  ArrayVector<double> get_half_edges(void) const{
+    // for each face find the point halfway between each set of neighbouring vertices
+    // Convex polyhedra always have edges neighbouring two faces, so we will
+    // only ever find (∑pᵢ)>>1 half-edge points, where pᵢ are the number of
+    // vertices (or edges) on the iᵗʰ face.
+    size_t nfv = 0;
+    for (auto f: vertices_per_face) nfv += f.size();
+    // we don't care about point order, but we only want to have one copy
+    // of each half-edge point. At the expense of memory, we can keep track
+    // of which pairs we've already visited:
+    std::vector<bool> unvisited(nfv*nfv, true);
+    ArrayVector<double> hep(3u, nfv>>1);
+    size_t found=0, a,b;
+    for (auto f: vertices_per_face) for (size_t i=0; i<f.size(); ++i){
+      a = f[i];
+      b = f[(i+1)%f.size()]; // cyclic boundary condition on vertices
+      // we visit the facet vertices in an arbitrary order, so we need to keep
+      // track of our progress in [a,b] and [b,a]
+      if (unvisited[a*nfv+b] && unvisited[b*nfv+a]){
+        unvisited[a*nfv+b] = unvisited[b*nfv+a] = false;
+        hep.set(found++, (vertices.extract(a)+vertices.extract(b))/2.0);
+      }
+    }
+    if (found != nfv>>1)
+      throw std::runtime_error("Problem finding all half-edge points.");
+    return hep;
+  };
   std::string string_repr(void) const {
     size_t nv = vertices.size(), nf=points.size();
     std::string repr = "Polyhedron with ";
     repr += std::to_string(nv) + " " + (1==nv?"vertex":"vertices") + " and ";
     repr += std::to_string(nf) + " " + (1==nf?"facet":"facets");
+    debug_exec(repr += "; volume " +std::to_string(this->get_volume());)
     return repr;
   };
   double get_volume(void) const {

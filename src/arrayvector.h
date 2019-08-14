@@ -136,6 +136,14 @@ public:
       if (d) for(size_t i=0; i<m*n; i++) data[i] = d[i];
     }
   };
+  //! Constructor from std::vector<std::array<T,N>>
+  template<class R, size_t Nel> ArrayVector(const std::vector<std::array<R,Nel>>& va):
+  M(Nel), N(va.size()), data(nullptr){
+    if (M*N){
+      data = safealloc<T>(M*N);
+      for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) data[i*M+j] = static_cast<T>(va[i][j]);
+    }
+  }
   //! Type converting copy constructor
   template<class R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
   ArrayVector(const ArrayVector<R>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
@@ -238,6 +246,8 @@ public:
     @param i the index of the array to hold the new value
     @param j [optional] the index into the ith array where the value will be stored
   */
+  bool set(const size_t i, const std::vector<T>& in);
+  template<size_t Nel> bool set(const size_t i, const std::array<T,Nel>& in);
   bool insert(const T in, const size_t i, const size_t j=0u);
   /*! Print a subset of the arrays to console using the specified format string
     @param[in] fmt A char pointer to the format string used to format a single array element, e.g., "%g"
