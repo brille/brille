@@ -68,7 +68,7 @@ public:
   int get_number(void) const {return number;};
   std::string get_symbol(void) const { return symbol; };
   std::string get_schoenflies(void) const { return schoenflies; };
-  Holohedry get_holonedry(void) const { return holohedry; };
+  Holohedry get_holohedry(void) const { return holohedry; };
   Laue get_laue(void) const { return laue; };
   std::string get_holohedry_string(void) const { return my_to_string(holohedry); };
   std::string get_laue_string(void) const { return my_to_string(laue); };

@@ -39,7 +39,7 @@ template<typename T> LDVec<T> LDVec<T>::extract(const ArrayVector<bool>& tf) con
   if (tf.numel() != 1u || tf.size() != this->size()){
     std::string msg = "Extracting an LQVec by logical indexing requires";
     msg += " an ArrayVector<bool> with numel()==1";
-    msg += " and size()==LQVec.size().";
+    msg += " and size()==LDVec.size().";
     throw std::runtime_error(msg);
   }
   size_t nout=0;
@@ -48,6 +48,20 @@ template<typename T> LDVec<T> LDVec<T>::extract(const ArrayVector<bool>& tf) con
   size_t idx = 0;
   for (size_t i=0; i<tf.size(); ++i)
     if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
+  return out;
+}
+template<typename T> LDVec<T> LDVec<T>::extract(const std::vector<bool>& tf) const{
+  if (tf.size() != this->size()){
+    std::string msg = "Extracting an LQVec by logical indexing requires";
+    msg += " an std::vector<bool> with size()==LDVec.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (size_t i=0; i<tf.size(); ++i) if (tf[i]) ++nout;
+  LQVec<T> out(this->get_lattice(),nout);
+  size_t idx = 0;
+  for (size_t i=0; i<tf.size(); ++i)
+    if (tf[i]) out.set(idx++, this->datapointer(i));
   return out;
 }
 

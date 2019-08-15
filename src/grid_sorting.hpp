@@ -564,7 +564,7 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
             for (size_t i=0; i<n_idx.size(); ++i)
               if(nn_idx[i]!=n_idx[i]) ++num_derivative;
           if (num_derivative){ // use derivative based sorting whenever possible
-            success = this->multi_sort_derivative_all(weights, funcs, spobj, perm, sorted, current, n_idx, nn_idx, num_derivative);
+            success = this->multi_sort_derivative_all(weights, funcs, spobj, perm, sorted, current, n_idx, nn_idx/*, num_derivative*/);
           }
           else{
             success = this->multi_sort_difference(weights, funcs, spobj, perm, sorted, current, n_idx);
@@ -584,7 +584,7 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
     }
     more_to_do = !to_visit.empty();
     if (++count >= refresh){
-      for (int i=0; i<80; i++); std::cout << " ";
+      for (int i=0; i<80; i++) std::cout << " ";
       std::cout << "\rPoints to visit: " << to_visit.size();
       count = 0u;
       refresh = to_visit.size() >> 4;
@@ -712,8 +712,8 @@ for (size_t p=0; p<nidx.size(); ++p){
   }
 }
 if (n2p_idx.size()!=no_pairs){
-  for(auto gst: nidx) std::cout<<" "<<std::to_string(gst); std::cout<<std::endl;
-  for(auto gst: nnidx) std::cout<<" "<<std::to_string(gst); std::cout<<std::endl;
+  for(auto gst: nidx){ std::cout<<" "<<std::to_string(gst);} std::cout<<std::endl;
+  for(auto gst: nnidx){ std::cout<<" "<<std::to_string(gst);} std::cout<<std::endl;
   std::string msg = "Too ";
   msg += ( n2p_idx.size()>no_pairs ? "many" : "few");
   msg += " derivative pairs found!";
@@ -795,7 +795,7 @@ bool MapGrid3<T>::multi_sort_derivative_all(
   const R scales[4], const int funcs[2], const size_t spobj[2],
   ArrayVector<size_t>& perm, std::vector<bool>& sorted,
   const size_t cidx, const std::vector<size_t> nidx,
-  const std::vector<size_t> nnidx, const size_t no_pairs
+  const std::vector<size_t> nnidx //, const size_t no_pairs
 ) const {
 // int out_count=0;
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;

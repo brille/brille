@@ -341,7 +341,7 @@ public:
   bool multi_sort_derivative_all(const R scales[4], const int funcs[2],
     const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     const size_t cidx, const std::vector<size_t> nidx,
-    const std::vector<size_t> nnidx, const size_t no_pairs) const;
+    const std::vector<size_t> nnidx/*, const size_t no_pairs*/) const;
   //
   template<class R>
   bool multi_sort_difference(const R weights[4], const int funcs[2],
@@ -546,7 +546,7 @@ public:
     slong tmp;
     for (int i=0; i<3; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp>=0 && tmp<this->size(i)){
+      if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
         if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
           out += 1<<i; // exact match
       } else {
@@ -587,7 +587,7 @@ public:
     slong tmp;
     for (int i=0; i<3; i++){
       tmp = (slong)( floor( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp>=0 && tmp<this->size(i)){
+      if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
         if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
           out += 1<<i; // exact match
       } else {

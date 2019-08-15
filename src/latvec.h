@@ -44,7 +44,10 @@ public:
   template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
   //! std::vector<std::array<T,3>> copy constructor
   template<class R> LDVec(const Direct lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){};
-
+  //! Explicit copy constructor
+  // required in gcc 9+ since we define our own operator= below:
+  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {};
+  //! Assignment operator reusing data if we can
   LDVec<T>& operator=(const LDVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;
       this->lattice = other.get_lattice();
@@ -54,7 +57,7 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the data (if it exists)
-      if (other.data && m*n)
+      if (other.data && m && n)
         for(size_t i=0; i<m*n; i++)
           this->data[i] = other.data[i];
     }
@@ -70,12 +73,12 @@ public:
 
   Direct get_lattice() const { return lattice; };
   template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LQVec<R> *vec) const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> *vec) const { return false; };
+  template<typename R> bool samelattice(const LQVec<R> *)    const { return false; };
+  template<typename R> bool starlattice(const LDVec<R> *)    const { return false; };
   template<typename R> bool starlattice(const LQVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); };
   template<typename R> bool samelattice(const LDVec<R> &vec) const { return lattice.issame(vec.get_lattice()); };
-  template<typename R> bool samelattice(const LQVec<R> &vec) const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> &vec) const { return false; };
+  template<typename R> bool samelattice(const LQVec<R> &)    const { return false; };
+  template<typename R> bool starlattice(const LDVec<R> &)    const { return false; };
   template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
   // extract overloads preserving lattice information
   //! Return the ith single-array LDVec
@@ -97,6 +100,7 @@ public:
     @returns An LDVec containing the indicies indicated by tfvec
   */
   LDVec<T> extract(const ArrayVector<bool>& idx) const;
+  LDVec<T> extract(const std::vector<bool>& idx) const;
   //! extract the 3-vector with index `i`
   LDVec<T> get(const size_t i) const;
   //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
@@ -173,7 +177,10 @@ public:
   template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
   //! std::vector<std::array<T,3>> copy constructor
   template<class R> LQVec(const Reciprocal lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){};
-
+  //! Explicit copy constructor
+  // required in gcc 9+ since we define our own operator= below:
+  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {};
+  //! Assignment operator reusing data if we can
   LQVec<T>& operator=(const LQVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;
       this->lattice = other.get_lattice();
@@ -183,7 +190,7 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the data (if it exists)
-      if (other.data && m*n)
+      if (other.data && m && n)
         for(size_t i=0; i<m*n; i++)
           this->data[i] = other.data[i];
     }
@@ -199,12 +206,12 @@ public:
 
   Reciprocal get_lattice() const { return lattice; };
   template<typename R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LDVec<R> *vec) const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> *vec) const { return false; };
+  template<typename R> bool samelattice(const LDVec<R> *)    const { return false; };
+  template<typename R> bool starlattice(const LQVec<R> *)    const { return false; };
   template<typename R> bool starlattice(const LDVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); };
   template<typename R> bool samelattice(const LQVec<R> &vec) const { return lattice.issame(vec.get_lattice()); };
-  template<typename R> bool samelattice(const LDVec<R> &vec) const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> &vec) const { return false; };
+  template<typename R> bool samelattice(const LDVec<R> &)    const { return false; };
+  template<typename R> bool starlattice(const LQVec<R> &)    const { return false; };
   template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
   // extract overloads preserving lattice information
   //! Return the ith single-array LQVec
@@ -226,6 +233,7 @@ public:
     @returns An LQVec containing the indicies indicated by tfvec
   */
   LQVec<T> extract(const ArrayVector<bool>& idx) const;
+  LQVec<T> extract(const std::vector<bool>& idx) const;
   //! Extract the 3-vector with index `i`
   LQVec<T> get(const size_t i) const;
   //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)

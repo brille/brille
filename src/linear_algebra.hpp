@@ -278,7 +278,7 @@ template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B
   delete[] AmB; delete[] AmBt;
   // tr( (A-B)x(A-B)')
   T tr = T(0);
-  for (int i=0; i<n; i++) tr += mult[i*(1+n)];
+  for (size_t i=0; i<n; i++) tr += mult[i*(1+n)];
   delete[] mult;
   // sqrt( tr( (A-B)x(A-B)') )
   return std::sqrt(tr);
@@ -300,7 +300,7 @@ template<typename T> T frobenius_distance(const size_t n, const std::complex<T>*
   delete[] AmB; delete[] AmBt;
   // tr( (A-B)x(A-B)'), which is guaranteed to be real
   T tr{0};
-  for (int i=0; i<n; ++i) tr += std::real(mult[i*(1+n)]);
+  for (size_t i=0; i<n; ++i) tr += std::real(mult[i*(1+n)]);
   delete[] mult;
   // sqrt( tr( (A-B)x(A-B)') )
   return std::sqrt(tr);

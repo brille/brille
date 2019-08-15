@@ -465,8 +465,6 @@ public:
   //   memory was allocated by the "new" operator (C++).
   void deinitialize()
   {
-    int i, j;
-
     if (pointlist != (REAL *) NULL) {
       delete [] pointlist;
     }
@@ -560,7 +558,7 @@ public:
       delete [] vedgelist;
     }
     if (vfacetlist != (vorofacet *) NULL) {
-      // for (i = 0; i < numberofvfacets; i++) {
+      // for (int i = 0; i < numberofvfacets; i++) {
       //   delete [] vfacetlist[i].elist;
       // }
       delete [] vfacetlist;

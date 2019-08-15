@@ -149,7 +149,7 @@ bool Lattice::issame(const Lattice lat) const{
 }
 
 bool Lattice::isapprox(const Lattice lat, const double tol) const {
-  return this->ispermutation(lat)==0 ? false : true;
+  return this->ispermutation(lat, tol)==0 ? false : true;
 }
 int Lattice::ispermutation(const Lattice lat, const double tol) const {
   const double *a1 = this->ang;

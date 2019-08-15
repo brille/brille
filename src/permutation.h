@@ -111,7 +111,7 @@ bool munkres_permutation(const T* centre, const T* neighbour, const std::array<u
 R s_cost{0}, e_cost{0}, v_cost{0}, m_cost{0};
 Munkres<R> munkres(Nobj);
 size_t *assignment = new size_t[Nobj]();
-size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
+// size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
@@ -285,7 +285,7 @@ R* vsol = new R[Nobj];
 int* rowsol = new int[Nobj];
 int* colsol = new int[Nobj];
 
-size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
+// size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){
@@ -302,9 +302,9 @@ for (size_t i=0; i<Nobj; ++i){
     }
     if (Nel[1]){
       switch(eig_cost_func){
-        case 0: e_cost = std::abs(std::sin(hermitian_angle(Nel[1], c_i, n_j)));
-        case 1: e_cost = vector_distance(Nel[1], c_i, n_j);
-        case 2: e_cost = 1-vector_product(Nel[1], c_i, n_j);
+        case 0: e_cost = std::abs(std::sin(hermitian_angle(Nel[1], c_i, n_j))); break;
+        case 1: e_cost = vector_distance(Nel[1], c_i, n_j); break;
+        case 2: e_cost = 1-vector_product(Nel[1], c_i, n_j); break;
       }
       c_i += Nel[1];
       n_j += Nel[1];
@@ -341,7 +341,7 @@ lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
 */
 for (size_t i=0; i<Nobj; ++i)
   for (size_t j=0; j<Nobj; ++j)
-    if (permutations.getvalue(neighbour_idx,i)==rowsol[j]) // or should this be colsol?
+    if (permutations.getvalue(neighbour_idx,i)==static_cast<size_t>(rowsol[j])) // or should this be colsol?
       permutations.insert(j,centre_idx,i);
 
 delete[] cost;
@@ -445,7 +445,7 @@ R* cost = new R[Nobj*Nobj];
 size_t* rowsol = new size_t[Nobj];
 size_t* colsol = new size_t[Nobj];
 
-size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
+// size_t any_evm = static_cast<size_t>(Nel[1]) + static_cast<size_t>(Nel[2]) + static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
 for (size_t i=0; i<Nobj; ++i){

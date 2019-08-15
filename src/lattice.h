@@ -108,6 +108,7 @@ public:
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double, const double, const double, const double, const double, const double, const std::string);
   ~Lattice() = default;
+  //! copy constructor
   Lattice(const Lattice& other){
     for (int i=0; i<3; ++i){
       this->len[i] = other.len[i];
@@ -116,6 +117,17 @@ public:
     this->volume = other.volume;
     this->hall = other.hall;
   };
+  //! explicit assignment operator
+  // required for gcc 9+
+  Lattice& operator=(const Lattice& other){
+    for (int i=0; i<3; ++i){
+      this->len[i] = other.len[i];
+      this->ang[i] = other.ang[i];
+    }
+    this->volume = other.volume;
+    this->hall = other.hall;
+    return *this;
+  }
   //! Return the first basis vector length
   double get_a     () const {return len[0];};
   //! Return the second basis vector length
@@ -181,6 +193,8 @@ public:
   int set_hall(const int h) { check_hall_number(h); return hall; };
   //! Return the Spacegroup object of the Lattice
   Spacegroup get_spacegroup_object() const { return Spacegroup(hall); };
+  //! Return the Pointgroup object of the Lattice
+  Pointgroup get_pointgroup_object() const { return Spacegroup(hall).get_pointgroup(); };
   //! Return the Spacegroup symmetry operation object of the Lattice
   Symmetry get_spacegroup_symmetry() const { return make_spacegroup_symmetry_object(hall); };
   //! Return the Pointgroup Symmetry operation object of the Lattice

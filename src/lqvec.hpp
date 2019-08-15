@@ -50,6 +50,20 @@ template<typename T> LQVec<T> LQVec<T>::extract(const ArrayVector<bool>& tf) con
     if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
   return out;
 }
+template<typename T> LQVec<T> LQVec<T>::extract(const std::vector<bool>& tf) const{
+  if (tf.size() != this->size()){
+    std::string msg = "Extracting an LQVec by logical indexing requires";
+    msg += " an std::vector<bool> with size()==LQVec.size().";
+    throw std::runtime_error(msg);
+  }
+  size_t nout=0;
+  for (size_t i=0; i<tf.size(); ++i) if (tf[i]) ++nout;
+  LQVec<T> out(this->get_lattice(),nout);
+  size_t idx = 0;
+  for (size_t i=0; i<tf.size(); ++i)
+    if (tf[i]) out.set(idx++, this->datapointer(i));
+  return out;
+}
 
 template<typename T> LQVec<T> LQVec<T>::get(const size_t i) const {
   LQVec<T> out(this->get_lattice(), i<this->size() ? 1u : 0u );

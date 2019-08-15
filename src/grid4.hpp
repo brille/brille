@@ -52,7 +52,9 @@ template<class T> size_t MapGrid4<T>::unsafe_get_map(slong *outmap) const {
 //
 template<class T> size_t MapGrid4<T>::maximum_mapping(const slong *map2check, const size_t num2check) const {
   size_t maxmap=0;
-  for (size_t i=0; i<num2check; ++i) if (map2check[i]>maxmap) maxmap = map2check[i];
+  for (size_t i=0; i<num2check; ++i)
+    if (static_cast<size_t>(map2check[i])>maxmap)
+      maxmap = static_cast<size_t>(map2check[i]);
   return maxmap;
 }
 template<class T> size_t MapGrid4<T>::maximum_mapping(const slong *map2check) const {

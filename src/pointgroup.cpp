@@ -202,7 +202,6 @@ void Pointgroup::setup(void){
 PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
 {
   PointSymmetry pointsym(0);
-  int count = 1;
   bool isunique;
   // copy the first rotation matrix
 	pointsym.add(rotations);
@@ -258,9 +257,9 @@ of pointgroup operations with the i-encoded isometry type.
 |   9   |     6    |
 */
 static int get_pointgroup_class_table(int table[10], const PointSymmetry & pointsym){
-  int i, rot_type;
-  for (i = 0; i < 10; i++) { table[i] = 0; }
-  for (i = 0; i < pointsym.size(); i++) {
+  int rot_type;
+  for (size_t i = 0; i < 10; i++) { table[i] = 0; }
+  for (size_t i = 0; i < pointsym.size(); i++) {
     rot_type = isometry_type(pointsym.data(i));
     if (rot_type == -1) {
       return 0;
@@ -341,11 +340,11 @@ static int get_axes(int axes[3], const Laue laue, const PointSymmetry & pointsym
 
 static int laue2m(int axes[3], const PointSymmetry & pointsym)
 {
-  int i, num_ortho_axis, min_norm;
+  int num_ortho_axis, min_norm;
   int prop_rot[9], t_mat[9];
   int ortho_axes[NUM_ROT_AXES];
 
-  for (i = 0; i < pointsym.size(); i++) {
+  for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
     // Find the first two-fold rotation
 		// det(prop_rot)==1, so two-fold has tr==-1 for 2 and ̄2.
@@ -364,7 +363,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
 	int * norm_squared = new int[num_ortho_axis]();
 	const int max_norm=8;
 	int below_count = 0;
-	for (i=0; i<num_ortho_axis; ++i){
+	for (int i=0; i<num_ortho_axis; ++i){
 		norm_squared[i] = vector_norm_squared(rot_axes[ortho_axes[i]]);
 		if (norm_squared[i] < max_norm - ZERO_PREC) ++below_count;
 	}
@@ -376,7 +375,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
   // The shortest with squared norm less than 8 is the second axis.
   min_norm = max_norm;
 	int min_i = -1;
-  for (i = 0; i < num_ortho_axis; i++) {
+  for (int i = 0; i < num_ortho_axis; i++) {
     if (norm_squared[i] < min_norm - ZERO_PREC) {
       min_norm = norm_squared[i];
       axes[0] = ortho_axes[i];
@@ -387,7 +386,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
   /* The third axis */
 	// check again all orthogonal axes for the second shortest
   min_norm = max_norm;
-	for (i = 0; i < num_ortho_axis; i++) {
+	for (int i = 0; i < num_ortho_axis; i++) {
     if (norm_squared[i] < min_norm - ZERO_PREC) {
       min_norm = norm_squared[i];
       axes[2] = ortho_axes[i];
@@ -407,11 +406,11 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
 
 static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int rot_order)
 {
-  int i, j, num_ortho_axis, is_found=0;
+  int num_ortho_axis, is_found=0;
   int axis_vec[3], prop_rot[9], t_mat[9];
   int ortho_axes[NUM_ROT_AXES];
 
-  for (i = 0; i < pointsym.size(); i++) {
+  for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
     /* For order=4, look for a four-fold rotation, which has tr(W)==1 */
     if (rot_order == 4 && trace(prop_rot)==1) {
@@ -434,10 +433,10 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
 	// axes[1] = R * axes[0]
   axes[1] = -1;
 	bool axes_found=false;
-  for (i = 0; i < num_ortho_axis; i++) {
+  for (int i = 0; i < num_ortho_axis; i++) {
     axes[0] = ortho_axes[i];
     multiply_matrix_vector(axis_vec, prop_rot, rot_axes[axes[0]]);
-    for (j = 0; j < num_ortho_axis; j++) {
+    for (int j = 0; j < num_ortho_axis; j++) {
 			if (equal_vector<int,3>(axis_vec, rot_axes[ortho_axes[j]]))
 				is_found = 1;
 			if (!is_found){
@@ -472,12 +471,11 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
 
 static int lauennn(int axes[3], const PointSymmetry & pointsym, const int rot_order)
 {
-  int i, count, axis, tr;
+  int count=0, axis, tr;
   int prop_rot[9];
-  for (i = 0; i < 3; i++) axes[i] = -1;
-  count = 0;
+  for (int i = 0; i < 3; i++) axes[i] = -1;
 	// look for three two-fold or four-fold axes
-  for (i = 0; i < pointsym.size(); i++) {
+  for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
 		tr = trace(prop_rot);
 		// two-fold rotations have tr(W)==-1, four-fold have tr(W)==1
@@ -529,8 +527,7 @@ static int get_rotation_axis(const int *proper_rot)
 
 
 static int orthogonal_to_axis(int ortho_axes[], const int axis){
-	int num_ortho=0;
-	int vec[3], dot;
+	int num_ortho=0, dot;
 	for (int i=0; i<NUM_ROT_AXES; ++i){
 		dot = 0;
 		for (int j=0; j<3; ++j) dot += rot_axes[i][j]*rot_axes[axis][j];
@@ -598,7 +595,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 	// check for uniqueness of the rotations
   bool i_is_not_unique = false;
 	unique_rot.push_back(0); // the first rotation is the first unique rotation
-  for (int i=1; i<rot_tmp.size(); ++i) {
+  for (size_t i=1; i<rot_tmp.size(); ++i) {
 		// check all rotations against the already established-to-be-unique rotations
 		for (int j: unique_rot){
 			i_is_not_unique = equal_matrix(rot_tmp[j].data(), rot_tmp[i].data());
@@ -619,12 +616,16 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 static int _internal_pointgroup_rotations(int *rotations, const int max_size, const std::vector<std::array<int,9>>& all_rots, const int is_time_reversal)
 {
   std::vector<std::array<int,9>> unq_rots = get_unique_rotations(all_rots,is_time_reversal);
-	int i=0;
-	if (unq_rots.size() > max_size)
-		fprintf(stderr,"Indicated max size (%d) is less than number of unique rotations (%d)",max_size,unq_rots.size());
-	else
-		for (i=0; i < unq_rots.size(); i++) std::copy(unq_rots[i].begin(), unq_rots[i].end(), rotations+i*9);
-	return i; // i is either 0 or the last value from the for loop, unq_rots.size
+	if (unq_rots.size() > static_cast<size_t>(max_size)){
+    std::string msg = "Indicated maximum size " + std::to_string(max_size);
+    msg += " is less than number of unique rotations (";
+    msg += std::to_string(unq_rots.size()) + ")";
+    throw std::out_of_range(msg);
+  }	else {
+		for (size_t i=0; i < unq_rots.size(); i++)
+      std::copy(unq_rots[i].begin(), unq_rots[i].end(), rotations+i*9);
+  }
+	return static_cast<int>(unq_rots.size());
 }
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){

@@ -79,6 +79,7 @@ public:
          Is each call to wedge_search not resetting the normals, or
          something similar?
       */
+      this->wedge_brute_force();
     }
   }
   //! Returns the lattice passed in at construction
@@ -169,6 +170,7 @@ public:
   the irreducible wedge.
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
+  void wedge_brute_force(void);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
   already identified, this method finds all intersections of combinations of

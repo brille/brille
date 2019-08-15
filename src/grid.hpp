@@ -184,7 +184,8 @@ template<class T> int MapGrid3<T>::lin2map(const size_t l, size_t& m) const {
 }
 template<class T> int MapGrid3<T>::map2lin(const size_t m, size_t& l) const {
   if ( m > this->maximum_mapping() ) return 1;
-  for (size_t i=0; i<this->numel(); ++i) if (this->map[i]==m){
+  for (size_t i=0; i<this->numel(); ++i)
+  if (this->map[i]>-1 && static_cast<size_t>(this->map[i])==m){
     l = i;
     return 0;
   }

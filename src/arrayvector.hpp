@@ -209,7 +209,7 @@ template<typename T> size_t ArrayVector<T>::resize(size_t newsize){
   T * newdata;
   // allocate a new block of memory
   if (std) newdata = safealloc<T>(newsize*this->numel());
-  if (this->size()*this->numel()) { // copy-over data :(
+  if (this->size() && this->numel()) { // copy-over data :(
     size_t smallerN = (this->size() < newsize) ? this->size() : newsize;
     for (size_t i=0; i<smallerN*this->numel(); i++) newdata[i] = this->data[i];
     // hand-back the chunk of memory which data points to
@@ -222,7 +222,7 @@ template<typename T> size_t ArrayVector<T>::resize(size_t newsize){
 }
 template<typename T> size_t ArrayVector<T>::refresh(size_t newnumel, size_t newsize){
   // first off, remove the old data block, if it exists
-  if (this->size()*this->numel())  delete[] this->data;
+  if (this->size() && this->numel())  delete[] this->data;
   bool std = (newsize*newnumel)>0;
   T * newdata;
   // allocate a new block of memory
@@ -386,7 +386,6 @@ template<typename T> bool ArrayVector<T>::all_approx(const std::string& expr, co
   throw std::runtime_error(msg);
 }
 template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, const T val, const size_t n) const{
-  T p,m, tol=2*std::numeric_limits<T>::epsilon();
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
   if (!expr.compare("lt") || !expr.compare("<")){
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
@@ -418,7 +417,6 @@ template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, co
   throw std::runtime_error(msg);
 }
 template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const T val, const size_t n) const{
-  T p,m, tol=2*std::numeric_limits<T>::epsilon();
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
   ArrayVector<bool> out(1u, this->size());
   for (size_t i=0; i<this->size(); ++i) out.insert(false, i);
@@ -476,6 +474,41 @@ template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::stri
   std::string msg = __PRETTY_FUNCTION__;
   msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);
+}
+
+template<typename T> bool ArrayVector<T>::vector_approx(const size_t i, const size_t j, const std::string& op, const T val) const{
+  if (i>=this->size() || j>=this->size())
+    throw std::out_of_range("ArrayVector range indices out of range");
+  bool ok = true;
+  if (!op.compare("+")){
+    for (size_t k=0; k<this->numel(); ++k)
+    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)+val)) ok = false;
+    return ok;
+  }
+  if (!op.compare("-")){
+    for (size_t k=0; k<this->numel(); ++k)
+    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)-val)) ok = false;
+    return ok;
+  }
+  if (!op.compare("*")){
+    for (size_t k=0; k<this->numel(); ++k)
+    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)*val)) ok = false;
+    return ok;
+  }
+  if (!op.compare("/")){
+    for (size_t k=0; k<this->numel(); ++k)
+    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)/val)) ok = false;
+    return ok;
+  }
+  if (!op.compare("\\")){
+    for (size_t k=0; k<this->numel(); ++k)
+    if(!approx_scalar(this->getvalue(i,k),val/this->getvalue(j,k))) ok = false;
+    return ok;
+  }
+  if (op.compare("")) std::cout<<"unknown operation " << op << std::endl;
+  for (size_t k=0; k<this->numel(); ++k)
+  if (!approx_scalar(this->getvalue(i,k), this->getvalue(j,k))) ok = false;
+  return ok;
 }
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{

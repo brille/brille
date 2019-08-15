@@ -285,11 +285,10 @@ public:
     */
     double volume{0.}, subvol;
     double n[3];
-    std::array<int,3> tri;
     ArrayVector<double> a(3u, 1u), ba(3u, 1u), ca(3u, 1u);
     for (size_t f=0; f<normals.size(); ++f){
       a = this->vertices.extract(vertices_per_face[f][0]);
-      for (int i=1; i<vertices_per_face[f].size()-1; ++i){ // loop over triangles
+      for (size_t i=1; i<vertices_per_face[f].size()-1; ++i){ // loop over triangles
         ba = this->vertices.extract(vertices_per_face[f][ i ]) - a;
         ca = this->vertices.extract(vertices_per_face[f][i+1]) - a;
         vector_cross(n, ba.datapointer(0), ca.datapointer(0));
@@ -366,7 +365,7 @@ protected:
     for (size_t i=0; i<vertices.size(); ++i){
       for (auto facet: faces_per_vertex[i]){
         flag = true;
-        for (auto vertex: vpf[facet]) if (vertex==i) flag = false;
+        for (auto vertex: vpf[facet]) if (static_cast<size_t>(vertex)==i) flag = false;
         if (flag) vpf[facet].push_back(i);
       }
     }

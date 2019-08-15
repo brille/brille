@@ -1,13 +1,22 @@
 import os
 import re
 import sys
-import platform
 import subprocess
+from sysconfig import get_platform
 from subprocess import CalledProcessError, check_output, check_call
 from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from write_version_info import get_version_info
+
+def is_vsc():
+    platform = get_platform()
+    return platform.startswith("win")
+
+
+def is_mingw():
+    platform = get_platform()
+    return platform.startswith("mingw")
 
 
 class CMakeExtension(Extension):
@@ -25,7 +34,7 @@ class CMakeBuild(build_ext):
                                " the following extensions: " +
                                ", ".join(e.name for e in self.extensions))
 
-        if platform.system() == "Windows":
+        if is_vsc():
             rex = r'version\s*([\d.]+)'
             cmake_version = LooseVersion(re.search(rex, out.decode()).group(1))
             if cmake_version < '3.1.0':
@@ -38,11 +47,14 @@ class CMakeBuild(build_ext):
         extdir = os.path.dirname(self.get_ext_fullpath(ext.name))
         extdir = os.path.abspath(extdir)
         cmake_args = []
-        if platform.system() == "Windows":
+        if is_vsc():
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
             else:
                 cmake_args += ['-A', 'Win32']
+
+        if is_mingw():
+            cmake_args += ['-G','Unix Makefiles'] # Must be two entries to work
 
         cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                        '-DPYTHON_EXECUTABLE=' + sys.executable]
@@ -54,7 +66,7 @@ class CMakeBuild(build_ext):
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
         cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
 
-        if platform.system() == "Windows":
+        if is_vsc():
             cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
             cmake_args += [cmake_lib_out_dir.format(cfg.upper(), extdir)]
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]

@@ -9,9 +9,9 @@ project(symbz)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_C_FLAGS_RELEASE "-Wall -O2")
 if (MSVC)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Zi")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Zi /Wall")
 else()
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Wall -Wextra")
 endif()
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
@@ -50,7 +50,8 @@ set(SOURCES ${PROJECT_SOURCE_DIR}/src/arithmetic.cpp
 		)
 
 # Python c++ bindings
-add_subdirectory(lib/pybind11)
+# add_subdirectory(lib/pybind11)
+find_package(pybind11 REQUIRED)
 pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp ${SOURCES})
 
 if(MSVC)

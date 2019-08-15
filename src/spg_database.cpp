@@ -8615,7 +8615,6 @@ int international_number_to_hall_number(const int number){
 int international_string_to_hall_number(const std::string& itname)
 {
   Spacegroup spg;
-  size_t n = itname.size();
   for (int i=1; i<531; i++){
 	  spg = ALL_SPACEGROUPS[i];
 	  // now check for matching international table names
@@ -8629,7 +8628,6 @@ int international_string_to_hall_number(const std::string& itname)
 
 int hall_symbol_to_hall_number(const std::string& hsymbol){
   Spacegroup spg;
-  size_t n = hsymbol.size();
   for (int i=1; i<531; i++){
     spg = ALL_SPACEGROUPS[i];
     // only accept exact matches
@@ -8653,7 +8651,7 @@ std::string trim(const std::string& str,
 }
 
 std::string quote_replaces_equal(std::string str){
-  for (int i=0; i<str.size(); ++i) if (str[i]=='=') str[i]='\"';
+  for (size_t i=0; i<str.size(); ++i) if (str[i]=='=') str[i]='\"';
   return str;
 }
 

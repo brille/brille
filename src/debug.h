@@ -42,7 +42,7 @@ private:
 };
 
 // replace GNU __PRETTY_FUNCTION__ by __FUNCSIG__ on Windows (MSVC)
-#ifdef _WIN32
+#ifdef _MSC_VER
   #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 

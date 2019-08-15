@@ -56,8 +56,8 @@ public:
       @param d [optional] a pointer to a n*m block of data which is copied into the ArrayVector
   */
   ArrayVector(size_t m=0, size_t n=0, const T* d=nullptr) : M(m), N(n){
-      if (m*n) data = safealloc<T>(m*n);
-      if (d && m*n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+      if (m && n) data = safealloc<T>(m*n);
+      if (d && m && n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
   };
   /*! ArrayVector contstructor taking shape and stride information for the case
       of a non-contiguous and/or non-row-ordered array at the provided pointer.
@@ -78,8 +78,8 @@ public:
       this->N = static_cast<size_t>(shape[0]);
       Integer nel=1; for (size_t i=1; i<shape.size(); ++i) nel *= shape[i];
       this->M = static_cast<size_t>(nel);
-      if (this->N*this->M) this->data = safealloc<T>(this->N*this->M);
-      if (d && this->N*this->M){
+      if (this->N && this->M) this->data = safealloc<T>(this->N*this->M);
+      if (d && this->N && this->M){
         // we want to copy-in the data to a row-ordered array (and flatten it)
         // so calculate the span along each dimension of that row-ordered array
         std::vector<size_t> spans(shape.size());
@@ -89,7 +89,7 @@ public:
         // if the calculated spans and input strides are equivalent, we can
         // skip calculating indicies:
         bool roword = true;
-        for (int i=0; i<strides.size(); ++i)
+        for (size_t i=0; i<strides.size(); ++i)
           roword &= strides[i]/sizeof(T) == spans[i];
         if (roword){
           for (size_t i=0; i<this->N*this->M; ++i) this->data[i] = d[i];
@@ -120,8 +120,8 @@ public:
   */
   template<class R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
   ArrayVector(size_t m=0, size_t n=0, const R* d=nullptr): M(m), N(n){
-    if (m*n) data = safealloc<T>(m*n);
-    if (d && m*n) for (size_t i=0; i<m*n; i++) data[i] = T(d[i]);
+    if (m && n) data = safealloc<T>(m*n);
+    if (d && m && n) for (size_t i=0; i<m*n; i++) data[i] = T(d[i]);
   }
   /*! Copy constructor
       @param vec another ArrayVector which is copied into the new object
@@ -130,7 +130,7 @@ public:
   ArrayVector(const ArrayVector<T>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
-    if (m*n){
+    if (m && n){
       T *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
       data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) data[i] = d[i];
@@ -139,7 +139,7 @@ public:
   //! Constructor from std::vector<std::array<T,N>>
   template<class R, size_t Nel> ArrayVector(const std::vector<std::array<R,Nel>>& va):
   M(Nel), N(va.size()), data(nullptr){
-    if (M*N){
+    if (M && N){
       data = safealloc<T>(M*N);
       for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) data[i*M+j] = static_cast<T>(va[i][j]);
     }
@@ -149,7 +149,7 @@ public:
   ArrayVector(const ArrayVector<R>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
-    if (m*n){
+    if (m && n){
       R *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
       data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) data[i] = static_cast<T>(d[i]);
@@ -164,7 +164,7 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the data (if it exists)
-      if (other.data && m*n)
+      if (other.data && m && n)
         for(size_t i=0; i<m*n; i++)
           this->data[i] = other.data[i];
     }
@@ -179,7 +179,7 @@ public:
     return out;
   }
   // Destructor
-  ~ArrayVector() { if (M*N) delete[] data; };
+  ~ArrayVector() { if (M && N) delete[] data; };
   //! Returns the number of arrays
   size_t size() const {return N;};
   //! Returns the number of elements in each array
@@ -317,6 +317,7 @@ public:
   bool all_approx(const std::string& expr, const T val, const size_t n=0) const;
   bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
   ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
+  bool vector_approx(const size_t i, const size_t j, const std::string& op="", const T val=0.) const;
   //! Round all elements using std::round
   ArrayVector<int> round() const;
   //! Find the floor of all elements using std::floor

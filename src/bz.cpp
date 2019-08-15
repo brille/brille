@@ -205,11 +205,15 @@ void BrillouinZone::set_ir_wedge_normals(const LQVec<double>& x){
 }
 
 void BrillouinZone::print() const {
-  printf("BrillouinZone with %u vertices and %u faces\n",this->vertices_count(),this->faces_count());
+  std::string msg = "BrillouinZone with ";
+  msg += std::to_string(this->vertices_count()) + " vertices and ";
+  msg += std::to_string(this->faces_count()) + " faces";
+  std::cout << msg << std::endl;
 }
 
 // #include "bz_wedge_0.cpp"
 #include "bz_wedge_1.cpp"
+#include "bz_wedge_2.cpp"
 
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
@@ -321,7 +325,7 @@ void BrillouinZone::irreducible_vertex_search(){
   size_t n21 = ((Nbz*(Nbz-1))>>1)*Nir;
   size_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
   size_t n03 = 0;
-  for (int i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
+  for (size_t i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
   status_update(" Checking {" + std::to_string(n21) + ", "
                 + std::to_string(n12) + ", "
                 + std::to_string(n03) +"} {2:1, 1:2, 0:3} zone:wedge 3-plane"
@@ -387,9 +391,8 @@ void BrillouinZone::irreducible_vertex_search(){
   // vertex.
   // We want to combine these lists:
 
-  std::vector<bool> bz_face_present, ir_face_present;
-  size_t max_bz_idx=0, max_ir_idx=0;
-  for (auto i: i30) for (int j: i) if (j>max_bz_idx) max_bz_idx = static_cast<size_t>(j);
+  int max_bz_idx=0, max_ir_idx=0;
+  for (auto i: i30) for (int j: i) if (j > max_bz_idx) max_bz_idx = j;
   for (size_t i=0; i<i21.size(); ++i){
     if (i21.getvalue(i,0)>max_bz_idx) max_bz_idx = i21.getvalue(i,0);
     if (i21.getvalue(i,1)>max_bz_idx) max_bz_idx = i21.getvalue(i,1);
@@ -404,9 +407,8 @@ void BrillouinZone::irreducible_vertex_search(){
     for (size_t j=0; j<3u; ++j)
     if (i03.getvalue(i,j)>max_ir_idx) max_ir_idx = i03.getvalue(i,j);
   }
-  size_t num_bz_idx = max_bz_idx+1, num_ir_idx = max_ir_idx+1; // since we count from 0.
-  for (size_t i=0; i<num_bz_idx; ++i) bz_face_present.push_back(false);
-  for (size_t i=0; i<num_ir_idx; ++i) ir_face_present.push_back(false);
+  max_bz_idx++; max_ir_idx++; // since we count from 0, and need one more element than the highest index.
+  std::vector<bool> bz_face_present(max_bz_idx, false), ir_face_present(max_ir_idx, false);
   for (auto i: i30) for (int j: i) bz_face_present[j] = true;
   for (size_t i=0; i<i21.size(); ++i){
     bz_face_present[i21.getvalue(i,0)] = true;
@@ -435,10 +437,7 @@ void BrillouinZone::irreducible_vertex_search(){
   LQVec<double> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
   ArrayVector<int> all_ijk(3u, total_verts);
 
-  std::vector<size_t> bz_face_mapped, ir_face_mapped;
-  for (size_t i=0; i<num_bz_idx; ++i) bz_face_mapped.push_back(0);
-  for (size_t i=0; i<num_ir_idx; ++i) ir_face_mapped.push_back(0);
-
+  std::vector<size_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
 
   size_t face_idx=0;
   verbose_status_update("Combine ", i30.size(), " 3:0 normals and plane-points");

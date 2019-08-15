@@ -296,7 +296,7 @@ public:
     slong tmp;
     for (int i=0; i<4; i++){
       tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
-      if (tmp>=0 && tmp<this->size(i)){
+      if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
         if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
           out += 1<<i; // exact match
       } else {

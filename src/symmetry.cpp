@@ -146,28 +146,20 @@ void PointSymmetry::permute(const std::vector<size_t>& p){
   std::string msg;
   std::vector<size_t> o(this->size());
   std::iota(o.begin(), o.end(), 0u); // 0, 1, 2, …, size()-1
-  std::vector<size_t> d, s=p;
-  std::sort(s.begin(), s.end()); // set_difference requires *sorted* ranges
-  std::set_difference(s.begin(), s.end(), o.begin(), o.end(), std::inserter(d, d.begin()));
-  if (d.size() || p.size()!=this->size()){
+  std::vector<size_t> s=p;
+  std::sort(s.begin(), s.end()); // includes requires *sorted* ranges
+  if (!std::includes(o.begin(), o.end(), s.begin(), s.end()) || p.size()!=this->size()){
     msg="The provided permutation vector [";
     for (auto x: p) msg += " " + std::to_string(x);
-    msg += " ] is invalid because ";
-    if (d.size()){
-      msg += "it contains extra values {";
-      for (auto x: d) msg += " " + std::to_string(x);
-      msg += " }";
-    }
-    if (d.size() && p.size()!=this->size()) msg += " and ";
-    if (p.size()!=this->size()) msg += std::to_string(p.size()) + " != "  + std::to_string(this->size());
+    msg += " ] is invalid.";
+    msg += " A permutation of [";
+    for (auto x: o) msg += " " + std::to_string(x);
+    msg += " ] was expected.";
     throw std::runtime_error(msg);
   }
-  if (!std::includes(o.begin(), o.end(), s.begin(), s.end()))
-    std::cout << "Not all of p is in (1:size())-1" << std::endl;
   // swapping requires we have the inverse permutation
   for (size_t i=0; i<p.size(); ++i) s[p[i]] = i;
-  Matrix<int> tM;
-  size_t tI;
+  // perform the actual element swapping
   for (size_t i=0; i<this->size();){
     if (s[i]==i) {
       ++i;
@@ -177,11 +169,11 @@ void PointSymmetry::permute(const std::vector<size_t>& p){
     }
   }
   // confirm that the permuting worked:
-  if (!std::is_sorted(d.begin(), d.end())){
+  if (!std::is_sorted(s.begin(), s.end())){
     msg="Undoing the permutation [";
     for (auto x: p) msg += " " + std::to_string(x);
     msg +=" ] failed. End result is [";
-    for (auto x: d) msg += " " + std::to_string(x);
+    for (auto x: s) msg += " " + std::to_string(x);
     msg +=" ]";
     throw std::runtime_error(msg);
   }
