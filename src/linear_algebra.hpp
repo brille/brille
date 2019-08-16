@@ -95,7 +95,7 @@ template<typename T, typename R, typename S, int N> void multiply_vector_matrix(
 template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B){
   size_t i,j,k;
   for (i=0;i<n*m;i++) C[i]=T(0);
-  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*B[k*m+j];
+  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += static_cast<T>(A[i*l+k]*B[k*m+j]);
 }
 template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const R* A, const std::complex<S>* B){
   size_t i,j,k;

@@ -35,8 +35,28 @@ void BrillouinZone::wedge_brute_force(void){
   if (special.vector_approx(i,j,"*",-1.0)) isok[j]=false;
   // isok[i] == true → point i is the first half of a Friedel-pair or a loner
   special = special.extract(isok);
-
   std::cout << "Reduced to " << std::to_string(special.size()) << " after Friedel-pair reduction" << std::endl;
+
+  // Grab the pointgroup symmetry operations with order>1
+  PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal).higher(1);
+  // And use them to find which special points are symmetry equivalent
+  std::vector<std::vector<size_t>> sym_equiv_idx;
+  std::vector<size_t> one_type;
+  std::vector<bool> unfound(special.size(), true);
+  for (size_t i=0; i<special.size(); ++i) if (unfound[i]) {
+    one_type.clear(); // empty the contents, reserving the memory
+    one_type.push_back(i);
+    unfound[i] = false; // not necessary, likely
+    for (size_t k=0; k<ps.size(); ++k)
+    for (size_t j=i+1; j<special.size(); ++j)
+    if (unfound[j] && special.rotate_approx(i,j,ps.get(k))){ // special[i] ≡ R[k]*special[j]
+      one_type.push_back(j);
+      unfound[j] = false;
+    }
+    sym_equiv_idx.push_back(one_type);
+  }
+
+  std::cout << "Of which " << sym_equiv_idx.size() << " points are unique by symmetry" << std::endl;
   /* We want all combinations of two special points, which when combined with
   the Γ point, represent all possible symmetry planes in the Brillouin zone  */
   size_t count=0, expected = (special.size()*(special.size()-1))>>1;

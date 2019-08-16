@@ -318,6 +318,7 @@ public:
   bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
   ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
   bool vector_approx(const size_t i, const size_t j, const std::string& op="", const T val=0.) const;
+  template<class R, size_t Nel> bool rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>&) const;
   //! Round all elements using std::round
   ArrayVector<int> round() const;
   //! Find the floor of all elements using std::floor

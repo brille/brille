@@ -510,6 +510,22 @@ template<typename T> bool ArrayVector<T>::vector_approx(const size_t i, const si
   if (!approx_scalar(this->getvalue(i,k), this->getvalue(j,k))) ok = false;
   return ok;
 }
+template<typename T> template<class R, size_t Nel>
+bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>& mat) const{
+  // if (!std::is_convertible<typename std::common_type<T,R>,T>::value)
+  //   throw std::runtime_error("Incompatible types.");
+  size_t n = this->numel();
+  if (Nel != n*n)
+    throw std::runtime_error("Wrong size matrix input.");
+  if (i>=this->size() || j>=this->size())
+    throw std::out_of_range("ArrayVector range indices out of range");
+  std::vector<T> intermediate(n);
+  mul_mat_vec(intermediate.data(), n, mat.data(), this->datapointer(j));
+  bool same = true;
+  for (size_t k=0; k<n; ++k)
+  if (!approx_scalar(this->getvalue(i,k), intermediate[k])) same = false;
+  return same;
+};
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{
   ArrayVector<int> out(this->numel(),this->size());
