@@ -219,11 +219,17 @@ public:
   //! Return the inverse Reciprocal lattice
   Reciprocal star() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
-  void get_xyz_transform(double *toxyz) const;
+  void get_xyz_transform(double*) const;
+  void get_xyz_transform(double*, const size_t, const size_t) const;
+  template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
-  void get_inverse_xyz_transform(double *fromxyz) const;
+  void get_inverse_xyz_transform(double*) const;
+  void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+  template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
+  void get_lattice_matrix(double*, const size_t, const size_t) const;
+  template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
   bool isstar(const Direct) const;
   //! Determine if a Reciprocal lattice is the inverse of this lattice
@@ -246,13 +252,21 @@ public:
   //! Return the inverse Direct lattice
   Direct star() const;
   //! Return the Busing-Levey B matrix http://dx.doi.org/10.1107/S0365110X67000970
-  void get_B_matrix(double *mt) const;
+  void get_B_matrix(double*) const;
+  void get_B_matrix(double*, const size_t, const size_t) const;
+  template<class I> void get_B_matrix(double*, std::vector<I>&) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
-  void get_xyz_transform(double *toxyz) const;
+  void get_xyz_transform(double*) const;
+  void get_xyz_transform(double*, const size_t, const size_t) const;
+  template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
-  void get_inverse_xyz_transform(double *fromxyz) const;
+  void get_inverse_xyz_transform(double*) const;
+  void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+  template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
+  void get_lattice_matrix(double*, const size_t, const size_t) const;
+  template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
   bool isstar(const Reciprocal) const;
   //! Determine if a Direct lattice is the inverse of this lattice

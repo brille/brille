@@ -215,6 +215,12 @@ Direct Reciprocal::star() const {
 }
 
 void Direct::get_lattice_matrix(double *latmat) const{
+  this->get_lattice_matrix(latmat, 3u, 1u);
+}
+template<class I> void Direct::get_lattice_matrix(double *latmat, std::vector<I>& strides) const {
+  this->get_lattice_matrix(latmat, static_cast<size_t>(strides[0]/sizeof(double)), static_cast<size_t>(strides[1]/sizeof(double)));
+}
+void Direct::get_lattice_matrix(double *latmat, const size_t c, const size_t r) const{
   // define the lattice basis vectors using the same convention as spglib
   double c0=std::cos(this->ang[0]), c1=std::cos(this->ang[1]), c2=std::cos(this->ang[2]);
   double s2=std::sin(this->ang[2]);
@@ -223,43 +229,65 @@ void Direct::get_lattice_matrix(double *latmat) const{
   double zhat[3]={c1, (c0-c2*c1)/s2, this->unitvolume()/s2};
 
   for (int i=0;i<3;++i){
-    latmat[i*3+0] = this->len[0]*xhat[i];
-    latmat[i*3+1] = this->len[1]*yhat[i];
-    latmat[i*3+2] = this->len[2]*zhat[i];
+    latmat[i*c+0*r] = this->len[0]*xhat[i];
+    latmat[i*c+1*r] = this->len[1]*yhat[i];
+    latmat[i*c+2*r] = this->len[2]*zhat[i];
   }
-
 }
-void Direct::get_xyz_transform(double *toxyz) const {
+void Direct::get_xyz_transform(double* fromxyz) const{
+  this->get_xyz_transform(fromxyz, 3u, 1u);
+}
+template<class I> void Direct::get_xyz_transform(double* x, std::vector<I>& s) const {
+  this->get_xyz_transform(x, static_cast<size_t>(s[0]/sizeof(double)), static_cast<size_t>(s[1]/sizeof(double)));
+}
+void Direct::get_xyz_transform(double *toxyz, const size_t c, const size_t r) const {
   // there are infinite possibilities for your choice of axes.
   // the original spglib used x along a and y in the (a,b) plane
   // here we're going with x along astar and y in the (astar, bstar) plane -- this is the "B-matrix"
-  Reciprocal r = this->star();
-  double *B = new double[9]();
-  r.get_B_matrix(B);
+  double B[9], tmp[9];
+  this->star().get_B_matrix(B, 3u, 1u);
   // we want toxyz to be 2*pi*transpose(inverse(B));
   // use it as a buffer
-  matrix_inverse(toxyz,B);
-  matrix_transpose(toxyz); // in-place transpose using swap
-  for (int i=0; i<9; i++) toxyz[i] *= 2*PI;
-  delete[] B;
+  matrix_inverse(tmp,B);
+  matrix_transpose(tmp); // in-place transpose using swap
+  for (int i=0; i<9; i++) tmp[i] *= 2*PI;
+  for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) toxyz[i*c+j*r]=tmp[3*i+j];
 }
-
-void Direct::get_inverse_xyz_transform(double *fromxyz) const{
-  double toxyz[9];
-  this->get_xyz_transform(toxyz);
-  if(!matrix_inverse(fromxyz, toxyz))
+void Direct::get_inverse_xyz_transform(double* fromxyz) const{
+  this->get_inverse_xyz_transform(fromxyz, 3u, 1u);
+}
+template<class I> void Direct::get_inverse_xyz_transform(double* x, std::vector<I>& s) const {
+  this->get_inverse_xyz_transform(x, static_cast<size_t>(s[0]/sizeof(double)), static_cast<size_t>(s[1]/sizeof(double)));
+}
+void Direct::get_inverse_xyz_transform(double *fromxyz, const size_t c, const size_t r) const{
+  double toxyz[9], tmp[9];
+  this->get_xyz_transform(toxyz,3u,1u);
+  if(!matrix_inverse(tmp, toxyz))
     throw std::runtime_error("xyz_transform matrix has zero determinant");
+  for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) fromxyz[i*c+j*r] = tmp[i*3+j];
 }
-
 void Reciprocal::get_lattice_matrix(double *latmat) const{
-  Direct d = this->star();
-  double m[9];
-  d.get_lattice_matrix(m);
-  matrix_inverse(latmat,m);
-  matrix_transpose(latmat);
-  for (int i=0; i<9; ++i) latmat[i]*=2*PI;
+  this->get_lattice_matrix(latmat, 3u, 1u);
 }
-void Reciprocal::get_B_matrix(double *B) const {
+template<class I> void Reciprocal::get_lattice_matrix(double* x, std::vector<I>& strides) const {
+  this->get_lattice_matrix(x, static_cast<size_t>(strides[0]/sizeof(double)), static_cast<size_t>(strides[1]/sizeof(double)));
+}
+void Reciprocal::get_lattice_matrix(double *latmat, const size_t c, const size_t r) const{
+  Direct d = this->star();
+  double m[9], tmp[9];
+  d.get_lattice_matrix(m, 3u, 1u);
+  matrix_inverse(tmp,m);
+  matrix_transpose(tmp);
+  for (int i=0; i<9; ++i) tmp[i]*=2*PI;
+  for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) latmat[c*i+r*j] = tmp[3*i+j];
+}
+void Reciprocal::get_B_matrix(double* B) const {
+  this->get_B_matrix(B, 3u, 1u);
+}
+template<class I> void Reciprocal::get_B_matrix(double* B, std::vector<I>& strides) const {
+  this->get_B_matrix(B, static_cast<size_t>(strides[0]/sizeof(double)), static_cast<size_t>(strides[1]/sizeof(double)));
+}
+void Reciprocal::get_B_matrix(double *B, const size_t c, const size_t r) const {
   //Calculate the B-matrix as in Acta Cryst. (1967). 22, 457
   // http://dx.doi.org/10.1107/S0365110X67000970
   Direct d = this->star();
@@ -274,31 +302,42 @@ void Reciprocal::get_B_matrix(double *B) const {
   // if you mix this up, you'll only notice for non-orthogonal space groups
 
   // a-star along x -- first column = [0,3,6] in C ([0,1,2] in MATLAB)
-  B[0] = this->get_a();
-  B[3] = 0.0;
-  B[6] = 0.0;
+  B[0*c+0*r] = this->get_a();
+  B[1*c+0*r] = 0.0;
+  B[2*c+0*r] = 0.0;
 
   // b-star in the x-y plane -- second column = [1,4,7] in C ([3,4,5] in MATLAB)
-  B[1] = this->get_b()*cos(this->get_gamma());
-  B[4] = this->get_b()*asg;
-  B[7] = 0.0;
+  B[0*c+1*r] = this->get_b()*cos(this->get_gamma());
+  B[1*c+1*r] = this->get_b()*asg;
+  B[2*c+1*r] = 0.0;
 
   // and c-star -- third column = [2,5,8] in C ([6,7,8] in MATLAB)
-  B[2] = this->get_c()*cos(this->get_beta());
-  B[5] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
-  B[8] = 2*PI/d.get_c();
+  B[0*c+2*r] = this->get_c()*cos(this->get_beta());
+  B[1*c+2*r] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
+  B[2*c+2*r] = 2*PI/d.get_c();
 }
-void Reciprocal::get_xyz_transform(double *toxyz) const {
+void Reciprocal::get_xyz_transform(double *toxyz) const { this->get_xyz_transform(toxyz, 3u, 1u); }
+template<class I> void Reciprocal::get_xyz_transform(double* toxyz, std::vector<I>& strides) const {
+  this->get_xyz_transform(toxyz, static_cast<size_t>(strides[0]/sizeof(double)), static_cast<size_t>(strides[1]/sizeof(double)));
+}
+void Reciprocal::get_xyz_transform(double *toxyz, const size_t c, const size_t r) const {
   // there are infinite possibilities for your choice of axes.
   // the original spglib used x along a and y in the (a,b) plane
   // here we're going with x along astar and y in the (astar, bstar) plane -- this is the "B-matrix"
-  this->get_B_matrix(toxyz);
+  this->get_B_matrix(toxyz, c, r);
 }
-void Reciprocal::get_inverse_xyz_transform(double *fromxyz) const {
-  double toxyz[9];
-  this->get_xyz_transform(toxyz);
-  if(!matrix_inverse(fromxyz, toxyz))
+void Reciprocal::get_inverse_xyz_transform(double *fromxyz) const{
+  this->get_inverse_xyz_transform(fromxyz, 3u, 1u);
+}
+template<class I> void Reciprocal::get_inverse_xyz_transform(double* x, std::vector<I>& strides) const {
+  this->get_inverse_xyz_transform(x, static_cast<size_t>(strides[0]/sizeof(double)), static_cast<size_t>(strides[1]/sizeof(double)));
+}
+void Reciprocal::get_inverse_xyz_transform(double *fromxyz, const size_t c, const size_t r) const {
+  double toxyz[9], tmp[9];
+  this->get_xyz_transform(toxyz, 3u, 1u);
+  if(!matrix_inverse(tmp, toxyz))
     throw std::runtime_error("xyz_transform matrix has zero determinant");
+  for (size_t i=0; i<3u; ++i) for(size_t j=0; j<3u; ++j) fromxyz[i*c+j*r] = tmp[i*3+j];
 }
 
 // We have to define these separately from Lattice since Lattice.star() doesn't exist.

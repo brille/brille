@@ -299,12 +299,18 @@ bool BrillouinZone::ir_wedge_is_ok(const LQVec<double>& normals){
 }
 
 void BrillouinZone::shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const {
+  verbose_status_update("shrinking to ",cnt);
   if(vrt.size() && ijk.size()){
     vrt.resize(cnt);
     ijk.resize(cnt);
-    ArrayVector<bool> isin = this->isinside(vrt);
-    vrt = extract(vrt, isin);
-    ijk = extract(ijk, isin);
+    if (cnt){ // isinside has a problem with vrt.size()==0
+      ArrayVector<bool> isin = this->isinside(vrt);
+      debug_exec(size_t nin=0;)
+      debug_exec(for(size_t i=0; i<isin.size(); ++i) if (isin.getvalue(i)) ++nin;)
+      verbose_status_update("and retaining ",nin," inside vertices");
+      vrt = extract(vrt, isin);
+      ijk = extract(ijk, isin);
+    }
   }
 }
 
@@ -326,10 +332,7 @@ void BrillouinZone::irreducible_vertex_search(){
   size_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
   size_t n03 = 0;
   for (size_t i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
-  status_update(" Checking {" + std::to_string(n21) + ", "
-                + std::to_string(n12) + ", "
-                + std::to_string(n03) +"} {2:1, 1:2, 0:3} zone:wedge 3-plane"
-                + " intersection points");
+  verbose_status_update("Checking {",n21,", ",n12,", ",n03,"} {2:1, 1:2, 0:3} zone:wedge 3-plane intersection points");
 
   LQVec<double> bznormals = this->get_normals();
   LQVec<double> bzpoints = this->get_points();
@@ -546,7 +549,7 @@ void BrillouinZone::irreducible_vertex_search(){
   // and facet planes which are polygons, plus finds the vertex to facet
   // and facet to vertex indexing required for, e.g., plotting
   this->set_ir_polyhedron(all_verts, all_point, all_norms, all_ijk);
-  status_update(" Found a " + this->ir_polyhedron.string_repr());
+  verbose_status_update("Found a ",this->ir_polyhedron.string_repr());
 }
 
 void BrillouinZone::vertex_search(const int extent){

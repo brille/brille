@@ -52,6 +52,11 @@ class CMakeBuild(build_ext):
                 cmake_args += ['-A', 'x64']
             else:
                 cmake_args += ['-A', 'Win32']
+            # Try to be clever about finding pybind11 on Windows:
+            if 'VCPKG' in os.environ:
+                vcpkg = os.environ['VCPKG']
+                vcpkg += '\\scripts\\buildsystems\\vcpkg.cmake'
+                cmake_args += ['-DCMAKE_TOOLCHAIN_FILE='+vcpkg]
 
         if is_mingw():
             cmake_args += ['-G','Unix Makefiles'] # Must be two entries to work

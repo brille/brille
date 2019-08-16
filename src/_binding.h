@@ -726,22 +726,26 @@ void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &l
     declare_lattice_vec_init(pclass,lenunit,"ITname","P_1");
     declare_lattice_mat_init(pclass,"hall",1);
     declare_lattice_mat_init(pclass,"ITname","P_1");
-    pclass.def("star",&T::star,"Return the dual lattice");
-    pclass.def("xyz_transform",[](T &d){
+    pclass.def_property_readonly("star",&T::star,"Return the dual lattice");
+    pclass.def_property_readonly("xyz_transform",[](T &d){
       auto result = py::array_t<double, py::array::c_style>({3,3});
       py::buffer_info bi = result.request();
-      d.get_xyz_transform( (double *) bi.ptr);
+      size_t c = static_cast<size_t>(bi.strides[0]/sizeof(double));
+      size_t r = static_cast<size_t>(bi.strides[1]/sizeof(double));
+      d.get_xyz_transform( (double *) bi.ptr, c, r);
       return result;
     });
-    pclass.def("lattice_matrix",[](T &d){
+    pclass.def_property_readonly("lattice_matrix",[](T &d){
       auto result = py::array_t<double, py::array::c_style>({3,3});
       py::buffer_info bi = result.request();
-      d.get_lattice_matrix( (double *) bi.ptr);
+      size_t c = static_cast<size_t>(bi.strides[0]/sizeof(double));
+      size_t r = static_cast<size_t>(bi.strides[1]/sizeof(double));
+      d.get_lattice_matrix( (double *) bi.ptr, c, r);
       return result;
     });
     pclass.def("isstar",(bool (T::*)(const Direct    ) const) &T::isstar);
     pclass.def("isstar",(bool (T::*)(const Reciprocal) const) &T::isstar);
-    pclass.def("primitive",&T::primitive,"Return the primitive lattice");
+    pclass.def_property_readonly("primitive",&T::primitive,"Return the primitive lattice");
 }
 
 template<class T>

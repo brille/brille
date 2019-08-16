@@ -281,6 +281,12 @@ public:
   std::string to_string(const std::string &) const;
   //! Return a std::string containing the ith array with specified following string
   std::string to_string(const size_t i, const std::string &) const;
+  //! Return a std::string containing the ith array with the specified following character
+  /* This version prevents to_string(i,'\n') from being converted to
+     to_string(i,10u) implicitly, since '\n' is char(10). If i≠10 such a case
+     would give unexpected results. One could ensure that to_string(i, "\n") was
+     used instead, but it is probably unrealistic to do so.*/
+  std::string to_string(const size_t i, const char e) const { return this->to_string(i, std::string(e));};
   /*! Return a subset of the contents of the ArrayVector as a std::string
     @param first The index of the first array to convert
     @param last The index of the last array to convert
