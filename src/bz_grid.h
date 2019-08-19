@@ -31,7 +31,7 @@ public:
            determined by scaling the lengths of the underlying lattice basis
            vectors; e.g., d[0]*= |(100)|, d[1]*=|(010)|, d[2]*=|(001)|
   */
-  BrillouinZoneGrid3(const BrillouinZone bz, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(d,isrlu);};
+  BrillouinZoneGrid3(const BrillouinZone bz, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(d,isrlu);}
   /*! Construct using number of steps
     @param bz The BrillouinZone object
     @param n The three number of steps
@@ -39,7 +39,7 @@ public:
           a function of n. For a given dimension, i, N[i] = 2*n[i]+1 if n[i]>0
           or N[i] = 1 if n[i]==0
   */
-  BrillouinZoneGrid3(const BrillouinZone bz, const size_t *n): brillouinzone(bz) { this->determine_map_step(n); };
+  BrillouinZoneGrid3(const BrillouinZone bz, const size_t *n): brillouinzone(bz) { this->determine_map_step(n); }
   /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
       instead of a orthogonal grid.
       @param bz The BrillouinZone object
@@ -48,9 +48,9 @@ public:
       @note If vol is in relative lattice units an absolute volume will be
             determined using the unit cell volume of the underlying lattice.
   */
-  // BrillouinZoneGrid3(const BrillouinZone bz, const double vol, const int isrlu=1): brillouinzone(bz) {this->determine_map_tri(vol, isrlu);};
+  // BrillouinZoneGrid3(const BrillouinZone bz, const double vol, const int isrlu=1): brillouinzone(bz) {this->determine_map_tri(vol, isrlu);}
   //! Return the BrillouinZone object contained
-  const BrillouinZone get_brillouinzone() const { return this->brillouinzone; };
+  const BrillouinZone get_brillouinzone() const { return this->brillouinzone; }
   /*! Return the grid points of the InterpolateGrid3 object in relative lattice units
     @param maxN The maximum number of 3-vectors for which space has been allocated
     @param[out] hkl Where the vectors will be stored
@@ -65,7 +65,7 @@ public:
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl+3*i, fromxyz, xyz.datapointer(i));
     return xyz.size();
-  };
+  }
   /*! Return the grid points of the InterpolateGrid3 object in relative lattice units
     @returns An ArrayVector containing the 3-vectors
   */
@@ -78,7 +78,7 @@ public:
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
-  };
+  }
   /*! Return only the mapped grid points of the InterpolateGrid3 object in relative lattice units
     @returns An ArrayVector containing the mapped 3-vectors
   */
@@ -91,7 +91,7 @@ public:
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
-  };
+  }
   template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
@@ -176,7 +176,7 @@ public:
       }
     }
     return ir_result;
-  };
+  }
 protected:
   /*! Determines and sets the properties of the underlying grid from three step sizes
     @param d_in A pointer to the three step sizes
@@ -218,7 +218,7 @@ protected:
     this->set_zero(z);
     this->set_map(); // fills the 3D map with linear indices -- eventually replace this with a fancier mapping that (a) respects the zone boundary and (b) sticks to the irreducible wedge
     this->truncate_grid_to_brillouin_zone();
-  };
+  }
   /*! Determines and sets the properties of the underying grid from three step counts
     @param in The input number of steps in three directions
     @note The number of grid points will not be prod(in) but rather prod(N) where
@@ -249,7 +249,7 @@ protected:
     this->set_zero(z);
     this->set_map();
     this->truncate_grid_to_brillouin_zone();
-  };
+  }
 
   /*! \brief Remove unusable grid points
 
@@ -273,7 +273,7 @@ protected:
     slong kept = 0;
     for (size_t i=0; i<hkl.size(); ++i)
       this->map[i] = keep.getvalue(i) ? kept++ : slong(-1);
-  };
+  }
 };
 
 /*! \brief A class to hold both a BrillouinZone and InterpolateGrid4

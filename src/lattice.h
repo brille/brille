@@ -15,14 +15,14 @@ class Reciprocal;
 
 template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, const I r, T* len, T* ang){
   T n[9];
-  // compute the dot product of each column with itself
+  // compute the dot product of each row with itself
   for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  len[i] += latmat[i*c+j*r]*latmat[i*c+j*r];
   // the lattice vector lengths are the square root of this
   for (int i=0; i<3; ++i) len[i] = std::sqrt(len[i]);
-  // normalize the column vectors, leaving only angle information
+  // normalize the row vectors, leaving only angle information
   for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*c+j*r] = latmat[i*c+j*r]/len[i];
-  // take the dot product between cyclically permuted columns: 0=1⋅2, 1=2⋅0, 2=0⋅1
-  for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  ang[i] += n[c*((i+1)%3)+j*r]*n[c*((i+2)%3)+j*r];
+  // take the dot product between cyclically permuted rows: 0=1⋅2, 1=2⋅0, 2=0⋅1
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j)  ang[i] += n[c*((i+1)%3)+j*r]*n[c*((i+2)%3)+j*r];
   // the lattice angles are the arccosines of these dot products of normalized lattice vectors
   for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
 }
@@ -50,11 +50,11 @@ protected:
   template<class I>
   void set_len_pointer(const double *lvec, const I span){
     for (int i=0;i<3;i++) this->len[i] = lvec[i*span];
-  };
+  }
   template<class I>
   void set_ang_pointer(const double *avec, const I span){
     for (int i=0;i<3;i++) this->ang[i] = avec[i*span];
-  };
+  }
   void set_len_scalars(const double, const double, const double);
   void set_ang_scalars(const double, const double, const double);
   void check_hall_number(const int h);
@@ -71,7 +71,7 @@ public:
     this->set_ang_pointer(a,1);
     this->volume=this->calculatevolume();
     this->check_hall_number(h);
-  };
+  }
   //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
   Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const int h){
@@ -79,7 +79,7 @@ public:
     this->set_ang_pointer(angles,angstrides[0]/sizeof(double));
     this->volume=this->calculatevolume();
     this->check_hall_number(h);
-  };
+  }
   //! Construct the Lattice from a vector of the basis vector lengths and a vector of the basis vector angles
   Lattice(const double *, const double *, const int h=1);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
@@ -96,7 +96,7 @@ public:
     this->set_ang_pointer(a,1);
     this->volume=this->calculatevolume();
     this->check_IT_name(itname);
-  };
+  }
   //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
   Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string itname){
@@ -104,7 +104,7 @@ public:
     this->set_ang_pointer(angles,angstrides[0]/sizeof(double));
     this->volume=this->calculatevolume();
     this->check_IT_name(itname);
-  };
+  }
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double, const double, const double, const double, const double, const double, const std::string);
   ~Lattice() = default;
@@ -116,7 +116,7 @@ public:
     }
     this->volume = other.volume;
     this->hall = other.hall;
-  };
+  }
   //! explicit assignment operator
   // required for gcc 9+
   Lattice& operator=(const Lattice& other){
@@ -129,19 +129,19 @@ public:
     return *this;
   }
   //! Return the first basis vector length
-  double get_a     () const {return len[0];};
+  double get_a     () const {return len[0];}
   //! Return the second basis vector length
-  double get_b     () const {return len[1];};
+  double get_b     () const {return len[1];}
   //! Return the third basis vector length
-  double get_c     () const {return len[2];};
+  double get_c     () const {return len[2];}
   //! Return the angle between the second and third basis vectors in radian
-  double get_alpha () const {return ang[0];};
+  double get_alpha () const {return ang[0];}
   //! Return the angle between the first and third basis vectors in radian
-  double get_beta  () const {return ang[1];};
+  double get_beta  () const {return ang[1];}
   //! Return the angle between the first and second basis vectors in radian
-  double get_gamma () const {return ang[2];};
+  double get_gamma () const {return ang[2];}
   //! Return the volume of the parallelpiped unit cell formed by the basis vectors
-  double get_volume() const {return volume;};
+  double get_volume() const {return volume;}
   //! Calculate and return the unit cell volume
   double calculatevolume();
   /*! Calculate the metric tensor of the Lattice
@@ -188,17 +188,17 @@ public:
   //! Return a string representation of the basis vector lengths and angles
   virtual std::string string_repr();
   //! Return the Hall number of the Lattice
-  int get_hall() const {return hall;};
+  int get_hall() const {return hall;}
   //! Set the symmetry of the Lattice by changing the Hall number
-  int set_hall(const int h) { check_hall_number(h); return hall; };
+  int set_hall(const int h) { check_hall_number(h); return hall; }
   //! Return the Spacegroup object of the Lattice
-  Spacegroup get_spacegroup_object() const { return Spacegroup(hall); };
+  Spacegroup get_spacegroup_object() const { return Spacegroup(hall); }
   //! Return the Pointgroup object of the Lattice
-  Pointgroup get_pointgroup_object() const { return Spacegroup(hall).get_pointgroup(); };
+  Pointgroup get_pointgroup_object() const { return Spacegroup(hall).get_pointgroup(); }
   //! Return the Spacegroup symmetry operation object of the Lattice
-  Symmetry get_spacegroup_symmetry() const { return make_spacegroup_symmetry_object(hall); };
+  Symmetry get_spacegroup_symmetry() const { return make_spacegroup_symmetry_object(hall); }
   //! Return the Pointgroup Symmetry operation object of the Lattice
-  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const { return make_pointgroup_symmetry_object(hall, time_reversal); };
+  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const { return make_pointgroup_symmetry_object(hall, time_reversal); }
   //! Check whether the pointgroup has the space-inversion operator, ̄1.
   bool has_space_inversion() const {
     PointSymmetry ps = make_pointgroup_symmetry_object(hall, 0); // don't add time-reversal symmetry.
@@ -214,8 +214,8 @@ defines new versions of some methods.
 */
 class Direct: public Lattice{
 public:
-  template<class ...Types> Direct(Types ... args): Lattice(args...){};
-  Direct(Lattice lat): Lattice(lat){};
+  template<class ...Types> Direct(Types ... args): Lattice(args...){}
+  Direct(Lattice lat): Lattice(lat){}
   //! Return the inverse Reciprocal lattice
   Reciprocal star() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
@@ -247,8 +247,8 @@ class and defines new versions of some methods.
 */
 class Reciprocal: public Lattice{
 public:
-  template<class ...Types> Reciprocal(Types ... args): Lattice(args...){};
-  Reciprocal(Lattice lat): Lattice(lat){};
+  template<class ...Types> Reciprocal(Types ... args): Lattice(args...){}
+  Reciprocal(Lattice lat): Lattice(lat){}
   //! Return the inverse Direct lattice
   Direct star() const;
   //! Return the Busing-Levey B matrix http://dx.doi.org/10.1107/S0365110X67000970

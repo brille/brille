@@ -43,7 +43,7 @@ template<typename T,typename R> double same_lattice_dot(const R* x, const T* y, 
 //   return out;
 // }
 
-// cross
+// cross (LatVec × LatVec)
 template<class T, class R, template<class> class L,
          typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type
         >
@@ -58,7 +58,8 @@ L<double> cross(const L<T>& a, const L<R>& b) {
   tmp *= lat.get_volume()/2.0/PI;
   return tmp.star();
 }
-// dot
+
+// dot [LatVec ⋅ LatVec]
 template<class T, class R, template<class> class L1, template<class> class L2,
          typename=typename std::enable_if<std::is_base_of<LatVec,L1<T>>::value>::type,
          typename=typename std::enable_if<std::is_base_of<LatVec,L2<R>>::value>::type
@@ -90,6 +91,7 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
   }
   return out;
 }
+
 // // [LatVec] norm
 // template<class T, template<class> class L,
 //          typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type

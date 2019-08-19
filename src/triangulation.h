@@ -6,7 +6,7 @@
 #include <array>
 #include <cassert>
 // Tetgen header
-#include "tetgen/tetgen.h"
+#include "tetgen.h"
 // debugging output
 #include "debug.h"
 
@@ -20,12 +20,12 @@ class TetrahedralTriangulation{
   std::vector<std::vector<size_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<size_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
 public:
-  size_t number_of_vertices(void) const {return nVertices;};
-  size_t number_of_tetrahedra(void) const {return nTetrahedra;};
-  const ArrayVector<double>& get_vertex_positions(void) const {return vertex_positions;};
-  const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;};
+  size_t number_of_vertices(void) const {return nVertices;}
+  size_t number_of_tetrahedra(void) const {return nTetrahedra;}
+  const ArrayVector<double>& get_vertex_positions(void) const {return vertex_positions;}
+  const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
-  TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){};
+  TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
   TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
     nVertices = static_cast<size_t>(tgio.numberofpoints);
     nTetrahedra = static_cast<size_t>(tgio.numberoftetrahedra);
@@ -131,7 +131,7 @@ public:
     }
     type = OUTSIDE_CONVEX_HULL;
     return 0;
-  };
+  }
   // Make a new locator which slots into the interpolation routine more easily
   std::vector<size_t> locate_for_interpolation(const ArrayVector<double>& x) const {
     if (x.numel()!=3u && x.size()!=1u){
@@ -165,7 +165,7 @@ public:
         throw std::logic_error("Intentionally unreachable switch statement..");
     }
     return vert_idx;
-  };
+  }
   /* If the following function is more useful than the preceeding, it could be
      advantageous to replicate the above code in this function's for loop.    */
   std::vector<std::vector<size_t>> locate_all_for_interpolation(const ArrayVector<double>& x) const {

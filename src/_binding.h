@@ -203,8 +203,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     Reciprocal lat = b.get_lattice();
     LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
 
-    int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
     // perform the interpolation and rotate and vectors/tensors afterwards
+    int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
     ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads);
     // and then make sure we return an numpy array of appropriate size:
     std::vector<ssize_t> outshape;
@@ -247,10 +247,10 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     py::buffer_info mi = pyM.request();
     if ( mi.ndim != 1u )
       throw std::runtime_error("debey_waller requires masses as a 1-D vector.");
-    size_t span = mi.strides[0]/sizeof(double);
+    size_t span = static_cast<size_t>(mi.strides[0])/sizeof(double);
     std::vector<double> masses(mi.shape[0]);
     double * mass_ptr = (double*) mi.ptr;
-    for (size_t i=0; i<mi.shape[0]; ++i) masses.push_back(mass_ptr[i*span]);
+    for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
     return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
   }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"));
 }
@@ -358,12 +358,14 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def_property("map",
       /*get map*/ [](Class& cobj){
         std::vector<ssize_t> shape(3); // the map is 3D
-        shape[0] = cobj.size(0);
-        shape[1] = cobj.size(1);
-        shape[2] = cobj.size(2);
+        size_t expected = 1u;
+        for (size_t i=0; i<3u; ++i){
+          shape[i] = cobj.size(i);
+          expected *= cobj.size(i);
+        }
         auto np = py::array_t<slong,py::array::c_style>(shape);
         size_t nret = cobj.unsafe_get_map( (slong*)np.request().ptr );
-        if (nret != shape[0]*shape[1]*shape[2])
+        if (nret != expected)
           // I guess nret is smaller, otherwise we probably already encountered a segfault
           throw std::runtime_error("Something has gone horribly wrong with getting the map.");
         return np;
@@ -371,9 +373,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       /*set map*/ [](Class& cobj, py::array_t<slong> pymap){
         py::buffer_info bi = pymap.request();
         if (bi.ndim != 3) throw std::runtime_error("The mapping must be a 3 dimensional array");
-        for (size_t i=0; i<3; ++i) if (bi.shape[i]!=cobj.size(i))
+        for (size_t i=0; i<3; ++i) if (bi.shape[i]<0 || static_cast<size_t>(bi.shape[i])!=cobj.size(i))
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
-        for (size_t i=0; i<3; ++i) if (bi.strides[i]!=cobj.stride(i))
+        for (size_t i=0; i<3; ++i) if (bi.strides[i]<0 || static_cast<size_t>(bi.strides[i])!=cobj.stride(i))
           throw std::runtime_error("The new map strides must match the old map");
         if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
@@ -535,10 +537,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       py::buffer_info mi = pyM.request();
       if ( mi.ndim != 1u )
         throw std::runtime_error("debey_waller requires masses as a 1-D vector.");
-      size_t span = mi.strides[0]/sizeof(double);
+      size_t span = static_cast<size_t>(mi.strides[0])/sizeof(double);
       std::vector<double> masses(mi.shape[0]);
       double * mass_ptr = (double*) mi.ptr;
-      for (size_t i=0; i<mi.shape[0]; ++i) masses.push_back(mass_ptr[i*span]);
+      for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
       return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
     }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"));
 }
@@ -604,10 +606,14 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     .def_property("map",
       /*get map*/ [](Class& cobj){
         std::vector<ssize_t> shape(4); // the map is 4D
-        for (int i=0; i<4; i++) shape[i] = cobj.size(i);
+        size_t expected = 1u;
+        for (size_t i=0; i<4u; ++i){
+          shape[i] = cobj.size(i);
+          expected *= cobj.size(i);
+        }
         auto np = py::array_t<slong,py::array::c_style>(shape);
         size_t nret = cobj.unsafe_get_map( (slong*)np.request().ptr );
-        if (nret != shape[0]*shape[1]*shape[2]*shape[3])
+        if (nret != expected)
           // I guess nret is smaller, otherwise we probably already encountered a segfault
           throw std::runtime_error("Something has gone horribly wrong with getting the map.");
         return np;
@@ -615,9 +621,9 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       /*set map*/ [](Class& cobj, py::array_t<slong,py::array::c_style> pymap){
         py::buffer_info bi = pymap.request();
         if (bi.ndim != 4) throw std::runtime_error("The mapping must be a 4 dimensional array");
-        for (size_t i=0; i<4; ++i) if (bi.shape[i]!=cobj.size(i))
+        for (size_t i=0; i<4; ++i) if (bi.shape[i]<0 || static_cast<size_t>(bi.shape[i])!=cobj.size(i))
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
-        for (size_t i=0; i<4; ++i) if (bi.strides[i]!=cobj.stride(i))
+        for (size_t i=0; i<4; ++i) if (bi.strides[i]<0 || static_cast<size_t>(bi.strides[i])!=cobj.stride(i))
           throw std::runtime_error("The new map strides must match the old map");
         if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");

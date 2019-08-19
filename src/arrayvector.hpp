@@ -525,7 +525,7 @@ bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::ar
   for (size_t k=0; k<n; ++k)
   if (!approx_scalar(this->getvalue(i,k), intermediate[k])) same = false;
   return same;
-};
+}
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{
   ArrayVector<int> out(this->numel(),this->size());
@@ -620,6 +620,20 @@ template<class T, template<class> class A,
 A<T> unique(A<T>& source){
   ArrayVector<bool> uniquesorce = source.is_unique();
   return extract(source, uniquesorce);
+}
+
+// cross (ArrayVector × ArrayVector)
+template<class T, class R, template<class> class A,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value&&!std::is_base_of<LatVec,A<T>>::value>::type,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
+         class S=typename std::common_type<T,R>::type >
+A<S> cross(const A<T>& a, const A<R>& b) {
+  AVSizeInfo si = a.consistency_check(b);
+  if (si.m!=3u) throw std::domain_error("cross product is only defined for three vectors");
+  A<S> tmp( 3u, si.n);
+  for (size_t i=0; i<si.n; i++)
+    vector_cross<S,T,R,3>(tmp.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
+  return tmp;
 }
 
 template<class T, class R, template<class> class A,

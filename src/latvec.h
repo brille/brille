@@ -28,7 +28,7 @@ template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
   Direct lattice;
 public:
   //! Default constructor, enforces that 3-vectors are held
-  LDVec(const Direct lat=Direct(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
+  LDVec(const Direct lat=Direct(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
   //! Constructor taking a possibly non-contigous and/or non-row-ordered input
   template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
   LDVec(const Direct lat,
@@ -37,16 +37,16 @@ public:
         const std::vector<Integer>& strides,
         const int flag=1): ArrayVector<T>(d,shape,strides), lattice(lat){
     this->check_arrayvector(flag);
-  };
+  }
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
-  LDVec(const Direct lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); };
+  LDVec(const Direct lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
-  template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
+  template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
-  template<class R> LDVec(const Direct lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){};
+  template<class R> LDVec(const Direct lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
-  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {};
+  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {}
   //! Assignment operator reusing data if we can
   LDVec<T>& operator=(const LDVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;
@@ -62,7 +62,7 @@ public:
           this->data[i] = other.data[i];
     }
     return *this;
-  };
+  }
   //! Extract the 3-vector with index `i`
   const LDVec<T> operator[](const size_t i) const{
     bool isok = i < this->size();
@@ -71,15 +71,15 @@ public:
     return out;
   }
 
-  Direct get_lattice() const { return lattice; };
-  template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LQVec<R> *)    const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> *)    const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LDVec<R> &vec) const { return lattice.issame(vec.get_lattice()); };
-  template<typename R> bool samelattice(const LQVec<R> &)    const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> &)    const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  Direct get_lattice() const { return lattice; }
+  template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
   // extract overloads preserving lattice information
   //! Return the ith single-array LDVec
   LDVec<T> extract(const size_t i=0) const ;
@@ -113,7 +113,7 @@ public:
   //! Determine the scalar product between two vectors in the object
   double dot(const size_t i, const size_t j) const;
   //! Determine the absolute length of a vector in the object
-  double norm(const size_t i) const { return sqrt(this->dot(i,i)); };
+  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object
   LDVec<double> cross(const size_t i, const size_t j) const;
 
@@ -130,24 +130,24 @@ public:
   template<class R> AVSizeInfo consistency_check(const LDVec<R>& b) const {
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
     return this->ArrayVector<T>::consistency_check(b);
-  };
+  }
   //! Verify that a ArrayVector object is consistent for binary operations
   template<class R, template<class> class A,
     typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
     >
   AVSizeInfo consistency_check(const A<R>& b) const {
     return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
-  };
+  }
   //! Check whether a second LDVec is approximately the same as this object
-  template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+  template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); }
   //! Check whether two vectors in the object are approximately the same
-  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);}
   //! Round all elements using std::round
-  LDVec<int> round() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::round()); };
+  LDVec<int> round() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::round()); }
   //! Find the floor of all elements using std::floor
-  LDVec<int> floor() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::floor()); };
+  LDVec<int> floor() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::floor()); }
   //! Find the ceiling of all elements using std::ceil
-  LDVec<int> ceil() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::ceil()); };
+  LDVec<int> ceil() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::ceil()); }
 protected:
   void check_arrayvector(const int);
 };
@@ -162,7 +162,7 @@ template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
   Reciprocal lattice;
 public:
   //! Default constructor, enforces that 3-vectors are held
-  LQVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){};
+  LQVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
   //! Constructor taking a possibly non-contigous and/or non-row-ordered input
   template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
   LQVec(const Reciprocal lat, const T*d,
@@ -170,16 +170,16 @@ public:
         const std::vector<Integer>& strides,
         const int flag=1): ArrayVector<T>(d,shape,strides), lattice(lat){
     this->check_arrayvector(flag);
-  };
+  }
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
-  LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); };
+  LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
-  template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {};
+  template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
-  template<class R> LQVec(const Reciprocal lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){};
+  template<class R> LQVec(const Reciprocal lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
-  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {};
+  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {}
   //! Assignment operator reusing data if we can
   LQVec<T>& operator=(const LQVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;
@@ -195,7 +195,7 @@ public:
           this->data[i] = other.data[i];
     }
     return *this;
-  };
+  }
   //! Extract the 3-vector with index `i`
   const LQVec<T> operator[](const size_t i) const{
     bool isok = i < this->size();
@@ -204,15 +204,15 @@ public:
     return out;
   }
 
-  Reciprocal get_lattice() const { return lattice; };
-  template<typename R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LDVec<R> *)    const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> *)    const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); };
-  template<typename R> bool samelattice(const LQVec<R> &vec) const { return lattice.issame(vec.get_lattice()); };
-  template<typename R> bool samelattice(const LDVec<R> &)    const { return false; };
-  template<typename R> bool starlattice(const LQVec<R> &)    const { return false; };
-  template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); };
+  Reciprocal get_lattice() const { return lattice; }
+  template<typename R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
   // extract overloads preserving lattice information
   //! Return the ith single-array LQVec
   LQVec<T> extract(const size_t i=0) const ;
@@ -249,7 +249,7 @@ public:
   //! Determine the scalar product between two vectors in the object.
   double dot(const size_t i, const size_t j) const;
   //! Determine the absolute length of a vector in the object.
-  double norm(const size_t i) const { return sqrt(this->dot(i,i)); };
+  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object.
   LQVec<double> cross(const size_t i, const size_t j) const;
 
@@ -265,24 +265,24 @@ public:
   template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
     return this->ArrayVector<T>::consistency_check(b);
-  };
+  }
   //! Verify that an ArrayVector object is compatible for binary operations
   template<class R, template<class> class A,
     typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
     >
   AVSizeInfo consistency_check(const A<R>& b) const {
     return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
-  };
+  }
   //! Check whether a second LQVec is approximately the same as this object
-  template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); };
+  template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); }
   //! Check whether two vectors in the object are approximately the same.
-  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);};
+  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);}
   //! Round all elements using std::round
-  LQVec<int> round() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::round()); };
+  LQVec<int> round() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::round()); }
   //! Find the floor of all elements using std::floor
-  LQVec<int> floor() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::floor()); };
+  LQVec<int> floor() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::floor()); }
   //! Find the ceiling of all elements using std::ceil
-  LQVec<int> ceil() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::ceil()); };
+  LQVec<int> ceil() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::ceil()); }
 protected:
   void check_arrayvector(const int);
 };

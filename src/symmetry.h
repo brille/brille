@@ -17,10 +17,10 @@ template<class T> using Vectors = std::vector<Vector<T>>;
 //   Matrix<int> W;
 //   Vector<double> w;
 // public:
-//   Motion(): W({1,0,0, 0,1,0, 0,0,1}), w({0.,0.,0.}) {};
-//   Motion(const Matrix<int>& X): W(X), w({0.,0.,0.}) {};
-//   Motion(const Vector<double>& x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {};
-//   Motion(const Matrix<int>& X, const Vector<double>& x): W(X), w(x) {};
+//   Motion(): W({1,0,0, 0,1,0, 0,0,1}), w({0.,0.,0.}) {}
+//   Motion(const Matrix<int>& X): W(X), w({0.,0.,0.}) {}
+//   Motion(const Vector<double>& x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {}
+//   Motion(const Matrix<int>& X, const Vector<double>& x): W(X), w(x) {}
 //   Motion operator*(const Motion& m) const;
 //   template<class T, typename S/*=promotion stuff*/>
 //   Vector<S> operator*(const Vector<T>& x) const;
@@ -53,10 +53,10 @@ class Symmetry{
   Matrices<int> R;
   Vectors<double> T;
 public:
-  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n); };
-  const Matrices<int>&   getallr(void)               const { return this->R;  };
-  const Vectors<double>& getallt(void)               const { return this->T;  };
-  size_t                 size(void)                  const { return R.size(); };
+  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n); }
+  const Matrices<int>&   getallr(void)               const { return this->R;  }
+  const Vectors<double>& getallt(void)               const { return this->T;  }
+  size_t                 size(void)                  const { return R.size(); }
   size_t                 resize(const size_t i)                                ;
   size_t                 add(const int *r, const double *t)                    ;
   size_t                 add(const Matrix<int>&, const Vector<double>&)        ;
@@ -88,10 +88,10 @@ public:
 class PointSymmetry{
   Matrices<int> R;
 public:
-  PointSymmetry(size_t n=0): R(n) { R.resize(n);};
-  PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); };
-  const Matrices<int>& getall(void)                  const { return this->R;  };
-  size_t               size(void)                    const { return R.size(); };
+  PointSymmetry(size_t n=0): R(n) { R.resize(n);}
+  PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); }
+  const Matrices<int>& getall(void)                  const { return this->R;  }
+  size_t               size(void)                    const { return R.size(); }
   size_t               resize(const size_t newsize)                            ;
   size_t               add(const int *r)                                       ;
   size_t               add(const Matrix<int>&)                                 ;

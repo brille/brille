@@ -1,12 +1,3 @@
-static size_t number_of_polyhedra_to_check(size_t n){
-  size_t total=0u, partial=1u;
-  for (size_t i=0; i<n; ++i){
-    total += partial;
-    partial *= n-i;
-    partial /= i+1;
-  }
-  return total;
-}
 template<class T>
 static bool next_set(const std::vector<std::vector<T>>& equiv, std::vector<size_t>& idx, std::vector<T>& set){
   bool goon = true;
@@ -102,11 +93,16 @@ void BrillouinZone::wedge_brute_force(void){
   debug_exec(size_t total_checks = 0;)
   double check_volume=-1;
   size_t Ndistinct = sym_equiv_idx.size(), count = 0;
+  // sym_equiv_idx is sorted longest to shortest. Any singleton distinct
+  // symmetry points are at the end. We should avoid trying to modify their
+  // special indexes.
+  size_t singleton = 0;
+  for (auto x: sym_equiv_idx) if (x.size()<2) ++singleton;
   size_t expected = (Ndistinct*(Ndistinct-1))>>1;
   LQVec<double> symplanes(this->outerlattice, expected);
   LQVec<double> normals(this->outerlattice, 0u);
   // indexing for the Ndistinct symmetry-distinct points
-  std::vector<size_t> distinct_idx(Ndistinct,0u);
+  std::vector<size_t> distinct_idx(Ndistinct-singleton,0u);
   std::vector<size_t> special_idx;
   for (auto x: sym_equiv_idx) special_idx.push_back(x[0]);
 
@@ -133,7 +129,7 @@ void BrillouinZone::wedge_brute_force(void){
     if (approx_scalar(check_volume, volume_goal)) break;
   }
 
-  
+
   // reset special_idx (this shouldn't be necessary, since we overflow back to this condition)
   special_idx.clear();
   for (auto x: sym_equiv_idx) special_idx.push_back(x[0]);

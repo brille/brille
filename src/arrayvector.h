@@ -112,7 +112,7 @@ public:
         } // end if not row-ordered and contiguous
       } // end if input data is not null and N*M>0
     } // end if shape and strides contain equal number of elements
-  };
+  }
   /*! Type converting ArrayVector constructor
       @param m the number of elements within each array
       @param n the number of arrays in the ArrayVector
@@ -135,7 +135,7 @@ public:
       data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) data[i] = d[i];
     }
-  };
+  }
   //! Constructor from std::vector<std::array<T,N>>
   template<class R, size_t Nel> ArrayVector(const std::vector<std::array<R,Nel>>& va):
   M(Nel), N(va.size()), data(nullptr){
@@ -154,7 +154,7 @@ public:
       data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) data[i] = static_cast<T>(d[i]);
     }
-  };
+  }
   // Assignment operator
   ArrayVector<T>& operator=(const ArrayVector<T>& other){
     if ( this != &other ){ // avoid self-assignment
@@ -169,7 +169,7 @@ public:
           this->data[i] = other.data[i];
     }
     return *this;
-  };
+  }
   ArrayVector<T> operator[](const size_t i) const{
     bool isok = i < this->size();
     ArrayVector<T> out(this->numel(), isok ? 1u: 0u);
@@ -286,7 +286,7 @@ public:
      to_string(i,10u) implicitly, since '\n' is char(10). If i≠10 such a case
      would give unexpected results. One could ensure that to_string(i, "\n") was
      used instead, but it is probably unrealistic to do so.*/
-  std::string to_string(const size_t i, const char e) const { return this->to_string(i, std::string(e));};
+  std::string to_string(const size_t i, const char e) const { return this->to_string(i, std::string(e));}
   /*! Return a subset of the contents of the ArrayVector as a std::string
     @param first The index of the first array to convert
     @param last The index of the last array to convert
@@ -382,7 +382,7 @@ public:
     }
     si.aorb = true; // this doesn't matter here but will later
     return si;
-  };
+  }
   /*! Truncate the arrays by removing elements
     @param from the first element which will be removed from each array
     @param to the last element which will be removed from each array
@@ -417,7 +417,7 @@ public:
        return 2;
     }
     return 1;
-  };
+  }
   /*! Add extra elements to each array
     @param ntoadd how many elements should be added
     @param valtoadd the value which each new element is set to (default=0)
@@ -434,7 +434,7 @@ public:
     this->M = newM;
     this->data = newdata;
     return 0;
-  };
+  }
 
   ArrayVector<T> operator -() const;
 

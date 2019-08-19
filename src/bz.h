@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "polyhedron.h"
 #include "debug.h"
+// #include "voro++.hh"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -41,7 +42,18 @@ public:
     this->lattice = toprim ? lat.primitive() : lat;
     this->is_primitive = !(this->lattice.issame(this->outerlattice));
     this->has_inversion = this->time_reversal || lat.has_space_inversion();
-    this->vertex_search(extent);
+
+
+    double old_volume = -1.0, new_volume=0.0;
+    int test_extent = extent-1;
+    // initial test_extent based on spacegroup or pointgroup?
+    while (old_volume != new_volume){
+      old_volume = new_volume;
+      // this->vertex_search(++test_extent);
+      this->voro_search(++test_extent);
+      new_volume = this->polyhedron.get_volume();
+    }
+    status_update("First Brillouin zone found with volume ",new_volume," using extent ",test_extent);
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
@@ -196,6 +208,7 @@ public:
     which contribute to one or more vertex in the object.
   */
   void vertex_search(const int extent=1);
+  void voro_search(const int extent=1);
   // void vertex_search_xyz(const int extent=1);
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
   bool isprimitive(void) const {return this->is_primitive;};

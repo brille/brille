@@ -16,7 +16,7 @@ public:
       std::cout << fnc << std::endl;
     }
     this->inner_print(l...);
-  };
+  }
   template<typename... L> void println(const std::string& fnc, L... l){
     if (last_function.compare(fnc)){
       last_function = fnc;
@@ -24,20 +24,20 @@ public:
     }
     this->inner_print(l...);
     std::cout << std::endl;
-  };
+  }
 private:
   template<typename T, typename... L> void inner_print(const T& x, L... l){
     std::cout << std::to_string(x);
     this->inner_print(l...);
-  };
+  }
   template<typename... L> void inner_print(const std::string& x, L... l){
     std::cout << x;
     this->inner_print(l...);
-  };
+  }
   template<typename... L> void inner_print(const char* x, L... l){
     std::cout << x;
     this->inner_print(l...);
-  };
+  }
   void inner_print(void){};
 };
 

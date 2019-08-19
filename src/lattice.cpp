@@ -229,9 +229,12 @@ void Direct::get_lattice_matrix(double *latmat, const size_t c, const size_t r) 
   double zhat[3]={c1, (c0-c2*c1)/s2, this->unitvolume()/s2};
 
   for (int i=0;i<3;++i){
-    latmat[i*c+0*r] = this->len[0]*xhat[i];
-    latmat[i*c+1*r] = this->len[1]*yhat[i];
-    latmat[i*c+2*r] = this->len[2]*zhat[i];
+    // latmat[i*c+0*r] = this->len[0]*xhat[i];
+    // latmat[i*c+1*r] = this->len[1]*yhat[i];
+    // latmat[i*c+2*r] = this->len[2]*zhat[i];
+    latmat[0*c+i*r] = this->len[0]*xhat[i]; // ̂x direction, first row
+    latmat[1*c+i*r] = this->len[1]*yhat[i]; // ̂y direction, second row
+    latmat[2*c+i*r] = this->len[2]*zhat[i]; // ̂z direction, third row
   }
 }
 void Direct::get_xyz_transform(double* fromxyz) const{
@@ -297,21 +300,18 @@ void Reciprocal::get_B_matrix(double *B, const size_t c, const size_t r) const {
   if (asb<0) asb*=-1.0;
   asg = sin(this->get_gamma());
   if (asg<0) asg*=-1.0;
-
   // Be careful about indexing B. Make sure each vector goes in as a column, not a row!
   // if you mix this up, you'll only notice for non-orthogonal space groups
 
-  // a-star along x -- first column = [0,3,6] in C ([0,1,2] in MATLAB)
+  // a-star along x -- first column (constant row index = 0)
   B[0*c+0*r] = this->get_a();
   B[1*c+0*r] = 0.0;
   B[2*c+0*r] = 0.0;
-
-  // b-star in the x-y plane -- second column = [1,4,7] in C ([3,4,5] in MATLAB)
+  // b-star in the x-y plane -- second column
   B[0*c+1*r] = this->get_b()*cos(this->get_gamma());
   B[1*c+1*r] = this->get_b()*asg;
   B[2*c+1*r] = 0.0;
-
-  // and c-star -- third column = [2,5,8] in C ([6,7,8] in MATLAB)
+  // and c-star -- third column
   B[0*c+2*r] = this->get_c()*cos(this->get_beta());
   B[1*c+2*r] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
   B[2*c+2*r] = 2*PI/d.get_c();

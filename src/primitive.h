@@ -38,13 +38,13 @@ private:
   std::array<double,9> c2p; //!< The matrix taking centred lattice to the primitive lattice
   std::array<int   ,9> p2c; //!< The inverse matrix taking the primitive lattice to the centred lattice
 public:
-  PrimitiveTransform(const Bravais c): bravais{c} { set_matrices(); };
-  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); };
+  PrimitiveTransform(const Bravais c): bravais{c} { set_matrices(); }
+  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); }
   PrimitiveTransform(const int hall){
     Spacegroup s(hall);
     bravais = s.bravais;
     set_matrices();
-  };
+  }
   void set_matrices(void) {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring"); break;
@@ -56,11 +56,11 @@ public:
       case Bravais::R: c2p=P_R_TRANSFORM; p2c=R_P_TRANSFORM; break;
               default: c2p=P_P_TRANSFORM; p2c=P_P_INVTRNFRM;
     }
-  };
-  // const double* get_to_primitive_ptr()   const { return c2p.data(); };
-  // const int* get_from_primitive_ptr() const { return p2c.data(); };
-  std::array<double,9> get_to_primitive() const { return c2p; };
-  std::array<int,9> get_from_primitive() const { return p2c; };
+  }
+  // const double* get_to_primitive_ptr()   const { return c2p.data(); }
+  // const int* get_from_primitive_ptr() const { return p2c.data(); }
+  std::array<double,9> get_to_primitive() const { return c2p; }
+  std::array<int,9> get_from_primitive() const { return p2c; }
   //
   void print(){
     for (int i=0; i<3; ++i){
@@ -70,15 +70,15 @@ public:
       for (int j=0; j<3; ++j) printf(" % 2d",p2c[i*3+j]);
       printf("\n");
     }
-  };
+  }
   //! A check if the Matrices *should* do anything, that *is not* if the centering is Primitive
-  bool does_anything() const { return (bravais!=Bravais::P);};
+  bool does_anything() const { return (bravais!=Bravais::P);}
   //! A check if the Matrices *shouldn't* do anything, that *is* if the centering is Primitive
-  bool does_nothing() const { return (bravais==Bravais::P);};
+  bool does_nothing() const { return (bravais==Bravais::P);}
   std::string string_repr() const {
     std::string repr = "<" + bravais_string(bravais) + " PrimitiveTransform object>";
     return repr;
-  };
+  }
 };
 
 

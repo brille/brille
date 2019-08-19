@@ -58,7 +58,7 @@ template<typename T> template<typename R> unsigned int Mesh3<T>::check_before_in
   if (x.numel()!=3u)
     throw std::runtime_error("Mesh3 requires x values which are three-vectors.");
   return mask;
-};
+}
 //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
 template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_at(const ArrayVector<R>& x) const{
   this->check_before_interpolating(x);

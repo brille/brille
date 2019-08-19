@@ -36,14 +36,14 @@ public:
         elements({0,0,0,0}),
         branches(0) {
     this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points);
-  };
+  }
   Mesh3(const Mesh3<T>& other){
     this->mesh = other.mesh;
     this->data = other.data;
     this->shape= other.shape;
     this->elements = other.elements;
     this->branches = other.branches;
-  };
+  }
   Mesh3<T>& operator=(const Mesh3<T>& other){
     this->mesh = other.mesh;
     this->data = other.data;
@@ -51,21 +51,21 @@ public:
     this->elements = other.elements;
     this->branches = other.branches;
     return *this;
-  };
+  }
   //! Return the number of mesh vertices
-  size_t size() const { return this->mesh.number_of_vertices(); };
+  size_t size() const { return this->mesh.number_of_vertices(); }
   //! Return the positions of all vertices in the mesh
-  const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); };
+  const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
   //! Return the tetrahedron indices of the mesh
-  const ArrayVector<size_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();};
+  const ArrayVector<size_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
   //! Return a constant reference to the data ArrayVector
-  const ArrayVector<T>& get_data() const { return this->data; };
+  const ArrayVector<T>& get_data() const { return this->data; }
   //! Return the number of dimensions of each array in the `data` ArrayVector
-  size_t data_ndim(void) const {return this->shape.size();};
+  size_t data_ndim(void) const {return this->shape.size();}
   //! Return the number of arrays in the `data` ArrayVector
-  size_t num_data(void) const {return this->data.size();};
+  size_t num_data(void) const {return this->data.size();}
   //! Return the `shape` ArrayVector containing information about the arrays in the `data` ArrayVector
-  ArrayVector<size_t> data_shape(void) const {return this->shape;};
+  ArrayVector<size_t> data_shape(void) const {return this->shape;}
   /*! \brief Sum over the data array
 
   Either add together the elements of the array stored at each mapped point
@@ -75,7 +75,7 @@ public:
   @returns An ArrayVector with `numel()==1` for `axis=0` or `size()==1` for
   `axis=1`
   */
-  ArrayVector<T> sum_data(const int axis) const{return this->data.sum(axis);};
+  ArrayVector<T> sum_data(const int axis) const{return this->data.sum(axis);}
 
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
@@ -120,7 +120,7 @@ public:
   //! Perform sanity checks before attempting to interpolate
   template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x) const;
   //! Perform linear interpolation at the specified Reciprocal lattice points
-  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());};
+  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());}
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
   template<typename R> ArrayVector<T> interpolate_at(const ArrayVector<R>& x) const;
 private:

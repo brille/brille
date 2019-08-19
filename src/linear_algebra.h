@@ -59,9 +59,9 @@ template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const si
 template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const S* B);
 template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const std::complex<S>* B);
 // specializations for matrix*matrix, matrix*vector, and vector*matrix
-template<class T, class R, class S> void mul_mat_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, n, A, B);};
-template<class T, class R, class S> void mul_mat_vec(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, 1, A, B);};
-template<class T, class R, class S> void mul_vec_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, 1, n, n, A, B);};
+template<class T, class R, class S> void mul_mat_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, n, A, B);}
+template<class T, class R, class S> void mul_mat_vec(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, 1, A, B);}
+template<class T, class R, class S> void mul_vec_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, 1, n, n, A, B);}
 
 //! array element-wise addition
 template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B);

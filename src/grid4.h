@@ -27,11 +27,11 @@ protected:
 public:
   // constructors
   MapGrid4(const size_t *n=default_n4): map(nullptr), data(0,0), shape(1,0)
-    { this->set_size(n); };
+    { this->set_size(n); }
   MapGrid4(const size_t *n, const ArrayVector<T>& av): map(nullptr)
-    { this->set_size(n); this->replace_data(av); };
+    { this->set_size(n); this->replace_data(av); }
   MapGrid4(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr)
-    { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,4u); };
+    { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,4u); }
   // copy constructor
   MapGrid4(const MapGrid4<T>& other): map(nullptr) {
     this->resize(other.size(0),other.size(1),other.size(2),other.size(3)); // sets N, calculates span, frees/allocates map memory if necessary
@@ -42,7 +42,7 @@ public:
   // destructor
   ~MapGrid4(){
     if ( numel()>0 && map!=nullptr) delete[] map;
-  }; // everything else is handled by itself
+  } // everything else is handled by itself
   // Copy constructor:
   // Assignment operator:
   MapGrid4<T>& operator=(const MapGrid4<T> &other){
@@ -53,7 +53,7 @@ public:
       this->shape= other.shape;
     }
     return *this;
-  };
+  }
   //! Print the number of points along each axis to the console
   void print_N(const bool nl=false) const;
   //! Print the span along each axis to the console
@@ -145,7 +145,7 @@ public:
   */
   ArrayVector<T> sum_data(const int axis) const{
     return this->data.sum(axis);
-  };
+  }
 protected:
   void set_size(const size_t *n);
   void calc_span();
@@ -167,13 +167,13 @@ template<class T> class InterpolateGrid4: public MapGrid4<T>{
   double zero[4]; //!< the 4-vector position of `map[0]`
   double step[4]; //!< the step size along each direction of the grid
 public:
-  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n) { this->set_zero(z); this->set_step(s); };
-  InterpolateGrid4(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n) { this->set_zero(z); this->set_step(s); }
+  InterpolateGrid4(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,av){ this->set_zero(z); this->set_step(s); }
+  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); }
 
 
-  void set_zero(const double *newzero){ for(int i=0;i<4;i++) this->zero[i] = newzero[i]; };
-  void set_step(const double *newstep){ for(int i=0;i<4;i++) this->step[i] = newstep[i]; };
+  void set_zero(const double *newzero){ for(int i=0;i<4;i++) this->zero[i] = newzero[i]; }
+  void set_step(const double *newstep){ for(int i=0;i<4;i++) this->step[i] = newstep[i]; }
 
   //! Return the first three components of the positions of all grid points
   ArrayVector<double> get_grid_xyz() const {
@@ -191,7 +191,7 @@ public:
             xyz.insert( z2+s2*k, cnt++,2);
           }
     return xyz;
-  };
+  }
   //! Return all four components of the positions of all grid points
   ArrayVector<double> get_grid_xyzw() const {
     ArrayVector<double> xyzw(4u,this->numel());
@@ -209,7 +209,7 @@ public:
             xyzw.insert( z3+s3*l, cnt++,3);
           }
     return xyzw;
-  };
+  }
   //! Return the first three components of the positions of all mapped grid points
   ArrayVector<double> get_mapped_xyz() const {
     ArrayVector<double> xyz(3u,this->valid_mapping_count());
@@ -228,7 +228,7 @@ public:
             }
           }
     return xyz;
-  };
+  }
   //! Return all four components of the positions of all mapped grid points
   ArrayVector<double> get_mapped_xyzw() const {
     ArrayVector<double> xyzw(4u,this->valid_mapping_count());
@@ -248,35 +248,35 @@ public:
             }
           }
     return xyzw;
-  };
+  }
   //! Return an ArrayVector of the grid coordinates along its first dimension
   ArrayVector<double> get_grid_x() const {
     ArrayVector<double> x(1u,this->size(0));
     double s0=this->step[0], z0=this->zero[0];
     for (size_t i=0; i<x.size(); i++) x.insert( z0+s0*i, i);
     return x;
-  };
+  }
   //! Return an ArrayVector of the grid coordinates along its second dimension
   ArrayVector<double> get_grid_y() const {
     ArrayVector<double> y(1u,this->size(1));
     double s1=this->step[1], z1=this->zero[1];
     for (size_t j=0; j<y.size(); j++) y.insert( z1+s1*j, j);
     return y;
-  };
+  }
   //! Return an ArrayVector of the grid coordinates along its third dimension
   ArrayVector<double> get_grid_z() const {
     ArrayVector<double> z(1u,this->size(2));
     double s2=this->step[2], z2=this->zero[2];
     for (size_t k=0; k<z.size(); k++) z.insert( z2+s2*k, k);
     return z;
-  };
+  }
   //! Return an ArrayVector of the grid coordinates along its fourth dimension
   ArrayVector<double> get_grid_w() const {
     ArrayVector<double> w(1u,this->size(3));
     double s3=this->step[3], z3=this->zero[3];
     for (size_t l=0; l<w.size(); l++) w.insert( z3+s3*l, l);
     return w;
-  };
+  }
   /*! Find the subscripted indices of the closest grid point to a specified position
   @param x The test position
   @param[out] ijkl A storage location for the subscripted indices
@@ -311,7 +311,7 @@ public:
       ijkl[i] = (size_t)(tmp);
     }
     return out;
-  };
+  }
   //! Perform sanity checks before attempting to interpolate
   template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
     if (this->size(0)<2||this->size(1)<2||this->size(2)<2||this->size(3)<2)
@@ -321,7 +321,7 @@ public:
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid4 requires x values which are three-vectors.");
     return 0;
-  };
+  }
   /*! Perform linear interpolation at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
   @returns An ArrayVector of the itnerpolated values
@@ -390,7 +390,7 @@ public:
       unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
-  };
+  }
   /*! Perform linear interpolation in parallel at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
   @returns An ArrayVector of the itnerpolated values
@@ -461,7 +461,7 @@ public:
       unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
     }
     return out;
-  };
+  }
   /*! Get the size information about the first three components of the grid,
       suitable for use in creating an idential object.
       @returns An ArrayVector with three 1-element arrays containing (N[0:2]-1)/2
@@ -469,7 +469,7 @@ public:
   ArrayVector<size_t> get_halfN(void) const {
     ArrayVector<size_t> out(1u,3u,this->N); // this is the Q part of N
     return (out-1)/2; // and we want just half of it
-  };
+  }
   /*! Get the fourth-dimension specification of the grid,
       suitable for use in creating an identical object.
       @returns an ArrayVector with three 1-element arrays containing {zero[3],step[3],zero[3]+(N[3]-1)*step[3]}
@@ -481,7 +481,7 @@ public:
     spec[2] = this->zero[3] + this->step[3] * (double)(this->size(3)-1);
     ArrayVector<double> out(1u,3u,spec);
     return out;
-  };
+  }
 protected:
   /*! Determine the neighbouring grid points of a given grid linear index
   @param centre The linear index to a point in the mapping grid
@@ -526,7 +526,7 @@ protected:
     }
     if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
     return neighbours;
-  };
+  }
 };
 
 #include "grid4.hpp"

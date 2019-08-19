@@ -38,13 +38,13 @@ public:
   // constructors
   MapGrid3(const size_t *n=default_n): map(nullptr), data(0,0), shape(1,0),
     elements({0,0,0,0}), branches(0)
-    { this->set_size(n); };
+    { this->set_size(n); }
   MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr),
     elements({0,0,0,0}), branches(0)
-    { this->set_size(n); this->replace_data(av); };
+    { this->set_size(n); this->replace_data(av); }
   MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr),
     elements({0,0,0,0}), branches(0)
-    { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); };
+    { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); }
   // copy constructor
   MapGrid3(const MapGrid3<T>& other): map(nullptr) {
     this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
@@ -57,7 +57,7 @@ public:
   // destructor
   ~MapGrid3(){
     if ( numel()>0 && map!=nullptr) delete[] map;
-  }; // everything else is handled by itself
+  } // everything else is handled by itself
   // Copy constructor:
   // Assignment operator:
   MapGrid3<T>& operator=(const MapGrid3<T> &other){
@@ -70,7 +70,7 @@ public:
       this->shape= other.shape;
     }
     return *this;
-  };
+  }
   //! Print the number of points along each axis to the console
   void print_N(const bool nl=false) const;
   //! Print the span along each axis to the console
@@ -376,7 +376,7 @@ public:
   */
   ArrayVector<T> sum_data(const int axis) const{
     return this->data.sum(axis);
-  };
+  }
   template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
   ArrayVector<S> debye_waller_sum(const LQVec<R>& Q, const R beta) const;
   template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
@@ -409,13 +409,13 @@ template<class T> class InterpolateGrid3: public MapGrid3<T>{
   double zero[3]; //!< the 3-vector position of `map[0]`
   double step[3]; //!< the step size along each direction of the grid
 public:
-  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n) { this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,av){ this->set_zero(z); this->set_step(s); };
-  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); };
+  InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n) { this->set_zero(z); this->set_step(s); }
+  InterpolateGrid3(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,av){ this->set_zero(z); this->set_step(s); }
+  InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); }
 
 
-  void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; };
-  void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; };
+  void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; }
+  void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; }
 
   /*! \brief Return the positions of all grid points
   @param maxN the maximum number of grid points which can be stored in `xyz`
@@ -436,7 +436,7 @@ public:
           cnt++;
         }
     return cnt;
-  };
+  }
   /*! \brief Return the x coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `x`
   @param[out] x A location to store the x values
@@ -448,7 +448,7 @@ public:
     double s0=this->step[0], z0=this->zero[0];
     for (size_t i=0; i<this->size(0); i++) x[ cnt++ ] = z0 + s0*i;
     return cnt;
-  };
+  }
   /*! \brief Return the y coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `y`
   @param[out] y A location to store the y values
@@ -460,7 +460,7 @@ public:
     double s1=this->step[1], z1=this->zero[1];
     for (size_t j=0; j<this->size(1); j++) y[ cnt++ ] = z1 + s1*j;
     return cnt;
-  };
+  }
   /*! \brief Return the z coordiates of the grid points
   @param maxN the maximum number of values which can be stored in `z`
   @param[out] z A location to store the z values
@@ -472,7 +472,7 @@ public:
     double s2=this->step[2], z2=this->zero[2];
     for (size_t k=0; k<this->size(2); k++) z[ cnt++ ] = z2 + s2*k;
     return cnt;
-  };
+  }
   //! Return an ArrayVector of the coordinates for all grid points
   ArrayVector<double> get_grid_xyz() const {
     ArrayVector<double> xyz(3u,this->numel());
@@ -487,7 +487,7 @@ public:
           xyz.insert( z2+s2*k, cnt++,2);
         }
     return xyz;
-  };
+  }
   //! Return an ArrayVector of the coordinates for all mapped grid points
   ArrayVector<double> get_mapped_xyz() const {
     ArrayVector<double> xyz(3u,this->valid_mapping_count());
@@ -506,28 +506,28 @@ public:
           }
         }
     return xyz;
-  };
+  }
   //! Return an ArrayVector of the grid x coordinates
   ArrayVector<double> get_grid_x() const {
     ArrayVector<double> x(1u,this->size(0));
     double s0=this->step[0], z0=this->zero[0];
     for (size_t i=0; i<x.size(); i++) x.insert( z0+s0*i, i);
     return x;
-  };
+  }
   //! Return an ArrayVector of the grid y coordinates
   ArrayVector<double> get_grid_y() const {
     ArrayVector<double> y(1u,this->size(1));
     double s1=this->step[1], z1=this->zero[1];
     for (size_t j=0; j<y.size(); j++) y.insert( z1+s1*j, j);
     return y;
-  };
+  }
   //! Return an ArrayVector of the grid z coordinates
   ArrayVector<double> get_grid_z() const {
     ArrayVector<double> z(1u,this->size(2));
     double s2=this->step[2], z2=this->zero[2];
     for (size_t k=0; k<z.size(); k++) z.insert( z2+s2*k, k);
     return z;
-  };
+  }
   /*! Find the subscripted indices of the closest grid point to a specified position
   @param x The test position
   @param[out] ijk A storage location for the subscripted indices
@@ -567,7 +567,7 @@ public:
       ijk[i] = (size_t)(tmp);
     }
     return out;
-  };
+  }
   /*! Find the subscripted indices of the grid point to a specified position
       which is smaller than the position in all coordinates.
   @param x The test position
@@ -608,7 +608,7 @@ public:
       ijk[i] = (size_t)(tmp);
     }
     return out;
-  };
+  }
   //! Perform sanity checks before attempting to interpolate
   template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x) const {
     unsigned int mask=0u;
@@ -714,7 +714,7 @@ public:
                             cnt,corners,weights,out,i);
     }
     return out;
-  };
+  }
   //! Perform linear interpolation in parallel at the specified points expressed in a Reciprocal lattice
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const LQVec<R>& x, const int threads) const {return this->parallel_linear_interpolate_at(x.get_xyz(),threads);}
   //! Perform linear interpolation in parallel at the specified points expressed in a Direct lattice
@@ -788,7 +788,7 @@ public:
                             cnt,corners,weights,out,i);
     }
     return out;
-  };
+  }
 };
 
 

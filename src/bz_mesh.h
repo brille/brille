@@ -20,9 +20,9 @@ public:
   */
   BrillouinZoneMesh3(const BrillouinZone bz, const double max_size_invA=-1., const double min_angle=20.0, const double max_angle=-1.0, const double max_ratio=-1., const int max_points=-1):
     Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
-    brillouinzone(bz) {};
+    brillouinzone(bz) {}
   // get the BrillouinZone object
-  BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;};
+  BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
   ArrayVector<T> get_mesh_hkl(void) const {
     ArrayVector<double> xyz = this->get_mesh_xyz();
@@ -33,7 +33,7 @@ public:
     ArrayVector<double> hkl(3,xyz.size());
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
-  };
+  }
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
@@ -46,11 +46,13 @@ public:
       throw std::runtime_error(msg);
     }
     ArrayVector<T> ir_result;
-    // if (nthreads > 1){ // change this to != 1?
+    if (nthreads > 1){ // change this to != 1?
+      std::cout << "bz_mesh::interpolate_at; parallel algorithm not yet implemented." << std::endl;
     //   ir_result = this->Mesh3<T>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads);
-    // } else {
       ir_result = this->Mesh3<T>::interpolate_at(ir_q.get_xyz());
-    // }
+    } else {
+      ir_result = this->Mesh3<T>::interpolate_at(ir_q.get_xyz());
+    }
 
     // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
     // the interpolation needs to be rotated.
@@ -106,7 +108,7 @@ public:
       }
     }
     return ir_result;
-  };
+  }
 };
 
 #endif // _BZ_MESH_

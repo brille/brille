@@ -10,13 +10,13 @@
 #include "transform.h"
 
 TEST_CASE("primitive transforms","[transform]"){
-  BravaisLetter c;
-  SECTION("Body centring"){ c = I; }
-  SECTION("All-face centring"){ c = F; }
-  SECTION("A-face centring"){ c = A; }
-  SECTION("B-face centring"){ c = B; }
-  SECTION("C-face centring"){ c = C; }
-  SECTION("Rhombohedral centring"){ c = R; }
+  Bravais c;
+  SECTION("Body centring"){         c = Bravais::I; }
+  SECTION("All-face centring"){     c = Bravais::F; }
+  SECTION("A-face centring"){       c = Bravais::A; }
+  SECTION("B-face centring"){       c = Bravais::B; }
+  SECTION("C-face centring"){       c = Bravais::C; }
+  SECTION("Rhombohedral centring"){ c = Bravais::R; }
   PrimitiveTransform PT(c);
   REQUIRE( !PT.does_nothing() );
   std::array<double,9> P = PT.get_to_primitive();
@@ -29,15 +29,9 @@ TEST_CASE("primitive transforms","[transform]"){
 
 TEST_CASE("primitive vector transforms","[transform]"){
   std::string spgr;
-  SECTION("Primitive spacegroup"){
-    spgr = "P 1";
-  }
-  SECTION("Body-centred spacegroup"){
-    spgr = "Im-3m";
-  }
-  SECTION("Face-centred spacegroup"){
-    spgr = "Fmm2";
-  }
+  SECTION("Primitive spacegroup"){    spgr = "P 1";   }
+  SECTION("Body-centred spacegroup"){ spgr = "Im-3m"; }
+  SECTION("Face-centred spacegroup"){ spgr = "Fmm2";  }
   Direct d(1,1,1,PI/2,PI/2,PI/2,spgr);
   Reciprocal r = d.star();
 
@@ -76,7 +70,6 @@ TEST_CASE("primitive vector transforms","[transform]"){
   //     REQUIRE( Vpxyz.getvalue(i,j) == Approx(Vxyz.getvalue(i,j)) );
   // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
   LDVec<double> pVp = transform_from_primitive(d,Vp);
-  // LQVec<double> pQp = transform_from_primitive(r,Qp);
   for (int i=0; i<nQ; ++i)
     for (int j=0; j<3; ++j)
       REQUIRE( pVp.getvalue(i,j) == Approx(V.getvalue(i,j)) );

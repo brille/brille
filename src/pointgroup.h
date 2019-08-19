@@ -53,10 +53,10 @@ public:
   Holohedry holohedry;
   Laue laue;
   // Initializers:
-  Pointgroup(): number(0), holohedry(Holohedry::_), laue(Laue::_){};
-  Pointgroup(const int no): number(no) {setup();};
+  Pointgroup(): number(0), holohedry(Holohedry::_), laue(Laue::_){}
+  Pointgroup(const int no): number(no) {setup();}
   Pointgroup(const int no, const std::string& sym, const std::string& sch, const Holohedry& h, const Laue& l):
-    number(no), symbol(sym), schoenflies(sch), holohedry(h), laue(l) {};
+    number(no), symbol(sym), schoenflies(sch), holohedry(h), laue(l) {}
   std::string to_string(void) const {
     std::string str = "<Pointgroup";
     str += " " + symbol;
@@ -65,13 +65,13 @@ public:
     str += " " + my_to_string(laue);
     return str+">";
   }
-  int get_number(void) const {return number;};
-  std::string get_symbol(void) const { return symbol; };
-  std::string get_schoenflies(void) const { return schoenflies; };
-  Holohedry get_holohedry(void) const { return holohedry; };
-  Laue get_laue(void) const { return laue; };
-  std::string get_holohedry_string(void) const { return my_to_string(holohedry); };
-  std::string get_laue_string(void) const { return my_to_string(laue); };
+  int get_number(void) const {return number;}
+  std::string get_symbol(void) const { return symbol; }
+  std::string get_schoenflies(void) const { return schoenflies; }
+  Holohedry get_holohedry(void) const { return holohedry; }
+  Laue get_laue(void) const { return laue; }
+  std::string get_holohedry_string(void) const { return my_to_string(holohedry); }
+  std::string get_laue_string(void) const { return my_to_string(laue); }
 protected:
   void setup(void);
 };

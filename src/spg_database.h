@@ -89,23 +89,23 @@ public:
   int pointgroup_number;
   int hall_number;
   // Initializers
-  Spacegroup(): number(0), bravais(Bravais::_), pointgroup_number(0), hall_number(0) {};
+  Spacegroup(): number(0), bravais(Bravais::_), pointgroup_number(0), hall_number(0) {}
   Spacegroup(int no, const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch, Bravais br, int pno):
     number(no), bravais(br), pointgroup_number(pno) {
       deal_with_strings(sf, hs, its, itf, ith, ch);
       set_hall_number();
-  };
-  Spacegroup(int _hall_number) { set_from_hall_number(_hall_number); };
+  }
+  Spacegroup(int _hall_number) { set_from_hall_number(_hall_number); }
   //
-  int get_hall_number(void) const { return this->hall_number; };
-  int get_international_table_number(void) const { return this->number; };
-  int get_pointgroup_number(void) const { return this->pointgroup_number; };
-  std::string get_schoenflies_symbol(void) const {return this->schoenflies; };
-  std::string get_hall_symbol(void) const {return this->hall_symbol; };
-  std::string get_international_table_symbol(void) const {return this->international; };
-  std::string get_international_table_full(void) const {return this->international_full; };
-  std::string get_international_table_short(void) const {return this->international_short; };
-  std::string get_choice(void) const {return this->choice; };
+  int get_hall_number(void) const { return this->hall_number; }
+  int get_international_table_number(void) const { return this->number; }
+  int get_pointgroup_number(void) const { return this->pointgroup_number; }
+  std::string get_schoenflies_symbol(void) const {return this->schoenflies; }
+  std::string get_hall_symbol(void) const {return this->hall_symbol; }
+  std::string get_international_table_symbol(void) const {return this->international; }
+  std::string get_international_table_full(void) const {return this->international_full; }
+  std::string get_international_table_short(void) const {return this->international_short; }
+  std::string get_choice(void) const {return this->choice; }
   std::string string_repr(void) const {
     std::string repr;
     repr += " IT(" + std::to_string(this->number) + "): "
@@ -118,7 +118,7 @@ public:
     std::string left("< Spacegroup "), right(" >");
     return left + repr + right;
   }
-  Pointgroup get_pointgroup(void) const {return Pointgroup(this->pointgroup_number);};
+  Pointgroup get_pointgroup(void) const {return Pointgroup(this->pointgroup_number);}
 private:
   void deal_with_strings(const char*, const char*, const char*, const char*, const char*, const char*);
   void set_hall_number(void);

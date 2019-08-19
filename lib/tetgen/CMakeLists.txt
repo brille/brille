@@ -1,14 +1,13 @@
-# Set  the minimum  required version  of cmake  for a  project.
-cmake_minimum_required(VERSION 2.6)
+if (MSVC)
+  add_compile_options(/O2)
+else()
+  add_compile_options(-O3)
+endif()
 
-# Add an executable to the project using the specified source files.
-add_executable(tetgen tetgen.cxx predicates.cxx)
+set(TETGEN_TARGETS _symbz test_cpp test_catch)
 
-#Add a library to the project using the specified source files. 
-# In Linux/Unix, it will creates the libtet.a
-add_library(tet STATIC tetgen.cxx predicates.cxx)
-
-#Set properties on a target. 
-#We use this here to set -DTETLIBRARY for when compiling the
-#library
-set_target_properties(tet PROPERTIES "COMPILE_DEFINITIONS" TETLIBRARY)
+set(TETGEN_SOURCES tetgen.cxx predicates.cxx)
+foreach(TETGEN_TARGET ${TETGEN_TARGETS})
+  target_sources(${TETGEN_TARGET} PRIVATE ${TETGEN_SOURCES})
+  target_include_directories(${TETGEN_TARGET} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+endforeach(TETGEN_TARGET)

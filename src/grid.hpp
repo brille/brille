@@ -1,26 +1,25 @@
 // MapGrid3 Methods
 
 template<class T> void MapGrid3<T>::print_N(const bool nl) const {
-  printf("[");
-  for (size_t i=0; i<3u; i++) printf(" %3u",this->N[i]);
-  printf("]");
-  if (nl) printf("\n");
+  std::cout << "[";
+  for (size_t i=0; i<3u; ++i) std::cout << " " << this->N[i];
+  std::cout << " ]";
+  if (nl) std::cout << std::endl;
 }
 template<class T> void MapGrid3<T>::print_span(const bool nl) const {
-  printf("[");
-  for (size_t i=0; i<3u; i++) printf(" %3u",this->span[i]);
-  printf("]");
-  if (nl) printf("\n");
+  std::cout << "[";
+  for (size_t i=0; i<3u; ++i) std::cout << " " << this->span[i];
+  std::cout << " ]";
+  if (nl) std::cout << std::endl;
 }
 template<class T> void MapGrid3<T>::print_map(void) const {
   for (size_t k=0; k<this->N[2]; ++k){
     for (size_t i=0; i<this->N[0]; ++i){
-      for (size_t j=0; j<this->N[1]; ++j){
-        printf(" %4d",this->map[sub2lin(i,j,k)]);
-      }
-      printf("\n");
+      for (size_t j=0; j<this->N[1]; ++j)
+        std::cout << " " << this->map[sub2lin(i,j,k)];
+      std::cout << std::endl;
     }
-    printf("\n");
+    std::cout << std::endl;
   }
 }
 //
@@ -353,4 +352,4 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t c
   }
   if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");
   return neighbours;
-};
+}
