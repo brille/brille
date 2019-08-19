@@ -79,6 +79,19 @@ double Lattice::calculatevolume(){
   tmp = sqrt(tmp);
   tmp *= 2*l[0]*l[1]*l[2];
   this->volume = tmp;
+  if (std::isnan(tmp)){
+    std::string msg = "Invalid lattice unit cell ";
+    if (std::isnan(this->unitvolume())){
+      msg += "angles [";
+      for (int i=0; i<3; ++i) msg += " " + std::to_string(a[0]/PI*180.);
+      msg += " ]";
+    } else {
+      msg += "lengths [";
+      for (int i=0; i<3; ++i) msg += " " + std::to_string(l[i]);
+      msg += " ]";
+    }
+    throw std::domain_error(msg);
+  }
   return tmp;
 }
 Lattice Lattice::inner_star() const {
@@ -247,14 +260,13 @@ void Direct::get_xyz_transform(double *toxyz, const size_t c, const size_t r) co
   // there are infinite possibilities for your choice of axes.
   // the original spglib used x along a and y in the (a,b) plane
   // here we're going with x along astar and y in the (astar, bstar) plane -- this is the "B-matrix"
-  double B[9], tmp[9];
+  double B[9], t[9];
   this->star().get_B_matrix(B, 3u, 1u);
   // we want toxyz to be 2*pi*transpose(inverse(B));
-  // use it as a buffer
-  matrix_inverse(tmp,B);
-  matrix_transpose(tmp); // in-place transpose using swap
-  for (int i=0; i<9; i++) tmp[i] *= 2*PI;
-  for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) toxyz[i*c+j*r]=tmp[3*i+j];
+  // use t as a buffer
+  matrix_inverse(t,B);
+  matrix_transpose(t); // in-place transpose using swap
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) toxyz[i*c+j*r] = 2*PI*t[3*i+j];
 }
 void Direct::get_inverse_xyz_transform(double* fromxyz) const{
   this->get_inverse_xyz_transform(fromxyz, 3u, 1u);

@@ -203,6 +203,21 @@ template<typename T> std::string ArrayVector<T>::to_string(const size_t first, c
                   + " ArrayVector!";
   throw std::domain_error(msg);
 }
+template<typename T> template<class R> std::string ArrayVector<T>::to_string(const ArrayVector<R>& other, const size_t num) const {
+  if (other.size() != this->size())
+    throw std::runtime_error("ArrayVector::to_string : Equal-length ArrayVectors required.");
+  size_t n = (num && num<this->size()) ? num : this->size();
+  std::string s;
+  for (size_t i=0; i<n; ++i){
+    for (size_t j=0; j<other.numel(); ++j)
+      s += my_to_string(other.getvalue(i,j)) + " ";
+    s += " ";
+    for (size_t j=0; j<this->numel(); ++j)
+      s += my_to_string(this->getvalue(i,j)) + " ";
+    s += "\n";
+  }
+  return s;
+}
 
 template<typename T> size_t ArrayVector<T>::resize(size_t newsize){
   bool std = (newsize*this->numel())>0;
@@ -630,10 +645,10 @@ template<class T, class R, template<class> class A,
 A<S> cross(const A<T>& a, const A<R>& b) {
   AVSizeInfo si = a.consistency_check(b);
   if (si.m!=3u) throw std::domain_error("cross product is only defined for three vectors");
-  A<S> tmp( 3u, si.n);
+  A<S> out( 3u, si.n);
   for (size_t i=0; i<si.n; i++)
-    vector_cross<S,T,R,3>(tmp.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
-  return tmp;
+    vector_cross<S,T,R,3>(out.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
+  return out;
 }
 
 template<class T, class R, template<class> class A,
@@ -642,15 +657,15 @@ template<class T, class R, template<class> class A,
          >
 A<S> dot(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
-  if (si.scalara^si.scalarb){
+  if (si.scalara^si.scalarb)
     throw std::runtime_error("ArrayVector dot requires equal numel()");
-  }
   A<S> out(1u,si.n);
-  S tmp;
+  S d;
   for (size_t i=0; i<si.n; ++i){
-    tmp = S(0);
-    for (size_t j=0; j<si.m; ++j) tmp+= a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
-    out.insert(tmp,i,0);
+    d = S(0);
+    for (size_t j=0; j<si.m; ++j)
+      d+= a.getvalue((si.oneveca ? 0 : i), j) * b.getvalue((si.onevecb ? 0 : i), j);
+    out.insert(d, i, 0);
   }
   return out;
 }
@@ -772,7 +787,8 @@ A<S> operator*(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
   A<S> out = si.aorb ? A<S>(a) : A<S>(b);
   out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
+  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++)
+    out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i, j);
   return out;
 }
 template<class T, class R, template<class> class A,
@@ -1091,4 +1107,44 @@ void new_unsafe_interpolate_to(const A<T>& source,
       for (size_t iEv=0; iEv<nEl[1]; ++iEv) sink_i[offset+iEv]/=normI;
     }
   }
+}
+
+template<class T> void ArrayVector<T>::permute(const std::vector<size_t>& p){
+  debug_exec(std::string msg;)
+  std::vector<size_t> s=p, o(this->size());
+  std::iota(o.begin(), o.end(), 0u);
+  std::sort(s.begin(), s.end());
+  debug_exec(\
+    if (!std::includes(o.begin(), o.end(), s.begin(), s.end()) || p.size()!=this->size()){\
+      msg = "The provided permutation vector [";\
+      for (auto x: p) msg += " " + std::to_string(x);\
+      msg += " ] is invalid";\
+      msg += " A permutation of [";\
+      for (auto x: o) msg += " " + std::to_string(x);\
+      msg += " ] was expected.";\
+    }\
+  )
+  // get the inverse permutation so we can swap elements
+  for (size_t i=0; i<p.size(); ++i) s[p[i]] = i;
+  // Now perform all swapping of Arrays until everything is in order
+  ArrayVector<T> store(this->numel(), 1u);
+  for (size_t i=0; i<this->size();){
+    if (s[i]!=i){
+      store.set(0, this->extract(i));
+      this->set(i, this->extract(s[i]));
+      this->set(s[i], store);
+      std::swap(s[i], s[s[i]]);
+    } else
+      ++i;
+  }
+  // if debugging, confirm that the permutation worked
+  debug_exec(\
+    if (!std::is_sorted(s.begin(), s.end())){\
+      msg = "Undoing the permutation [";\
+      for (auto x: p) msg += " " + std::to_string(x);\
+      msg += " ] failed. End result is [";\
+      for (auto x: s) msg += " " + std::to_string(x);\
+      msg += " ]";\
+    }\
+  )
 }

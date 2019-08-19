@@ -1,4 +1,4 @@
-#ifdef _WIN32
+#ifdef _MSC_VER
 void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool parallel_ok){
   debug_exec(std::string update_msg;)
   /*

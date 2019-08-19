@@ -195,7 +195,7 @@ protected:
     // d is "guaranteed" to now be in units of inverse angstrom.
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double minx[3], maxx[3];
-    for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
+    for (int i=0; i<3; i++) {minx[i]= (std::numeric_limits<double>::max)(); maxx[i]= std::numeric_limits<double>::lowest();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
       for (size_t j=0; j<3u; j++){
         if (vxyz.getvalue(i,j) < minx[j]) minx[j] = vxyz.getvalue(i,j);
@@ -233,7 +233,7 @@ protected:
     }
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
-    for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
+    for (int i=0; i<3; i++) maxx[i]= std::numeric_limits<double>::lowest(); // - max
     for (size_t i=0; i<vxyz.size(); i++)
       for (size_t j=0; j<3u; j++)
         if (vxyz.getvalue(i,j) > maxx[j]) maxx[j] = vxyz.getvalue(i,j);
@@ -386,7 +386,7 @@ protected:
     // d is "guaranteed" to now be in units of inverse angstrom (and meV).
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double minx[3], maxx[3];
-    for (int i=0; i<3; i++) {minx[i]= std::numeric_limits<double>::max(); maxx[i]= -std::numeric_limits<double>::max();} // +/- max
+    for (int i=0; i<3; i++) {minx[i]= (std::numeric_limits<double>::max)(); maxx[i]= std::numeric_limits<double>::lowest();} // +/- max
     for (size_t i=0; i<vxyz.size(); i++){
       for (size_t j=0; j<3u; j++){
         if (vxyz.getvalue(i,j) < minx[j]) minx[j] = vxyz.getvalue(i,j);
@@ -430,7 +430,7 @@ protected:
     n[3] = (size_t)std::ceil( (spec[2]+spec[1]-spec[0])/spec[1] );
     ArrayVector<double> vxyz = this->brillouinzone.get_vertices().get_xyz();
     double maxx[3];
-    for (int i=0; i<3; i++) maxx[i]= -std::numeric_limits<double>::max(); // - max
+    for (int i=0; i<3; i++) maxx[i]= std::numeric_limits<double>::lowest(); // - max
     for (size_t i=0; i<vxyz.size(); i++)
       for (size_t j=0; j<3u; j++)
         if (vxyz.getvalue(i,j) > maxx[j]) maxx[j] = vxyz.getvalue(i,j);

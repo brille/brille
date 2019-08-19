@@ -37,16 +37,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // with the permutation found, permute rotps:
   rotps.permute(perm);
 
-  debug_exec(update_msg = "Rotations\n";)
-  for (size_t i=0; i<3; ++i){
-    for (size_t j=0; j<rotps.size(); ++j){
-      debug_exec(update_msg += " ";)
-      for (size_t k=0; k<3; ++k)
-      debug_exec(update_msg += " " + my_to_string(rotps.data(j)[i*3+k]);)
-    }
-    debug_exec(update_msg += "\n";)
-  }
-  status_update(update_msg);
+  status_update("Rotations:\n", rotps.getall());
 
   // make lattice vectors from the stationary axes
   LQVec<int> z(this->outerlattice, rotps.axes());
@@ -88,7 +79,8 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
       if (!pbv /*basis vectors not preferred*/){
         u_parallel_v = norm(cross(x.get(i), z.get(j))).all_approx("<=",1e-10);
         // if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ
-        x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
+        // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
+        x.set(j, (pok||u_parallel_v) ? x.get(i) : z.cross(i,j));
       }
       if (!approx_scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(j, -x.get(j));
       handled[j] = true;

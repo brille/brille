@@ -2,11 +2,13 @@
 #ifndef _ARRAYVECTOR_H_
 #define _ARRAYVECTOR_H_
 
-#include<iostream>
-#include<string>
-#include<cmath>
-#include<functional>
-#include<vector>
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <functional>
+#include <vector>
+#include <algorithm>
+#include <numeric>
 #include "linear_algebra.h"
 #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides status_update()
 
@@ -293,6 +295,8 @@ public:
     @param after [optional] will be included in the string after each array (default="\n")
   */
   std::string to_string(const size_t first, const size_t last, const std::string &after="\n") const;
+  //! Print two ArrayVectors together:
+  template<class R> std::string to_string(const ArrayVector<R>& other, const size_t num=0) const;
   /*! Modify the number of arrays that the ArrayVector can hold
     @param newsize the desired number of arrays to hold
     @note A new data block is created even if the size does not change. As much
@@ -463,6 +467,7 @@ public:
   //! Determine the length (or its equivalent) of the array at index i
   T norm(const size_t i) const;
 
+  void permute(const std::vector<size_t>& p);
 };
 
 

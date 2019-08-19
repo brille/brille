@@ -27,7 +27,7 @@ find_umins_plain(
   cost umin = local_cost[0] - v[0];
   idx j1 = 0;
   idx j2 = -1;
-  cost usubmin = std::numeric_limits<cost>::max();
+  cost usubmin = (std::numeric_limits<cost>::max)();
   for (idx j = 1; j < dim; j++) {
     cost h = local_cost[j] - v[j];
     if (h < usubmin) {
@@ -63,8 +63,8 @@ find_umins(
   const float *local_cost = assign_cost + i * dim;
   __m256i idxvec = _mm256_setr_epi32(0, 1, 2, 3, 4, 5, 6, 7);
   __m256i j1vec = _mm256_set1_epi32(-1), j2vec = _mm256_set1_epi32(-1);
-  __m256 uminvec = _mm256_set1_ps(std::numeric_limits<float>::max()),
-         usubminvec = _mm256_set1_ps(std::numeric_limits<float>::max());
+  __m256 uminvec = _mm256_set1_ps((std::numeric_limits<float>::max)()),
+         usubminvec = _mm256_set1_ps((std::numeric_limits<float>::max)());
   for (idx j = 0; j < dim - 7; j += 8) {
     __m256 acvec = _mm256_loadu_ps(local_cost + j);
     __m256 vvec = _mm256_loadu_ps(v + j);
@@ -90,8 +90,8 @@ find_umins(
   _mm256_store_si256(reinterpret_cast<__m256i*>(j2mem), j2vec);
 
   idx j1 = -1, j2 = -1;
-  float umin = std::numeric_limits<float>::max(),
-        usubmin = std::numeric_limits<float>::max();
+  float umin = (std::numeric_limits<float>::max)(),
+        usubmin = (std::numeric_limits<float>::max)();
   for (int vi = 0; vi < 8; vi++) {
     float h = uminmem[vi];
     if (h < usubmin) {
@@ -142,8 +142,8 @@ find_umins(
   const double *local_cost = assign_cost + i * dim;
   __m256i idxvec = _mm256_setr_epi64x(0, 1, 2, 3);
   __m256i j1vec = _mm256_set1_epi64x(-1), j2vec = _mm256_set1_epi64x(-1);
-  __m256d uminvec = _mm256_set1_pd(std::numeric_limits<double>::max()),
-          usubminvec = _mm256_set1_pd(std::numeric_limits<double>::max());
+  __m256d uminvec = _mm256_set1_pd((std::numeric_limits<double>::max)()),
+          usubminvec = _mm256_set1_pd((std::numeric_limits<double>::max)());
   for (idx j = 0; j < dim - 3; j += 4) {
     __m256d acvec = _mm256_loadu_pd(local_cost + j);
     __m256d vvec = _mm256_loadu_pd(v + j);
@@ -169,8 +169,8 @@ find_umins(
   _mm256_store_si256(reinterpret_cast<__m256i*>(j2mem), j2vec);
 
   idx j1 = -1, j2 = -1;
-  double umin = std::numeric_limits<double>::max(),
-         usubmin = std::numeric_limits<double>::max();
+  double umin = (std::numeric_limits<double>::max)(),
+         usubmin = (std::numeric_limits<double>::max)();
   for (int vi = 0; vi < 4; vi++) {
     double h = uminmem[vi];
     if (h < usubmin) {
@@ -277,7 +277,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
       free[numfree++] = i;
     } else if (matches[i] == 1) {  // transfer reduction from rows that are assigned once.
       idx j1 = rowsol[i];
-      cost min = std::numeric_limits<cost>::max();
+      cost min = (std::numeric_limits<cost>::max)();
       for (idx j = 0; j < dim; j++) {
         if (j != j1) {
           if (local_cost[j] - v[j] < min) {

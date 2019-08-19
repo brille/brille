@@ -211,9 +211,9 @@ void BrillouinZone::print() const {
   std::cout << msg << std::endl;
 }
 
-// #include "bz_wedge_0.cpp"
-#include "bz_wedge_1.cpp"
-#include "bz_wedge_2.cpp"
+// #include "bz_wedge_0.cpp" // defines different wedge_search versions for MSVC
+#include "bz_wedge_1.cpp" // defines wedge_search
+#include "bz_wedge_2.cpp" // defines wedge_brute_force
 
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
@@ -600,12 +600,19 @@ void BrillouinZone::irreducible_vertex_search(){
 //   this->set_polyhedron(lv, ln);
 // }
 void BrillouinZone::voro_search(const int extent){
-  std::array<double, 3> bbmin({1e3,1e3,1e3}), bbmax({-1e3,-1e3,-1e3});
+  std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
   LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
+  size_t ntau = primtau.size();
+  std::vector<size_t> perm(ntau);
+  std::iota(perm.begin(), perm.end(), 0u); // {0u, 1u, 2u, ..., ntau-1}
+  std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+    return primtau.norm(a) < primtau.norm(b);
+  });
+  primtau.permute(perm);
   LQVec<double> convtau = transform_from_primitive(this->outerlattice, primtau);
+  // the first Brillouin zone polyhedron will be expressed in absolute units
+  // in the xyz frame of the conventional reciprocal lattice
   ArrayVector<double> tau = convtau.get_xyz();
-  std::cout << "tau\n" << tau.to_string();
-  size_t ntau = tau.size();
   double tij;
   for (size_t i=0; i<ntau; ++i)
     for (size_t j=0; j<3u; ++j){
@@ -613,11 +620,6 @@ void BrillouinZone::voro_search(const int extent){
       if (tij < bbmin[j]) bbmin[j] = tij;
       if (tij > bbmax[j]) bbmax[j] = tij;
   }
-  std::cout << "Bounding box: [";
-  for (auto x: bbmin) std::cout << " " << x;
-  std::cout << " ] [";
-  for (auto x: bbmax) std::cout << " " << x;
-  std::cout << " ]" << std::endl;;
   // create an initialize the voro++ voronoicell object
   Polyhedron voronoi = polyhedron_box(bbmin, bbmax);
   // and then use the reciprocal lattice points to subdivide the cell until
@@ -738,7 +740,7 @@ void BrillouinZone::vertex_search(const int extent){
   int *minequividx = new int[unqcnt]();
   double *minequivlen = new double[unqcnt]();
   for (int i=0; i<unqcnt; i++){
-    minequivlen[i] = std::numeric_limits<double>::max(); // better than 1./0.
+    minequivlen[i] = (std::numeric_limits<double>::max)(); // better than 1./0.
     for (int j=0; j<numidxmap[i]; j++){
       if ( unqlenmap[i*maxequiv +j] < minequivlen[i]){
         minequividx[i] = unqidxmap[i*in_cnt+j];

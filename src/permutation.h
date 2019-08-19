@@ -20,12 +20,12 @@ need means by which to identify the underlying real data type.
 */
 template<class T> struct CostTraits{
   using type = T;
-  constexpr static T max = std::numeric_limits<T>::max();
+  constexpr static T max = (std::numeric_limits<T>::max)();
 };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T> struct CostTraits<std::complex<T>>{
   using type = T;
-  constexpr static T max = std::numeric_limits<T>::max();
+  constexpr static T max = (std::numeric_limits<T>::max)();
 };
 #endif
 

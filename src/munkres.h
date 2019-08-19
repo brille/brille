@@ -276,7 +276,7 @@ private:
     // Add the value found in step 4 to every element of each covered row
     // and subtract it from every element of each uncovered column.
     // Return to step 4 without altering any stars, primes or covered lines.
-    auto smallest = std::numeric_limits<T>::max();
+    auto smallest = (std::numeric_limits<T>::max)();
     for (size_t r=0; r<N; ++r)
       for (size_t c=0; c<N; ++c)
         if (rowcover[r]==0 && colcover[c]==0 && cost[r*N+c] < smallest) smallest=cost[r*N+c];

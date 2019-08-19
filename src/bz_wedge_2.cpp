@@ -113,7 +113,7 @@ void BrillouinZone::wedge_brute_force(void){
       for (size_t i=0; i<Ndistinct-1; ++i)
       for (size_t j=i+1; j<Ndistinct; ++j)
       symplanes.set(count++, special.cross(special_idx[i], special_idx[j]));
-      debug_exec( if (count!=expected) status_update("Found ",count," normals but expected ",expected); )
+      status_update_if(count!=expected,"Found ",count," normals but expected ",expected);
 
       // copy the symmetry plane normals and add one rotation-axis
       normals = cat(symplanes, rot_normals.extract(i));
@@ -145,7 +145,7 @@ void BrillouinZone::wedge_brute_force(void){
     for (size_t i=0; i<Ndistinct-1; ++i)
     for (size_t j=i+1; j<Ndistinct; ++j)
     symplanes.set(count++, special.cross(special_idx[i], special_idx[j]));
-    debug_exec( if (count!=expected) status_update("Found ",count," normals but expected ",expected); )
+    status_update_if(count!=expected,"Found ",count," normals but expected ",expected);
     /* Each cross product could be done with the opposite handedness. So we
        need to try the 2ᴺ combinations of ±1 for each :( */
     for (size_t i=0; i<expected; ++i) signs[i] = all_signs[i][0];

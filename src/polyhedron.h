@@ -329,10 +329,10 @@ protected:
 
 static bool ok_size(const size_t& a, const size_t& b){return (a==1u)||(a==b);}
 
-template<class T> ArrayVector<bool> plane_outside_point(
+template<class T> ArrayVector<bool> point_inside_plane(
   const ArrayVector<T>& n, const ArrayVector<T>& p, const ArrayVector<T>& x
 ){
-  return dot(n, p-x).is_approx("<=", 0.); // true if x is closer to the origin
+  return dot(n, x-p).is_approx("<=", 0.); // true if x is closer to the origin
 }
 template<class T> ArrayVector<bool> intersection(
   const ArrayVector<T>& ni, const ArrayVector<T>& pi,
@@ -374,12 +374,31 @@ ArrayVector<bool> intersection(
   ArrayVector<T>& at){
   ArrayVector<bool> ok = intersection(ni, pi, nj, pj, nk, pk, at);
   for (size_t i=0; i<ok.size(); ++i) if (ok.getvalue(i)) {
-    ok.insert( plane_outside_point(n, p, at.extract(i)).all_true() , i);
+    ok.insert( point_inside_plane(n, p, at.extract(i)).all_true() , i);
   }
   return ok;
 }
-template<typename... L> bool one_intersection(L... args){
-  return intersection(args...).getvalue(0);
+// template<typename... L> bool one_intersection(L... args){
+//   return intersection(args...).getvalue(0);
+// }
+template<class T>
+bool one_intersection(const ArrayVector<T>& n,  const ArrayVector<T>& p,
+                      const ArrayVector<T>& ni, const ArrayVector<T>& pi,
+                      const ArrayVector<T>& nj, const ArrayVector<T>& pj,
+                      const ArrayVector<T>& nk, const ArrayVector<T>& pk,
+                      ArrayVector<T>& at){
+  return intersection(n,p,ni,pi,nj,pj,nk,pk,at).getvalue(0);
+}
+
+template<class T>
+static std::string my_to_string(const std::vector<std::vector<T>>& vv){
+  std::string s;
+  for (auto v: vv){
+    s += "[";
+    for (auto x: v) s += my_to_string(x);
+    s += " ]\n";
+  }
+  return s;
 }
 
 /*! Find the polyhedron which results from slicing an existant polyhedron by
@@ -394,51 +413,64 @@ template<class T> Polyhedron bisect(const Polyhedron& pin, const ArrayVector<T>&
   Polyhedron pout(pin);
   ArrayVector<double> pn, pp, pv=pout.get_vertices();
   std::vector<std::vector<int>> fpv, vpf;
-  std::vector<int> del_vertices, cut_faces, face_vertices, new_vector;
-  std::vector<int> vertex_map, face_map;
+  std::vector<int> del_vertices, cut, face_vertices, new_vector;
+  std::vector<int> vertex_map;
   ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u);
   size_t count;
+  int last_face, last_vertex;
   // copy the current vertices, normals, and relational information
   pv=pout.get_vertices();
   pn=pout.get_normals();
   pp=pout.get_points();
   fpv = pout.get_faces_per_vertex();
   vpf = pout.get_vertices_per_face();
+  status_update("Cut a ",pout.string_repr()," by ",n.size()," planes");
   for (size_t i=0; i<n.size(); ++i){
     // check whether there's anything to do
     ni = n.extract(i);
     pi = p.extract(i);
-    keep = plane_outside_point(ni, pi, pv);
+    keep = point_inside_plane(ni, pi, pv);
     if (!keep.all_true()){
       // compile the list of to-be-deleted vertices
-      del_vertices.empty();
+      del_vertices.clear();
       for (size_t j=0; j<keep.size(); ++j) if(!keep.getvalue(j))
         del_vertices.push_back(j);
+      debug_exec(if(del_vertices.size() != keep.size()-keep.count_true())\
+        throw std::logic_error("Wrong number of deleted vertices.");\
+      )
       // and the list of facets which need to be cut or removed
-      cut_faces.empty();
+      cut.clear();
       for (auto x: del_vertices) for (auto f: fpv[x])
-      if (std::find(cut_faces.begin(), cut_faces.end(), f)==cut_faces.end())
-        cut_faces.push_back(f); // add f to the list if it's not present already
+      if (std::find(cut.begin(), cut.end(), f)==cut.end())
+        cut.push_back(f); // add f to the list if it's not present already
       // find the new intersection points of two neighbouring facets and the cutting plane
       count = 0;
-      new_vector.empty();
-      for (size_t j=0; j<cut_faces.size()-1; ++j)
-      for (size_t k=j+1; k<cut_faces.size(); ++k)
+      new_vector.clear();
+      last_face = static_cast<int>(pn.size()); // the to-be-index of the new facet (normal)
+      for (size_t j=0; j<cut.size()-1; ++j)
+      for (size_t k=j+1; k<cut.size(); ++k)
       // check if the three planes intersect, and give a point not-outside of the polyhedron
-      if (one_intersection(pn, pp, ni, pi, pn.extract(j), pp.extract(j), pn.extract(k), pp.extract(k), at)){
+      if (one_intersection(pn, pp, /* all polyhedron planes, to check for outsideness*/
+                           ni, pi, /* the cutting plane */
+                           pn.extract(cut[j]), pp.extract(cut[j]), /* first cut plane */
+                           pn.extract(cut[k]), pp.extract(cut[k]), /* second cut plane */
+                           at /* the intersection point, if it exists */ )){
+        // grab the index of the next-added vertex
+        last_vertex = static_cast<int>(pv.size());
         // add the intersection point to all vertices
-        pv = cat(pv, at);
+        pv = cat(pv, at.extract(0));
         // add the new vertex to the list for each existing facet
-        vpf[j].push_back(static_cast<int>(pv.size())-1);
-        vpf[k].push_back(static_cast<int>(pv.size())-1);
-        // and the yet-to-be-created facet
-        new_vector.push_back(static_cast<int>(pv.size())-1);
+        vpf[cut[j]].push_back(last_vertex);
+        vpf[cut[k]].push_back(last_vertex);
+        // and the yet-to-be-created facet`
+        new_vector.push_back(last_vertex);
         // keeping track of how many points we've added
         ++count;
         // plus add the face index to the faces_per_vertex list for this new vertex
-        fpv.push_back({static_cast<int>(j), static_cast<int>(k), static_cast<int>(vpf.size())});
+        fpv.push_back({cut[j], cut[k], last_face});
         // this will be a problem if two sets of facets give the same intersection point
       }
+      debug_exec(if(new_vector.size()!=count) throw std::runtime_error("New vertices error");)
       // extend the vertices per face vector
       if (new_vector.size()) vpf.push_back(new_vector);
       // extend the keep ArrayVector<bool> to cover the new points
@@ -453,29 +485,26 @@ template<class T> Polyhedron bisect(const Polyhedron& pin, const ArrayVector<T>&
       pv = pv.extract(keep);
       // go through the vertices_per_face array, replacing vertex indicies
       // and making a face map to skip now-empty faces
-      count = 0;
       for (size_t j=0; j<vpf.size(); ++j){
-        new_vector.empty();
+        new_vector.clear();
         for (auto x: vpf[j]) if (keep.getvalue(x)) new_vector.push_back(vertex_map[x]);
         vpf[j] = new_vector;
-        face_map[j] = (vpf[j].size()>2 ? count++ : -1);
       }
-      // make a face map, remove empty faces, and update the faces_per_vertex
-      for (size_t j=0; j<fpv.size(); ++j){
-        new_vector.empty();
-        for (auto x: fpv[j]) if (face_map[x]>-1) new_vector.push_back(face_map[x]);
-        fpv[j] = new_vector;
-      }
-      // we need to calculate the face centres
+      // add the normal and point for the new face
       pn = cat(pn, ni);
       pp = cat(pp, pi);
+      // we need to calculate the face centres
       for (size_t j=0; j<vpf.size(); ++j){
         at.resize(vpf[j].size());
         for (size_t k=0; k<vpf[j].size(); ++k) at.set(k, pv.extract(vpf[j][k]));
-        pp.set(j, sum(at)/static_cast<double>(at.size()) );
+        // store the centroid as the on-plane point, but don't divide by zero
+        if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
       }
-
-      pout = Polyhedron(pv, pp, pn);
+      // remove any faces without vertices
+      keep.resize(pp.size());
+      for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>0, j);
+      // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
+      pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
       // copy the updated vertices, normals, and relational information
       pv=pout.get_vertices();
       pn=pout.get_normals();
@@ -497,12 +526,12 @@ Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
   v.insert(xmax[0], 5, 0); v.insert(xmax[1], 5, 1); v.insert(xmin[2], 5, 2); // 110 5
   v.insert(xmax[0], 6, 0); v.insert(xmax[1], 6, 1); v.insert(xmax[2], 6, 2); // 111 6
   v.insert(xmax[0], 7, 0); v.insert(xmin[1], 7, 1); v.insert(xmax[2], 7, 2); // 101 7
-  std::vector<std::vector<int>> vpf{{0,3,2,1},{4,5,6,7},{3,0,4,7},{1,2,6,5},{0,1,5,4},{3,7,6,2}};
-  std::vector<std::vector<int>> fpv{{0,2,4},{0,3,4},{0,3,5},{0,2,5},{1,2,4},{1,3,4},{1,3,5},{1,2,5}};
+  std::vector<std::vector<int>> vpf{{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}};
+  std::vector<std::vector<int>> fpv{{0,1,2},{1,2,5},{1,3,5},{0,1,3},{0,2,4},{2,4,5},{3,4,5},{0,3,4}};
   ArrayVector<T> tmp(3u, 4u);
   for (int i=0; i<6; ++i){
     for(int j=0; j<4; ++j) tmp.set(j, v.extract(vpf[i][j]));
-    p.set(i, sum(tmp)/4.0);
+    p.set(i, sum(tmp)/T(4));
   }
   return Polyhedron(v, p, p/norm(p), fpv, vpf);
 }

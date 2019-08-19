@@ -47,17 +47,19 @@ public:
     double old_volume = -1.0, new_volume=0.0;
     int test_extent = extent-1;
     // initial test_extent based on spacegroup or pointgroup?
-    while (old_volume != new_volume){
+    while (!approx_scalar(new_volume, old_volume)){
       old_volume = new_volume;
       // this->vertex_search(++test_extent);
       this->voro_search(++test_extent);
       new_volume = this->polyhedron.get_volume();
+      status_update("New polyhedron volume ", new_volume);
     }
-    status_update("First Brillouin zone found with volume ",new_volume," using extent ",test_extent);
+    status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
-    if (wedge_search){
+    if (wedge_search){// && this->outerlattice.get_hall()>2){
+      this->wedge_search(false, false);
       // status_update("Search for irreducible reciprocal space");
       //
       // this->wedge_search(/*prefer_basis_vectors = */ true, /*parallel_ok = */ false);
@@ -91,7 +93,7 @@ public:
       //    Is each call to wedge_search not resetting the normals, or
       //    something similar?
       // */
-      this->wedge_brute_force();
+      // this->wedge_brute_force();
     }
   }
   //! Returns the lattice passed in at construction

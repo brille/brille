@@ -808,12 +808,12 @@ for templated functions.
 */
 template<class T> struct GridDiffTraits{
   using type = T;
-  constexpr static T max = std::numeric_limits<T>::max();
+  constexpr static T max = (std::numeric_limits<T>::max)();
 };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T> struct GridDiffTraits<std::complex<T>>{
   using type = T;
-  constexpr static T max = std::numeric_limits<T>::max();
+  constexpr static T max = (std::numeric_limits<T>::max)();
 };
 #endif
 

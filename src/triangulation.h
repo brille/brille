@@ -62,7 +62,7 @@ public:
     }
     // find the closest vertex to our test-point:
     ArrayVector<double> d = norm(vertex_positions - x); // or does this need to be (vertex_position-x).norm()?
-    double min = std::numeric_limits<double>::max();
+    double min = (std::numeric_limits<double>::max)();
     size_t idx = nVertices + 1;
     for (size_t i=0; i<d.size(); ++i) if (d.getvalue(i)<min){
       min = d.getvalue(i);

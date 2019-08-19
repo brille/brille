@@ -32,7 +32,7 @@ int smp(const T dim, const P *restrict prefs, T *restrict rsol, T *restrict csol
         rpref[i*dim+j] = k;
         min = tmp[k];
       }
-      tmp[rpref[i*dim+j]] = std::numeric_limits<P>::max();
+      tmp[rpref[i*dim+j]] = (std::numeric_limits<P>::max)();
     }
     // cpref are based on the columns of pref
     for (T j=0; j<dim; ++j) tmp[j] = prefs[j*dim + i];
@@ -43,7 +43,7 @@ int smp(const T dim, const P *restrict prefs, T *restrict rsol, T *restrict csol
         cpref[i*dim+j] = k;
         min = tmp[k];
       }
-      tmp[cpref[i*dim+j]] = std::numeric_limits<P>::max();
+      tmp[cpref[i*dim+j]] = (std::numeric_limits<P>::max)();
     }
     /* cpref contains the row indexes in preferrential order, but it needs
     to contain the prefferential index in row order. */
