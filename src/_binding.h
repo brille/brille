@@ -765,6 +765,8 @@ void declare_polyhedron(py::module &m, const std::string &typestr) {
     .def_property_readonly("faces_per_vertex",&T::get_faces_per_vertex)
     .def_property_readonly("volume",&T::get_volume)
     .def_property_readonly("mirror",&T::mirror)
+    .def_property_readonly("centre",&T::centre)
+    .def("intersection",&T::intersection)
     .def("rotate",[](const T& o, py::array_t<double> rot){
       py::buffer_info info = rot.request();
       if (info.ndim != 2)

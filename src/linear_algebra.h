@@ -6,10 +6,6 @@
 #define SPGCONST
 #endif
 
-#include <stdio.h>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 #include <cmath>
 
 #include <type_traits>
@@ -17,6 +13,7 @@
 #include <math.h>
 #include <complex>
 #include "safealloc.h"
+#include "debug.h"
 
 const double PI = std::atan(1.0)*4;
 const double PICUBED = PI*PI*PI;
@@ -182,10 +179,6 @@ template<typename T> T hermitian_product(const size_t n, const T* a, const T* b)
 template<typename T> std::complex<T> hermitian_product(const size_t n, const T* a, const std::complex<T>* b);
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b);
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
-
-template<typename T> const std::string my_to_string(const T x);
-template<typename T> const std::string my_to_string(const std::complex<T> x);
-
 
 template<typename T> T vector_distance(const size_t n, const T* a, const T* b);
 template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b);

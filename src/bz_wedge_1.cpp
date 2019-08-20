@@ -9,7 +9,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // Get the vectors pointing to each full Brillouin zone facet cetre
   LQVec<double> xyz = cat(cat(this->get_points(), this->get_vertices()), this->get_half_edges());
 
-  status_update("xyz=\n", xyz.to_string());
+  // status_update("xyz=\n", xyz.to_string());
 
   // if rotps is empty, there are no 2+-fold rotations, act like we have ̄1:
   if (rotps.size()==0){
@@ -42,17 +42,13 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // make lattice vectors from the stationary axes
   LQVec<int> z(this->outerlattice, rotps.axes());
   // Find ̂zᵢ⋅ẑⱼ
-  double* dotij = new double[z.size()*z.size()]();
-  for (size_t i=0; i<z.size(); ++i) for (size_t j=0; j<z.size(); ++j)
-    dotij[i*z.size()+j]=dotij[i+z.size()*j] = z.dot(i,j)/10.0;
-
-  debug_exec(update_msg = "dot(i,j)\n";)
-  for (size_t i=0; i<z.size(); ++i){
-    for (size_t j=0; j<z.size(); ++j)
-    debug_exec(update_msg+=approx_scalar(dotij[i*z.size()+j],0.)?" 0":" x");
-    debug_exec(update_msg+="\n");
+  std::vector<std::vector<int>> dotij(z.size());
+  double dottmp;
+  for (size_t i=0; i<z.size(); ++i) for (size_t j=0; j<z.size(); ++j){
+    dottmp = std::abs(z.dot(i,j)/z.norm(i)/z.norm(j));
+    dotij[i].push_back( approx_scalar(dottmp,0.) ? -1: approx_scalar(dottmp, 1.) ? 1 : 0);
   }
-  status_update(update_msg);
+  status_update("dot(i,j) flag\n", dotij);
 
   // Find a suitable in-rotation-plane vector for each stationary axis
   LQVec<double> x(this->outerlattice, rotps.perpendicular_axes());
@@ -67,9 +63,10 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
      To start, assume that n and m are 0 and find the x̂ᵢ such that x̂ᵢ⋅(ẑᵢ×ẑⱼ)=1
   */
   std::vector<bool> handled(z.size(), false);
-  bool u_parallel_v;
+  bool flag;
   for (size_t i=0; i<z.size()-1; ++i) for (size_t j=i+1; j<z.size(); ++j)
-  if (!approx_scalar(dotij[i*z.size()+j], 0.0)){
+  // if zᵢ and zⱼ are neither parallel or perpendicular
+  if (0 == dotij[i][j]){
     if (!handled[i]){
       if (!pbv /*basis vectors not preferred*/) x.set(i, z.cross(i, j));
       if (handled[j] && !approx_scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(i, -x.get(i));
@@ -77,20 +74,21 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     }
     if (!handled[j]){
       if (!pbv /*basis vectors not preferred*/){
-        u_parallel_v = norm(cross(x.get(i), z.get(j))).all_approx("<=",1e-10);
+        flag = norm(cross(x.get(i), z.get(j))).all_approx(">",1e-10);
         // if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ
         // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
-        x.set(j, (pok||u_parallel_v) ? x.get(i) : z.cross(i,j));
+        x.set(j, (pok||flag) ? x.get(i) : z.cross(i,j));
       }
       if (!approx_scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(j, -x.get(j));
       handled[j] = true;
     }
   }
-  delete[] dotij;
 
   LQVec<double> y = cross(z, x); // complete a right-handed coordinate system
-  status_update("    z    ","           x           ","           y           ");
-  debug_exec(update_msg = "--------- ----------------------- -----------------------\n";)
+  x= x/norm(x);
+  y= y/norm(y);
+  status_update("    z                x                        y           ");
+  debug_exec(update_msg = "--------- -----------------------  -----------------------\n";)
   for (size_t i=0; i<z.size(); ++i){
     debug_exec(update_msg += z.to_string(i) +" "+  x.to_string(i) +" "+ y.to_string(i) +"\n";)
   }
@@ -106,9 +104,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     if (dot(y.get(i), Rv.get(0)).getvalue(0) < 0)
       is_right_handed[i] = false;
   }
-  debug_exec(update_msg = "Right handed:";)
-  for (auto i: is_right_handed){ debug_exec(update_msg+=" "+std::to_string(i);) }
-  status_update(update_msg);
+  status_update("Right handed:", is_right_handed);
 
   /* We now have for every symmetry operation a consistent vector in the
      rotation plane. We can now use z, x, and rotps to find and add the wedge
@@ -129,13 +125,14 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   LQVec<double> vi(this->outerlattice, max_order), zi(this->outerlattice, 1u);
   LQVec<double> vxz, zxv;
   for (size_t i=0; i<rotps.size(); ++i){
-    zi = (is_right_handed[i]?1:-1)*z.get(i);
+    zi = is_right_handed[i] ? z.get(i) : -z.get(i);
     order = rotps.order(i);
-    status_update("\nOrder ",std::to_string(order),", z=[",zi.to_string(0,"]"));
+    status_update("\nOrder ", order, ", z=", zi.to_string(0));
     accepted = false;
     vi.set(0, x.get(i)); // do something better here?
     for (int j=1; j<order; ++j) multiply_matrix_vector(vi.datapointer(j), rotps.data(i), vi.datapointer(j-1));
     zxv = cross(zi, vi.first(order));
+    zxv = zxv/norm(zxv);
     debug_exec(update_msg ="          R^n v                 z x (R^n v)      \n";)
     debug_exec(update_msg+="------------------------ ------------------------\n";)
     for (int j=0; j<order; ++j){

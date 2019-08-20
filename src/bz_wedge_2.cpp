@@ -39,13 +39,13 @@ void BrillouinZone::wedge_brute_force(void){
   special = special.extract(isok);
 
   // Grab the pointgroup symmetry operations
-  PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+  PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   // The first Brillouin zone volume
   double volume_goal = this->get_polyhedron().get_volume();
   // Divided by the number of pointgroup symmetry operations is the Goal volume
   volume_goal /= this->outerlattice.get_pointgroup_symmetry(this->time_reversal).size();
   // Now restrict the symmetry operations to those with order > 1.
-  ps = ps.higher(1);
+  PointSymmetry ps = fullps.higher(1);
   // And use them to find which special points are symmetry equivalent
   std::vector<std::vector<size_t>> sym_equiv_idx;
   std::vector<size_t> one_type;
@@ -106,27 +106,38 @@ void BrillouinZone::wedge_brute_force(void){
   std::vector<size_t> special_idx;
   for (auto x: sym_equiv_idx) special_idx.push_back(x[0]);
 
-  for (size_t i=0; i<rot_normals.size(); ++i){
-    while (!approx_scalar(check_volume, volume_goal)){
+  Polyhedron test_irBZ;
+  bool notfound = true;
+  for (size_t r=0; r<rot_normals.size(); ++r){
+    while (notfound){
       // Find this set of symmetry plane normals:
       count = 0u;
       for (size_t i=0; i<Ndistinct-1; ++i)
       for (size_t j=i+1; j<Ndistinct; ++j)
       symplanes.set(count++, special.cross(special_idx[i], special_idx[j]));
       status_update_if(count!=expected,"Found ",count," normals but expected ",expected);
-
       // copy the symmetry plane normals and add one rotation-axis
-      normals = cat(symplanes, rot_normals.extract(i));
-      // keep only unqiue plane normals -- maybe we should skip any rot_normals[i] which is in symplanes instead?
+      normals = cat(symplanes, rot_normals.extract(r));
+      // keep only unqiue plane normals -- maybe we should skip any rot_normals[r] which is in symplanes instead?
       normals = normals.extract(normals.is_unique());
       // From these construct a Brillouin-zone-limited polyhedron, and get its volume
       check_volume = this->ir_wedge_is_ok(normals) ? this->get_ir_polyhedron().get_volume() : 0.0;
       debug_exec(++total_checks;)
+      // if we have found the right volume, make sure we have an appropriate irBZ
+      if (approx_scalar(check_volume, volume_goal)){
+        test_irBZ = this->get_ir_polyhedron();
+        notfound = false;
+        for (size_t k=0; k<fullps.size(); ++k)
+        if (test_irBZ.intersects_fast(test_irBZ.rotate(fullps.get(k)))){ // is intersects_fast actually faster than intersects?
+          notfound = true;
+          break;
+        }
+      }
       // grab the next set of special indices, if distinct_idx overflows, break out
       if (next_set(sym_equiv_idx, distinct_idx, special_idx)) break;
     }
-    // if we have found the right volue, break out of the for loop
-    if (approx_scalar(check_volume, volume_goal)) break;
+    // if we have found the right volume with the right symmetry, break out of the for loop
+    if (!notfound) break;
   }
 
 
@@ -139,7 +150,7 @@ void BrillouinZone::wedge_brute_force(void){
   std::vector<size_t> signs_idx(expected, 0u);
   std::vector<bool> signs(expected);
   // run through all possible combinations until we find one with the right volume
-  while (!approx_scalar(check_volume, volume_goal)){
+  while (notfound){
     // Find this set of symmetry plane normals:
     count = 0u;
     for (size_t i=0; i<Ndistinct-1; ++i)
@@ -159,8 +170,17 @@ void BrillouinZone::wedge_brute_force(void){
       // From these construct a Brillouin-zone-limited polyhedron, and get its volume
       check_volume = this->ir_wedge_is_ok(normals) ? this->get_ir_polyhedron().get_volume() : 0.0;
       debug_exec(++total_checks;)
-      // if we have found the right volue, break out
-      if (approx_scalar(check_volume, volume_goal)) break;
+      if (approx_scalar(check_volume, volume_goal)){
+        test_irBZ = this->get_ir_polyhedron();
+        notfound = false;
+        for (size_t k=0; k<fullps.size(); ++k)
+        if (test_irBZ.intersects_fast(test_irBZ.rotate(fullps.get(k)))){ // is intersects_fast actually faster than intersects?
+          notfound = true;
+          break;
+        }
+      }
+      // if we have found the right volume with the right symmetry, break out
+      if (!notfound) break;
     } while (!next_set(all_signs, signs_idx, signs));
     // grab the next set of special indices, if distinct_idx overflows, break out
     if (next_set(sym_equiv_idx, distinct_idx, special_idx)) break;

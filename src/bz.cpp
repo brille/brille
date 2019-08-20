@@ -337,7 +337,11 @@ void BrillouinZone::irreducible_vertex_search(){
   LQVec<double> bznormals = this->get_normals();
   LQVec<double> bzpoints = this->get_points();
 
-  LQVec<double> irnormals = this->get_ir_wedge_normals();
+  // We will create a polyhedron using (some of) these normals. It is imperitive
+  // that the polyhedron normals point *outwards* from the centre of the polyhedron
+  // while we've thus far defined the wedge normals to point *into* the irreducible
+  // reciprocal space wedge.
+  LQVec<double> irnormals = -1.0*this->get_ir_wedge_normals();
   LQVec<double> vertices30 = this->get_vertices();
   std::vector<std::vector<int>> i30 = this->get_faces_per_vertex();
 

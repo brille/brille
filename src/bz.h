@@ -59,42 +59,37 @@ public:
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){// && this->outerlattice.get_hall()>2){
-      this->wedge_search(false, false);
-      // status_update("Search for irreducible reciprocal space");
-      //
-      // this->wedge_search(/*prefer_basis_vectors = */ true, /*parallel_ok = */ false);
-      // // if the number of symmetry operations in the pointgroup times the
-      // // volume of the found irreducible Brillouin Zone is not the volume
-      // // of the full first Brillouin zone, then something has gone wrong.
-      // PointSymmetry pg = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
-      // Polyhedron bzp = this->get_polyhedron();
-      // if(!approx_scalar(this->get_ir_polyhedron().get_volume(), bzp.get_volume()/pg.size())){
-      //   status_update("Re-search (2) for irreducible reciprocal space since ", this->get_ir_polyhedron().get_volume(), " != ", bzp.get_volume()/pg.size(),"\n");
-      //   this->wedge_search(/*prefer_basis_vectors = */ true, /*parallel_ok = */ true);
-      // }
-      // if(!approx_scalar(this->get_ir_polyhedron().get_volume(), bzp.get_volume()/pg.size())){
-      //   status_update("Re-search (3) for irreducible reciprocal space since ", this->get_ir_polyhedron().get_volume(), " != ", bzp.get_volume()/pg.size(),"\n");
-      //   this->wedge_search(/*prefer_basis_vectors = */ false, /*parallel_ok = */ true);
-      // }
-      // if(!approx_scalar(this->get_ir_polyhedron().get_volume(), bzp.get_volume()/pg.size())){
-      //   status_update("Re-search (1) for irreducible reciprocal space since ", this->get_ir_polyhedron().get_volume(), " != ", bzp.get_volume()/pg.size(),"\n");
-      //   this->wedge_search(/*prefer_basis_vectors = */ false, /*parallel_ok = */ false);
-      // }
-      // if(!approx_scalar(this->get_ir_polyhedron().get_volume(), bzp.get_volume()/pg.size())){
-      //   std::string msg = "Error finding the irreducible Brillouin zone since ";
-      //   msg += std::to_string(this->get_ir_polyhedron().get_volume());
-      //   msg += " != " + std::to_string(bzp.get_volume()/pg.size()) + "\n";
-      //   std::cout << msg << std::endl;
-      //   // throw std::runtime_error(msg);
-      // }
-      // /* There's something going on here which I clearly do not understand.
-      //    If I rearrange the if statements above spacegroup 525 does not give
-      //    a valid irreducible Brillouin zone for some reason.
-      //    Is each call to wedge_search not resetting the normals, or
-      //    something similar?
-      // */
-      // this->wedge_brute_force();
+      status_update("Starting the wedge search");
+      /* Prevously working order of calls:
+        true false
+        true true
+        false true
+        false false */
+      if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
+      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true, /*parallel ok*/false);
+      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/true);
+      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
+      // if (!this->check_ir_polyhedron()) this->wedge_brute_force();
+      this->check_ir_polyhedron();
     }
+  }
+  bool check_ir_polyhedron(void){
+    // get the operations of the pointgroup which are not 1 or -1
+    // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
+    PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0).higher(1);
+    double volume_goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
+    Polyhedron irbz = this->get_ir_polyhedron();
+    if (approx_scalar(irbz.get_volume(), volume_goal)){
+      for (size_t i=0; i<ps.size(); ++i)
+      if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
+        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation(s)");
+        return false;
+      }
+      // volume is right and no intersections
+      return true;
+    }
+    status_update("The current 'irreducible' polyhedron has the wrong volume");
+    return false;
   }
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};

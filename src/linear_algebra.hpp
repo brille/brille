@@ -427,45 +427,6 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
   return std::acos(c_t);
 }
 
-
-template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
-
-template<typename T> static
-enable_if_t<std::is_integral<T>::value && std::is_unsigned<T>::value, T>
-local_abs(T x) { return x; }
-template<typename T> static
-enable_if_t<!std::is_integral<T>::value || std::is_signed<T>::value, T>
-local_abs(T x) { return std::abs(x); }
-
-template<typename T> const std::string my_to_string(const T x){
-  std::ostringstream streamobj;
-  if (!std::is_integral<T>::value){
-    streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-  }
-  if (!std::is_integral<T>::value || std::is_signed<T>::value)
-    streamobj << (x<0 ? "-" : " ") << local_abs(x);
-  else
-    streamobj << " " << x;
-  return streamobj.str();
-}
-template<typename T> const std::string my_to_string(const std::complex<T> x){
-  T r = std::real(x), i=std::imag(x);
-  std::ostringstream streamobj;
-  if (!std::is_integral<T>::value){
-    streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-  }
-  if (!std::is_integral<T>::value || std::is_signed<T>::value){
-    streamobj << (r<0 ? "-" : " ") << local_abs(r);
-    streamobj << (std::signbit(i) ? "-i" : "+i") << local_abs(i);
-  } else {
-    streamobj << " " << r << "+i" << i;
-  }
-  return streamobj.str();
-}
-
-
 template<typename T> T vector_distance(const size_t n, const T* a, const T* b){
   T d, sum=0;
   for (size_t i=0; i<n; ++i){
