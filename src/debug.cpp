@@ -1,6 +1,12 @@
 #include "debug.h"
-
-#ifdef _MSC_VER
+/*******************************************************************************
+| These functions could be defined static and/or inline and then placed in the |
+| debug header file, however doing so forces all other source files to include |
+| the windows.h header file. Such behaviour is undesirable as it wreaks havok  |
+| on standard functions (e.g., std::max) by replacing them with macros.        |
+*******************************************************************************/
+#if defined(_MSC_VER) || defined(__MINGW32__)
+// #ifdef _MSC_VER
   // #define NOMINMAX
   #include <windows.h>
   int terminal_width(void){

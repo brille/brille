@@ -52,21 +52,20 @@ public:
       // this->vertex_search(++test_extent);
       this->voro_search(++test_extent);
       new_volume = this->polyhedron.get_volume();
-      status_update("New polyhedron volume ", new_volume);
+      verbose_status_update("New polyhedron volume ", new_volume);
     }
-    status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
+    verbose_status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
-    if (wedge_search){// && this->outerlattice.get_hall()>2){
-      status_update("Starting the wedge search");
+    if (wedge_search){
       /* Prevously working order of calls:
         true false
         true true
         false true
         false false */
       if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
-      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true, /*parallel ok*/false);
+      if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/true);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_brute_force();
@@ -74,15 +73,17 @@ public:
     }
   }
   bool check_ir_polyhedron(void){
-    // get the operations of the pointgroup which are not 1 or -1
-    // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
-    PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0).higher(1);
-    double volume_goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
+    PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
+    double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
     Polyhedron irbz = this->get_ir_polyhedron();
     if (approx_scalar(irbz.get_volume(), volume_goal)){
+      // get the operations of the pointgroup which are not 1 or -1
+      // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
+      PointSymmetry ps = fullps.higher(1);
       for (size_t i=0; i<ps.size(); ++i)
-      if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
-        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation(s)");
+      // if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
+      if (irbz.intersects(irbz.rotate(ps.get(i)))){
+        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation\n", ps.get(i));
         return false;
       }
       // volume is right and no intersections

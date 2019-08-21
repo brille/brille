@@ -51,20 +51,28 @@ def plot_points_with_lines(x, y, title=''):
         ax.set_title(title)
         pp.show()
 
-def plot_2d_points_with_lines(x, y, title=''):
+def plot_2d_points(x, title=''):
     """Plot 2D points and lines with a given title."""
     if HASMPL:
         ax = pp.axes()
-        ax.plot(y[:, 0], y[:, 1])
         ax.scatter(x[:, 0], x[:, 1], s=10)
         ax.set_title(title)
         pp.show()
 
-def make_dr(a, b, c, al=np.pi/2, be=np.pi/2, ga=np.pi/2):
+def make_dr(a, b, c, al=np.pi/2, be=np.pi/2, ga=np.pi/2, hall=1):
     """Make a Direct and Reciprocal lattice from Direct lattice parameters."""
-    d = s.Direct(a, b, c, al, be, ga)
-    r = d.star()
+    d = s.Direct(a, b, c, al, be, ga, hall)
+    r = d.star
     return (d, r)
+
+def norm(x):
+    return np.sqrt(np.dot(x, x))
+
+def vector_lists_match(A, B):
+    pA, pB = np.where(np.isclose(np.abs(A[:,np.newaxis,:] - B).sum(axis=2),0.))
+    if pA.size != A.shape[0] or pB.size != B.shape[0]:
+        return False
+    return np.allclose(A[pA], B[pB])
 
 class BrillouinZone (unittest.TestCase):
     def test_a_init_unit_cube(self):
@@ -78,20 +86,29 @@ class BrillouinZone (unittest.TestCase):
         # its first Brillouin zone is a cube in reciprocal space
         bz = s.BrillouinZone(r)
         # with six faces, defined by: (00̄1),(0̄10),(̄100),(100),(010),(001)
-        expected_faces = np.array([ [-1, 0, 0], [0,-1, 0], [0, 0,-1], [0, 0, 1], [0, 1, 0], [1, 0, 0] ], dtype='int32')
-        faces = bz.faces
-        self.assertEqual(faces.ndim, 2)
-        self.assertEqual(faces.shape[0], 6) # and there is one for each of the six faces
-        self.assertEqual(faces.shape[1], 3) # the face vectors are 3-vectors
-        self.assertTrue( (faces==expected_faces).all() )
+        p = bz.points
+        self.assertEqual(p.ndim, 2)
+        self.assertEqual(p.shape[0], 6) # and there is one for each of the six faces
+        self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
+        n = bz.normals
+        self.assertEqual(n.ndim, 2)
+        self.assertEqual(n.shape[0], 6) # and there is one for each of the six faces
+        self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
+        n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
+        self.assertTrue((n_dot_p == 1.0).all())
+
+        expected = np.array([[-1,0,0],[0,-1,0],[0,0,-1],[0,0,1],[0,1,0],[1,0,0]])
+        self.assertTrue(vector_lists_match(p, expected/2))
+        self.assertTrue(vector_lists_match(np.array([x/norm(x) for x in n]), expected))
         #
         # the vertices of the first Brillouin zone are the 8 corners of the 1/2-unit cube:
-        expected_verts = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]], dtype='double')/2
+        expected = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]])/2
         verts = bz.vertices
         self.assertEqual(verts.ndim, 2)
         self.assertEqual(verts.shape[0], 8)
         self.assertEqual(verts.shape[1], 3)
-        self.assertAlmostEqual( np.abs(expected_verts-verts).sum(), 0)
+        self.assertTrue(vector_lists_match(verts, expected))
+
     def test_b_isinside_unit_cube(self):
         d, r = make_dr(1, 1, 1)
         bz = s.BrillouinZone(r)
@@ -106,6 +123,7 @@ class BrillouinZone (unittest.TestCase):
         Q = np.random.rand(100, 3) - 0.5 # this is a uniform distribution over [-0.5, 0.5) -- close enough
         self.assertTrue( bz.isinside(Q).all() )
         self.assertFalse( bz.isinside(Q+5).all() )
+
     def test_c_moveinto_unit_cube(self):
         d, r = make_dr(1, 1, 1)
         bz = s.BrillouinZone(r)
@@ -129,27 +147,32 @@ class BrillouinZone (unittest.TestCase):
         # its first Brillouin zone is a cube in reciprocal space
         bz = s.BrillouinZone(r)
         # with eight faces, defined by: (̄100),(̄110),(0̄10),(001),(001),(010),(1̄10),(100)
-        expected_faces = np.array([ [-1, 0, 0],[-1, 1, 0],[0,-1, 0],[0, 0,-1],[0, 0, 1],[0, 1, 0],[1,-1, 0],[1, 0, 0] ], dtype='int32')
-        faces = bz.faces
-        self.assertEqual(faces.ndim, 2)
-        self.assertEqual(faces.shape[0], 8) # there is one for each of the eight faces
-        self.assertEqual(faces.shape[1], 3) # the face vectors are 3-vectors
-        self.assertTrue( (faces==expected_faces).all() )
+        p = bz.points
+        self.assertEqual(p.ndim, 2)
+        self.assertEqual(p.shape[0], 8) # and there is one for each of the eight faces
+        self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
+        n = bz.normals
+        self.assertEqual(n.ndim, 2)
+        self.assertEqual(n.shape[0], 8) # and there is one for each of the six faces
+        self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
+        n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
+        self.assertTrue((n_dot_p == 1.0).all())
+
+        expected= np.array([ [-1, 0, 0],[-1, 1, 0],[0,-1, 0],[0, 0,-1],[0, 0, 1],[0, 1, 0],[1,-1, 0],[1, 0, 0] ])
+        self.assertTrue(vector_lists_match(p, expected/2))
+        n_compare = np.array([x/np.max(np.abs(x)) for x in n])
+        self.assertTrue(vector_lists_match(n_compare, expected))
+        self.assertTrue( (bz.isinside(expected/2)).all() )
         #
         # the vertices of the first Brillouin zone are the 12 corners of the hexagonal-prism:
-        expected_verts = np.array([[-4, 2,-3],[-2,-2,-3],[-4, 2, 3],[-2,-2, 3],[-2, 4,-3],[-2, 4, 3],
-                                   [ 2,-4,-3],[ 2,-4, 3],[ 2, 2,-3],[ 4,-2,-3],[ 2, 2, 3],[ 4,-2, 3]], dtype='double')/6
+        expected = np.array([[-4, 2,-3],[-2,-2,-3],[-4, 2, 3],[-2,-2, 3],[-2, 4,-3],[-2, 4, 3],
+                             [ 2,-4,-3],[ 2,-4, 3],[ 2, 2,-3],[ 4,-2,-3],[ 2, 2, 3],[ 4,-2, 3]])/6
         verts = bz.vertices
         self.assertEqual(verts.ndim, 2)
         self.assertEqual(verts.shape[0], 12)
         self.assertEqual(verts.shape[1], 3)
-        self.assertAlmostEqual( np.abs(expected_verts-verts).sum(), 0)
-        self.assertTrue( (bz.isinside(expected_faces/2)).all() )
-        self.assertTrue( (bz.isinside(expected_verts)).all() )
-
-        B = r.get_B_matrix()
-        X = np.stack( [np.matmul(B, v) for v in expected_verts])
-        plot_points(X)
+        self.assertTrue(vector_lists_match(verts, expected))
+        self.assertTrue( (bz.isinside(expected)).all() )
 
     def test_b_isinside_hexagonal(self):
         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
@@ -161,7 +184,7 @@ class BrillouinZone (unittest.TestCase):
         Qin = bz.isinside(Q)
         B = r.get_B_matrix()
         X = np.stack( [ np.matmul(B, v) for v in Q[Qin,:] ] )
-        plot_2d_points_with_lines(X, bz.vertices_invA)
+        # plot_2d_points(X)
 
 
     def test_c_moveinto_hexagonal(self):
@@ -174,6 +197,64 @@ class BrillouinZone (unittest.TestCase):
         (q, tau) = bz.moveinto(Q)
         self.assertTrue( bz.isinside(q).all() )
         self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
+
+    def test_d_all_hallgroups(self):
+        failed = 0
+        for i in range(1, 531):
+            spacegroup = s.Spacegroup(i)
+            pointgroup = s.Pointgroup(spacegroup.pointgroup_number)
+            a = 1; b = 1; c = 1; al = np.pi/2; be = np.pi/2; ga = np.pi/2
+            # nothing to do for cubic spacegroups
+            if 'hexa' in pointgroup.holohedry:
+                ga = 2*np.pi/3
+            elif 'trig' in pointgroup.holohedry:
+                if 'R' in spacegroup.choice:
+                    al = be = ga = np.pi/3
+                else: # 'H' setting or normally hexagonal
+                    ga = 2*np.pi/3
+            elif 'tetr' in pointgroup.holohedry:
+                c = 2
+            elif 'orth' in pointgroup.holohedry:
+                axperm = spacegroup.choice.replace('-','')
+                if 'cab' in axperm:
+                    c = 1; a = 2; b = 3;
+                elif 'cba' in axperm:
+                    c = 1; b = 2; a = 1;
+                elif 'bca' in axperm:
+                    b = 1; c = 2; a = 3;
+                elif 'bac' in axperm:
+                    b = 1; a = 2; c = 3;
+                elif 'acb' in axperm:
+                    a = 1; c = 2; b = 3;
+                else:
+                    a = 1; b = 2; c = 3;
+            elif 'mono' in pointgroup.holohedry:
+                if 'a' in spacegroup.choice:
+                    a = 2; al = np.pi/180*(91+19*np.random.rand())
+                elif 'b' in spacegroup.choice:
+                    b = 2; be = np.pi/180*(91+19*np.random.rand())
+                elif 'c' in spacegroup.choice:
+                    c = 2; ga = np.pi/180*(91+19*np.random.rand())
+                else:
+                    print("Monoclinic without 'a', 'b', or 'c' choice?? ", spacegroup.choice)
+            elif 'tric' in pointgroup.holohedry:
+                a = 1; b = 2; c = 3;
+                al = np.pi/3*(1 + np.random.rand())
+                be = np.pi/3*(1 + np.random.rand())
+                ga = np.pi/3*(1 + np.random.rand())
+
+            dlat, rlat = make_dr(a, b, c, al, be, ga, i)
+            bz = s.BrillouinZone(rlat)
+
+            vol_bz = bz.polyhedron.volume
+            vol_ir = bz.ir_polyhedron.volume
+            if not np.isclose(vol_ir, vol_bz/s.PointSymmetry(i).size):
+                print(spacegroup)
+                print(dlat)
+                failed += 1
+
+        if failed > 0:
+            print("Failed for ",failed," out of 530 Hall groups")
 
 
 if __name__ == '__main__':

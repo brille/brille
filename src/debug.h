@@ -10,36 +10,26 @@
 #include <complex>
 
 // #define VERBOSE_DEBUG
-#define DEBUG // comment-out for no debugging output
+// #define DEBUG // comment-out for no debugging output
 
 int terminal_width(void);
 int terminal_height(void);
 
-template <typename T> struct is_AV {
+template <typename T> struct is_container {
   enum { value = false };
 };
-template <typename T> struct is_AV<std::vector<T>> {
+template <typename T> struct is_container<std::vector<T>> {
   enum { value = true };
 };
-template <typename T, size_t N> struct is_AV<std::array<T, N>> {
+template <typename T, size_t N> struct is_container<std::array<T, N>> {
   enum { value = true };
 };
-template <typename T> struct is_not_AV {
-  enum { value = true };
-};
-template <typename T> struct is_not_AV<std::vector<T>> {
-  enum { value = false };
-};
-template <typename T, size_t N> struct is_not_AV<std::array<T, N>> {
-  enum { value = false };
-};
-
 
 template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
 template<typename T> static enable_if_t< std::is_integral<T>::value && std::is_unsigned<T>::value, T> local_abs(T x) { return x; }
 template<typename T> static enable_if_t<!std::is_integral<T>::value ||   std::is_signed<T>::value, T> local_abs(T x) { return std::abs(x); }
 
-template<typename T, typename=typename std::enable_if<is_not_AV<T>::value>::type>
+template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
 const std::string my_to_string(const T x, const size_t w=0){
   std::ostringstream streamobj;
   if (!std::is_integral<T>::value){
@@ -47,7 +37,7 @@ const std::string my_to_string(const T x, const size_t w=0){
     streamobj << std::setprecision(4);
   }
   // char may or may not be signed, depending on the system
-  if (std::is_base_of<char,T>::value || (std::is_integral<T>::value && !std::is_signed<T>::value) ){
+  if (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
     if (w) streamobj << std::setw(w);
     streamobj << x;
   } else {
@@ -56,7 +46,7 @@ const std::string my_to_string(const T x, const size_t w=0){
   }
   return streamobj.str();
 }
-template<typename T, typename=typename std::enable_if<is_not_AV<T>::value>::type>
+template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
 const std::string my_to_string(const std::complex<T> x, const size_t w=0){
   T r = std::real(x), i=std::imag(x);
   std::ostringstream streamobj;
@@ -75,24 +65,24 @@ const std::string my_to_string(const std::complex<T> x, const size_t w=0){
   return streamobj.str();
 }
 template<typename T, template<class> class C,
-        typename=typename std::enable_if<is_not_AV<T>::value>::type,
-        typename=typename std::enable_if<is_AV<C<T>>::value>::type>
+        typename=typename std::enable_if<!is_container<T>::value>::type,
+        typename=typename std::enable_if<is_container<C<T>>::value>::type>
 const std::string my_to_string(const std::vector<C<T>>& v, const size_t w=0){
   std::string s;
   for (C<T> x: v) s += my_to_string(x) + "\n";
   return s;
 }
-template<typename T, typename=typename std::enable_if<is_AV<T>::value>::type>
+template<typename T, typename=typename std::enable_if<is_container<T>::value>::type>
 const std::string my_to_string(const T & a, const size_t w=0){
   std::string s;
   for (auto x: a) s += my_to_string(x, w);
   return s;
 }
 
-template<typename T> static enable_if_t<is_not_AV<T>::value, size_t> max_element_length(const T& v){
+template<typename T> static enable_if_t<!is_container<T>::value, size_t> max_element_length(const T& v){
   return my_to_string(v).size();
 }
-template<typename T> static enable_if_t<is_AV<T>::value, size_t> max_element_length(const T& v){
+template<typename T> static enable_if_t<is_container<T>::value, size_t> max_element_length(const T& v){
   size_t l=0, t=0;
   for (auto x: v){
     t = max_element_length(x);
@@ -122,21 +112,13 @@ public:
   }
 private:
   template<typename T, typename... L>
-  enable_if_t<is_not_AV<T>::value, void> inner_print(const T& x, L... l){
+  enable_if_t<!is_container<T>::value, void> inner_print(const T& x, L... l){
     // std::cout << std::to_string(x);
     std::cout << x;
     this->inner_print(l...);
   }
-  // template<typename... L> void inner_print(const std::string& x, L... l){
-  //   std::cout << x;
-  //   this->inner_print(l...);
-  // }
-  // template<typename... L> void inner_print(const char* x, L... l){
-  //   std::cout << x;
-  //   this->inner_print(l...);
-  // }
   template<typename T, typename... L>
-  enable_if_t<is_not_AV<T>::value, void> inner_print(const std::vector<T>& x, L... args){
+  enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<T>& x, L... args){
     size_t l = max_element_length(x);
     int w = terminal_width();
     if (l) w /= static_cast<int>(l)+1;
@@ -148,13 +130,33 @@ private:
     }
     this->inner_print(s, args...);
   }
+  template<typename T, size_t N, typename... L>
+  enable_if_t<!is_container<T>::value, void> inner_print(const std::array<T,N>& x, L... args){
+    size_t l= max_element_length(x);
+    std::string s;
+    if (N==9){
+      for (int a=0; a<3; ++a){
+        for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
+        s += "\n";
+      }
+    } else {
+      size_t w = static_cast<size_t>(terminal_width());
+      if (l) w /= l+1;
+      size_t count = 0;
+      for (size_t i=0; i<N; ++i){
+        s += " " + my_to_string(x[i], l);
+        if (!(++count % w)) s += "\n";
+      }
+    }
+    this->inner_print(s, args...);
+  }
   template<typename T, typename... L>
   void inner_print(const std::vector<std::vector<T>>& vv, L... args){
     for (auto v: vv) this->inner_print(v,"\n");
     this->inner_print(args...);
   }
   template<typename T, size_t N, typename... L>
-  enable_if_t<is_not_AV<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
+  enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
     size_t l = max_element_length(x);
     size_t w = static_cast<size_t>(terminal_width());
     size_t num;

@@ -5,8 +5,6 @@
 #include "arrayvector.h"
 #include "debug.h"
 
-class Polyhedron; // predefine for bisect()
-
 template <typename T>
 std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, const ArrayVector<T>& n){
   if (vecs.numel()!=3u)
@@ -115,123 +113,6 @@ bool one_intersection(const ArrayVector<T>& n,  const ArrayVector<T>& p,
                       const ArrayVector<T>& nk, const ArrayVector<T>& pk,
                       ArrayVector<T>& at){
   return intersection(n,p,ni,pi,nj,pj,nk,pk,at).getvalue(0);
-}
-
-/*! Find the polyhedron which results from slicing an existant polyhedron by
-one or more plane passing through its volume. The part closest to the origin
-is retained.*/
-template<class T> Polyhedron bisect(const Polyhedron& pin, const ArrayVector<T>& n, const ArrayVector<T>& p) {
-  if (n.numel()!=3u || p.numel()!=3u)
-    throw std::runtime_error("Wrong number of vector elements");
-  if (n.size()!=p.size())
-    throw std::runtime_error("Equal number of vectors and points required");
-  ArrayVector<bool> keep, valid, added(1u,0u);
-  Polyhedron pout(pin);
-  ArrayVector<double> pn, pp, pv=pout.get_vertices();
-  std::vector<std::vector<int>> fpv, vpf;
-  std::vector<int> del_vertices, cut, face_vertices, new_vector;
-  std::vector<int> vertex_map;
-  ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u);
-  size_t count;
-  int last_face, last_vertex;
-  // copy the current vertices, normals, and relational information
-  pv=pout.get_vertices();
-  pn=pout.get_normals();
-  pp=pout.get_points();
-  fpv = pout.get_faces_per_vertex();
-  vpf = pout.get_vertices_per_face();
-  // move the output polyhedron to be centred on the origin -- which requires we move all cutting planes as well
-  // ArrayVector<double> origin = sum(pv)/static_cast<double>(pv.size());
-  status_update("Cut a ",pout.string_repr()," by ",n.size()," planes");
-  for (size_t i=0; i<n.size(); ++i){
-    // check whether there's anything to do
-    ni = n.extract(i);
-    pi = p.extract(i);
-    keep = point_inside_plane(ni, pi, pv);
-    if (!keep.all_true()){
-      // compile the list of to-be-deleted vertices
-      del_vertices.clear();
-      for (size_t j=0; j<keep.size(); ++j) if(!keep.getvalue(j))
-        del_vertices.push_back(j);
-      debug_exec(if(del_vertices.size() != keep.size()-keep.count_true())\
-        throw std::logic_error("Wrong number of deleted vertices.");\
-      )
-      // and the list of facets which need to be cut or removed
-      cut.clear();
-      for (auto x: del_vertices) for (auto f: fpv[x])
-      if (std::find(cut.begin(), cut.end(), f)==cut.end())
-        cut.push_back(f); // add f to the list if it's not present already
-      // find the new intersection points of two neighbouring facets and the cutting plane
-      count = 0;
-      new_vector.clear();
-      last_face = static_cast<int>(pn.size()); // the to-be-index of the new facet (normal)
-      for (size_t j=0; j<cut.size()-1; ++j)
-      for (size_t k=j+1; k<cut.size(); ++k)
-      // check if the three planes intersect, and give a point not-outside of the polyhedron
-      if (one_intersection(pn, pp, /* all polyhedron planes, to check for outsideness*/
-                           ni, pi, /* the cutting plane */
-                           pn.extract(cut[j]), pp.extract(cut[j]), /* first cut plane */
-                           pn.extract(cut[k]), pp.extract(cut[k]), /* second cut plane */
-                           at /* the intersection point, if it exists */ )){
-        // grab the index of the next-added vertex
-        last_vertex = static_cast<int>(pv.size());
-        // add the intersection point to all vertices
-        pv = cat(pv, at.extract(0));
-        // add the new vertex to the list for each existing facet
-        vpf[cut[j]].push_back(last_vertex);
-        vpf[cut[k]].push_back(last_vertex);
-        // and the yet-to-be-created facet`
-        new_vector.push_back(last_vertex);
-        // keeping track of how many points we've added
-        ++count;
-        // plus add the face index to the faces_per_vertex list for this new vertex
-        fpv.push_back({cut[j], cut[k], last_face});
-        // this will be a problem if two sets of facets give the same intersection point
-      }
-      debug_exec(if(new_vector.size()!=count) throw std::runtime_error("New vertices error");)
-      // extend the vertices per face vector
-      if (new_vector.size()) vpf.push_back(new_vector);
-      // extend the keep ArrayVector<bool> to cover the new points
-      added.resize(count);
-      for (size_t j=0; j<count; ++j) added.insert(true, j);
-      keep = cat(keep, added);
-      // find the new indices for all vertices, and extract the kept vertices
-      vertex_map.resize(pv.size());
-      count = 0;
-      for (size_t j=0; j<pv.size(); ++j)
-        vertex_map[j]= (keep.getvalue(j) ? count++ : -1);
-      pv = pv.extract(keep);
-      // go through the vertices_per_face array, replacing vertex indicies
-      // and making a face map to skip now-empty faces
-      for (size_t j=0; j<vpf.size(); ++j){
-        new_vector.clear();
-        for (auto x: vpf[j]) if (keep.getvalue(x)) new_vector.push_back(vertex_map[x]);
-        vpf[j] = new_vector;
-      }
-      // add the normal and point for the new face
-      pn = cat(pn, ni);
-      pp = cat(pp, pi);
-      // we need to calculate the face centres
-      for (size_t j=0; j<vpf.size(); ++j){
-        at.resize(vpf[j].size());
-        for (size_t k=0; k<vpf[j].size(); ++k) at.set(k, pv.extract(vpf[j][k]));
-        // store the centroid as the on-plane point, but don't divide by zero
-        if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
-      }
-      // remove any faces without vertices
-      keep.resize(pp.size());
-      for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>0, j);
-      // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
-      pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
-      // copy the updated vertices, normals, and relational information
-      pv=pout.get_vertices();
-      pn=pout.get_normals();
-      pp=pout.get_points();
-      fpv = pout.get_faces_per_vertex();
-      vpf = pout.get_vertices_per_face();
-    }
-  }
-  return pout;
 }
 
 template<class T> std::vector<T> reverse(const std::vector<T>& x){
@@ -438,7 +319,6 @@ public:
   }
 protected:
   void keep_unique_vertices(void){
-    // status_update(">");
     std::vector<bool> flg;
     for (size_t i=0; i<vertices.size(); ++i) flg.push_back(true);
     int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
@@ -446,13 +326,11 @@ protected:
     for (size_t i=1; i<vertices.size(); ++i) for (size_t j=0; j<i; ++j)
       if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.datapointer(i), vertices.datapointer(j), t);
     this->vertices = this->vertices.extract(flg);
-    // status_update("<");
   }
   // This is the function which is bad for non-convex polyhedra, since it
   // assigns all faces with n⋅(v-p)=0 to a vertex irrespective of whether two
   // faces have opposite direction normals.
   void find_all_faces_per_vertex(void){
-    // status_update(">");
     ArrayVector<double> vmp;
     std::vector<std::vector<int>> fpv(vertices.size());
     ArrayVector<bool> isonplane(1u, points.size());
@@ -461,10 +339,8 @@ protected:
       for (size_t j=0; j<points.size(); ++j) if (isonplane.getvalue(j)) fpv[i].push_back(static_cast<int>(j));
     }
     this->faces_per_vertex = fpv;
-    // status_update("<");
   }
   void polygon_vertices_per_face(void) {
-    // status_update(">");
     bool flag = true;
     // We have 3+ faces per vertex, so we can now find the vertices per face
     std::vector<std::vector<int>> vpf(this->points.size());
@@ -495,10 +371,8 @@ protected:
     std::vector<std::vector<int>> polygon_vpf;
     for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);
     this->vertices_per_face = polygon_vpf;
-    // status_update("<");
   }
   void sort_polygons(void){
-    // status_update(">");
     std::vector<std::vector<int>> sorted_vpp(this->points.size());
     ArrayVector<double> facet_verts(3u, 0u), facet_centre, facet_normal;
     std::vector<int> facet, perm;
@@ -531,7 +405,6 @@ protected:
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
     }
     this->vertices_per_face = sorted_vpp;
-    // status_update("<");
   }
 public:
   Polyhedron centre(void) const {
@@ -539,10 +412,9 @@ public:
     return Polyhedron(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
   }
   /* Since we have the machinery to bisect a Polyhedron by a series of planes,
-     the simplest way of checking for the intersection between to polyhedra is
+     the simplest way of checking for the intersection between two polyhedra is
      to bisect one of them by all of the planes of the other and if the
-     resulting polyhedron has a smaller volume than what we started with then
-     the two polyhedra intersect.
+     resulting polyhedron has non-zero volume then the two polyhedra intersect.
      But this is almost certainly a far-from-optimal solution; especially since
      the bisect algorithm assumes that the input polyhedron contains (and will
      always contain) the origin.
@@ -550,31 +422,161 @@ public:
   bool intersects(const Polyhedron& other) const {
     ArrayVector<double> centroid = this->get_centroid();
     Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
-    Polyhedron ipoly = bisect(centred, other.normals, other.points-centroid);
-    double iv = ipoly.get_volume(), cv = centred.get_volume();
-    // the volume of intersection shouldn't ever be larger than what we started with
-    debug_exec(if(!approx_scalar(iv, cv) && iv>cv) throw std::logic_error("Bisecting a polyhedron somehow grew its volume!");)
-    return !approx_scalar(iv, cv);
+    Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
+    double iv = ipoly.get_volume();
+    // If two polyhedra intersect one another, their intersection is not null.
+    return !approx_scalar(iv, 0.);
   }
   Polyhedron intersection(const Polyhedron& other) const {
     ArrayVector<double> centroid = this->get_centroid();
     Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
-    Polyhedron ipoly = bisect(centred, other.normals, other.points-centroid);
+    Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
     return Polyhedron(ipoly.vertices + centroid, ipoly.points + centroid, ipoly.normals, ipoly.faces_per_vertex, ipoly.vertices_per_face);
   }
   bool intersects_fast(const Polyhedron& other) const {
     // check if any of our vertices are inside of the other polyhedron
     /* if the dot product is zero it means that a point is on the surface of the
        other polyhedron, which is fine. So we're using strictly less than zero. */
+    bool flag;
     for (size_t i=0; i<vertices.size(); ++i)
-      if (dot(other.normals, vertices.extract(i)-other.points).any_approx("<", 0.))
-        return true;
+      if (dot(other.normals, vertices.extract(i)-other.points).any_approx("<", 0.)){
+        // for those of our vertices *in* the other polyhedron
+        // ensure that they are not actually a shared vertex
+        if (norm(other.vertices - vertices.extract(i)).none_approx(0.)) return true;
+      }
     // check if any of the other vertices are inside of our polyhedron
     for (size_t i=0; i<other.vertices.size(); ++i)
       if (dot(normals, other.vertices.extract(i)-points).any_approx("<", 0.))
-        return true;
+        if (norm(this->vertices - other.vertices.extract(i)).none_approx(0.)) return true;
     // check for intersecting planes :(
     return this->intersects(other);
+  }
+
+  /*! Find the polyhedron which results from slicing an existant polyhedron by
+  one or more plane passing through its volume. The part closest to the origin
+  is retained.*/
+  template<class T> static Polyhedron bisect(const Polyhedron& pin, const ArrayVector<T>& n, const ArrayVector<T>& p) {
+    if (n.numel()!=3u || p.numel()!=3u)
+      throw std::runtime_error("Wrong number of vector elements");
+    if (n.size()!=p.size())
+      throw std::runtime_error("Equal number of vectors and points required");
+    ArrayVector<bool> keep, valid, added(1u,0u);
+    Polyhedron pout(pin);
+    ArrayVector<double> pn, pp, pv=pout.get_vertices();
+    std::vector<std::vector<int>> fpv, vpf;
+    std::vector<int> del_vertices, cut, face_vertices, new_vector;
+    std::vector<int> vertex_map;
+    ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u);
+    size_t count;
+    int last_face, last_vertex;
+    // copy the current vertices, normals, and relational information
+    pv=pout.get_vertices();
+    pn=pout.get_normals();
+    pp=pout.get_points();
+    fpv = pout.get_faces_per_vertex();
+    vpf = pout.get_vertices_per_face();
+    // move the output polyhedron to be centred on the origin -- which requires we move all cutting planes as well
+    // ArrayVector<double> origin = sum(pv)/static_cast<double>(pv.size());
+    verbose_status_update("Cut a ",pout.string_repr()," by ",n.size()," planes");
+    for (size_t i=0; i<n.size(); ++i){
+      if (approx_scalar(pout.get_volume(), 0.)) break; // we can't do anything with an empty polyhedron
+      verbose_status_update("Checking a plane"," passing through ",p.to_string(i)," normal to ",n.to_string(i));
+      // check whether there's anything to do
+      ni = n.extract(i);
+      pi = p.extract(i);
+      keep = point_inside_plane(ni, pi, pv);
+      if (!keep.all_true()){
+        verbose_status_update("Pre-cut ",i," polyhedron vertices:\n",pv.to_string());
+        verbose_status_update("Pre-cut ",i," polyhedron planes (p,n):\n",pn.to_string(pp));
+        verbose_status_update("Pre-cut ",i," polyhedron faces_per_vertex:\n", fpv);
+        verbose_status_update("Pre-cut ",i," polyhedron vertices_per_face:\n",vpf);
+        // compile the list of to-be-deleted vertices
+        del_vertices.clear();
+        for (size_t j=0; j<keep.size(); ++j) if(!keep.getvalue(j))
+          del_vertices.push_back(j);
+        verbose_status_update("Vertices beyond the cut ", del_vertices);
+        // and the list of facets which need to be cut or removed
+        cut.clear();
+        for (auto x: del_vertices) for (auto f: fpv[x])
+        if (std::find(cut.begin(), cut.end(), f)==cut.end())
+          cut.push_back(f); // add f to the list if it's not present already
+        verbose_status_update("Facets ",cut," are cut by the plane");
+        // find the new intersection points of two neighbouring facets and the cutting plane
+        count = 0;
+        new_vector.clear();
+        last_face = static_cast<int>(pn.size()); // the to-be-index of the new facet (normal)
+        for (size_t j=0; j<cut.size()-1; ++j)
+        for (size_t k=j+1; k<cut.size(); ++k)
+        // check if the three planes intersect, and give a point not-outside of the polyhedron
+        if (one_intersection(pn, pp, /* all polyhedron planes, to check for outsideness*/
+                             ni, pi, /* the cutting plane */
+                             pn.extract(cut[j]), pp.extract(cut[j]), /* first cut plane */
+                             pn.extract(cut[k]), pp.extract(cut[k]), /* second cut plane */
+                             at /* the intersection point, if it exists */ )){
+          // grab the index of the next-added vertex
+          last_vertex = static_cast<int>(pv.size());
+          // add the intersection point to all vertices
+          pv = cat(pv, at.extract(0));
+          // add the new vertex to the list for each existing facet
+          vpf[cut[j]].push_back(last_vertex);
+          vpf[cut[k]].push_back(last_vertex);
+          // and the yet-to-be-created facet`
+          new_vector.push_back(last_vertex);
+          // keeping track of how many points we've added
+          ++count;
+          // plus add the face index to the faces_per_vertex list for this new vertex
+          fpv.push_back({cut[j], cut[k], last_face});
+          // this will be a problem if two sets of facets give the same intersection point
+        }
+        debug_exec(if(new_vector.size()!=count) throw std::runtime_error("New vertices error");)
+        // extend the vertices per face vector
+        if (new_vector.size()) vpf.push_back(new_vector);
+        // extend the keep ArrayVector<bool> to cover the new points
+        added.resize(count);
+        for (size_t j=0; j<count; ++j) added.insert(true, j);
+        keep = cat(keep, added);
+        verbose_status_update("keep? vertices:\n",pv.to_string(keep));
+        // find the new indices for all vertices, and extract the kept vertices
+        vertex_map.resize(pv.size());
+        count = 0;
+        for (size_t j=0; j<pv.size(); ++j)
+          vertex_map[j]= (keep.getvalue(j) ? count++ : -1);
+        pv = pv.extract(keep);
+        verbose_status_update("vertex mapping:", vertex_map);
+        // go through the vertices_per_face array, replacing vertex indicies
+        // and making a face map to skip now-empty faces
+        for (size_t j=0; j<vpf.size(); ++j){
+          new_vector.clear();
+          for (auto x: vpf[j]) if (keep.getvalue(x)) new_vector.push_back(vertex_map[x]);
+          vpf[j] = new_vector;
+        }
+        // add the normal and point for the new face
+        pn = cat(pn, ni);
+        pp = cat(pp, pi);
+        // we need to calculate the face centres
+        for (size_t j=0; j<vpf.size(); ++j){
+          at.resize(vpf[j].size());
+          for (size_t k=0; k<vpf[j].size(); ++k) at.set(k, pv.extract(vpf[j][k]));
+          // store the centroid as the on-plane point, but don't divide by zero
+          if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
+        }
+        // remove any faces without vertices
+        keep.resize(pp.size());
+        for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>0, j);
+        verbose_status_update("keep? plane normals:\n",pn.to_string(keep));
+        verbose_status_update("keep? plane points:\n",pp.to_string(keep));
+        // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
+        pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
+        verbose_status_update("New ",pout.string_repr());
+        // copy the updated vertices, normals, and relational information
+        pv=pout.get_vertices();
+        pn=pout.get_normals();
+        pp=pout.get_points();
+        fpv = pout.get_faces_per_vertex();
+        vpf = pout.get_vertices_per_face();
+      }
+    }
+    return pout;
   }
 };
 

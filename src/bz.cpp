@@ -628,7 +628,7 @@ void BrillouinZone::voro_search(const int extent){
   Polyhedron voronoi = polyhedron_box(bbmin, bbmax);
   // and then use the reciprocal lattice points to subdivide the cell until
   // only the first Brillouin zone is left:
-  Polyhedron firstbz = bisect(voronoi, tau/norm(tau), tau/2.0);
+  Polyhedron firstbz = Polyhedron::bisect(voronoi, tau/norm(tau), tau/2.0);
   this->polyhedron = firstbz;
 }
 
