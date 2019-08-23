@@ -76,6 +76,21 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<si
   }
   return out;
 }
+template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<int>& idx) const{
+  bool allinbounds = true;
+  ArrayVector<T> out(this->numel(),0u);
+  for (auto j: idx) if (j>=this->size() || j<0) {
+    std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
+    for (auto i: idx) msg += " " + std::to_string(i);
+    msg += " ] but size() = " + std::to_string(this->size());
+    throw std::out_of_range(msg);
+  }
+  if (allinbounds){
+    out.resize(idx.size());
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx[j]) );
+  }
+  return out;
+}
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bool>& tf) const{
   if (tf.numel() != 1u || tf.size() != this->size()){
     std::string msg = "Extracting an ArrayVector by logical indexing requires";
@@ -95,6 +110,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<bo
   if (t.size() != this->size()){
     std::string msg = "Extracting an ArrayVector by logical indexing requires";
     msg += " a std::vector<bool> with size()==ArrayVector.size().";
+    msg += " Instead got " + std::to_string(t.size()) + " where " + std::to_string(this->size()) + " was expected";
     throw std::runtime_error(msg);
   }
   size_t nout=0;
@@ -486,6 +502,16 @@ template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::stri
     }
     return out;
   }
+  if (!expr.compare("neq") || !expr.compare("!=")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), val))
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
   std::string msg = __PRETTY_FUNCTION__;
   msg += ": Unknown comparator " + expr;
   throw std::runtime_error(msg);
@@ -526,7 +552,7 @@ template<typename T> bool ArrayVector<T>::vector_approx(const size_t i, const si
   return ok;
 }
 template<typename T> template<class R, size_t Nel>
-bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>& mat) const{
+bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>& mat, const int order) const{
   // if (!std::is_convertible<typename std::common_type<T,R>,T>::value)
   //   throw std::runtime_error("Incompatible types.");
   size_t n = this->numel();
@@ -534,12 +560,32 @@ bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::ar
     throw std::runtime_error("Wrong size matrix input.");
   if (i>=this->size() || j>=this->size())
     throw std::out_of_range("ArrayVector range indices out of range");
-  std::vector<T> intermediate(n);
-  mul_mat_vec(intermediate.data(), n, mat.data(), this->datapointer(j));
+  std::vector<T> tmpA(n), tmpB(n);
+  for (size_t k=0; k<n; ++k) tmpA[k] = this->getvalue(j,k);
   bool same = true;
-  for (size_t k=0; k<n; ++k)
-  if (!approx_scalar(this->getvalue(i,k), intermediate[k])) same = false;
-  return same;
+  if (order<0){
+    int o=0;
+    do{
+      same = true;
+      // check against the current tmp vector whether this order rotations has
+      // moved j to i -- if it has, same stays true and we can return true
+      for (size_t k=0; k<n; ++k) if (!approx_scalar(this->getvalue(i,k), tmpA[k])) same = false;
+      if (same) return true;
+      // otherwise we need to perform the next rotation
+      mul_mat_vec(tmpB.data(), n, mat.data(), tmpA.data());
+      // and assign the rotated vector back to the first temporary array
+      tmpA = tmpB;
+    } while (o++<std::abs(order)); // check if v[j], Rv[j], R²v[j], …, Rᵒ⁻¹v[j] ≡ v[i]
+    return same;
+  } else {
+    // rotate exactly order times
+    for (int o=0; o<order; ++o){
+      mul_mat_vec(tmpB.data(), n, mat.data(), tmpA.data());
+      tmpA = tmpB;
+    }
+    for (size_t k=0; k<n; ++k) if (!approx_scalar(this->getvalue(i,k), tmpA[k])) same = false;
+    return same;
+  }
 }
 
 template<typename T> ArrayVector<int> ArrayVector<T>::round() const{

@@ -69,6 +69,11 @@ if (${PYTHONINTERP_FOUND})
 	add_dependencies(check _symbz)
 endif()
 
+set(CXX_TARGETS _symbz test_cpp test_catch)
+foreach(CXX_TARGET ${CXX_TARGETS})
+  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 17)
+endforeach(CXX_TARGET)
+
 
 # OpenMP support:
 find_package(OpenMP)

@@ -51,6 +51,28 @@ std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, c
 //   }
 //   return angles;
 // }
+template<class T> static T triangle_area_squared(const T a, const T b, const T c){
+  T s = (a+b+c)/2;
+  return s*(s-a)*(s-b)*(s-c);
+}
+template<class T> int face_has_area(const ArrayVector<T>& points){
+  // first verify that all points are coplanar
+  // pick the first three points to define a plane, then ensure all points are in it
+  if (points.size()<3) return -2; // can't be a face
+  ArrayVector<T> p0 = points.extract(0);
+  ArrayVector<double> n = cross(points.extract(1)-p0, points.extract(2)-p0);
+  if (!dot(n, points-p0).all_approx("==",0.)) return -1; // non-coplanar
+  T s=0;
+  ArrayVector<T> a,b;
+  for (size_t i=1; i<points.size()-1; ++i){
+    a = points.extract(i)-p0;
+    for (size_t j=i+1; j<points.size(); ++j){
+      b = points.extract(j)-p0;
+      s += triangle_area_squared(a.norm(0), b.norm(0), (a-b).norm(0));
+    }
+  }
+  return approx_scalar(s, T(0)) ? 0 : 1;
+}
 
 static inline bool ok_size(const size_t& a, const size_t& b){return (a==1u)||(a==b);}
 
@@ -140,10 +162,17 @@ public:
                 normals(ArrayVector<double>(3u, 0u)),
                 faces_per_vertex(std::vector<std::vector<int>>()),
                 vertices_per_face(std::vector<std::vector<int>>()) {}
-  // initalize from vertices, points, and three-plane intersection information
-  Polyhedron(const ArrayVector<double>& v,
-             const ArrayVector<double>& p
-        )://,const ArrayVector<int>& fpv):
+  //! Create a convex-hull Polyhedron from a set of points
+  Polyhedron(const ArrayVector<double>& v): vertices(v){
+    this->keep_unique_vertices();
+    this->find_convex_hull();
+    this->find_all_faces_per_vertex();
+    this->polygon_vertices_per_face();
+    this->sort_polygons();
+    this->purge_extra_vertices();
+  }
+  //! Build a Polyhedron from vertices and vectors pointing to face centres
+  Polyhedron(const ArrayVector<double>& v, const ArrayVector<double>& p):
   vertices(v), points(p), normals(p/norm(p)) {
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
@@ -157,10 +186,10 @@ public:
              const std::vector<std::vector<int>>& vpf):
     vertices(v), points(p), normals(p/norm(p)), faces_per_vertex(fpv), vertices_per_face(vpf){}
   // initalize from vertices, points, normals, and three-plane intersection information
+  //! Build a Polyhedron from vertices, on-face points, and face normals
   Polyhedron(const ArrayVector<double>& v,
              const ArrayVector<double>& p,
-             const ArrayVector<double>& n
-        )://,const ArrayVector<int>& fpv):
+             const ArrayVector<double>& n):
   vertices(v), points(p), normals(n) {
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
@@ -191,8 +220,8 @@ public:
     return *this;
   }
   Polyhedron mirror(void) const {
-    // return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
-    return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, this->vertices_per_face);
+    return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
+    // return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, this->vertices_per_face);
   }
   template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
     ArrayVector<double> newv(3u, this->vertices.size()), newp(3u, this->points.size()), newn(3u, this->normals.size());
@@ -203,6 +232,7 @@ public:
     for (size_t i=0; i<this->normals.size(); ++i)
       multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), this->normals.datapointer(i));
     return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+    // return Polyhedron(newv, newp, newn);
   }
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
@@ -327,6 +357,55 @@ protected:
       if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.datapointer(i), vertices.datapointer(j), t);
     this->vertices = this->vertices.extract(flg);
   }
+  void find_convex_hull(void){
+    /* Find the set of planes which contain all vertices.
+       The cross product between two vectors connecting three points defines a
+       plane normal. If the plane passing through the three points partitions
+       space into point-free and not-point-free then it is one of the planes of
+       the convex-hull.                                                       */
+    unsigned long long bc = binomial_coefficient(vertices.size(), 3u);
+    if (bc > static_cast<unsigned long long>(std::numeric_limits<size_t>::max()))
+      throw std::runtime_error("Too many vertices to count all possible normals with a `size_t` integer");
+    ArrayVector<double> n(3u, static_cast<size_t>(bc)), p(3u, static_cast<size_t>(bc));
+    ArrayVector<double> ab(3u, 2u);
+    size_t count = 0;
+    // The same algorithm without temporary nijk, vi, vj, vk arrays (utilizing
+    // vertices.extract, p.extract, and n.extract instead) does not work.
+    // Either the compiler optimizes something important away or there is a bug
+    // in repeatedly extracting the same array from an ArrayVector. In either
+    // case, vectors which should not have been zero ended up as such.
+    ArrayVector<double> nijk(3u,1u), vi(3u,1u), vj(3u,1u), vk(3u,1u);
+    for (size_t i=0; i<vertices.size()-2; ++i){
+      vi = vertices.extract(i);
+      for (size_t j=i+1; j<vertices.size()-1; ++j){
+        vj = vertices.extract(j);
+        ab.set(0, vj-vi);
+        for (size_t k=j+1; k<vertices.size(); ++k){
+          vk = vertices.extract(k);
+          ab.set(1, vk-vi);
+          ab.cross(0, 1, nijk.datapointer());
+          // status_update(i," ",j," ",k," ", ab.to_string(" x ")," = ",nijk.to_string(0));
+          // increment the counter only if the new normal is not ⃗0 and partitions space
+          if (!approx_scalar(nijk.norm(0),0.) && dot(nijk, vertices - vi).all_approx("≤|≥", 0.)){
+            // verify that the normal points the right way:
+            if (dot(nijk, vertices - vi).all_approx(">=",0.))
+              nijk = -1*nijk;
+            // normalize the cross product to ensure we can determine uniqueness later
+            n.set(count, nijk/nijk.norm(0));
+            p.set(count, (vi+vj+vk)/3.0);
+            ++count;
+          }
+        }
+      }
+    }
+    if (n.size() < count)
+      throw std::logic_error("Too many normal vectors found");
+    // check that we only keep one copy of each unique normal vector
+    n.resize(count); p.resize(count);
+    ArrayVector<bool> nok = n.is_unique();
+    normals = n.extract(nok);
+    points = p.extract(nok);
+  }
   // This is the function which is bad for non-convex polyhedra, since it
   // assigns all faces with n⋅(v-p)=0 to a vertex irrespective of whether two
   // faces have opposite direction normals.
@@ -355,7 +434,9 @@ protected:
 
     // additionally, we only want to keep faces which describe polygons
     std::vector<bool> is_polygon;
-    for (size_t i=0; i<vpf.size(); ++i) is_polygon.push_back(vpf[i].size()>2);
+    for (size_t i=0; i<vpf.size(); ++i)
+      is_polygon.push_back(face_has_area(vertices.extract(vpf[i]))>0);
+      // is_polygon.push_back(vpf[i].size()>2);
     this->points = this->points.extract(is_polygon);
     this->normals = this->normals.extract(is_polygon);
 
@@ -387,7 +468,8 @@ protected:
       for (size_t i=0; i<facet.size(); ++i) facet_verts.set(i, this->vertices.extract(facet[i]));
       facet_centre = sum(facet_verts)/static_cast<double>(facet.size());
       facet_verts -= facet_centre; // these are now on-face vectors to each vertex
-      facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
+      // if a point happens to be at the face centre dividing by the norm is a problem.
+      // facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
       perm.resize(facet.size());
       perm[0] = 0; // always start with whichever vertex is first
       for (size_t i=1; i<facet.size(); ++i){
@@ -399,12 +481,67 @@ protected:
             min_idx=k;
             min_angle = angles[k];
           }
-        if (min_idx >= facet.size()) throw std::runtime_error("Error finding minimum winding angle polygon vertex");
+        if (min_idx >= facet.size()){
+          for (size_t d=0; d<facet.size(); ++d) status_update("Facet vertex ",d," ", this->vertices.extract(facet[d]).to_string(0));
+          status_update("Facet face vertices\n", facet_verts.to_string());
+          status_update("Winding angles ", angles);
+          throw std::runtime_error("Error finding minimum winding angle polygon vertex");
+        }
         perm[i] = min_idx;
       }
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
     }
     this->vertices_per_face = sorted_vpp;
+  }
+  void purge_extra_vertices(void){
+    /* If we used our convex hull algorithm to determine our polygon, it might
+    have extraneous vertices within its convex polygonal faces */
+    /* This method should be used only after find_all_faces_per_vertex,
+      polygon_vertices_per_face, and sort_polygons have all been run as it
+      assumes that the vertices per face are in increasing-winding-order.
+    */
+    ArrayVector<double> abc(3u, 3u);
+    std::vector<int> face;
+    for (size_t n=0; n<normals.size(); ++n){
+      face = vertices_per_face[n];
+      status_update("A face with vertices ", face);
+      for (size_t i=0, j; face.size()>3 && i<face.size();){
+        j = (face.size()+i-1)%face.size();
+        abc.set(0, vertices.extract(face[i]) - vertices.extract(face[j]));
+        j = (face.size()+i+1)%face.size();
+        abc.set(1, vertices.extract(face[j]) - vertices.extract(face[i]));
+        abc.cross(0, 1, abc.datapointer(2));
+        if (dot(normals.extract(n), abc.extract(2)).all_approx(">", 0.)) {
+          // left-turn, keep this point
+          ++i;
+        } else {
+          // right-turn, remove this point.
+          face.erase(face.begin()+i);
+        }
+      }
+      status_update("Is a convex polygonal face with vertices ", face);
+    }
+    ArrayVector<bool> keep(1u, vertices.size());
+    bool flag;
+    for (size_t i=0; i<vertices.size(); ++i){
+      flag = false;
+      for (auto verts: vertices_per_face)
+        if (!flag && std::find(verts.begin(), verts.end(), static_cast<int>(i))!=verts.end())
+          flag = true;
+      keep.insert(flag, i);
+    }
+    if (keep.count_true() < vertices.size()){
+      status_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
+      // Remap the vertices_per_face array
+      size_t count = 0, max=keep.count_true();
+      std::vector<size_t> map;
+      for (size_t i=0; i<keep.size(); ++i) map.push_back(keep.getvalue(i) ? count++ : max+1);
+      for (auto facet: vertices_per_face)
+      for (size_t i=0; i<facet.size(); ++i) if (map[facet[i]]<max) facet[i]=map[facet[i]];
+      // Remove elements of faces_per_vertex and vertices[.extract(keep)]
+      for (size_t i=keep.size(); i-- > 0; ) if (!keep.getvalue(i)) faces_per_vertex.erase(faces_per_vertex.begin()+i);
+      vertices = vertices.extract(keep);
+    }
   }
 public:
   Polyhedron centre(void) const {
@@ -437,7 +574,6 @@ public:
     // check if any of our vertices are inside of the other polyhedron
     /* if the dot product is zero it means that a point is on the surface of the
        other polyhedron, which is fine. So we're using strictly less than zero. */
-    bool flag;
     for (size_t i=0; i<vertices.size(); ++i)
       if (dot(other.normals, vertices.extract(i)-other.points).any_approx("<", 0.)){
         // for those of our vertices *in* the other polyhedron

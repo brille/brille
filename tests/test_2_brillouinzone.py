@@ -237,6 +237,7 @@ class BrillouinZone (unittest.TestCase):
                     c = 2; ga = np.pi/180*(91+19*np.random.rand())
                 else:
                     print("Monoclinic without 'a', 'b', or 'c' choice?? ", spacegroup.choice)
+                continue
             elif 'tric' in pointgroup.holohedry:
                 a = 1; b = 2; c = 3;
                 al = np.pi/3*(1 + np.random.rand())
@@ -244,6 +245,9 @@ class BrillouinZone (unittest.TestCase):
                 ga = np.pi/3*(1 + np.random.rand())
 
             dlat, rlat = make_dr(a, b, c, al, be, ga, i)
+
+            print("Hall ", i, " ", dlat)
+
             bz = s.BrillouinZone(rlat)
 
             vol_bz = bz.polyhedron.volume

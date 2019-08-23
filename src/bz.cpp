@@ -42,6 +42,41 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
   const LQVec<double> & nref = is_inner ? np : n;
   this->ir_polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), nref.get_xyz(), args...);
 }
+bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
+  bool is_outer = this->outerlattice.issame(v.get_lattice());
+  bool is_inner = this->lattice.issame(v.get_lattice());
+  LQVec<double> vp(this->outerlattice);
+  PrimitiveTransform PT(this->outerlattice.get_hall());
+  is_inner &= PT.does_anything();
+  if (!(is_outer || is_inner))
+    throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
+  if (is_inner)
+    vp = transform_from_primitive(this->outerlattice, v);
+  const LQVec<double> & vref = is_inner ? vp : v;
+  status_update("Generate a convex polyhedron from\n", vref.to_string());
+  this->ir_polyhedron = Polyhedron(vref.get_xyz());
+  status_update("Generated a ", this->ir_polyhedron.string_repr()," from the specified vertices");
+  // check that the polyhedron we've specified has the desired properties
+  if (this->check_ir_polyhedron()){
+    // set the wedge normals as well
+    LQVec<double> ir_n = this->get_ir_normals();
+    LQVec<double> ir_p = this->get_ir_points();
+    LQVec<double> bz_n = this->get_normals();
+    LQVec<double> bz_p = this->get_points();
+    ArrayVector<bool> not_bz(1u, 0u);
+    for (size_t i=0; i<bz_n.size(); ++i){
+      // check if the irBZ face point is on a first BZ zone face too
+      not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
+      ir_n = ir_n.extract(not_bz);
+      ir_p = ir_p.extract(not_bz);
+    }
+    // the remaining irBZ faces are the irreducible reciprocal space wedge
+    // which we store with the opposite sign in this->ir_wedge_normals
+    this->set_ir_wedge_normals(-ir_n);
+    return true;
+  }
+  return false;
+}
 Polyhedron BrillouinZone::get_polyhedron(void) const {return this->polyhedron;}
 Polyhedron BrillouinZone::get_ir_polyhedron(const bool true_ir) const {
   if (!true_ir) return this->ir_polyhedron;
@@ -62,6 +97,31 @@ Polyhedron BrillouinZone::get_ir_polyhedron(const bool true_ir) const {
   // otherwise, something has gone wrong. return the full first Brillouin zone
   return this->ir_polyhedron;
   // return this->polyhedron;
+}
+bool BrillouinZone::check_ir_polyhedron(void){
+  PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
+  double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
+  Polyhedron irbz = this->get_ir_polyhedron(), rotated;
+  if (approx_scalar(irbz.get_volume(), volume_goal)){
+    // get the operations of the pointgroup which are not 1 or -1
+    // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
+    PointSymmetry ps = fullps.higher(1);
+    for (size_t i=0; i<ps.size(); ++i){
+      // if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
+      status_update("Rotate the polyhedron by", ps.get(i));
+      rotated = irbz.rotate(ps.get(i));
+      status_update("Checking for intersection ",i);
+      if (irbz.intersects(rotated)){
+        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation\n", ps.get(i));
+        return false;
+      }
+    }
+    // volume is right and no intersections
+    return true;
+  }
+  status_update("The current 'irreducible' polyhedron has the wrong volume");
+  status_update("Since ",irbz.get_volume()," != ",volume_goal);
+  return false;
 }
 
 // first Brillouin zone
@@ -213,7 +273,9 @@ void BrillouinZone::print() const {
 
 // #include "bz_wedge_0.cpp" // defines different wedge_search versions for MSVC
 #include "bz_wedge_1.cpp" // defines wedge_search
-#include "bz_wedge_2.cpp" // defines wedge_brute_force
+// #include "bz_wedge_2.cpp" // defines wedge_brute_force
+#include "bz_wedge_3.cpp" // defines new wedge_brute_force
+#include "bz_wedge_explicit.cpp" // defines wedge_explicit
 
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
@@ -278,8 +340,8 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
     return false;
   }
   if (num>0 && (p0 || p1)){
-    if (p0) status_update(msg, "-n0 present; addition causes null wedge)");
-    if (p1) status_update(msg, "-n1 present; addition causes null wedge)");
+    status_update_if(p0, msg, "-n0 present; addition causes null wedge)");
+    status_update_if(p1, msg, "-n1 present; addition causes null wedge)");
     return false;
   }
   normals.set(num,   n0.get(0));
@@ -557,52 +619,6 @@ void BrillouinZone::irreducible_vertex_search(){
   verbose_status_update("Found a ",this->ir_polyhedron.string_repr());
 }
 
-
-// void BrillouinZone::voro_search(const int extent){
-//   std::array<double, 3> bbmin({1e3,1e3,1e3}), bbmax({-1e3,-1e3,-1e3});
-//   ArrayVector<double> tau = LQVec<int>(this->lattice, make_relative_neighbour_indices(extent)).get_xyz();
-//   std::cout << "tau\n" << tau.to_string();
-//   size_t ntau = tau.size();
-//   double tij;
-//   for (size_t i=0; i<ntau; ++i)
-//     for (size_t j=0; j<3u; ++j){
-//       tij = tau.getvalue(i, j);
-//       if (tij < bbmin[j]) bbmin[j] = tij;
-//       if (tij > bbmax[j]) bbmax[j] = tij;
-//   }
-//   std::cout << "Bounding box: [";
-//   for (auto x: bbmin) std::cout << " " << x;
-//   std::cout << " ] [";
-//   for (auto x: bbmax) std::cout << " " << x;
-//   std::cout << " ]" << std::endl;;
-//   // create an initialize the voro++ voronoicell object
-//   voro::voronoicell voronoi;
-//   voronoi.init(bbmin[0], bbmax[0], bbmin[1], bbmax[1], bbmin[2], bbmax[2]);
-//   // and then use the reciprocal lattice points to subdivide the cell until
-//   // only the first Brillouin zone is left:
-//   for (size_t i=0; i<ntau; ++i)
-//     voronoi.plane(tau.getvalue(i,0)/2.0, tau.getvalue(i,1)/2.0, tau.getvalue(i,2)/2.0);
-//   // convert the voronoicell into a Polyhedron object
-//   std::vector<double> v, n;
-//   voronoi.vertices(v);
-//   std::cout << "v ="; for (auto x: v) std::cout << " " << x; std::cout << std::endl;
-//   voronoi.normals(n);
-//   std::cout << "n ="; for (auto x: n) std::cout << " " << x; std::cout << std::endl;
-//   size_t nv = v.size()/3u, nn = n.size()/3u;
-//   //convert from absolute coordinates back to the primitive unit cell rlu
-//   double fromxyz[9];
-//   this->lattice.get_inverse_xyz_transform(fromxyz);
-//   LQVec<double> lv(this->lattice, nv), ln(this->lattice, nn);
-//   for (size_t i=0; i<nv; i++)
-//     multiply_matrix_vector<double,double,double,3>(lv.datapointer(i), fromxyz, v.data()+3u*i);
-//   for (size_t i=0; i<nn; i++)
-//     multiply_matrix_vector<double,double,double,3>(ln.datapointer(i), fromxyz, n.data()+3u*i);
-//
-//   std::cout << "v =\n" << lv.to_string();
-//   std::cout << "n =\n" << ln.to_string();
-//   // let set_polyhedron handle the coordinate transform for the polyhedron
-//   this->set_polyhedron(lv, ln);
-// }
 void BrillouinZone::voro_search(const int extent){
   std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
   LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
@@ -645,6 +661,10 @@ void BrillouinZone::vertex_search(const int extent){
   // an improved method: 0.5*∑ᵢ₌₁ᴺ⁻¹ i²-i  -- we can skip 1 and the last value of our for loop is N-1
   for (int i=2; i<ntau; ++i) ntocheck += (i*(i-1))>>1;
   // Is there a closed-form equivalent to this expression?
+  // Yes. This is, of course, the Binomal coefficient (ntau, 3)
+  unsigned long long bc = binomial_coefficient(static_cast<unsigned>(ntau), 3u);
+  if (bc != static_cast<unsigned long long>(ntocheck))
+    throw std::runtime_error("Mistake calculating the binomial coefficient?!");
 
   LQVec<double> all_vertices(this->lattice,ntocheck);
   ArrayVector<int> all_ijk(3,ntocheck);

@@ -601,3 +601,41 @@ S coth_over_en(const std::complex<T> en, const R beta){
   S den = static_cast<S>(std::real(std::tanh(en*beta*0.5)*en));
   return S(1)/den;
 }
+
+template<class T, class R>
+enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
+binomial_coefficient(const T n, const R k){
+  unsigned long long ans{1}, num{1}, den{1}, lastnum, lastden, comdiv;
+  if (k>n)
+    throw std::domain_error("The binomial coefficient requires more choices than selections");
+  // the Binomial coefficient is symmetric due to the denominator k!(n-k)!
+  R m = (n-k < k) ? n-k : k;
+  bool overflow = false;
+  for (R i=0; i<m; ++i){
+    lastnum = num;
+    lastden = den;
+    num *= static_cast<unsigned long long>(n-i);
+    den *= static_cast<unsigned long long>(i+1);
+    if (lastnum > num || lastden > den){
+      comdiv = std::gcd(lastnum, lastden);
+      if (comdiv > 1){
+        num = lastnum/comdiv;
+        den = lastden/comdiv;
+        --i;
+      } else {
+        overflow = true;
+      }
+    }
+    if (overflow) break;
+  }
+
+  if (overflow){
+    long double dans{1};
+    for (T i=0; i<m; ++i)
+      dans *= static_cast<long double>(n-i)/static_cast<long double>(i+1);
+    ans = std::llround(dans);
+  } else {
+    ans = num/den;
+  }
+  return ans;
+}

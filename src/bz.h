@@ -7,6 +7,7 @@
 #include "pointgroup.h"
 #include <iostream>
 #include <algorithm>
+#include <vector>
 #include "polyhedron.h"
 #include "debug.h"
 // #include "voro++.hh"
@@ -64,34 +65,18 @@ public:
         true true
         false true
         false false */
-      if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
-      if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
+      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
+      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/true);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_brute_force();
+      // if (!this->check_ir_polyhedron()) this->wedge_explicit();
+      this->wedge_brute_force();
       this->check_ir_polyhedron();
     }
   }
-  bool check_ir_polyhedron(void){
-    PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
-    double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
-    Polyhedron irbz = this->get_ir_polyhedron();
-    if (approx_scalar(irbz.get_volume(), volume_goal)){
-      // get the operations of the pointgroup which are not 1 or -1
-      // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
-      PointSymmetry ps = fullps.higher(1);
-      for (size_t i=0; i<ps.size(); ++i)
-      // if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
-      if (irbz.intersects(irbz.rotate(ps.get(i)))){
-        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation\n", ps.get(i));
-        return false;
-      }
-      // volume is right and no intersections
-      return true;
-    }
-    status_update("The current 'irreducible' polyhedron has the wrong volume");
-    return false;
-  }
+  bool check_ir_polyhedron(void);
+  bool wedge_explicit(void);
   //! Returns the lattice passed in at construction
   const Reciprocal get_lattice() const { return this->outerlattice;};
   //! Returns the lattice actually used to find the Brillouin zone vertices,
@@ -119,17 +104,26 @@ public:
   template<typename... A> void set_polyhedron(const LQVec<double>&, const LQVec<double>&, A...);
   /*!
   Set the irreducible first Brillouin zone polyhedron from its vertices, facet
-  plane points, facet plane normals, and either the three intersecting planes
-  which gave each vertex or all intersecting planes which give each vertex as
-  well as all vertices which form a corner of each facet plane polygon.
+  plane points, facet plane normals, and, optionally, all intersecting planes
+  which give each vertex as well as all vertices which form a corner of each
+  facet plane polygon.
   @param vertices All vertices in the polyhedron
   @param points A point on each of the planes which define the facets of the polyhedron
   @param normals The normal direction which, along with the on-plane-point, defines each facet plane
-  @param fpv An ArrayVector<int> with three facet-plane indices for each vertex
-  @param fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
-  @param vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
+  @param [optional] fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
+  @param [optional] vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
   */
   template<typename... A> void set_ir_polyhedron(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, A...);
+  /*!
+  Set the irreducible first Brillouin zone polyhedron from its vertices. Since
+  no facet information is provided via this method, a convex hull of the
+  provided points is calculated and used as the irreducible polyhedron.
+  Additionally the volume and symmetry of the calculated polyhedron is checked
+  against the first Brillouin zone using the pointgroup symmetry operations.
+  @param vertices All vertices in the irreducible polyhedron
+  @returns A bool indicating if the found convex hull polyhedron is the
+           expected volume and has the expected symmetry.                     */
+  bool set_ir_vertices(const LQVec<double>&);
   //! Returns the first Brillouin zone polyhedron
   Polyhedron get_polyhedron(void) const;
   //! Returns the vertices of the first Brillouin zone polyhedron expressed as conventional unit cell vectors
@@ -181,6 +175,7 @@ public:
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
   void wedge_brute_force(void);
+  void wedge_triclinic(void);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
   already identified, this method finds all intersections of combinations of

@@ -61,6 +61,12 @@ public:
       if (m && n) data = safealloc<T>(m*n);
       if (d && m && n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
   };
+  ArrayVector(size_t m, size_t n, const T init): M(m), N(n){
+    if (m&&n){
+      data =safealloc<T>(m*n);
+      for (size_t i=0; i<m*n; ++i) data[i] = init;
+    }
+  }
   /*! ArrayVector contstructor taking shape and stride information for the case
       of a non-contiguous and/or non-row-ordered array at the provided pointer.
       @param d a pointer to the n*m block of data, to be copied
@@ -209,6 +215,7 @@ public:
     @returns An ArrayVector containing the indicies indicated by idx
   */
   ArrayVector<T> extract(const std::vector<size_t>& idx) const;
+  ArrayVector<T> extract(const std::vector<int>& idx) const;
   /*! Return a collection of arrays from the ArrayVector
     @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
     @returns An ArrayVector containing the indicies indicated by tfvec
@@ -328,7 +335,7 @@ public:
   bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
   ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
   bool vector_approx(const size_t i, const size_t j, const std::string& op="", const T val=0.) const;
-  template<class R, size_t Nel> bool rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>&) const;
+  template<class R, size_t Nel> bool rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>&, const int order=1) const;
   //! Round all elements using std::round
   ArrayVector<int> round() const;
   //! Find the floor of all elements using std::floor

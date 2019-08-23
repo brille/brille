@@ -12,6 +12,7 @@
 #include <limits>
 #include <math.h>
 #include <complex>
+#include <numeric>
 #include "safealloc.h"
 #include "debug.h"
 
@@ -202,6 +203,9 @@ template<class T> size_t encode_array_signs(const size_t n, const std::complex<T
 template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, T* v1);
 template<class T> int make_eigenvectors_equivalent(const size_t n, const std::complex<T>* v0, std::complex<T> v1);
 
+template<class T, class R>
+enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
+binomial_coefficient(const T n, const R k);
 
 #include "linear_algebra.hpp"
 
