@@ -200,6 +200,10 @@ class BrillouinZone (unittest.TestCase):
 
     def test_d_all_hallgroups(self):
         failed = 0
+        tested = 0
+        failed_spg = []
+        failed_ptg = []
+        failed_lat = []
         print()
         for i in range(1,531):
             spacegroup = s.Spacegroup(i)
@@ -255,12 +259,18 @@ class BrillouinZone (unittest.TestCase):
 
             vol_bz = bz.polyhedron.volume
             vol_ir = bz.ir_polyhedron.volume
+            tested += 1
             if not np.isclose(vol_ir, vol_bz/s.PointSymmetry(i).size):
                 print(dlat,": ",vol_ir," != ",vol_bz/s.PointSymmetry(i).size)
                 failed += 1
+                failed_spg.append(spacegroup)
+                failed_ptg.append(pointgroup)
+                failed_lat.append(dlat)
 
         if failed > 0:
-            print("Failed for ",failed," out of 530 Hall groups")
+            print("Failed for",failed,"out of",tested,"(max 530) Hall groups")
+            for spg, ptg, lat in zip(failed_spg, failed_ptg, failed_lat):
+                print(spg,ptg,lat)
 
 
 if __name__ == '__main__':

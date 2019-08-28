@@ -4,20 +4,25 @@
 #include <array>
 #include "spg_database.h"
 
-const std::array<double,9> P_I_TRANSFORM{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
-const std::array<double,9> P_F_TRANSFORM{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
-const std::array<double,9> P_A_TRANSFORM{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
-const std::array<double,9> P_B_TRANSFORM{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
-const std::array<double,9> P_C_TRANSFORM{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
-const std::array<double,9> P_R_TRANSFORM{ 0.66666666666666666667,-0.33333333333333333333,-0.33333333333333333333,  0.33333333333333333333, 0.33333333333333333333,-0.66666666666666666667,  0.33333333333333333333, 0.33333333333333333333, 0.33333333333333333333};
-const std::array<double,9> P_P_TRANSFORM{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
-const std::array<int,9> P_P_INVTRNFRM{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
-const std::array<int,9> I_P_TRANSFORM{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
-const std::array<int,9> F_P_TRANSFORM{-1, 1, 1,  1,-1, 1,  1, 1,-1};
-const std::array<int,9> A_P_TRANSFORM{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
-const std::array<int,9> B_P_TRANSFORM{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
-const std::array<int,9> C_P_TRANSFORM{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
-const std::array<int,9> R_P_TRANSFORM{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
+template<class T> static std::array<T,9> transpose(const std::array<T,9>& a){
+  return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
+}
+
+// const std::array<double,9> P_I_TRANSFORM{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
+// const std::array<double,9> P_F_TRANSFORM{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
+// const std::array<double,9> P_A_TRANSFORM{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
+// const std::array<double,9> P_B_TRANSFORM{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
+// const std::array<double,9> P_C_TRANSFORM{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
+// const std::array<double,9> P_R_TRANSFORM{2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
+// // const std::array<double,9> P_R_TRANSFORM{ 0.66666666666666666667,-0.33333333333333333333,-0.33333333333333333333,  0.33333333333333333333, 0.33333333333333333333,-0.66666666666666666667,  0.33333333333333333333, 0.33333333333333333333, 0.33333333333333333333};
+// const std::array<double,9> P_P_TRANSFORM{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
+// const std::array<int,9> P_P_INVTRNFRM{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
+// const std::array<int,9> I_P_TRANSFORM{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
+// const std::array<int,9> F_P_TRANSFORM{-1, 1, 1,  1,-1, 1,  1, 1,-1};
+// const std::array<int,9> A_P_TRANSFORM{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
+// const std::array<int,9> B_P_TRANSFORM{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
+// const std::array<int,9> C_P_TRANSFORM{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
+// const std::array<int,9> R_P_TRANSFORM{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 
 /*! \brief A class to hold transformation matricies and their inverse, with the matrix
 stored in an object determined by a provided BravaisLetter type.
@@ -26,48 +31,109 @@ For each centred real-space-filling lattice there is a transformation matrix P
 which converts its basis vectors into those of an equivalent primitive
 space-filling lattice via,
     (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P
-This transformation matrix has an inverse matrix P⁻¹ which performs the opposite
-conversion of basis vectors, or converts the associated reciprocal space-filling
-lattice basis vectors to their equivalent primitive basis vectors.
+
+The components of a real-space vector expressed in units of the conventional
+cell vectors transforms to the primitive cell expression by
+    xₚ = P⁻¹xₛ
+this can be shown by considering Aₛ = (aₛ,bₛ,cₛ) and Aₚ = (aₚ,bₚ,cₚ) then
+    Aₚ = Aₛ P
+and noting that the vector expressed in either lattice remains unchanged
+    Aₚ xₚ = Aₛ xₛ
+    (Aₛ P) xₚ = Aₛ xₛ
+    P xₚ = xₛ
+    xₚ = P⁻¹ xₛ
+
+If we express the reciprocal lattice vectors as the columns of a matrix B, then
+    Aₛ Bₛᵀ ≡ 2π 𝟙
+from which, we can derive the transformation of the reciprocal lattice vectors
+    Aₚ Bₚᵀ = Aₛ Bₛᵀ
+    Aₛ P Bₚᵀ = Aₛ Bₛᵀ
+    Bₚᵀ = P⁻¹ Bₛᵀ
+    Bₚ = Bₛ (P⁻¹)ᵀ
+and a reciprocal lattice vector qₛ can be expressed in the primitive reciprocal
+lattice since Bₚ qₚ = Bₛ qₛ
+    Bₛ (P⁻¹)ᵀ qₚ = Bₛ qₛ
+    (Pᵀ)⁻¹ qₚ = qₛ
+    qₚ = Pᵀ qₛ
+where the commutability of the inverse and transpose, (Pᵀ)⁻¹ ≡ (P⁻¹)ᵀ, has been
+utilized.
 
 This class holds P and P⁻¹ for a given centering type.
 */
 class PrimitiveTransform{
+protected:
+  constexpr static const std::array<double,9> P_P{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
+  constexpr static const std::array<double,9> P_I{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
+  constexpr static const std::array<double,9> P_F{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
+  constexpr static const std::array<double,9> P_A{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
+  constexpr static const std::array<double,9> P_B{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
+  constexpr static const std::array<double,9> P_C{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
+  constexpr static const std::array<double,9> P_R{2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
+  constexpr static const std::array<int,9> invP_P{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
+  constexpr static const std::array<int,9> invP_I{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
+  constexpr static const std::array<int,9> invP_F{-1, 1, 1,  1,-1, 1,  1, 1,-1};
+  constexpr static const std::array<int,9> invP_A{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
+  constexpr static const std::array<int,9> invP_B{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
+  constexpr static const std::array<int,9> invP_C{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
+  constexpr static const std::array<int,9> invP_R{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 private:
   Bravais bravais;    //!< The Bravais enum value
-  std::array<double,9> c2p; //!< The matrix taking centred lattice to the primitive lattice
-  std::array<int   ,9> p2c; //!< The inverse matrix taking the primitive lattice to the centred lattice
 public:
-  PrimitiveTransform(const Bravais c): bravais{c} { set_matrices(); }
-  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} { set_matrices(); }
+  PrimitiveTransform(const Bravais c): bravais{c} {}
+  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} {}
   PrimitiveTransform(const int hall){
     Spacegroup s(hall);
     bravais = s.bravais;
-    set_matrices();
   }
-  void set_matrices(void) {
+  std::array<double,9> get_P(void) const {
     switch (bravais){
-      case Bravais::_: throw std::runtime_error("Invalid Bravais centring"); break;
-      case Bravais::I: c2p=P_I_TRANSFORM; p2c=I_P_TRANSFORM; break;
-      case Bravais::F: c2p=P_F_TRANSFORM; p2c=F_P_TRANSFORM; break;
-      case Bravais::A: c2p=P_A_TRANSFORM; p2c=A_P_TRANSFORM; break;
-      case Bravais::B: c2p=P_B_TRANSFORM; p2c=B_P_TRANSFORM; break;
-      case Bravais::C: c2p=P_C_TRANSFORM; p2c=C_P_TRANSFORM; break;
-      case Bravais::R: c2p=P_R_TRANSFORM; p2c=R_P_TRANSFORM; break;
-              default: c2p=P_P_TRANSFORM; p2c=P_P_INVTRNFRM;
+      case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
+      case Bravais::I: return PrimitiveTransform::P_I;
+      case Bravais::F: return PrimitiveTransform::P_F;
+      case Bravais::A: return PrimitiveTransform::P_A;
+      case Bravais::B: return PrimitiveTransform::P_B;
+      case Bravais::C: return PrimitiveTransform::P_C;
+      case Bravais::R: return PrimitiveTransform::P_R;
+      default: return PrimitiveTransform::P_P;
     }
   }
-  // const double* get_to_primitive_ptr()   const { return c2p.data(); }
-  // const int* get_from_primitive_ptr() const { return p2c.data(); }
-  std::array<double,9> get_to_primitive() const { return c2p; }
-  std::array<int,9> get_from_primitive() const { return p2c; }
+  std::array<int,9> get_invP(void) const {
+    switch (bravais){
+      case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
+      case Bravais::I: return PrimitiveTransform::invP_I;
+      case Bravais::F: return PrimitiveTransform::invP_F;
+      case Bravais::A: return PrimitiveTransform::invP_A;
+      case Bravais::B: return PrimitiveTransform::invP_B;
+      case Bravais::C: return PrimitiveTransform::invP_C;
+      case Bravais::R: return PrimitiveTransform::invP_R;
+      default: return PrimitiveTransform::invP_P;
+    }
+  }
+  std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }
+  std::array<int,9> get_invPt(void) const { return transpose(this->get_invP());}
+  // void set_matrices(void) {
+  //   switch (bravais){
+  //     case Bravais::_: throw std::runtime_error("Invalid Bravais centring"); break;
+  //     case Bravais::I: M=P_I_TRANSFORM; invM=I_P_TRANSFORM; break;
+  //     case Bravais::F: M=P_F_TRANSFORM; invM=F_P_TRANSFORM; break;
+  //     case Bravais::A: M=P_A_TRANSFORM; invM=A_P_TRANSFORM; break;
+  //     case Bravais::B: M=P_B_TRANSFORM; invM=B_P_TRANSFORM; break;
+  //     case Bravais::C: M=P_C_TRANSFORM; invM=C_P_TRANSFORM; break;
+  //     case Bravais::R: M=P_R_TRANSFORM; invM=R_P_TRANSFORM; break;
+  //             default: M=P_P_TRANSFORM; invM=P_P_INVTRNFRM;
+  //   }
+  // }
+  // std::array<double,9> get_to_primitive() const { return M; }
+  // std::array<int,9> get_from_primitive() const { return invM; }
   //
   void print(){
+    std::array<double,9> M = this->get_P();
+    std::array<int,9> invM = this->get_invP();
     for (int i=0; i<3; ++i){
       printf("%3s", i==1 ? "to" :"");
-      for (int j=0; j<3; ++j) printf(" % 4.2f",c2p[i*3+j]);
+      for (int j=0; j<3; ++j) printf(" % 4.2f",M[i*3+j]);
       printf("%5s", i==1 ? "from" : "");
-      for (int j=0; j<3; ++j) printf(" % 2d",p2c[i*3+j]);
+      for (int j=0; j<3; ++j) printf(" % 2d",invM[i*3+j]);
       printf("\n");
     }
   }
@@ -89,8 +155,8 @@ have the same internal data types, templated functions benefit from having a
 single definition of the internal types (especially in the case of changing one
 or both in the future).
 */
-struct PrimitiveTransformTraits{
-  using to = double;
-  using from = int;
+struct PrimitiveTraits{
+  using P = double;
+  using invP = int;
 };
 #endif

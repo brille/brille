@@ -383,13 +383,20 @@ Direct Direct::primitive(void) const{
   double plm[9], lm[9];
   PrimitiveTransform P(this->hall);
   if (P.does_anything()){
-    this->get_lattice_matrix(lm);
-    std::array<double,9> Parray = P.get_to_primitive();
-    multiply_matrix_matrix<double,double,double,3>(plm,lm,Parray.data());
+    this->get_lattice_matrix(lm); // now returns *row* vectors!
+    // The transformation matrix P gives us the primitive basis column-vector
+    // matrix Aₚ from the standard basis column-vector matrix Aₛ by
+    // Aₚ = Aₛ P. But here we have Aₛᵀ and want Aₚᵀ:
+    // Aₚᵀ = (Aₛ P)ᵀ = Pᵀ Aₛᵀ
+    // So we need the transpose of P from the PrimitiveTransform object:
+    multiply_matrix_matrix<double,double,double,3>(plm,P.get_Pt().data(),lm);
     return Direct(plm);
   }
   return *this;
 }
 Reciprocal Reciprocal::primitive(void) const{
+  // We could try to use the fact that for column vectors Bₚ = Bₛ (P⁻¹)ᵀ
+  // but it's probably safer to continue using the reciprocal of the primitive
+  // of the reciprocal of this lattice.
   return this->star().primitive().star();
 }

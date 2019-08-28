@@ -105,6 +105,14 @@ const int * PointSymmetry::data(const size_t i) const {
 Matrix<int> PointSymmetry::get(const size_t i) const {
   return (i<this->size()) ? this->R[i] : Matrix<int>({0,0,0,0,0,0,0,0,0});
 }
+Matrix<int> PointSymmetry::get_proper(const size_t i) const {
+  Matrix<int> out{0,0,0, 0,0,0, 0,0,0};
+  if (i<this->size()){
+    out = this->R[i];
+    if (this->isometry(i) < 0) for (size_t j=0; j<9u; ++j) out[j] *= -1;
+  }
+  return out;
+}
 // const Matrix<int>& PointSymmetry::get(const size_t i) const {
 //   if (i>=this->size())
 //     throw std::out_of_range("The requested symmetry operation is out of range");

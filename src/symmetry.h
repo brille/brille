@@ -103,6 +103,7 @@ public:
   size_t               erase(const size_t i)                                   ;
   bool                 has(const Matrix<int>&)                            const;
   Matrix<int>          get(const size_t i)                                const;
+  Matrix<int>          get_proper(const size_t i)                         const;
   // const Matrix<int>&   get(const size_t i)                                const;
   void                 sort(const int ad=0)                                    ;
   void                 permute(const std::vector<size_t>&)                     ;

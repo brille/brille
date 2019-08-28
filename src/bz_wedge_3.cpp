@@ -83,6 +83,18 @@ void BrillouinZone::wedge_brute_force(void){
   });
   ps.permute(perm); // ps now sorted with shortest stationary axis first
 
+  ArrayVector<bool> keep(1u, 0u);
+  if (fullps.has_space_inversion()){
+    // ps does not include 1 or -1, so all operations have stationary axes
+    LQVec<int> all_axes(this->outerlattice, ps.axes());
+    if (all_axes.is_unique().count_true() == 1u){
+      status_update("Deal with -1 since there is only one stationary axis");
+      // use the stationary axis as the normal of a mirror plane
+      keep = dot(all_axes.extract(0), special).is_approx(">=", 0.);
+      special = special.extract(keep);
+    }
+  }
+
   status_update("Deal with 2-fold axes along highest-symmetry directions first");
 
   std::vector<bool> sym_unused(ps.size(), true);
@@ -90,7 +102,7 @@ void BrillouinZone::wedge_brute_force(void){
   LQVec<int> eis(this->outerlattice, 9u);
   LQVec<int> vec(this->outerlattice, 1u);// must be int since ps.axis returns array<int,3>
   LQVec<double> nrm(this->outerlattice, 1u), pts(this->outerlattice, 2u);
-  ArrayVector<bool> is_ei(1u, 9u), keep(1u, 0u);
+  ArrayVector<bool> is_ei(1u, 9u);
   std::vector<std::array<int,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1}};
   for (size_t i=0; i<9u; ++i) eis.set(i, eiv[i]);
 
@@ -139,7 +151,8 @@ void BrillouinZone::wedge_brute_force(void){
       one_type.push_back(j);
       unfound[j] = false;
       for (size_t k=j+1; k<special.size(); ++k)
-      if (unfound[k] && special.rotate_approx(k, j, ps.get(i), -ps.order(i))){ // -order checks all possible rotations
+      // if (unfound[k] && special.rotate_approx(k, j, ps.get(i), -ps.order(i))){ // -order checks all possible rotations
+      if (unfound[k] && special.rotate_approx(k, j, ps.get_proper(i), -ps.order(i))){ // -order checks all possible rotations
         one_type.push_back(k);
         unfound[k] = false;
       }
@@ -151,7 +164,8 @@ void BrillouinZone::wedge_brute_force(void){
       type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
       for (int o=0; o<ps.order(i); ++o)
       for (size_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
-        if (special.rotate_approx(one_type[k], j, ps.get(i), o)){
+        // if (special.rotate_approx(one_type[k], j, ps.get(i), o)){
+        if (special.rotate_approx(one_type[k], j, ps.get_proper(i), o)){
           type_order[o] = one_type[k];
           type_unfound[k] = false;
         }
@@ -218,7 +232,7 @@ void BrillouinZone::wedge_brute_force(void){
     }
   }
 
-  status_update("Remaining special points\n", special.to_string());
+  // status_update("Remaining special points\n", special.to_string());
 
   // append the Γ point onto the list of special points:
   special.resize(special.size()+1u);

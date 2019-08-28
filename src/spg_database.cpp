@@ -64,6 +64,12 @@ std::string bravais_string(const Bravais b){
 '            BASE' --> 'Bravais::X' (not present)
 2019-05-28 G Tucker */
 
+/* To switch from fixed-length character arrays to strings, the regex
+    "([A-Za-z0-9^=\-\s_/\(]*[A-Za-z0-9=\)])(\s+)"
+   can be used to select all strings with trailing spaces, to be replaced by
+    "$1"$2
+*/
+
 /* In Hall symbols (3rd column), '=' is used instead of '"'. */
 static const Spacegroup ALL_SPACEGROUPS[] = {
   {  0, "      ", "                ", "                               ", "                   ", "          ", "     ", Bravais::_,  0 }, /*   0 */

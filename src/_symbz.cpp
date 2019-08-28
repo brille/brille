@@ -196,11 +196,19 @@ PYBIND11_MODULE(_symbz,m){
     pt.def(py::init<int>(),py::arg("Hall number"));
     pt.def_property_readonly("P",[](const PrimitiveTransform &p){
       std::vector<ssize_t> sz={3,3};
-      return sa2np(sz,p.get_to_primitive());
+      return sa2np(sz,p.get_P());
     });
     pt.def_property_readonly("invP",[](const PrimitiveTransform &p){
       std::vector<ssize_t> sz={3,3};
-      return sa2np(sz,p.get_from_primitive());
+      return sa2np(sz,p.get_invP());
+    });
+    pt.def_property_readonly("Pt",[](const PrimitiveTransform &p){
+      std::vector<ssize_t> sz={3,3};
+      return sa2np(sz,p.get_Pt());
+    });
+    pt.def_property_readonly("invPt",[](const PrimitiveTransform &p){
+      std::vector<ssize_t> sz={3,3};
+      return sa2np(sz,p.get_invPt());
     });
     pt.def_property_readonly("does_anything",&PrimitiveTransform::does_anything);
     pt.def_property_readonly("is_primitive",&PrimitiveTransform::does_nothing);

@@ -10,7 +10,7 @@
 #include <complex>
 
 // #define VERBOSE_DEBUG
-// #define DEBUG // comment-out for no debugging output
+#define DEBUG // comment-out for no debugging output
 
 int terminal_width(void);
 int terminal_height(void);
