@@ -24,8 +24,8 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b, const 
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;
   isfpR = std::is_floating_point<R>::value;
-  T Ttol = static_cast<T>(tol*1000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = static_cast<R>(tol*1000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
   if ( isfpT || isfpR ){
     if (isfpT && isfpR){
@@ -51,8 +51,8 @@ template<typename T, typename R> bool approx_array(const int N, const int M, con
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;
   isfpR = std::is_floating_point<R>::value;
-  T Ttol = static_cast<T>(tol*1000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = static_cast<R>(tol*1000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
   if ( isfpT || isfpR ){
     if (isfpT && isfpR){
@@ -606,8 +606,11 @@ template<class T, class R>
 enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
 binomial_coefficient(const T n, const R k){
   unsigned long long ans{1}, num{1}, den{1}, lastnum, lastden, comdiv;
-  if (k>n)
-    throw std::domain_error("The binomial coefficient requires more choices than selections");
+  if (k>n){
+    std::string msg = "The binomial coefficient requires more choices than selections.";
+    msg += "\n binomial_coefficient(" + std::to_string(n) + ":" + std::to_string(k) + ") is invalid";
+    throw std::domain_error(msg);
+  }
   // the Binomial coefficient is symmetric due to the denominator k!(n-k)!
   R m = (n-k < k) ? n-k : k;
   bool overflow = false;

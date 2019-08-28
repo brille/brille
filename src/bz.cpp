@@ -108,7 +108,7 @@ bool BrillouinZone::check_ir_polyhedron(void){
     PointSymmetry ps = fullps.higher(1);
     for (size_t i=0; i<ps.size(); ++i){
       // if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
-      status_update("Rotate the polyhedron by", ps.get(i));
+      status_update("Rotate the polyhedron by\n", ps.get(i));
       rotated = irbz.rotate(ps.get(i));
       status_update("Checking for intersection ",i);
       if (irbz.intersects(rotated)){
@@ -628,8 +628,12 @@ void BrillouinZone::voro_search(const int extent){
   std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
     return primtau.norm(a) < primtau.norm(b);
   });
+  verbose_status_update("unsorted primtau\n",primtau.to_string(norm(primtau)));
+  verbose_status_update("permutation:",perm);
   primtau.permute(perm);
+  verbose_status_update("sorted primtau\n",primtau.to_string(norm(primtau)));
   LQVec<double> convtau = transform_from_primitive(this->outerlattice, primtau);
+  verbose_status_update("convtau\n",convtau.to_string(norm(convtau)));
   // the first Brillouin zone polyhedron will be expressed in absolute units
   // in the xyz frame of the conventional reciprocal lattice
   ArrayVector<double> tau = convtau.get_xyz();
@@ -662,6 +666,7 @@ void BrillouinZone::vertex_search(const int extent){
   for (int i=2; i<ntau; ++i) ntocheck += (i*(i-1))>>1;
   // Is there a closed-form equivalent to this expression?
   // Yes. This is, of course, the Binomal coefficient (ntau, 3)
+  status_update_if(ntau<3, "vertex_search:: Not enough taus for binomial coefficient");
   unsigned long long bc = binomial_coefficient(static_cast<unsigned>(ntau), 3u);
   if (bc != static_cast<unsigned long long>(ntocheck))
     throw std::runtime_error("Mistake calculating the binomial coefficient?!");

@@ -152,8 +152,20 @@ private:
   }
   template<typename T, typename... L>
   void inner_print(const std::vector<std::vector<T>>& vv, L... args){
-    for (auto v: vv) this->inner_print(v,"\n");
-    this->inner_print(args...);
+    size_t l = max_element_length(vv);
+    size_t w = static_cast<size_t>(terminal_width());
+    size_t num;
+    std::string s;
+    if (l) w /= l+1;
+    for (auto v: vv){
+      num = 0;
+      for (auto x: v){
+        s += my_to_string(x, l);
+        if (!(++num %w)) s += "\n";
+      }
+      s += "\n";
+    }
+    this->inner_print(s, args...);
   }
   template<typename T, size_t N, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
@@ -166,7 +178,7 @@ private:
       for (size_t i=0; i<x.size(); i+=num){
         for (int a=0; a<3; ++a){
           for (size_t j=0; j<num && (i+j)<x.size(); ++j){
-            for (int b=0; b<3; ++b) s += " " + my_to_string(x[i+j][a*3+b], l);
+            for (int b=0; b<3; ++b) s += my_to_string(x[i+j][a*3+b], l);
             s += " ";
           }
           s += "\n";
@@ -177,7 +189,7 @@ private:
       if (l) w /= l+1;
       for (size_t i=0; i<x.size(); num=0, ++i){
         for (auto y: x[i]){
-          s += " " + my_to_string(y, l);
+          s += my_to_string(y, l);
           if (!(++num % w)) s += "\n";
         }
         s += "\n";

@@ -156,7 +156,7 @@ class BrillouinZone (unittest.TestCase):
         self.assertEqual(n.shape[0], 8) # and there is one for each of the six faces
         self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
         n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
-        self.assertTrue((n_dot_p == 1.0).all())
+        self.assertTrue(np.allclose(n_dot_p, 1.))
 
         expected= np.array([ [-1, 0, 0],[-1, 1, 0],[0,-1, 0],[0, 0,-1],[0, 0, 1],[0, 1, 0],[1,-1, 0],[1, 0, 0] ])
         self.assertTrue(vector_lists_match(p, expected/2))
@@ -200,10 +200,11 @@ class BrillouinZone (unittest.TestCase):
 
     def test_d_all_hallgroups(self):
         failed = 0
-        for i in range(1, 531):
+        print()
+        for i in range(1,531):
             spacegroup = s.Spacegroup(i)
             pointgroup = s.Pointgroup(spacegroup.pointgroup_number)
-            a = 1; b = 1; c = 1; al = np.pi/2; be = np.pi/2; ga = np.pi/2
+            a = 5; b = 5; c = 5; al = np.pi/2; be = np.pi/2; ga = np.pi/2
             # nothing to do for cubic spacegroups
             if 'hexa' in pointgroup.holohedry:
                 ga = 2*np.pi/3
@@ -213,48 +214,49 @@ class BrillouinZone (unittest.TestCase):
                 else: # 'H' setting or normally hexagonal
                     ga = 2*np.pi/3
             elif 'tetr' in pointgroup.holohedry:
-                c = 2
+                c = 10
             elif 'orth' in pointgroup.holohedry:
                 axperm = spacegroup.choice.replace('-','')
                 if 'cab' in axperm:
-                    c = 1; a = 2; b = 3;
+                    c = 5; a = 10; b = 15;
                 elif 'cba' in axperm:
-                    c = 1; b = 2; a = 1;
+                    c = 5; b = 10; a = 15;
                 elif 'bca' in axperm:
-                    b = 1; c = 2; a = 3;
+                    b = 5; c = 10; a = 15;
                 elif 'bac' in axperm:
-                    b = 1; a = 2; c = 3;
+                    b = 5; a = 10; c = 15;
                 elif 'acb' in axperm:
-                    a = 1; c = 2; b = 3;
+                    a = 5; c = 10; b = 15;
                 else:
-                    a = 1; b = 2; c = 3;
+                    a = 5; b = 10; c = 15;
             elif 'mono' in pointgroup.holohedry:
+                continue # skip all monoclinic pointgroups for now
                 if 'a' in spacegroup.choice:
-                    a = 2; al = np.pi/180*(91+19*np.random.rand())
+                    a = 10; al = np.pi/180*(91+19*np.random.rand())
                 elif 'b' in spacegroup.choice:
-                    b = 2; be = np.pi/180*(91+19*np.random.rand())
+                    b = 10; be = np.pi/180*(91+19*np.random.rand())
                 elif 'c' in spacegroup.choice:
-                    c = 2; ga = np.pi/180*(91+19*np.random.rand())
+                    c = 10; ga = np.pi/180*(91+19*np.random.rand())
                 else:
                     print("Monoclinic without 'a', 'b', or 'c' choice?? ", spacegroup.choice)
-                continue
+                    continue
             elif 'tric' in pointgroup.holohedry:
-                a = 1; b = 2; c = 3;
+                a = 5; b = 10; c = 15;
                 al = np.pi/3*(1 + np.random.rand())
                 be = np.pi/3*(1 + np.random.rand())
                 ga = np.pi/3*(1 + np.random.rand())
 
             dlat, rlat = make_dr(a, b, c, al, be, ga, i)
 
-            print("Hall ", i, " ", dlat)
+            # print("Hall ", i, " ", dlat)
+            print(spacegroup,pointgroup)
 
             bz = s.BrillouinZone(rlat)
 
             vol_bz = bz.polyhedron.volume
             vol_ir = bz.ir_polyhedron.volume
             if not np.isclose(vol_ir, vol_bz/s.PointSymmetry(i).size):
-                print(spacegroup)
-                print(dlat)
+                print(dlat,": ",vol_ir," != ",vol_bz/s.PointSymmetry(i).size)
                 failed += 1
 
         if failed > 0:

@@ -60,8 +60,8 @@ template<class T> int face_has_area(const ArrayVector<T>& points){
   // pick the first three points to define a plane, then ensure all points are in it
   if (points.size()<3) return -2; // can't be a face
   ArrayVector<T> p0 = points.extract(0);
-  ArrayVector<double> n = cross(points.extract(1)-p0, points.extract(2)-p0);
-  if (!dot(n, points-p0).all_approx("==",0.)) return -1; // non-coplanar
+  // ArrayVector<double> n = cross(points.extract(1)-p0, points.extract(2)-p0);
+  // if (!dot(n, points-p0).all_approx("==",0.)) return -1; // non-coplanar
   T s=0;
   ArrayVector<T> a,b;
   for (size_t i=1; i<points.size()-1; ++i){
@@ -191,6 +191,8 @@ public:
              const ArrayVector<double>& p,
              const ArrayVector<double>& n):
   vertices(v), points(p), normals(n) {
+    verbose_status_update("Construct a polyhedron from vertices:\n",vertices.to_string());
+    verbose_status_update("and planes (points, normals):\n", normals.to_string(points));
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
@@ -223,16 +225,29 @@ public:
     return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
     // return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, this->vertices_per_face);
   }
+  // template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
+  //   ArrayVector<double> newv(3u, this->vertices.size()), newp(3u, this->points.size()), newn(3u, this->normals.size());
+  //   for (size_t i=0; i<this->vertices.size(); ++i)
+  //     multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), this->vertices.datapointer(i));
+  //   for (size_t i=0; i<this->points.size(); ++i)
+  //     multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), this->points.datapointer(i));
+  //   for (size_t i=0; i<this->normals.size(); ++i)
+  //     multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), this->normals.datapointer(i));
+  //   return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+  //   // return Polyhedron(newv, newp, newn);
+  // }
   template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
-    ArrayVector<double> newv(3u, this->vertices.size()), newp(3u, this->points.size()), newn(3u, this->normals.size());
-    for (size_t i=0; i<this->vertices.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), this->vertices.datapointer(i));
-    for (size_t i=0; i<this->points.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), this->points.datapointer(i));
-    for (size_t i=0; i<this->normals.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), this->normals.datapointer(i));
-    return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
-    // return Polyhedron(newv, newp, newn);
+    ArrayVector<double> newv(3u, vertices.size());
+    ArrayVector<double> newp(3u, points.size());
+    ArrayVector<double> newn(3u, normals.size());
+    for (size_t i=0; i<vertices.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), vertices.datapointer(i));
+    for (size_t i=0; i<points.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), points.datapointer(i));
+    for (size_t i=0; i<normals.size(); ++i)
+      multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), normals.datapointer(i));
+    // return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+    return Polyhedron(newv, newp, newn);
   }
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
@@ -363,6 +378,7 @@ protected:
        plane normal. If the plane passing through the three points partitions
        space into point-free and not-point-free then it is one of the planes of
        the convex-hull.                                                       */
+    status_update_if(vertices.size()<3, "find_convex_hull:: Not enough vertices for binomial_coefficient");
     unsigned long long bc = binomial_coefficient(vertices.size(), 3u);
     if (bc > static_cast<unsigned long long>(std::numeric_limits<size_t>::max()))
       throw std::runtime_error("Too many vertices to count all possible normals with a `size_t` integer");
@@ -417,6 +433,7 @@ protected:
       isonplane = dot(normals, vertices.extract(i) - points).is_approx("==",0.);
       for (size_t j=0; j<points.size(); ++j) if (isonplane.getvalue(j)) fpv[i].push_back(static_cast<int>(j));
     }
+    verbose_status_update("Found faces per vertex array\n",fpv);
     this->faces_per_vertex = fpv;
   }
   void polygon_vertices_per_face(void) {
@@ -431,12 +448,13 @@ protected:
         if (flag) vpf[facet].push_back(i);
       }
     }
-
+    verbose_status_update("Found vertices per face array\n", vpf);
     // additionally, we only want to keep faces which describe polygons
-    std::vector<bool> is_polygon;
+    std::vector<bool> is_polygon(vpf.size(), true);
     for (size_t i=0; i<vpf.size(); ++i)
-      is_polygon.push_back(face_has_area(vertices.extract(vpf[i]))>0);
-      // is_polygon.push_back(vpf[i].size()>2);
+      is_polygon[i] = face_has_area(vertices.extract(vpf[i])) > 0;
+    verbose_status_update("Face is polygon:",is_polygon);
+
     this->points = this->points.extract(is_polygon);
     this->normals = this->normals.extract(is_polygon);
 
@@ -447,11 +465,14 @@ protected:
     for (size_t i=0; i<faces_per_vertex.size(); ++i)
     for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(map[facet]);
     this->faces_per_vertex = reduced_fpv;
+    verbose_status_update("Faces per vertex reduced to\n", faces_per_vertex);
 
     // plus cut-down the vertices_per_face vector
     std::vector<std::vector<int>> polygon_vpf;
-    for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);
+    for (size_t i=0; i<vpf.size(); ++i) if (is_polygon[i]) polygon_vpf.push_back(vpf[i]);
+    // for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);
     this->vertices_per_face = polygon_vpf;
+    verbose_status_update("Vertices per (polygon) face\n", vertices_per_face);
   }
   void sort_polygons(void){
     std::vector<std::vector<int>> sorted_vpp(this->points.size());
@@ -469,7 +490,7 @@ protected:
       facet_centre = sum(facet_verts)/static_cast<double>(facet.size());
       facet_verts -= facet_centre; // these are now on-face vectors to each vertex
       // if a point happens to be at the face centre dividing by the norm is a problem.
-      // facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
+      facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
       perm.resize(facet.size());
       perm[0] = 0; // always start with whichever vertex is first
       for (size_t i=1; i<facet.size(); ++i){
@@ -703,6 +724,7 @@ public:
         verbose_status_update("keep? plane points:\n",pp.to_string(keep));
         // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
         pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
+        // pout = Polyhedron(pv);
         verbose_status_update("New ",pout.string_repr());
         // copy the updated vertices, normals, and relational information
         pv=pout.get_vertices();

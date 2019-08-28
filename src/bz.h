@@ -50,12 +50,18 @@ public:
     // initial test_extent based on spacegroup or pointgroup?
     while (!approx_scalar(new_volume, old_volume)){
       old_volume = new_volume;
-      // this->vertex_search(++test_extent);
       this->voro_search(++test_extent);
       new_volume = this->polyhedron.get_volume();
-      verbose_status_update("New polyhedron volume ", new_volume);
     }
-    verbose_status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
+    // fallback in case voro_search fails for some reason?!?
+    if (approx_scalar(new_volume, 0.)){
+      status_update("voro_search failed to produce a non-null first Brillouin zone.");
+      this->vertex_search(extent);
+    } else {
+      verbose_status_update("New polyhedron volume ", this->polyhedron.get_volume());
+      verbose_status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
+    }
+
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
