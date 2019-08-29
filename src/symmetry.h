@@ -2,10 +2,10 @@
 #ifndef _SYMMETRY_H_
 #define _SYMMETRY_H_
 
-#include <vector>
-#include <array>
+// #include <vector>
+// #include <array>
 #include <algorithm>
-#include <numeric>
+// #include <numeric>
 #include "linear_algebra.h"
 
 template<class T> using Matrix = std::array<T,9>;

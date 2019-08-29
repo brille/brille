@@ -178,14 +178,19 @@ public:
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
+    // this->sort_polygons();
+    this->purge_central_polygon_vertices();
     this->sort_polygons();
+    this->purge_extra_vertices();
   }
   // initialize from vertices, points, and all relational information
   Polyhedron(const ArrayVector<double>& v,
              const ArrayVector<double>& p,
              const std::vector<std::vector<int>>& fpv,
              const std::vector<std::vector<int>>& vpf):
-    vertices(v), points(p), normals(p/norm(p)), faces_per_vertex(fpv), vertices_per_face(vpf){}
+    vertices(v), points(p), normals(p/norm(p)), faces_per_vertex(fpv), vertices_per_face(vpf){
+    this->sort_polygons();
+  }
   // initalize from vertices, points, normals, and three-plane intersection information
   //! Build a Polyhedron from vertices, on-face points, and face normals
   Polyhedron(const ArrayVector<double>& v,
@@ -197,7 +202,10 @@ public:
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
+    // this->sort_polygons();
+    this->purge_central_polygon_vertices();
     this->sort_polygons();
+    this->purge_extra_vertices();
   }
   // initialize from vertices, points, normals, and all relational information
   Polyhedron(const ArrayVector<double>& v,
@@ -247,8 +255,8 @@ public:
       multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), points.datapointer(i));
     for (size_t i=0; i<normals.size(); ++i)
       multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), normals.datapointer(i));
-    // return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
-    return Polyhedron(newv, newp, newn);
+    return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+    // return Polyhedron(newv, newp, newn);
   }
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
@@ -487,7 +495,7 @@ protected:
     ArrayVector<bool> is_centre_av(1u, 0u);
     std::vector<bool> is_centre;
     size_t facet_size;
-    status_update("Starting vertices_per_face\n",vertices_per_face);
+    verbose_status_update("Starting vertices_per_face\n",vertices_per_face);
     for (size_t j=0; j<normals.size(); ++j){
       facet_size = vertices_per_face[j].size();
       facet_normal = normals.extract(j);
@@ -498,7 +506,7 @@ protected:
       is_centre_av = norm(facet_verts).is_approx("==",0.);
       is_centre.resize(is_centre_av.size());
       for (size_t i=0; i<is_centre_av.size(); ++i) is_centre[i] = is_centre_av.getvalue(i);
-      status_update("Face ",j," has central vertices", is_centre);
+      verbose_status_update("Face ",j," has central vertices", is_centre);
       for (size_t i=0; i<vertices_per_face[j].size();){
         if (is_centre[i]){
           is_centre.erase(is_centre.begin()+i);
@@ -508,9 +516,9 @@ protected:
         }
       }
     }
-    status_update("Pre-purge vertices_per_face\n",vertices_per_face);
+    // status_update("Pre-purge vertices_per_face\n",vertices_per_face);
     this->actual_vertex_purge();
-    status_update("Purged vertices_per_face\n",vertices_per_face);
+    // status_update("Purged vertices_per_face\n",vertices_per_face);
   }
   void actual_vertex_purge(void){
     // go through all faces again and determine whether a vertex is present
@@ -524,7 +532,7 @@ protected:
       keep.insert(flag, i);
     }
     if (keep.count_true() < vertices.size()){
-      status_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
+      verbose_status_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
       // Remap the vertices_per_face array
       size_t count = 0, max=keep.count_true();
       std::vector<size_t> map;
@@ -543,13 +551,14 @@ protected:
   void sort_polygons(void){
     std::vector<std::vector<int>> sorted_vpp(this->points.size());
     ArrayVector<double> facet_verts(3u, 0u), facet_centre, facet_normal;
-    std::vector<int> facet, perm;
+    std::vector<int> facet, perm, used;
     std::vector<double> angles;
     double min_angle;
     size_t min_idx;
     ArrayVector<double> all_normals = this->get_normals();
     for (size_t j=0; j<this->points.size(); ++j){
       facet = this->vertices_per_face[j];
+      verbose_status_update("Sorting face ",j," which has vertices",facet);
       facet_normal = all_normals.extract(j);
       facet_verts.resize(vertices_per_face[j].size());
       for (size_t i=0; i<vertices_per_face[j].size(); ++i) facet_verts.set(i, this->vertices.extract(facet[i]));
@@ -557,14 +566,20 @@ protected:
       facet_verts -= facet_centre; // these are now on-face vectors to each vertex
       // if a point happens to be at the face centre dividing by the norm is a problem.
       facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
+      verbose_status_update("With on-plane vectors\n",facet_verts.to_string());
       perm.resize(facet.size());
       perm[0] = 0; // always start with whichever vertex is first
+      used.clear();
+      used.push_back(0);
       for (size_t i=1; i<facet.size(); ++i){
         angles = bare_winding_angles(facet_verts, perm[i-1], facet_normal);
         min_angle = 1e3;
         min_idx=facet.size()+1;
         for (size_t k=0; k<facet.size(); ++k)
-          if (!approx_scalar(angles[k], 0.0) && angles[k] < min_angle){
+          if ( std::find(used.begin(),used.end(),k)==used.end() // ensure the point hasn't already been picked
+               && !approx_scalar(angles[k], 0.0) // that its not along the same line
+               && angles[k] < min_angle // and that it has a smaller winding angle
+             ){
             min_idx=k;
             min_angle = angles[k];
           }
@@ -576,7 +591,9 @@ protected:
           throw std::runtime_error("Error finding minimum winding angle polygon vertex");
         }
         perm[i] = min_idx;
+        used.push_back(min_idx);
       }
+      verbose_status_update("Producing sorting permutation",perm);
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
     }
     this->vertices_per_face = sorted_vpp;
@@ -590,7 +607,7 @@ protected:
     */
     ArrayVector<double> abc(3u, 3u);
     for (size_t n=0; n<normals.size(); ++n){
-      status_update("A face with vertices ", vertices_per_face[n]);
+      verbose_status_update("A face with vertices ", vertices_per_face[n]);
       for (size_t i=0, j; vertices_per_face[n].size()>3 && i<vertices_per_face[n].size();){
         // pull out the vector from the previous point to this one
         j = (vertices_per_face[n].size()+i-1)%vertices_per_face[n].size();
@@ -609,30 +626,9 @@ protected:
           vertices_per_face[n].erase(vertices_per_face[n].begin()+i);
         }
       }
-      status_update("Is a convex polygonal face with vertices ", vertices_per_face[n]);
+      verbose_status_update("Is a convex polygonal face with vertices ", vertices_per_face[n]);
     }
     this->actual_vertex_purge();
-    // ArrayVector<bool> keep(1u, vertices.size());
-    // bool flag;
-    // for (size_t i=0; i<vertices.size(); ++i){
-    //   flag = false;
-    //   for (auto verts: vertices_per_face)
-    //     if (!flag && std::find(verts.begin(), verts.end(), static_cast<int>(i))!=verts.end())
-    //       flag = true;
-    //   keep.insert(flag, i);
-    // }
-    // if (keep.count_true() < vertices.size()){
-    //   status_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
-    //   // Remap the vertices_per_face array
-    //   size_t count = 0, max=keep.count_true();
-    //   std::vector<size_t> map;
-    //   for (size_t i=0; i<keep.size(); ++i) map.push_back(keep.getvalue(i) ? count++ : max+1);
-    //   for (auto facet: vertices_per_face)
-    //   for (size_t i=0; i<facet.size(); ++i) if (map[facet[i]]<max) facet[i]=map[facet[i]];
-    //   // Remove elements of faces_per_vertex and vertices[.extract(keep)]
-    //   for (size_t i=keep.size(); i-- > 0; ) if (!keep.getvalue(i)) faces_per_vertex.erase(faces_per_vertex.begin()+i);
-    //   vertices = vertices.extract(keep);
-    // }
   }
 public:
   Polyhedron centre(void) const {

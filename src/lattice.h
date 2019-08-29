@@ -3,8 +3,8 @@
 #define _LATTICE_CLASS_H_
 
 #include <assert.h>
-#include <vector>
-#include "linear_algebra.h"
+// #include <vector>
+// #include "linear_algebra.h"
 #include "primitive.h"
 
 

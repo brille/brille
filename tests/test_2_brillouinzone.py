@@ -216,6 +216,7 @@ class BrillouinZone (unittest.TestCase):
                 if 'R' in spacegroup.choice:
                     al = be = ga = np.pi/3
                 else: # 'H' setting or normally hexagonal
+                    c = 10;
                     ga = 2*np.pi/3
             elif 'tetr' in pointgroup.holohedry:
                 c = 10

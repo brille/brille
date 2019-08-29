@@ -102,26 +102,46 @@ bool BrillouinZone::check_ir_polyhedron(void){
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
   double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
   Polyhedron irbz = this->get_ir_polyhedron(), rotated;
-  if (approx_scalar(irbz.get_volume(), volume_goal)){
-    // get the operations of the pointgroup which are not 1 or -1
-    // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
-    PointSymmetry ps = fullps.higher(1);
-    for (size_t i=0; i<ps.size(); ++i){
-      // if (irbz.intersects_fast(irbz.rotate(ps.get(i)))){
-      status_update("Rotate the polyhedron by\n", ps.get(i));
-      rotated = irbz.rotate(ps.get(i));
-      status_update("Checking for intersection ",i);
-      if (irbz.intersects(rotated)){
-        status_update("The current 'irreducible' polyhedron intersects with itself upon application of symmetry operation\n", ps.get(i));
-        return false;
-      }
-    }
-    // volume is right and no intersections
-    return true;
+  if (!approx_scalar(irbz.get_volume(), volume_goal)){
+    status_update("The current 'irreducible' polyhedron has the wrong volume");
+    status_update("Since ",irbz.get_volume()," != ",volume_goal);
+    return false;
   }
-  status_update("The current 'irreducible' polyhedron has the wrong volume");
-  status_update("Since ",irbz.get_volume()," != ",volume_goal);
-  return false;
+  /* TODO FIXME -- make a LatticePolyhedron class to handle this? */
+  /* Our Polyhedron class holds the vertices, and plane information of a
+     convex polyhedron expressed in an orthonormal frame tied to the
+     conventional reciprocal space lattice. The conversion from lattice
+     vectors to absolute vectors is done with a transformation matrix, B.
+     The rotation and rotoinversions, R, stored in the PointSymmetry object
+     are expressed in units of the conventional real space lattice.
+
+     Reciprocal space vectors rotate via the transpose of R, Rᵀ; and since the
+     polyhedron contains vertices, points, and normals of the form Bx and we
+     need to apply Rᵀ to x directly, we want to "rotate" each part of the
+     polyhedron by B Rᵀ B⁻¹, e.g., B Rᵀ B⁻¹ B x = B Rᵀ x.
+  */
+  double B[9], invB[9], RtinvB[8];
+  this->outerlattice.get_B_matrix(B);
+  matrix_inverse(invB, B);
+  std::array<double,9> BRtinvB;
+  std::array<int,9> Rt;
+  // get the operations of the pointgroup which are not 1 or -1
+  // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
+  PointSymmetry ps = fullps.higher(1);
+  for (size_t i=0; i<ps.size(); ++i){
+    Rt = transpose(ps.get(i)); // Rᵀ
+    multiply_matrix_matrix(RtinvB, Rt.data(), invB); // Rᵀ*B⁻¹
+    multiply_matrix_matrix(BRtinvB.data(), B, RtinvB); // B*Rᵀ*B⁻¹
+    status_update("Rotate the polyhedron by\n", BRtinvB);
+    rotated = irbz.rotate(BRtinvB);
+    status_update("Checking for intersection ",i);
+    if (irbz.intersects(rotated)){
+      status_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
+      return false;
+    }
+  }
+  // volume is right and no intersections
+  return true;
 }
 
 // first Brillouin zone

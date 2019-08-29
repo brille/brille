@@ -36,8 +36,8 @@
 #ifndef __pointgroup_H__
 #define __pointgroup_H__
 
-#include <vector>
-#include <array>
+// #include <vector>
+// #include <array>
 #include "symmetry.h"
 
 enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};

@@ -1,4 +1,3 @@
-/*!\file*/
 /* Copyright (C) 2010 Atsushi Togo
  All rights reserved.
 

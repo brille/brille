@@ -97,6 +97,12 @@ PYBIND11_MODULE(_symbz,m){
     r.get_B_matrix((double *)bi.ptr);
     return result;
   });
+  reciprocal.def_property_readonly("B",[](Reciprocal &r){
+    auto result = py::array_t<double, py::array::c_style>({3,3});
+    py::buffer_info bi = result.request();
+    r.get_B_matrix((double *)bi.ptr);
+    return result;
+  });
 
   py::class_<BrillouinZone> bz(m,"BrillouinZone");
   bz.def(py::init<Reciprocal,bool,int,bool,bool>(),

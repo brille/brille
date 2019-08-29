@@ -2,15 +2,15 @@
 #ifndef _ARRAYVECTOR_H_
 #define _ARRAYVECTOR_H_
 
-#include <iostream>
-#include <string>
-#include <cmath>
+// #include <iostream>
+// #include <string>
+// #include <cmath>
 #include <functional>
-#include <vector>
+// #include <vector>
 #include <algorithm>
-#include <numeric>
+// #include <numeric>
 #include "linear_algebra.h"
-#include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides status_update()
+// #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides status_update()
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 

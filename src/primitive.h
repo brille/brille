@@ -1,28 +1,12 @@
 /*! \file */
 #ifndef _PRIMITIVE_H_
 #define _PRIMITIVE_H_
-#include <array>
+// #include <array>
 #include "spg_database.h"
 
-template<class T> static std::array<T,9> transpose(const std::array<T,9>& a){
+template<class T> std::array<T,9> transpose(const std::array<T,9>& a){
   return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
 }
-
-// const std::array<double,9> P_I_TRANSFORM{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
-// const std::array<double,9> P_F_TRANSFORM{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
-// const std::array<double,9> P_A_TRANSFORM{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
-// const std::array<double,9> P_B_TRANSFORM{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
-// const std::array<double,9> P_C_TRANSFORM{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
-// const std::array<double,9> P_R_TRANSFORM{2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
-// // const std::array<double,9> P_R_TRANSFORM{ 0.66666666666666666667,-0.33333333333333333333,-0.33333333333333333333,  0.33333333333333333333, 0.33333333333333333333,-0.66666666666666666667,  0.33333333333333333333, 0.33333333333333333333, 0.33333333333333333333};
-// const std::array<double,9> P_P_TRANSFORM{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
-// const std::array<int,9> P_P_INVTRNFRM{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
-// const std::array<int,9> I_P_TRANSFORM{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
-// const std::array<int,9> F_P_TRANSFORM{-1, 1, 1,  1,-1, 1,  1, 1,-1};
-// const std::array<int,9> A_P_TRANSFORM{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
-// const std::array<int,9> B_P_TRANSFORM{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
-// const std::array<int,9> C_P_TRANSFORM{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
-// const std::array<int,9> R_P_TRANSFORM{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 
 /*! \brief A class to hold transformation matricies and their inverse, with the matrix
 stored in an object determined by a provided BravaisLetter type.
@@ -111,21 +95,6 @@ public:
   }
   std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }
   std::array<int,9> get_invPt(void) const { return transpose(this->get_invP());}
-  // void set_matrices(void) {
-  //   switch (bravais){
-  //     case Bravais::_: throw std::runtime_error("Invalid Bravais centring"); break;
-  //     case Bravais::I: M=P_I_TRANSFORM; invM=I_P_TRANSFORM; break;
-  //     case Bravais::F: M=P_F_TRANSFORM; invM=F_P_TRANSFORM; break;
-  //     case Bravais::A: M=P_A_TRANSFORM; invM=A_P_TRANSFORM; break;
-  //     case Bravais::B: M=P_B_TRANSFORM; invM=B_P_TRANSFORM; break;
-  //     case Bravais::C: M=P_C_TRANSFORM; invM=C_P_TRANSFORM; break;
-  //     case Bravais::R: M=P_R_TRANSFORM; invM=R_P_TRANSFORM; break;
-  //             default: M=P_P_TRANSFORM; invM=P_P_INVTRNFRM;
-  //   }
-  // }
-  // std::array<double,9> get_to_primitive() const { return M; }
-  // std::array<int,9> get_from_primitive() const { return invM; }
-  //
   void print(){
     std::array<double,9> M = this->get_P();
     std::array<int,9> invM = this->get_invP();

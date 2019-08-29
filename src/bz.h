@@ -4,12 +4,12 @@
 
 #include "neighbours.h"
 #include "transform.h"
-#include "pointgroup.h"
-#include <iostream>
-#include <algorithm>
-#include <vector>
+// #include "pointgroup.h"
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
 #include "polyhedron.h"
-#include "debug.h"
+// #include "debug.h"
 // #include "voro++.hh"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice

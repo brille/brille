@@ -37,10 +37,10 @@
 #ifndef __spg_database_H__
 #define __spg_database_H__
 
-#include<iostream>
-#include<string>
+// #include<iostream>
+// #include<string>
 #include<cstring>
-#include "symmetry.h"
+// #include "symmetry.h"
 #include "pointgroup.h"
 
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
