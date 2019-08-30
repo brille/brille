@@ -131,6 +131,10 @@ public:
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
     return this->ArrayVector<T>::consistency_check(b);
   }
+  template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
+    if (!(this->starlattice(b))) throw std::runtime_error("Real and reciprocal space vectors must be in dual lattices.");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
   //! Verify that a ArrayVector object is consistent for binary operations
   template<class R, template<class> class A,
     typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
@@ -264,6 +268,10 @@ public:
   //! Verify that a second LQVec object is compatible for binary operations
   template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
     if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
+  template<class R> AVSizeInfo consistency_check(const LDVec<R>& b) const {
+    if (!(this->starlattice(b))) throw std::runtime_error("Reciprocal and real space vectors must be in dual lattices.");
     return this->ArrayVector<T>::consistency_check(b);
   }
   //! Verify that an ArrayVector object is compatible for binary operations

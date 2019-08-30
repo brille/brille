@@ -149,54 +149,30 @@ void Lattice::get_contravariant_metric_tensor(double *mt) const {
 }
 
 bool Lattice::issame(const Lattice lat) const{
-  const double *a1 = this->ang;
-  const double *l1 = this->len;
-  const double *a2 = lat.ang;
-  const double *l2 = lat.len;
-  double eps = 2*std::numeric_limits<double>::epsilon();
-  for (int i=0; i<3; i++){
-    if ( std::abs(l1[i]-l2[i]) > eps*std::abs(l1[i]+l2[i]) ) return false;
-    if ( std::abs(a1[i]-a2[i]) > eps*std::abs(a1[i]+a2[i]) ) return false;
-  }
-  return true;
+  return approx_vector(3, this->ang, lat.ang) && approx_vector(3, this->len, lat.len);
 }
 
-bool Lattice::isapprox(const Lattice lat, const double tol) const {
-  return this->ispermutation(lat, tol)==0 ? false : true;
+bool Lattice::isapprox(const Lattice lat) const {
+  return this->ispermutation(lat)==0 ? false : true;
 }
-int Lattice::ispermutation(const Lattice lat, const double tol) const {
-  const double *a1 = this->ang;
-  const double *l1 = this->len;
-  const double *a2 = lat.ang;
-  const double *l2 = lat.len;
-  double dif, sum;
-  bool perm_equiv = true;
-  // check if the a,b,c axes are permuted
-  for (int j=0; j<3; ++j){
-    perm_equiv = true;
-    for (int i=0; i<3; i++){
-      dif = std::abs(l1[i]-l2[(i+j)%3]);
-      sum = std::abs(l1[i]+l2[(i+j)%3]);
-      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
-      dif = std::abs(a1[i]-a2[(i+j)%3]);
-      sum = std::abs(a1[i]+a2[(i+j)%3]);
-      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+int Lattice::ispermutation(const Lattice lat) const {
+  double a[3], l[3];
+  int i, j, ap[3]{0,2,1}; // for anti-permutations
+  for (j=0; j<3; ++j){
+    for (i=0; i<3; ++i){
+      a[i] = this->ang[(i+j)%3];
+      l[i] = this->len[(i+j)%3];
     }
-    if (perm_equiv) return j+1;
+    if (approx_vector(3, a, lat.ang) && approx_vector(3, l, lat.len))
+      return j+1;
   }
-  // antipermutations are possible too
-  int ap[3]{0,2,1};
-  for (int j=0; j<3; ++j){
-    perm_equiv = true;
-    for (int i=0; i<3; i++){
-      dif = std::abs(l1[i]-l2[ap[(i+j)%3]]);
-      sum = std::abs(l1[i]+l2[ap[(i+j)%3]]);
-      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
-      dif = std::abs(a1[i]-a2[ap[(i+j)%3]]);
-      sum = std::abs(a1[i]+a2[ap[(i+j)%3]]);
-      if ( dif > tol*sum || dif > tol ) perm_equiv = false;
+  for (j=0; j<3; ++j){
+    for (i=0; i<3; ++i){
+      a[i] = this->ang[ap[(i+j)%3]];
+      l[i] = this->len[ap[(i+j)%3]];
     }
-    if (perm_equiv) return -j-1;
+    if (approx_vector(3, a, lat.ang) && approx_vector(3, l, lat.len))
+      return -j-1;
   }
   return 0;
 }

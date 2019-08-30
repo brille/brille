@@ -238,11 +238,11 @@ template<typename R, int N> R vector_norm_squared(const R *v){
   return vv;
 }
 template<typename T, typename R, typename S, int N> void vector_cross(T *c, const R *a, const S *b){
-  if (3==N){
-    c[0] = (R)(a[1]*b[2] - a[2]*b[1]);
-    c[1] = (R)(a[2]*b[0] - a[0]*b[2]);
-    c[2] = (R)(a[0]*b[1] - a[1]*b[0]);
-  }
+  if (3!=N)
+    throw std::domain_error("The cross product is only defined for 3-vectors");
+  c[0] = static_cast<T>(a[1])*static_cast<T>(b[2]) - static_cast<T>(a[2])*static_cast<T>(b[1]);
+  c[1] = static_cast<T>(a[2])*static_cast<T>(b[0]) - static_cast<T>(a[0])*static_cast<T>(b[2]);
+  c[2] = static_cast<T>(a[0])*static_cast<T>(b[1]) - static_cast<T>(a[1])*static_cast<T>(b[0]);
 }
 template<typename R, int N> R vector_dot(const R *a, const R *b){
   R out = 0;

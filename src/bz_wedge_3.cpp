@@ -40,17 +40,10 @@ void BrillouinZone::wedge_brute_force(void){
     return;
   }
   // get the characteristic points of the first Brillouin zone
-  LQVec<double> centres = this->get_points();
-  LQVec<double> corners = this->get_vertices();
-  LQVec<double> special = cat(centres, corners);
-  // if this spacegroup is Rhombohedral, Monoclinic, or Triclinic
+  // the face centers and corners:
+  LQVec<double> special = cat(this->get_points(), this->get_vertices());
   // add the mid-facet-edge points:
-  Pointgroup pg = this->outerlattice.get_pointgroup_object();
-  // Holohedry h = pg.get_holohedry();
-  // if (Holohedry::triclinic == h || Holohedry::monoclinic == h ||
-  //     // some ofthe trigonal pointgroups are associated with rhombohedral spacegroups
-  //     (Holohedry::trigonal == h && !sg.get_choice().compare("R")))
-    special = cat(special, this->get_half_edges());
+  special = cat(special, this->get_half_edges());
 
   // // Since we're assuming inversion symmetry (rectified later if necessary),
   // // for every Friedel-pair of points we can immediately discard one
@@ -64,12 +57,9 @@ void BrillouinZone::wedge_brute_force(void){
 
   // Grab the pointgroup symmetry operations
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
-  // The first Brillouin zone volume
-  double volume_goal = this->get_polyhedron().get_volume();
-  // Divided by the number of pointgroup symmetry operations is the Goal volume
-  volume_goal /= fullps.size();
   // Now restrict the symmetry operations to those with order > 1.
   PointSymmetry ps = fullps.higher(1);
+  // PointSymmetry ps = fullps.nfolds(1);
   // ps is sorted in increasing rotation-order order, but we want to sort
   // by increasing stationary-axis length (so that, e.g, [100] is dealt with
   // before [111]).
@@ -81,54 +71,64 @@ void BrillouinZone::wedge_brute_force(void){
     lq.set(1u, ps.axis(b));
     return lq.dot(0u,0u) < lq.dot(1u,1u);
   });
+  // std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+  //   return ps.order(a) > ps.order(b);
+  // });
   ps.permute(perm); // ps now sorted with shortest stationary axis first
 
   ArrayVector<bool> keep(1u, 0u);
-  if (fullps.has_space_inversion()){
-    // ps does not include 1 or -1, so all operations have stationary axes
-    LQVec<int> all_axes(this->outerlattice, ps.axes());
-    if (all_axes.is_unique().count_true() == 1u){
-      status_update("Deal with -1 since there is only one stationary axis");
-      // use the stationary axis as the normal of a mirror plane
-      keep = dot(all_axes.extract(0), special).is_approx(">=", 0.);
-      special = special.extract(keep);
-    }
-  }
-
+  // if (fullps.has_space_inversion()){
+  //   // ps does not include 1 or -1, so all operations have stationary axes
+  //   // the stationary axis of each rotation is, of course, express in real space!
+  //   LDVec<int> all_axes(this->outerlattice.star(), ps.axes());
+  //   if (all_axes.is_unique().count_true() == 1u){
+  //     status_update("Deal with -1 since there is only one stationary axis");
+  //     // use the stationary axis as the normal of a mirror plane
+  //     keep = dot(all_axes.extract(0).star(), special).is_approx(">=", 0.);
+  //     special = special.extract(keep);
+  //   }
+  // }
   status_update("Deal with 2-fold axes along highest-symmetry directions first");
 
   std::vector<bool> sym_unused(ps.size(), true);
   // deal with any two-fold axes along êᵢ first:
-  LQVec<int> eis(this->outerlattice, 9u);
-  LQVec<int> vec(this->outerlattice, 1u);// must be int since ps.axis returns array<int,3>
-  LQVec<double> nrm(this->outerlattice, 1u), pts(this->outerlattice, 2u);
+  // The stationary vector of each rotation is a real space vector!
+  LDVec<int> vec(this->outerlattice.star(), 1u);// must be int since ps.axis returns array<int,3>
+  LQVec<double> nrm(this->outerlattice, 1u);
   ArrayVector<bool> is_ei(1u, 9u);
-  std::vector<std::array<int,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1}};
-  for (size_t i=0; i<9u; ++i) eis.set(i, eiv[i]);
+  std::vector<std::array<double,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1}};
+  LQVec<double> eis(this->outerlattice, 9u);
+  for (size_t i=0; i<eis.size(); ++i) eis.set(i, eiv[i]);
+  LDVec<double> reis(this->outerlattice.star(), 2u);
+  for (size_t i=0; i<reis.size(); ++i) reis.set(i, eiv[i]);
 
   for (size_t i=0; i<ps.size(); ++i) if (ps.order(i)==2){
     vec.set(0, ps.axis(i));
-    is_ei = norm(cross(eis, vec)).is_approx("==", 0.);
-    status_update("Is 2-fold axis ",i," ei?: ",is_ei.to_string(" "));
+    // Stationary axis along reciprocal space basis vector
+    is_ei = norm(cross(eis, vec.star())).is_approx("==", 0.);
     if (is_ei.count_true() == 1u){
-      if (is_ei.getvalue(0)) // (100) → n = (001)×(100) { =(010) if cubic}
-        nrm.set(0, eis.cross(2,0));
-      if (is_ei.getvalue(1)) // (010) → n = (100)×(010) { =(001) if cubic}
-        nrm.set(0, eis.cross(0,1));
-      if (is_ei.getvalue(2)) // (001) → n = (010)×(001) { =(100) if cubic}
-        nrm.set(0, eis.cross(1,2));
-      if (is_ei.getvalue(3)) // (110) → n = (110)×(001) { =(1̄10) if cubic}
-        nrm.set(0, eis.cross(3,2));
-      if (is_ei.getvalue(4)) // (1̄10) → n = (001)×(1̄10) { =(110) if cubic}
-        nrm.set(0, eis.cross(2,4));
-      if (is_ei.getvalue(5)) // (101) → n = (010)×(101) { =(10̄1) if cubic}
-        nrm.set(0, eis.cross(1,5));
-      if (is_ei.getvalue(6)) // (011) → n = (011)×(100) { =(01̄1) if cubic}
-        nrm.set(0, eis.cross(6,0));
-      if (is_ei.getvalue(7)) // (1̄0̄1) → n = (10̄1)×(010) { =(101) if cubic}
-        nrm.set(0, eis.cross(7,1));
-      if (is_ei.getvalue(8)) // (01̄1) → n = (100)×(01̄1) { =(011) if cubic}
-        nrm.set(0, eis.cross(0,8));
+      status_update("Is 2-fold axis ",i," ei*?: ",is_ei.to_string(" "));
+      if (is_ei.getvalue(0)) nrm.set(0, eis.cross(2,0)); /* (100)* → n=(001)*×(100)* */
+      if (is_ei.getvalue(1)) nrm.set(0, eis.cross(0,1)); /* (010)* → n=(100)*×(010)* */
+      if (is_ei.getvalue(2)) nrm.set(0, eis.cross(1,2)); /* (001)* → n=(010)*×(001)* */
+      if (is_ei.getvalue(3)) nrm.set(0, eis.cross(3,2)); /* (110)* → n=(110)*×(001)* */
+      if (is_ei.getvalue(4)) nrm.set(0, eis.cross(2,4)); /* (1̄10)* → n=(001)*×(1̄10)* */
+      if (is_ei.getvalue(5)) nrm.set(0, eis.cross(1,5)); /* (101)* → n=(010)*×(101)* */
+      if (is_ei.getvalue(6)) nrm.set(0, eis.cross(6,0)); /* (011)* → n=(011)*×(100)* */
+      if (is_ei.getvalue(7)) nrm.set(0, eis.cross(7,1)); /* (1̄0̄1)* → n=(10̄1)*×(010)* */
+      if (is_ei.getvalue(8)) nrm.set(0, eis.cross(0,8)); /* (01̄1)* → n=(100)*×(01̄1)* */
+      // keep any special points beyond the bounding plane
+      keep = dot(nrm, special).is_approx(">=", 0.);
+      status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+      special = special.extract(keep);
+      sym_unused[i] = false;
+    }
+    // Stationary axis along real space basis vector
+    is_ei = norm(cross(reis, vec)).is_approx("==", 0.);
+    if (sym_unused[i] && is_ei.count_true() == 1u){
+      status_update("Is 2-fold axis ",i," ei?: ",is_ei.to_string(" "));
+      if (is_ei.getvalue(0)) nrm.set(0, eiv[1]); /* (100) → n = (010)* */
+      if (is_ei.getvalue(1)) nrm.set(0, eiv[0]); /* (010) → n = (100)* */
       // keep any special points beyond the bounding plane
       keep = dot(nrm, special).is_approx(">=", 0.);
       status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
@@ -181,6 +181,8 @@ void BrillouinZone::wedge_brute_force(void){
         return as > bs;
       }
     );
+    size_t keep_count;
+    LQVec<double> pt0(this->outerlattice, 1u), pt1(this->outerlattice, 1u);
     for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]){
       // we need at least two equivalent points, ideally there will be the same number as the order
       if (one_sym[s].size() > static_cast<size_t>(std::count(one_sym[s].begin(), one_sym[s].end(), special.size())+1)){
@@ -196,25 +198,26 @@ void BrillouinZone::wedge_brute_force(void){
         if (sym_unused[i] && type_order[j]<special.size() && type_order[k]<special.size()){
           if (ps.order(i)>2){
             // hold the two special points in their own LQVec<double> (!not <int>!)
-            pts.set(0, special.extract(type_order[j]));
-            pts.set(1, special.extract(type_order[k]));
-            if ( dot(eis.extract(1), cross(vec, eis.extract(0))).all_approx("<",0.) ){
-              // the rotation is left handed, so swap the special points
-              pts.set(1, special.extract(type_order[k]));
-              pts.set(0, special.extract(type_order[j]));
-            }
+            pt0 = special.extract(type_order[j]);
+            pt1 = special.extract(type_order[k]);
             // we have two plane normals to worry about:
-            status_update("Stationary vector\n",vec.to_string(),"and special points\n",pts.to_string());
+            status_update("Stationary vector",vec.to_string(0),"and special points",pt0.to_string(0),"and",pt1.to_string(0));
             // find both cross products, remembering that we want normals
             // pointing *into* the wedge.
             nrm.resize(2);
-            nrm.set(0, cross(1.0*vec, pts.extract(0)));
-            nrm.set(1, cross(pts.extract(1), 1.0*vec));
-            status_update("give normals:\n", nrm.to_string());
+            if ( dot(pt1, cross(vec.star(), pt0)).all_approx("<",0.) ){
+              // the rotation is left handed, so swap the special points
+              nrm.set(0, cross(vec.star(), pt1));
+              nrm.set(1, cross(pt0, vec.star()));
+            } else {
+              nrm.set(0, cross(vec.star(), pt0));
+              nrm.set(1, cross(pt1, vec.star()));
+            }
+            status_update("give normals:", nrm.to_string(";"));
             // now check that all special points are inside of the wedge defined by the normals
           } else {
             // order == 2, so only one normal to worry about:
-            nrm = cross(vec, special.extract(type_order[j]));
+            nrm = cross(vec.star(), special.extract(type_order[j]));
             // make sure we don't remove all points out of the plane containing
             // the rotation axis and the two special points
             if (dot(nrm, special).is_approx(">",0.).count_true() == 0)
@@ -222,7 +225,10 @@ void BrillouinZone::wedge_brute_force(void){
           }
           // check to make sure that using these normals do not remove all but a plane of points
           keep = keep_if(nrm, special);
-          if (keep.count_true() < keep.size()){
+          keep_count = keep.count_true();
+          // We need at least three points (plus Γ) to define a polyhedron.
+          // Also skip the extraction if we are keeping all points
+          if (keep_count > 2 && keep_count < keep.size()){
             status_update("Keeping special points:\n",special.to_string(keep));
             special = special.extract(keep);
             sym_unused[i]=false;
@@ -240,6 +246,82 @@ void BrillouinZone::wedge_brute_force(void){
   // and then form the irreducible polyhedron by finding the convex hull
   // of these points: (which sets the wedge normals too)
   this->set_ir_vertices(special);
+
+  /*If the full pointsymmetry has space inversion *and* there is only a single
+    stationary rotation/rotoinversion axis the thus-far-found polyhedron has
+    twice the volume of the true irreducible polyhedron.
+    We need to split the polyhedron in half by a plane perpendicular to *one of*
+    the full-Brillouin zone normal directions.
+    This is easier for spacegroups with orthogonal basis vectors -- we can
+    usually pick the stationary axis -- but is trickier if the basis vectors
+    are not orthogonal.
+  */
+  if (fullps.has_space_inversion()){
+    // ps only contains operations *with* a stationary axis (described in real space)
+    LDVec<int> all_axes(this->outerlattice.star(), ps.axes());
+    double ir_volume = this->ir_polyhedron.get_volume();
+    double goal_volume = this->polyhedron.get_volume()/static_cast<double>(fullps.size());
+    if (all_axes.is_unique().count_true() == 1u || approx_scalar(ir_volume, 2.0*goal_volume) ){
+      status_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
+      Polyhedron div;
+      LQVec<double> bz_n = this->get_normals(), wg_n = this->get_ir_wedge_normals();
+      ArrayVector<double> gamma(3u, 1u);
+      for (size_t i=0; i<3u; ++i) gamma.insert(0, 0, i);
+      for (size_t i=0; i<bz_n.size(); ++i){
+        div = this->ir_polyhedron.divide(bz_n.extract(i).get_xyz(), gamma);
+        if (approx_scalar(div.get_volume(), goal_volume)){
+          // set div to be the ir_polyhedron
+          this->ir_polyhedron = div;
+          // add the new normal to wedge normals list
+          wg_n.resize(wg_n.size()+1);
+          wg_n.set(wg_n.size()-1, -bz_n.extract(i));
+          this->set_ir_wedge_normals(wg_n);
+          break;
+        }
+      }
+      if (approx_scalar(this->ir_polyhedron.get_volume(), ir_volume)){
+        status_update("Polyhedron volume still double expected.")
+        bool proceed=true;
+        // check for other dividing planes :/
+        LQVec<double> cij(this->outerlattice, 1u);
+        for (size_t i=0; proceed && i<bz_n.size()-1; ++i)
+        for (size_t j=i+1; proceed && j<bz_n.size(); ++j){
+          div = this->ir_polyhedron.divide(bz_n.cross(i,j).get_xyz(), gamma);
+          if (approx_scalar(div.get_volume(), goal_volume)){
+            this->ir_polyhedron = div;
+            wg_n.resize(wg_n.size()+1);
+            wg_n.set(wg_n.size()-1, -bz_n.cross(i,j));
+            this->set_ir_wedge_normals(wg_n);
+            proceed = false;
+          }
+        }
+        // ArrayVector<double> xyz(3u, 3u);
+        // for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) xyz.insert(i==j?1.:0., i, j);
+        // for (size_t i=0; i<xyz.size(); ++i){
+        //   div = this->ir_polyhedron.divide(xyz.extract(i), gamma);
+        //   if (approx_scalar(div.get_volume(), goal_volume)){
+        //     // set the polyhedron
+        //     this->ir_polyhedron = div;
+        //     // set the wedge normals
+        //     LQVec<double> ir_n = this->get_ir_normals();
+        //     LQVec<double> ir_p = this->get_ir_points();
+        //     LQVec<double> bz_p = this->get_points();
+        //     ArrayVector<bool> not_bz(1u, 0u);
+        //     for (size_t i=0; i<bz_n.size(); ++i){
+        //       // check if the irBZ face point is on a first BZ zone face too
+        //       not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
+        //       ir_n = ir_n.extract(not_bz);
+        //       ir_p = ir_p.extract(not_bz);
+        //     }
+        //     // the remaining irBZ faces are the irreducible reciprocal space wedge
+        //     // which we store with the opposite sign in this->ir_wedge_normals
+        //     this->set_ir_wedge_normals(-ir_n);
+        //     break;
+        //   }
+        // }
+      }
+    }
+  }
 }
 
 

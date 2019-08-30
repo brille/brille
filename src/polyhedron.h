@@ -644,6 +644,7 @@ public:
      always contain) the origin.
   */
   bool intersects(const Polyhedron& other) const {
+    verbose_status_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
     ArrayVector<double> centroid = this->get_centroid();
     Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
     Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
@@ -673,6 +674,12 @@ public:
         if (norm(this->vertices - other.vertices.extract(i)).none_approx(0.)) return true;
     // check for intersecting planes :(
     return this->intersects(other);
+  }
+  template<class T> Polyhedron divide(const ArrayVector<T>&n, const ArrayVector<T>& p){
+    ArrayVector<double> centroid = this->get_centroid();
+    Polyhedron centred(vertices-centroid, points-centroid, normals, faces_per_vertex, vertices_per_face);
+    Polyhedron divided = Polyhedron::bisect(centred, n, p-centroid);
+    return Polyhedron(divided.vertices+centroid, divided.points+centroid, divided.normals, divided.faces_per_vertex, divided.vertices_per_face);
   }
 
   /*! Find the polyhedron which results from slicing an existant polyhedron by

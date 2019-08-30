@@ -161,13 +161,13 @@ public:
   //! Determine if the passed Lattice represents the same space-spanning lattice
   bool issame(const Lattice) const; // this should really have a tolerance
   /*! Determine if the passed Lattice represents an equivalent space-spanning
-  lattice within the specified tolerance. Simuntaneous permutations of lengths
+  lattice within the specified tolerance. Simultaneous permutations of lengths
   and angles are considered as equivalent --
   e.g., (a,b,c)(α,β,γ) ≡ (b,c,a)(β,γ,α) ≡ (c,a,b)(γ,α,β),
   as are antipermutations,
   e.g., (a,b,c)(α,β,γ) ≡ (a,c,b)(α,γ,β) ≡ (c,b,a)(γ,β,α) ≡ (b,a,c)(β,α,γ).
   */
-  bool isapprox(const Lattice, const double tol=1e-10) const;
+  bool isapprox(const Lattice) const;
   /*! Determine if the passed Lattice is a permutation of the space-spanning
   lattice within the specified tolerance. The equivalence is encoded in a
   signed integer:
@@ -182,7 +182,7 @@ public:
   | -3 | (b,a,c)(β,α,γ) |
   | 0 | no equivalent permutation |
   */
-  int ispermutation(const Lattice, const double tol=1e-10) const;
+  int ispermutation(const Lattice) const;
   //! Print the basis vector lengths and angles to the console
   virtual void print();
   //! Return a string representation of the basis vector lengths and angles

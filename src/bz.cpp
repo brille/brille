@@ -120,21 +120,24 @@ bool BrillouinZone::check_ir_polyhedron(void){
      need to apply Rᵀ to x directly, we want to "rotate" each part of the
      polyhedron by B Rᵀ B⁻¹, e.g., B Rᵀ B⁻¹ B x = B Rᵀ x.
   */
-  double B[9], invB[9], RtinvB[8];
-  this->outerlattice.get_B_matrix(B);
-  matrix_inverse(invB, B);
-  std::array<double,9> BRtinvB;
+  // double B[9], invB[9], RtinvB[8];
+  std::array<double,9> B, invB, RtinvB, BRtinvB;
+  this->outerlattice.get_B_matrix(B.data());
+  verbose_status_update("B\n",B);
+  matrix_inverse(invB.data(), B.data());
+  verbose_status_update("inverse(B)\n",invB);
   std::array<int,9> Rt;
   // get the operations of the pointgroup which are not 1 or -1
   // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
   PointSymmetry ps = fullps.higher(1);
   for (size_t i=0; i<ps.size(); ++i){
     Rt = transpose(ps.get(i)); // Rᵀ
-    multiply_matrix_matrix(RtinvB, Rt.data(), invB); // Rᵀ*B⁻¹
-    multiply_matrix_matrix(BRtinvB.data(), B, RtinvB); // B*Rᵀ*B⁻¹
-    status_update("Rotate the polyhedron by\n", BRtinvB);
+    multiply_matrix_matrix(RtinvB.data(), Rt.data(), invB.data()); // Rᵀ*B⁻¹
+    verbose_status_update("transpose(R) inverse(B)\n",RtinvB);
+    multiply_matrix_matrix(BRtinvB.data(), B.data(), RtinvB.data()); // B*Rᵀ*B⁻¹
+    verbose_status_update("Rotate the polyhedron by\n", BRtinvB);
     rotated = irbz.rotate(BRtinvB);
-    status_update("Checking for intersection ",i);
+    verbose_status_update("Checking for intersection ",i);
     if (irbz.intersects(rotated)){
       status_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
       return false;

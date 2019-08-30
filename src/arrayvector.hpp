@@ -79,7 +79,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<si
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<int>& idx) const{
   bool allinbounds = true;
   ArrayVector<T> out(this->numel(),0u);
-  for (auto j: idx) if (j>=this->size() || j<0) {
+  for (auto j: idx) if (j<0 || static_cast<size_t>(j)>=this->size()) {
     std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
     for (auto i: idx) msg += " " + std::to_string(i);
     msg += " ] but size() = " + std::to_string(this->size());

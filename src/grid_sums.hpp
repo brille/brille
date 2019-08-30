@@ -34,7 +34,7 @@ ArrayVector<S> MapGrid3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_
   ArrayVector<S> WdQ(nIons,nQ); // Wᵈ(Q) has nIons entries per Q point
 
   S coth_en, Q_dot_e_2;
-  size_t span = 1u + nIons*3u + this->elements[2] + this->elements[3]*this->elements[3];
+  size_t stride = 1u + nIons*3u + this->elements[2] + this->elements[3]*this->elements[3];
   size_t nq = this->shape.getvalue(0u);
 
   const S beta = kB*t_K; // meV
@@ -51,9 +51,9 @@ ArrayVector<S> MapGrid3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_
         // and over all 3*nIon branches at each q
         for (size_t j=0; j<this->branches; ++j){
           // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
-          coth_en = coth_over_en(this->data.getvalue(q,j*span), beta);
+          coth_en = coth_over_en(this->data.getvalue(q,j*stride), beta);
           // and find |Q⋅ϵₛ|². Note: vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = vector_product(3u, Q.datapointer(Qidx), this->data.datapointer(q,j*span+1u+3u*d));
+          Q_dot_e_2 = vector_product(3u, Q.datapointer(Qidx), this->data.datapointer(q,j*stride+1u+3u*d));
           // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
           qj_sum += Q_dot_e_2 * coth_en;
         }
