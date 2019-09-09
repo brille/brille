@@ -280,7 +280,7 @@ void BrillouinZone::wedge_brute_force(void){
         }
       }
       if (approx_scalar(this->ir_polyhedron.get_volume(), ir_volume)){
-        status_update("Polyhedron volume still double expected.")
+        status_update("Polyhedron volume still double expected.");
         bool proceed=true;
         // check for other dividing planes :/
         LQVec<double> cij(this->outerlattice, 1u);
