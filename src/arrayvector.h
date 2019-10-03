@@ -320,6 +320,8 @@ public:
   //! Returns true if all elements evaluate to true.
   bool all_true(const size_t n=0) const;
   size_t count_true(const size_t n=0) const;
+  size_t first_true(const size_t n=0) const;
+  size_t last_true(const size_t n=0) const;
   //! Returns true if any elements evaluate to true.
   bool any_true(const size_t n=0) const;
   //! Returns true if all elements are greater or equal to zero

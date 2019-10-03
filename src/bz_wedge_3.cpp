@@ -28,7 +28,7 @@ template <class T> ArrayVector<bool> keep_if(LQVec<T>& normals, LQVec<T>& points
   return keep;
 }
 
-void BrillouinZone::wedge_brute_force(void){
+void BrillouinZone::wedge_brute_force(const bool special2folds){
   debug_exec(std::string msg;)
   Spacegroup sg = this->outerlattice.get_spacegroup_object();
   // For P1 the irreducible Brillouin zone *is* the first Brillouin zone
@@ -39,11 +39,11 @@ void BrillouinZone::wedge_brute_force(void){
     this->wedge_triclinic();
     return;
   }
-  // get the characteristic points of the first Brillouin zone
-  // the face centers and corners:
-  LQVec<double> special = cat(this->get_points(), this->get_vertices());
-  // add the mid-facet-edge points:
-  special = cat(special, this->get_half_edges());
+  // Get and combine the characteristic points of the first Brillouin zone:
+  // The face centres, face corners, and mid-face-edge points.
+  LQVec<double> special = cat(this->get_points(), this->get_vertices(), this->get_half_edges());
+  // prioritising mid-edges over face corners
+  // LQVec<double> special = cat(this->get_points(), this->get_half_edges(), this->get_vertices());
 
   // // Since we're assuming inversion symmetry (rectified later if necessary),
   // // for every Friedel-pair of points we can immediately discard one
@@ -95,48 +95,64 @@ void BrillouinZone::wedge_brute_force(void){
   // The stationary vector of each rotation is a real space vector!
   LDVec<int> vec(this->outerlattice.star(), 1u);// must be int since ps.axis returns array<int,3>
   LQVec<double> nrm(this->outerlattice, 1u);
-  ArrayVector<bool> is_ei(1u, 9u);
-  std::vector<std::array<double,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1}};
-  LQVec<double> eis(this->outerlattice, 9u);
+  std::vector<std::array<double,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1},{1,1,1}};
+  LQVec<double> eis(this->outerlattice, eiv.size());
   for (size_t i=0; i<eis.size(); ++i) eis.set(i, eiv[i]);
-  LDVec<double> reis(this->outerlattice.star(), 2u);
+  LDVec<double> reis(this->outerlattice.star(), eiv.size());
   for (size_t i=0; i<reis.size(); ++i) reis.set(i, eiv[i]);
+  size_t is_nth_ei;
 
-  for (size_t i=0; i<ps.size(); ++i) if (ps.order(i)==2){
-    vec.set(0, ps.axis(i));
-    // Stationary axis along reciprocal space basis vector
-    is_ei = norm(cross(eis, vec.star())).is_approx("==", 0.);
-    if (is_ei.count_true() == 1u){
-      status_update("Is 2-fold axis ",i," ei*?: ",is_ei.to_string(" "));
-      if (is_ei.getvalue(0)) nrm.set(0, eis.cross(2,0)); /* (100)* → n=(001)*×(100)* */
-      if (is_ei.getvalue(1)) nrm.set(0, eis.cross(0,1)); /* (010)* → n=(100)*×(010)* */
-      if (is_ei.getvalue(2)) nrm.set(0, eis.cross(1,2)); /* (001)* → n=(010)*×(001)* */
-      if (is_ei.getvalue(3)) nrm.set(0, eis.cross(3,2)); /* (110)* → n=(110)*×(001)* */
-      if (is_ei.getvalue(4)) nrm.set(0, eis.cross(2,4)); /* (1̄10)* → n=(001)*×(1̄10)* */
-      if (is_ei.getvalue(5)) nrm.set(0, eis.cross(1,5)); /* (101)* → n=(010)*×(101)* */
-      if (is_ei.getvalue(6)) nrm.set(0, eis.cross(6,0)); /* (011)* → n=(011)*×(100)* */
-      if (is_ei.getvalue(7)) nrm.set(0, eis.cross(7,1)); /* (1̄0̄1)* → n=(10̄1)*×(010)* */
-      if (is_ei.getvalue(8)) nrm.set(0, eis.cross(0,8)); /* (01̄1)* → n=(100)*×(01̄1)* */
-      // keep any special points beyond the bounding plane
-      keep = dot(nrm, special).is_approx(">=", 0.);
-      status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
-      special = special.extract(keep);
-      sym_unused[i] = false;
-    }
-    // Stationary axis along real space basis vector
-    is_ei = norm(cross(reis, vec)).is_approx("==", 0.);
-    if (sym_unused[i] && is_ei.count_true() == 1u){
-      status_update("Is 2-fold axis ",i," ei?: ",is_ei.to_string(" "));
-      if (is_ei.getvalue(0)) nrm.set(0, eiv[1]); /* (100) → n = (010)* */
-      if (is_ei.getvalue(1)) nrm.set(0, eiv[0]); /* (010) → n = (100)* */
-      // keep any special points beyond the bounding plane
-      keep = dot(nrm, special).is_approx(">=", 0.);
-      status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
-      special = special.extract(keep);
-      sym_unused[i] = false;
+  if (special2folds){
+    size_t e1, e2;
+    for (size_t i=0; i<ps.size(); ++i) if (ps.order(i)==2){
+      vec.set(0, ps.axis(i));
+      // First check if this stationary axis is along a reciprocal space vector
+      is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
+      if (is_nth_ei < 9 /* This is less than great practice */){
+        status_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
+        switch (is_nth_ei){
+          case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
+          case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break;
+          case 2: /* (001)⋆ */ e1=1; e2=2; /* n = (010)×(001)⋆ */ break;
+          case 3: /* (110)⋆ */ e1=3; e2=2; /* n = (110)×(001)⋆ */ break;
+          case 4: /* (1̄10)⋆ */ e1=2; e2=4; /* n = (001)×(1̄10)⋆ */ break;
+          case 5: /* (101)⋆ */ e1=1; e2=5; /* n = (010)×(101)⋆ */ break;
+          case 6: /* (011)⋆ */ e1=6; e2=0; /* n = (011)×(100)⋆ */ break;
+          case 7: /* (10̄1)⋆ */ e1=7; e2=1; /* n = (10̄1)×(010)⋆ */ break;
+          case 8: /* (01̄1)⋆ */ e1=0; e2=8; /* n = (100)×(01̄1)* */ break;
+          default: e1=0; e2=0;
+        }
+        // The plane normal is the cross product of the first real space vector
+        // (expressed in units of the reciprocal lattice) and the second
+        // reciprocal space vector.
+        nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
+        // // The plane normal is the cross produce of the first reciprocal space
+        // // vector and the second reciprocal space vector;
+        // nrm.set(0, eis.cross(e1, e2));
+        if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
+          // keep any special points beyond the bounding plane
+          keep = dot(nrm, special).is_approx(">=", 0.);
+          status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+          special = special.extract(keep);
+          sym_unused[i] = false;
+        }
+      }
+      // Stationary axis along real space basis vector
+      is_nth_ei = norm(cross(reis, vec)).is_approx("==", 0.).first_true();
+      if (sym_unused[i] && is_nth_ei < 2){
+        status_update("2-fold axis ",i," is ei No. ",is_nth_ei);
+        switch (is_nth_ei){
+          case 0: nrm.set(0, eiv[1]); break; /* (100) → n = (010)* */
+          case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
+        }
+        // keep any special points beyond the bounding plane
+        keep = dot(nrm, special).is_approx(">=", 0.);
+        status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+        special = special.extract(keep);
+        sym_unused[i] = false;
+      }
     }
   }
-
   status_update("Now figure out how all special points are related for each symmetry operation");
   // Find which points are mapped onto equivalent points by each symmetry operation
   std::vector<std::vector<size_t>> one_sym;
@@ -160,7 +176,7 @@ void BrillouinZone::wedge_brute_force(void){
       // sort the equivalent points by their relative order for this operation
       // such that Rⁱj ≡ type_order[i]
       type_order.clear();
-      type_order.insert(type_order.begin(), ps.order(i), special.size());
+      type_order.insert(type_order.begin(), ps.order(i), special.size()); // set default to (non-indexable) size of the special array
       type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
       for (int o=0; o<ps.order(i); ++o)
       for (size_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
@@ -174,6 +190,7 @@ void BrillouinZone::wedge_brute_force(void){
       status_update("Which are sorted by their rotation order:",type_order);
       one_sym.push_back(type_order);
     }
+    // sort one_sym by the number of valid (indexable) equivalent points
     std::sort(one_sym.begin(), one_sym.end(),
       [&](std::vector<size_t>& a, std::vector<size_t>& b){
         size_t as = a.size() - std::count(a.begin(), a.end(), special.size());
@@ -183,7 +200,7 @@ void BrillouinZone::wedge_brute_force(void){
     );
     size_t keep_count;
     LQVec<double> pt0(this->outerlattice, 1u), pt1(this->outerlattice, 1u);
-    for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]){
+    for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]/*always true?*/){
       // we need at least two equivalent points, ideally there will be the same number as the order
       if (one_sym[s].size() > static_cast<size_t>(std::count(one_sym[s].begin(), one_sym[s].end(), special.size())+1)){
         type_order = one_sym[s];

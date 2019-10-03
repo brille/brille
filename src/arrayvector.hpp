@@ -322,6 +322,20 @@ template<typename T> size_t ArrayVector<T>::count_true(const size_t n) const {
       if (this->getvalue(i,j)) ++count;
   return count;
 }
+template<typename T> size_t ArrayVector<T>::first_true(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=0; i<upto; i++)
+    for (size_t j=0; j<this->numel(); j++)
+      if (this->getvalue(i,j)) return i;
+  return upto; // an invalid indexing
+}
+template<typename T> size_t ArrayVector<T>::last_true(const size_t n) const {
+  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+  for (size_t i=upto; i--;) // evaluates for i=0, then stops
+    for (size_t j=0; j<this->numel(); j++)
+      if (this->getvalue(i,j)) return i;
+  return upto; // an invalid indexing
+}
 template<typename T> bool ArrayVector<T>::any_true(const size_t n) const {
   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
   for (size_t i=0; i<upto; i++)
@@ -731,6 +745,12 @@ A<S> cat(const A<T>& a, const A<R>& b){
   return out;
 }
 
+template<class T, template<class> class A, class ...Targs,
+         // typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type>
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type>
+A<T> cat(const A<T>& a, const A<T>& b, const A<T>& c, Targs ...Fargs){
+  return cat(cat(a,b), c, Fargs...); // recursively concatenate
+}
 
 template<class T, template<class> class L,typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type>
 L<int> round(const L<T>& a){

@@ -54,7 +54,7 @@ class SymEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 hall_number=None, parallel=False, **kwds):
+                 hall_number=None, parallel=False, tetmesh=False, **kwds):
         """Initialize a new SymEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -135,7 +135,7 @@ class SymEu:
         prim_lv, _, _ = spglib.find_primitive(cell)
         # if (prim_lv == lattice_vectors).all():
         # pylint: disable=no-member
-        if sbz.Direct(lattice_vectors).isapprox(sbz.Direct(prim_lv), 1e-10):
+        if sbz.Direct(lattice_vectors).isapprox(sbz.Direct(prim_lv)):
             # check for approximate equivalence of lattice parameters instead
             # of equivalent lattice vectors as spglib may introduce a rotation
             if self.data_cell_is_primitive is None:
@@ -172,11 +172,10 @@ class SymEu:
             # https://atztogo.github.io/spglib/definition.html#space-group-operation-and-change-of-basis
             # where the lattice_vectors form the columns of a matrix and here
             # they form the rows
-            lattice_vectors = np.matmul(prim_tran.invP.transpose(1, 0), lattice_vectors)
+            lattice_vectors = np.matmul(prim_tran.invPt, lattice_vectors)
         #
         dlat = sbz.Direct(lattice_vectors, self.hall_number)
-        rlat = dlat.star()
-        brillouin_zone = sbz.BrillouinZone(rlat)
+        brillouin_zone = sbz.BrillouinZone(dlat.star)
         if halfN is not None:
             if isinstance(halfN, (tuple, list)):
                 halfN = np.array(halfN)

@@ -50,7 +50,7 @@ template<class T, class R, template<class> class L,
 L<double> cross(const L<T>& a, const L<R>& b) {
   assert( a.samelattice(b) );
   AVSizeInfo si = a.consistency_check(b);
-  if (si.m!=3u) throw "cross product is only defined for three vectors";
+  if (si.m != 3u) throw std::runtime_error("cross product is only defined for three vectors");
   typename LatticeTraits<L<T>>::type lat = a.get_lattice();
   typename LatVecTraits<L<T>,double>::star tmp( lat.star(), si.n);
   for (size_t i=0; i<si.n; i++)

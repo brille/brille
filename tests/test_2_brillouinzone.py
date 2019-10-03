@@ -209,6 +209,7 @@ class BrillouinZone (unittest.TestCase):
         errored_spg = []
         errored_ptg = []
         errored_lat = []
+        errored_arg = []
         print()
         for i in range(1,531):
             spacegroup = s.Spacegroup(i)
@@ -277,6 +278,7 @@ class BrillouinZone (unittest.TestCase):
                 errored_spg.append(spacegroup)
                 errored_ptg.append(pointgroup)
                 errored_lat.append(dlat)
+                errored_arg.append(err.args)
 
 
         if failed > 0:
@@ -284,8 +286,9 @@ class BrillouinZone (unittest.TestCase):
             for spg, ptg, lat, rat in zip(failed_spg, failed_ptg, failed_lat, failed_ratio):
                 print(spg,ptg,lat,rat)
         if errored > 0:
-            print("\nException raised for",errored,"our of",tested,"(max 530) Hall Groups")
-            for spg, ptg, lat in zip(errored_spg, errored_ptg, errored_lat):
+            print("\nException raised for",errored,"out of",tested,"(max 530) Hall Groups")
+            for spg, ptg, lat, arg in zip(errored_spg, errored_ptg, errored_lat, errored_arg):
+                print(arg)
                 print(spg,ptg,lat)
 
 

@@ -24,7 +24,7 @@ public:
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
-  ArrayVector<T> get_mesh_hkl(void) const {
+  ArrayVector<double> get_mesh_hkl(void) const {
     ArrayVector<double> xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
