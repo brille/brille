@@ -63,7 +63,7 @@ class ModeSorting(unittest.TestCase):
         """Test sorting a random permutation of 0:5 for each grid point."""
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (10, 0, 0))
-        q_points = bz_grid.mapped_rlu
+        q_points = bz_grid.rlu
         n_q = q_points.shape[0]
         scalars = np.array([permutation(np.arange(5)) for _ in range(n_q)])
         # use a pre-sorted first point to make comparison easier
@@ -81,7 +81,7 @@ class ModeSorting(unittest.TestCase):
         """Test sorting a random permutation of 1E(0:5) for each grid point."""
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (10, 0, 0))
-        q_points = bz_grid.mapped_rlu
+        q_points = bz_grid.rlu
         n_q = q_points.shape[0]
         scalars = np.array([permutation(10**np.arange(5)) for _ in range(n_q)])
         # use a pre-sorted first point to make comparison easier
@@ -99,7 +99,7 @@ class ModeSorting(unittest.TestCase):
         """Test sorting randomly permuted vectors."""
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (10, 0, 0))
-        q_points = bz_grid.mapped_rlu
+        q_points = bz_grid.rlu
         n_q = q_points.shape[0]
         vectors = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1],
                             [1, 1, 0], [-1, 0, -1], [1, 1, 1]])
@@ -115,7 +115,7 @@ class ModeSorting(unittest.TestCase):
         """Test sorting randomly permuted scalars and vectors."""
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (10, 0, 0))
-        q_points = bz_grid.mapped_rlu
+        q_points = bz_grid.rlu
         n_q = q_points.shape[0]
         scalars = 10**np.arange(3).reshape(3, 1)
         vectors = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
@@ -137,7 +137,7 @@ class ModeSorting(unittest.TestCase):
         w_vc = 1
         _, b_z = make_rbz((1, 1, 1))
         bz_grid = s.BZGridQ(b_z, (15, 15, 15))
-        q_points = bz_grid.mapped_rlu
+        q_points = bz_grid.rlu
         energies = mode_dispersion(q_points)
         vectors = mode_vector(q_points)
         n_pt = q_points.shape[0]

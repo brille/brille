@@ -20,8 +20,8 @@ function sqw = horace_sqw(obj,qh,qk,ql,en,pars,varargin) % split varagin into fi
 %   kwpars      - A series of 'keywords' and parameters. Specific to this
 %                 function is:
 %
-%               - 'resfun' - determines the convolution / resolution 
-%                    function to get S(q,w). It can be either a string: 
+%               - 'resfun' - determines the convolution / resolution
+%                    function to get S(q,w). It can be either a string:
 %                      'gauss' - gaussian with single fixed (fittable) FWHM
 %                      'lor' - lorentzian with single fixed (fittable) FWHM
 %                      'voigt' - pseudo-voigt with single fixed (fittable) FWHM
@@ -29,7 +29,7 @@ function sqw = horace_sqw(obj,qh,qk,ql,en,pars,varargin) % split varagin into fi
 %                             the 'fwhm' parameter of disp2sqw.
 %                    NB. For 'gauss' and 'lor' only one fwhm parameter may be
 %                    specified. For 'voigt', fwhm = [width lorz_frac]
-%                    contains two parameters - the fwhm and lorentzian fraction  
+%                    contains two parameters - the fwhm and lorentzian fraction
 %                    [default: 'gauss']
 %               - 'partrans' - a function to transform the fit parameters
 %                    This transformation will be applied before each iteration
@@ -37,19 +37,19 @@ function sqw = horace_sqw(obj,qh,qk,ql,en,pars,varargin) % split varagin into fi
 %                    spinW and the convolution function.
 %                    [default: @(y)y  % identity operation]
 %               - 'coordtrans' - a matrix to transform the input coordinates
-%                    (qh,qk,ql,en) before being sent to SpinW. 
+%                    (qh,qk,ql,en) before being sent to SpinW.
 %                    [default: eye(4) % identity]
 %
-%               In addition, the following parameters are used by this function                         
+%               In addition, the following parameters are used by this function
 %                    and will also be passed on to spinw.matparser which will
 %                    do the actual modification of spinW model parameters:
-%                  
+%
 %               - 'mat' - A cell array of labels of spinW named 'matrix' or
 %                    matrix elements. E.g. {'J1', 'J2', 'D(3,3)'}. These will
 %                    be the model parameters to be varied in a fit, their
 %                    order in this cell array will be the same as in the
 %                    fit parameters vector.
-%                    [default: [] % empty matrix - no model parameters] 
+%                    [default: [] % empty matrix - no model parameters]
 %
 %                 All other parameters will be passed to spinW. See the help
 %                    for spinw/spinwave, spinw/matparser and spinw/sw_neutron
@@ -108,12 +108,12 @@ interpinpt = [{'pars'} {pars((1+n_horace_pars):end)} passon];
 % what horace expects [a single intensity per (qh(i),qk(i),ql(i),en(i))
 % tuple].
 % This function needs to compare the inputs in varargin to the
-% parameter hash, fill the BZGrid(s) if the hash is different,
+% parameter hash, fill the grid(s) if the hash is different,
 % interpolate the gridded Rank-N tensors ( 0<=N ) for the input Q [or
 % (Q,E)] points, and then call the interpreter function(s) to convert
 % the interpolated values into intensities for use by Horace/Tobyfit.
 
-% First, refill the BZGrid(s) if the hashes differ
+% First, refill the grid(s) if the hashes differ
 obj.fill(fillerinpt{:});
 
 % We have one or more filled BZGrids. We want to interpolate their
@@ -152,10 +152,10 @@ end
 % If no one has changed the interpreter cells then intres is cell(1,1).
 % Check to be sure
 assert( numel(intres) == 1 );
-sqw = intres{1};        
+sqw = intres{1};
 
 if reshaped
     sqw = reshape(sqw,inshaped);
 end
-    
+
 end

@@ -1,12 +1,12 @@
-% The SymBZfun object holds one 
-% py.symbz._symbz.BZGridQ or py.symbz._symbz.BZGridQE object, 
+% The SymBZfun object holds one
+% py.symbz._symbz.BZGridQ or py.symbz._symbz.BZGridQE object,
 % a function that can be evaluated to fill the object, and one or more
 % functions to interpret the interpolation results for, e.g, Horace.
-classdef SymBZfun < handle 
-    % making copies of the python object is (a) a bad idea for memory 
+classdef SymBZfun < handle
+    % making copies of the python object is (a) a bad idea for memory
     % management and (b) possibly bad for memory access --> handle class
     properties
-        BZGrid
+        pygrid
         filler
         interpreter
     end
@@ -30,7 +30,7 @@ classdef SymBZfun < handle
         Qtrans = eye(4);
     end
     methods
-        function obj = SymBZfun(BZGrid,varargin)
+        function obj = SymBZfun(ingrid,varargin)
             kdef = struct('fill',@(x)(1+0*x),...
                           'nfill',[],...
                           'shape',[],...
@@ -47,9 +47,9 @@ classdef SymBZfun < handle
             [args,kwds]=symbz.parse_arguments(varargin,kdef,{'rlu'});
             g3type = 'py.symbz._symbz.BZGridQ';  % or py.symbz._symbz.BZGridQcomplex
             g4type = 'py.symbz._symbz.BZGridQE'; % or py.symbz._symbz.BZGridQEcomplex
-            if strncmp(class(BZGrid),g4type,length(g4type))
+            if strncmp(class(ingrid),g4type,length(g4type))
                 obj.isQE=true;
-            elseif ~strncmp(class(BZGrid),g3type,length(g3type))
+            elseif ~strncmp(class(ingrid),g3type,length(g3type))
                 error('A single %s or %s (or their complex variants) is required as input',g3type,g4type);
             end
             if islogical( kwds.parallel)
@@ -78,7 +78,7 @@ classdef SymBZfun < handle
                     obj.Qtrans([1,2,3,5,6,7,9,10,11])=kwds.Qtrans(:);
                 end
             end
-            
+
             if iscell(kwds.fill)
                 fill = kwds.fill;
             else
@@ -94,16 +94,16 @@ classdef SymBZfun < handle
             assert(iscell(fill) && all( cellfun(@(x)(isa(x,'function_handle')), fill) ));
             obj.filler = fill;
             obj.nFillers = length(fill);
-            
+
             % anything that defines 'varargout', including anonymous functions, returns negative nargout
             if ~isempty(kwds.nfill) && isnumeric(kwds.nfill) && isscalar(kwds.nfill)
                 nfill = kwds.nfill;
             else
-                nfill = abs(nargout(fill{1})); 
+                nfill = abs(nargout(fill{1}));
             end
             fshape = kwds.shape; % what is the shape of each filler output
             rlu = kwds.rlu; % does the filler function expect Q in rlu or inverse Angstrom?
-            
+
             nret = [];
             if ~isempty(kwds.model) && ischar(kwds.model)
                 switch lower(kwds.model)
@@ -130,26 +130,26 @@ classdef SymBZfun < handle
             assert( all( cellfun(@(x)(isa(x,'function_handle')), interpret) ),...
                 'A single function handle or a cell of function handles is required for the interpreter' );
             obj.nInt = numel(interpret);
-            
+
             if ~isempty(kwds.nret) && isnumeric(kwds.nret) && numel(kwds.nret)==numel(interpret)
                 nret = kwds.nret;
             elseif isempty(nret)
                 nret = cellfun(@(x)(abs(nargout(x))),interpret);
             end
-            
+
             if ~iscell(fshape)
                 fshape = {fshape};
             end
             assert( ~isempty(fshape) && numel(fshape) == nfill, 'We need to know the shape of the filler output(s)' );
-            
+
             assert( nret(end) == 1, 'the last interpreter function should return a scalar!');
             obj.nFill = nfill;
             obj.shape = fshape;
             obj.rluNeeded = rlu;
             obj.nRet = nret;
             obj.interpreter = interpret;
-            
-            obj.BZGrid=BZGrid;
+
+            obj.pygrid=ingrid;
         end
         sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
         QorQE = get_mapped(obj)
@@ -159,4 +159,3 @@ classdef SymBZfun < handle
         con = convolve_modes(obj,qh,qk,ql,en,omega,S,varargin)
     end
 end
-    

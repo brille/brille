@@ -1,6 +1,6 @@
 function fill(obj,varargin)
 
-% First, refill the BZGrid(s) if the hashes differ
+% First, refill the grid(s) if the hashes differ
 newHash = symbz.DataHash(varargin);
 if ~strcmp(obj.parameterHash, newHash)
     vecs = obj.get_mapped();
@@ -36,9 +36,9 @@ if ~strcmp(obj.parameterHash, newHash)
     assert( numel(fillwith) == num * sum(cellfun(@prod,obj.shape)) )
     %
     % and finally put them in:
-    obj.BZGrid.fill( symbz.m2p(fillwith) );
+    obj.pygrid.fill( symbz.m2p(fillwith) );
 
-    % we have successfully filled the BZGrid(s), so store the hash.
+    % we have successfully filled the grid(s), so store the hash.
     obj.parameterHash = newHash;
 end
 

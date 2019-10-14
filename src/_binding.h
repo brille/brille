@@ -190,10 +190,10 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     cobj.replace_data(data, shape, el);
   }, py::arg("data"), py::arg("elements"))
   .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.get_data(), cobj.data_shape(), false);})
-  .def("interpolate_at",[](Class& cobj,
+  .def("ir_interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
                            const bool& useparallel,
-                           const int& threads){
+                           const int& threads, const bool& no_move){
     py::buffer_info bi = pyX.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -205,7 +205,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
 
     // perform the interpolation and rotate and vectors/tensors afterwards
     int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
-    ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads);
+    ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads, no_move);
     // and then make sure we return an numpy array of appropriate size:
     std::vector<ssize_t> outshape;
     for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
@@ -232,7 +232,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       for (size_t j=0; j< lires.numel(); j++)
         rptr[i*lires.numel()+j] = lires.getvalue(i,j);
     return liout;
-  },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1)
+  },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
     // handle Q
     py::buffer_info bi = pyQ.request();
@@ -284,10 +284,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
     .def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
     .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze((cobj.get_N()-1)/2);})
     .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
-    .def_property_readonly("rlu",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
-    .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
-    .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
-    .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
+    .def_property_readonly("grid_rlu",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
+    .def_property_readonly("grid_invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
+    .def_property_readonly("rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
+    .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
     .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
       py::buffer_info bi;
       // copy-in the elements array
@@ -579,14 +579,14 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     .def_property_readonly("halfN",[](const Class& cobj){return av2np_squeeze(cobj.get_halfN());} )
     .def_property_readonly("spec", [](const Class& cobj){return av2np_squeeze(cobj.get_spec());} )
     .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
-    .def_property_readonly("rlu_Q",[](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
-    .def_property_readonly("invA_Q",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
-    .def_property_readonly("mapped_rlu_Q",[](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
-    .def_property_readonly("mapped_invA_Q",[](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
-    .def_property_readonly("rlu",[](const Class& cobj){ return av2np(cobj.get_grid_hkle());} )
-    .def_property_readonly("invA",[](const Class& cobj){ return av2np(cobj.get_grid_xyzw());} )
-    .def_property_readonly("mapped_rlu",[](const Class& cobj){ return av2np(cobj.get_mapped_hkle());} )
-    .def_property_readonly("mapped_invA",[](const Class& cobj){ return av2np(cobj.get_mapped_xyzw());} )
+    .def_property_readonly("grid_rlu_Q", [](const Class& cobj){ return av2np(cobj.get_grid_hkl());} )
+    .def_property_readonly("grid_invA_Q",[](const Class& cobj){ return av2np(cobj.get_grid_xyz());} )
+    .def_property_readonly("rlu_Q",      [](const Class& cobj){ return av2np(cobj.get_mapped_hkl());} )
+    .def_property_readonly("invA_Q",     [](const Class& cobj){ return av2np(cobj.get_mapped_xyz());} )
+    .def_property_readonly("grid_rlu",   [](const Class& cobj){ return av2np(cobj.get_grid_hkle());} )
+    .def_property_readonly("grid_invA",  [](const Class& cobj){ return av2np(cobj.get_grid_xyzw());} )
+    .def_property_readonly("rlu",        [](const Class& cobj){ return av2np(cobj.get_mapped_hkle());} )
+    .def_property_readonly("invA",       [](const Class& cobj){ return av2np(cobj.get_mapped_xyzw());} )
     .def("fill",[](Class& cobj, py::array_t<T> pydata){
       py::buffer_info bi = pydata.request();
       ssize_t ndim = bi.ndim;

@@ -29,9 +29,9 @@ end
 bzg = symbz.BZGridQ(bz,'N',[5,5,5]);
 if bzg.map.shape{1} ~=10 || bzg.map.shape{2} ~=10 || bzg.map.shape{3} ~= 10
     return;
-elseif bzg.rlu.shape ~= bzg.invA.shape
+elseif bzg.grid_rlu.shape ~= bzg.grid_invA.shape
     return;
-elseif bzg.mapped_rlu.shape ~= bzg.mapped_invA.shape
+elseif bzg.rlu.shape ~= bzg.invA.shape
     return;
 end
 % more tests?
@@ -39,7 +39,7 @@ end
 bz=symbz.brillouinzone(r);
 bzg = symbz.BZGridQ(bz,'N',[10,10,10]);
 sq = @(Q)( cat(2, Q(:,1),Q(:,2)+0.5*Q(:,3)) ); % replace with any function linear in the components of Q
-bzg.fill( py.numpy.array( sq(double(bzg.mapped_rlu)) ) );
+bzg.fill( py.numpy.array( sq(double(bzg.rlu)) ) );
 qrand = (rand(30,3)-0.5);
 intsq = double( bzg.interpolate_at( py.numpy.array(qrand) ) );
 if ~all(all(abs(sq(qrand) - intsq) < 8*eps()*abs(sq(qrand) + intsq))) % 8*eps() since the interpolation is the sum of 8 terms

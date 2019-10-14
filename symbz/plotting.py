@@ -59,14 +59,7 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=False,
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
-    if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ)):
-        if Q is None:
-            if units == 'rlu':
-                Q = bz.mapped_rlu
-            elif units == 'invA':
-                Q = bz.mapped_invA
-        bz = bz.BrillouinZone
-    if isinstance(bz, (sbz.BZMeshQcomplex, sbz.BZMeshQ)):
+    if isinstance(bz, (sbz.BZGridQcomplex, sbz.BZGridQ, sbz.BZMeshQcomplex, sbz.BZMeshQ)):
         if Q is None:
             if units == 'rlu':
                 Q = bz.rlu

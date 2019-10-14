@@ -62,7 +62,7 @@ class TestEuphonic(unittest.TestCase):
         i_data = load_interpolation_data('nb')
         symsim = SymEu(i_data, halfN=(2, 2, 2))
 
-        q_rlu = symsim.grid.mapped_rlu
+        q_rlu = symsim.grid.rlu
         int_freq, int_vecs = symsim.frqs_vecs(q_rlu, interpolate=True,
                                               moveinto=False)
         sim_freq, sim_vecs = symsim.frqs_vecs(q_rlu, interpolate=False)

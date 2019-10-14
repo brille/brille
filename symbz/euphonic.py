@@ -54,7 +54,7 @@ class SymEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 hall_number=None, parallel=False, tetmesh=False, **kwds):
+                 hall_number=None, parallel=False, **kwds):
         """Initialize a new SymEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -67,7 +67,7 @@ class SymEu:
         self.data_cell_is_primitive = cell_is_primitive
         self.__check_if_cell_is_primitive()
         # Construct the BZGrid, by default using the conventional unit cell
-        grid_q = self.__make_grid(**kwds)
+        grid_q = self.__define_grid_or_mesh(**kwds)
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
         # Select only those keyword arguments which Euphonic expects:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
@@ -163,7 +163,7 @@ class SymEu:
         return sbz.PrimitiveTransform(self.hall_number)
 
     # pylint: disable=c0103,w0613,no-member
-    def __make_grid(self, halfN=None, step=None, units='rlu', **kwds):
+    def __define_grid_or_mesh(self, mesh=False, **kwds):
         prim_tran = self.__get_primitive_transform()
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         # And we can check whether there's anything to do using SymBZ
@@ -176,28 +176,40 @@ class SymEu:
         #
         dlat = sbz.Direct(lattice_vectors, self.hall_number)
         brillouin_zone = sbz.BrillouinZone(dlat.star)
+        if mesh:
+            self.__make_mesh(brillouin_zone, **kwds)
+        else:
+            self.__make_grid(brillouin_zone, **kwds)
+        # We need to make sure that we pass gridded Q points in the primitive
+        # lattice, since that is what Euphonic expects:
+        grid_q = self.grid.rlu
+        if prim_tran.does_anything and self.data_cell_is_primitive:
+            grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
+        return grid_q
+
+    def __make_grid(self, bz, halfN=None, step=None, units='rlu', **kwds):
         if halfN is not None:
+            # pybind is supposed to be able to convert to the C-expected type
+            # automatically, but it can't distinguish between the call requiring
+            # 'size_t' and 'double' so we need to help it out.
             if isinstance(halfN, (tuple, list)):
                 halfN = np.array(halfN)
             if not isinstance(halfN, np.ndarray):
-                raise Exception("halfN must be a tuple, list, or ndarray")
+                raise Exception('halfN must be a tuple, list, or ndarray')
             halfN = halfN.astype('uint64')
-            self.grid = sbz.BZGridQcomplex(brillouin_zone, halfN)
+            self.grid = sbz.BZGridQcomplex(bz, halfN)
         elif step is not None:
             if isinstance(step, ureg.Quantity):
                 step = (step.to('angstrom')).magnitude
                 isrlu = False
             else:
                 isrlu = units.lower() == 'rlu'
-            self.grid = sbz.BZGridQcomplex(brillouin_zone, step, isrlu)
+            self.grid = sbz.BZGridQcomplex(bz, step, isrlu)
         else:
             raise Exception("You must provide a halfN or step keyword")
-        # We need to make sure that we pass gridded Q points in the primitive
-        # lattice, since that is what Euphonic expects:
-        grid_q = self.grid.mapped_rlu
-        if prim_tran.does_anything and self.data_cell_is_primitive:
-            grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
-        return grid_q
+
+    def __make_mesh(self, bz, max_size=-1, min_angle=20, max_angle=-1, min_ratio=-1, max_points=-1, **kwds):
+        self.grid = sbz.BZMeshQcomplex(bz, max_size, min_angle, max_angle, min_ratio, max_points)
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
@@ -250,6 +262,26 @@ class SymEu:
             self.data.calculate_fine_phonons(q_pt, **cfp_dict)
         return self.data.freqs
 
+    def __call__(self, *args, **kwargs):
+        """Calculate and return Sᵢ(Q) and ωᵢ(Q) or S(Q,ω) depending on input.
+
+        If one positional argument is provided it is assumed to be Q in which
+        case both the intensity, Sᵢ(Q), and eigen-energy, ωᵢ(Q), for all phonon
+        branches are returned as a tuple.
+        If two positional arguments are provided they are assumed to be Q and ω
+        in which case Sᵢ(Q) and ωᵢ(Q) are used in conjunction with keyword
+        arguments 'resfun' and 'param' to calculate a convolved S(Q,ω).
+        """
+        if len(args) < 1:
+            raise RuntimeError('At least one argument, Q, is required')
+        elif len(args) is 1:
+            s_i_of_q = self.s_q(*args, **kwargs)
+            return (s_i_of_q, self.data.freqs)
+        elif len(args) is 2:
+            return self.s_qw(*args, kwargs) # keep kwargs as a dictionary
+        else:
+            raise RuntimeError('Only one or two arguments expected, (Q,) or (Q,ω), expected')
+
     def frqs_vecs(self, q_hkl, **kwargs):
         """Calculate and return ωᵢ(Q) and ϵᵢ(Q)."""
         self.w_q(q_hkl, **kwargs)
@@ -292,10 +324,10 @@ class SymEu:
         # and T=5 by default.
         if res_par_tem[0] in ('s', 'sho', 'simpleharmonicoscillator'):
             # pull out T, or 5 if it's not present
-            temp_k = p_dict['T'] if 'T' in p_dict else 5
-            # keep T if calc_bose is present and True
-            # discard T if calc_bose is present and False
+            temp_k = p_dict.get('T', 5)
+            # If calc_bose is present
             if 'calc_bose' in p_dict:
+                # keep T if it's True, discard T if it's False
                 temp_k = temp_k if p_dict['calc_bose'] else 0
             # Prevent Euphonic from performing the Bose correction twice
             p_dict['calc_bose'] = False

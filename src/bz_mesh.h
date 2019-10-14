@@ -34,14 +34,20 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
     return hkl;
   }
-  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads) const{
+  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
     BrillouinZone bz = this->get_brillouinzone();
 
     std::string msg;
-    if (!bz.ir_moveinto(x, ir_q, tau, rots)){
+    if (no_move){
+      // Special mode for testing where no specified points are moved
+      // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
+      // POLYHEDRON otherwise the interpolation will fail or give garbage back.
+      ir_q = x;
+      for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
+    } else if (!bz.ir_moveinto(x, ir_q, tau, rots)){
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }

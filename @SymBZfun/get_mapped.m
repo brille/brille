@@ -2,9 +2,9 @@ function cellofvecs = get_mapped(obj)
 % The python symbz mapped functions return either (N,3) or (N,4) arrays of
 % (qh,qk,ql) or (qh,qk,ql,en).
 if obj.rluNeeded
-    QorQE = symbz.p2m(obj.BZGrid.mapped_rlu);
+    QorQE = symbz.p2m(obj.pygrid.rlu);
 else
-    QorQE = symbz.p2m(obj.BZGrid.mapped_invA);
+    QorQE = symbz.p2m(obj.pygrid.invA);
 end
 s2 = size(QorQE,2);
 trn = obj.Qtrans(1:s2,1:s2);

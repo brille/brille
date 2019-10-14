@@ -101,7 +101,7 @@ public:
     std::string msg;
     if (no_move){
       // a special mode for testing wehere no specified points are moved
-      // it is imperitive that the provided x points remain *inwide* the mapped
+      // it is imperitive that the provided x points remain *inside* the mapped
       // grid points, which is beyond the scope of this method to check.
       ir_q = x;
       for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};

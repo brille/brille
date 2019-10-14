@@ -178,6 +178,35 @@ public:
       all_idx[i] = this->locate_for_interpolation(x.extract(i));
     return all_idx;
   }
+
+  /* Given a vertex in the mesh, return a vector of all of the other vertices to
+     which it is connected.
+  */
+  std::vector<size_t> neighbours(const ArrayVector<double>& x) const {
+    size_t v0, v1;
+    Locate_Type type;
+    size_t vert = this->locate(x, type, v0, v1);
+    if (VERTEX != type){
+      std::string msg = "The provided point is not a mesh vertex.";
+      throw std::runtime_error(msg);
+    }
+    return this->neighbours(vert);
+  }
+  std::vector<size_t> neighbours(const size_t vert) const {
+    if (vert >= this->nVertices){
+      std::string msg = "The provided vertex index is out of bounds";
+      throw std::out_of_range(msg);
+    }
+    std::vector<size_t> n;
+    size_t v;
+    for (size_t t: this->tetrahedra_per_vertex[vert])
+    // for (size_t v: this->vertices_per_tetrahedron[t]) // would work if vertices_per_tetrahedron was a vector<array<size_t,4>>
+    for (size_t j=0; j<4u; ++j){
+      v = this->vertices_per_tetrahedron.getvalue(t, j);
+      if ( v!= vert && std::find(n.begin(), n.end(), v) == n.end() ) n.push_back(v);
+    }
+    return n;
+  }
 };
 
 template <typename T>

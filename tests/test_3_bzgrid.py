@@ -79,11 +79,11 @@ class BrillouinZoneGrid(unittest.TestCase):
             s.BZGridQ(bz, [[2, 2, 2]])
         Ntuple = (2, 2, 2)
         bzg = s.BZGridQ(bz, Ntuple)
-        hkl = bzg.rlu
+        hkl = bzg.grid_rlu
         self.assertEqual(hkl.ndim, 2)
         self.assertEqual(hkl.shape[0], np.prod(2*np.array(Ntuple)+1))
         self.assertEqual(hkl.shape[1], 3)
-        xyz = bzg.invA  # the positions of the points in Å⁻¹
+        xyz = bzg.grid_invA  # the positions of the points in Å⁻¹
         self.assertEqual(hkl.shape, xyz.shape)
         self.assertAlmostEqual(np.abs(xyz - 2*np.pi*hkl).sum(), 0)
     # def test_b_plot_unit_cube(self):
@@ -109,7 +109,7 @@ class BrillouinZoneGrid(unittest.TestCase):
     #     _, _, bz = make_drbz(3, 3, 3, np.pi/2, np.pi/2, 2*np.pi/3)
     #     Ntuple = (20, 20, 0)
     #     bzg = s.BZGridQ(bz, Ntuple)
-    #     plot_points_with_lines(bzg.mapped_invA, bz.vertices_invA, 'mapped')
+    #     plot_points_with_lines(bzg.invA, bz.vertices_invA, 'mapped')
 
     # def test_d_copying(self):
     #     """Test d: copying BZGrid objects."""
@@ -128,14 +128,14 @@ class BrillouinZoneGrid(unittest.TestCase):
         r_lat = d_lat.star()
         b_zone = s.BrillouinZone(r_lat)
         bz_grid = s.BZGridQ(b_zone, halfN=(3, 3, 3))
-        q_pts = bz_grid.mapped_rlu
+        q_pts = bz_grid.rlu
         # fill with 1 at each mapped point
         bz_grid.fill(np.ones(q_pts.shape[0]))
         self.assertTrue(np.isclose(bz_grid.sum_data(0), q_pts.shape[0]))
         qones = np.ones(q_pts.shape[0])
         self.assertTrue(np.isclose(bz_grid.sum_data(1), qones).all())
         # fill with |q| at each mapped point
-        mod_q = np.abs(bz_grid.mapped_invA)
+        mod_q = np.abs(bz_grid.invA)
         bz_grid.fill(mod_q)
         self.assertTrue(np.isclose(bz_grid.sum_data(0), mod_q.sum(0)).all())
         self.assertTrue(np.isclose(bz_grid.sum_data(1), mod_q.sum(1)).all())

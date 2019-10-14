@@ -154,7 +154,7 @@ class Interpolate (unittest.TestCase):
         """Test interpolation normalisation."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_ones(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_ones(bzg.rlu))
         interpolated_ones = bzg.interpolate_at(Qi)
         # self.assertTrue( (interpolated_ones==1).all() )
         self.assertTrue((np.abs(interpolated_ones-1) < 1e-15).all())
@@ -163,7 +163,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as Qx."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_x(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_x(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi[:, 0]).all())
 
@@ -171,7 +171,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as Qy."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_y(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_y(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi[:, 1]).all())
 
@@ -179,7 +179,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as Qz."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_z(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_z(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi[:, 2]).all())
 
@@ -187,7 +187,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as Qx+Qy."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_xy(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_xy(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi[:, 0]+Qi[:, 1]).all())
 
@@ -195,7 +195,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as Qx+Qy+Qz."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_xyz(bzg.mapped_rlu))
+        bzg.fill(sqwfunc_xyz(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi[:, 0]+Qi[:, 1]+Qi[:, 2]).all())
 
@@ -203,7 +203,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as vector Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(vecfun_ident(bzg.mapped_rlu))
+        bzg.fill(vecfun_ident(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi).all())
 
@@ -212,7 +212,7 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = np.pi/3
-        bzg.fill(vecfun_rotx(bzg.mapped_rlu, ang))
+        bzg.fill(vecfun_rotx(bzg.rlu, ang))
         intres = bzg.interpolate_at(Qi)
         antres = vecfun_rotx(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -222,7 +222,7 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = 3*np.pi/5
-        bzg.fill(vecfun_rotz(bzg.mapped_rlu, ang))
+        bzg.fill(vecfun_rotz(bzg.rlu, ang))
         intres = bzg.interpolate_at(Qi)
         antres = vecfun_rotz(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -231,7 +231,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as matrix Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(matfun_ident(bzg.mapped_rlu))
+        bzg.fill(matfun_ident(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         antres = matfun_ident(Qi)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -240,7 +240,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as complex-valued scalars."""
         bzg = setup_grid(iscomplex=True)
         Qi = define_Q_points()
-        bzg.fill(complex_scalar(bzg.mapped_rlu))
+        bzg.fill(complex_scalar(bzg.rlu))
         intres = bzg.interpolate_at(Qi)
         antres = complex_scalar(Qi)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -249,7 +249,7 @@ class Interpolate (unittest.TestCase):
     #     """Test with a large grid."""
     #     bzg = setup_grid(halfN=(20, 20, 20))
     #     Qi = define_Q_points(rand=True, N=100000)
-    #     bzg.fill(matfun_ident(bzg.mapped_rlu))
+    #     bzg.fill(matfun_ident(bzg.rlu))
     #     intres = bzg.interpolate_at(Qi, True, True, 10)
     #     antres = matfun_ident(Qi)
     #     self.assertTrue(np.isclose(intres, antres).all())
@@ -260,7 +260,7 @@ class Interpolate (unittest.TestCase):
         r = d.star()
         bz = s.BrillouinZone(r)
         bzg = s.BZGridQcomplex(bz, halfN=(1, 1, 1))
-        Q = bzg.mapped_rlu
+        Q = bzg.rlu
         bzg.fill(fe_dispersion(Q))
         intres = bzg.interpolate_at(Q, False, False)
         antres = fe_dispersion(Q)
