@@ -55,6 +55,39 @@ public:
   }
   // emulate the locate functionality of CGAL -- for which we need an enumeration
   enum Locate_Type{ VERTEX, EDGE, FACET, CELL, OUTSIDE_CONVEX_HULL };
+  /*! \brief Locate which tetrahedron contains a specified point
+
+  By comparing distances between all tetrehedron vertices and a test point find
+  the vertex closest to the point. Then check all tetrahedra containing the
+  closest vertex to see whether the test point is within or on the surface of
+  the tetrahedron. The second check is performed by constructing four new
+  tetrahedra by replacing each of the source tetrahedron's vertices by the test
+  point in turn and then comparing their volumes. If all four tetrahedra have
+  positive volumes the test point is inside the source tetrahedron. If any one
+  has negative volume the test point is outside of the source tetrahedron. If
+  one has zero volume the test point lies on one of the faces of the source
+  tetrahedron. If two have zero volume the test point lies on one of the source
+  tetrahedron edges. And if three have zero volume the test point is one of the
+  source tetrahedron's vertices.
+  This function indicates which type of relationship the test point has to the
+  returned tetrahedron (index) by use of an enumeration. Depending on which
+  relationship is present further information is conveyed by up to two
+  unsigned integers.
+
+  @param x A single-array three-element ArrayVector that is the test point
+  @param [out] type The relationship between the test point and tetrahedron
+  @param [out] v0 The first integer conveying relational information
+  @param [out] v1 The second integer conveying relational information
+  @returns The index of the found tetrahedron
+
+  | type                | returned index                              | v0                        | v1                          |
+  |---------------------|---------------------------------------------|---------------------------|-----------------------------|
+  | VERTEX              | arbitrary tetrahedron containing the vertex | vertex index              | undefined                   |
+  | EDGE                | arbitrary tetrahedron containing the edge   | vertex at one end of edge | vertex at other end of edge |
+  | FACET               | one of the two tetrahedra with this face    | vertex opposite face      | undefined                   |
+  | CELL                | the tetrahedron containing the point        | undefined                 | undefined                   |
+  | OUTSIDE_CONVEX_HULL | zero                                        | undefind                  | undefined                   |
+  */
   size_t locate(const ArrayVector<double>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
     if (x.numel() != 3u || x.size() != 1u){
       std::string msg = "locate requires a single 3-element vector.";
@@ -68,13 +101,15 @@ public:
       min = d.getvalue(i);
       idx = i;
     }
-    // if the minimum distance is zero we're done:
-    if (approx_scalar(min, 0.0)){
-      type = VERTEX;
-      return tetrahedra_per_vertex[idx][0];
-    }
-    // Check each of the tetrahedra which contain this vertex to see if the
-    // point is inside/on the surface/on an edge of the tetrahedron
+    if (idx >= nVertices) throw std::logic_error("Closest vertex not found?!");
+    /* It would be tempting to shortcut the following for loop for the case of
+       an exact match, but we need to decide *which* vertex of the returned
+       tetrahedron we matched and its this part which requires we calculate
+       (at least) three `orient3d` calls. Rather than trying to optimise for
+       that case now, treating all cases equivalently is probably easier to
+       maintain in the future.                                                */
+    // Check each of the tetrahedra which contain this closest vertex to see if
+    // the point is inside/on-the-surface/on-an-edge/a-vertex of the tetrahedron
     double o[5];
     size_t zero_count;
     for (auto tet_idx: tetrahedra_per_vertex[idx]){

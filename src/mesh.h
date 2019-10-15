@@ -123,6 +123,17 @@ public:
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());}
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
   template<typename R> ArrayVector<T> interpolate_at(const ArrayVector<R>& x) const;
+  //! Return the neighbours for which a passed boolean array holds true
+  template<typename R> std::vector<size_t> which_neighbours(const std::vector<R>& t, const R value, const size_t idx) const;
+  //! Sort the values stored in the mesh by already-sorted neighbour consensus
+  template<typename R=double>
+  ArrayVector<size_t> multi_sort_perm(const R s=R(1), const R e=R(1), const R v=R(1), const R m=R(1), const int ef=0, const int vf=0) const;
+  template<typename R> size_t consensus_sort_from(const size_t s, const R w[4],
+    const int f[2], const size_t so[2], ArrayVector<size_t>& p,
+    std::vector<bool>& d, std::vector<bool>& l, std::vector<size_t>& v) const;
+  template<typename R> bool consensus_sort_difference(const R w[4],
+    const int f[2], const size_t so[2], ArrayVector<size_t>& p,
+    std::vector<bool>& d, const size_t i, const std::vector<size_t> n) const;
 private:
   //! Ensure that the provided elements make sense
   void check_elements(void);
