@@ -190,6 +190,17 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     cobj.replace_data(data, shape, el);
   }, py::arg("data"), py::arg("elements"))
   .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.get_data(), cobj.data_shape(), false);})
+  .def("multi_sort_perm",
+    [](Class& cobj, const double wS, const double wE, const double wV,
+                    const double wM, const int ewf, const int vwf){
+    return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
+  }, py::arg("scalar_cost_weight")=1,
+     py::arg("eigenvector_cost_weight")=1,
+     py::arg("vector_cost_weight")=1,
+     py::arg("matrix_cost_weight")=1,
+     py::arg("eigenvector_weight_function")=0,
+     py::arg("vector_weight_function")=0
+  )
   .def("ir_interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
                            const bool& useparallel,

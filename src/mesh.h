@@ -6,6 +6,7 @@
 #include <array>
 #include <omp.h>
 #include "interpolation.h"
+#include "unsignedtosigned.h"
 
 #include "triangulation.h" // defined Delaunay
 // typedef CGAL::Triangulation_vertex_base_with_info_3<unsigned, K>     Vertex_Base;
@@ -123,6 +124,7 @@ public:
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());}
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
   template<typename R> ArrayVector<T> interpolate_at(const ArrayVector<R>& x) const;
+  template<typename R> ArrayVector<T> parallel_interpolate_at(const ArrayVector<R>& x, const int nthreads) const;
   //! Return the neighbours for which a passed boolean array holds true
   template<typename R> std::vector<size_t> which_neighbours(const std::vector<R>& t, const R value, const size_t idx) const;
   //! Sort the values stored in the mesh by already-sorted neighbour consensus

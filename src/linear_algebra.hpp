@@ -1,4 +1,5 @@
 #define ZERO_PREC 1e-10
+template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
 
 // trace of a square matrix
 template<typename T, int N> T trace(const T *M){
@@ -20,33 +21,59 @@ template<typename T, int N, int M> bool equal_array(const T *A, const T *B, cons
 template<typename T, int N> bool equal_matrix(const T *A, const T *B, const T tol){ return equal_array<T,N,N>(A,B,tol); }
 template<typename T, int N> bool equal_vector(const T *A, const T *B, const T tol){ return equal_array<T,N,1>(A,B,tol); }
 
-template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol){
-  bool isfpT, isfpR;
-  isfpT = std::is_floating_point<T>::value;
-  isfpR = std::is_floating_point<R>::value;
+/* If both inputs provided to approx_scalar are unsigned then the calls to
+   std::abs() {a, b, a-b, a+b} are all undefined
+*/
+template<typename T, typename R> static enable_if_t<
+  ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
+  ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
+inner_approx_scalar(const T a, const R b, const int){ return a==b; }
+template<typename T, typename R> static enable_if_t<
+  ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
+  (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
+inner_approx_scalar(const T a, const R b, const int tol){
+  bool isfpR = std::is_floating_point<R>::value;
+  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  if ( a == T(0) && std::abs(b) <= Rtol )
+    return true;
+  else
+    return std::abs(a-b) <= Rtol*std::abs(a+b);
+}
+template<typename T, typename R> static enable_if_t<
+  (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
+  ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
+inner_approx_scalar(const T a, const R b, const int tol){
+  bool isfpT = std::is_floating_point<T>::value;
+  R Ttol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  if ( std::abs(a) <= Ttol && b == R(0) )
+    return true;
+  else
+    return std::abs(a-b) <= Ttol*std::abs(a+b);
+}
+template<typename T, typename R> static enable_if_t<
+  (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
+  (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
+inner_approx_scalar(const T a, const R b, const int tol){
+  bool isfpT = std::is_floating_point<T>::value;
+  bool isfpR = std::is_floating_point<R>::value;
   T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
   R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
-  bool useTtol = false;
-  if ( isfpT || isfpR ){
-    if (isfpT && isfpR){
-      if (std::is_convertible<R,T>::value) useTtol=true;
-      else if (!std::is_convertible<T,R>::value) return false; // they can't be equal in this case
-    } else if ( isfpT ) useTtol=true;
-  }
+  if (isfpT && isfpR && !std::is_convertible<R,T>::value) return false; // they can't be equal if they're not expressible in the same format
+  /* isfpT | isfpR | which? | why?
+     ------|-------|--------|-----
+       0       0     either    both Ttol and Rtol are 0
+       1       1      Ttol     R is convertible to T
+       0       1      Rtol     Ttol is 0, so use Rtol
+       1       0      Ttol     Rtol is 0, so use Ttol
+  */
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-  bool answer;
   if ( std::abs(a) <= Ttol && std::abs(b) <= Rtol )
-    answer = std::abs(a-b) <= (useTtol ? Ttol :Rtol);
+    return std::abs(a-b) <= (isfpT ? Ttol :Rtol);
   else
-    answer = std::abs(a-b) <= (useTtol ? Ttol :Rtol)*std::abs(a+b);
-  // if (!answer){
-  //   std::cout << std::to_string(a) << " != " << std::to_string(b);
-  //   std::cout << " since |a-b| = " << std::to_string(std::abs(a-b));
-  //   std::cout << " ≥ " << std::to_string(1000*(useTtol ? Ttol :Rtol));
-  //   std::cout << " or " << std::to_string(1000*(useTtol ? Ttol :Rtol)*std::abs(a+b)) << std::endl;
-  // }
-  return answer;
+    return std::abs(a-b) <= (isfpT ? Ttol :Rtol)*std::abs(a+b);
 }
+template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol){ return inner_approx_scalar(a,b,tol); }
+
 template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B, const int tol){
   bool isfpT, isfpR;
   isfpT = std::is_floating_point<T>::value;

@@ -77,6 +77,28 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_a
   }
   return out;
 }
+template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::parallel_interpolate_at(const ArrayVector<R>& x, const int threads) const{
+  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
+  this->check_before_interpolating(x);
+  // shared between threads
+  ArrayVector<T> out(this->data.numel(), x.size());
+  const ArrayVector<double>& positions = this->mesh.get_vertex_positions();
+  // private to each thread
+  ArrayVector<double> xi(3u, 1u);
+  std::vector<size_t> indexes;
+  std::vector<double> weights;
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  slong xsize = unsigned_to_signed<slong, size_t>(x.size());
+#pragma omp parallel for shared(x, out, positions) private(xi, indexes, weights)
+  for (slong si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, slong>(si);
+    xi = x.extract(i);
+    indexes = this->mesh.locate_for_interpolation(xi);
+    weights = tetrahedron_weights(xi, positions.extract(indexes));
+    new_unsafe_interpolate_to(this->data, this->elements, this->branches, indexes, weights, out, i);
+  }
+  return out;
+}
 
 
 template<class T>
@@ -195,7 +217,7 @@ ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
   }
   // Start from the Γ point (which we previously need to ensure is in the mesh)
   ArrayVector<double> Gamma(1u, 3u, 0.);
-  std::vector<size_t> verts = this->map.locate_for_interpolation(Gamma);
+  std::vector<size_t> verts = this->mesh.locate_for_interpolation(Gamma);
   if (verts.size() != 1)
     throw std::runtime_error("The Gamma points is not a mesh point?!");
   size_t idx = verts[0];
@@ -206,9 +228,6 @@ ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
   size_t num_sorted = 1;
   // Now do all of the sorting:
   num_sorted += this->consensus_sort_from(idx, weights, funcs, spobj, perm, sorted, locked, visited);
-  if (num_sorted < this->data.size()){
-    throw std::runtime_error(msg);
-  }
   if (num_sorted != this->data.size()){
     std::string msg;
     msg = "Sorting visited " + std::to_string(num_sorted) + " of "
@@ -262,7 +281,7 @@ size_t Mesh3<T>::consensus_sort_from(
   queue.push(s);
   size_t max_visits = 300;
   size_t num_sorted=0, idx=0u, count=0u, refresh=1u;
-  bool success, more_to_do=true;
+  bool more_to_do=true;
   while (more_to_do){
     idx = queue.front();
     queue.pop();
@@ -281,7 +300,7 @@ size_t Mesh3<T>::consensus_sort_from(
         queued[i] = true;
       }
     }
-    more_to_do = !queue.empty()
+    more_to_do = !queue.empty();
     if (++count >= refresh){
       for (int i=0; i<80; ++i) std::cout << " ";
       std::cout << "\rPoints queued: " << queue.size();
@@ -291,8 +310,8 @@ size_t Mesh3<T>::consensus_sort_from(
       more_to_do = queue.size() > 0;
     }
     std::cout << std::endl;
-    return num_sorted;
   }
+  return num_sorted;
 }
 
 template<class T> template<typename R>
@@ -321,7 +340,7 @@ bool Mesh3<T>::consensus_sort_difference(
   std::vector<bool> uncounted(nn, true);
   std::vector<size_t> freq(nn, 1u), equiv_to(nn, 0u);
   for (size_t i=0; i<nn; ++i) equiv_to[i] = i;
-  bool all_agreee;
+  //bool all_agreee;
   for (size_t i=0; i<nn-1; ++i) if (uncounted[i])
   for (size_t j=i+1; j<nn; ++j) if (uncounted[j] && t.vector_approx(i, j)) {
     uncounted[j] = false;

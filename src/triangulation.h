@@ -87,6 +87,25 @@ public:
   | FACET               | one of the two tetrahedra with this face    | vertex opposite face      | undefined                   |
   | CELL                | the tetrahedron containing the point        | undefined                 | undefined                   |
   | OUTSIDE_CONVEX_HULL | zero                                        | undefind                  | undefined                   |
+
+  @note When this method becomes a bottleneck (when the number of vertices
+        in the mesh becomes too large) a large performance benefit can be had
+        at the expense of preprocessing and memory use for metadata.
+        As written now the method requires nVertices distance calculations to
+        locate the vertex closest to the supplied point. One way to reduce this
+        is to be able to quickly narrow-down the number of vertices which must
+        be checked by, e.g., dividing the vertices into 3D bins. Bin dimesnions
+        can be chosen to keep a similar number of vertices in each bin.
+        The metadata we need to maintain are the bin boundaries, and either a
+        linked list of the vertices in each bin or (after sorting the vertices)
+        a list of the bin boundaries in the vertices (first vertex in each bin),
+        e.g., [0, first vertex in second bin, first vertex in third bin, ...].
+        Then, to locate a point's closest vertex, we first find which bin it
+        falls into and then only check its distance to vertices in that bin and
+        its neighbours, 3³ = 27 bins in total. If we choose an 8×8×8 binning we
+        have 512 total bins to keep track of and would only need to check 5.3%
+        of the total vertices; for 16×16×16 we would have 4096 bins and would
+        only need to check 0.66% of all vertices.
   */
   size_t locate(const ArrayVector<double>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
     if (x.numel() != 3u || x.size() != 1u){
@@ -202,7 +221,9 @@ public:
     return vert_idx;
   }
   /* If the following function is more useful than the preceeding, it could be
-     advantageous to replicate the above code in this function's for loop.    */
+     advantageous to replicate the above code in this function's for loop.
+     Either way, this should probably be parallelised with OpenMP.
+  */
   std::vector<std::vector<size_t>> locate_all_for_interpolation(const ArrayVector<double>& x) const {
     if (x.numel()!=3u){
       std::string msg = "locate_all requires 3-element vector(s)";

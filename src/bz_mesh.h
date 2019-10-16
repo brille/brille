@@ -51,14 +51,9 @@ public:
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> ir_result;
-    if (nthreads > 1){ // change this to != 1?
-      std::cout << "bz_mesh::interpolate_at; parallel algorithm not yet implemented." << std::endl;
-    //   ir_result = this->Mesh3<T>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads);
-      ir_result = this->Mesh3<T>::interpolate_at(ir_q.get_xyz());
-    } else {
-      ir_result = this->Mesh3<T>::interpolate_at(ir_q.get_xyz());
-    }
+    ArrayVector<T> ir_result = (nthreads < 2)
+      ? this->Mesh3<T>::interpolate_at(ir_q.get_xyz())
+      : this->Mesh3<T>::parallel_interpolate_at(ir_q.get_xyz(), nthreads);
 
     // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
     // the interpolation needs to be rotated.
