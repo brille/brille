@@ -145,30 +145,30 @@ public:
     bool point_is_outside;
     for (auto tet_idx: tetrahedra_per_vertex[idx]){
       // ~6× the volume of this tetrahedron -- here since the tetrahedron vertices are probably not ordered correctly
-      tvol = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
+      tvol = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
       // replace the first vertex by x
-      o[0] = orient3d(x.datapointer(),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
+      o[0] = orient3d(x.data(),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the second vertex by x
-      o[1] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      x.datapointer(),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
+      o[1] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
+                      x.data(),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the third vertex by x
-      o[2] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      x.datapointer(),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
+      o[2] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
+                      x.data(),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the fourth vertex by x
-      o[3] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      x.datapointer())/tvol;
+      o[3] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
+                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
+                      x.data())/tvol;
       info_update("tetrahedra ",tet_idx," has volumes ",o);
       // approx_scalar because we're still ok with some rounding? This seems potentially dangerous as implemented.
       for (size_t i=0; i<4u; ++i) is_zero[i] = approx_scalar(o[i], 0.);

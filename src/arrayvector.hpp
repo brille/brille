@@ -1,5 +1,4 @@
-
-template<typename T> T* ArrayVector<T>::datapointer(const size_t i, const size_t j) const {
+template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){
     std::string msg = __PRETTY_FUNCTION__;
@@ -11,20 +10,20 @@ template<typename T> T* ArrayVector<T>::datapointer(const size_t i, const size_t
   }
   ptr = this->_data + (i*this->numel() + j);
   if (!ptr){
-    throw std::runtime_error("Attempting to access uninitialized datapointer");
+    throw std::runtime_error("Attempting to access uninitialized data");
   }
   return ptr;
 }
 
 template<typename T> T ArrayVector<T>::getvalue(const size_t i, const size_t j) const {
   T *ptr, out;
-  ptr = this->datapointer(i,j);
+  ptr = this->data(i,j);
   out = *ptr;
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t i) const {
   if (i<this->size()){
-    ArrayVector<T> out(this->numel(),1u,this->datapointer(i));
+    ArrayVector<T> out(this->numel(),1u,this->data(i));
     return out;
   }
   std::string msg = "The requested element " + std::to_string(i);
@@ -35,7 +34,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t i) cons
 template<typename T> ArrayVector<T> ArrayVector<T>::first(const size_t num) const {
   size_t stop = num < this->size() ? num : this->size();
   ArrayVector<T> out(this->numel(), stop);
-  for (size_t j=0; j<stop; j++) out.set(j, this->datapointer(j) );
+  for (size_t j=0; j<stop; j++) out.set(j, this->data(j) );
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, const size_t *i) const {
@@ -44,7 +43,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, cons
   for (size_t j=0; j<n; j++) if ( !(i[j]<this->size()) ){ allinbounds=false; break; }
   if (allinbounds){
     out.resize(n);
-    for (size_t j=0; j<n; j++) out.set(j, this->datapointer(i[j]) );
+    for (size_t j=0; j<n; j++) out.set(j, this->data(i[j]) );
   }
   return out;
 }
@@ -57,7 +56,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
   for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
   if (allinbounds){
     out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx.getvalue(j)) );
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx.getvalue(j)) );
   }
   return out;
 }
@@ -72,7 +71,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<si
   }
   if (allinbounds){
     out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx[j]) );
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
   }
   return out;
 }
@@ -87,7 +86,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<in
   }
   if (allinbounds){
     out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx[j]) );
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
   }
   return out;
 }
@@ -103,7 +102,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bo
   ArrayVector<T> out(this->numel(),nout);
   size_t idx = 0;
   for (size_t i=0; i<tf.size(); ++i)
-    if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
+    if (tf.getvalue(i,0)) out.set(idx++, this->data(i));
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<bool>& t) const{
@@ -117,7 +116,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<bo
   for (auto i: t) if (i) ++nout;
   ArrayVector<T> o(this->numel(),nout);
   size_t j = 0;
-  for (size_t i=0; i<t.size(); ++i) if (t[i]) o.set(j++, this->datapointer(i));
+  for (size_t i=0; i<t.size(); ++i) if (t[i]) o.set(j++, this->data(i));
   return o;
 }
 template<typename T> bool ArrayVector<T>::get(const size_t i, T* out) const {
@@ -280,7 +279,7 @@ template<typename T> template<typename R> bool ArrayVector<T>::isapprox(const Ar
   return true;
 }
 template<typename T> bool ArrayVector<T>::isapprox(const size_t i, const size_t j) const {
-  return approx_vector(this->numel(), this->datapointer(i), this->datapointer(j));
+  return approx_vector(this->numel(), this->data(i), this->data(j));
   // for (size_t k=0; k<this->numel(); k++) if (!approx_scalar(this->getvalue(i,k),this->getvalue(j,k))) return false;
   // return true;
 }
@@ -289,7 +288,7 @@ template<typename T> void ArrayVector<T>::cross(const size_t i, const size_t j, 
   if (this->numel()!=3u){
     throw std::domain_error("cross is only defined for 3-D vectors");
   }
-  if (i<this->size()&&j<this->size())  vector_cross(out,this->datapointer(i,0),this->datapointer(j,0));
+  if (i<this->size()&&j<this->size())  vector_cross(out,this->data(i,0),this->data(j,0));
   else {
     std::string msg = "Attempted to access elements " + std::to_string(i);
     msg += " and " + std::to_string(j) + " of a " + std::to_string(this->size());
@@ -653,7 +652,7 @@ template<typename T> ArrayVector<bool> ArrayVector<T>::is_unique(void) const{
   for (size_t i=0; i<this->size(); ++i) isu.insert(true,i);
   // and only check from the second array onwards against those of lower index
   for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
-  if (isu.getvalue(j) && approx_vector(this->numel(), this->datapointer(i), this->datapointer(j))){
+  if (isu.getvalue(j) && approx_vector(this->numel(), this->data(i), this->data(j))){
     isu.insert(false,i);
     break;
   }
@@ -665,7 +664,7 @@ template<typename T> ArrayVector<size_t> ArrayVector<T>::unique_idx(void) const{
   for (size_t i=0; i<this->size(); ++i) isu.insert(i,i);
   // and only check from the second array onwards against those of lower index
   for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
-  if (j==isu.getvalue(j) && approx_vector(this->numel(), this->datapointer(i), this->datapointer(j))){
+  if (j==isu.getvalue(j) && approx_vector(this->numel(), this->data(i), this->data(j))){
     isu.insert(j,i);
     break;
   }
@@ -687,7 +686,7 @@ L<T> extract(L<T>& source, ArrayVector<bool>& idx){
   sink.resize(nout);
   size_t at = 0;
   for (size_t i=0; i<idx.size(); ++i)
-    if (idx.getvalue(i,0)) sink.set(at++, source.datapointer(i));
+    if (idx.getvalue(i,0)) sink.set(at++, source.data(i));
   return sink;
 }
 template<class T, template<class> class A,
@@ -707,7 +706,7 @@ A<S> cross(const A<T>& a, const A<R>& b) {
   if (si.m!=3u) throw std::domain_error("cross product is only defined for three vectors");
   A<S> out( 3u, si.n);
   for (size_t i=0; i<si.n; i++)
-    vector_cross<S,T,R,3>(out.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
+    vector_cross<S,T,R,3>(out.data(i), a.data(si.oneveca?0:i), b.data(si.onevecb?0:i));
   return out;
 }
 
@@ -1028,11 +1027,11 @@ template<class T, class R, template<class> class A,
          class S = typename std::common_type<T,R>::type
          >
 void unsafe_accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, A<S>& out, const size_t j) {
-  S *outdata = out.datapointer(j);
+  S *outdata = out.data(j);
   T *avidata;
   size_t m=av.numel();
   for (size_t x=0; x<n; ++x){
-    avidata = av.datapointer(i[x]);
+    avidata = av.data(i[x]);
     for (size_t y=0; y<m; ++y)
       outdata[y] += avidata[y]*w[x];
   }
@@ -1093,12 +1092,12 @@ void unsafe_interpolate_to(const A<T>& source,
                            const R *weights,   /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!! THIS IS WHY THERE ARE TWO VERSION OF unsafe_interpolate_to!!!!!!!!!!!!!!*/
                            A<S>& sink,
                            const size_t Jsnk) {
-  S *sink_j = sink.datapointer(Jsnk);
-  T *source_i, *source_0 = source.datapointer(Isrc[0]);
+  S *sink_j = sink.data(Jsnk);
+  T *source_i, *source_0 = source.data(Isrc[0]);
   size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2])+static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
   T e_i_theta;
   for (size_t x=0; x<Narr; ++x){
-    source_i = source.datapointer(Isrc[x]);
+    source_i = source.data(Isrc[x]);
     // loop over the modes. they are the first index and farthest in memory
     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
       // Scalars are first, nothing special to do:
@@ -1140,12 +1139,13 @@ void new_unsafe_interpolate_to(const A<T>& source,
                            A<S>& sink,
                            const size_t iSnk)
 {
-  S *sink_i = sink.datapointer(iSnk);
-  T *source_i, *source_0 = source.datapointer(iSrc[0]);
+  S *sink_i = sink.data(iSnk);
+  T *source_i, *source_0 = source.data(iSrc[0]);
   size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
   T e_i_theta;
-  for (size_t x: iSrc){
-    source_i = source.datapointer(iSrc[x]);
+  info_update("Interpolating between arrays ",iSrc," with weights ",weights);
+  for (size_t x=0; x<iSrc.size(); ++x){
+    source_i = source.data(iSrc[x]);
     // loop over the objects (modes)
     for (size_t iObj=0; iObj<nObj; ++iObj){
       // find the weighted sum of each scalar

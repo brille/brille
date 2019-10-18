@@ -54,7 +54,7 @@ L<double> cross(const L<T>& a, const L<R>& b) {
   typename LatticeTraits<L<T>>::type lat = a.get_lattice();
   typename LatVecTraits<L<T>,double>::star tmp( lat.star(), si.n);
   for (size_t i=0; i<si.n; i++)
-    vector_cross<double,T,R,3>(tmp.datapointer(i), a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i));
+    vector_cross<double,T,R,3>(tmp.data(i), a.data(si.oneveca?0:i), b.data(si.onevecb?0:i));
   tmp *= lat.get_volume()/2.0/PI;
   return tmp.star();
 }
@@ -79,7 +79,7 @@ ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
     double len[3] = {lat.get_a(),lat.get_b(),lat.get_c()};
     double ang[3] = {lat.get_alpha(),lat.get_beta(),lat.get_gamma()};
     for (size_t i=0; i<si.n; i++)
-      out.insert( same_lattice_dot( a.datapointer(si.oneveca?0:i), b.datapointer(si.onevecb?0:i), len, ang), i);
+      out.insert( same_lattice_dot( a.data(si.oneveca?0:i), b.data(si.onevecb?0:i), len, ang), i);
   } else {
     double tmp=0;
     for (size_t i=0; i<si.n; i++) {
@@ -123,7 +123,7 @@ typename LatVecTraits<L<T>,double>::star star(const L<T>& v){
   v.get_lattice().get_covariant_metric_tensor(cvmt);
   typename LatVecTraits<L<T>,double>::star vstar( v.get_lattice().star(), v.size() );
   for (size_t i=0; i<v.size(); ++i)
-    multiply_matrix_vector(vstar.datapointer(i), cvmt, v.datapointer(i));
+    multiply_matrix_vector(vstar.data(i), cvmt, v.data(i));
   delete[] cvmt;
   return vstar;
 }
@@ -256,7 +256,7 @@ L<S> operator*(const std::array<R,9>& m, const L<T>& a){
   L<S> out(a.get_lattice(), a.size());
   S tmp[3];
   for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,R,T,3>(out.datapointer(i), m.data(), a.datapointer(i) );
+    multiply_matrix_vector<S,R,T,3>(out.data(i), m.data(), a.data(i) );
   return out;
 }
 

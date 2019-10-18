@@ -510,7 +510,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         x_invA = x_rlu.get_xyz();
       }
       size_t subidx[3];
-      unsigned int flg = cobj.nearest_index(x_invA.datapointer(0,0), subidx);
+      unsigned int flg = cobj.nearest_index(x_invA.data(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
     },py::arg("x"),py::arg("isrlu")=true)
@@ -530,7 +530,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         x_invA = x_rlu.get_xyz();
       }
       size_t subidx[3];
-      unsigned int flg = cobj.floor_index(x_invA.datapointer(0,0), subidx);
+      unsigned int flg = cobj.floor_index(x_invA.data(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
     },py::arg("x"),py::arg("isrlu")=true)

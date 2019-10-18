@@ -209,7 +209,7 @@ template<typename T> T tetrahedron_volume(const ArrayVector<T>& a, const ArrayVe
   dumb.set(0, b-a);
   dumb.set(1, c-a);
   dumb.set(2, d-a);
-  vector_cross(dumb.datapointer(3), dumb.datapointer(1), dumb.datapointer(2));
+  vector_cross(dumb.data(3), dumb.data(1), dumb.data(2));
   return std::abs(dumb.dot(0,3)/6.0); // abs so that we don't have to worry about the permutation
 }
 /*

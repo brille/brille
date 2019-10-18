@@ -344,7 +344,7 @@ public:
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk );
+      flg = this->nearest_index(x.data(i), ijk );
       cnt = 1u;
       if (flg > 16){
         std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
@@ -380,7 +380,7 @@ public:
 
         // determine the linear indices for the (up to) 16 grid points
         // surrounding x[i] plus their linear-interpolation weights.
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,4u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob) {
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
@@ -417,7 +417,7 @@ public:
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk );
+      flg = this->nearest_index(x.data(i), ijk );
       cnt = 1u;
       if (flg > 16){
         std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
@@ -451,7 +451,7 @@ public:
         if (13==flg)/*+x++*/ dirs[0]=1u;
         if (14==flg)/*x+++*/ dirs[0]=0u;
 
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,4u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob) {
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
@@ -490,7 +490,7 @@ protected:
   ArrayVector<size_t> get_neighbours(const size_t centre) const {
     ArrayVector<int> mzp = make_relative_neighbour_indices4(1); // all combinations of [-1,0,+1] for four dimensions, skipping (0,0,0,0)
     ArrayVector<size_t> ijk(4u,1u);
-    this->lin2sub(centre, ijk.datapointer(0)); // get the subscripted indices of the centre position
+    this->lin2sub(centre, ijk.data(0)); // get the subscripted indices of the centre position
     bool isz[4], ism[4]; // is the centre index 0 (isz) or the maximum (ism)
     for (size_t i=0; i<4u; ++i) isz[i] = 0==ijk.getvalue(0,i);
     for (size_t i=0; i<4u; ++i) ism[i] = this->size(i)-1 <= ijk.getvalue(0,i);
@@ -507,7 +507,7 @@ protected:
     for (size_t i=0; i<mzp.size(); ++i){
       if (is_valid.getvalue(i)){
         for (size_t j=0; j<4u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        is_valid.insert( this->is_inbounds(tmp.datapointer(0)) ,i); //ensure we only check in-bounds neighbours
+        is_valid.insert( this->is_inbounds(tmp.data(0)) ,i); //ensure we only check in-bounds neighbours
       }
     }
     size_t valid_neighbours = 0;
@@ -521,7 +521,7 @@ protected:
         //    tmp = mzp[i] + ijk;
         // because the compiler doesn't know what to do with ArrayVector<int> + ArrayVector<size_t>
         for (size_t j=0; j<4u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-        oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
+        oob += this->sub2lin(tmp.data(0),neighbours.data(valid_neighbour++));
       }
     }
     if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");

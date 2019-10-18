@@ -1,6 +1,6 @@
 template<typename T> LDVec<T> LDVec<T>::extract(const size_t i) const {
   if (i<this->size()){
-    LDVec<T> out(this->get_lattice(),1u,this->datapointer(i));
+    LDVec<T> out(this->get_lattice(),1u,this->data(i));
     return out;
   }
   std::string msg = "The requested element " + std::to_string(i);
@@ -11,7 +11,7 @@ template<typename T> LDVec<T> LDVec<T>::extract(const size_t i) const {
 template<typename T> LDVec<T> LDVec<T>::first(const size_t num) const {
   size_t stop = num < this->size() ? num : this->size();
   LDVec<T> out(this->get_lattice(), stop);
-  for (size_t j=0; j<stop; j++) out.set(j, this->datapointer(j) );
+  for (size_t j=0; j<stop; j++) out.set(j, this->data(j) );
   return out;
 }
 template<typename T> LDVec<T> LDVec<T>::extract(const size_t n, const size_t *i) const {
@@ -20,7 +20,7 @@ template<typename T> LDVec<T> LDVec<T>::extract(const size_t n, const size_t *i)
   for (size_t j=0; j<n; j++) if ( !(i[j]<this->size()) ){ allinbounds=false; break; }
   if (allinbounds){
     out.resize(n);
-    for (size_t j=0; j<n; j++) out.set(j, this->datapointer(i[j]) );
+    for (size_t j=0; j<n; j++) out.set(j, this->data(i[j]) );
   }
   return out;
 }
@@ -31,7 +31,7 @@ template<typename T> LDVec<T> LDVec<T>::extract(const ArrayVector<size_t>& idx) 
   for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
   if (allinbounds){
     out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->datapointer( idx.getvalue(j)) );
+    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx.getvalue(j)) );
   }
   return out;
 }
@@ -47,7 +47,7 @@ template<typename T> LDVec<T> LDVec<T>::extract(const ArrayVector<bool>& tf) con
   LDVec<T> out(this->get_lattice(),nout);
   size_t idx = 0;
   for (size_t i=0; i<tf.size(); ++i)
-    if (tf.getvalue(i,0)) out.set(idx++, this->datapointer(i));
+    if (tf.getvalue(i,0)) out.set(idx++, this->data(i));
   return out;
 }
 template<typename T> LDVec<T> LDVec<T>::extract(const std::vector<bool>& tf) const{
@@ -61,13 +61,13 @@ template<typename T> LDVec<T> LDVec<T>::extract(const std::vector<bool>& tf) con
   LQVec<T> out(this->get_lattice(),nout);
   size_t idx = 0;
   for (size_t i=0; i<tf.size(); ++i)
-    if (tf[i]) out.set(idx++, this->datapointer(i));
+    if (tf[i]) out.set(idx++, this->data(i));
   return out;
 }
 
 template<typename T> LDVec<T> LDVec<T>::get(const size_t i) const {
   LDVec<T> out(this->get_lattice(), i<this->size() ? 1u : 0u );
-  if (i<this->size()) this->ArrayVector<T>::get(i, out.datapointer() );
+  if (i<this->size()) this->ArrayVector<T>::get(i, out.data() );
   return out;
 }
 
@@ -79,7 +79,7 @@ template<typename T> ArrayVector<double> LDVec<T>::get_xyz() const {
   Reciprocal lat = this->get_lattice();
   lat.get_xyz_transform(toxyz);
   ArrayVector<double> xyz(this->numel(),this->size());
-  for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(xyz.datapointer(i), toxyz, this->datapointer(i));
+  for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(xyz.data(i), toxyz, this->data(i));
   delete[] toxyz;
   return xyz;
 }
@@ -87,7 +87,7 @@ template<typename T> LQVec<double> LDVec<T>::star() const {
   double *cvmt = safealloc<double>(9);
   (this->lattice).get_covariant_metric_tensor(cvmt);
   LQVec<double> slv( (this->lattice).star(), this->size() );
-  for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(slv.datapointer(i), cvmt, this->datapointer(i));
+  for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(slv.data(i), cvmt, this->data(i));
   slv /= 2.0*PI; // ai= gij/2/pi * ai_star
   delete[] cvmt;
   return slv;
@@ -97,7 +97,7 @@ template<typename T> LDVec<double> LDVec<T>::cross(const size_t i, const size_t 
   LDVec<double> out(this->get_lattice(), bothok? 1u : 0u);
   if (bothok){
     double *rlucross = safealloc<double>(3);
-    vector_cross<double,T,T,3>(rlucross, this->datapointer(i), this->datapointer(j));
+    vector_cross<double,T,T,3>(rlucross, this->data(i), this->data(j));
 
     Direct dlat = this->get_lattice();
     LQVec<double> lqv( dlat.star(), 1u, rlucross);
@@ -114,7 +114,7 @@ template<typename T> double LDVec<T>::dot(const size_t i, const size_t j) const 
   double len[3] = {lat.get_a(),lat.get_b(),lat.get_c()};
   double ang[3] = {lat.get_alpha(),lat.get_beta(),lat.get_gamma()};
   if (i<this->size()&&j<this->size())
-    return same_lattice_dot(this->datapointer(i),this->datapointer(j),len,ang);
+    return same_lattice_dot(this->data(i),this->data(j),len,ang);
   throw "attempted out of bounds access by dot";
 }
 

@@ -2,6 +2,20 @@ cmake_minimum_required(VERSION 3.13)
 
 project(symbz)
 
+# find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+if (CMAKE_CXX_CPPCHECK)
+    list(
+        APPEND CMAKE_CXX_CPPCHECK
+            "--enable=warning"
+            "--inconclusive"
+            "--force"
+            "--inline-suppr"
+            # "--template=gcc" # uncomment to get suppression error ids in brackets
+            "--suppress=*:${CMAKE_SOURCE_DIR}/lib/*"
+            "--suppress=compareBoolExpressionWithInt:${CMAKE_SOURCE_DIR}/src/arrayvector.hpp:349"
+    )
+endif()
+
 if (MSVC)
     # warning level 4 -- add /WX for all warnings as errors
     add_compile_options(/W4)

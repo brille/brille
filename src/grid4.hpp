@@ -1,29 +1,27 @@
 // MapGrid4 Methods
-
 template<class T> void MapGrid4<T>::print_N(const bool nl) const {
-  printf("[");
-  for (size_t i=0; i<4u; i++) printf(" %3u",this->N[i]);
-  printf("]");
-  if (nl) printf("\n");
+  std::cout << "[";
+  for (size_t i=0; i<4u; ++i) std::cout << " " << this->N[i];
+  std::cout << " ]";
+  if (nl) std::cout << std::endl;
 }
 template<class T> void MapGrid4<T>::print_span(const bool nl) const {
-  printf("[");
-  for (size_t i=0; i<4u; i++) printf(" %3u",this->span[i]);
-  printf("]");
-  if (nl) printf("\n");
+  std::cout << "[";
+  for (size_t i=0; i<4u; ++i) std::cout << " " << this->span[i];
+  std::cout << " ]";
+  if (nl) std::cout << std::endl;
 }
 template<class T> void MapGrid4<T>::print_map(void) const {
   for (size_t l=0; l<this->N[3]; ++l){
     for (size_t k=0; k<this->N[2]; ++k){
       for (size_t i=0; i<this->N[0]; ++i){
-        for (size_t j=0; j<this->N[1]; ++j){
-          printf(" %4d",this->map[sub2lin(i,j,k,l)]);
-        }
-        printf("\n");
+        for (size_t j=0; j<this->N[1]; ++j)
+          std::cout << " " << this->map[sub2lin(i,j,k,l)];
+        std::cout << std::endl;
       }
-      printf("\n");
+      std::cout << std::endl;
     }
-    printf("\n");
+    std::cout << std::endl;
   }
 }
 //
@@ -135,10 +133,10 @@ template<class T> int MapGrid4<T>::lin2map(const size_t l, size_t& m) const {
 }
 //
 template<class T> size_t MapGrid4<T>::numel(void) const {
-  return (N==nullptr) ? 0u : N[0]*N[1]*N[2]*N[3];
+  return (N==nullptr) ? 0u : this->N[0]*this->N[1]*this->N[2]*this->N[3];
 }
 template<class T> size_t MapGrid4<T>::size(const size_t i) const {
-  return (i<4u && N!=nullptr) ? N[i] : 0;
+  return (i<4u && N!=nullptr) ? this->N[i] : 0;
 }
 // template<class T> size_t MapGrid4<T>::span(const size_t i) const {
 //   return (i<4u && span!=nullptr) ? span[i] : 0;

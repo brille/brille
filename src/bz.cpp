@@ -154,7 +154,7 @@ LQVec<double> BrillouinZone::get_vertices(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<v.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(lv.datapointer(i), fromxyz, v.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(lv.data(i), fromxyz, v.data(i));
   return lv;
 }
 LQVec<double> BrillouinZone::get_primitive_vertices(void) const {
@@ -168,7 +168,7 @@ LQVec<double> BrillouinZone::get_points(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<p.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(lp.datapointer(i), fromxyz, p.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(lp.data(i), fromxyz, p.data(i));
   return lp;
 }
 LQVec<double> BrillouinZone::get_primitive_points(void) const {
@@ -182,7 +182,7 @@ LQVec<double> BrillouinZone::get_normals(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<n.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(ln.datapointer(i), fromxyz, n.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(ln.data(i), fromxyz, n.data(i));
   return ln;
 }
 LQVec<double> BrillouinZone::get_primitive_normals(void) const {
@@ -196,7 +196,7 @@ LQVec<double> BrillouinZone::get_half_edges(void) const{
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<h.size(); ++i)
-  multiply_matrix_vector(lh.datapointer(i), fromxyz, h.datapointer(i));
+  multiply_matrix_vector(lh.data(i), fromxyz, h.data(i));
   return lh;
 }
 std::vector<std::vector<int>> BrillouinZone::get_faces_per_vertex(void) const {
@@ -213,7 +213,7 @@ LQVec<double> BrillouinZone::get_ir_vertices(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<v.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(lv.datapointer(i), fromxyz, v.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(lv.data(i), fromxyz, v.data(i));
   return lv;
 }
 LQVec<double> BrillouinZone::get_ir_primitive_vertices(void) const {
@@ -228,7 +228,7 @@ LQVec<double> BrillouinZone::get_ir_points(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<p.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(lp.datapointer(i), fromxyz, p.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(lp.data(i), fromxyz, p.data(i));
   return lp;
 }
 LQVec<double> BrillouinZone::get_ir_primitive_points(void) const {
@@ -243,7 +243,7 @@ LQVec<double> BrillouinZone::get_ir_normals(void) const {
   double fromxyz[9];
   this->outerlattice.get_inverse_xyz_transform(fromxyz);
   for (size_t i=0; i<n.size(); i++)
-    multiply_matrix_vector<double,double,double,3>(ln.datapointer(i), fromxyz, n.datapointer(i));
+    multiply_matrix_vector<double,double,double,3>(ln.data(i), fromxyz, n.data(i));
   return ln;
 }
 LQVec<double> BrillouinZone::get_ir_primitive_normals(void) const {
@@ -727,7 +727,7 @@ void BrillouinZone::vertex_search(const int extent){
   for (int i=0; i<count; i++){
     // this between_origin_and_plane expects all vectors in an orthonormal frame
     if ( between_origin_and_plane( &halftau, &all_vertices, &all_ijk, i, &in_verts, in_cnt, 1e-10 ) ){
-      in_ijk.set(in_cnt++, all_ijk.datapointer(i));
+      in_ijk.set(in_cnt++, all_ijk.data(i));
     }
   }
   // if ( in_cnt > 0) in_verts.print(0,in_cnt-1);
@@ -809,8 +809,8 @@ void BrillouinZone::vertex_search(const int extent){
   LQVec<double> unq_vrt(this->lattice, unqcnt);
   ArrayVector<int> unq_ijk(3,unqcnt);
   for (int i=0; i<unqcnt; i++){
-      unq_vrt.set( i, in_verts.datapointer(minequividx[i]) );
-      unq_ijk.set( i, in_ijk.datapointer(minequividx[i]) );
+      unq_vrt.set( i, in_verts.data(minequividx[i]) );
+      unq_ijk.set( i, in_ijk.data(minequividx[i]) );
   }
   delete[] minequividx;
 
@@ -823,7 +823,7 @@ void BrillouinZone::vertex_search(const int extent){
     break;
   }
   ArrayVector<int> faces(3,ncontrib);
-  for (int i=0; i<ncontrib; i++) faces.set(i, tau.datapointer(contrib[i]));
+  for (int i=0; i<ncontrib; i++) faces.set(i, tau.data(contrib[i]));
 
   // Each vertex is the intersection of three faces -- smlst_ijk contains the indexes into tau
   // but since tau contains planes which do not contribute to the first Brillouin Zone
@@ -1008,7 +1008,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
 //       if (!in_ir.getvalue(i)){
 //         for (size_t j=0; j<nR; ++j){
 //           // we could check if the rotation axis u∥qi, but that is probably more work than just "rotating" and getting the same point
-//           multiply_matrix_vector(qj.datapointer(0), psym.data(j), qi.datapointer(0));
+//           multiply_matrix_vector(qj.data(0), psym.data(j), qi.data(0));
 //           if(this->isinside_wedge(qj).getvalue(0)){
 //             qi = qj;
 //             Ri = psym.get(j);
@@ -1171,7 +1171,7 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
   LQVec<double> qj(Q.get_lattice(), 1u);
   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
-    multiply_matrix_vector(qj.datapointer(0), psym.data(j), q.datapointer(i));
+    multiply_matrix_vector(qj.data(0), psym.data(j), q.data(i));
     if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
       q.set(i, qj); // keep Rⱼ⋅qᵢ as qᵢᵣ
       R[i] = psym.get_inverse(j); // and Rⱼ⁻¹ ∈ G, such that Qᵢ = Rⱼ⁻¹⋅qᵢᵣ + τᵢ.
@@ -1214,7 +1214,7 @@ bool three_plane_intersection(const LQVec<double>& n,                // plane no
     tmp = cjk*dot(pi,ni) + cki*dot(pj,nj) + cij*dot(pk,nk);
     tmp /= detM;
 
-    iat.set(idx, tmp.datapointer() );
+    iat.set(idx, tmp.data() );
     return true;
   }
   return false;
@@ -1235,7 +1235,7 @@ bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
                       + cross(nk,ni)*dot(pj,nj)
                       + cross(ni,nj)*dot(pk,nk);
     tmp /= detM;
-    intersect.set(idx, tmp.datapointer());
+    intersect.set(idx, tmp.data());
     return true;
   }
   return false;
@@ -1253,7 +1253,7 @@ bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
   if (std::abs(detM) > 1e-10){
     LQVec<double> tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj);
     tmp /= detM;
-    intersect.set(idx, tmp.datapointer());
+    intersect.set(idx, tmp.data());
     return true;
   }
   return false;
@@ -1271,7 +1271,7 @@ bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
   if (std::abs(detM) > 1e-10){
     LQVec<double> tmp = cross(nj,nk)*dot(pi,ni);
     tmp /= detM;
-    intersect.set(idx, tmp.datapointer());
+    intersect.set(idx, tmp.data());
     return true;
   }
   return false;
@@ -1318,6 +1318,6 @@ bool between_origin_and_plane(const LQVec<double> *p,
     }
   }
   // none of p are closer to the origin than v(i)
-  inv->set(store_at, v->datapointer(idx));
+  inv->set(store_at, v->data(idx));
   return true;
 }

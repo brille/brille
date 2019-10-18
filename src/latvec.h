@@ -41,12 +41,12 @@ public:
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
   LDVec(const Direct lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
-  template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {}
+  template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
   template<class R> LDVec(const Direct lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
-  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {}
+  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}
   //! Assignment operator reusing data if we can
   LDVec<T>& operator=(const LDVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;
@@ -178,12 +178,12 @@ public:
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
   LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
-  template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.datapointer()), lattice(vec.get_lattice()) {}
+  template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
   template<class R> LQVec(const Reciprocal lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
-  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.datapointer()), lattice(other.get_lattice()) {}
+  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}
   //! Assignment operator reusing data if we can
   LQVec<T>& operator=(const LQVec<T>& other){
     if (this != &other){ // do nothing if called by, e.g., a = a;

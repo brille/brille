@@ -164,7 +164,7 @@ public:
   struct vorofacet {
     int c1, c2;
     int *elist;
-    vorofacet(): elist(nullptr) {};
+    vorofacet(): c1(0), c2(0), elist(nullptr) {};
     ~vorofacet(){
       if (elist) delete [] elist;
     }

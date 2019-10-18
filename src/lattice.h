@@ -139,7 +139,7 @@ public:
   }
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double, const double, const double, const double, const double, const double, const std::string);
-  ~Lattice() = default;
+  virtual ~Lattice() = default;
   //! copy constructor
   Lattice(const Lattice& other){
     for (int i=0; i<3; ++i){

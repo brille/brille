@@ -489,5 +489,12 @@ def sho(x_0, x_i, y_i, fwhm, t_k):
     # and actually calculate the distribution
     part1 = bose[flag]*(4/np.pi)*fwhm[flag]*x_i[flag]*y_i[flag]
     part2 = ((x_02[flag]-x_i[flag]**2)**2 + 4*fwhm[flag]**2*x_02[flag])
-    y_0[flag] = part1/part2
+    # if the symbz object is holding complex values (it is) then its returned
+    # interpolated values are all complex too, even, e.g., energies which are
+    # purely real with identically zero imaginary components.
+    # The division of two purely-real complex numbers in Python will annoyingly
+    # raise a warning about discarding the imaginary part. So preempt it here.
+    if not np.isclose(np.sum(np.abs(np.imag(part1))+np.abs(np.imag(part2))), 0.):
+        raise RuntimeError('Unexpected imaginary components.')
+    y_0[flag] = np.real(part1)/np.real(part2)
     return y_0.reshape(outshape)

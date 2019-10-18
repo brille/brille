@@ -100,7 +100,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   std::vector<bool> is_right_handed(z.size(), true);
   LQVec<double> Rv(this->outerlattice, 1u);
   for (size_t i=0; i<z.size(); ++i) if (rotps.order(i)>2){
-    multiply_matrix_vector(Rv.datapointer(0), rotps.data(i), x.datapointer(i));
+    multiply_matrix_vector(Rv.data(0), rotps.data(i), x.data(i));
     if (dot(y.get(i), Rv.get(0)).getvalue(0) < 0)
       is_right_handed[i] = false;
   }
@@ -130,7 +130,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     debug_update("\nOrder ", order, ", z=", zi.to_string(0));
     accepted = false;
     vi.set(0, x.get(i)); // do something better here?
-    for (int j=1; j<order; ++j) multiply_matrix_vector(vi.datapointer(j), rotps.data(i), vi.datapointer(j-1));
+    for (int j=1; j<order; ++j) multiply_matrix_vector(vi.data(j), rotps.data(i), vi.data(j-1));
     zxv = cross(zi, vi.first(order));
     zxv = zxv/norm(zxv);
     debug_exec(update_msg ="          R^n v                 z x (R^n v)      \n";)

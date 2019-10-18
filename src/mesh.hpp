@@ -143,7 +143,7 @@ ArrayVector<S> Mesh3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_K) 
           // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
           coth_en = coth_over_en(this->data.getvalue(q,j*span), beta);
           // and find |Q⋅ϵₛ|². Note: vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = vector_product(3u, Q.datapointer(Qidx), this->data.datapointer(q,j*span+1u+3u*d));
+          Q_dot_e_2 = vector_product(3u, Q.data(Qidx), this->data.data(q,j*span+1u+3u*d));
           // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
           qj_sum += Q_dot_e_2 * coth_en;
         }
@@ -331,8 +331,8 @@ bool Mesh3<T>::consensus_sort_difference(
   ArrayVector<size_t> t(p.numel(), nn+1);
   for (size_t i=0; i<nn; ++i){
     for (size_t j=0; j<p.numel(); ++j) t.insert(p.getvalue(neighbours[i], j), nn, j);
-    jv_permutation(this->data.datapointer(idx, 0),
-                   this->data.datapointer(neighbours[i], 0),
+    jv_permutation(this->data.data(idx, 0),
+                   this->data.data(neighbours[i], 0),
                    this->elements, w[0], w[1], w[2], w[3], spobj[0], spobj[1],
                    t, i, nn, funcs[0], funcs[1]);
   }

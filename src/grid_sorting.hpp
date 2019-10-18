@@ -227,8 +227,8 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   const size_t nidx,
                                   const int ecf,
                                   const int vcf) const {
-return jv_permutation(this->data.datapointer(cidx,0),
-                           this->data.datapointer(nidx,0),
+return jv_permutation(this->data.data(cidx,0),
+                           this->data.data(nidx,0),
                            this->elements,
                            scaleS, scaleE, scaleV, scaleM,
                            span, nobj, perm, cidx, nidx, ecf, vcf);
@@ -287,8 +287,8 @@ bool rslt;
 // std::cout << predic.to_string();
 // std::cout << this->data.to_string(cidx) << std::endl;
 // find the assignment of each *predicted* object value to those at cidx:
-rslt = jv_permutation(this->data.datapointer(cidx,0),
-                           predic.datapointer(out_i,0),
+rslt = jv_permutation(this->data.data(cidx,0),
+                           predic.data(out_i,0),
                            this->elements,
                            scaleS, scaleE, scaleV, scaleM,
                            span, nobj, perm, cidx, nidx, ecf, vcf);
@@ -608,8 +608,8 @@ bool MapGrid3<T>::multi_sort_difference(
   for (size_t i=0; i<nidx.size(); ++i){
     for (size_t j=0; j<perm.numel(); ++j)
       tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
-    jv_permutation(this->data.datapointer(cidx,0),
-                   this->data.datapointer(nidx[i],0),
+    jv_permutation(this->data.data(cidx,0),
+                   this->data.data(nidx[i],0),
                    this->elements,
                    weights[0], weights[1], weights[2], weights[3],
                    spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
@@ -735,8 +735,8 @@ ArrayVector<size_t> tperm(perm.numel(), no_pairs+1);
 for (size_t i=0; i<no_pairs; ++i){
   for (size_t j=0; j<perm.numel(); ++j)
     tperm.insert(perm.getvalue(nidx[n2p_idx[i]],j),no_pairs,j);
-  jv_permutation(this->data.datapointer(cidx,0),
-                 predic.datapointer(i,0),
+  jv_permutation(this->data.data(cidx,0),
+                 predic.data(i,0),
                  this->elements,
                  scales[0], scales[1], scales[2], scales[3],
                  spobj[0], spobj[1], tperm, i, no_pairs, funcs[0], funcs[1]
@@ -846,8 +846,8 @@ ArrayVector<size_t> tperm(perm.numel(), nidx.size()+1);
 for (size_t i=0; i<nidx.size(); ++i){
   for (size_t j=0; j<perm.numel(); ++j)
     tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
-  jv_permutation(this->data.datapointer(cidx,0),
-                 predic.datapointer(i,0),
+  jv_permutation(this->data.data(cidx,0),
+                 predic.data(i,0),
                  this->elements,
                  scales[0], scales[1], scales[2], scales[3],
                  spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]

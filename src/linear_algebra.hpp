@@ -555,7 +555,7 @@ template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, 
   s1 = encode_array_signs(n,v1);
   if (s0 == s1) return 0;
   // the only valid permutation for real values is by 2.
-  size_t onesign, s1mod;
+  size_t onesign, s1mod=0;
   for (size_t j=0; j<n; ++j){
     // extract a single sign quaternary
     onesign = (s1 >> 2*(n-1-j)) - ((s1 >> 2*(n-j)) << 2*(n-j));
@@ -577,7 +577,7 @@ template<class T> int make_eigenvectors_equivalent(const size_t n, const std::co
   s1 = encode_array_signs(n,v1);
   if (s0 == s1) return 0;
   // The signs of each vector are not the same, so check for equivalence:
-  size_t onesign, s1mod;
+  size_t onesign, s1mod=0;
   // we can permute each sign quaternary number up to three times
   for (size_t i=1; i<4; ++i){
     s1mod = 0;

@@ -25,7 +25,7 @@ LQVec<S> transform_to_primitive(const Reciprocal lat, const LQVec<T>& a){
   std::array<Ptype,9> P = PT.get_Pt(); // the transpose of the P matrix
   LQVec<S> out(lat.primitive(), a.size());
   for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,Ptype,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
+    multiply_matrix_vector<S,Ptype,T,3>(out.data(i), P.data(), a.data(i) );
   return out;
 }
 
@@ -45,7 +45,7 @@ LQVec<S> transform_from_primitive(const Reciprocal lat, const LQVec<T>& a){
   std::array<invPtype,9> P = PT.get_invPt(); // the inverse of the transpose of P (or the transpose of the inverse of P)
   LQVec<S> out(lat, a.size());
   for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,invPtype,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
+    multiply_matrix_vector<S,invPtype,T,3>(out.data(i), P.data(), a.data(i) );
   return out;
 }
 
@@ -67,7 +67,7 @@ LDVec<S> transform_to_primitive(const Direct lat, const LDVec<T>& a){
   std::array<invPtype,9> P = PT.get_invP(); // xₚ = P⁻¹ xₛ
   LDVec<S> out(lat.primitive(), a.size());
   for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,invPtype,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
+    multiply_matrix_vector<S,invPtype,T,3>(out.data(i), P.data(), a.data(i) );
   return out;
 }
 
@@ -87,7 +87,7 @@ LDVec<S> transform_from_primitive(const Direct lat, const LDVec<T>& a){
   std::array<Ptype,9> P = PT.get_P(); // xₛ = P xₚ
   LDVec<S> out(lat, a.size());
   for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,Ptype,T,3>(out.datapointer(i), P.data(), a.datapointer(i) );
+    multiply_matrix_vector<S,Ptype,T,3>(out.data(i), P.data(), a.data(i) );
   return out;
 }
 

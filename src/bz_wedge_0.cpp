@@ -68,7 +68,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   LQVec<double> Rx(this->outerlattice, 1u);
   for (size_t i=0; i<rotations.size(); ++i){
     // Calculate Rx
-    multiply_matrix_vector(Rx.datapointer(0), rotations[i].data(), x.datapointer(i));
+    multiply_matrix_vector(Rx.data(0), rotations[i].data(), x.data(i));
     // y ≡ u × x, so if rotated x points away from y we need to flip u.
     if (dot(Rx, y.get(i)).getvalue(0) < 0) u.set(i, -u.get(i));
   }
@@ -193,7 +193,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
     } else {
       vj.set(0, v.get(j));
       for (int k=1; k<order; ++k)
-        multiply_matrix_vector(vj.datapointer(k), rotations[j].data(), vj.datapointer(k-1));
+        multiply_matrix_vector(vj.data(k), rotations[j].data(), vj.data(k-1));
       debug_update("R^n v\n", vj.to_string());
       // consecutive acceptable normals *must* point into the irreducible wedge
       // and we need to check between Rⁿ⁻¹v and Rⁿv=Iv=v, so k and (k+1)%n
@@ -293,7 +293,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
     idx = unique_idx[i];
     for (size_t j=0; j<u.size(); ++j) if (idx == u_equiv_idx.getvalue(j)){
       // check if R*x points in the same direction as u×x≡y
-      multiply_matrix_vector(Rx.datapointer(0), rotations[j].data(), x.datapointer(j));
+      multiply_matrix_vector(Rx.data(0), rotations[j].data(), x.data(j));
       if (dot(Rx, y.get(j)).getvalue(0)>0) unique_idx[i] = j;
     }
   }
@@ -428,7 +428,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
     accepted=false;
     vj.set(0, v.get(j));
     for (int k=1; k<order; ++k)
-    multiply_matrix_vector(vj.datapointer(k), rotations[j].data(), vj.datapointer(k-1));
+    multiply_matrix_vector(vj.data(k), rotations[j].data(), vj.data(k-1));
     debug_update("R^n v\n", vj.first(order).to_string());
     if (2==order){
       // the single normal version of add_wedge_normal_check allows for the

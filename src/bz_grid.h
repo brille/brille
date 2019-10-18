@@ -63,7 +63,7 @@ public:
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl+3*i, fromxyz, xyz.datapointer(i));
+    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl+3*i, fromxyz, xyz.data(i));
     return xyz.size();
   }
   /*! Return the grid points of the InterpolateGrid3 object in relative lattice units
@@ -76,7 +76,7 @@ public:
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
+    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   }
   /*! Return only the mapped grid points of the InterpolateGrid3 object in relative lattice units
@@ -89,7 +89,7 @@ public:
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
+    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   }
   template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
@@ -161,16 +161,16 @@ public:
           offset = b*sp + this->elements[0];
           // eigenvectors and regular vectors rotate the same way
           for (size_t v=0; v<(ne+nv); ++v){
-            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.datapointer(i, offset+v*3u));
+            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.data(i, offset+v*3u));
             for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
           }
           offset += (ne+nv)*3u;
           for (size_t m=0; m<nm; ++m){
             // we want R*M*R⁻¹.
             // first calculate M*R⁻¹, storing in tmp_m
-            mul_mat_mat(tmp_m, 3u, ir_result.datapointer(i, offset+m*9u), invR[i].data());
+            mul_mat_mat(tmp_m, 3u, ir_result.data(i, offset+m*9u), invR[i].data());
             // next calculate R*tmp_m, storing back in the ir_result array
-            mul_mat_mat(ir_result.datapointer(i, offset+m*9u), 3u, rots[i].data(), tmp_m);
+            mul_mat_mat(ir_result.data(i, offset+m*9u), 3u, rots[i].data(), tmp_m);
           }
         }
       }
@@ -326,7 +326,7 @@ public:
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
+    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   };
   /*! Return the full grid points of the InterpolateGrid4 object in relative lattice units
@@ -351,7 +351,7 @@ public:
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     ArrayVector<double> hkl(3,xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.datapointer(i), fromxyz, xyz.datapointer(i));
+    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   };
   /*! Return the full mapped grid points of the InterpolateGrid4 object in relative lattice units

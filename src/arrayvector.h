@@ -139,7 +139,7 @@ public:
     size_t m = vec.numel();
     size_t n = vec.size();
     if (m && n){
-      T *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
+      T *d = vec.data(); // if m*n==0 data will throw a ValueError
       _data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) _data[i] = d[i];
     }
@@ -158,7 +158,7 @@ public:
     size_t m = vec.numel();
     size_t n = vec.size();
     if (m && n){
-      R *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
+      R *d = vec.data(); // if m*n==0 data will throw a ValueError
       _data = safealloc<T>(m*n);
       if (d) for(size_t i=0; i<m*n; i++) _data[i] = static_cast<T>(d[i]);
     }
@@ -182,7 +182,7 @@ public:
     bool isok = i < this->size();
     ArrayVector<T> out(this->numel(), isok ? 1u: 0u);
     if (isok){
-      out.set(1, this->datapointer(i));
+      out.set(1, this->data(i));
     }
     return out;
   }
@@ -193,11 +193,12 @@ public:
   //! Returns the number of elements in each array
   size_t numel() const {return M;};
   //! Returns the pointer to the ith array's jth element
-  T* datapointer(const size_t i=0, const size_t j=0) const;
+  T* data(const size_t i=0, const size_t j=0) const;
   //! Returns the value of the ith array's jth element
   T getvalue(const size_t i=0, const size_t j=0) const;
   //! Return the ith single-array ArrayVector
   ArrayVector<T> extract(const size_t i=0) const ;
+  //! Return the first `num` arrays of the ArrayVector
   ArrayVector<T> first(const size_t num) const;
   /*! Return a collection of arrays from the ArrayVector
     @param n the number of arrays to return

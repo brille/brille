@@ -308,7 +308,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t c
   ArrayVector<int> mzp = make_relative_neighbour_indices_prime(1); // all combinations of [-1,0,+1] for three dimensions, skipping (0,0,0)
   ArrayVector<size_t> ijk(3u,1u);
   // get the subscripted indices of the centre position
-  this->lin2sub(centre, ijk.datapointer(0));
+  this->lin2sub(centre, ijk.data(0));
   // flag vectors holding: is the centre index 0 (isz) or the maximum (ism)
   bool isz[3], ism[3];
   for (size_t i=0; i<3u; ++i) isz[i] = 0==ijk.getvalue(0,i);
@@ -331,7 +331,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t c
     if (is_valid.getvalue(i)){
       for (size_t j=0; j<3u; ++j)
         tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-      is_valid.insert((this->sub2map(tmp.datapointer(0), _i)) ? false : true, i);
+      is_valid.insert((this->sub2map(tmp.data(0), _i)) ? false : true, i);
     }
   }
   // Count how many valid neighbours are left
@@ -347,7 +347,7 @@ template<class T> ArrayVector<size_t> MapGrid3<T>::get_neighbours(const size_t c
       //    tmp = mzp[i] + ijk;
       // because the compiler doesn't know what to do with ArrayVector<int> + ArrayVector<size_t>
       for (size_t j=0; j<3u; ++j) tmp.insert( ijk.getvalue(0,j) + mzp.getvalue(i,j), 0, j);
-      oob += this->sub2lin(tmp.datapointer(0),neighbours.datapointer(valid_neighbour++));
+      oob += this->sub2lin(tmp.data(0),neighbours.data(valid_neighbour++));
     }
   }
   if (oob) throw std::runtime_error("Out-of-bounds points found when there should be none.");

@@ -628,7 +628,7 @@ public:
           must_be_in_bounds.push_back(i);
       }
       for (size_t i=0; i<x.size(); ++i){
-        flg = this->nearest_index(x.datapointer(i), ijk, mask);
+        flg = this->nearest_index(x.data(i), ijk, mask);
         allok &= 0==(flg>>3);
         if (!allok) break;
       }
@@ -667,8 +667,8 @@ public:
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk, mask);
-      // flg = this->floor_index(x.datapointer(i), ijk, mask );
+      flg = this->nearest_index(x.data(i), ijk, mask);
+      // flg = this->floor_index(x.data(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
       // Alternatively, ignore out-of-bounds information by flg &= 7;
       if (flg > 7){
@@ -695,8 +695,8 @@ public:
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
 
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
-        // oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
+        // oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
@@ -746,7 +746,7 @@ public:
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.datapointer(i), ijk, mask );
+      flg = this->nearest_index(x.data(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
       if (flg > 7){
         std::string msg_flg = "grid.h::parallel_linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
@@ -770,7 +770,7 @@ public:
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
 
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.datapointer(i),corners,weights,3u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";

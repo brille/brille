@@ -53,7 +53,7 @@ ArrayVector<S> MapGrid3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_
           // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
           coth_en = coth_over_en(this->data.getvalue(q,j*stride), beta);
           // and find |Q⋅ϵₛ|². Note: vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = vector_product(3u, Q.datapointer(Qidx), this->data.datapointer(q,j*stride+1u+3u*d));
+          Q_dot_e_2 = vector_product(3u, Q.data(Qidx), this->data.data(q,j*stride+1u+3u*d));
           // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
           qj_sum += Q_dot_e_2 * coth_en;
         }

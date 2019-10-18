@@ -20,11 +20,11 @@ std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, c
       continue;
     }
     dotij = vecs.dot(i,j);
-    vector_cross(crsij, vecs.datapointer(i), vecs.datapointer(j));
+    vector_cross(crsij, vecs.data(i), vecs.data(j));
     // crsij = vecs.cross(i,j);
     x = dotij * vecs.extract(i);
     y = vecs.extract(j) - x;
-    y_len = y.norm(0) * (std::signbit(vector_dot(crsij, n.datapointer(0))) ? -1 : 1);
+    y_len = y.norm(0) * (std::signbit(vector_dot(crsij, n.data(0))) ? -1 : 1);
     angij = std::atan2(y_len, dotij);
     angles[j] = angij < 0 ? angij+2*PI : angij;
   }
@@ -237,11 +237,11 @@ public:
   // template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
   //   ArrayVector<double> newv(3u, this->vertices.size()), newp(3u, this->points.size()), newn(3u, this->normals.size());
   //   for (size_t i=0; i<this->vertices.size(); ++i)
-  //     multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), this->vertices.datapointer(i));
+  //     multiply_matrix_vector<double,T,double>(newv.data(i), rot.data(), this->vertices.data(i));
   //   for (size_t i=0; i<this->points.size(); ++i)
-  //     multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), this->points.datapointer(i));
+  //     multiply_matrix_vector<double,T,double>(newp.data(i), rot.data(), this->points.data(i));
   //   for (size_t i=0; i<this->normals.size(); ++i)
-  //     multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), this->normals.datapointer(i));
+  //     multiply_matrix_vector<double,T,double>(newn.data(i), rot.data(), this->normals.data(i));
   //   return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
   //   // return Polyhedron(newv, newp, newn);
   // }
@@ -250,11 +250,11 @@ public:
     ArrayVector<double> newp(3u, points.size());
     ArrayVector<double> newn(3u, normals.size());
     for (size_t i=0; i<vertices.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newv.datapointer(i), rot.data(), vertices.datapointer(i));
+      multiply_matrix_vector<double,T,double>(newv.data(i), rot.data(), vertices.data(i));
     for (size_t i=0; i<points.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newp.datapointer(i), rot.data(), points.datapointer(i));
+      multiply_matrix_vector<double,T,double>(newp.data(i), rot.data(), points.data(i));
     for (size_t i=0; i<normals.size(); ++i)
-      multiply_matrix_vector<double,T,double>(newn.datapointer(i), rot.data(), normals.datapointer(i));
+      multiply_matrix_vector<double,T,double>(newn.data(i), rot.data(), normals.data(i));
     return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
     // return Polyhedron(newv, newp, newn);
   }
@@ -338,9 +338,9 @@ public:
       for (size_t i=1; i<vertices_per_face[f].size()-1; ++i){ // loop over triangles
         ba = this->vertices.extract(vertices_per_face[f][ i ]) - a;
         ca = this->vertices.extract(vertices_per_face[f][i+1]) - a;
-        vector_cross(n, ba.datapointer(0), ca.datapointer(0));
-        subvol = vector_dot(a.datapointer(0), n);
-        // if (vector_dot(n, normals.datapointer(f)) < 0) subvol *= -1.0;
+        vector_cross(n, ba.data(0), ca.data(0));
+        subvol = vector_dot(a.data(0), n);
+        // if (vector_dot(n, normals.data(f)) < 0) subvol *= -1.0;
         volume += subvol;
       }
     }
@@ -358,7 +358,7 @@ public:
         c = vertices.extract(verts[i+1]);
         ba = b-a;
         ca = c-a;
-        vector_cross(n, ba.datapointer(0), ca.datapointer(0));
+        vector_cross(n, ba.data(0), ca.data(0));
         ba = a+b;
         bc = b+c;
         ca = c+a;
@@ -378,7 +378,7 @@ protected:
     int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
     size_t n = vertices.numel();
     for (size_t i=1; i<vertices.size(); ++i) for (size_t j=0; j<i; ++j)
-      if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.datapointer(i), vertices.datapointer(j), t);
+      if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.data(i), vertices.data(j), t);
     this->vertices = this->vertices.extract(flg);
   }
   void find_convex_hull(void){
@@ -408,7 +408,7 @@ protected:
         for (size_t k=j+1; k<vertices.size(); ++k){
           vk = vertices.extract(k);
           ab.set(1, vk-vi);
-          ab.cross(0, 1, nijk.datapointer());
+          ab.cross(0, 1, nijk.data());
           // debug_update(i," ",j," ",k," ", ab.to_string(" x ")," = ",nijk.to_string(0));
           // increment the counter only if the new normal is not ⃗0 and partitions space
           if (!approx_scalar(nijk.norm(0),0.) && dot(nijk, vertices - vi).all_approx("≤|≥", 0.)){
@@ -616,7 +616,7 @@ protected:
         j = (vertices_per_face[n].size()+i+1)%vertices_per_face[n].size();
         abc.set(1, vertices.extract(vertices_per_face[n][j]) - vertices.extract(vertices_per_face[n][i]));
         // and find their dot product, storing the result in the same buffer
-        abc.cross(0, 1, abc.datapointer(2));
+        abc.cross(0, 1, abc.data(2));
         // check whether the cross product points the same way as the face normal
         if (dot(normals.extract(n), abc.extract(2)).all_approx(">", 0.)) {
           // left-turn, keep this point
