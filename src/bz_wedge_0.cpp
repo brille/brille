@@ -14,7 +14,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
       rotations.push_back(psym.get(i));
   // we can stop now if there are no 2+-fold rotations:
   if (rotations.size()<1){
-    status_update("No 2+-fold operations");
+    debug_update("No 2+-fold operations");
     return;
   }
   // sort the rotations by their orders
@@ -27,7 +27,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   for (int o: orders) if (o>max_order) max_order = o;
 
   debug_exec(update_msg = "Rotation orders:"; for (int o: orders) update_msg += " " + std::to_string(o);)
-  status_update(update_msg);
+  debug_update(update_msg);
 
   //
   std::array<std::array<int,3>,3> axis_plane_vecs;
@@ -90,7 +90,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
       update_msg += "\n";\
     }\
   )
-  status_update(update_msg);
+  debug_update(update_msg);
 
   // Two rotations with ûᵢ⋅ûⱼ ≠ 0 should have (Rⁿv̂ᵢ)⋅(Rᵐv̂ⱼ) = 1 for some n,m.
   // To start with, assume that n and m are 0 and find the v̂ᵢ such
@@ -101,7 +101,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   LQVec<double> primitive_basis(this->lattice, 3u);
   for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) primitive_basis.insert(i==j?1:0,i,j);
   LQVec<double> xyz = transform_from_primitive(this->outerlattice, primitive_basis);
-  status_update("basis vectors\n", xyz.to_string());
+  debug_update("basis vectors\n", xyz.to_string());
 
   // why not just stash away the v̂ᵢ now?
   LQVec<double> v(x); // copy x
@@ -157,9 +157,9 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   for (size_t i=0; i<u.size(); ++i)
   if (u_equiv_idx.getvalue(i)!=i) v.set(i,v.get(u_equiv_idx.getvalue(i)));
 
-  status_update("u_equiv_idx = " + u_equiv_idx.to_string(" "));
-  status_update("u =\n" +  u.to_string());
-  status_update("v =\n" + v.to_string());
+  debug_update("u_equiv_idx = " + u_equiv_idx.to_string(" "));
+  debug_update("u =\n" +  u.to_string());
+  debug_update("v =\n" + v.to_string());
 
   // We now have for every rotation a consistent vector in the rotation plane.
   // It's time to use ̂u, ̂v, R, and order(R) to find/add the wedge normals
@@ -181,7 +181,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   int order;
   for (size_t j=0; j<rotations.size(); ++j){
     order = orders[j];
-    status_update("r, u: " + std::to_string(order) + " (" + u.to_string(j,")"));
+    debug_update("r, u: " + std::to_string(order) + " (" + u.to_string(j,")"));
     accepted=false;
     if (2==order){
       // the single normal version of add_wedge_normal_check allows for the
@@ -194,7 +194,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
       vj.set(0, v.get(j));
       for (int k=1; k<order; ++k)
         multiply_matrix_vector(vj.datapointer(k), rotations[j].data(), vj.datapointer(k-1));
-      status_update("R^n v\n", vj.to_string());
+      debug_update("R^n v\n", vj.to_string());
       // consecutive acceptable normals *must* point into the irreducible wedge
       // and we need to check between Rⁿ⁻¹v and Rⁿv=Iv=v, so k and (k+1)%n
       for (int k=0; k<order; ++k){
@@ -207,7 +207,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   }
   this->ir_wedge_is_ok(normals.first(total_found)); // assigns the ir_polyhedron
   // otherwise ir_wedge_is_ok is called by wedge_normal_check
-  status_update("wedge_search finished");
+  debug_update("wedge_search finished");
 }
 
 #else // if not _WIN32
@@ -229,10 +229,10 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   LQVec<double> primitive_basis(this->lattice, 3u);
   for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) primitive_basis.insert(i==j?1:0,i,j);
   LQVec<double> xyz = transform_from_primitive(this->outerlattice, primitive_basis);
-  status_update("basis vectors\n", xyz.to_string());
+  debug_update("basis vectors\n", xyz.to_string());
   // we can stop now if there are no 2+-fold rotations:
   if (rotations.size()<1){
-    status_update("No 2+-fold operations");
+    debug_update("No 2+-fold operations");
     this->ir_wedge_is_ok(xyz.first(1u)); // assigns the ir_polyhedron
     return;
   }
@@ -299,11 +299,11 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   }
 
   // debug_exec(update_msg = "All rotation orders:"; for (int o:orders) update_msg += " "+std::to_string(o);)
-  // status_update(update_msg);
+  // debug_update(update_msg);
   // debug_exec(update_msg = "All equivalent idx:";)
   // for (size_t i=0;i<u.size(); ++i) debug_exec(update_msg += " "+std::to_string(u_equiv_idx.getvalue(i));)
-  // status_update(update_msg);
-  // status_update("all u\n", u.to_string());
+  // debug_update(update_msg);
+  // debug_update("all u\n", u.to_string());
 
   LQVec<double> newu(this->outerlattice, unique_idx.size());
   LQVec<double> newx(this->outerlattice, unique_idx.size());
@@ -327,7 +327,7 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   for (int o: orders) if (o>max_order) max_order = o;
 
   debug_exec(update_msg = "Rotation orders:"; for (int o: orders) update_msg += " " + std::to_string(o);)
-  status_update(update_msg);
+  debug_update(update_msg);
 
   // Find unique ûᵢ⋅ûⱼ
   size_t count = u.size();
@@ -335,14 +335,14 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   for (size_t i=0; i<count; ++i) for (size_t j=0; j<count; ++j)
   ui_dot_uj[count*i+j] = u.dot(i,j)/10;
 
-  status_update("dot(ui, uj)");
+  debug_update("dot(ui, uj)");
   debug_exec(update_msg = "");
   for(size_t i=0; i<count; ++i){
     for (size_t j=0; j<count; ++j)
       debug_exec(update_msg+=approx_scalar(ui_dot_uj[i*count+j],0.)?" 0":" x");
     debug_exec(update_msg+="\n");
   }
-  status_update(update_msg);
+  debug_update(update_msg);
 
   // Two rotations with ûᵢ⋅ûⱼ ≠ 0 should have (Rⁿv̂ᵢ)⋅(Rᵐv̂ⱼ) = 1 for some n,m.
   // To start with, assume that n and m are 0 and find the v̂ᵢ such
@@ -397,8 +397,8 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
   }
   delete[] ui_dot_uj;
 
-  status_update("u =\n" +  u.to_string());
-  status_update("v =\n" + v.to_string());
+  debug_update("u =\n" +  u.to_string());
+  debug_update("v =\n" + v.to_string());
 
   // We now have for every rotation a consistent vector in the rotation plane.
   // It's time to use ̂u, ̂v, R, and order(R) to find/add the wedge normals
@@ -417,19 +417,19 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
     // insert the unique axis it as a wedge normal:
     this->wedge_normal_check(u.get(0), normals, total_found);
     this->ir_wedge_is_ok(normals.first(total_found)); // to ensure the wedge normals are up to date
-    status_update("_____ ", total_found, " ____ normals found");
+    debug_update("_____ ", total_found, " ____ normals found");
   }
   bool accepted=false;
   int order;
   for (size_t j=0; j<count; ++j){
     uj = u.get(j);
     order = orders[j];
-    status_update("r, u: " + std::to_string(order) + " (" + uj.to_string(0,")"));
+    debug_update("r, u: " + std::to_string(order) + " (" + uj.to_string(0,")"));
     accepted=false;
     vj.set(0, v.get(j));
     for (int k=1; k<order; ++k)
     multiply_matrix_vector(vj.datapointer(k), rotations[j].data(), vj.datapointer(k-1));
-    status_update("R^n v\n", vj.first(order).to_string());
+    debug_update("R^n v\n", vj.first(order).to_string());
     if (2==order){
       // the single normal version of add_wedge_normal_check allows for the
       // possibility of either n or -n being added, so we don't need to check
@@ -455,11 +455,11 @@ void BrillouinZone::wedge_search(const bool prefer_basis_vectors, const bool par
                                             normals, total_found);
       }
     }
-    status_update("_____ ", total_found, " ____ normals found");
+    debug_update("_____ ", total_found, " ____ normals found");
   }
   this->ir_wedge_is_ok(normals.first(total_found)); // assigns the ir_polyhedron
   // otherwise ir_wedge_is_ok is called by wedge_normal_check
-  status_update("wedge_search finished");
+  debug_update("wedge_search finished");
 }
 
 #endif

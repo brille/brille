@@ -9,11 +9,11 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // Get the vectors pointing to each full Brillouin zone facet cetre
   LQVec<double> xyz = cat(cat(this->get_points(), this->get_vertices()), this->get_half_edges());
 
-  // status_update("xyz=\n", xyz.to_string());
+  // debug_update("xyz=\n", xyz.to_string());
 
   // if rotps is empty, there are no 2+-fold rotations, act like we have ̄1:
   if (rotps.size()==0){
-    status_update("No 2+-fold rotation operations");
+    debug_update("No 2+-fold rotation operations");
     this->ir_wedge_is_ok(xyz.first(1u)); // for ̄1, assigns this->ir_polyhedron
     return;
   }
@@ -37,7 +37,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // with the permutation found, permute rotps:
   rotps.permute(perm);
 
-  status_update("Rotations:\n", rotps.getall());
+  debug_update("Rotations:\n", rotps.getall());
 
   // make lattice vectors from the stationary axes
   LQVec<int> z(this->outerlattice, rotps.axes());
@@ -48,7 +48,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     dottmp = std::abs(z.dot(i,j)/z.norm(i)/z.norm(j));
     dotij[i].push_back( approx_scalar(dottmp,0.) ? -1: approx_scalar(dottmp, 1.) ? 1 : 0);
   }
-  status_update("dot(i,j) flag\n", dotij);
+  debug_update("dot(i,j) flag\n", dotij);
 
   // Find a suitable in-rotation-plane vector for each stationary axis
   LQVec<double> x(this->outerlattice, rotps.perpendicular_axes());
@@ -87,12 +87,12 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   LQVec<double> y = cross(z, x); // complete a right-handed coordinate system
   x= x/norm(x);
   y= y/norm(y);
-  status_update("    z                x                        y           ");
+  debug_update("    z                x                        y           ");
   debug_exec(update_msg = "--------- -----------------------  -----------------------\n";)
   for (size_t i=0; i<z.size(); ++i){
     debug_exec(update_msg += z.to_string(i) +" "+  x.to_string(i) +" "+ y.to_string(i) +"\n";)
   }
-  status_update(update_msg);
+  debug_update(update_msg);
 
   /* Each symmetry operation in rotps is guaranteed to be a proper rotation,
      but there is no guarantee that it represents a *right handed* rotation.
@@ -104,7 +104,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     if (dot(y.get(i), Rv.get(0)).getvalue(0) < 0)
       is_right_handed[i] = false;
   }
-  status_update("Right handed:", is_right_handed);
+  debug_update("Right handed:", is_right_handed);
 
   /* We now have for every symmetry operation a consistent vector in the
      rotation plane. We can now use z, x, and rotps to find and add the wedge
@@ -127,7 +127,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   for (size_t i=0; i<rotps.size(); ++i){
     zi = is_right_handed[i] ? z.get(i) : -z.get(i);
     order = rotps.order(i);
-    status_update("\nOrder ", order, ", z=", zi.to_string(0));
+    debug_update("\nOrder ", order, ", z=", zi.to_string(0));
     accepted = false;
     vi.set(0, x.get(i)); // do something better here?
     for (int j=1; j<order; ++j) multiply_matrix_vector(vi.datapointer(j), rotps.data(i), vi.datapointer(j-1));
@@ -138,7 +138,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     for (int j=0; j<order; ++j){
       debug_exec(update_msg += vi.to_string(j) +" "+ zxv.to_string(j)+"\n");
     }
-    status_update(update_msg);
+    debug_update(update_msg);
     if (2==order){
       // one-normal version of wedge_normal_check allows for either ±n
       // → no need to check z×Rv = z×(-x) = -(z×x)
@@ -162,5 +162,5 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     } // order>2
   }
   this->ir_wedge_is_ok(normals.first(found));
-  status_update("wedge_search finished");
+  debug_update("wedge_search finished");
 }

@@ -13,6 +13,8 @@ class Lattice;
 class Direct;
 class Reciprocal;
 
+enum class AngleUnit { not_provided, radian, degree, pi };
+
 template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, const I r, T* len, T* ang){
   T n[9];
   // compute the dot product of each row with itself
@@ -52,8 +54,22 @@ protected:
     for (int i=0;i<3;i++) this->len[i] = lvec[i*span];
   }
   template<class I>
-  void set_ang_pointer(const double *avec, const I span){
-    for (int i=0;i<3;i++) this->ang[i] = avec[i*span];
+  void set_ang_pointer(const double *avec, const I span, const AngleUnit angle_unit){
+    AngleUnit au = angle_unit;
+    if (au == AngleUnit::not_provided){
+      double minang = (std::numeric_limits<double>::max)();
+      double maxang = (std::numeric_limits<double>::lowest)();
+      for (int i=0; i<3; ++i){
+        if (avec[i*span] < minang) minang = avec[i*span];
+        if (avec[i*span] > maxang) maxang = avec[i*span];
+      }
+      if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
+      // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
+      // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+      au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+    }
+    double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+    for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
   }
   void set_len_scalars(const double, const double, const double);
   void set_ang_scalars(const double, const double, const double);
@@ -68,40 +84,56 @@ public:
     double l[3]={0,0,0}, a[3]={0,0,0};
     latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
     this->set_len_pointer(l,1);
-    this->set_ang_pointer(a,1);
+    this->set_ang_pointer(a,1, AngleUnit::radian);
     this->volume=this->calculatevolume();
     this->check_hall_number(h);
   }
-  //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
+  /*! \brief Construct the lattice from two vectors of the lengths and angles
+
+  @param lengths    A pointer to the first of three basis vector lengths in
+                    arbitrary length units
+  @param lenstrides The first element must contain the stride in bytes between
+                    basis vector lenght entries
+  @param angles     A pointer to the first of three inter-basis-vector angles in
+                    units of pi, radian, or degree
+  @param angstrides The first element must contain the stride in bytes between
+                    angle entries
+  @param h          The hall number specifying the lattice symmetries
+  @param au         An enum which identifies which units the provided angles
+                    use. If omitted or AngleUnit::not_provided, an attempt is
+                    made to guess the units. If all provided angles have values
+                    less than π then they are assumed to be in units of radian,
+                    otherwise they are assumed to be in units of degrees.
+  */
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const int h){
+  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const int h, const AngleUnit au=AngleUnit::not_provided){
     this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
-    this->set_ang_pointer(angles,angstrides[0]/sizeof(double));
+    this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
     this->volume=this->calculatevolume();
     this->check_hall_number(h);
   }
   //! Construct the Lattice from a vector of the basis vector lengths and a vector of the basis vector angles
-  Lattice(const double *, const double *, const int h=1);
+  Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
   Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double *, const std::string);
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const double *, const std::string);
+  Lattice(const double *, const double *, const std::string, const AngleUnit au=AngleUnit::not_provided);
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
   Lattice(const double * latmat, std::vector<I>& strides, const std::string itname){
     double l[3]={0,0,0}, a[3]={0,0,0};
     latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
     this->set_len_pointer(l,1);
-    this->set_ang_pointer(a,1);
+    this->set_ang_pointer(a,1, AngleUnit::radian);
     this->volume=this->calculatevolume();
     this->check_IT_name(itname);
   }
   //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string itname){
+  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string itname, const AngleUnit au=AngleUnit::not_provided){
     this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
-    this->set_ang_pointer(angles,angstrides[0]/sizeof(double));
+    this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
     this->volume=this->calculatevolume();
     this->check_IT_name(itname);
   }

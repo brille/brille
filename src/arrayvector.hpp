@@ -1,5 +1,5 @@
 
-template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
+template<typename T> T* ArrayVector<T>::datapointer(const size_t i, const size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){
     std::string msg = __PRETTY_FUNCTION__;
@@ -9,7 +9,7 @@ template<typename T> T* ArrayVector<T>::datapointer(size_t i, size_t j) const {
     msg += std::to_string(this->numel()) + " elements";
     throw std::out_of_range(msg);
   }
-  ptr = this->data + (i*this->numel() + j);
+  ptr = this->_data + (i*this->numel() + j);
   if (!ptr){
     throw std::runtime_error("Attempting to access uninitialized datapointer");
   }
@@ -127,7 +127,7 @@ template<typename T> bool ArrayVector<T>::get(const size_t i, T* out) const {
 }
 template<typename T> bool ArrayVector<T>::set(const size_t i, const T* in){
   if (i>this->size()-1) return false;
-  for (size_t j=0; j<this->numel(); j++) this->data[i*this->numel()+j] = in[j];
+  for (size_t j=0; j<this->numel(); j++) this->_data[i*this->numel()+j] = in[j];
   return true;
 }
 template<typename T> bool ArrayVector<T>::set(const size_t i, const ArrayVector<T>* in){
@@ -152,7 +152,7 @@ template<typename T>template<size_t Nel> bool ArrayVector<T>::set(const size_t i
 }
 template<typename T> bool ArrayVector<T>::insert(const T in, const size_t i, const size_t j){
   bool inrange = i<this->size() && j<this->numel();
-  if (inrange) this->data[i*this->numel()+j] = in;
+  if (inrange) this->_data[i*this->numel()+j] = in;
   return inrange;
 }
 template<typename T> void ArrayVector<T>::printformatted(const char * fmt,const size_t first, const size_t last, const char * after) const {
@@ -240,28 +240,28 @@ template<typename T> size_t ArrayVector<T>::resize(size_t newsize){
   T * newdata;
   // allocate a new block of memory
   if (std) newdata = safealloc<T>(newsize*this->numel());
-  if (this->size() && this->numel()) { // copy-over data :(
+  if (this->size() && this->numel()) { // copy-over _data :(
     size_t smallerN = (this->size() < newsize) ? this->size() : newsize;
-    for (size_t i=0; i<smallerN*this->numel(); i++) newdata[i] = this->data[i];
-    // hand-back the chunk of memory which data points to
-    delete[] this->data;
+    for (size_t i=0; i<smallerN*this->numel(); i++) newdata[i] = this->_data[i];
+    // hand-back the chunk of memory which _data points to
+    delete[] this->_data;
   }
-  // and set data to the newdata pointer;
+  // and set _data to the newdata pointer;
   this->N = newsize;
-  if (std) this->data = newdata;
+  if (std) this->_data = newdata;
   return newsize;
 }
 template<typename T> size_t ArrayVector<T>::refresh(size_t newnumel, size_t newsize){
-  // first off, remove the old data block, if it exists
-  if (this->size() && this->numel())  delete[] this->data;
+  // first off, remove the old _data block, if it exists
+  if (this->size() && this->numel())  delete[] this->_data;
   bool std = (newsize*newnumel)>0;
   T * newdata;
   // allocate a new block of memory
   if (std) newdata = safealloc<T>(newsize*newnumel);
-  // and set data to the newdata pointer;
+  // and set _data to the newdata pointer;
   this->M = newnumel;
   this->N = newsize;
-  this->data = std ? newdata : nullptr;
+  this->_data = std ? newdata : nullptr;
   return newnumel*newsize;
 }
 
@@ -951,7 +951,7 @@ A<S> operator/(const R& b, const A<T>& a){
 
 template<typename T> ArrayVector<T> ArrayVector<T>:: operator -() const {
   ArrayVector<T> out(this->numel(),this->size());
-  for (size_t i=0; i<(this->numel()*this->size()); i++) out.data[i] = -(this->data[i]);
+  for (size_t i=0; i<(this->numel()*this->size()); i++) out._data[i] = -(this->_data[i]);
   return out;
 }
 

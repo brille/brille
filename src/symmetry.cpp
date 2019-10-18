@@ -113,6 +113,18 @@ Matrix<int> PointSymmetry::get_proper(const size_t i) const {
   }
   return out;
 }
+Matrix<int> PointSymmetry::get_inverse(const size_t i) const {
+  Matrix<int> identity{1,0,0, 0,1,0, 0,0,1}, result;
+  if (i>=this->size()) return identity;
+  // We *could* calculate R⁻¹ but might run into rounding/type issues.
+  // We know that there must be an element of R for which RᵢRⱼ=E,
+  // the identity element. Let's look for Rⱼ instead.
+  for (size_t j=0; j<this->size(); ++j){
+    multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
+    if (approx_matrix(3, identity.data(), result.data())) return this->R[j];
+  }
+  throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
+}
 // const Matrix<int>& PointSymmetry::get(const size_t i) const {
 //   if (i>=this->size())
 //     throw std::out_of_range("The requested symmetry operation is out of range");

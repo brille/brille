@@ -601,7 +601,7 @@ bool BrillouinZone::wedge_explicit(void){
   bool ir_is_ok = this->check_ir_polyhedron();
   // We need to have at least four points to create a polyhedron:
   if (!ir_is_ok && points.size()>3){
-    status_update("Creating an irBZ polyhedron from explicit points.");
+    debug_update("Creating an irBZ polyhedron from explicit points.");
     LQVec<double> verts(this->outerlattice, points);
     ir_is_ok = this->set_ir_vertices(verts);
   }

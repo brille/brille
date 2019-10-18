@@ -67,7 +67,7 @@ template<class T, class R, template<class> class L1, template<class> class L2,
 ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
   bool issame = a.samelattice(b);
   if (!( issame || a.starlattice(b) )){
-    status_update("Incompatible lattices\n",a.get_lattice().string_repr(),"\n",b.get_lattice().string_repr());
+    debug_update("Incompatible lattices\n",a.get_lattice().string_repr(),"\n",b.get_lattice().string_repr());
     throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
   }
   AVSizeInfo si = a.consistency_check(b);

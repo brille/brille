@@ -226,18 +226,21 @@ template<typename T> T tetrahedron_volume(const ArrayVector<T>& a, const ArrayVe
 */
 template<typename T> std::vector<double> tetrahedron_weights(const ArrayVector<T>& p, const ArrayVector<T>& v){
   std::vector<double> weights(v.size());
-  if (v.size()==1){
-    weights[0] = 1.0;
-    return weights;
-  }
   switch (v.size()){
+    case 1:{
+      info_update("interpolation weight for one point is 1.");
+      weights[0] = 1.0;
+      break;
+    }
     case 2:{
+      info_update("finding interpolation weights for point along a line.");
       T len = (v.extract(1)-v.extract(0)).norm(0);
       weights[0] = (v.extract(1)-p).norm(0)/len;
       weights[1] = (v.extract(0)-p).norm(0)/len;
       break;
     }
     case 3:{
+      info_update("finding interpolation weights for point in a triangle.");
       T area = triangle_area(v.extract(0), v.extract(1), v.extract(2));
       weights[0] = triangle_area(p, v.extract(1), v.extract(2))/area;
       weights[1] = triangle_area(v.extract(0), p, v.extract(2))/area;
@@ -245,6 +248,7 @@ template<typename T> std::vector<double> tetrahedron_weights(const ArrayVector<T
       break;
     }
     case 4:{
+      info_update("finding interpolation weights for point in a tetrahedron.");
       T vol = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), v.extract(3));
       weights[0] = tetrahedron_volume(p, v.extract(1), v.extract(2), v.extract(3))/vol;
       weights[1] = tetrahedron_volume(v.extract(0), p, v.extract(2), v.extract(3))/vol;

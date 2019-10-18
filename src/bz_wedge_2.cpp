@@ -115,7 +115,7 @@ void BrillouinZone::wedge_brute_force(void){
       for (size_t i=0; i<Ndistinct-1; ++i)
       for (size_t j=i+1; j<Ndistinct; ++j)
       symplanes.set(count++, special.cross(special_idx[i], special_idx[j]));
-      status_update_if(count!=expected,"Found ",count," normals but expected ",expected);
+      debug_update_if(count!=expected,"Found ",count," normals but expected ",expected);
       // copy the symmetry plane normals and add one rotation-axis
       normals = cat(symplanes, rot_normals.extract(r));
       // keep only unqiue plane normals -- maybe we should skip any rot_normals[r] which is in symplanes instead?
@@ -156,7 +156,7 @@ void BrillouinZone::wedge_brute_force(void){
     for (size_t i=0; i<Ndistinct-1; ++i)
     for (size_t j=i+1; j<Ndistinct; ++j)
     symplanes.set(count++, special.cross(special_idx[i], special_idx[j]));
-    status_update_if(count!=expected,"Found ",count," normals but expected ",expected);
+    debug_update_if(count!=expected,"Found ",count," normals but expected ",expected);
     /* Each cross product could be done with the opposite handedness. So we
        need to try the 2ᴺ combinations of ±1 for each :( */
     for (size_t i=0; i<expected; ++i) signs[i] = all_signs[i][0];
@@ -201,6 +201,6 @@ void BrillouinZone::wedge_brute_force(void){
       msg += "Brillouin zone has been found after " + std::to_string(total_checks);\
       msg += " attempts.";\
     )
-    status_update(msg);
+    debug_update(msg);
   }
 }

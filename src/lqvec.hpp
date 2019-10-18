@@ -72,7 +72,7 @@ template<typename T> LQVec<T> LQVec<T>::get(const size_t i) const {
 }
 
 template<typename T> ArrayVector<T> LQVec<T>::get_hkl() const {
-  return ArrayVector<T>(this->numel(),this->size(),this->data); // strip off the Lattice information
+  return ArrayVector<T>(this->numel(),this->size(),this->_data); // strip off the Lattice information
 }
 template<typename T> ArrayVector<double> LQVec<T>::get_xyz() const {
   double *toxyz = safealloc<double>(9);

@@ -4,13 +4,13 @@ Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0};
   latmat_to_lenang(latmat,3,1,l,a); // (3,1) -> assume row-ordered matrix
   this->set_len_pointer(l,1);
-  this->set_ang_pointer(a,1);
+  this->set_ang_pointer(a,1, AngleUnit::radian);
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
-Lattice::Lattice(const double* lengths, const double* angles, const int h){
+Lattice::Lattice(const double* lengths, const double* angles, const int h, const AngleUnit au){
   this->set_len_pointer(lengths,1);
-  this->set_ang_pointer(angles,1);
+  this->set_ang_pointer(angles,1, au);
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
@@ -24,13 +24,13 @@ Lattice::Lattice(const double* latmat, const std::string itname){
   double l[3]={0,0,0}, a[3]={0,0,0};
   latmat_to_lenang(latmat,3,1,l,a);
   this->set_len_pointer(l,1);
-  this->set_ang_pointer(a,1);
+  this->set_ang_pointer(a,1, AngleUnit::radian);
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }
-Lattice::Lattice(const double *lengths, const double *angles, const std::string itname){
+Lattice::Lattice(const double *lengths, const double *angles, const std::string itname, const AngleUnit au){
   this->set_len_pointer(lengths,1);
-  this->set_ang_pointer(angles,1);
+  this->set_ang_pointer(angles,1, au);
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }

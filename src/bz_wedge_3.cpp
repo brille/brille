@@ -82,13 +82,13 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
   //   // the stationary axis of each rotation is, of course, express in real space!
   //   LDVec<int> all_axes(this->outerlattice.star(), ps.axes());
   //   if (all_axes.is_unique().count_true() == 1u){
-  //     status_update("Deal with -1 since there is only one stationary axis");
+  //     debug_update("Deal with -1 since there is only one stationary axis");
   //     // use the stationary axis as the normal of a mirror plane
   //     keep = dot(all_axes.extract(0).star(), special).is_approx(">=", 0.);
   //     special = special.extract(keep);
   //   }
   // }
-  status_update("Deal with 2-fold axes along highest-symmetry directions first");
+  debug_update("Deal with 2-fold axes along highest-symmetry directions first");
 
   std::vector<bool> sym_unused(ps.size(), true);
   // deal with any two-fold axes along êᵢ first:
@@ -109,7 +109,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
       // First check if this stationary axis is along a reciprocal space vector
       is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
       if (is_nth_ei < 9 /* This is less than great practice */){
-        status_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
+        debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
         switch (is_nth_ei){
           case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
           case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break;
@@ -132,7 +132,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
         if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
           // keep any special points beyond the bounding plane
           keep = dot(nrm, special).is_approx(">=", 0.);
-          status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+          debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
           special = special.extract(keep);
           sym_unused[i] = false;
         }
@@ -140,26 +140,26 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
       // Stationary axis along real space basis vector
       is_nth_ei = norm(cross(reis, vec)).is_approx("==", 0.).first_true();
       if (sym_unused[i] && is_nth_ei < 2){
-        status_update("2-fold axis ",i," is ei No. ",is_nth_ei);
+        debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
         switch (is_nth_ei){
           case 0: nrm.set(0, eiv[1]); break; /* (100) → n = (010)* */
           case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
         }
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is_approx(">=", 0.);
-        status_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+        debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
         special = special.extract(keep);
         sym_unused[i] = false;
       }
     }
   }
-  status_update("Now figure out how all special points are related for each symmetry operation");
+  debug_update("Now figure out how all special points are related for each symmetry operation");
   // Find which points are mapped onto equivalent points by each symmetry operation
   std::vector<std::vector<size_t>> one_sym;
   std::vector<size_t> one_type, type_order;
   std::vector<bool> unfound(special.size(), true), type_unfound;
   for (size_t i=0; i<ps.size(); ++i) if (sym_unused[i]){
-    status_update("Unused symmetry ",i," with order ", ps.order(i));
+    debug_update("Unused symmetry ",i," with order ", ps.order(i));
     one_sym.clear();
     for (auto b: unfound) b = true;
     for (size_t j=0; j<special.size(); ++j) if (unfound[j]){
@@ -172,7 +172,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
         one_type.push_back(k);
         unfound[k] = false;
       }
-      status_update("Point equivalent to ",j," for symmetry ",i,":",one_type);
+      debug_update("Point equivalent to ",j," for symmetry ",i,":",one_type);
       // sort the equivalent points by their relative order for this operation
       // such that Rⁱj ≡ type_order[i]
       type_order.clear();
@@ -187,7 +187,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
         }
       }
       // and store the sorted equivalent indices
-      status_update("Which are sorted by their rotation order:",type_order);
+      debug_update("Which are sorted by their rotation order:",type_order);
       one_sym.push_back(type_order);
     }
     // sort one_sym by the number of valid (indexable) equivalent points
@@ -204,7 +204,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
       // we need at least two equivalent points, ideally there will be the same number as the order
       if (one_sym[s].size() > static_cast<size_t>(std::count(one_sym[s].begin(), one_sym[s].end(), special.size())+1)){
         type_order = one_sym[s];
-        status_update("Highest-multiplicity distinct point type:",type_order);
+        debug_update("Highest-multiplicity distinct point type:",type_order);
       // auto loc = std::find_if(one_sym.begin(), one_sym.end(), [&](std::vector<size_t>x){return x.size()==static_cast<size_t>(ps.order(i));});
       // if (loc != one_sym.end()){
       //   size_t idx = loc - one_sym.begin();
@@ -218,7 +218,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
             pt0 = special.extract(type_order[j]);
             pt1 = special.extract(type_order[k]);
             // we have two plane normals to worry about:
-            status_update("Stationary vector",vec.to_string(0),"and special points",pt0.to_string(0),"and",pt1.to_string(0));
+            debug_update("Stationary vector",vec.to_string(0),"and special points",pt0.to_string(0),"and",pt1.to_string(0));
             // find both cross products, remembering that we want normals
             // pointing *into* the wedge.
             nrm.resize(2);
@@ -230,7 +230,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
               nrm.set(0, cross(vec.star(), pt0));
               nrm.set(1, cross(pt1, vec.star()));
             }
-            status_update("give normals:", nrm.to_string(";"));
+            debug_update("give normals:", nrm.to_string(";"));
             // now check that all special points are inside of the wedge defined by the normals
           } else {
             // order == 2, so only one normal to worry about:
@@ -246,7 +246,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
           // We need at least three points (plus Γ) to define a polyhedron.
           // Also skip the extraction if we are keeping all points
           if (keep_count > 2 && keep_count < keep.size()){
-            status_update("Keeping special points:\n",special.to_string(keep));
+            debug_update("Keeping special points:\n",special.to_string(keep));
             special = special.extract(keep);
             sym_unused[i]=false;
           }
@@ -255,7 +255,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
     }
   }
 
-  // status_update("Remaining special points\n", special.to_string());
+  // debug_update("Remaining special points\n", special.to_string());
 
   // append the Γ point onto the list of special points:
   special.resize(special.size()+1u);
@@ -279,7 +279,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
     double ir_volume = this->ir_polyhedron.get_volume();
     double goal_volume = this->polyhedron.get_volume()/static_cast<double>(fullps.size());
     if (all_axes.is_unique().count_true() == 1u || approx_scalar(ir_volume, 2.0*goal_volume) ){
-      status_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
+      debug_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
       Polyhedron div;
       LQVec<double> bz_n = this->get_normals(), wg_n = this->get_ir_wedge_normals();
       ArrayVector<double> gamma(3u, 1u);
@@ -297,7 +297,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
         }
       }
       if (approx_scalar(this->ir_polyhedron.get_volume(), ir_volume)){
-        status_update("Polyhedron volume still double expected.");
+        debug_update("Polyhedron volume still double expected.");
         bool proceed=true;
         // check for other dividing planes :/
         LQVec<double> cij(this->outerlattice, 1u);

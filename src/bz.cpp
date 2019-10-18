@@ -53,9 +53,9 @@ bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
   if (is_inner)
     vp = transform_from_primitive(this->outerlattice, v);
   const LQVec<double> & vref = is_inner ? vp : v;
-  status_update("Generate a convex polyhedron from\n", vref.to_string());
+  debug_update("Generate a convex polyhedron from\n", vref.to_string());
   this->ir_polyhedron = Polyhedron(vref.get_xyz());
-  status_update("Generated a ", this->ir_polyhedron.string_repr()," from the specified vertices");
+  debug_update("Generated a ", this->ir_polyhedron.string_repr()," from the specified vertices");
   // check that the polyhedron we've specified has the desired properties
   if (this->check_ir_polyhedron()){
     // set the wedge normals as well
@@ -103,8 +103,8 @@ bool BrillouinZone::check_ir_polyhedron(void){
   double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
   Polyhedron irbz = this->get_ir_polyhedron(), rotated;
   if (!approx_scalar(irbz.get_volume(), volume_goal)){
-    status_update("The current 'irreducible' polyhedron has the wrong volume");
-    status_update("Since ",irbz.get_volume()," != ",volume_goal);
+    debug_update("The current 'irreducible' polyhedron has the wrong volume");
+    debug_update("Since ",irbz.get_volume()," != ",volume_goal);
     return false;
   }
   /* TODO FIXME -- make a LatticePolyhedron class to handle this? */
@@ -123,9 +123,9 @@ bool BrillouinZone::check_ir_polyhedron(void){
   // double B[9], invB[9], RtinvB[8];
   std::array<double,9> B, invB, RtinvB, BRtinvB;
   this->outerlattice.get_B_matrix(B.data());
-  verbose_status_update("B\n",B);
+  verbose_update("B\n",B);
   matrix_inverse(invB.data(), B.data());
-  verbose_status_update("inverse(B)\n",invB);
+  verbose_update("inverse(B)\n",invB);
   std::array<int,9> Rt;
   // get the operations of the pointgroup which are not 1 or -1
   // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
@@ -133,13 +133,13 @@ bool BrillouinZone::check_ir_polyhedron(void){
   for (size_t i=0; i<ps.size(); ++i){
     Rt = transpose(ps.get(i)); // Rᵀ
     multiply_matrix_matrix(RtinvB.data(), Rt.data(), invB.data()); // Rᵀ*B⁻¹
-    verbose_status_update("transpose(R) inverse(B)\n",RtinvB);
+    verbose_update("transpose(R) inverse(B)\n",RtinvB);
     multiply_matrix_matrix(BRtinvB.data(), B.data(), RtinvB.data()); // B*Rᵀ*B⁻¹
-    verbose_status_update("Rotate the polyhedron by\n", BRtinvB);
+    verbose_update("Rotate the polyhedron by\n", BRtinvB);
     rotated = irbz.rotate(BRtinvB);
-    verbose_status_update("Checking for intersection ",i);
+    verbose_update("Checking for intersection ",i);
     if (irbz.intersects(rotated)){
-      status_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
+      debug_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
       return false;
     }
   }
@@ -303,32 +303,32 @@ void BrillouinZone::print() const {
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
   if (norm(n).all_approx(0.0)){
-    status_update(msg, "rejected; zero-length");
+    debug_update(msg, "rejected; zero-length");
     return false;
   }
   if (num==0){
-    status_update(msg, "accepted; first normal");
+    debug_update(msg, "accepted; first normal");
     normals.set(num, n.get(0));
     num=num+1;
     return true;
   }
   if (norm(cross(normals.first(num), n)).any_approx("==",0.)){
-    status_update(msg, "rejected; already present");
+    debug_update(msg, "rejected; already present");
     return false;
   }
   normals.set(num,  n.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+1))){
-    status_update(msg, "accepted");
+    debug_update(msg, "accepted");
     num=num+1;
     return true;
   }
   normals.set(num, -n.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+1))){
-    status_update(msg, "accepted (*-1)");
+    debug_update(msg, "accepted (*-1)");
     num=num+1;
     return true;
   }
-  status_update(msg, "rejected; addition causes null wedge");
+  debug_update(msg, "rejected; addition causes null wedge");
   return false;
 }
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num){
@@ -339,42 +339,42 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
     p1 = norm(cross(normals.first(num), n1)).any_approx("==",0.);
   }
   if (p0 && p1){
-    status_update(msg, "rejected; already present");
+    debug_update(msg, "rejected; already present");
     return false;
   }
   if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx("==",1.)){
     normals.set(num,  n1.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
-      status_update(msg, "n1 accepted (n0 present)");
+      debug_update(msg, "n1 accepted (n0 present)");
       num=num+1;
       return true;
     }
-    status_update(msg, "n1 rejected (n0 present); addition causes null wedge");
+    debug_update(msg, "n1 rejected (n0 present); addition causes null wedge");
     return false;
   }
   if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx("==",1.)){
     normals.set(num,  n0.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
-      status_update(msg, "n0 accepted (n1 present)");
+      debug_update(msg, "n0 accepted (n1 present)");
       num=num+1;
       return true;
     }
-    status_update(msg, "n0 rejected (n1 present); addition causes null wedge");
+    debug_update(msg, "n0 rejected (n1 present); addition causes null wedge");
     return false;
   }
   if (num>0 && (p0 || p1)){
-    status_update_if(p0, msg, "-n0 present; addition causes null wedge)");
-    status_update_if(p1, msg, "-n1 present; addition causes null wedge)");
+    debug_update_if(p0, msg, "-n0 present; addition causes null wedge)");
+    debug_update_if(p1, msg, "-n1 present; addition causes null wedge)");
     return false;
   }
   normals.set(num,   n0.get(0));
   normals.set(num+1, n1.get(0));
   if (this->ir_wedge_is_ok(normals.first(num+2))){
-    status_update(msg, "n0 & n1 accepted");
+    debug_update(msg, "n0 & n1 accepted");
     num=num+2;
     return true;
   }
-  status_update(msg, "n0 & n1 rejected; adding both would cause null wedge");
+  debug_update(msg, "n0 & n1 rejected; adding both would cause null wedge");
   return false;
 }
 bool BrillouinZone::ir_wedge_is_ok(const LQVec<double>& normals){
@@ -384,15 +384,13 @@ bool BrillouinZone::ir_wedge_is_ok(const LQVec<double>& normals){
 }
 
 void BrillouinZone::shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const {
-  verbose_status_update("shrinking to ",cnt);
+  verbose_update("shrinking to ",cnt);
   if(vrt.size() && ijk.size()){
     vrt.resize(cnt);
     ijk.resize(cnt);
     if (cnt){ // isinside has a problem with vrt.size()==0
       ArrayVector<bool> isin = this->isinside(vrt);
-      debug_exec(size_t nin=0;)
-      debug_exec(for(size_t i=0; i<isin.size(); ++i) if (isin.getvalue(i)) ++nin;)
-      verbose_status_update("and retaining ",nin," inside vertices");
+      verbose_update("and retaining ", isin.count_true(), " inside vertices");
       vrt = extract(vrt, isin);
       ijk = extract(ijk, isin);
     }
@@ -417,7 +415,7 @@ void BrillouinZone::irreducible_vertex_search(){
   size_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
   size_t n03 = 0;
   for (size_t i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
-  verbose_status_update("Checking {",n21,", ",n12,", ",n03,"} {2:1, 1:2, 0:3} zone:wedge 3-plane intersection points");
+  verbose_update("Checking {",n21,", ",n12,", ",n03,"} {2:1, 1:2, 0:3} zone:wedge 3-plane intersection points");
 
   LQVec<double> bznormals = this->get_normals();
   LQVec<double> bzpoints = this->get_points();
@@ -471,13 +469,13 @@ void BrillouinZone::irreducible_vertex_search(){
       i03.insert(i, c03, 0); i03.insert(j, c03, 1); i03.insert(k, c03++, 2);
     }
   }
-  verbose_status_update("Intersections found");
+  verbose_update("Intersections found");
   // make sure we shrink all sets of vertices to just those found!
   // plus remove any intersection points outside of the first Brillouin zone
   this->shrink_and_prune_outside(c21, vertices21, i21);
   this->shrink_and_prune_outside(c12, vertices12, i12);
   this->shrink_and_prune_outside(c03, vertices03, i03);
-  verbose_status_update("Intersections pruned");
+  verbose_update("Intersections pruned");
   // Now we have four lists of vertices, plus lists of the normal vectors
   // and on-plane points, which define the three planes that intersect at each
   // vertex.
@@ -532,14 +530,14 @@ void BrillouinZone::irreducible_vertex_search(){
   std::vector<size_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
 
   size_t face_idx=0;
-  verbose_status_update("Combine ", i30.size(), " 3:0 normals and plane-points");
+  verbose_update("Combine ", i30.size(), " 3:0 normals and plane-points");
   for (auto i: i30) for (int j: i)
     if (0==bz_face_mapped[j]){
       all_norms.set(face_idx, bznormals.extract(j));
       all_point.set(face_idx,  bzpoints.extract(j));
       bz_face_mapped[j] = ++face_idx; // so that bz_face_mapped is the index+1
     }
-  verbose_status_update("Combine ", i21.size(), " 2:1 normals and plane-points");
+  verbose_update("Combine ", i21.size(), " 2:1 normals and plane-points");
   for (size_t i=0; i<i21.size(); ++i){
     if (0==bz_face_mapped[i21.getvalue(i,0)]){
       all_norms.set(face_idx, bznormals.extract(i21.getvalue(i,0)));
@@ -557,7 +555,7 @@ void BrillouinZone::irreducible_vertex_search(){
       ir_face_mapped[i21.getvalue(i,2)] = ++face_idx;
     }
   }
-  verbose_status_update("Combine ", i12.size(), " 1:2 normals and plane-points");
+  verbose_update("Combine ", i12.size(), " 1:2 normals and plane-points");
   for (size_t i=0; i<i12.size(); ++i){
     if (0==bz_face_mapped[i12.getvalue(i,0)]){
       all_norms.set(face_idx, bznormals.extract(i12.getvalue(i,0)));
@@ -575,7 +573,7 @@ void BrillouinZone::irreducible_vertex_search(){
       ir_face_mapped[i12.getvalue(i,2)] = ++face_idx;
     }
   }
-  verbose_status_update("Combine ", i03.size(), " 0:3 normals and plane-points");
+  verbose_update("Combine ", i03.size(), " 0:3 normals and plane-points");
   for (size_t i=0; i<i03.size(); ++i) for (size_t j=0; j<3u; ++j){
     if (0==ir_face_mapped[i03.getvalue(i,j)]){
       all_norms.set(face_idx, irnormals.extract(i03.getvalue(i,j)));
@@ -584,38 +582,38 @@ void BrillouinZone::irreducible_vertex_search(){
     }
   }
 
-  verbose_status_update("Normals and plane-points combined");
+  verbose_update("Normals and plane-points combined");
 
   size_t vert_idx=0;
-  verbose_status_update("Combine ", i30.size(), " 3:0 vertices and planes-per-vertex");
+  verbose_update("Combine ", i30.size(), " 3:0 vertices and planes-per-vertex");
   for (size_t i=0; i<i30.size(); ++i){
     all_ijk.insert(bz_face_mapped[i30[i][0]]-1, vert_idx, 0);
     all_ijk.insert(bz_face_mapped[i30[i][1]]-1, vert_idx, 1);
     all_ijk.insert(bz_face_mapped[i30[i][2]]-1, vert_idx, 2);
     all_verts.set(vert_idx++, vertices30.extract(i));
   }
-  verbose_status_update("Combine ", i21.size(), " 2:1 vertices and planes-per-vertex");
+  verbose_update("Combine ", i21.size(), " 2:1 vertices and planes-per-vertex");
   for (size_t i=0; i<i21.size(); ++i){
     all_ijk.insert(bz_face_mapped[i21.getvalue(i,0)]-1, vert_idx, 0);
     all_ijk.insert(bz_face_mapped[i21.getvalue(i,1)]-1, vert_idx, 1);
     all_ijk.insert(ir_face_mapped[i21.getvalue(i,2)]-1, vert_idx, 2);
     all_verts.set(vert_idx++, vertices21.extract(i));
   }
-  verbose_status_update("Combine ", i12.size(), " 1:2 vertices and planes-per-vertex");
+  verbose_update("Combine ", i12.size(), " 1:2 vertices and planes-per-vertex");
   for (size_t i=0; i<i12.size(); ++i){
     all_ijk.insert(bz_face_mapped[i12.getvalue(i,0)]-1, vert_idx, 0);
     all_ijk.insert(ir_face_mapped[i12.getvalue(i,1)]-1, vert_idx, 1);
     all_ijk.insert(ir_face_mapped[i12.getvalue(i,2)]-1, vert_idx, 2);
     all_verts.set(vert_idx++, vertices12.extract(i));
   }
-  verbose_status_update("Combine ", i03.size(), " 0:3 vertices and planes-per-vertex");
+  verbose_update("Combine ", i03.size(), " 0:3 vertices and planes-per-vertex");
   for (size_t i=0; i<i03.size(); ++i){
     all_ijk.insert(ir_face_mapped[i03.getvalue(i,0)]-1, vert_idx, 0);
     all_ijk.insert(ir_face_mapped[i03.getvalue(i,1)]-1, vert_idx, 1);
     all_ijk.insert(ir_face_mapped[i03.getvalue(i,2)]-1, vert_idx, 2);
     all_verts.set(vert_idx++, vertices03.extract(i));
   }
-  verbose_status_update("Vertices and planes-per-vertex combined");
+  verbose_update("Vertices and planes-per-vertex combined");
   // four lists now combined into one.
   //      all_ijk   -- (N,3) array of which three planes intersected at a vertex
   //      all_verts -- (N,) vector of intersection vertex locations
@@ -639,7 +637,7 @@ void BrillouinZone::irreducible_vertex_search(){
   // and facet to vertex indexing required for, e.g., plotting
   this->set_ir_polyhedron(all_verts, all_point, all_norms);
   // this->set_ir_polyhedron(all_verts, all_point, all_norms, all_ijk);
-  verbose_status_update("Found a ",this->ir_polyhedron.string_repr());
+  verbose_update("Found a ",this->ir_polyhedron.string_repr());
 }
 
 void BrillouinZone::voro_search(const int extent){
@@ -651,12 +649,12 @@ void BrillouinZone::voro_search(const int extent){
   std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
     return primtau.norm(a) < primtau.norm(b);
   });
-  verbose_status_update("unsorted primtau\n",primtau.to_string(norm(primtau)));
-  verbose_status_update("permutation:",perm);
+  verbose_update("unsorted primtau\n",primtau.to_string(norm(primtau)));
+  verbose_update("permutation:",perm);
   primtau.permute(perm);
-  verbose_status_update("sorted primtau\n",primtau.to_string(norm(primtau)));
+  verbose_update("sorted primtau\n",primtau.to_string(norm(primtau)));
   LQVec<double> convtau = transform_from_primitive(this->outerlattice, primtau);
-  verbose_status_update("convtau\n",convtau.to_string(norm(convtau)));
+  verbose_update("convtau\n",convtau.to_string(norm(convtau)));
   // the first Brillouin zone polyhedron will be expressed in absolute units
   // in the xyz frame of the conventional reciprocal lattice
   ArrayVector<double> tau = convtau.get_xyz();
@@ -689,7 +687,7 @@ void BrillouinZone::vertex_search(const int extent){
   for (int i=2; i<ntau; ++i) ntocheck += (i*(i-1))>>1;
   // Is there a closed-form equivalent to this expression?
   // Yes. This is, of course, the Binomal coefficient (ntau, 3)
-  status_update_if(ntau<3, "vertex_search:: Not enough taus for binomial coefficient");
+  debug_update_if(ntau<3, "vertex_search:: Not enough taus for binomial coefficient");
   unsigned long long bc = binomial_coefficient(static_cast<unsigned>(ntau), 3u);
   if (bc != static_cast<unsigned long long>(ntocheck))
     throw std::runtime_error("Mistake calculating the binomial coefficient?!");
@@ -910,150 +908,169 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
   return out;
 }
 
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
-  bool isouter = this->outerlattice.issame(Q.get_lattice());
-  bool isinner = this->lattice.issame(Q.get_lattice());
+template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const LQVec<T> &p, const bool constructing) const {
+  bool isouter = this->outerlattice.issame(p.get_lattice());
+  bool isinner = this->lattice.issame(p.get_lattice());
   if (!(isouter||isinner))
-    throw std::runtime_error("Q points provided to BrillouinZone::ir_moveinto must be in the standard or primitive lattice used to define the BrillouinZone object");
-  /*
-  The Pointgroup symmetry information comes from, effectively, spglib which
-  has all rotation matrices defined in the conventional unit cell -- which is
-  our `outerlattice`. Consequently we must work in the outerlattice here.
-  */
-  // get_pointgroup_symmetry constructs the PointSymmetry object from a vector<array<int,9>>
-  // the PointSymmetry constructor automatically sorts the operations in this case.
-  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
-  //PointSymmetry psym = make_pointgroup_symmetry_object(this->outerlattice.get_hall(), time_reversal);
-  int max_order= rotation_order(psym.data(psym.size()-1)); // since they're sorted
-
-  LQVec<double> bz_points = this->get_points();
-  LQVec<double> bz_normals =  this->get_normals();
-  LQVec<int> bz_tau = (2.0*bz_points).round(); // the BZ points are each τ/2
-
-  LQVec<double> ir_normals = this->get_ir_wedge_normals();
-  ArrayVector<double> bz_tau_len = norm(bz_tau);
-
-  // We're not building up the irreducible Brillouin zone here.
-  // We can skip this as false is the default value for constructing in
-  // this->inside_wedge
-  // const bool constructing{false};
-
-  size_t nQ = Q.size();
-  // ensure q, tau, and R can hold one for each Q.
-  q.resize(nQ);
-  tau.resize(nQ);
-  R.resize(nQ);
-  // We want to find R(q)+τ = Q with q ∈ IR-Bz and R ∈ Pointgroup operations.
-  LQVec<double> qi(Q.get_lattice(), 1u), qj(Q.get_lattice(), 1u);
-  LQVec<int> taui;
-  std::array<int,9> Ri, Rj, RE={1,0,0, 0,1,0, 0,0,1};
-  ArrayVector<double> q_dot_bz_normals;
-  ArrayVector<int> Nhkl;
-  // by chance some Q points might already be in the IR-Bz:
-  ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
-  // if they are we need to ensure that R is set to RE for them:
-  for (size_t i=0; i<R.size(); ++i) R[i] = RE;
-
-  size_t count, count1, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
-  int maxnm = 0;
-  for (size_t i=0; i<nQ; ++i){
-    count = 0;
-    count1= 0;
-    qi = Q.get(i);
-    taui = 0*tau.get(i);
-    Ri = RE;
-    while (!(in_bz.getvalue(i) && in_ir.getvalue(i)) && count++ < 50*max_order*nR*nBZtau){
-      while (!in_bz.getvalue(i) && count1++ < 50*nBZtau){
-        q_dot_bz_normals = dot(qi, bz_normals);
-        Nhkl = (q_dot_bz_normals/bz_tau_len).round();
-        if (!Nhkl.all_zero()){ // qi is outside of the 1st Bz
-          maxnm = 0;
-          maxat = 0;
-          for (size_t j=0; j<Nhkl.size(); ++j){
-            if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_bz_normals.getvalue(j)>q_dot_bz_normals.getvalue(maxat))){
-              maxnm = Nhkl.getvalue(j);
-              maxat = j;
-            }
-          }
-          qi -= bz_tau[maxat] * static_cast<double>(maxnm);
-          taui += bz_tau[maxat];
-          in_bz.insert(this->isinside(qi).getvalue(0), i);
-        } else {
-          in_bz.insert(true, i);
-        }
-      }
-      // moving Q into the first Bz could move q in or out of the IR wedge
-      in_ir.insert(this->isinside_wedge(qi).getvalue(0), i);
-      // If the rotation matrices, R, form a complete pointgroup
-      // then for every Rᵢ and Rⱼ ∈ R, RᵢRⱼ≡Rₖ ∈ R. This means that we do not
-      // need to check combinations of rotation matrices (or powers) for
-      // complete pointgroups.
-      if (!in_ir.getvalue(i)){
-        for (size_t j=0; j<nR; ++j){
-          // we could check if the rotation axis u∥qi, but that is probably more work than just "rotating" and getting the same point
-          multiply_matrix_vector(qj.datapointer(0), psym.data(j), qi.datapointer(0));
-          if(this->isinside_wedge(qj).getvalue(0)){
-            qi = qj;
-            Ri = psym.get(j);
-            in_ir.insert(true, i);
-            break;
-          }
-        }
-      }
-      if (!in_ir.getvalue(i)){
-        std::string msg = "Either the provided point symmetry operations do not";
-        msg += " form a complete group or there is a bug in this code.";
-        msg += " Either way, please fix me.";
-        throw std::runtime_error(msg);
-      }
-      // moving qi into the irreducible wedge could have moved it out of the
-      // first brillouin zone.
-      in_bz.insert(this->isinside(qi).getvalue(0), i);
-    }
-    // now we have found *a* set of q, tau, R for which R⁻¹q + tau = Q
-    q.set(i, qi);
-    tau.set(i, taui);
-    // We *could* calculate R⁻¹ but might run into rounding/type issues.
-    // We know that there must be an element of R for which RᵢRⱼ=E,
-    // the identity element. Let's look for Rⱼ instead.
-    for (size_t j=0; j<nR; ++j){
-      multiply_matrix_matrix(Rj.data(), psym.data(j), Ri.data());
-      // std::cout << "( ";
-      // for (auto iii: psym.get(j)) std::cout << " " << my_to_string(iii);
-      // std::cout << " ) x (";
-      // for (auto iii: Ri) std::cout << " " << my_to_string(iii);
-      // std::cout << " ) = (";
-      // for (auto iii: Rj) std::cout << " " << my_to_string(iii);
-      if (approx_matrix(3, RE.data(), Rj.data())){
-        // std::cout << " ) ok" << std::endl;
-        R[i] = psym.get(j);
-        break;
-      }
-      // std::cout << " )" << std::endl;
-    }
+    throw std::runtime_error("Q points provided to BrillouinZone::isinside_wedge must be in the standard or primitive lattice used to define the BrillouinZone object");
+  std::vector<bool> out(p.size(), true); // default to true in case of no normals when all points are 'inside'
+  LQVec<double> normals;
+  if (isouter)
+    normals = this->get_ir_wedge_normals();
+  else
+    normals = this->get_primitive_ir_wedge_normals();
+  if (normals.size()){
+    std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
+    for (size_t i=0; i<p.size(); ++i)
+      out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);
   }
-  // std::cout << "All per point rotations:" << std::endl;
-  // for (auto r: R){
-  //   std::cout << "(";
-  //   for (auto i: r) std::cout << " " << my_to_string(i);
-  //   std::cout << " )" << std::endl;;
-  // }
-  if (!in_bz.all_true() || !in_ir.all_true()){
-    std::string msg;
-    for (size_t i=0; i<nQ; ++i)
-      if (!in_bz.getvalue(i) || !in_ir.getvalue(i)){
-        msg += "Q=" + Q.to_string(i) + " is outside of the BrillouinZone "
-            + " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i)
-            + " R = [";
-        for (int r: R[i]) msg += " " + std::to_string(r);
-        msg += " ]\n" ;
-        throw std::runtime_error(msg);
-      }
-  }
-  return (in_bz.all_true() && in_ir.all_true());
+  return out;
 }
 
-bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau){
+// bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
+//   bool isouter = this->outerlattice.issame(Q.get_lattice());
+//   bool isinner = this->lattice.issame(Q.get_lattice());
+//   if (!(isouter||isinner))
+//     throw std::runtime_error("Q points provided to BrillouinZone::ir_moveinto must be in the standard or primitive lattice used to define the BrillouinZone object");
+//   /*
+//   The Pointgroup symmetry information comes from, effectively, spglib which
+//   has all rotation matrices defined in the conventional unit cell -- which is
+//   our `outerlattice`. Consequently we must work in the outerlattice here.
+//   */
+//   // get_pointgroup_symmetry constructs the PointSymmetry object from a vector<array<int,9>>
+//   // the PointSymmetry constructor automatically sorts the operations in this case.
+//   PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+//   //PointSymmetry psym = make_pointgroup_symmetry_object(this->outerlattice.get_hall(), time_reversal);
+//   int max_order= rotation_order(psym.data(psym.size()-1)); // since they're sorted
+//
+//   LQVec<double> bz_points = this->get_points();
+//   LQVec<double> bz_normals =  this->get_normals();
+//   LQVec<int> bz_tau = (2.0*bz_points).round(); // the BZ points are each τ/2
+//
+//   LQVec<double> ir_normals = this->get_ir_wedge_normals();
+//   ArrayVector<double> bz_tau_len = norm(bz_tau);
+//
+//   // We're not building up the irreducible Brillouin zone here.
+//   // We can skip this as false is the default value for constructing in
+//   // this->inside_wedge
+//   // const bool constructing{false};
+//
+//   size_t nQ = Q.size();
+//   // ensure q, tau, and R can hold one for each Q.
+//   q.resize(nQ);
+//   tau.resize(nQ);
+//   R.resize(nQ);
+//   // We want to find R(q)+τ = Q with q ∈ IR-Bz and R ∈ Pointgroup operations.
+//   LQVec<double> qi(Q.get_lattice(), 1u), qj(Q.get_lattice(), 1u);
+//   LQVec<int> taui;
+//   std::array<int,9> Ri, Rj, RE={1,0,0, 0,1,0, 0,0,1};
+//   ArrayVector<double> q_dot_bz_normals;
+//   ArrayVector<int> Nhkl;
+//   // by chance some Q points might already be in the IR-Bz:
+//   ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
+//   // if they are we need to ensure that R is set to RE for them:
+//   for (size_t i=0; i<R.size(); ++i) R[i] = RE;
+//
+//   size_t count, count1, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
+//   int maxnm = 0;
+//   for (size_t i=0; i<nQ; ++i){
+//     count = 0;
+//     count1= 0;
+//     qi = Q.get(i);
+//     taui = 0*tau.get(i);
+//     Ri = RE;
+//     while (!(in_bz.getvalue(i) && in_ir.getvalue(i)) && count++ < 50*max_order*nR*nBZtau){
+//       while (!in_bz.getvalue(i) && count1++ < 50*nBZtau){
+//         q_dot_bz_normals = dot(qi, bz_normals);
+//         Nhkl = (q_dot_bz_normals/bz_tau_len).round();
+//         if (!Nhkl.all_zero()){ // qi is outside of the 1st Bz
+//           maxnm = 0;
+//           maxat = 0;
+//           for (size_t j=0; j<Nhkl.size(); ++j){
+//             if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_bz_normals.getvalue(j)>q_dot_bz_normals.getvalue(maxat))){
+//               maxnm = Nhkl.getvalue(j);
+//               maxat = j;
+//             }
+//           }
+//           qi -= bz_tau[maxat] * static_cast<double>(maxnm);
+//           taui += bz_tau[maxat];
+//           in_bz.insert(this->isinside(qi).getvalue(0), i);
+//         } else {
+//           in_bz.insert(true, i);
+//         }
+//       }
+//       // moving Q into the first Bz could move q in or out of the IR wedge
+//       in_ir.insert(this->isinside_wedge(qi).getvalue(0), i);
+//       // If the rotation matrices, R, form a complete pointgroup
+//       // then for every Rᵢ and Rⱼ ∈ R, RᵢRⱼ≡Rₖ ∈ R. This means that we do not
+//       // need to check combinations of rotation matrices (or powers) for
+//       // complete pointgroups.
+//       if (!in_ir.getvalue(i)){
+//         for (size_t j=0; j<nR; ++j){
+//           // we could check if the rotation axis u∥qi, but that is probably more work than just "rotating" and getting the same point
+//           multiply_matrix_vector(qj.datapointer(0), psym.data(j), qi.datapointer(0));
+//           if(this->isinside_wedge(qj).getvalue(0)){
+//             qi = qj;
+//             Ri = psym.get(j);
+//             in_ir.insert(true, i);
+//             break;
+//           }
+//         }
+//       }
+//       if (!in_ir.getvalue(i)){
+//         std::string msg = "Either the provided point symmetry operations do not";
+//         msg += " form a complete group or there is a bug in this code.";
+//         msg += " Either way, please fix me.";
+//         throw std::runtime_error(msg);
+//       }
+//       // moving qi into the irreducible wedge could have moved it out of the
+//       // first brillouin zone.
+//       in_bz.insert(this->isinside(qi).getvalue(0), i);
+//     }
+//     // now we have found *a* set of q, tau, R for which R⁻¹q + tau = Q
+//     q.set(i, qi);
+//     tau.set(i, taui);
+//     // We *could* calculate R⁻¹ but might run into rounding/type issues.
+//     // We know that there must be an element of R for which RᵢRⱼ=E,
+//     // the identity element. Let's look for Rⱼ instead.
+//     for (size_t j=0; j<nR; ++j){
+//       multiply_matrix_matrix(Rj.data(), psym.data(j), Ri.data());
+//       // std::cout << "( ";
+//       // for (auto iii: psym.get(j)) std::cout << " " << my_to_string(iii);
+//       // std::cout << " ) x (";
+//       // for (auto iii: Ri) std::cout << " " << my_to_string(iii);
+//       // std::cout << " ) = (";
+//       // for (auto iii: Rj) std::cout << " " << my_to_string(iii);
+//       if (approx_matrix(3, RE.data(), Rj.data())){
+//         // std::cout << " ) ok" << std::endl;
+//         R[i] = psym.get(j);
+//         break;
+//       }
+//       // std::cout << " )" << std::endl;
+//     }
+//   }
+//   // std::cout << "All per point rotations:" << std::endl;
+//   // for (auto r: R){
+//   //   std::cout << "(";
+//   //   for (auto i: r) std::cout << " " << my_to_string(i);
+//   //   std::cout << " )" << std::endl;;
+//   // }
+//   if (!in_bz.all_true() || !in_ir.all_true()){
+//     std::string msg;
+//     for (size_t i=0; i<nQ; ++i)
+//       if (!in_bz.getvalue(i) || !in_ir.getvalue(i)){
+//         msg += "Q=" + Q.to_string(i) + " is outside of the BrillouinZone "
+//             + " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i)
+//             + " R = [";
+//         for (int r: R[i]) msg += " " + std::to_string(r);
+//         msg += " ]\n" ;
+//         throw std::runtime_error(msg);
+//       }
+//   }
+//   return (in_bz.all_true() && in_ir.all_true());
+// }
+
+bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const {
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
   LQVec<int> tauprim(this->lattice);
@@ -1129,6 +1146,46 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
     tau = transform_from_primitive(this->outerlattice,tausl);
   }
   return allinside.all_true(); // return false if any points are still outside of the first Brilluoin Zone
+}
+
+bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
+  /* The Pointgroup symmetry information comes from, effectively, spglib which
+  has all rotation matrices defined in the conventional unit cell -- which is
+  our `outerlattice`. Consequently we must work in the outerlattice here.  */
+  if (!this->outerlattice.issame(Q.get_lattice()))
+    throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
+  // get the PointSymmetry object, containing all operations
+  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+  // ensure q, tau, and R can hold one for each Q.
+  size_t nQ = Q.size();
+  q.resize(nQ);
+  tau.resize(nQ);
+  R.resize(nQ);
+  // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
+  // such that Q = q₁ₛₜ + τ
+  this->moveinto(Q, q, tau);
+  // by chance some first Bz points are likely already in the IR-Bz:
+  std::vector<bool> in_ir = this->isinside_wedge_std(q);
+  // any q already in the irreducible zone need no rotation → identity
+  for (size_t i=0; i<nQ; ++i) if ( in_ir[i] ) R[i] = {1,0,0, 0,1,0, 0,0,1};
+  // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+  LQVec<double> qj(Q.get_lattice(), 1u);
+  for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
+    multiply_matrix_vector(qj.datapointer(0), psym.data(j), q.datapointer(i));
+    if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
+      q.set(i, qj); // keep Rⱼ⋅qᵢ as qᵢᵣ
+      R[i] = psym.get_inverse(j); // and Rⱼ⁻¹ ∈ G, such that Qᵢ = Rⱼ⁻¹⋅qᵢᵣ + τᵢ.
+      break;
+    }
+  }
+  for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+    std::string msg = "Q = " + Q.to_string(i);
+    msg += " is outside of the irreducible BrillouinZone ";
+    msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
+    throw std::runtime_error(msg);
+    return false;
+  }
+  return true; // otherwise we hit the runtime error above
 }
 
 bool three_plane_intersection(const LQVec<double>& n,                // plane normals

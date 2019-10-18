@@ -197,8 +197,8 @@ public:
              const ArrayVector<double>& p,
              const ArrayVector<double>& n):
   vertices(v), points(p), normals(n) {
-    verbose_status_update("Construct a polyhedron from vertices:\n",vertices.to_string());
-    verbose_status_update("and planes (points, normals):\n", normals.to_string(points));
+    verbose_update("Construct a polyhedron from vertices:\n",vertices.to_string());
+    verbose_update("and planes (points, normals):\n", normals.to_string(points));
     this->keep_unique_vertices();
     this->find_all_faces_per_vertex();
     this->polygon_vertices_per_face();
@@ -387,7 +387,7 @@ protected:
        plane normal. If the plane passing through the three points partitions
        space into point-free and not-point-free then it is one of the planes of
        the convex-hull.                                                       */
-    status_update_if(vertices.size()<3, "find_convex_hull:: Not enough vertices for binomial_coefficient");
+    debug_update_if(vertices.size()<3, "find_convex_hull:: Not enough vertices for binomial_coefficient");
     unsigned long long bc = binomial_coefficient(vertices.size(), 3u);
     if (bc > static_cast<unsigned long long>(std::numeric_limits<size_t>::max()))
       throw std::runtime_error("Too many vertices to count all possible normals with a `size_t` integer");
@@ -409,7 +409,7 @@ protected:
           vk = vertices.extract(k);
           ab.set(1, vk-vi);
           ab.cross(0, 1, nijk.datapointer());
-          // status_update(i," ",j," ",k," ", ab.to_string(" x ")," = ",nijk.to_string(0));
+          // debug_update(i," ",j," ",k," ", ab.to_string(" x ")," = ",nijk.to_string(0));
           // increment the counter only if the new normal is not ⃗0 and partitions space
           if (!approx_scalar(nijk.norm(0),0.) && dot(nijk, vertices - vi).all_approx("≤|≥", 0.)){
             // verify that the normal points the right way:
@@ -442,7 +442,7 @@ protected:
       isonplane = dot(normals, vertices.extract(i) - points).is_approx("==",0.);
       for (size_t j=0; j<points.size(); ++j) if (isonplane.getvalue(j)) fpv[i].push_back(static_cast<int>(j));
     }
-    verbose_status_update("Found faces per vertex array\n",fpv);
+    verbose_update("Found faces per vertex array\n",fpv);
     this->faces_per_vertex = fpv;
   }
   void polygon_vertices_per_face(void) {
@@ -457,12 +457,12 @@ protected:
         if (flag) vpf[facet].push_back(i);
       }
     }
-    verbose_status_update("Found vertices per face array\n", vpf);
+    verbose_update("Found vertices per face array\n", vpf);
     // additionally, we only want to keep faces which describe polygons
     std::vector<bool> is_polygon(vpf.size(), true);
     for (size_t i=0; i<vpf.size(); ++i)
       is_polygon[i] = face_has_area(vertices.extract(vpf[i])) > 0;
-    verbose_status_update("Face is polygon:",is_polygon);
+    verbose_update("Face is polygon:",is_polygon);
 
     this->points = this->points.extract(is_polygon);
     this->normals = this->normals.extract(is_polygon);
@@ -474,14 +474,14 @@ protected:
     for (size_t i=0; i<faces_per_vertex.size(); ++i)
     for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(map[facet]);
     this->faces_per_vertex = reduced_fpv;
-    verbose_status_update("Faces per vertex reduced to\n", faces_per_vertex);
+    verbose_update("Faces per vertex reduced to\n", faces_per_vertex);
 
     // plus cut-down the vertices_per_face vector
     std::vector<std::vector<int>> polygon_vpf;
     for (size_t i=0; i<vpf.size(); ++i) if (is_polygon[i]) polygon_vpf.push_back(vpf[i]);
     // for (auto i: vpf) if (i.size()>2) polygon_vpf.push_back(i);
     this->vertices_per_face = polygon_vpf;
-    verbose_status_update("Vertices per (polygon) face\n", vertices_per_face);
+    verbose_update("Vertices per (polygon) face\n", vertices_per_face);
   }
   void purge_central_polygon_vertices(void){
     /* We often build polyhedra from convex hulls of points and it is not
@@ -495,7 +495,7 @@ protected:
     ArrayVector<bool> is_centre_av(1u, 0u);
     std::vector<bool> is_centre;
     size_t facet_size;
-    verbose_status_update("Starting vertices_per_face\n",vertices_per_face);
+    verbose_update("Starting vertices_per_face\n",vertices_per_face);
     for (size_t j=0; j<normals.size(); ++j){
       facet_size = vertices_per_face[j].size();
       facet_normal = normals.extract(j);
@@ -506,7 +506,7 @@ protected:
       is_centre_av = norm(facet_verts).is_approx("==",0.);
       is_centre.resize(is_centre_av.size());
       for (size_t i=0; i<is_centre_av.size(); ++i) is_centre[i] = is_centre_av.getvalue(i);
-      verbose_status_update("Face ",j," has central vertices", is_centre);
+      verbose_update("Face ",j," has central vertices", is_centre);
       for (size_t i=0; i<vertices_per_face[j].size();){
         if (is_centre[i]){
           is_centre.erase(is_centre.begin()+i);
@@ -516,9 +516,9 @@ protected:
         }
       }
     }
-    // status_update("Pre-purge vertices_per_face\n",vertices_per_face);
+    // debug_update("Pre-purge vertices_per_face\n",vertices_per_face);
     this->actual_vertex_purge();
-    // status_update("Purged vertices_per_face\n",vertices_per_face);
+    // debug_update("Purged vertices_per_face\n",vertices_per_face);
   }
   void actual_vertex_purge(void){
     // go through all faces again and determine whether a vertex is present
@@ -532,7 +532,7 @@ protected:
       keep.insert(flag, i);
     }
     if (keep.count_true() < vertices.size()){
-      verbose_status_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
+      verbose_update("Keeping ", keep.count_true(), " of ", vertices.size(), " vertices");
       // Remap the vertices_per_face array
       size_t count = 0, max=keep.count_true();
       std::vector<size_t> map;
@@ -558,7 +558,7 @@ protected:
     ArrayVector<double> all_normals = this->get_normals();
     for (size_t j=0; j<this->points.size(); ++j){
       facet = this->vertices_per_face[j];
-      verbose_status_update("Sorting face ",j," which has vertices",facet);
+      verbose_update("Sorting face ",j," which has vertices",facet);
       facet_normal = all_normals.extract(j);
       facet_verts.resize(vertices_per_face[j].size());
       for (size_t i=0; i<vertices_per_face[j].size(); ++i) facet_verts.set(i, this->vertices.extract(facet[i]));
@@ -566,7 +566,7 @@ protected:
       facet_verts -= facet_centre; // these are now on-face vectors to each vertex
       // if a point happens to be at the face centre dividing by the norm is a problem.
       facet_verts = facet_verts/norm(facet_verts); // and now just their directions;
-      verbose_status_update("With on-plane vectors\n",facet_verts.to_string());
+      verbose_update("With on-plane vectors\n",facet_verts.to_string());
       perm.resize(facet.size());
       perm[0] = 0; // always start with whichever vertex is first
       used.clear();
@@ -584,16 +584,16 @@ protected:
             min_angle = angles[k];
           }
         if (min_idx >= facet.size()){
-          for (size_t d=0; d<facet.size(); ++d) status_update("Facet vertex ",d," ", this->vertices.extract(facet[d]).to_string(0));
-          status_update("Facet centre", facet_centre.to_string(0));
-          status_update("Facet face vertices\n", facet_verts.to_string());
-          status_update("Winding angles ", angles);
+          for (size_t d=0; d<facet.size(); ++d) debug_update("Facet vertex ",d," ", this->vertices.extract(facet[d]).to_string(0));
+          debug_update("Facet centre", facet_centre.to_string(0));
+          debug_update("Facet face vertices\n", facet_verts.to_string());
+          debug_update("Winding angles ", angles);
           throw std::runtime_error("Error finding minimum winding angle polygon vertex");
         }
         perm[i] = min_idx;
         used.push_back(min_idx);
       }
-      verbose_status_update("Producing sorting permutation",perm);
+      verbose_update("Producing sorting permutation",perm);
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
     }
     this->vertices_per_face = sorted_vpp;
@@ -607,7 +607,7 @@ protected:
     */
     ArrayVector<double> abc(3u, 3u);
     for (size_t n=0; n<normals.size(); ++n){
-      verbose_status_update("A face with vertices ", vertices_per_face[n]);
+      verbose_update("A face with vertices ", vertices_per_face[n]);
       for (size_t i=0, j; vertices_per_face[n].size()>3 && i<vertices_per_face[n].size();){
         // pull out the vector from the previous point to this one
         j = (vertices_per_face[n].size()+i-1)%vertices_per_face[n].size();
@@ -626,7 +626,7 @@ protected:
           vertices_per_face[n].erase(vertices_per_face[n].begin()+i);
         }
       }
-      verbose_status_update("Is a convex polygonal face with vertices ", vertices_per_face[n]);
+      verbose_update("Is a convex polygonal face with vertices ", vertices_per_face[n]);
     }
     this->actual_vertex_purge();
   }
@@ -644,7 +644,7 @@ public:
      always contain) the origin.
   */
   bool intersects(const Polyhedron& other) const {
-    verbose_status_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
+    verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
     ArrayVector<double> centroid = this->get_centroid();
     Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
     Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
@@ -707,30 +707,30 @@ public:
     vpf = pout.get_vertices_per_face();
     // move the output polyhedron to be centred on the origin -- which requires we move all cutting planes as well
     // ArrayVector<double> origin = sum(pv)/static_cast<double>(pv.size());
-    verbose_status_update("Cut a ",pout.string_repr()," by ",n.size()," planes");
+    verbose_update("Cut a ",pout.string_repr()," by ",n.size()," planes");
     for (size_t i=0; i<n.size(); ++i){
       if (approx_scalar(pout.get_volume(), 0.)) break; // we can't do anything with an empty polyhedron
-      verbose_status_update("Checking a plane"," passing through ",p.to_string(i)," normal to ",n.to_string(i));
+      verbose_update("Checking a plane"," passing through ",p.to_string(i)," normal to ",n.to_string(i));
       // check whether there's anything to do
       ni = n.extract(i);
       pi = p.extract(i);
       keep = point_inside_plane(ni, pi, pv);
       if (!keep.all_true()){
-        verbose_status_update("Pre-cut ",i," polyhedron vertices:\n",pv.to_string());
-        verbose_status_update("Pre-cut ",i," polyhedron planes (p,n):\n",pn.to_string(pp));
-        verbose_status_update("Pre-cut ",i," polyhedron faces_per_vertex:\n", fpv);
-        verbose_status_update("Pre-cut ",i," polyhedron vertices_per_face:\n",vpf);
+        verbose_update("Pre-cut ",i," polyhedron vertices:\n",pv.to_string());
+        verbose_update("Pre-cut ",i," polyhedron planes (p,n):\n",pn.to_string(pp));
+        verbose_update("Pre-cut ",i," polyhedron faces_per_vertex:\n", fpv);
+        verbose_update("Pre-cut ",i," polyhedron vertices_per_face:\n",vpf);
         // compile the list of to-be-deleted vertices
         del_vertices.clear();
         for (size_t j=0; j<keep.size(); ++j) if(!keep.getvalue(j))
           del_vertices.push_back(j);
-        verbose_status_update("Vertices beyond the cut ", del_vertices);
+        verbose_update("Vertices beyond the cut ", del_vertices);
         // and the list of facets which need to be cut or removed
         cut.clear();
         for (auto x: del_vertices) for (auto f: fpv[x])
         if (std::find(cut.begin(), cut.end(), f)==cut.end())
           cut.push_back(f); // add f to the list if it's not present already
-        verbose_status_update("Facets ",cut," are cut by the plane");
+        verbose_update("Facets ",cut," are cut by the plane");
         // find the new intersection points of two neighbouring facets and the cutting plane
         count = 0;
         new_vector.clear();
@@ -765,14 +765,14 @@ public:
         added.resize(count);
         for (size_t j=0; j<count; ++j) added.insert(true, j);
         keep = cat(keep, added);
-        verbose_status_update("keep? vertices:\n",pv.to_string(keep));
+        verbose_update("keep? vertices:\n",pv.to_string(keep));
         // find the new indices for all vertices, and extract the kept vertices
         vertex_map.resize(pv.size());
         count = 0;
         for (size_t j=0; j<pv.size(); ++j)
           vertex_map[j]= (keep.getvalue(j) ? count++ : -1);
         pv = pv.extract(keep);
-        verbose_status_update("vertex mapping:", vertex_map);
+        verbose_update("vertex mapping:", vertex_map);
         // go through the vertices_per_face array, replacing vertex indicies
         // and making a face map to skip now-empty faces
         for (size_t j=0; j<vpf.size(); ++j){
@@ -793,12 +793,12 @@ public:
         // remove any faces without vertices
         keep.resize(pp.size());
         for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>0, j);
-        verbose_status_update("keep? plane normals:\n",pn.to_string(keep));
-        verbose_status_update("keep? plane points:\n",pp.to_string(keep));
+        verbose_update("keep? plane normals:\n",pn.to_string(keep));
+        verbose_update("keep? plane points:\n",pp.to_string(keep));
         // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
         pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
         // pout = Polyhedron(pv);
-        verbose_status_update("New ",pout.string_repr());
+        verbose_update("New ",pout.string_repr());
         // copy the updated vertices, normals, and relational information
         pv=pout.get_vertices();
         pn=pout.get_normals();

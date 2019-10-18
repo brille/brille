@@ -73,6 +73,7 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_a
     xi = x.extract(i);
     vertices = this->mesh.locate_for_interpolation(xi);
     weights = tetrahedron_weights(xi, positions.extract(vertices));
+    info_update("Now call new_unsafe_interpolate_to");
     new_unsafe_interpolate_to(this->data, this->elements, this->branches, vertices, weights, out, i);
   }
   return out;

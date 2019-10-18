@@ -5,10 +5,17 @@
 #include <vector>
 #include <array>
 #include <cassert>
+#include <algorithm>
 // Tetgen header
 #include "tetgen.h"
 // debugging output
 #include "debug.h"
+
+template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
+  auto at = std::find(x.begin(), x.end(), val);
+  if (at == x.end()) throw std::logic_error("Value not found?!");
+  return std::distance(x.begin(), at);
+}
 
 // template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type>
 class TetrahedralTriangulation{
@@ -114,6 +121,7 @@ public:
     }
     // find the closest vertex to our test-point:
     ArrayVector<double> d = norm(vertex_positions - x); // or does this need to be (vertex_position-x).norm()?
+    verbose_update("distances to mesh vertices:\n",d.to_string());
     double min = (std::numeric_limits<double>::max)();
     size_t idx = nVertices + 1;
     for (size_t i=0; i<d.size(); ++i) if (d.getvalue(i)<min){
@@ -129,11 +137,15 @@ public:
        maintain in the future.                                                */
     // Check each of the tetrahedra which contain this closest vertex to see if
     // the point is inside/on-the-surface/on-an-edge/a-vertex of the tetrahedron
-    double o[5];
+    // double o[5];
+    double tvol;
+    std::array<double,4> o;
+    std::array<bool,4> is_zero;
     size_t zero_count;
+    bool point_is_outside;
     for (auto tet_idx: tetrahedra_per_vertex[idx]){
-      // ~6× the volume of this tetrahedron -- really here in case the tetrahedron vertices are not ordered correctly
-      o[4] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
+      // ~6× the volume of this tetrahedron -- here since the tetrahedron vertices are probably not ordered correctly
+      tvol = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
@@ -141,42 +153,51 @@ public:
       o[0] = orient3d(x.datapointer(),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
+                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the second vertex by x
       o[1] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
                       x.datapointer(),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
+                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the third vertex by x
       o[2] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
                       x.datapointer(),
-                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
+                      vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
       // replace the fourth vertex by x
       o[3] = orient3d(vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
                       vertex_positions.datapointer(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      x.datapointer());
-      if ((o[0]/o[4])<0 || (o[1]/o[4])<0 || (o[2]/o[4])<0 || (o[3]/o[4])<0)
-        continue; // the point is outside of this tetrahedron
-      zero_count = 0;
-      for (size_t i=1; i<5u; ++i) if (o[i]==0) ++zero_count; // use approx_scalar instead?
+                      x.datapointer())/tvol;
+      info_update("tetrahedra ",tet_idx," has volumes ",o);
+      // approx_scalar because we're still ok with some rounding? This seems potentially dangerous as implemented.
+      for (size_t i=0; i<4u; ++i) is_zero[i] = approx_scalar(o[i], 0.);
+      point_is_outside = false;
+      for (size_t i=0; i<4u; ++i) if (!is_zero[i] && o[i]<0.) point_is_outside=true;
+      if (point_is_outside) continue; // the point is outside of this tetrahedron
+      zero_count = std::count(is_zero.begin(), is_zero.end(), true);
+      info_update(zero_count," zero-volume subtetrahedra");
       switch (zero_count){
         case 0:
           type = CELL;
           break;
         case 1:
           type = FACET;
-          v0 = (o[0]==0) ? 0 : (o[1]==0) ? 1: (o[2]==0) ? 2 : 3;
+          // return the index which is zero, the facet opposite contains the point
+          v0 = find_first(is_zero, true);
           break;
         case 2:
           type = EDGE;
-          v0 = (o[0]!=0) ? 0 : (o[0]!=0) ? 1 : 2;
-          v1 = (o[v1+1]!=0) ? v1+1 : (o[v1+2]!=0) ? v1+2 : v1+3;
+          // The first non-zero volume represents a vertex at one endpoint
+          v0 = find_first(is_zero, false);
+          is_zero[v0] = true; // so we can use find_fist again
+          // The second non-zero volume represents the other endpoint
+          v1 = find_first(is_zero, false);
           break;
         case 3:
           type = VERTEX;
-          v0 = (o[0]!=0) ? 0 : (o[1]!=0) ? 1 : (o[2]!=0) ? 2 : 3;
+          // replacing a vertex by itself is the only way to have non-zero volume
+          v0 = find_first(is_zero, false);
           break;
         default:
           throw std::logic_error("Intentionally unreachable switch statement.");
@@ -192,9 +213,10 @@ public:
       std::string msg = "locate requires a single 3-element vector.";
       throw std::runtime_error(msg);
     }
-    size_t v0, v1;
+    size_t v0=0, v1=0;
     Locate_Type type;
     size_t tet_idx = this->locate(x, type, v0, v1);
+    info_update("locate found point near tetrahedron ",tet_idx," type ",type," v0 ",v0," v1 ",v1);
     std::vector<size_t> vert_idx;
     switch (type){
       case VERTEX:
@@ -218,6 +240,7 @@ public:
       default:
         throw std::logic_error("Intentionally unreachable switch statement..");
     }
+    info_update("vertices ",vert_idx," needed for interpolation at x = ", x.to_string(0));
     return vert_idx;
   }
   /* If the following function is more useful than the preceeding, it could be
@@ -276,7 +299,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
 ) {
   assert(verts.numel() == 3); // otherwise we can't make a 3-D triangulation
   // create the tetgenbehavior object which contains all options/switches for tetrahedralize
-  status_update("Creating `tetgenbehavior` object");
+  debug_update("Creating `tetgenbehavior` object");
   tetgenbehavior tgb;
   tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
   tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
@@ -301,11 +324,11 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
   #endif
 
   // make the input and output tetgenio objects and fill the input with our polyhedron
-  status_update("Creating input and output `tetgenio` objects");
+  debug_update("Creating input and output `tetgenio` objects");
   tetgenio tgi, tgo;
   // we have to handle initializing points/facets, but tetgenio has a destructor
   // which handles deleting all non-NULL fields.
-  status_update("Initialize and fill the input object's pointlist parameter");
+  debug_update("Initialize and fill the input object's pointlist parameter");
   tgi.numberofpoints = static_cast<int>(verts.size());
   tgi.pointlist = new double[3*tgi.numberofpoints];
   tgi.pointmarkerlist = new int[tgi.numberofpoints];
@@ -316,7 +339,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     for (size_t j=0; j<verts.numel(); ++j)
       tgi.pointlist[idx++] = verts.getvalue(i,j);
   }
-  status_update("Initialize and fill the input object's facetlist parameter");
+  debug_update("Initialize and fill the input object's facetlist parameter");
   tgi.numberoffacets = static_cast<int>(vpf.size());
   tgi.facetlist = new tetgenio::facet[tgi.numberoffacets];
   tgi.facetmarkerlist = new int[tgi.numberoffacets];
@@ -331,7 +354,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
   }
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
-  status_update("Calling tetgen::tetrahedralize");
+  debug_update("Calling tetgen::tetrahedralize");
   try {
       tetrahedralize(&tgb, &tgi, &tgo);
   } catch (const std::logic_error& e) {
@@ -344,7 +367,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     std::string msg = "tetgen threw an undetermined error";
     throw std::runtime_error(msg);
   }
-  status_update("Constructing TetrahedralTriangulation object");
+  debug_update("Constructing TetrahedralTriangulation object");
   return TetrahedralTriangulation(tgo);
 }
 

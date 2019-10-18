@@ -210,22 +210,24 @@ private:
   #define _MY_PRETTY_FUNC_ ""
 #endif
 
+static DebugPrinter _debug_printer("");
+#define info_update(...) _debug_printer.println("", __VA_ARGS__)
+
 #if defined(VERBOSE_DEBUG) || defined(DEBUG)
-  static DebugPrinter _debug_printer("");
   #define debug_exec(...) __VA_ARGS__
-  #define status_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define status_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define debug_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define debug_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
 #else
-  #define status_update_if(...)
-  #define status_update(...)
+  #define debug_update_if(...)
+  #define debug_update(...)
   #define debug_exec(...)
 #endif
 #ifdef VERBOSE_DEBUG
-  #define verbose_status_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define verbose_status_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define verbose_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define verbose_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
 #else
-  #define verbose_status_update(...)
-  #define verbose_status_update_if(...)
+  #define verbose_update(...)
+  #define verbose_update_if(...)
 #endif
 
 #endif //_DEBUG_H_

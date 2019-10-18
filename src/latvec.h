@@ -57,9 +57,9 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the data (if it exists)
-      if (other.data && m && n)
+      if (other._data && m && n)
         for(size_t i=0; i<m*n; i++)
-          this->data[i] = other.data[i];
+          this->_data[i] = other._data[i];
     }
     return *this;
   }
@@ -194,9 +194,9 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the data (if it exists)
-      if (other.data && m && n)
+      if (other._data && m && n)
         for(size_t i=0; i<m*n; i++)
-          this->data[i] = other.data[i];
+          this->_data[i] = other._data[i];
     }
     return *this;
   }

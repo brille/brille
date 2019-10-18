@@ -55,11 +55,11 @@ public:
     }
     // fallback in case voro_search fails for some reason?!?
     if (approx_scalar(new_volume, 0.)){
-      status_update("voro_search failed to produce a non-null first Brillouin zone.");
+      debug_update("voro_search failed to produce a non-null first Brillouin zone.");
       this->vertex_search(extent);
     } else {
-      verbose_status_update("New polyhedron volume ", this->polyhedron.get_volume());
-      verbose_status_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
+      verbose_update("New polyhedron volume ", this->polyhedron.get_volume());
+      verbose_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
     }
 
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
@@ -225,12 +225,13 @@ public:
            associated Q point is inside our irreducible reciprocal space.
   */
   template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p, const bool constructing=false) const;
+  template<typename T> std::vector<bool> isinside_wedge_std(const LQVec<T> &p, const bool constructing=false) const;
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
     @param[in] Q A reference to LQVec list of Q points
     @param[out] q The reduced reciprocal lattice vectors
     @param[out] tau The reciprocal lattice zone centres
   */
-  bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau);
+  bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const;
   /*! \brief Find q, τ, and R∈G such that Q = Rq + τ, where τ is a reciprocal
              lattice vector and R is a pointgroup symmetry operation of the
              conventional unit cell pointgroup, G.

@@ -10,7 +10,7 @@
 #include <algorithm>
 // #include <numeric>
 #include "linear_algebra.h"
-// #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides status_update()
+// #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides debug_update()
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 
@@ -45,36 +45,36 @@ typedef struct{
  * 0, its second at M, its third at 2M, ..., and its last *
  * at (N-1)*M                                             *
  **********************************************************/
- // Replace data by a std::vector< std::array<T,M> > ... then ArrayVector<T,M> and the standard libraries define most things
+ // Replace _data by a std::vector< std::array<T,M> > ... then ArrayVector<T,M> and the standard libraries define most things
 template<typename T> class ArrayVector{
 protected:
   size_t M; //!< The number of elements within each array
   size_t N; //!< The number of arrays in the ArrayVector
-  T* data;  //!< A pointer to the first element of the contiguous memory data block
+  T* _data;  //!< A pointer to the first element of the contiguous memory _data block
 public:
   /*! Standard ArrayVector constructor
       @param m the number of elements within each array
       @param n the number of arrays in the ArrayVector
-      @param d [optional] a pointer to a n*m block of data which is copied into the ArrayVector
+      @param d [optional] a pointer to a n*m block of _data which is copied into the ArrayVector
   */
   ArrayVector(size_t m=0, size_t n=0, const T* d=nullptr) : M(m), N(n){
-      if (m && n) data = safealloc<T>(m*n);
-      if (d && m && n) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+      if (m && n) _data = safealloc<T>(m*n);
+      if (d && m && n) for(size_t i=0; i<m*n; i++) _data[i] = d[i];
   };
   ArrayVector(size_t m, size_t n, const T init): M(m), N(n){
     if (m&&n){
-      data =safealloc<T>(m*n);
-      for (size_t i=0; i<m*n; ++i) data[i] = init;
+      _data =safealloc<T>(m*n);
+      for (size_t i=0; i<m*n; ++i) _data[i] = init;
     }
   }
   /*! ArrayVector contstructor taking shape and stride information for the case
       of a non-contiguous and/or non-row-ordered array at the provided pointer.
-      @param d a pointer to the n*m block of data, to be copied
+      @param d a pointer to the n*m block of _data, to be copied
       @param shape a vector of sizes along each dimension of the input array
       @param strides a vector of strides along each dimension of the input array
       @note The strides vector must indicate the number of bytes necessary to
             move from one point to the next along a given dimension of the input
-            data array. The ArrayVector is strictly two dimensional and
+            _data array. The ArrayVector is strictly two dimensional and
             therefore a convention must be adopted for converting the
             D-dimensional input array [D=s.size()].
             This constructor will attempt to combine the 2ⁿᵈ through Dᵗʰ
@@ -86,9 +86,9 @@ public:
       this->N = static_cast<size_t>(shape[0]);
       Integer nel=1; for (size_t i=1; i<shape.size(); ++i) nel *= shape[i];
       this->M = static_cast<size_t>(nel);
-      if (this->N && this->M) this->data = safealloc<T>(this->N*this->M);
+      if (this->N && this->M) this->_data = safealloc<T>(this->N*this->M);
       if (d && this->N && this->M){
-        // we want to copy-in the data to a row-ordered array (and flatten it)
+        // we want to copy-in the _data to a row-ordered array (and flatten it)
         // so calculate the span along each dimension of that row-ordered array
         std::vector<size_t> spans(shape.size());
         spans[shape.size()-1]=1u;
@@ -100,12 +100,12 @@ public:
         for (size_t i=0; i<strides.size(); ++i)
           roword &= strides[i]/sizeof(T) == spans[i];
         if (roword){
-          for (size_t i=0; i<this->N*this->M; ++i) this->data[i] = d[i];
+          for (size_t i=0; i<this->N*this->M; ++i) this->_data[i] = d[i];
         } else {
           size_t tmp, lin, idx;
           // loop over all linear indicies
           // calculate the subscripted indices using our new row-ordered span
-          // and then calculate the linear index into the input data using
+          // and then calculate the linear index into the input _data using
           // the provided strides -- remembering to convert from bytes to index
           for (size_t i=0; i<this->N*this->M; ++i){
             tmp = i;
@@ -115,52 +115,52 @@ public:
               tmp -= idx*spans[j];
               lin += idx*strides[j]/sizeof(T);
             }
-            this->data[i] = d[lin];
+            this->_data[i] = d[lin];
           }
         } // end if not row-ordered and contiguous
-      } // end if input data is not null and N*M>0
+      } // end if input _data is not null and N*M>0
     } // end if shape and strides contain equal number of elements
   }
   /*! Type converting ArrayVector constructor
       @param m the number of elements within each array
       @param n the number of arrays in the ArrayVector
-      @param d a pointer to a n*m block of data which is type converted and copied into the ArrayVector
+      @param d a pointer to a n*m block of _data which is type converted and copied into the ArrayVector
   */
   template<class R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
   ArrayVector(size_t m=0, size_t n=0, const R* d=nullptr): M(m), N(n){
-    if (m && n) data = safealloc<T>(m*n);
-    if (d && m && n) for (size_t i=0; i<m*n; i++) data[i] = T(d[i]);
+    if (m && n) _data = safealloc<T>(m*n);
+    if (d && m && n) for (size_t i=0; i<m*n; i++) _data[i] = T(d[i]);
   }
   /*! Copy constructor
       @param vec another ArrayVector which is copied into the new object
       @note this is used by objects which wrap the ArrayVector, e.g., the lattice vectors
   */
-  ArrayVector(const ArrayVector<T>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
+  ArrayVector(const ArrayVector<T>& vec): M(vec.numel()), N(vec.size()), _data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
     if (m && n){
       T *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
-      data = safealloc<T>(m*n);
-      if (d) for(size_t i=0; i<m*n; i++) data[i] = d[i];
+      _data = safealloc<T>(m*n);
+      if (d) for(size_t i=0; i<m*n; i++) _data[i] = d[i];
     }
   }
   //! Constructor from std::vector<std::array<T,N>>
   template<class R, size_t Nel> ArrayVector(const std::vector<std::array<R,Nel>>& va):
-  M(Nel), N(va.size()), data(nullptr){
+  M(Nel), N(va.size()), _data(nullptr){
     if (M && N){
-      data = safealloc<T>(M*N);
-      for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) data[i*M+j] = static_cast<T>(va[i][j]);
+      _data = safealloc<T>(M*N);
+      for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) _data[i*M+j] = static_cast<T>(va[i][j]);
     }
   }
   //! Type converting copy constructor
   template<class R, typename=typename std::enable_if<std::is_convertible<R,T>::value>::type>
-  ArrayVector(const ArrayVector<R>& vec): M(vec.numel()), N(vec.size()), data(nullptr){
+  ArrayVector(const ArrayVector<R>& vec): M(vec.numel()), N(vec.size()), _data(nullptr){
     size_t m = vec.numel();
     size_t n = vec.size();
     if (m && n){
       R *d = vec.datapointer(); // if m*n==0 datapointer will throw a ValueError
-      data = safealloc<T>(m*n);
-      if (d) for(size_t i=0; i<m*n; i++) data[i] = static_cast<T>(d[i]);
+      _data = safealloc<T>(m*n);
+      if (d) for(size_t i=0; i<m*n; i++) _data[i] = static_cast<T>(d[i]);
     }
   }
   // Assignment operator
@@ -168,13 +168,13 @@ public:
     if ( this != &other ){ // avoid self-assignment
       size_t m = other.numel();
       size_t n = other.size();
-      // reuse the data-block if we can. otherwise, refresh/resize it
+      // reuse the _data-block if we can. otherwise, refresh/resize it
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
-      // copy-over the data (if it exists)
-      if (other.data && m && n)
+      // copy-over the _data (if it exists)
+      if (other._data && m && n)
         for(size_t i=0; i<m*n; i++)
-          this->data[i] = other.data[i];
+          this->_data[i] = other._data[i];
     }
     return *this;
   }
@@ -187,13 +187,13 @@ public:
     return out;
   }
   // Destructor
-  ~ArrayVector() { if (M && N) delete[] data; };
+  ~ArrayVector() { if (M && N) delete[] _data; };
   //! Returns the number of arrays
   size_t size() const {return N;};
   //! Returns the number of elements in each array
   size_t numel() const {return M;};
   //! Returns the pointer to the ith array's jth element
-  T* datapointer(size_t i=0, size_t j=0) const;
+  T* datapointer(const size_t i=0, const size_t j=0) const;
   //! Returns the value of the ith array's jth element
   T getvalue(const size_t i=0, const size_t j=0) const;
   //! Return the ith single-array ArrayVector
@@ -306,15 +306,15 @@ public:
   template<class R> std::string to_string(const ArrayVector<R>& other, const size_t num=0) const;
   /*! Modify the number of arrays that the ArrayVector can hold
     @param newsize the desired number of arrays to hold
-    @note A new data block is created even if the size does not change. As much
-          of the old data block as will fit is copied into the new block.
+    @note A new _data block is created even if the size does not change. As much
+          of the old _data block as will fit is copied into the new block.
   */
   size_t resize(size_t newsize);
   /*! Modify the number of elements per array and the number of arrays
     @param newnumel The new number of elements per array
     @param newsize  The new number of arrays to hold
-    @note A new data block is created even if newnumel*newsize == numel*size.
-          No data is copied from the old to new block.
+    @note A new _data block is created even if newnumel*newsize == numel*size.
+          No _data is copied from the old to new block.
   */
   size_t refresh(size_t newnumel, size_t newsize=0u);
   //! Returns true if all elements evaluate to true.
@@ -404,7 +404,7 @@ public:
     @returns 0 if the removal is successful,
              1 if from is greater than the number of starting elements, or
              2 if from=1 and to>=[number of initial elements]-1
-    @note A non-zero return indicates that nothing was done to the data block,
+    @note A non-zero return indicates that nothing was done to the _data block,
           otherwise a copy has been preformed.
   */
   int removeelements(const size_t from, const size_t to){
@@ -420,11 +420,11 @@ public:
            for (size_t j=0; j<this->M; ++j){
             idx = 0;
             if ( j < from || j > last)
-              newdata[i*remaining_elements + idx++] = this->data[i*this->N + j];
+              newdata[i*remaining_elements + idx++] = this->_data[i*this->N + j];
          }
-         delete[] this->data; //before we loose its pointer
+         delete[] this->_data; //before we loose its pointer
          this->M = remaining_elements;
-         this->data = newdata;
+         this->_data = newdata;
          return 0;
        }
        return 2;
@@ -440,12 +440,12 @@ public:
     size_t i, j;
     T* newdata = new T[newM*this->N]();
     for (i=0; i<this->N; ++i){
-      for (j=0; j<this->M; ++j) newdata[i*newM+j] = this->data[i*this->M+j];
+      for (j=0; j<this->M; ++j) newdata[i*newM+j] = this->_data[i*this->M+j];
       for (j=this->M; j<newM; ++j)  newdata[i*newM+j] = valtoadd;
     }
-    delete[] this->data;
+    delete[] this->_data;
     this->M = newM;
-    this->data = newdata;
+    this->_data = newdata;
     return 0;
   }
 
