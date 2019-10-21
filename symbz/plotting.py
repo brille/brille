@@ -1,8 +1,10 @@
 """Provides functionality for drawing first Brillouin zones in 3D."""
+import collections
 import numpy as np
 import matplotlib.pyplot as pp
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+from matplotlib.colors import get_named_colors_mapping
 import symbz as sbz
 
 def _check_axes(axs=None):
@@ -194,3 +196,38 @@ def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
     if show:
         pp.show()
     return axs
+
+def plot_tetrahedron(verts, axs=None, show=True, **kwds):
+    if not (verts.ndim == 2 and verts.shape[0]==4 and verts.shape[1]==3):
+        raise RuntimeError('Input are not the vertices of a tetrahedron')
+    vpf = np.array([[0,1,2],[0,3,1],[3,2,1],[0,2,3]])
+    pc, _, _ = _make_poly_collection(verts, vpf, **kwds)
+    # Add the Poly3DCollection to existing or new axes:
+    axs = _check_axes(axs)
+    axs.add_collection3d(pc)
+    if show:
+        pp.show()
+    return axs
+
+def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
+    if not (allverts.ndim == 2 and allverts.shape[1] == 3):
+        raise RuntimeError('Vertices are not the correct shape')
+    if not (tetidx.ndim == 2 and tetidx.shape[1] == 4):
+        raise RuntimeError('Tetrahedra indexes are not the correct shape')
+
+    colours = kwds.pop('color', get_named_colors_mapping().keys())
+    if isinstance(colours, collections.Iterable):
+        colours = list(colours)
+    if isinstance(colours, str) or (isinstance(colours, (list, tuple)) and len(colours)==3):
+        colours = [colours]
+    if not isinstance(colours, np.ndarray):
+        colours = np.array(colours);
+    #if not 'str' in colours.dtype.name:
+    if colours.shape[0] < tetidx.shape[0]:
+        colours = np.tile(colours, 1+tetidx.shape[0]//colours.shape[0])
+    colours = colours[0:tetidx.shape[0]]
+
+    # we want to ensure all tetrahedra end up in the same set of axes
+    axs = _check_axes(axs)
+    for tet, colour in zip(tetidx, colours):
+        plot_tetrahedron(allverts[tet], color=colour, **kwds)

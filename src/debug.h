@@ -212,6 +212,7 @@ private:
 
 static DebugPrinter _debug_printer("");
 #define info_update(...) _debug_printer.println("", __VA_ARGS__)
+// #define info_update(...)
 
 #if defined(VERBOSE_DEBUG) || defined(DEBUG)
   #define debug_exec(...) __VA_ARGS__

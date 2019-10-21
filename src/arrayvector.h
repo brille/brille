@@ -478,6 +478,8 @@ public:
   T norm(const size_t i) const;
 
   void permute(const std::vector<size_t>& p);
+  bool swap(const size_t i, const size_t j);
+  bool swap(const size_t i, const size_t a, const size_t b);
 };
 
 

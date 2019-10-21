@@ -63,17 +63,12 @@ template<typename T> template<typename R> unsigned int Mesh3<T>::check_before_in
 template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_at(const ArrayVector<R>& x) const{
   this->check_before_interpolating(x);
   ArrayVector<T> out(this->data.numel(), x.size());
-
-  const ArrayVector<double>& positions = this->mesh.get_vertex_positions();
-  std::vector<size_t> vertices; // should become corners
-
-  ArrayVector<double> xi(3u, 1u);
+  std::vector<size_t> vertices;
   std::vector<double> weights;
   for (size_t i=0; i<x.size(); ++i){
-    xi = x.extract(i);
-    vertices = this->mesh.locate_for_interpolation(xi);
-    weights = tetrahedron_weights(xi, positions.extract(vertices));
-    info_update("Now call new_unsafe_interpolate_to");
+    debug_update("Locating ",x.to_string(i));
+    this->mesh.locate(x.extract(i), vertices, weights);
+    debug_update("Interpolate between vertices ", vertices," with weights ",weights);
     new_unsafe_interpolate_to(this->data, this->elements, this->branches, vertices, weights, out, i);
   }
   return out;
@@ -83,19 +78,15 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::parallel_inte
   this->check_before_interpolating(x);
   // shared between threads
   ArrayVector<T> out(this->data.numel(), x.size());
-  const ArrayVector<double>& positions = this->mesh.get_vertex_positions();
   // private to each thread
-  ArrayVector<double> xi(3u, 1u);
   std::vector<size_t> indexes;
   std::vector<double> weights;
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   slong xsize = unsigned_to_signed<slong, size_t>(x.size());
-#pragma omp parallel for shared(x, out, positions) private(xi, indexes, weights)
+#pragma omp parallel for shared(x, out) private(indexes, weights)
   for (slong si=0; si<xsize; ++si){
     size_t i = signed_to_unsigned<size_t, slong>(si);
-    xi = x.extract(i);
-    indexes = this->mesh.locate_for_interpolation(xi);
-    weights = tetrahedron_weights(xi, positions.extract(indexes));
+    this->mesh.locate(x.extract(i), indexes, weights);
     new_unsafe_interpolate_to(this->data, this->elements, this->branches, indexes, weights, out, i);
   }
   return out;
@@ -218,7 +209,8 @@ ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
   }
   // Start from the Γ point (which we previously need to ensure is in the mesh)
   ArrayVector<double> Gamma(1u, 3u, 0.);
-  std::vector<size_t> verts = this->mesh.locate_for_interpolation(Gamma);
+  std::vector<size_t> verts;
+  this->mesh.locate(Gamma, verts);
   if (verts.size() != 1)
     throw std::runtime_error("The Gamma points is not a mesh point?!");
   size_t idx = verts[0];

@@ -1143,7 +1143,6 @@ void new_unsafe_interpolate_to(const A<T>& source,
   T *source_i, *source_0 = source.data(iSrc[0]);
   size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
   T e_i_theta;
-  info_update("Interpolating between arrays ",iSrc," with weights ",weights);
   for (size_t x=0; x<iSrc.size(); ++x){
     source_i = source.data(iSrc[x]);
     // loop over the objects (modes)
@@ -1213,4 +1212,24 @@ template<class T> void ArrayVector<T>::permute(const std::vector<size_t>& p){
       msg += " ]";\
     }\
   )
+}
+
+template<class T> bool ArrayVector<T>::swap(const size_t i, const size_t j){
+  if (i<this->size() && j<this->size()){
+    ArrayVector<T> store(this->numel(), 1u);
+    store.set(0, this->extract(i));
+    this->set(i, this->extract(j));
+    this->set(j, store);
+    return true;
+  }
+  return false;
+}
+template<class T> bool ArrayVector<T>::swap(const size_t i, const size_t a, const size_t b){
+  if (i<this->size() && a<this->numel() && b<this->numel()){
+    T tmp = this->getvalue(i,a);
+    this->insert(this->getvalue(i,b), i,a);
+    this->insert(tmp, i,b);
+    return true;
+  }
+  return false;
 }

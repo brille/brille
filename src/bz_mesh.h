@@ -51,7 +51,6 @@ public:
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    info_update("q passed to interpolate_at:\n", ir_q.get_xyz().to_string());
     ArrayVector<T> ir_result = (nthreads < 2)
       ? this->Mesh3<T>::interpolate_at(ir_q.get_xyz())
       : this->Mesh3<T>::parallel_interpolate_at(ir_q.get_xyz(), nthreads);

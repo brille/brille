@@ -46,6 +46,7 @@ public:
     for (size_t i=0; i<nTetrahedra; ++i)
     for (size_t j=0; j<4u; ++j)
     vertices_per_tetrahedron.insert(static_cast<size_t>(tgio.tetrahedronlist[i*tgio.numberofcorners+j]),i,j);
+    for (size_t i=0; i<nTetrahedra; ++i)
     // Construct the tetrahedra per vertex vector of vectors
     tetrahedra_per_vertex.resize(nVertices);
     for (size_t i=0; i<nVertices; ++i)
@@ -59,6 +60,8 @@ public:
     for (size_t j=0; j<4u; ++j)
     if (tgio.neighborlist[i*4u+j] >= 0)
       neighbours_per_tetrahedron[i].push_back(static_cast<size_t>(tgio.neighborlist[i*4u+j]));
+    // ensure that all tetrahedra have positive (orient3d) volume
+    this->correct_tetrahedra_vertex_ordering();
   }
   // emulate the locate functionality of CGAL -- for which we need an enumeration
   enum Locate_Type{ VERTEX, EDGE, FACET, CELL, OUTSIDE_CONVEX_HULL };
@@ -114,162 +117,92 @@ public:
         of the total vertices; for 16×16×16 we would have 4096 bins and would
         only need to check 0.66% of all vertices.
   */
-  size_t locate(const ArrayVector<double>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
-    if (x.numel() != 3u || x.size() != 1u){
-      std::string msg = "locate requires a single 3-element vector.";
-      throw std::runtime_error(msg);
-    }
-    // find the closest vertex to our test-point:
-    ArrayVector<double> d = norm(vertex_positions - x); // or does this need to be (vertex_position-x).norm()?
-    verbose_update("distances to mesh vertices:\n",d.to_string());
-    double min = (std::numeric_limits<double>::max)();
-    size_t idx = nVertices + 1;
-    for (size_t i=0; i<d.size(); ++i) if (d.getvalue(i)<min){
-      min = d.getvalue(i);
-      idx = i;
-    }
-    if (idx >= nVertices) throw std::logic_error("Closest vertex not found?!");
-    /* It would be tempting to shortcut the following for loop for the case of
-       an exact match, but we need to decide *which* vertex of the returned
-       tetrahedron we matched and its this part which requires we calculate
-       (at least) three `orient3d` calls. Rather than trying to optimise for
-       that case now, treating all cases equivalently is probably easier to
-       maintain in the future.                                                */
-    // Check each of the tetrahedra which contain this closest vertex to see if
-    // the point is inside/on-the-surface/on-an-edge/a-vertex of the tetrahedron
-    // double o[5];
-    double tvol;
-    std::array<double,4> o;
-    std::array<bool,4> is_zero;
-    size_t zero_count;
-    bool point_is_outside;
-    for (auto tet_idx: tetrahedra_per_vertex[idx]){
-      // ~6× the volume of this tetrahedron -- here since the tetrahedron vertices are probably not ordered correctly
-      tvol = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)));
-      // replace the first vertex by x
-      o[0] = orient3d(x.data(),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
-      // replace the second vertex by x
-      o[1] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      x.data(),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
-      // replace the third vertex by x
-      o[2] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      x.data(),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,3u)))/tvol;
-      // replace the fourth vertex by x
-      o[3] = orient3d(vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,0u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,1u)),
-                      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet_idx,2u)),
-                      x.data())/tvol;
-      info_update("tetrahedra ",tet_idx," has volumes ",o);
-      // approx_scalar because we're still ok with some rounding? This seems potentially dangerous as implemented.
-      for (size_t i=0; i<4u; ++i) is_zero[i] = approx_scalar(o[i], 0.);
-      point_is_outside = false;
-      for (size_t i=0; i<4u; ++i) if (!is_zero[i] && o[i]<0.) point_is_outside=true;
-      if (point_is_outside) continue; // the point is outside of this tetrahedron
-      zero_count = std::count(is_zero.begin(), is_zero.end(), true);
-      info_update(zero_count," zero-volume subtetrahedra");
-      switch (zero_count){
-        case 0:
-          type = CELL;
-          break;
-        case 1:
-          type = FACET;
-          // return the index which is zero, the facet opposite contains the point
-          v0 = find_first(is_zero, true);
-          break;
-        case 2:
-          type = EDGE;
-          // The first non-zero volume represents a vertex at one endpoint
-          v0 = find_first(is_zero, false);
-          is_zero[v0] = true; // so we can use find_fist again
-          // The second non-zero volume represents the other endpoint
-          v1 = find_first(is_zero, false);
-          break;
-        case 3:
-          type = VERTEX;
-          // replacing a vertex by itself is the only way to have non-zero volume
-          v0 = find_first(is_zero, false);
-          break;
-        default:
-          throw std::logic_error("Intentionally unreachable switch statement.");
-      }
-      return tet_idx;
-    }
-    type = OUTSIDE_CONVEX_HULL;
-    return 0;
-  }
-  // Make a new locator which slots into the interpolation routine more easily
-  std::vector<size_t> locate_for_interpolation(const ArrayVector<double>& x) const {
-    if (x.numel()!=3u && x.size()!=1u){
-      std::string msg = "locate requires a single 3-element vector.";
-      throw std::runtime_error(msg);
-    }
-    size_t v0=0, v1=0;
-    Locate_Type type;
-    size_t tet_idx = this->locate(x, type, v0, v1);
-    info_update("locate found point near tetrahedron ",tet_idx," type ",type," v0 ",v0," v1 ",v1);
-    std::vector<size_t> vert_idx;
-    switch (type){
-      case VERTEX:
-        vert_idx.push_back(vertices_per_tetrahedron.getvalue(tet_idx,v0));
+  size_t old_locate(const ArrayVector<double>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
+    std::vector<size_t> v;
+    std::vector<double> w;
+    size_t idx = this->locate(x, v, w);
+    switch (v.size()){
+      case 0:
+        type = OUTSIDE_CONVEX_HULL;
+        return 0;
+      case 1:
+        type = VERTEX;
+        v0 = v[0];
         break;
-      case EDGE:
-        vert_idx.push_back(vertices_per_tetrahedron.getvalue(tet_idx,v0));
-        vert_idx.push_back(vertices_per_tetrahedron.getvalue(tet_idx,v1));
+      case 2:
+        type = EDGE;
+        v0 = v[0];
+        v1 = v[1];
         break;
-      case FACET:
-        for (size_t i=0; i<4u; ++i) if (i!=v0)
-        vert_idx.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
+      case 3:
+        type = FACET;
+        for (size_t i=0; i<4u; ++i){
+          v0 = vertices_per_tetrahedron.getvalue(idx, i);
+          if (std::find(v.begin(), v.end(), v0) == v.end()) break;
+        }
         break;
-      case CELL:
-        for (size_t i=0; i<4u; ++i)
-        vert_idx.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
-        break;
-      case OUTSIDE_CONVEX_HULL:
-        throw std::logic_error("Interpolation attempted for a point outside the convex hull");
+      case 4:
+        type = CELL;
         break;
       default:
         throw std::logic_error("Intentionally unreachable switch statement..");
     }
-    info_update("vertices ",vert_idx," needed for interpolation at x = ", x.to_string(0));
-    return vert_idx;
+    return idx;
   }
-  /* If the following function is more useful than the preceeding, it could be
-     advantageous to replicate the above code in this function's for loop.
-     Either way, this should probably be parallelised with OpenMP.
-  */
-  std::vector<std::vector<size_t>> locate_all_for_interpolation(const ArrayVector<double>& x) const {
-    if (x.numel()!=3u){
-      std::string msg = "locate_all requires 3-element vector(s)";
-      throw std::runtime_error(msg);
+  // Make a new locator which slots into the interpolation routine more easily
+  size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v, std::vector<double>& w) const {
+    if (x.numel() != 3u || x.size() != 1u)
+      throw std::runtime_error("locate requires a single 3-element vector.");
+    std::array<double,4> weights;
+    v.clear();
+    w.clear(); // make sure w is back to zero-elements
+
+    size_t tet_idx;
+    for (tet_idx=0; tet_idx < nTetrahedra; ++tet_idx) if (this->might_contain(tet_idx, x)){
+      this->weights(tet_idx, x, weights);
+      // if all weights are greater or equal to ~zero, we can use this tetrahedron
+      if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
+        for (size_t i=0; i<4u; ++i) if (!approx_scalar(weights[i], 0.)){
+          v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
+          w.push_back(weights[i]);
+        }
+        break;
+      }
     }
-    std::vector<std::vector<size_t>> all_idx(x.size());
-    for (size_t i=0; i<x.size(); ++i)
-      all_idx[i] = this->locate_for_interpolation(x.extract(i));
-    return all_idx;
+    return tet_idx;
   }
+  // and a special version which doesn't return the weights
+  size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v) const{
+    std::vector<double> w;
+    return this->locate(x, v, w);
+  }
+
+  // /* If the following function is more useful than the preceeding, it could be
+  //    advantageous to replicate the above code in this function's for loop.
+  //    Either way, this should probably be parallelised with OpenMP.
+  // */
+  // std::vector<std::vector<size_t>> locate_all_for_interpolation(const ArrayVector<double>& x) const {
+  //   if (x.numel()!=3u){
+  //     std::string msg = "locate_all requires 3-element vector(s)";
+  //     throw std::runtime_error(msg);
+  //   }
+  //   std::vector<std::vector<size_t>> all_idx(x.size());
+  //   for (size_t i=0; i<x.size(); ++i)
+  //     all_idx[i] = this->locate_for_interpolation(x.extract(i));
+  //   return all_idx;
+  // }
 
   /* Given a vertex in the mesh, return a vector of all of the other vertices to
      which it is connected.
   */
   std::vector<size_t> neighbours(const ArrayVector<double>& x) const {
-    size_t v0, v1;
-    Locate_Type type;
-    size_t vert = this->locate(x, type, v0, v1);
-    if (VERTEX != type){
+    std::vector<size_t> v;
+    this->locate(x, v);
+    if (v.size() != 1u){
       std::string msg = "The provided point is not a mesh vertex.";
       throw std::runtime_error(msg);
     }
-    return this->neighbours(vert);
+    return this->neighbours(v[0]);
   }
   std::vector<size_t> neighbours(const size_t vert) const {
     if (vert >= this->nVertices){
@@ -285,6 +218,62 @@ public:
       if ( v!= vert && std::find(n.begin(), n.end(), v) == n.end() ) n.push_back(v);
     }
     return n;
+  }
+  double volume(const size_t tet) const {
+    double v;
+    v = orient3d(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)) )/6.0;
+    return v;
+  }
+  bool might_contain(const size_t tet, const ArrayVector<double>& x) const {
+    if (x.size() < 1u || x.numel()<3u) return false;
+    double is;
+    // any tetrahedron can be circumscribed by a sphere. The tetgen/predicates
+    // function insphere can be used to check whether a point is inside a
+    // tetrahedron's circumsphere: it returns a positive if the point is inside,
+    // a negative if it is outside, and zero if it is on the surface -- assuming
+    // that the volume returned by orient3d is positive for the tetrahedron.
+    is = insphere(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
+      x.data() );
+    // since we only care if this tetrahedron *might* contain the point x, here
+    // we just want to know if the insphere result is greater or ~equal to zero.
+    return (is > 0. || approx_scalar(is, 0.));
+  }
+protected:
+  void weights(const size_t tet, const ArrayVector<double>& x, std::array<double,4>& w) const {
+    double vol6 = 6.0*this->volume(tet);
+    w[0] = orient3d(
+      x.data(),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)) )/vol6;
+    w[1] = orient3d(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      x.data(),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)) )/vol6;
+    w[2] = orient3d(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      x.data(),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)) )/vol6;
+    w[3] = orient3d(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      x.data()                                                          )/vol6;
+  }
+  void correct_tetrahedra_vertex_ordering(void){
+    for (size_t i=0; i<nTetrahedra; ++i)
+    if (std::signbit(this->volume(i))) // the volume of tetrahedra i is negative
+    vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
   }
 };
 
