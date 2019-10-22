@@ -10,12 +10,39 @@
 #include "tetgen.h"
 // debugging output
 #include "debug.h"
+#include "balltree.h"
 
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);
   if (at == x.end()) throw std::logic_error("Value not found?!");
   return std::distance(x.begin(), at);
 }
+
+// // In case we need to store the input polyhedron and mesh-refining parameters:
+// class TetgenInput{
+//   ArrayVector<double> _vertices;
+//   std::vector<std::vector<int>> _vertices_per_facet;
+//   double _max_cell_size;
+//   double _min_dihedral_angle;
+//   double _max_dihedral_angle;
+//   double _radius_edge_ratio;
+//   int _max_mesh_points;
+// public:
+//   TetgenInput(
+//     const ArrayVector<double>& v, const std::vector<std::vector<int>>& f,
+//     const double mcs=-1.0, const double nda=-1.0, const double xda=-1.0,
+//     const double rer=-1.0, const int mmp=-1):
+//       _vertices(v), _vertices_per_facet(f), _max_cell_size(mcs),
+//       _min_dihedral_angle(nda), _max_dihedral_angle(xda),
+//       _radius_edge_ratio(rer), _max_mesh_points(mmp) {}
+//   const ArrayVector<double>& vertices() const { return _vertices; }
+//   const std::vector<std::vector<int>>& vertices_per_facet() const {return _vertices_per_facet; }
+//   double max_cell_size() const { return _max_cell_size; }
+//   double max_dihedral_angle() const { return _max_dihedral_angle; }
+//   double min_dihedral_angle() const { return _min_dihedral_angle; }
+//   double radius_edge_ratio() const { return _radius_edge_ratio; }
+//   int max_mesh_points() const { return _max_mesh_points; }
+// };
 
 // template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type>
 class TetrahedralTriangulation{
@@ -26,6 +53,8 @@ class TetrahedralTriangulation{
   ArrayVector<size_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
   std::vector<std::vector<size_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<size_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
+  tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh
+  BallNode tetrahedrTree;
 public:
   size_t number_of_vertices(void) const {return nVertices;}
   size_t number_of_tetrahedra(void) const {return nTetrahedra;}
@@ -33,7 +62,7 @@ public:
   const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
   TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
+  TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}), tgsource(tgio){
     nVertices = static_cast<size_t>(tgio.numberofpoints);
     nTetrahedra = static_cast<size_t>(tgio.numberoftetrahedra);
     // copy-over all vertex positions:
@@ -62,6 +91,8 @@ public:
       neighbours_per_tetrahedron[i].push_back(static_cast<size_t>(tgio.neighborlist[i*4u+j]));
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
+    // construct the tree for faster locating:
+    this->make_balltree();
   }
   // emulate the locate functionality of CGAL -- for which we need an enumeration
   enum Locate_Type{ VERTEX, EDGE, FACET, CELL, OUTSIDE_CONVEX_HULL };
@@ -150,15 +181,37 @@ public:
     return idx;
   }
   // Make a new locator which slots into the interpolation routine more easily
+  // size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v, std::vector<double>& w) const {
+  //   if (x.numel() != 3u || x.size() != 1u)
+  //     throw std::runtime_error("locate requires a single 3-element vector.");
+  //   std::array<double,4> weights;
+  //   v.clear();
+  //   w.clear(); // make sure w is back to zero-elements
+  //
+  //   size_t tet_idx;
+  //   for (tet_idx=0; tet_idx < nTetrahedra; ++tet_idx) if (this->might_contain(tet_idx, x)){
+  //     this->weights(tet_idx, x, weights);
+  //     // if all weights are greater or equal to ~zero, we can use this tetrahedron
+  //     if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
+  //       for (size_t i=0; i<4u; ++i) if (!approx_scalar(weights[i], 0.)){
+  //         v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
+  //         w.push_back(weights[i]);
+  //       }
+  //       break;
+  //     }
+  //   }
+  //   return tet_idx;
+  // }
   size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v, std::vector<double>& w) const {
     if (x.numel() != 3u || x.size() != 1u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     std::array<double,4> weights;
     v.clear();
     w.clear(); // make sure w is back to zero-elements
-
-    size_t tet_idx;
-    for (tet_idx=0; tet_idx < nTetrahedra; ++tet_idx) if (this->might_contain(tet_idx, x)){
+    info_update("Find which tetrahedra might contain the point ",x.to_string(0));
+    std::vector<size_t> tets_to_check = tetrahedrTree.all_containing_leaf_indexes(x);
+    info_update("The tree would have us search ",tets_to_check);
+    for (size_t tet_idx: tets_to_check){
       this->weights(tet_idx, x, weights);
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
       if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
@@ -166,10 +219,11 @@ public:
           v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
           w.push_back(weights[i]);
         }
-        break;
+        return tet_idx;
       }
     }
-    return tet_idx;
+    // containing tetrahedra not found :(
+    return nTetrahedra;
   }
   // and a special version which doesn't return the weights
   size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v) const{
@@ -274,6 +328,30 @@ protected:
     for (size_t i=0; i<nTetrahedra; ++i)
     if (std::signbit(this->volume(i))) // the volume of tetrahedra i is negative
     vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
+  }
+  void make_balltree(void){
+    // Construct a vector of BallLeaf objects for each tetrahedra:
+    std::vector<BallLeaf> leaves;
+    std::array<double,3> centre;
+    double radius;
+    info_update("Pull together the circumsphere information for all tetrahedra");
+    tetgenmesh tgm; // to get access to circumsphere
+    for (size_t i=0; i<nTetrahedra; ++i){
+      // use tetgen's circumsphere to find the centre and radius for each tetrahedra
+      tgm.circumsphere(
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 0u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 1u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 2u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 3u)),
+        centre.data(), &radius);
+      leaves.push_back(BallLeaf(centre, radius, i));
+    }
+    // construct the full tree structure at once using an algorithm similar to
+    // Omohundro's Kd algorithm in 'Five Balltree Construction Algorithms'
+    size_t maximum_branchings = 5; // only 2⁵ = 32 nodes containing leaves for testing
+    info_update("Now construct the tree for tetrahedra location");
+    tetrahedrTree = construct_balltree(leaves, maximum_branchings);
+    info_update("Tree for locating tetrahedra now exists");
   }
 };
 
