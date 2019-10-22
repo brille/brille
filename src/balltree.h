@@ -10,6 +10,7 @@ class BallLeaf{
   double _radius;
   size_t _index;
 public:
+  ~BallLeaf() = default;
   BallLeaf(): _radius(0.), _index(0) {};
   BallLeaf(const std::array<double,3>& p, const double r, const size_t i): _centre(p), _radius(r), _index(i) {};
   BallLeaf(const BallLeaf& other){
@@ -44,6 +45,7 @@ class BallNode{
   std::array<double,3> _centre;
   double _radius;
 public:
+  ~BallNode() = default;
   BallNode(): _radius(0) {};
   BallNode(const std::array<double,3>& p, const double r): _centre(p), _radius(r){};
   BallNode(const BallNode& other){
@@ -122,6 +124,27 @@ public:
     }
     for (auto leaf: _leaves) if (leaf.fuzzy_contains(x)) aci.push_back(leaf.index());
     return aci;
+  }
+  std::string to_string() const {
+    std::vector<std::string> levels;
+    levels.push_back("level 0:");
+    this->fill_strings(0, levels);
+    std::string all_levels = levels[0];
+    for (size_t i=1; i<levels.size(); ++i) all_levels += "\n"+levels[i];
+    return all_levels;
+  }
+  void fill_strings(const size_t i, std::vector<std::string>& levels) const {
+    if (_leaves.size()){
+      for (auto leaf: _leaves) levels[i] += " " + std::to_string(leaf.index());
+      levels[i] += " | ";
+    }
+    if (_children.size()){
+      if (levels.size() <= i+1){
+        levels.resize(i+2);
+        levels[i+1] = "level " + std::to_string(i+1) +":";
+      }
+      for (auto child: _children) child.fill_strings(i+1, levels);
+    }
   }
 };
 

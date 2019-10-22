@@ -7,6 +7,8 @@
 #include <omp.h>
 #include "interpolation.h"
 #include "unsignedtosigned.h"
+#include "permutation.h"
+#include <queue>
 
 #include "triangulation.h" // defined Delaunay
 // typedef CGAL::Triangulation_vertex_base_with_info_3<unsigned, K>     Vertex_Base;

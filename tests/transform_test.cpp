@@ -19,8 +19,8 @@ TEST_CASE("primitive transforms","[transform]"){
   SECTION("Rhombohedral centring"){ c = Bravais::R; }
   PrimitiveTransform PT(c);
   REQUIRE( !PT.does_nothing() );
-  std::array<double,9> P = PT.get_to_primitive();
-  std::array<int,9> invP = PT.get_from_primitive();
+  std::array<double,9> P = PT.get_P();
+  std::array<int,9> invP = PT.get_invP();
   double I[9]={1.,0.,0., 0.,1.,0., 0.,0.,1.};
   double res[9];
   multiply_matrix_matrix<double,int,double,3>(res,invP.data(),P.data());

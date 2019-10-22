@@ -53,7 +53,7 @@ class TetrahedralTriangulation{
   ArrayVector<size_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
   std::vector<std::vector<size_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<size_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
-  tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh
+  //tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh
   BallNode tetrahedrTree;
 public:
   size_t number_of_vertices(void) const {return nVertices;}
@@ -62,7 +62,7 @@ public:
   const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
   TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}), tgsource(tgio){
+  TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){ //, tgsource(tgio){
     nVertices = static_cast<size_t>(tgio.numberofpoints);
     nTetrahedra = static_cast<size_t>(tgio.numberoftetrahedra);
     // copy-over all vertex positions:
@@ -208,9 +208,9 @@ public:
     std::array<double,4> weights;
     v.clear();
     w.clear(); // make sure w is back to zero-elements
-    info_update("Find which tetrahedra might contain the point ",x.to_string(0));
+    debug_update("Find which tetrahedra might contain the point ",x.to_string(0));
     std::vector<size_t> tets_to_check = tetrahedrTree.all_containing_leaf_indexes(x);
-    info_update("The tree would have us search ",tets_to_check);
+    debug_update("The tree would have us search ",tets_to_check);
     for (size_t tet_idx: tets_to_check){
       this->weights(tet_idx, x, weights);
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
@@ -334,7 +334,7 @@ protected:
     std::vector<BallLeaf> leaves;
     std::array<double,3> centre;
     double radius;
-    info_update("Pull together the circumsphere information for all tetrahedra");
+    debug_update("Pull together the circumsphere information for all tetrahedra");
     tetgenmesh tgm; // to get access to circumsphere
     for (size_t i=0; i<nTetrahedra; ++i){
       // use tetgen's circumsphere to find the centre and radius for each tetrahedra
@@ -349,9 +349,10 @@ protected:
     // construct the full tree structure at once using an algorithm similar to
     // Omohundro's Kd algorithm in 'Five Balltree Construction Algorithms'
     size_t maximum_branchings = 5; // only 2⁵ = 32 nodes containing leaves for testing
-    info_update("Now construct the tree for tetrahedra location");
+    debug_update("Now construct the tree for tetrahedra location");
     tetrahedrTree = construct_balltree(leaves, maximum_branchings);
-    info_update("Tree for locating tetrahedra now exists");
+    debug_update("Tree for locating tetrahedra now exists");
+    // info_update("Tetrahedra tree:\n",tetrahedrTree.to_string());
   }
 };
 

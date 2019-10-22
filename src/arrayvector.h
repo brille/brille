@@ -172,7 +172,7 @@ public:
       if ( m !=this->numel() ) this->refresh(m,n);
       if ( n !=this->size()  ) this->resize(n);
       // copy-over the _data (if it exists)
-      if (other._data && m && n)
+      if (m && n)
         for(size_t i=0; i<m*n; i++)
           this->_data[i] = other._data[i];
     }

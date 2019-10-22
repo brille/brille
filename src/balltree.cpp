@@ -2,11 +2,11 @@
 #include "debug.h"
 
 BallNode construct_balltree(const std::vector<BallLeaf>& leaves, const size_t max_depth){
-  info_update("Construct a tree from ",leaves.size()," BallLeaf objects");
+  debug_update("Construct a tree from ",leaves.size()," BallLeaf objects");
   std::array<double,3> axis;
   BallNode root = construct_ballnode(leaves, axis);
   bifurcate_balltree(root, leaves, max_depth, root.centre(), axis);
-  info_update("Tree construction finished");
+  debug_update("Tree construction finished");
   return root;
 }
 
@@ -33,7 +33,7 @@ BallNode construct_ballnode(const std::vector<BallLeaf>& leaves, std::array<doub
     }
     if (d+leaf.radius() > radius) radius = d+leaf.radius();
   }
-  info_update("BallNode encompasing ",leaves.size()," BallLeaf objects will be centred at ",c," with radius ",radius);
+  debug_update("BallNode encompasing ",leaves.size()," BallLeaf objects will be centred at ",c," with radius ",radius);
   BallNode node(c, radius);
   return node;
 }
@@ -41,11 +41,11 @@ BallNode construct_ballnode(const std::vector<BallLeaf>& leaves, std::array<doub
 bool bifurcate_balltree(BallNode& root, const std::vector<BallLeaf>& leaves, const size_t max_depth, const std::array<double,3>& at, const std::array<double,3>& along){
   if (leaves.size() < 1) return true;
   if (max_depth == 0 || leaves.size() == 1){ // we've hit bottom or can't branch further
-    info_update("Giving up with ",max_depth," bifurcations to go and ",leaves.size()," BallLeaf objects");
+    debug_update("Giving up with ",max_depth," bifurcations to go and ",leaves.size()," BallLeaf objects");
     root.leaves(leaves);
-    info_update("This terminal node now contains ",root.count_leaves()," leaves");
+    debug_update("This terminal node now contains ",root.count_leaves()," leaves");
   } else {
-    info_update("Bifurcating at ",at," along ",along);
+    debug_update("Bifurcating at ",at," along ",along);
     std::vector<BallLeaf> upper, lower;
     std::array<double,3> x;
     double dot;
@@ -53,33 +53,32 @@ bool bifurcate_balltree(BallNode& root, const std::vector<BallLeaf>& leaves, con
       dot = 0.;
       x = leaf.centre();
       for (size_t i=0; i<3u; ++i) dot += (x[i]-at[i])*along[i];
-      if (dot > 0. )
+      if (dot > leaf.radius() ) // was > 0.
         upper.push_back(leaf);
       else
         lower.push_back(leaf);
     }
-    info_update("BallLeafs split into ",upper.size()," and ",lower.size()," objects in the upper and lower branches");
+    debug_update("BallLeafs split into ",upper.size()," and ",lower.size()," objects in the upper and lower branches");
     std::array<double,3> axis;
-    BallNode node;
     // create new nodes if we might need to bifurcate further
     if (upper.size()>1){
-      info_update("Constructing upper branch");
-      node = construct_ballnode(upper, axis);
-      bifurcate_balltree(node, upper, max_depth-1, node.centre(), axis);
-      info_update("Adding an upper child at height ",max_depth);
-      root.addchild(node);
+      debug_update("Constructing upper branch");
+      BallNode upper_branch = construct_ballnode(upper, axis);
+      bifurcate_balltree(upper_branch, upper, max_depth-1, upper_branch.centre(), axis);
+      debug_update("Adding an upper child at height ",max_depth);
+      root.addchild(upper_branch);
     }
     if (lower.size()>1){
-      info_update("Constructing lower branch");
-      node = construct_ballnode(lower, axis);
-      bifurcate_balltree(node, lower, max_depth-1, node.centre(), axis);
-      info_update("Adding a lower child at height ",max_depth);
-      root.addchild(node);
+      debug_update("Constructing lower branch");
+      BallNode lower_branch = construct_ballnode(lower, axis);
+      bifurcate_balltree(lower_branch, lower, max_depth-1, lower_branch.centre(), axis);
+      debug_update("Adding a lower child at height ",max_depth);
+      root.addchild(lower_branch);
     }
     // single element vectors can not be bifurcated further and do not need their own nodes
     if (upper.size()==1) root.addleaf(upper[0]);
     if (lower.size()==1) root.addleaf(lower[0]);
   }
-  info_update("Finishing bifurcation at height ",max_depth);
+  debug_update("Finishing bifurcation at height ",max_depth);
   return false;
 }

@@ -82,10 +82,10 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::parallel_inte
   std::vector<size_t> indexes;
   std::vector<double> weights;
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-  slong xsize = unsigned_to_signed<slong, size_t>(x.size());
+  long xsize = unsigned_to_signed<long, size_t>(x.size());
 #pragma omp parallel for shared(x, out) private(indexes, weights)
-  for (slong si=0; si<xsize; ++si){
-    size_t i = signed_to_unsigned<size_t, slong>(si);
+  for (long si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, long>(si);
     this->mesh.locate(x.extract(i), indexes, weights);
     new_unsafe_interpolate_to(this->data, this->elements, this->branches, indexes, weights, out, i);
   }
