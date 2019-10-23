@@ -83,9 +83,9 @@ template<typename T> static enable_if_t<!is_container<T>::value, size_t> max_ele
   return my_to_string(v).size();
 }
 template<typename T> static enable_if_t<is_container<T>::value, size_t> max_element_length(const T& v){
-  size_t l=0, t=0;
+  size_t l=0;
   for (auto x: v){
-    t = max_element_length(x);
+    size_t t = max_element_length(x);
     if (t > l) l = t;
   }
   return l;

@@ -20,13 +20,12 @@ MapGrid3<T>::classify_neighbours(const std::vector<bool>& sorted, const size_t c
   sorted_neighbours.reserve(neighbours.size());
   sorted_next_neighbours.reserve(neighbours.size());
   unsorted_neighbours.reserve(neighbours.size());
-  int ret;
   int dir[3];
   bool possible;
   for (size_t i=0; i<neighbours.size(); ++i){
     // sorted only contains valid-mapped point information
     // so convert from linear index to mapping index
-    ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
+    int ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
     if (ret !=0){
       std::string msg = "Could not find map index of neighbour "
                       + std::to_string(neighbours.getvalue(i)) + " as ";
@@ -81,13 +80,12 @@ MapGrid3<T>::classify_sorted_neighbours(const std::vector<bool>& sorted, const s
   std::vector<size_t> sorted_next_neighbours;
   sorted_neighbours.reserve(neighbours.size());
   sorted_next_neighbours.reserve(neighbours.size());
-  int ret;
   int dir[3];
   bool possible;
   for (size_t i=0; i<neighbours.size(); ++i){
     // sorted only contains valid-mapped point information
     // so convert from linear index to mapping index
-    ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
+    int ret = this->lin2map(neighbours.getvalue(i), n_map_idx);
     if (ret !=0){
       std::string msg = "Could not find map index of neighbour "
                       + std::to_string(neighbours.getvalue(i)) + " as ";
@@ -251,10 +249,9 @@ ArrayVector<T> sorted(this->data.numel(),2u); // sorted neighbours
 // Copy the data at each point, ensuring that the global permutation for
 // nidx and nnidx are respected
 size_t nn_i=0;
-bool nn_i_found;
 // std::cout << "Estimate the values of modes at the centre" << std::endl;
 for (size_t i=0; i<nobj; ++i){
-  nn_i_found = false;
+  bool nn_i_found = false;
   for (size_t j=0; j<nobj; ++j)
     if (perm.getvalue(nnidx,j)==perm.getvalue(nidx,i)){
       nn_i = j;
@@ -380,7 +377,6 @@ size_t MapGrid3<T>::sort_recursion(const size_t centre,
 std::vector<size_t> unsorted_neighbours = this->find_unsorted_neighbours(sorted, centre);
 std::vector<size_t> sorted_neighbours;
 size_t nlin, num_sorted=0;
-bool success=false;
 for (size_t nmap: unsorted_neighbours){
   // When this gets parallelised two threads might have overlapping neighbours
   // Don't bother doing anything if another thread got to this neighbour after
@@ -393,9 +389,9 @@ for (size_t nmap: unsorted_neighbours){
     throw std::runtime_error("No sorted neighbours.");
   if (sorted_neighbours.size()>2)
     throw std::runtime_error("Too many sorted neighbours.");
-  success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
-                                  sorted_neighbours[0],
-                                  ecf, vcf);
+  bool success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
+                                       sorted_neighbours[0],
+                                       ecf, vcf);
   // if (sorted_neighbours.size()==1)
   //   success = this->sort_difference(wS, wE, wV, wM, span, nobj, perm, nmap,
   //                                   sorted_neighbours[0],
@@ -545,12 +541,10 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
   std::queue<size_t> to_visit;
   to_visit.push(centre);
   size_t num_sorted = 0;
-  size_t current, num_derivative = 0;
-  bool success;
   size_t count=0u, refresh=1u;
   bool more_to_do = true;
   while (more_to_do){
-    current = to_visit.front();
+    size_t current = to_visit.front();
     to_visit.pop();
     queued[current] = false;
     if (!locked[current]){
@@ -559,7 +553,8 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
       if (!sorted[current]){
         std::tie(n_idx, nn_idx) = this->classify_sorted_neighbours(sorted, current);
         if (n_idx.size()){
-          num_derivative = 0;
+          bool success;
+          size_t num_derivative = 0;
           if (n_idx.size()==nn_idx.size())
             for (size_t i=0; i<n_idx.size(); ++i)
               if(nn_idx[i]!=n_idx[i]) ++num_derivative;

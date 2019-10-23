@@ -74,7 +74,7 @@ protected:
   void set_len_scalars(const double, const double, const double);
   void set_ang_scalars(const double, const double, const double);
   void check_hall_number(const int h);
-  void check_IT_name(const std::string itname);
+  void check_IT_name(const std::string& itname);
 public:
   //! Construct the Lattice from a matrix of the basis vectors
   Lattice(const double *, const int h=1);
@@ -117,11 +117,11 @@ public:
   //! Construct the Lattice from the three scalar lengths and three scalar angles
   Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const std::string);
+  Lattice(const double *, const std::string&);
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const double *, const std::string, const AngleUnit au=AngleUnit::not_provided);
+  Lattice(const double *, const double *, const std::string&, const AngleUnit au=AngleUnit::not_provided);
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * latmat, std::vector<I>& strides, const std::string itname){
+  Lattice(const double * latmat, std::vector<I>& strides, const std::string& itname){
     double l[3]={0,0,0}, a[3]={0,0,0};
     latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
     this->set_len_pointer(l,1);
@@ -131,14 +131,14 @@ public:
   }
   //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string itname, const AngleUnit au=AngleUnit::not_provided){
+  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string& itname, const AngleUnit au=AngleUnit::not_provided){
     this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
     this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
     this->volume=this->calculatevolume();
     this->check_IT_name(itname);
   }
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double, const double, const double, const double, const double, const double, const std::string);
+  Lattice(const double, const double, const double, const double, const double, const double, const std::string&);
   virtual ~Lattice() = default;
   //! copy constructor
   Lattice(const Lattice& other){
@@ -149,7 +149,7 @@ public:
     this->volume = other.volume;
     this->hall = other.hall;
   }
-  //! explicit assignment operator
+  //! assignment operator
   // required for gcc 9+
   Lattice& operator=(const Lattice& other){
     for (int i=0; i<3; ++i){
@@ -191,7 +191,7 @@ public:
   // some functions don't logically make sense for this base class, but
   // do for the derived classes. define them here for funsies
   //! Determine if the passed Lattice represents the same space-spanning lattice
-  bool issame(const Lattice) const; // this should really have a tolerance
+  bool issame(const Lattice&) const; // this should really have a tolerance
   /*! Determine if the passed Lattice represents an equivalent space-spanning
   lattice within the specified tolerance. Simultaneous permutations of lengths
   and angles are considered as equivalent --
@@ -199,7 +199,7 @@ public:
   as are antipermutations,
   e.g., (a,b,c)(α,β,γ) ≡ (a,c,b)(α,γ,β) ≡ (c,b,a)(γ,β,α) ≡ (b,a,c)(β,α,γ).
   */
-  bool isapprox(const Lattice) const;
+  bool isapprox(const Lattice&) const;
   /*! Determine if the passed Lattice is a permutation of the space-spanning
   lattice within the specified tolerance. The equivalence is encoded in a
   signed integer:
@@ -214,7 +214,7 @@ public:
   | -3 | (b,a,c)(β,α,γ) |
   | 0 | no equivalent permutation |
   */
-  int ispermutation(const Lattice) const;
+  int ispermutation(const Lattice&) const;
   //! Print the basis vector lengths and angles to the console
   virtual void print();
   //! Return a string representation of the basis vector lengths and angles
@@ -247,7 +247,7 @@ defines new versions of some methods.
 class Direct: public Lattice{
 public:
   template<class ...Types> Direct(Types ... args): Lattice(args...){}
-  Direct(Lattice lat): Lattice(lat){}
+  Direct(const Lattice& lat): Lattice(lat){}
   //! Return the inverse Reciprocal lattice
   Reciprocal star() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
@@ -263,9 +263,9 @@ public:
   void get_lattice_matrix(double*, const size_t, const size_t) const;
   template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
-  bool isstar(const Direct) const;
+  bool isstar(const Direct&) const;
   //! Determine if a Reciprocal lattice is the inverse of this lattice
-  bool isstar(const Reciprocal) const;
+  bool isstar(const Reciprocal&) const;
   void print() override;
   std::string string_repr() override;
   //! For non-Primitive Direct lattices, return the equivalent Primitive lattice
@@ -280,7 +280,7 @@ class and defines new versions of some methods.
 class Reciprocal: public Lattice{
 public:
   template<class ...Types> Reciprocal(Types ... args): Lattice(args...){}
-  Reciprocal(Lattice lat): Lattice(lat){}
+  Reciprocal(const Lattice& lat): Lattice(lat){}
   //! Return the inverse Direct lattice
   Direct star() const;
   //! Return the Busing-Levey B matrix http://dx.doi.org/10.1107/S0365110X67000970
@@ -300,9 +300,9 @@ public:
   void get_lattice_matrix(double*, const size_t, const size_t) const;
   template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
-  bool isstar(const Reciprocal) const;
+  bool isstar(const Reciprocal&) const;
   //! Determine if a Direct lattice is the inverse of this lattice
-  bool isstar(const Direct) const;
+  bool isstar(const Direct&) const;
   void print() override;
   std::string string_repr() override;
   //! For non-Primitive Reciprocal lattices, return the equivalent Primitive Reciprocal lattice

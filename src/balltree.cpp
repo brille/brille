@@ -21,10 +21,10 @@ BallNode construct_ballnode(const std::vector<BallLeaf>& leaves, std::array<doub
   for (size_t i=0; i<3u; ++i) c[i] /= static_cast<double>(leaves.size());
   // plus the vector pointing to the farthest leaf from the centroid
   // and the radius fully encompasing all leaves;
-  double d, dmax = 0., radius = 0.;
+  double dmax = 0., radius = 0.;
   for (auto leaf: leaves){
     x = leaf.centre();
-    d = 0.;
+    double d = 0.;
     for (size_t i=0; i<3u; ++i) d += (x[i]-c[i])*(x[i]-c[i]);
     d = std::sqrt(d);
     if (d>dmax){
@@ -48,12 +48,12 @@ bool bifurcate_balltree(BallNode& root, const std::vector<BallLeaf>& leaves, con
     info_update("Bifurcating at ",at," along ",along);
     std::vector<BallLeaf> upper, lower;
     std::array<double,3> x;
-    double dot;
+    double x_dot_a;
     for (auto leaf: leaves){
-      dot = 0.;
+      x_dot_a = 0.;
       x = leaf.centre();
-      for (size_t i=0; i<3u; ++i) dot += (x[i]-at[i])*along[i];
-      if (dot > leaf.radius() ) // was  dot > 0.
+      for (size_t i=0; i<3u; ++i) x_dot_a += (x[i]-at[i])*along[i];
+      if (x_dot_a > leaf.radius() ) // was  x_dot_a > 0.
         upper.push_back(leaf);
       else
         lower.push_back(leaf);
@@ -64,10 +64,10 @@ bool bifurcate_balltree(BallNode& root, const std::vector<BallLeaf>& leaves, con
       upper.clear();
       lower.clear();
       for (auto leaf: leaves){
-        dot = 0.;
+        x_dot_a = 0.;
         x = leaf.centre();
-        for (size_t i=0; i<3u; ++i) dot += (x[i]-at[i])*along[i];
-        if (dot < -leaf.radius() )
+        for (size_t i=0; i<3u; ++i) x_dot_a += (x[i]-at[i])*along[i];
+        if (x_dot_a < -leaf.radius() )
           lower.push_back(leaf);
         else
           upper.push_back(leaf);

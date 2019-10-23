@@ -23,6 +23,7 @@ U signed_to_unsigned(const S s){
     std::string msg = "Value " + std::to_string(s)
                     + " can not be stored in requested unsiged type"
                     + " (max value "+ std::to_string((std::numeric_limits<U>::max)()) + ")";
+    throw std::overflow_error(msg);
   }
   return static_cast<U>(s);
 }

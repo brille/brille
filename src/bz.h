@@ -39,8 +39,14 @@ public:
                 search in τ-index. The default indicates that (̄1̄1̄1),
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
   */
-  BrillouinZone(Reciprocal lat, bool toprim=true, int extent=1, bool tr=false, bool wedge_search=true): outerlattice(lat), time_reversal(tr) {
-    this->lattice = toprim ? lat.primitive() : lat;
+  BrillouinZone(const Reciprocal& lat,
+                         const bool toprim=true,
+                         const int extent=1,
+                         const bool tr=false,
+                         const bool wedge_search=true):
+  lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr)
+  {
+    //this->lattice = toprim ? lat.primitive() : lat;
     this->is_primitive = !(this->lattice.issame(this->outerlattice));
     this->has_inversion = this->time_reversal || lat.has_space_inversion();
 

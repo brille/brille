@@ -28,10 +28,10 @@ template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
   Direct lattice;
 public:
   //! Default constructor, enforces that 3-vectors are held
-  LDVec(const Direct lat=Direct(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
+  LDVec(const Direct& lat=Direct(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
   //! Constructor taking a possibly non-contigous and/or non-row-ordered input
   template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
-  LDVec(const Direct lat,
+  LDVec(const Direct& lat,
         const T*d,
         const std::vector<Integer>& shape,
         const std::vector<Integer>& strides,
@@ -39,11 +39,11 @@ public:
     this->check_arrayvector(flag);
   }
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
-  LDVec(const Direct lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); }
+  LDVec(const Direct& lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
   template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
-  template<class R> LDVec(const Direct lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
+  template<class R> LDVec(const Direct& lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
   LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}
@@ -166,21 +166,21 @@ template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
   Reciprocal lattice;
 public:
   //! Default constructor, enforces that 3-vectors are held
-  LQVec(const Reciprocal lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
+  LQVec(const Reciprocal& lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
   //! Constructor taking a possibly non-contigous and/or non-row-ordered input
   template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
-  LQVec(const Reciprocal lat, const T*d,
+  LQVec(const Reciprocal& lat, const T*d,
         const std::vector<Integer>& shape,
         const std::vector<Integer>& strides,
         const int flag=1): ArrayVector<T>(d,shape,strides), lattice(lat){
     this->check_arrayvector(flag);
   }
   //! Copy constructor, optionally verifying that only 3-element arrays are provided.
-  LQVec(const Reciprocal lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); }
+  LQVec(const Reciprocal& lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); }
   //! [Optional type conversion] copy constructor
-  template<class R>  LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
+  template<class R> LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
   //! std::vector<std::array<T,3>> copy constructor
-  template<class R> LQVec(const Reciprocal lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
+  template<class R> LQVec(const Reciprocal& lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
   //! Explicit copy constructor
   // required in gcc 9+ since we define our own operator= below:
   LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}

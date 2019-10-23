@@ -6,7 +6,7 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const size_t N
   return construct_trellis(leaves, Nxyz_array);
 }
 Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::array<size_t,3> Nxyz){
-  std::array<double,3> x, y, z, p, c{0.,0.,0.};
+  std::array<double,3> p, c{0.,0.,0.};
   std::array<double,9> xyz;
   // find the centroid of the leaf positions
   for (size_t i=0; i<3u; ++i) c[i] = 0.;
@@ -28,20 +28,20 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::arr
     }
   }
   // normalise the x-axis:
-  d = 0;
+  d = 0.;
   for (size_t i=0; i<3u; ++i) d += xyz[i]*xyz[i];
   d = std::sqrt(d);
   for (size_t i=0; i<3u; ++i) xyz[i] /= d;
   // find the perpendicular direction with the farthest leaf from the centroid
   // choose this to be our y-axis
-  dmax = 0.
+  dmax = 0.;
   std::array<double,3> pperp;
   for (auto leaf: leaves){
     p = leaf.centre();
     d = 0.; // p⋅x
     for (size_t i=0; i<3u; ++i) d += (p[i]-c[i])*xyz[i];
     for (size_t i=0; i<3u; ++i) pperp[i] = (p[i]-c[i])*(1-d*xyz[i]);
-    d = 0.
+    d = 0.;
     for (size_t i=0; i<3u; ++i) d += pperp[i]*pperp[i];
     if (d > dmax){
       dmax = d;
@@ -62,10 +62,9 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::arr
     minmax[i][1] = std::numeric_limits<double>::lowest();
   }
   // minimum does not need to include the radius but maximum does:
-  double r, min, max;
   for (auto leaf: leaves){
     p = leaf.centre();
-    r = leaf.radius();
+    double r = leaf.radius();
     for (size_t i=0; i<3u; ++i){
       d = 0.;
       for (size_t j=0; j<3u; ++j) d += p[j]*xyz[i*3u+j];

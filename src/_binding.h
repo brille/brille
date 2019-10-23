@@ -6,6 +6,7 @@
 
 #include "bz_grid.h"
 #include "bz_mesh.h"
+#include "unsignedtosigned.h"
 
 #ifndef __BINDING_H
 #define __BINDING_H
@@ -14,8 +15,9 @@ namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
 
 template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& sz, const std::array<T,N>& sv){
-  size_t numel = 1;
-  for (ssize_t i: sz) numel *= i;
+  // size_t numel = 1;
+  // for (ssize_t i: sz) numel *= i;
+  size_t numel = signed_to_unsigned<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -28,8 +30,9 @@ template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& 
   return np;
 }
 template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const std::vector<T>& sv){
-  size_t numel = 1;
-  for (ssize_t i: sz) numel *= i;
+  // size_t numel = 1;
+  // for (ssize_t i: sz) numel *= i;
+  size_t numel = signed_to_unsigned<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (sv.size() != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -45,8 +48,9 @@ template<typename T, size_t N>
 py::array_t<T> sva2np(const std::vector<ssize_t>&sz,
                       const std::vector<std::array<T,N>>& sva)
 {
-  size_t numel = 1;
-  for (ssize_t i: sz) numel *= i;
+  // size_t numel = 1;
+  // for (ssize_t i: sz) numel *= i;
+  size_t numel = signed_to_unsigned<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (sva.size()*N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -118,15 +122,16 @@ py::array_t<T> av2np_shape(const ArrayVector<T>& av,
   for (size_t i=1; i<inshape.size(); ++i)
     if (!(squeeze && inshape.getvalue(i)==1))
       outshape.push_back( (ssize_t)inshape.getvalue(i) );
-  size_t numel = 1;
-  for (ssize_t osi : outshape) numel *= (size_t)osi;
+  // size_t numel = 1;
+  // for (ssize_t osi : outshape) numel *= (size_t)osi;
+  size_t numel = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
   if (numel != av.size()*av.numel()){
     return squeeze ? av2np_squeeze(av) : av2np(av);
-    std::string msg = "Expected " + std::to_string(numel)
-                    + " but only have " + std::to_string(av.numel()*av.size())
-                    + " (" + std::to_string(av.numel())
-                    + " × " + std::to_string(av.size()) + ")";
-    throw std::runtime_error(msg);
+    // std::string msg = "Expected " + std::to_string(numel)
+    //                 + " but only have " + std::to_string(av.numel()*av.size())
+    //                 + " (" + std::to_string(av.numel())
+    //                 + " × " + std::to_string(av.size()) + ")";
+    // throw std::runtime_error(msg);
   }
   auto out = py::array_t<T,py::array::c_style>(outshape);
   T *ptr = (T*)out.request().ptr;
@@ -208,8 +213,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     py::buffer_info bi = pyX.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    ssize_t npts = 1;
-    if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+    // ssize_t npts = 1;
+    // if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
     BrillouinZone b = cobj.get_brillouinzone();
     Reciprocal lat = b.get_lattice();
     LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
@@ -225,8 +230,9 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       // the shape of each element is data_shape[1,...,data_ndim-1]
       for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
     }
-    size_t total_elements = 1;
-    for (ssize_t osi : outshape) total_elements *= osi;
+    // size_t total_elements = 1;
+    // for (ssize_t osi : outshape) total_elements *= osi;
+    size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
     if (total_elements != lires.numel()*lires.size() ){
       std::cout << "outshape: (";
       for (ssize_t osi : outshape) std::cout << osi << "," ;
@@ -249,8 +255,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     py::buffer_info bi = pyQ.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("debye_waller requires one or more 3-vectors");
-    ssize_t npts = 1;
-    if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+    // ssize_t npts = 1;
+    // if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
     BrillouinZone b = cobj.get_brillouinzone();
     Reciprocal lat = b.get_lattice();
     LQVec<double> cQ(lat, (double*)bi.ptr, bi.shape, bi.strides); //memcopy
@@ -427,8 +433,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         // the shape of each element is data_shape[1,...,data_ndim-1]
         for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
       }
-      size_t total_elements = 1;
-      for (ssize_t osi : outshape) total_elements *= osi;
+      // size_t total_elements = 1;
+      // for (ssize_t osi : outshape) total_elements *= osi;
+      size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
       if (total_elements != lires.numel()*lires.size() ){
         std::cout << "outshape: (";
         for (ssize_t osi : outshape) std::cout << osi << "," ;
@@ -454,8 +461,8 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       py::buffer_info bi = pyX.request();
       if ( bi.shape[bi.ndim-1] !=3 )
         throw std::runtime_error("Interpolation requires one or more 3-vectors");
-      ssize_t npts = 1;
-      if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+      // ssize_t npts = 1;
+      // if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
       BrillouinZone b = cobj.get_brillouinzone();
       Reciprocal lat = b.get_lattice();
       LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
@@ -471,8 +478,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         // the shape of each element is data_shape[1,...,data_ndim-1]
         for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
       }
-      size_t total_elements = 1;
-      for (ssize_t osi : outshape) total_elements *= osi;
+      // size_t total_elements = 1;
+      // for (ssize_t osi : outshape) total_elements *= osi;
+      size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
       if (total_elements != lires.numel()*lires.size() ){
         std::cout << "outshape: (";
         for (ssize_t osi : outshape) std::cout << osi << "," ;
@@ -539,8 +547,8 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       py::buffer_info bi = pyQ.request();
       if ( bi.shape[bi.ndim-1] !=3 )
         throw std::runtime_error("debye_waller requires one or more 3-vectors");
-      ssize_t npts = 1;
-      if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
+      // ssize_t npts = 1;
+      // if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
       BrillouinZone b = cobj.get_brillouinzone();
       Reciprocal lat = b.get_lattice();
       LQVec<double> cQ(lat, (double*)bi.ptr, bi.shape, bi.strides); //memcopy
@@ -675,8 +683,9 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         // the shape of each element is data_shape[1,...,data_ndim-1]
         for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
       }
-      size_t total_elements = 1;
-      for (ssize_t osi : outshape) total_elements *= osi;
+      // size_t total_elements = 1;
+      // for (ssize_t osi : outshape) total_elements *= osi;
+      size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
       if (total_elements != lires.numel()*lires.size() ){
         std::cout << "outshape: (";
         for (ssize_t osi : outshape) std::cout << osi << "," ;
@@ -760,8 +769,8 @@ void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &l
       d.get_lattice_matrix( (double *) bi.ptr, c, r);
       return result;
     });
-    pclass.def("isstar",(bool (T::*)(const Direct    ) const) &T::isstar);
-    pclass.def("isstar",(bool (T::*)(const Reciprocal) const) &T::isstar);
+    pclass.def("isstar",(bool (T::*)(const Direct&    ) const) &T::isstar);
+    pclass.def("isstar",(bool (T::*)(const Reciprocal&) const) &T::isstar);
     pclass.def_property_readonly("primitive",&T::primitive,"Return the primitive lattice");
 }
 

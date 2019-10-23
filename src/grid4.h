@@ -293,9 +293,8 @@ public:
   unsigned int nearest_index(const double *x, size_t *ijkl) const {
     // out contains detailed information about how x is out of bounds.
     unsigned int out=0;
-    slong tmp;
     for (int i=0; i<4; i++){
-      tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
+      slong tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
       if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
         if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
           out += 1<<i; // exact match
@@ -336,16 +335,15 @@ public:
   template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[16], ijk[4], cnt;
-    unsigned int flg;
+    size_t corners[16], ijk[4];
     int oob;
     double weights[16];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.data(i), ijk );
-      cnt = 1u;
+      unsigned int flg = this->nearest_index(x.data(i), ijk );
+      size_t cnt = 1u;
       if (flg > 16){
         std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
         throw std::runtime_error(msg_flg);
@@ -405,20 +403,19 @@ public:
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
     this->check_before_interpolating(x);
     ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[16], ijk[4], cnt;
-    unsigned int flg;
+    size_t corners[16], ijk[4];
     int oob;
     double weights[16];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
 
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
-#pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs)
+#pragma omp parallel for shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
-      flg = this->nearest_index(x.data(i), ijk );
-      cnt = 1u;
+      unsigned int flg = this->nearest_index(x.data(i), ijk );
+      size_t cnt = 1u;
       if (flg > 16){
         std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
         throw std::runtime_error(msg_flg);

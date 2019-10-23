@@ -39,14 +39,13 @@ and determines the appropriate normalized weights for each of the 2ᴰ points.
       if ever desired.
 */
 template <class R, template<class> class T>
-int corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t> dirs){
+int corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
     std::vector<int> d(ndims);
-    double tmp;
     for (size_t i=0; i<ndims; ++i){
       // tmp = interpolation_direction_and_distance(zero[dirs[i]],step[dirs[i]],ijk[dirs[i]],x[dirs[i]]);
-      tmp = (x[dirs[i]]-(zero[dirs[i]]+ijk[dirs[i]]*step[dirs[i]]))/step[dirs[i]];
+      double tmp = (x[dirs[i]]-(zero[dirs[i]]+ijk[dirs[i]]*step[dirs[i]]))/step[dirs[i]];
       d[i] = tmp < 0 ? -1 : 1;
       p[i] = std::abs(tmp);
       m[i] = 1.0 - p[i];
@@ -138,12 +137,11 @@ and determines the appropriate normalized weights for each of the 2ᴰ points.
       for all indices in dirs.
 */
 template <class R, template<class> class T>
-int floor_corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t> dirs){
+int floor_corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
-    double tmp;
     for (size_t i=0; i<ndims; ++i){
-      tmp = zero[dirs[i]] + ((double)ijk[dirs[i]]) * step[dirs[i]];
+      double tmp = zero[dirs[i]] + ((double)ijk[dirs[i]]) * step[dirs[i]];
       p[i] = (x[dirs[i]]-tmp)/step[dirs[i]];
       m[i] = 1.0 - p[i];
     }

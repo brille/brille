@@ -144,7 +144,8 @@ template<class T> std::vector<T> reverse(const std::vector<T>& x){
 }
 template<class T> std::vector<std::vector<T>> reverse_each(const std::vector<std::vector<T>>& x){
   std::vector<std::vector<T>> r;
-  for (auto i: x) r.push_back(reverse(i));
+  std::transform(x.begin(), x.end(), std::back_inserter(r), [](const std::vector<T>& y){return reverse(y);});
+  // for (auto i: x) r.push_back(reverse(i));
   return r;
 }
 
@@ -367,8 +368,8 @@ public:
         }
       }
     }
-    double norm = 1.0/(48 * this->get_volume());
-    for (int j=0; j<3; ++j) centroid[j] *= norm;
+    double normalisation = 1.0/(48 * this->get_volume());
+    for (int j=0; j<3; ++j) centroid[j] *= normalisation;
     return ArrayVector<double>(3u, 1u, centroid);
   }
 protected:
@@ -446,7 +447,7 @@ protected:
     this->faces_per_vertex = fpv;
   }
   void polygon_vertices_per_face(void) {
-    bool flag = true;
+    bool flag;
     // We have 3+ faces per vertex, so we can now find the vertices per face
     std::vector<std::vector<int>> vpf(this->points.size());
     for (size_t i=0; i<vertices.size(); ++i){
@@ -491,14 +492,13 @@ protected:
        a division by zero.
     */
     // Go through all faces an remove central vertices
-    ArrayVector<double> facet_verts(3u, 0u), facet_normal, facet_centre;
+    ArrayVector<double> facet_verts(3u, 0u), /*facet_normal,*/ facet_centre;
     ArrayVector<bool> is_centre_av(1u, 0u);
     std::vector<bool> is_centre;
-    size_t facet_size;
     verbose_update("Starting vertices_per_face\n",vertices_per_face);
     for (size_t j=0; j<normals.size(); ++j){
-      facet_size = vertices_per_face[j].size();
-      facet_normal = normals.extract(j);
+      size_t facet_size = vertices_per_face[j].size();
+      //facet_normal = normals.extract(j);
       facet_verts.resize(facet_size);
       for (size_t i=0; i<facet_size; ++i) facet_verts.set(i, vertices.extract(vertices_per_face[j][i]));
       facet_centre = sum(facet_verts)/static_cast<double>(facet_size);
@@ -523,9 +523,8 @@ protected:
   void actual_vertex_purge(void){
     // go through all faces again and determine whether a vertex is present
     ArrayVector<bool> keep(1u, vertices.size());
-    bool flag;
     for (size_t i=0; i<vertices.size(); ++i){
-      flag = false;
+      bool flag = false;
       for (auto verts: vertices_per_face)
         if (!flag && std::find(verts.begin(), verts.end(), static_cast<int>(i))!=verts.end())
           flag = true;

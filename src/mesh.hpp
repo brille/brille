@@ -228,8 +228,7 @@ ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
     if (num_sorted < this->data.size()) throw std::runtime_error(msg);
     std::cout << msg << std::endl;
   }
-  size_t count_sorted=0;
-  for (auto i: sorted) if (i) ++count_sorted;
+  size_t count_sorted = std::count(sorted.begin(), sorted.end(), true);
   if (count_sorted != this->data.size()){
     std::cout << "Successfully sorted " << count_sorted << " of ";
     std::cout << this->data.size() << " mesh points.";
@@ -273,10 +272,10 @@ size_t Mesh3<T>::consensus_sort_from(
   std::queue<size_t> queue;
   queue.push(s);
   size_t max_visits = 300;
-  size_t num_sorted=0, idx=0u, count=0u, refresh=1u;
+  size_t num_sorted=0, count=0u, refresh=1u;
   bool more_to_do=true;
   while (more_to_do){
-    idx = queue.front();
+    size_t idx = queue.front();
     queue.pop();
     queued[idx] = false;
     if (!lock[idx]){

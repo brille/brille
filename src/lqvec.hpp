@@ -119,18 +119,18 @@ template<typename T> LQVec<double> LQVec<T>::cross(const size_t i, const size_t 
 }
 
 template<typename T> double LQVec<T>::dot(const size_t i, const size_t j) const {
+  if (i>=this->size() || j>=this->size())
+    throw std::out_of_range("attempted out of bounds access by dot");
   Reciprocal lat = this->get_lattice();
   double len[3] = {lat.get_a(),lat.get_b(),lat.get_c()};
   double ang[3] = {lat.get_alpha(),lat.get_beta(),lat.get_gamma()};
-  if (i<this->size()&&j<this->size())
-    return same_lattice_dot(this->data(i),this->data(j),len,ang);
-  throw "attempted out of bounds access by dot";
+  return same_lattice_dot(this->data(i),this->data(j),len,ang);
 }
 
 template<typename T> LQVec<T>& LQVec<T>:: operator+=(const LQVec<T>& av){
   assert( this->samelattice(av) );
   AVSizeInfo si = this->inplace_consistency_check(av);
-  if (si.m != 3u) throw "LQVecs should always have numel()==3!\n";
+  if (si.m != 3u) throw std::runtime_error("LQVecs should always have numel()==3!");
   for (size_t i=0; i<si.n; i++)
     for(size_t j=0; j<si.m; j++)
       this->insert(  this->getvalue(i,j) + av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
@@ -139,7 +139,7 @@ template<typename T> LQVec<T>& LQVec<T>:: operator+=(const LQVec<T>& av){
 template<typename T> LQVec<T>& LQVec<T>:: operator-=(const LQVec<T>& av){
   assert( this->samelattice(av) );
   AVSizeInfo si = this->inplace_consistency_check(av);
-  if (si.m != 3u) throw "LQVecs should always have numel()==3!\n";
+  if (si.m != 3u) throw std::runtime_error("LQVecs should always have numel()==3!");
   for (size_t i=0; i<si.n; i++)
     for(size_t j=0; j<si.m; j++)
       this->insert(  this->getvalue(i,j) - av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );

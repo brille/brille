@@ -31,7 +31,7 @@ public:
            determined by scaling the lengths of the underlying lattice basis
            vectors; e.g., d[0]*= |(100)|, d[1]*=|(010)|, d[2]*=|(001)|
   */
-  BrillouinZoneGrid3(const BrillouinZone bz, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(d,isrlu);}
+  BrillouinZoneGrid3(const BrillouinZone& bz, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(d,isrlu);}
   /*! Construct using number of steps
     @param bz The BrillouinZone object
     @param n The three number of steps
@@ -39,7 +39,7 @@ public:
           a function of n. For a given dimension, i, N[i] = 2*n[i]+1 if n[i]>0
           or N[i] = 1 if n[i]==0
   */
-  BrillouinZoneGrid3(const BrillouinZone bz, const size_t *n): brillouinzone(bz) { this->determine_map_step(n); }
+  BrillouinZoneGrid3(const BrillouinZone& bz, const size_t *n): brillouinzone(bz) { this->determine_map_step(n); }
   /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
       instead of a orthogonal grid.
       @param bz The BrillouinZone object
@@ -58,7 +58,7 @@ public:
   */
   size_t get_grid_hkl(const size_t maxN, double *hkl) const {
     ArrayVector<double> xyz = this->get_grid_xyz();
-    if ( xyz.size() > maxN ) {printf("!!!!Grid has %lu points but output only has space for %lu\n",xyz.size(),maxN); return 0;}
+    if (xyz.size() > maxN) throw std::out_of_range("Output does not have enough storage space.");
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
@@ -294,7 +294,7 @@ public:
            determined by scaling the lengths of the underlying lattice basis
            vectors; e.g., d[0]*= |(100)|, d[1]*=|(010)|, d[2]*=|(001)|
   */
-  BrillouinZoneGrid4(const BrillouinZone bz, const double *spec, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(spec,d,isrlu);};
+  BrillouinZoneGrid4(const BrillouinZone& bz, const double *spec, const double *d, const int isrlu=1): brillouinzone(bz) { this->determine_map_size(spec,d,isrlu);};
   /*! Construct using an energy-axis specification and number of steps
     @param spec The energy specification, expected of the form [Emin,Estep,Emax]
     @param bz The BrillouinZone object
@@ -303,7 +303,7 @@ public:
           a function of n. For a given dimension, i, N[i] = 2*n[i]+1 if n[i]>0
           or N[i] = 1 if n[i]==0
   */
-  BrillouinZoneGrid4(const BrillouinZone bz, const double *spec, const size_t *n): brillouinzone(bz) { this->determine_map_step(spec,n); };
+  BrillouinZoneGrid4(const BrillouinZone& bz, const double *spec, const size_t *n): brillouinzone(bz) { this->determine_map_step(spec,n); };
   // /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
   //     instead of a orthogonal grid.
   //     @param spec The energy specification, expected of the form [Emin,Estep,Emax]

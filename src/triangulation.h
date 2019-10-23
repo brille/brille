@@ -188,18 +188,18 @@ public:
   // size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v, std::vector<double>& w) const {
   //   if (x.numel() != 3u || x.size() != 1u)
   //     throw std::runtime_error("locate requires a single 3-element vector.");
-  //   std::array<double,4> weights;
+  //   std::array<double,4> ws;
   //   v.clear();
   //   w.clear(); // make sure w is back to zero-elements
   //
   //   size_t tet_idx;
   //   for (tet_idx=0; tet_idx < nTetrahedra; ++tet_idx) if (this->might_contain(tet_idx, x)){
-  //     this->weights(tet_idx, x, weights);
+  //     this->weights(tet_idx, x, ws);
   //     // if all weights are greater or equal to ~zero, we can use this tetrahedron
-  //     if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
-  //       for (size_t i=0; i<4u; ++i) if (!approx_scalar(weights[i], 0.)){
+  //     if (std::all_of(ws.begin(), ws.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
+  //       for (size_t i=0; i<4u; ++i) if (!approx_scalar(ws[i], 0.)){
   //         v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
-  //         w.push_back(weights[i]);
+  //         w.push_back(ws[i]);
   //       }
   //       break;
   //     }
@@ -209,7 +209,7 @@ public:
   size_t locate(const ArrayVector<double>& x, std::vector<size_t>& v, std::vector<double>& w) const {
     if (x.numel() != 3u || x.size() != 1u)
       throw std::runtime_error("locate requires a single 3-element vector.");
-    std::array<double,4> weights;
+    std::array<double,4> ws;
     v.clear();
     w.clear(); // make sure w is back to zero-elements
 
@@ -219,12 +219,12 @@ public:
     // for (size_t tet_idx: tets_to_check) if (this->unsafe_might_contain(tet_idx, x)){
 
     for (auto leaf: tetrahedraTrellis.node_leaves(x)) if (this->unsafe_might_contain(leaf.index(), x)){
-      this->weights(leaf.index(), x, weights);
+      this->weights(leaf.index(), x, ws);
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
-      if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
-        for (size_t i=0; i<4u; ++i) if (!approx_scalar(weights[i], 0.)){
+      if (std::all_of(ws.begin(), ws.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
+        for (size_t i=0; i<4u; ++i) if (!approx_scalar(ws[i], 0.)){
           v.push_back(vertices_per_tetrahedron.getvalue(leaf.index(), i));
-          w.push_back(weights[i]);
+          w.push_back(ws[i]);
         }
         return leaf.index();
       }

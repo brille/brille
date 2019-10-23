@@ -61,22 +61,19 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<size_t>& idx) const{
-  bool allinbounds = true;
   ArrayVector<T> out(this->numel(),0u);
-  for (auto j: idx) if (j>=this->size()) {
+  size_t this_size = this->size();
+  if (!std::all_of(idx.begin(), idx.end(), [this_size](size_t j){return j<this_size;})){
     std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
     for (auto i: idx) msg += " " + std::to_string(i);
     msg += " ] but size() = " + std::to_string(this->size());
     throw std::out_of_range(msg);
   }
-  if (allinbounds){
-    out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
-  }
+  out.resize(idx.size());
+  for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<int>& idx) const{
-  bool allinbounds = true;
   ArrayVector<T> out(this->numel(),0u);
   for (auto j: idx) if (j<0 || static_cast<size_t>(j)>=this->size()) {
     std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
@@ -84,10 +81,8 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<in
     msg += " ] but size() = " + std::to_string(this->size());
     throw std::out_of_range(msg);
   }
-  if (allinbounds){
-    out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
-  }
+  out.resize(idx.size());
+  for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bool>& tf) const{
@@ -112,9 +107,7 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<bo
     msg += " Instead got " + std::to_string(t.size()) + " where " + std::to_string(this->size()) + " was expected";
     throw std::runtime_error(msg);
   }
-  size_t nout=0;
-  for (auto i: t) if (i) ++nout;
-  ArrayVector<T> o(this->numel(),nout);
+  ArrayVector<T> o(this->numel(), std::count(t.begin(), t.end(), true));
   size_t j = 0;
   for (size_t i=0; i<t.size(); ++i) if (t[i]) o.set(j++, this->data(i));
   return o;
@@ -178,7 +171,10 @@ template<typename T> void ArrayVector<T>::print(const size_t first, const size_t
 }
 
 template<typename T> void ArrayVector<T>::printheader(const char* name) const {
-  printf("%s numel %u, size %u\n", name, this->numel(), this->size());
+  std::string header = std::string(name) + " numel "
+                     + std::to_string(this->numel()) + ", size "
+                     + std::to_string(this->size());
+  std::cout << header << std::endl;
 }
 
 template<typename T> std::string ArrayVector<T>::unsafe_to_string(const size_t first, const size_t last, const std::string &after) const {
@@ -1028,10 +1024,9 @@ template<class T, class R, template<class> class A,
          >
 void unsafe_accumulate_to(const A<T>& av, const size_t n, const size_t *i, const R *w, A<S>& out, const size_t j) {
   S *outdata = out.data(j);
-  T *avidata;
   size_t m=av.numel();
   for (size_t x=0; x<n; ++x){
-    avidata = av.data(i[x]);
+    T *avidata = av.data(i[x]);
     for (size_t y=0; y<m; ++y)
       outdata[y] += avidata[y]*w[x];
   }
@@ -1093,11 +1088,11 @@ void unsafe_interpolate_to(const A<T>& source,
                            A<S>& sink,
                            const size_t Jsnk) {
   S *sink_j = sink.data(Jsnk);
-  T *source_i, *source_0 = source.data(Isrc[0]);
+  T *source_0 = source.data(Isrc[0]);
   size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2])+static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
   T e_i_theta;
   for (size_t x=0; x<Narr; ++x){
-    source_i = source.data(Isrc[x]);
+    T *source_i = source.data(Isrc[x]);
     // loop over the modes. they are the first index and farthest in memory
     for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
       // Scalars are first, nothing special to do:
@@ -1140,11 +1135,11 @@ void new_unsafe_interpolate_to(const A<T>& source,
                            const size_t iSnk)
 {
   S *sink_i = sink.data(iSnk);
-  T *source_i, *source_0 = source.data(iSrc[0]);
+  T *source_0 = source.data(iSrc[0]);
   size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
   T e_i_theta;
   for (size_t x=0; x<iSrc.size(); ++x){
-    source_i = source.data(iSrc[x]);
+    T *source_i = source.data(iSrc[x]);
     // loop over the objects (modes)
     for (size_t iObj=0; iObj<nObj; ++iObj){
       // find the weighted sum of each scalar

@@ -16,7 +16,7 @@ using invPtype = PrimitiveTraits::invP;
   representation.
 */
 template<class T,typename S=typename std::common_type<T,Ptype>::type>
-LQVec<S> transform_to_primitive(const Reciprocal lat, const LQVec<T>& a){
+LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
@@ -36,7 +36,7 @@ LQVec<S> transform_to_primitive(const Reciprocal lat, const LQVec<T>& a){
   equivalent Lattice vector expressed in units of the passed lattice.
 */
 template<class T,typename S=typename std::common_type<T,invPtype>::type>
-LQVec<S> transform_from_primitive(const Reciprocal lat, const LQVec<T>& a){
+LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
@@ -58,7 +58,7 @@ LQVec<S> transform_from_primitive(const Reciprocal lat, const LQVec<T>& a){
   representation.
 */
 template<class T,typename S=typename std::common_type<T,invPtype>::type>
-LDVec<S> transform_to_primitive(const Direct lat, const LDVec<T>& a){
+LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
@@ -78,7 +78,7 @@ LDVec<S> transform_to_primitive(const Direct lat, const LDVec<T>& a){
   equivalent Lattice vector expressed in units of the passed lattice.
 */
 template<class T,typename S=typename std::common_type<T,Ptype>::type>
-LDVec<S> transform_from_primitive(const Direct lat, const LDVec<T>& a){
+LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?

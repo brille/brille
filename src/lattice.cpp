@@ -20,7 +20,7 @@ Lattice::Lattice(const double la, const double lb, const double lc, const double
   this->volume = this->calculatevolume();
   this->check_hall_number(h);
 }
-Lattice::Lattice(const double* latmat, const std::string itname){
+Lattice::Lattice(const double* latmat, const std::string& itname){
   double l[3]={0,0,0}, a[3]={0,0,0};
   latmat_to_lenang(latmat,3,1,l,a);
   this->set_len_pointer(l,1);
@@ -28,13 +28,13 @@ Lattice::Lattice(const double* latmat, const std::string itname){
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }
-Lattice::Lattice(const double *lengths, const double *angles, const std::string itname, const AngleUnit au){
+Lattice::Lattice(const double *lengths, const double *angles, const std::string& itname, const AngleUnit au){
   this->set_len_pointer(lengths,1);
   this->set_ang_pointer(angles,1, au);
   this->volume=this->calculatevolume();
   this->check_IT_name(itname);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string itname){
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname){
   this->set_len_scalars(la,lb,lc);
   this->set_ang_scalars(al,bl,cl);
   this->volume = this->calculatevolume();
@@ -53,7 +53,7 @@ void Lattice::set_ang_scalars(const double a, const double b, const double g){
 void Lattice::check_hall_number(const int h){
   this->hall = hall_number_ok(h) ? h : 0;
 }
-void Lattice::check_IT_name(const std::string itname){
+void Lattice::check_IT_name(const std::string& itname){
   this->hall = international_string_to_hall_number(itname);
 }
 double Lattice::unitvolume() const{
@@ -148,14 +148,14 @@ void Lattice::get_contravariant_metric_tensor(double *mt) const {
   delete[] tmp;
 }
 
-bool Lattice::issame(const Lattice lat) const{
+bool Lattice::issame(const Lattice& lat) const{
   return approx_vector(3, this->ang, lat.ang) && approx_vector(3, this->len, lat.len);
 }
 
-bool Lattice::isapprox(const Lattice lat) const {
+bool Lattice::isapprox(const Lattice& lat) const {
   return this->ispermutation(lat)==0 ? false : true;
 }
-int Lattice::ispermutation(const Lattice lat) const {
+int Lattice::ispermutation(const Lattice& lat) const {
   double a[3], l[3];
   int i, j, ap[3]{0,2,1}; // for anti-permutations
   for (j=0; j<3; ++j){
@@ -182,7 +182,7 @@ void Lattice::print(){
   printf("(%g %g %g) " ,this->len[0], this->len[1], this->len[2]);
   printf("(%g %g %g)\n",this->ang[0]/PI*180, this->ang[1]/PI*180, this->ang[2]/PI*180);
 }
-std::string lattice2string(const Lattice& l, const std::string lenunit="", const std::string angunit="°"){
+std::string lattice2string(const Lattice& l, const std::string& lenunit="", const std::string& angunit="°"){
   std::string repr;
   repr = "(" + std::to_string(l.get_a()) + " "
              + std::to_string(l.get_b()) + " "
@@ -329,21 +329,21 @@ void Reciprocal::get_inverse_xyz_transform(double *fromxyz, const size_t c, cons
 }
 
 // We have to define these separately from Lattice since Lattice.star() doesn't exist.
-bool Direct::isstar(const Reciprocal latt) const{
+bool Direct::isstar(const Reciprocal& latt) const{
   // two lattices are the star of each other if the star of one is the same as the other
   // we need to check both ways in case rounding errors in the inversion cause a problem
   return ( this->issame( latt.star() ) || latt.issame( this->star() ) );
 }
-bool Reciprocal::isstar(const Direct latt) const{
+bool Reciprocal::isstar(const Direct& latt) const{
   // two lattices are the star of each other if the star of one is the same as the other
   // we need to check both ways in case rounding errors in the inversion cause a problem
   return ( this->issame( latt.star() ) || latt.issame( this->star() ) );
 }
 
 //bool Direct::issame(const Reciprocal) const {printf("call to Direct::issame(Reciprocal)\n"); return false;}
-bool Direct::isstar(const Direct) const {return false;}
+bool Direct::isstar(const Direct&) const {return false;}
 //bool Reciprocal::issame(const Direct) const {printf("call to Reciprocal::issame(Direct)\n"); return false;}
-bool Reciprocal::isstar(const Reciprocal) const {return false;}
+bool Reciprocal::isstar(const Reciprocal&) const {return false;}
 
 void Direct::print(){
   printf("(%g %g %g)A " ,this->len[0], this->len[1], this->len[2]);
@@ -356,9 +356,9 @@ void Reciprocal::print(){
 
 
 Direct Direct::primitive(void) const{
-  double plm[9], lm[9];
   PrimitiveTransform P(this->hall);
   if (P.does_anything()){
+    double plm[9], lm[9];
     this->get_lattice_matrix(lm); // now returns *row* vectors!
     // The transformation matrix P gives us the primitive basis column-vector
     // matrix Aₚ from the standard basis column-vector matrix Aₛ by

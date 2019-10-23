@@ -102,16 +102,15 @@ public:
         if (roword){
           for (size_t i=0; i<this->N*this->M; ++i) this->_data[i] = d[i];
         } else {
-          size_t tmp, lin, idx;
+          // size_t tmp, lin, idx;
           // loop over all linear indicies
           // calculate the subscripted indices using our new row-ordered span
           // and then calculate the linear index into the input _data using
           // the provided strides -- remembering to convert from bytes to index
           for (size_t i=0; i<this->N*this->M; ++i){
-            tmp = i;
-            lin = 0;
+            size_t tmp = i, lin = 0;
             for (size_t j=0; j<shape.size(); ++j){
-              idx  = tmp/spans[j];
+              size_t idx = tmp/spans[j];
               tmp -= idx*spans[j];
               lin += idx*strides[j]/sizeof(T);
             }
@@ -409,11 +408,9 @@ public:
           otherwise a copy has been preformed.
   */
   int removeelements(const size_t from, const size_t to){
-    size_t last;
-    size_t remaining_elements;
     if (from < this->M){ // otherwise there's nothing to do
-       last = to < this->M-1 ? to : this->M-1;
-       remaining_elements = from + (this->M-1 - last);
+       size_t last = to < this->M-1 ? to : this->M-1;
+       size_t remaining_elements = from + (this->M-1 - last);
        if (remaining_elements != this->M){ // otherwise we have nothing to do
          T *newdata = new T[remaining_elements*this->N]();
          size_t idx;

@@ -32,7 +32,6 @@ template<typename T, typename R> static enable_if_t<
   ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
   (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
 inner_approx_scalar(const T a, const R b, const int tol){
-  bool isfpR = std::is_floating_point<R>::value;
   R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   if ( a == T(0) && std::abs(b) <= Rtol )
     return true;
@@ -43,7 +42,6 @@ template<typename T, typename R> static enable_if_t<
   (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
   ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
 inner_approx_scalar(const T a, const R b, const int tol){
-  bool isfpT = std::is_floating_point<T>::value;
   R Ttol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   if ( std::abs(a) <= Ttol && b == R(0) )
     return true;
@@ -75,9 +73,8 @@ inner_approx_scalar(const T a, const R b, const int tol){
 template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol){ return inner_approx_scalar(a,b,tol); }
 
 template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B, const int tol){
-  bool isfpT, isfpR;
-  isfpT = std::is_floating_point<T>::value;
-  isfpR = std::is_floating_point<R>::value;
+  bool isfpT = std::is_floating_point<T>::value;
+  bool isfpR = std::is_floating_point<R>::value;
   T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
   R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
@@ -455,21 +452,21 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
 }
 
 template<typename T> T vector_distance(const size_t n, const T* a, const T* b){
-  T d, sum=0;
+  T d, s=0;
   for (size_t i=0; i<n; ++i){
     d = a[i]-b[i];
-    sum += d*d;
+    s += d*d;
   }
-  return std::sqrt(sum);
+  return std::sqrt(s);
 }
 template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> d;
-  T sum=0;
+  T s=0;
   for (size_t i=0; i<n; ++i){
     d = a[i]-b[i];
-    sum += std::real(d*std::conj(d));
+    s += std::real(d*std::conj(d));
   }
-  return std::sqrt(sum);
+  return std::sqrt(s);
 }
 
 template<typename T> T vector_product(const size_t n, const T* a, const T* b){
@@ -555,7 +552,7 @@ template<class T> int make_eigenvectors_equivalent(const size_t n, const T* v0, 
   s1 = encode_array_signs(n,v1);
   if (s0 == s1) return 0;
   // the only valid permutation for real values is by 2.
-  size_t onesign, s1mod=0;
+  size_t onesign, s1mod{0};
   for (size_t j=0; j<n; ++j){
     // extract a single sign quaternary
     onesign = (s1 >> 2*(n-1-j)) - ((s1 >> 2*(n-j)) << 2*(n-j));
@@ -577,10 +574,10 @@ template<class T> int make_eigenvectors_equivalent(const size_t n, const std::co
   s1 = encode_array_signs(n,v1);
   if (s0 == s1) return 0;
   // The signs of each vector are not the same, so check for equivalence:
-  size_t onesign, s1mod=0;
+  size_t onesign;
   // we can permute each sign quaternary number up to three times
   for (size_t i=1; i<4; ++i){
-    s1mod = 0;
+    size_t s1mod{0};
     for (size_t j=0; j<n; ++j){
       // extract a single sign quaternary
       onesign = (s1 >> 2*(n-1-j)) - ((s1 >> 2*(n-j)) << 2*(n-j));
@@ -632,7 +629,7 @@ S coth_over_en(const std::complex<T> en, const R beta){
 template<class T, class R>
 enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
 binomial_coefficient(const T n, const R k){
-  unsigned long long ans{1}, num{1}, den{1}, lastnum, lastden, comdiv;
+  unsigned long long ans{1}, num{1}, den{1}, comdiv;
   if (k>n){
     std::string msg = "The binomial coefficient requires more choices than selections.";
     msg += "\n binomial_coefficient(" + std::to_string(n) + ":" + std::to_string(k) + ") is invalid";
@@ -642,8 +639,7 @@ binomial_coefficient(const T n, const R k){
   R m = (n-k < k) ? n-k : k;
   bool overflow = false;
   for (R i=0; i<m; ++i){
-    lastnum = num;
-    lastden = den;
+    unsigned long long lastnum{num}, lastden{den};
     num *= static_cast<unsigned long long>(n-i);
     den *= static_cast<unsigned long long>(i+1);
     if (lastnum > num || lastden > den){

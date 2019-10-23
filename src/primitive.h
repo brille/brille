@@ -64,7 +64,7 @@ private:
   Bravais bravais;    //!< The Bravais enum value
 public:
   PrimitiveTransform(const Bravais c): bravais{c} {}
-  PrimitiveTransform(const Spacegroup s): bravais{s.bravais} {}
+  PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
   PrimitiveTransform(const int hall){
     Spacegroup s(hall);
     bravais = s.bravais;

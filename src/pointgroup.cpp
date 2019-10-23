@@ -202,12 +202,11 @@ void Pointgroup::setup(void){
 PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
 {
   PointSymmetry pointsym(0);
-  bool isunique;
   // copy the first rotation matrix
 	pointsym.add(rotations);
   // so that our outer for loop can start from the second one
   for (int i = 1; i < num_rotations; i++) {
-    isunique = true;
+    bool isunique = true;
     for (int j = 0; j < num_rotations; j++)
       if ( equal_matrix(rotations+i*9, pointsym.data(j)) ){
        isunique = false;
@@ -257,10 +256,9 @@ of pointgroup operations with the i-encoded isometry type.
 |   9   |     6    |
 */
 static int get_pointgroup_class_table(int table[10], const PointSymmetry & pointsym){
-  int rot_type;
   for (size_t i = 0; i < 10; i++) { table[i] = 0; }
   for (size_t i = 0; i < pointsym.size(); i++) {
-    rot_type = isometry_type(pointsym.data(i));
+    int rot_type = isometry_type(pointsym.data(i));
     if (rot_type == -1) {
       return 0;
     } else {
@@ -471,13 +469,13 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
 
 static int lauennn(int axes[3], const PointSymmetry & pointsym, const int rot_order)
 {
-  int count=0, axis, tr;
+  int count=0, axis;
   int prop_rot[9];
   for (int i = 0; i < 3; i++) axes[i] = -1;
 	// look for three two-fold or four-fold axes
   for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
-		tr = trace(prop_rot);
+		int tr = trace(prop_rot);
 		// two-fold rotations have tr(W)==-1, four-fold have tr(W)==1
 		if ((tr == -1 && rot_order == 2) || (tr==1 && rot_order==4)){
 			axis = get_rotation_axis(prop_rot);
@@ -527,11 +525,11 @@ static int get_rotation_axis(const int *proper_rot)
 
 
 static int orthogonal_to_axis(int ortho_axes[], const int axis){
-	int num_ortho=0, dot;
+	int num_ortho=0;
 	for (int i=0; i<NUM_ROT_AXES; ++i){
-		dot = 0;
-		for (int j=0; j<3; ++j) dot += rot_axes[i][j]*rot_axes[axis][j];
-		if (0==dot) ortho_axes[num_ortho++] = i;
+		int i_dot_a = 0;
+		for (int j=0; j<3; ++j) i_dot_a += rot_axes[i][j]*rot_axes[axis][j];
+		if (0==i_dot_a) ortho_axes[num_ortho++] = i;
 	}
 	return num_ortho;
 }
@@ -584,8 +582,8 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 	std::vector<int> unique_rot;
 	unique_rot.reserve(2*N);
 
-	// copy the rotations
-	for (auto i: rotations) rot_tmp.push_back(i);
+	// copy the rotations to rot_tmp
+  std::copy(rotations.begin(), rotations.end(), std::back_inserter(rot_tmp));
 	// so that we can add their inverses if time reversal symmetry is allowed
 	if (is_time_reversal){
 		rot_tmp.resize(2*N);
@@ -609,6 +607,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 	std::vector<std::array<int,9>> rot_unique;
 	rot_unique.reserve(unique_rot.size());
 	for (int i: unique_rot) rot_unique.push_back(rot_tmp[i]);
+  // std::transform(unique_rot.begin(), unique_rot.end(), std::back_inserter(rot_unique), [](int i){return rot_tmp[i];});
 
   return rot_unique;
 }

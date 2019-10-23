@@ -44,20 +44,20 @@ public:
     everything.push_back((std::numeric_limits<double>::max)());
     this->boundaries(everything, everything, everything);
   };
-  Trellis(const std::array<double,3>& abc, const std::array<std::vector<double>,3>& bounds){
-    this->xyz(abs);
+  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds){
+    this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
   }
-  Trellis(const std::array<double,3>& abc,
+  Trellis(const std::array<double,9>& abc,
           const std::array<std::vector<double>,3>& bounds,
           const std::vector<TrellisLeaf>& leaves){
-    this->xyz(abs);
+    this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
     this->add_leaves(leaves);
   }
-  size_t node_count() const {
+  size_t node_count() {
     size_t count = 1u;
     for (size_t i=0; i<3u; ++i) count *= _boundaries[i].size()-1;
     _nodes.resize(count);
@@ -69,9 +69,14 @@ public:
     return s;
   }
   std::array<size_t,3> span() const {
-    std::array<size_t,3> s{1,0,0}, z=this->size();
-    for (size_t i=1; i<3; ++i) s[i] = z[i-1]*s[i-1];
+    std::array<size_t,3> s{1,0,0}, sz=this->size();
+    for (size_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
+  }
+  size_t boundaries(const std::array<std::vector<double>,3>& xyzb){
+    if (std::all_of(xyzb.begin(), xyzb.end(), [](const std::vector<double>& a){ return a.size()>1; }))
+      _boundaries = xyzb;
+    return this->node_count();
   }
   size_t boundaries(const std::vector<double>& xb, const std::vector<double>& yb, const std::vector<double>& zb){
     if (xb.size()>1) _boundaries[0] = xb;
@@ -112,34 +117,32 @@ public:
 
   // Find the appropriate node for an arbitrary point:
   std::array<size_t,3> node_subscript(const std::array<double,3>& p) const {
-    std::array<size_t,3> sub{0,0,0}, z=this->size();
-    double dot;
+    std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
-      dot = 0;
-      for (size_t i=0; i<3u; ++i) dot += p[i]*_xyz[dim*3u + i];
-      for (size_t i=0; i<z[i]; ++i) if ( dot < _boundaries[dim][i+1]) sub[dim] = i;
+      double p_dot_e = 0;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[dim*3u + i];
+      for (size_t i=0; i<sz[i]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
   std::array<size_t,3> node_subscript(const ArrayVector<double>& p) const {
-    std::array<size_t,3> sub{0,0,0}, z=this->size();
-    double dot;
+    std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
-      dot = 0;
-      for (size_t i=0; i<3u; ++i) dot += p.getvalue(0,i)*_xyz[dim*3u + i];
-      for (size_t i=0; i<z[i]; ++i) if ( dot < _boundaries[dim][i+1]) sub[dim] = i;
+      double p_dot_e = 0;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*_xyz[dim*3u + i];
+      for (size_t i=0; i<sz[i]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
   // or leaf, which has a centre and radius
   std::array<size_t,3> node_subscript(const TrellisLeaf& l) const {
     std::array<double,3> p = l.centre();
-    double dot, r = l.radius();
-    std::array<size_t,3> sub{0,0,0}, z=this->size();
+    double r = l.radius();
+    std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
-      dot = 0;
-      for (size_t i=0; i<3u; ++i) dot += p[i]*_xyz[3u*dim + i];
-      for (size_t i=0; i<z[i]; ++i) if (dot+r < _boundaries[dim][i+1]) sub[dim] = i;
+      double p_dot_e = 0;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[3u*dim + i];
+      for (size_t i=0; i<sz[i]; ++i) if (p_dot_e+r < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -181,9 +184,8 @@ public:
   }
   // add a number of leaves to the trellis:
   bool add_leaves(const std::vector<TrellisLeaf>& leaves){
-    size_t idx;
     for (auto leaf: leaves){
-      idx = this->node_index(leaf);
+      size_t idx = this->node_index(leaf);
       _nodes[idx].push_back(leaf);
     }
     return true;

@@ -311,9 +311,8 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   std::vector<size_t> eqv_idx(this->size());
   std::vector<size_t> unq_idx;
   Vectors<int> unq_axis;
-  bool isunique;
   for (size_t i=0; i<this->size(); ++i){
-    isunique = true;
+    bool isunique = true;
     for (auto j: unq_idx) if (approx_vector(all_axis[j].data(), all_axis[i].data())){
       eqv_idx[i] = j;
       isunique = false;
@@ -327,9 +326,8 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   }
   // equal-valued entries of eqv_idx have the same stationary axis
   // but the order of the selected unique rotation may not be what we want
-  size_t idx;
   for (size_t i=0; i<unq_idx.size(); ++i){
-    idx = unq_idx[i];
+    size_t idx = unq_idx[i];
     for (size_t j=0; j<this->size(); ++j)
     if (idx == eqv_idx[j] && this->order(j) > this->order(unq_idx[i]))
     unq_idx[i] = j;
