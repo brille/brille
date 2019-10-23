@@ -10,7 +10,8 @@
 #include "tetgen.h"
 // debugging output
 #include "debug.h"
-#include "balltree.h"
+// #include "balltree.h"
+#include "balltrellis.h"
 
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);
@@ -54,7 +55,10 @@ class TetrahedralTriangulation{
   std::vector<std::vector<size_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<size_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
   //tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh
-  BallNode tetrahedrTree;
+  // BallNode tetrahedraTree;
+  // std::vector<BallLeaf> leaves;
+  Trellis tetrahedraTrellis;
+  std::vector<TrellisLeaf> leaves;
 public:
   size_t number_of_vertices(void) const {return nVertices;}
   size_t number_of_tetrahedra(void) const {return nTetrahedra;}
@@ -208,18 +212,21 @@ public:
     std::array<double,4> weights;
     v.clear();
     w.clear(); // make sure w is back to zero-elements
-    debug_update("Find which tetrahedra might contain the point ",x.to_string(0));
-    std::vector<size_t> tets_to_check = tetrahedrTree.all_containing_leaf_indexes(x);
-    debug_update("The tree would have us search ",tets_to_check);
-    for (size_t tet_idx: tets_to_check){
-      this->weights(tet_idx, x, weights);
+
+    // debug_update("Find which tetrahedra might contain the point ",x.to_string(0));
+    // std::vector<size_t> tets_to_check = tetrahedraTree.all_containing_leaf_indexes(x);
+    // debug_update("The tree would have us search ",tets_to_check);
+    // for (size_t tet_idx: tets_to_check) if (this->unsafe_might_contain(tet_idx, x)){
+
+    for (auto leaf: tetrahedraTrellis.node_leaves(x)) if (this->unsafe_might_contain(leaf.index(), x)){
+      this->weights(leaf.index(), x, weights);
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
       if (std::all_of(weights.begin(), weights.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
         for (size_t i=0; i<4u; ++i) if (!approx_scalar(weights[i], 0.)){
-          v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));
+          v.push_back(vertices_per_tetrahedron.getvalue(leaf.index(), i));
           w.push_back(weights[i]);
         }
-        return tet_idx;
+        return leaf.index();
       }
     }
     // containing tetrahedra not found :(
@@ -283,24 +290,29 @@ public:
     return v;
   }
   bool might_contain(const size_t tet, const ArrayVector<double>& x) const {
-    if (x.size() < 1u || x.numel()<3u) return false;
-    double is;
-    // any tetrahedron can be circumscribed by a sphere. The tetgen/predicates
-    // function insphere can be used to check whether a point is inside a
-    // tetrahedron's circumsphere: it returns a positive if the point is inside,
-    // a negative if it is outside, and zero if it is on the surface -- assuming
-    // that the volume returned by orient3d is positive for the tetrahedron.
-    is = insphere(
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
-      x.data() );
-    // since we only care if this tetrahedron *might* contain the point x, here
-    // we just want to know if the insphere result is greater or ~equal to zero.
-    return (is > 0. || approx_scalar(is, 0.));
+    if (x.size() < 1u || x.numel()<3u) throw std::runtime_error("x must be a single 3-vector");
+    if (tet >= nTetrahedra) return false;
+    return this->unsafe_might_contain(tet, x);
   }
 protected:
+  bool unsafe_might_contain(const size_t tet, const ArrayVector<double>& x) const {
+    // double is;
+    // // any tetrahedron can be circumscribed by a sphere. The tetgen/predicates
+    // // function insphere can be used to check whether a point is inside a
+    // // tetrahedron's circumsphere: it returns a positive if the point is inside,
+    // // a negative if it is outside, and zero if it is on the surface -- assuming
+    // // that the volume returned by orient3d is positive for the tetrahedron.
+    // is = insphere(
+    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
+    //   x.data() );
+    // // since we only care if this tetrahedron *might* contain the point x, here
+    // // we just want to know if the insphere result is greater or ~equal to zero.
+    // return (is > 0. || approx_scalar(is, 0.));
+    return leaves[tet].fuzzy_contains(x);
+  }
   void weights(const size_t tet, const ArrayVector<double>& x, std::array<double,4>& w) const {
     double vol6 = 6.0*this->volume(tet);
     w[0] = orient3d(
@@ -331,7 +343,8 @@ protected:
   }
   void make_balltree(void){
     // Construct a vector of BallLeaf objects for each tetrahedra:
-    std::vector<BallLeaf> leaves;
+    // std::vector<BallLeaf> leaves;
+    leaves.clear();
     std::array<double,3> centre;
     double radius;
     debug_update("Pull together the circumsphere information for all tetrahedra");
@@ -344,15 +357,27 @@ protected:
         vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 2u)),
         vertex_positions.data(vertices_per_tetrahedron.getvalue(i, 3u)),
         centre.data(), &radius);
-      leaves.push_back(BallLeaf(centre, radius, i));
+      // leaves.push_back(BallLeaf(centre, radius, i));
+      leaves.push_back(TrellisLeaf(centre, radius, i));
     }
-    // construct the full tree structure at once using an algorithm similar to
-    // Omohundro's Kd algorithm in 'Five Balltree Construction Algorithms'
-    size_t maximum_branchings = 5; // only 2⁵ = 32 nodes containing leaves for testing
-    debug_update("Now construct the tree for tetrahedra location");
-    tetrahedrTree = construct_balltree(leaves, maximum_branchings);
-    debug_update("Tree for locating tetrahedra now exists");
-    // info_update("Tetrahedra tree:\n",tetrahedrTree.to_string());
+    // // construct the full tree structure at once using an algorithm similar to
+    // // Omohundro's Kd algorithm in 'Five Balltree Construction Algorithms'
+    // if (nTetrahedra > 0){
+    //   // we will construct a binary tree. If we have N leaves to place at the
+    //   // end of the branches, they can occupy as many as N branches.
+    //   // A tree with N final branches has log₂(N) levels, so we will never need
+    //   // to exceed this.
+    //   // If we reduce the number of branchings we increase the number of leaves
+    //   // per terminal branch. There must be some trade-off between tree-granularity
+    //   // and tree-size for how quickly a containing tetrahedra can be located.
+    //   size_t maximum_branchings = static_cast<size_t>(std::log2(nTetrahedra))-2;
+    //   maximum_branchings = 3;
+    //   debug_update("Construct a tree for tetrahedra location with up to ",maximum_branchings," branchings.");
+    //   tetrahedraTree = construct_balltree(leaves, maximum_branchings);
+    //   debug_update("Tree for locating tetrahedra now exists");
+    //   // info_update("Tetrahedra tree:\n",tetrahedraTree.to_string());
+    // }
+    tetrahedraTrellis = construct_trellis(leaves, 3);
   }
 };
 

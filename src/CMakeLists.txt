@@ -11,7 +11,8 @@ set(CXX_TARGETS _symbz test_cpp test_catch)
 
 set(CXX_SOURCES
   arithmetic.cpp
-  balltree.cpp
+  #balltree.cpp
+  balltrellis.cpp
   bz.cpp
   debug.cpp
   lattice.cpp

@@ -7,35 +7,39 @@
 
 class BallLeaf{
   std::array<double,3> _centre;
-  double _radius;
+  double _squared_radius;
   size_t _index;
 public:
   ~BallLeaf() = default;
-  BallLeaf(): _radius(0.), _index(0) {};
-  BallLeaf(const std::array<double,3>& p, const double r, const size_t i): _centre(p), _radius(r), _index(i) {};
-  BallLeaf(const BallLeaf& other){
-    this->_centre = other.centre();
-    this->_radius = other.radius();
-    this->_index = other.index();
-  }
-  BallLeaf& operator=(const BallLeaf& other){
-    this->_centre = other.centre();
-    this->_radius = other.radius();
-    this->_index = other.index();
-    return *this;
-  }
+  BallLeaf(): _squared_radius(0.), _index(0) {};
+  BallLeaf(const std::array<double,3>& p, const double r, const size_t i): _centre(p), _squared_radius(r*r), _index(i) {};
+  // BallLeaf(const BallLeaf& other){
+  //   this->_centre = other.centre();
+  //   this->_radius = other.radius();
+  //   this->_index = other.index();
+  // }
+  // BallLeaf& operator=(const BallLeaf& other){
+  //   this->_centre = other.centre();
+  //   this->_radius = other.radius();
+  //   this->_index = other.index();
+  //   return *this;
+  // }
   size_t index(const size_t idx){
     _index = idx;
     return _index;
   }
   size_t index() const { return _index; }
-  double radius() const { return _radius; }
+  double radius() const { return std::sqrt(_squared_radius); }
   const std::array<double,3>& centre() const {return _centre; }
+  bool fuzzy_contains(const ArrayVector<double>& x) const {
+    double d=0;
+    for (size_t i=0; i<3u; ++i) d += (x.getvalue(0,i)-_centre[i])*(x.getvalue(0,i)-_centre[i]);
+    return (d < _squared_radius || approx_scalar(d, _squared_radius));
+  }
   bool fuzzy_contains(const std::array<double,3>& x) const {
     double d=0;
     for (size_t i=0; i<3u; ++i) d += (x[i]-_centre[i])*(x[i]-_centre[i]);
-    d = std::sqrt(d) - _radius;
-    return (d < 0 || approx_scalar(d, 0.));
+    return (d < _squared_radius || approx_scalar(d, _squared_radius));
   }
 };
 
@@ -48,21 +52,21 @@ public:
   ~BallNode() = default;
   BallNode(): _radius(0) {};
   BallNode(const std::array<double,3>& p, const double r): _centre(p), _radius(r){};
-  BallNode(const BallNode& other){
-    this->_centre = other.centre();
-    this->_radius = other.radius();
-    // force deep copying
-    for (auto child: other.children()) this->_children.push_back(BallNode(child));
-    for (auto leaf: other.leaves()) this->_leaves.push_back(BallLeaf(leaf));
-  }
-  BallNode& operator=(const BallNode& other){
-    this->_centre = other.centre();
-    this->_radius = other.radius();
-    // force deep copying
-    for (auto child: other.children()) this->_children.push_back(BallNode(child));
-    for (auto leaf: other.leaves()) this->_leaves.push_back(BallLeaf(leaf));
-    return *this;
-  }
+  // BallNode(const BallNode& other){
+  //   this->_centre = other.centre();
+  //   this->_radius = other.radius();
+  //   // force deep copying
+  //   for (auto child: other.children()) this->_children.push_back(BallNode(child));
+  //   for (auto leaf: other.leaves()) this->_leaves.push_back(BallLeaf(leaf));
+  // }
+  // BallNode& operator=(const BallNode& other){
+  //   this->_centre = other.centre();
+  //   this->_radius = other.radius();
+  //   // force deep copying
+  //   for (auto child: other.children()) this->_children.push_back(BallNode(child));
+  //   for (auto leaf: other.leaves()) this->_leaves.push_back(BallLeaf(leaf));
+  //   return *this;
+  // }
   // child related methods
   size_t count_children() const { return _children.size(); }
   std::vector<BallNode> containing_children(const std::array<double,3>& x) const {
