@@ -1,11 +1,18 @@
 #include "balltrellis.h"
 #include "debug.h"
 
-Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const size_t Nxyz){
-  std::array<size_t,3> Nxyz_array{Nxyz, Nxyz, Nxyz};
-  return construct_trellis(leaves, Nxyz_array);
-}
-Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::array<size_t,3> Nxyz){
+/* A note about the directions chosen for binning the leaves:
+  A better way of doing this would be to compute the covariance and/or
+  correlation matrix for the leaf centres, e.g.,
+    | ∑|xᵢ-̄x|² ∑|yᵢ-̄x|² ∑|zᵢ-̄x|² |
+    | ∑|xᵢ-̄y|² ∑|yᵢ-̄y|² ∑|zᵢ-̄y|² |
+    | ∑|xᵢ-̄z|² ∑|yᵢ-̄z|² ∑|zᵢ-̄z|² |
+  and then find its eigenvectors. If we ever decide to include a real
+  linear algebra library then we could easily update this function to make
+  use of its eigenvalue solver as well.
+  For now, an additional library just to address this issue is probably overkill.
+*/
+Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const double fraction){
   std::array<double,3> p, c{0.,0.,0.};
   std::array<double,9> xyz;
   // find the centroid of the leaf positions
@@ -39,8 +46,8 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::arr
   for (auto leaf: leaves){
     p = leaf.centre();
     d = 0.; // p⋅x
-    for (size_t i=0; i<3u; ++i) d += (p[i]-c[i])*xyz[i];
-    for (size_t i=0; i<3u; ++i) pperp[i] = (p[i]-c[i])*(1-d*xyz[i]);
+    for (size_t i=0; i<3u; ++i) d += p[i]*xyz[i]; // dot(p, ̂x)
+    for (size_t i=0; i<3u; ++i) pperp[i] = p[i] - d*xyz[i]; // p - ̂x dot(p, ̂x)
     d = 0.;
     for (size_t i=0; i<3u; ++i) d += pperp[i]*pperp[i];
     if (d > dmax){
@@ -72,17 +79,29 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::arr
       if (d + r > minmax[i][1]) minmax[i][1] = d + r;
     }
   }
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>> optimisation testing
+  double max_radius = 0.;
+  for (auto leaf: leaves) if (leaf.radius() > max_radius) max_radius = leaf.radius();
+  info_update("The maximum leaf radius is ",max_radius);
+  info_update("And the leaves extend over");
+  info_update(" x = ",xyz[0]," ",xyz[1]," ",xyz[2]," : ",minmax[0]);
+  info_update(" y = ",xyz[3]," ",xyz[4]," ",xyz[5]," : ",minmax[1]);
+  info_update(" z = ",xyz[6]," ",xyz[7]," ",xyz[8]," : ",minmax[2]);
+  d = max_radius * fraction;
+  info_update("Using a boundary step size of max_radius*",fraction," which is ",d);
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<
   // and construct the boundaries
   std::array<std::vector<double>,3> boundaries;
   for (size_t i=0; i<3u; ++i){
-    // find the boundary step size
-    d = (minmax[i][1]-minmax[i][0]) / static_cast<double>(Nxyz[i]);
+    // // find the boundary step size
+    // d = (minmax[i][1]-minmax[i][0]) / static_cast<double>(Nxyz[i]);
     // and construct the boundaries:
     boundaries[i].push_back(minmax[i][0]);
     while( boundaries[i].back() < minmax[i][1] ) boundaries[i].push_back(boundaries[i].back()+d);
     // replace the first and last boundaries to -∞ and +∞, respectively
     boundaries[i].front() = std::numeric_limits<double>::lowest();
     boundaries[i].back() = (std::numeric_limits<double>::max)();
+    info_update("Step size along axis ",i,", ",d,", yields ",boundaries[i].size()-1," bins");
   }
 
   // Construct the Trellis object assigning the leaves to nodes

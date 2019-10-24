@@ -24,7 +24,8 @@ TEST_CASE("BrillouinZoneMesh3 instantiation","[mesh]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_size = 0.01;
-  BrillouinZoneMesh3<double> bzm(bz, max_size);
+  BrillouinZoneMesh3<double> bzm0(bz);
+  BrillouinZoneMesh3<double> bzm1(bz, max_size);
 }
 
 // TEST_CASE("Simple BrillouinZoneMesh3 interpolation","[mesh]"){

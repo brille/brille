@@ -159,13 +159,14 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
-  .def(py::init<BrillouinZone,double,double,double,double,int>(),
+  .def(py::init<BrillouinZone,double,double,double,double,int,double>(),
        py::arg("brillouinzone"),
        py::arg("max_size")=-1.,
        py::arg("min_angle")=20.,
        py::arg("max_angle")=-1.,
        py::arg("min_ratio")=-1.,
-       py::arg("max_points")=-1
+       py::arg("max_points")=-1,
+       py::arg("lattice_ratio")=1.
       )
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
   .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_mesh_hkl());})

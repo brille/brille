@@ -66,7 +66,7 @@ public:
   const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
   TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  TetrahedralTriangulation(const tetgenio& tgio): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){ //, tgsource(tgio){
+  TetrahedralTriangulation(const tetgenio& tgio, const double fraction): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){ //, tgsource(tgio){
     nVertices = static_cast<size_t>(tgio.numberofpoints);
     nTetrahedra = static_cast<size_t>(tgio.numberoftetrahedra);
     // copy-over all vertex positions:
@@ -96,7 +96,7 @@ public:
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
     // construct the tree for faster locating:
-    this->make_balltree();
+    this->make_balltree(fraction);
   }
   // emulate the locate functionality of CGAL -- for which we need an enumeration
   enum Locate_Type{ VERTEX, EDGE, FACET, CELL, OUTSIDE_CONVEX_HULL };
@@ -218,7 +218,9 @@ public:
     // debug_update("The tree would have us search ",tets_to_check);
     // for (size_t tet_idx: tets_to_check) if (this->unsafe_might_contain(tet_idx, x)){
 
-    for (auto leaf: tetrahedraTrellis.node_leaves(x)) if (this->unsafe_might_contain(leaf.index(), x)){
+    for (size_t node: tetrahedraTrellis.nodes_to_search(x)) // returns a distance-sorted list of nodes which might have a containing leaf
+    for (auto leaf: tetrahedraTrellis.node_leaves(node))
+    if (this->unsafe_might_contain(leaf.index(), x)){
       this->weights(leaf.index(), x, ws);
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
       if (std::all_of(ws.begin(), ws.end(), [](double z){return z>0. || approx_scalar(z,0.);})){
@@ -341,7 +343,7 @@ protected:
     if (std::signbit(this->volume(i))) // the volume of tetrahedra i is negative
     vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
   }
-  void make_balltree(void){
+  void make_balltree(const double fraction){
     // Construct a vector of BallLeaf objects for each tetrahedra:
     // std::vector<BallLeaf> leaves;
     leaves.clear();
@@ -377,7 +379,7 @@ protected:
     //   debug_update("Tree for locating tetrahedra now exists");
     //   // info_update("Tetrahedra tree:\n",tetrahedraTree.to_string());
     // }
-    tetrahedraTrellis = construct_trellis(leaves, 3);
+    tetrahedraTrellis = construct_trellis(leaves, fraction);
   }
 };
 
@@ -388,7 +390,8 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
                                      const double min_dihedral=-1.0,
                                      const double max_dihedral=-1.0,
                                      const double radius_edge_ratio=-1.0,
-                                     const int max_mesh_points=-1
+                                     const int max_mesh_points=-1,
+                                     const double fraction=1.0
 ) {
   assert(verts.numel() == 3); // otherwise we can't make a 3-D triangulation
   // create the tetgenbehavior object which contains all options/switches for tetrahedralize
@@ -461,7 +464,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     throw std::runtime_error(msg);
   }
   debug_update("Constructing TetrahedralTriangulation object");
-  return TetrahedralTriangulation(tgo);
+  return TetrahedralTriangulation(tgo, fraction);
 }
 
 #endif // _TRIANGULATION_H_

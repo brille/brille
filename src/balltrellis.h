@@ -1,5 +1,6 @@
 #include <vector>
 #include <array>
+#include <algorithm>
 #include "arrayvector.h"
 
 #ifndef _BALLTRELLIS_H_
@@ -37,21 +38,22 @@ class Trellis{
   std::vector<std::vector<TrellisLeaf>> _nodes;
   std::array<double,9> _xyz;
   std::array<std::vector<double>,3> _boundaries;
+  double _maximum_leaf_radius;
 public:
-  Trellis(): _xyz({1,0,0, 0,1,0, 0,0,1}) {
+  Trellis(): _xyz({1,0,0, 0,1,0, 0,0,1}), _maximum_leaf_radius(0.) {
     std::vector<double> everything;
     everything.push_back(std::numeric_limits<double>::lowest());
     everything.push_back((std::numeric_limits<double>::max)());
     this->boundaries(everything, everything, everything);
   };
-  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds){
+  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds): _maximum_leaf_radius(0.) {
     this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
   }
   Trellis(const std::array<double,9>& abc,
           const std::array<std::vector<double>,3>& bounds,
-          const std::vector<TrellisLeaf>& leaves){
+          const std::vector<TrellisLeaf>& leaves): _maximum_leaf_radius(0.){
     this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
@@ -121,7 +123,7 @@ public:
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[dim*3u + i];
-      for (size_t i=0; i<sz[i]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -130,7 +132,7 @@ public:
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*_xyz[dim*3u + i];
-      for (size_t i=0; i<sz[i]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -142,20 +144,12 @@ public:
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[3u*dim + i];
-      for (size_t i=0; i<sz[i]; ++i) if (p_dot_e+r < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<sz[dim]; ++i) if (p_dot_e+r < _boundaries[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
   // find the node linear index for a point or leaf
-  template <class T>
-  size_t node_index(const T& p) const {
-    std::array<size_t,3> sp, sb;
-    sp = this->span();
-    sb = this->node_subscript(p);
-    size_t idx=0;
-    for (size_t dim=0; dim<3u; ++dim) idx += sp[dim]*sb[dim];
-    return idx;
-  }
+  template <class T> size_t node_index(const T& p) const { return this->sub2idx(this->node_subscript(p)); }
 
   // get the leaves located at a node
   const std::vector<TrellisLeaf>& node_leaves(const size_t idx) const {
@@ -186,14 +180,54 @@ public:
   bool add_leaves(const std::vector<TrellisLeaf>& leaves){
     for (auto leaf: leaves){
       size_t idx = this->node_index(leaf);
+      if (leaf.radius() > _maximum_leaf_radius) _maximum_leaf_radius = leaf.radius(); // keep track of this on a per-node basis?
       _nodes[idx].push_back(leaf);
     }
     return true;
   }
+  // get a vector of node indicess to search when trying to find a point in a leaf
+  template<class T> std::vector<size_t> nodes_to_search(const T& p) const {
+    std::array<size_t,3> tsub, psub = this->node_subscript(p);
+    std::array<size_t,3> xtnt = this->size();
+    std::array<size_t,3> xspn = this->span();
+    size_t tidx, pidx = this->sub2idx(psub, xspn);
+    std::vector<size_t> to_search;
+    // include all nodes which are no more than the maximum leaf diameter away
+    // We only need to search in the increasing-subscripts direction due to how
+    // the leaves were assigned to the trellis nodes to begin with.
+    for (tsub[0]=psub[0]; tsub[0]<xtnt[0]; ++tsub[0])
+    for (tsub[1]=psub[1]; tsub[1]<xtnt[1]; ++tsub[1])
+    for (tsub[2]=psub[2]; tsub[2]<xtnt[2]; ++tsub[2]){
+      tidx = this->sub2idx(tsub, xspn);
+      if (this->node_distance(pidx, tidx) <= 3.5*_maximum_leaf_radius) // a bit more than sqrt(3)*d to account for body diagonal
+        to_search.push_back(tidx);
+    }
+    // Assuming we're most likely to find the leaf at a node close to where
+    // the point is located, sort the found nodes by their distance away
+    std::sort(to_search.begin(), to_search.end(),
+      [pidx, this](const size_t i, const size_t j){
+        return this->node_distance(pidx,i) < this->node_distance(pidx,j);
+      }
+    );
+    return to_search;
+  }
+private:
+  size_t sub2idx(const std::array<size_t,3>& sub) const {
+    return this->sub2idx(sub, this->span());
+  }
+  size_t sub2idx(const std::array<size_t,3>& sub, const std::array<size_t,3>& sp) const {
+    size_t idx=0;
+    for (size_t dim=0; dim<3u; ++dim) idx += sp[dim]*sub[dim];
+    return idx;
+  }
+  double node_distance(const size_t i, const size_t j) const {
+    double d{0.};
+    for (size_t dim=0; dim<3u; ++dim) d += (_boundaries[dim][i+1]-_boundaries[dim][j+1])*(_boundaries[dim][i+1]-_boundaries[dim][j+1]);
+    return std::sqrt(d);
+  }
 };
 
-Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const size_t Nxyz=5);
-Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const std::array<size_t,3>& Nxyz);
+Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const double fraction=1.);
 
 
 #endif
