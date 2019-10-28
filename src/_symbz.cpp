@@ -16,6 +16,7 @@ PYBIND11_MODULE(_symbz,m){
 
   {
   using namespace symbz::version;
+  m.attr("__version__") = version_number;
   m.attr("version") = long_version();
   m.attr("git_revision") = git_revision;
   m.attr("build_datetime") = build_datetime;

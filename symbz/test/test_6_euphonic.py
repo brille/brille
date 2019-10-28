@@ -26,9 +26,9 @@ else:
 
 def load_interpolation_data(named):
     """Load a data file from the tests folder."""
-    test_spec = find_spec('tests')
+    test_spec = find_spec('symbz.test')
     if test_spec is None:
-        raise Exception('Could not locate the tests module directory')
+        raise Exception('Could not locate the test submodule directory')
     seed = os.path.join(test_spec.submodule_search_locations[0], named)
     return InterpolationData(seed)
 
