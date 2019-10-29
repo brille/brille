@@ -35,25 +35,25 @@ public:
 
 
 class Trellis{
-  std::vector<std::vector<TrellisLeaf>> _nodes;
-  std::array<double,9> _xyz;
-  std::array<std::vector<double>,3> _boundaries;
-  double _maximum_leaf_radius;
+  std::vector<std::vector<TrellisLeaf>> nodes_;
+  std::array<double,9> xyz_;
+  std::array<std::vector<double>,3> boundaries_;
+  double max_leaf_radius_;
 public:
-  Trellis(): _xyz({1,0,0, 0,1,0, 0,0,1}), _maximum_leaf_radius(0.) {
+  Trellis(): xyz_({1,0,0, 0,1,0, 0,0,1}), max_leaf_radius_(0.) {
     std::vector<double> everything;
     everything.push_back(std::numeric_limits<double>::lowest());
     everything.push_back((std::numeric_limits<double>::max)());
     this->boundaries(everything, everything, everything);
   };
-  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds): _maximum_leaf_radius(0.) {
+  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds): max_leaf_radius_(0.) {
     this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
   }
   Trellis(const std::array<double,9>& abc,
           const std::array<std::vector<double>,3>& bounds,
-          const std::vector<TrellisLeaf>& leaves): _maximum_leaf_radius(0.){
+          const std::vector<TrellisLeaf>& leaves): max_leaf_radius_(0.){
     this->xyz(abc);
     this->boundaries(bounds);
     this->node_count(); /*resizes the vector*/
@@ -61,13 +61,13 @@ public:
   }
   size_t node_count() {
     size_t count = 1u;
-    for (size_t i=0; i<3u; ++i) count *= _boundaries[i].size()-1;
-    _nodes.resize(count);
+    for (size_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
+    nodes_.resize(count);
     return count;
   }
   std::array<size_t,3> size() const {
     std::array<size_t,3> s;
-    for (size_t i=0; i<3u; ++i) s[i] = _boundaries[i].size()-1;
+    for (size_t i=0; i<3u; ++i) s[i] = boundaries_[i].size()-1;
     return s;
   }
   std::array<size_t,3> span() const {
@@ -77,44 +77,44 @@ public:
   }
   size_t boundaries(const std::array<std::vector<double>,3>& xyzb){
     if (std::all_of(xyzb.begin(), xyzb.end(), [](const std::vector<double>& a){ return a.size()>1; }))
-      _boundaries = xyzb;
+      boundaries_ = xyzb;
     return this->node_count();
   }
   size_t boundaries(const std::vector<double>& xb, const std::vector<double>& yb, const std::vector<double>& zb){
-    if (xb.size()>1) _boundaries[0] = xb;
-    if (yb.size()>1) _boundaries[1] = yb;
-    if (zb.size()>1) _boundaries[2] = zb;
+    if (xb.size()>1) boundaries_[0] = xb;
+    if (yb.size()>1) boundaries_[1] = yb;
+    if (zb.size()>1) boundaries_[2] = zb;
     return this->node_count();
   }
-  size_t xboundaries(const std::vector<double>& xb){ return this->boundaries(xb, _boundaries[1], _boundaries[2]);}
-  size_t yboundaries(const std::vector<double>& yb){ return this->boundaries(_boundaries[0], yb, _boundaries[2]);}
-  size_t zboundaries(const std::vector<double>& zb){ return this->boundaries(_boundaries[0], _boundaries[1], zb);}
-  std::array<double,3> x() const { std::array<double,3> out{_xyz[0],_xyz[1],_xyz[2]}; return out; }
-  std::array<double,3> y() const { std::array<double,3> out{_xyz[3],_xyz[4],_xyz[5]}; return out; }
-  std::array<double,3> z() const { std::array<double,3> out{_xyz[6],_xyz[7],_xyz[8]}; return out; }
-  std::array<double,3> x(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) _xyz[i   ] = n[i]; return this->x();}
-  std::array<double,3> y(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) _xyz[i+3u] = n[i]; return this->y();}
-  std::array<double,3> z(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) _xyz[i+6u] = n[i]; return this->z();}
-  const std::array<double,9>& xyz() const { return _xyz;}
+  size_t xboundaries(const std::vector<double>& xb){ return this->boundaries(xb, boundaries_[1], boundaries_[2]);}
+  size_t yboundaries(const std::vector<double>& yb){ return this->boundaries(boundaries_[0], yb, boundaries_[2]);}
+  size_t zboundaries(const std::vector<double>& zb){ return this->boundaries(boundaries_[0], boundaries_[1], zb);}
+  std::array<double,3> x() const { std::array<double,3> out{xyz_[0],xyz_[1],xyz_[2]}; return out; }
+  std::array<double,3> y() const { std::array<double,3> out{xyz_[3],xyz_[4],xyz_[5]}; return out; }
+  std::array<double,3> z() const { std::array<double,3> out{xyz_[6],xyz_[7],xyz_[8]}; return out; }
+  std::array<double,3> x(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i   ] = n[i]; return this->x();}
+  std::array<double,3> y(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i+3u] = n[i]; return this->y();}
+  std::array<double,3> z(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i+6u] = n[i]; return this->z();}
+  const std::array<double,9>& xyz() const { return xyz_;}
   const std::array<double,9>& xyz(const std::array<double,9>& n){
-    _xyz = n;
-    return _xyz;
+    xyz_ = n;
+    return xyz_;
   }
   const std::array<double,9>& xyz(const std::array<double,3>& nx, const std::array<double,3>& ny, const std::array<double,3>& nz){
     for (size_t i=0; i<3u; ++i){
-      _xyz[i   ] = nx[i];
-      _xyz[i+3u] = ny[i];
-      _xyz[i+6u] = nz[i];
+      xyz_[i   ] = nx[i];
+      xyz_[i+3u] = ny[i];
+      xyz_[i+6u] = nz[i];
     }
-    return _xyz;
+    return xyz_;
   }
   const std::array<double,9>& xyz(const std::array<double,3>& nx, const std::array<double,3>& ny){
     for (size_t i=0; i<3u; ++i){
-      _xyz[i   ] = nx[i];
-      _xyz[i+3u] = ny[i];
+      xyz_[i   ] = nx[i];
+      xyz_[i+3u] = ny[i];
     }
-    vector_cross(_xyz.data()+6u, _xyz.data(), _xyz.data()+3u); // z = x × y
-    return _xyz;
+    vector_cross(xyz_.data()+6u, xyz_.data(), xyz_.data()+3u); // z = x × y
+    return xyz_;
   }
 
   // Find the appropriate node for an arbitrary point:
@@ -122,8 +122,8 @@ public:
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
-      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[dim*3u + i];
-      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*xyz_[dim*3u + i];
+      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < boundaries_[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -131,8 +131,8 @@ public:
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
-      for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*_xyz[dim*3u + i];
-      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*xyz_[dim*3u + i];
+      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < boundaries_[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -143,8 +143,8 @@ public:
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
-      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*_xyz[3u*dim + i];
-      for (size_t i=0; i<sz[dim]; ++i) if (p_dot_e+r < _boundaries[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*xyz_[3u*dim + i];
+      for (size_t i=0; i<sz[dim]; ++i) if (p_dot_e+r < boundaries_[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
@@ -153,13 +153,13 @@ public:
 
   // get the leaves located at a node
   const std::vector<TrellisLeaf>& node_leaves(const size_t idx) const {
-    if (idx < _nodes.size()) return _nodes[idx];
+    if (idx < nodes_.size()) return nodes_[idx];
     throw std::domain_error("Out of bounds index for Trellis' nodes");
   }
   const std::vector<TrellisLeaf>& node_leaves(const size_t idx, const std::vector<TrellisLeaf>& l) {
-    if (idx < _nodes.size()){
-      _nodes[idx] = l;
-      return _nodes[idx];
+    if (idx < nodes_.size()){
+      nodes_[idx] = l;
+      return nodes_[idx];
     }
     throw std::domain_error("Out of bounds index for Trellis' nodes");
   }
@@ -173,24 +173,27 @@ public:
   // add a leaf to the trellis:
   bool add_leaf(const TrellisLeaf& l){
     size_t idx = this->node_index(l);
-    _nodes[idx].push_back(l);
+    nodes_[idx].push_back(l);
     return true;
   }
   // add a number of leaves to the trellis:
   bool add_leaves(const std::vector<TrellisLeaf>& leaves){
     for (auto leaf: leaves){
       size_t idx = this->node_index(leaf);
-      if (leaf.radius() > _maximum_leaf_radius) _maximum_leaf_radius = leaf.radius(); // keep track of this on a per-node basis?
-      _nodes[idx].push_back(leaf);
+      if (leaf.radius() > max_leaf_radius_) max_leaf_radius_ = leaf.radius(); // keep track of this on a per-node basis?
+      nodes_[idx].push_back(leaf);
     }
     return true;
   }
-  // get a vector of node indicess to search when trying to find a point in a leaf
+  /* Get a vector of node indices to search when trying to find a point in a
+     leaf. We only need to check against leaves with a node-distance no larger
+     than 2√3 times the maximum leaf radius -- since nodes further away than
+     this are incapable of holding leaves which reach points in this node.
+     */
   template<class T> std::vector<size_t> nodes_to_search(const T& p) const {
     std::array<size_t,3> tsub, psub = this->node_subscript(p);
     std::array<size_t,3> xtnt = this->size();
     std::array<size_t,3> xspn = this->span();
-    size_t tidx, pidx = this->sub2idx(psub, xspn);
     std::vector<size_t> to_search;
     // include all nodes which are no more than the maximum leaf diameter away
     // We only need to search in the increasing-subscripts direction due to how
@@ -198,15 +201,15 @@ public:
     for (tsub[0]=psub[0]; tsub[0]<xtnt[0]; ++tsub[0])
     for (tsub[1]=psub[1]; tsub[1]<xtnt[1]; ++tsub[1])
     for (tsub[2]=psub[2]; tsub[2]<xtnt[2]; ++tsub[2]){
-      tidx = this->sub2idx(tsub, xspn);
-      if (this->node_distance(pidx, tidx) <= 3.5*_maximum_leaf_radius) // a bit more than sqrt(3)*d to account for body diagonal
-        to_search.push_back(tidx);
+      // if (this->node_distance(psub, tsub) <= 3.5*max_leaf_radius_) // a bit more than sqrt(3)*d to account for body diagonal
+      if (this->node_close_enough(psub, tsub))
+        to_search.push_back(this->sub2idx(tsub, xspn));
     }
     // Assuming we're most likely to find the leaf at a node close to where
     // the point is located, sort the found nodes by their distance away
     std::sort(to_search.begin(), to_search.end(),
-      [pidx, this](const size_t i, const size_t j){
-        return this->node_distance(pidx,i) < this->node_distance(pidx,j);
+      [psub, xspn, this](const size_t i, const size_t j){
+        return this->node_distance(psub,this->idx2sub(i,xspn)) < this->node_distance(psub,this->idx2sub(j,xspn));
       }
     );
     return to_search;
@@ -220,10 +223,24 @@ private:
     for (size_t dim=0; dim<3u; ++dim) idx += sp[dim]*sub[dim];
     return idx;
   }
-  double node_distance(const size_t i, const size_t j) const {
+  std::array<size_t,3> idx2sub(const size_t idx, const std::array<size_t,3>& sp) const {
+    std::array<size_t,3> sub{0,0,0};
+    size_t rem{idx};
+    for (size_t dim=3u; dim>0u; dim--){
+      sub[dim] = rem/sp[dim];
+      rem -= sub[dim]*sp[dim];
+    }
+    return sub;
+  }
+  double node_distance(const std::array<size_t,3>& i, const std::array<size_t,3>& j) const {
     double d{0.};
-    for (size_t dim=0; dim<3u; ++dim) d += (_boundaries[dim][i+1]-_boundaries[dim][j+1])*(_boundaries[dim][i+1]-_boundaries[dim][j+1]);
+    for (size_t dim=0; dim<3u; ++dim) d += (boundaries_[dim][i[dim]+1]-boundaries_[dim][j[dim]+1])*(boundaries_[dim][i[dim]+1]-boundaries_[dim][j[dim]+1]);
     return std::sqrt(d);
+  }
+  bool node_close_enough(const std::array<size_t,3>& i, const std::array<size_t,3>& j) const {
+    double halfdist = this->node_distance(i,j)/2.0;
+    if (halfdist < max_leaf_radius_) return true;
+    return approx_scalar(halfdist, max_leaf_radius_);
   }
 };
 

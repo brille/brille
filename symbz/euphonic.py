@@ -228,7 +228,7 @@ class SymEu:
                                           T)
         return DWfactor
 
-    def w_q(self, q_pt, moveinto=True, interpolate=True, **kwargs):
+    def w_q(self, q_pt, moveinto=True, interpolate=True, threads=-1, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
         prim_tran = self.__get_primitive_transform()
         if interpolate:
@@ -236,7 +236,7 @@ class SymEu:
             # each grid point has a (n_br, 1+3*n_io) array and interpolate_at
             # returns an (n_pt, n_br, 1+3*n_io) array.
             # frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
-            frqs_vecs = self.grid.ir_interpolate_at(q_pt, self.parallel, do_not_move_points=(not moveinto))
+            frqs_vecs = self.grid.ir_interpolate_at(q_pt, self.parallel, threads, not moveinto)
             # Separate the frequencies and eigenvectors
             # pylint: disable=w0632
             frqs, vecs = np.split(frqs_vecs, (1,), axis=2)

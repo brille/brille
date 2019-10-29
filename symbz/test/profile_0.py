@@ -69,60 +69,32 @@ dlat = symbz.Direct((5.,5.,5.), (90.,90.,90.), 525)
 bz = symbz.BrillouinZone(dlat.star)
 
 # max_sizes = 1/np.arange(100,5000,500)
-# trellis_r = 1/(np.arange(1,30002,5000)**(1/3))
-max_sizes = 1/np.arange(100, 4000, 500)
-# trellis_r = 1/(np.arange(1, 15002, 5000)**(1/3))
-trellis_r = 2**np.arange(-1, 2.1, 0.5)
-
-smat, tmat = np.meshgrid(max_sizes, trellis_r)
+max_sizes = 2**np.arange(-12,-2.01,0.5)
+max_sizes = 1/(10**np.linspace(6,12,5))**(1/3)
 
 print('pybind object creation times:')
-it = np.nditer([smat, tmat, None, None, None])
-for s, t, c, e, n in it:
+it = np.nditer([max_sizes, None, None, None])
+for s, c, e, n in it:
     tictoc.tic()
-    # while not (tictoc.elapsed() > 10 or tictoc.relative_uncertainty() < 0.1):
-    while not (tictoc.elapsed() > 1 or tictoc.relative_uncertainty() < 0.5):
-        mesh = symbz.BZMeshQ(bz, max_size=s, lattice_ratio=t)
+    while not (tictoc.elapsed() > 10 or tictoc.relative_uncertainty() < 0.01):
+        mesh = symbz.BZMeshQ(bz, max_size=s, lattice_ratio=2.)
         tictoc.toc()
     c[...] = tictoc.average()
     e[...] = tictoc.uncertainty()
     n[...] = mesh.rlu.shape[0]
-    print('size {:6.4f} ratio {:6.4f}: <time>={:5.3f}({:5.3f}) sum(time)={:5.2f} sec'.format(s,t,c,e,tictoc.elapsed()))
-creation = it.operands[2]
-creation_uncertainty = it.operands[3]
-n_vertices = it.operands[4]
+    print('size {:6.4f}: <time>={:5.3f}({:5.3f}) sum(time)={:5.2f} sec'.format(s,c,e,tictoc.elapsed()))
+creation = it.operands[1]
+creation_uncertainty = it.operands[2]
+n_vertices = it.operands[3]
 
 pp.figure()
-pcolormesh(smat, tmat, np.log10(creation))
-pp.xlabel(r'maximum tetrahedral volume / $\AA^{-3}$')
-pp.ylabel(r'location trellis spacing / maximum tetrahedral circumsphere radius')
+pp.errorbar(n_vertices**2, 1000*creation, yerr=1000*creation_uncertainty, marker='o')
+pp.xlabel(r'$N_v^2$')
+pp.ylabel(r'BZMeshQ object creation time / ms')
 
 pp.figure()
-for i, value in enumerate(trellis_r):
-    pp.errorbar(1/max_sizes, creation[i], yerr=creation_uncertainty[i], marker='o', linestyle='-', label='{:8.6f}'.format(value))
-pp.xlabel(r'inverse maximum tetrahedral volume / $\AA^3$')
-pp.ylabel(r'BZMeshQ object creation time / s')
-pp.legend(title='[trellis spacing]/[maximum circumsphere radius]')
-
-pp.figure()
-for i, value in enumerate(max_sizes):
-    pp.errorbar(1/trellis_r**3, creation[:,i], yerr=creation_uncertainty[:,i], marker='o', linestyle='-', label='{:8.6f}'.format(value))
-pp.xlabel(r'[maximum tetrahedral circumsphere radius]/[trellis spacing]')
-pp.ylabel(r'BZMeshQ object creation time / s')
-pp.legend(title=r'maximum tetrahedral volume / $\AA^{-1}$')
-
-pp.figure()
-for i, value in enumerate(trellis_r):
-    pp.errorbar(n_vertices[i], creation[i], yerr=creation_uncertainty[i], marker='o', linestyle='-', label='{:8.6f}'.format(value))
-pp.xlabel(r'Number of mesh vertices')
-pp.ylabel(r'BZMeshQ object creation time / s')
-pp.legend(title='[trellis spacing]/[maximum circumsphere radius]')
-
-pp.figure()
-for i, value in enumerate(max_sizes):
-    pp.errorbar(n_vertices[:,i], creation[:,i], yerr=creation_uncertainty[:,i], marker='o', linestyle='-', label='{:8.6f}'.format(value))
-pp.xlabel(r'Number of mesh vertices')
-pp.ylabel(r'BZMeshQ object creation time / s')
-pp.legend(title=r'maximum tetrahedral volume / $\AA^{-1}$')
+pp.errorbar(n_vertices, 1000*creation, yerr=1000*creation_uncertainty, marker='o')
+pp.xlabel(r'$N_v$')
+pp.ylabel(r'BZMeshQ object creation time / ms')
 
 pp.show()

@@ -213,9 +213,9 @@ public:
     v.clear();
     w.clear(); // make sure w is back to zero-elements
 
-    // debug_update("Find which tetrahedra might contain the point ",x.to_string(0));
+    // verbose_update("Find which tetrahedra might contain the point ",x.to_string(0));
     // std::vector<size_t> tets_to_check = tetrahedraTree.all_containing_leaf_indexes(x);
-    // debug_update("The tree would have us search ",tets_to_check);
+    // verbose_update("The tree would have us search ",tets_to_check);
     // for (size_t tet_idx: tets_to_check) if (this->unsafe_might_contain(tet_idx, x)){
 
     for (size_t node: tetrahedraTrellis.nodes_to_search(x)) // returns a distance-sorted list of nodes which might have a containing leaf
@@ -231,7 +231,7 @@ public:
         return leaf.index();
       }
     }
-    // containing tetrahedra not found :(
+    throw std::runtime_error("The containing tetrahedra was not found?!");
     return nTetrahedra;
   }
   // and a special version which doesn't return the weights
@@ -349,7 +349,7 @@ protected:
     leaves.clear();
     std::array<double,3> centre;
     double radius;
-    debug_update("Pull together the circumsphere information for all tetrahedra");
+    verbose_update("Pull together the circumsphere information for all tetrahedra");
     tetgenmesh tgm; // to get access to circumsphere
     for (size_t i=0; i<nTetrahedra; ++i){
       // use tetgen's circumsphere to find the centre and radius for each tetrahedra
@@ -374,9 +374,9 @@ protected:
     //   // and tree-size for how quickly a containing tetrahedra can be located.
     //   size_t maximum_branchings = static_cast<size_t>(std::log2(nTetrahedra))-2;
     //   maximum_branchings = 3;
-    //   debug_update("Construct a tree for tetrahedra location with up to ",maximum_branchings," branchings.");
+    //   verbose_update("Construct a tree for tetrahedra location with up to ",maximum_branchings," branchings.");
     //   tetrahedraTree = construct_balltree(leaves, maximum_branchings);
-    //   debug_update("Tree for locating tetrahedra now exists");
+    //   verbose_update("Tree for locating tetrahedra now exists");
     //   // info_update("Tetrahedra tree:\n",tetrahedraTree.to_string());
     // }
     tetrahedraTrellis = construct_trellis(leaves, fraction);
@@ -395,7 +395,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
 ) {
   assert(verts.numel() == 3); // otherwise we can't make a 3-D triangulation
   // create the tetgenbehavior object which contains all options/switches for tetrahedralize
-  debug_update("Creating `tetgenbehavior` object");
+  verbose_update("Creating `tetgenbehavior` object");
   tetgenbehavior tgb;
   tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
   tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
@@ -420,11 +420,11 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
   #endif
 
   // make the input and output tetgenio objects and fill the input with our polyhedron
-  debug_update("Creating input and output `tetgenio` objects");
+  verbose_update("Creating input and output `tetgenio` objects");
   tetgenio tgi, tgo;
   // we have to handle initializing points/facets, but tetgenio has a destructor
   // which handles deleting all non-NULL fields.
-  debug_update("Initialize and fill the input object's pointlist parameter");
+  verbose_update("Initialize and fill the input object's pointlist parameter");
   tgi.numberofpoints = static_cast<int>(verts.size());
   tgi.pointlist = new double[3*tgi.numberofpoints];
   tgi.pointmarkerlist = new int[tgi.numberofpoints];
@@ -435,7 +435,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     for (size_t j=0; j<verts.numel(); ++j)
       tgi.pointlist[idx++] = verts.getvalue(i,j);
   }
-  debug_update("Initialize and fill the input object's facetlist parameter");
+  verbose_update("Initialize and fill the input object's facetlist parameter");
   tgi.numberoffacets = static_cast<int>(vpf.size());
   tgi.facetlist = new tetgenio::facet[tgi.numberoffacets];
   tgi.facetmarkerlist = new int[tgi.numberoffacets];
@@ -450,7 +450,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
   }
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
-  debug_update("Calling tetgen::tetrahedralize");
+  verbose_update("Calling tetgen::tetrahedralize");
   try {
       tetrahedralize(&tgb, &tgi, &tgo);
   } catch (const std::logic_error& e) {
@@ -463,7 +463,7 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     std::string msg = "tetgen threw an undetermined error";
     throw std::runtime_error(msg);
   }
-  debug_update("Constructing TetrahedralTriangulation object");
+  verbose_update("Constructing TetrahedralTriangulation object");
   return TetrahedralTriangulation(tgo, fraction);
 }
 

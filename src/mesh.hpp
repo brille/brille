@@ -65,10 +65,14 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_a
   ArrayVector<T> out(this->data.numel(), x.size());
   std::vector<size_t> vertices;
   std::vector<double> weights;
+  size_t found_tet, max_valid_tet = this->mesh.number_of_tetrahedra()-1;
   for (size_t i=0; i<x.size(); ++i){
-    debug_update("Locating ",x.to_string(i));
-    this->mesh.locate(x.extract(i), vertices, weights);
-    debug_update("Interpolate between vertices ", vertices," with weights ",weights);
+    verbose_update("Locating ",x.to_string(i));
+    found_tet = this->mesh.locate(x.extract(i), vertices, weights);
+    debug_update_if(found_tet > max_valid_tet,"Point ",x.to_string(i)," not found in tetrahedra!");
+    if (found_tet > max_valid_tet)
+      throw std::runtime_error("Point not found in tetrahedral mesh");
+    verbose_update("Interpolate between vertices ", vertices," with weights ",weights);
     new_unsafe_interpolate_to(this->data, this->elements, this->branches, vertices, weights, out, i);
   }
   return out;

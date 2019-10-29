@@ -103,10 +103,8 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const double f
     boundaries[i].push_back(minmax[i][0]);
     while( boundaries[i].back() < minmax[i][1] ) boundaries[i].push_back(boundaries[i].back()+d);
     // replace the first and last boundaries to -∞ and +∞, respectively
-    // boundaries[i].front() = std::numeric_limits<double>::lowest();
-    // boundaries[i].back() = (std::numeric_limits<double>::max)();
-    boundaries[i].front() = -std::numeric_limits<double>::infinity();
-    boundaries[i].back()  =  std::numeric_limits<double>::infinity();
+    // boundaries[i].front() = -std::numeric_limits<double>::infinity();
+    // boundaries[i].back()  =  std::numeric_limits<double>::infinity();
     debug_update("Step size along axis ",i,", ",d,", yields ",boundaries[i].size()-1," bins with boundaries ",boundaries[i]);
   }
 
