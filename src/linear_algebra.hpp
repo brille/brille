@@ -626,6 +626,16 @@ S coth_over_en(const std::complex<T> en, const R beta){
   return S(1)/den;
 }
 
+template<class T> enable_if_t<std::is_unsigned<T>::value, T>
+gcd(const T a, const T b){
+  #ifdef STD_GCD
+    return std::gcd(a,b);
+  #else
+    if (b==0) return a;
+    return gcd(b, a % b);
+  #endif
+}
+
 template<class T, class R>
 enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
 binomial_coefficient(const T n, const R k){
@@ -643,11 +653,7 @@ binomial_coefficient(const T n, const R k){
     num *= static_cast<unsigned long long>(n-i);
     den *= static_cast<unsigned long long>(i+1);
     if (lastnum > num || lastden > den){
-      #ifdef GCD_IS_EXPERIMENTAL
-        comdiv = std::experimental::gcd(lastnum, lastden);
-      #else
-        comdiv = std::gcd(lastnum, lastden);
-      #endif 
+      comdiv = gcd(lastnum, lastden);
       if (comdiv > 1){
         num = lastnum/comdiv;
         den = lastden/comdiv;
