@@ -90,10 +90,12 @@ public:
   int hall_number;
   // Initializers
   Spacegroup(): number(0), bravais(Bravais::_), pointgroup_number(0), hall_number(0) {}
-  Spacegroup(int no, const char* sf, const char* hs, const char* its, const char* itf, const char* ith, const char* ch, Bravais br, int pno):
-    number(no), bravais(br), pointgroup_number(pno) {
+  Spacegroup(const int no, const std::string& sf, const std::string& hs,
+             const std::string& its, const std::string& itf,
+             const std::string& ith, const std::string& ch,
+             const Bravais br, const int pno, const int hno):
+    number(no), bravais(br), pointgroup_number(pno), hall_number(hno) {
       deal_with_strings(sf, hs, its, itf, ith, ch);
-      set_hall_number();
   }
   Spacegroup(int _hall_number) { set_from_hall_number(_hall_number); }
   //
@@ -120,7 +122,7 @@ public:
   }
   Pointgroup get_pointgroup(void) const {return Pointgroup(this->pointgroup_number);}
 private:
-  void deal_with_strings(const char*, const char*, const char*, const char*, const char*, const char*);
+  void deal_with_strings(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
   void set_hall_number(void);
   void set_from_hall_number(const int);
 };
