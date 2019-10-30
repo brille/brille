@@ -643,7 +643,11 @@ binomial_coefficient(const T n, const R k){
     num *= static_cast<unsigned long long>(n-i);
     den *= static_cast<unsigned long long>(i+1);
     if (lastnum > num || lastden > den){
-      comdiv = std::gcd(lastnum, lastden);
+      #ifdef GCD_IS_EXPERIMENTAL
+        comdiv = std::experimental::gcd(lastnum, lastden);
+      #else
+        comdiv = std::gcd(lastnum, lastden);
+      #endif 
       if (comdiv > 1){
         num = lastnum/comdiv;
         den = lastden/comdiv;

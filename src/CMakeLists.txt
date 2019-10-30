@@ -1,7 +1,8 @@
 # Directory specific compilation flags
 if (MSVC)
     # warning level 4 -- add /WX for all warnings as errors
-    add_compile_options(/W4)
+    # /Zc__cplusplus ensures the preprocessor macro __cplusplus is set
+    add_compile_options(/W4 /Zc__cplusplus)
 else()
     # lots of warnings -- add -Werror for  all warnings as errors
     add_compile_options(-Wall -Wextra -pedantic)

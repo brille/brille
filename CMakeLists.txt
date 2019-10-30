@@ -86,7 +86,11 @@ endif()
 
 set(CXX_TARGETS _symbz test_cpp test_catch)
 foreach(CXX_TARGET ${CXX_TARGETS})
-  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 17)
+  if (MSVC)
+    set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 17)
+  else()
+    set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14) # was 17
+  endif()
 endforeach(CXX_TARGET)
 
 

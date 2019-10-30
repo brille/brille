@@ -16,6 +16,15 @@
 #include "safealloc.h"
 #include "debug.h"
 
+// We include numeric for std::gcd in C++17 (are we using it for anything else?)
+/* Pre-C++17 gcd was not part of the standard but may be present in an
+// experimental header -- which of course doesn't exist for MSVC
+*/
+#if !defined(_MSC_VER) && defined(__cplusplus) && __cplusplus < 201700L
+  #include <experimental/numeric>
+  #define GCD_IS_EXPERIMENTAL
+#endif
+
 const double PI = std::atan(1.0)*4;
 const double PICUBED = PI*PI*PI;
 const double PIOVERTWO = PI/2.0;
