@@ -288,7 +288,6 @@ public:
 
 private:
   TetMap connect(const size_t high, const size_t low) const{
-    info_update("Connect layer ",high," to ",low);
     Stopwatch<> stopwatch;
     stopwatch.tic();
     const TetTriLayer& hl{layers[high]}, ll{layers[low]};
@@ -302,24 +301,27 @@ private:
     for (size_t i=0; i<map.size(); ++i){
       // initialize the map
       map[i] = TetSet();
+      ArrayVector<double> cchi = cch.extract(i);
       // get a Polyhedron object for the ith higher-tetrahedra in case we need it
       Polyhedron tethi = hl.get_tetrahedron(i);
       std::vector<double> sumrad;
       for (double r: crl) sumrad.push_back(crh[i]+r);
       // if two circumsphere centers are closer than the sum of their radii
       // they are close enough to possibly overlap:
-      for (size_t j: find(norm(ccl - cch.extract(i)).is_approx("<=", sumrad))){
+      for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
         bool add = false;
         // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
         for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;
         // even if no vertex is inside of the ith higher-tetrahedra, the two tetrahedra
         // can overlap -- and checking for this overlap is complicated.
         // make the Polyhedron class do the heavy lifting.
-        if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
+        // if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
+        if (add || ll.get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
+        // if (add || ll.get_tetrahedron(j).fuzzy_intersects(tethi)) map[i].push_back(j);
       }
     }
     stopwatch.toc();
-    info_update("Completed in ",stopwatch.elapsed()," ms");
+    info_update("Connect ",hl.number_of_tetrahedra()," to ",ll.number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
     // we now have a TetMap which contains, for every tetrahedral index of the
     // higher level, all tetrahedral indices of the lower level which touch the
     // higher tetrahedron or share some part of its volume.

@@ -672,6 +672,35 @@ public:
     // If two polyhedra intersect one another, their intersection is not null.
     return !approx_scalar(iv, 0.);
   }
+  bool fuzzy_intersects(const Polyhedron& other) const {
+    verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
+    const ArrayVector<double>& n = other.normals;
+    const ArrayVector<double>& p = other.points;
+    ArrayVector<double> at(3u,1u,0.);
+    for (size_t i=0; i<n.size(); ++i){
+      ArrayVector<double> crit = dot(n.extract(i), vertices-p.extract(i));
+      if (crit.any_approx(">",0.)){
+        std::vector<size_t> del = find(crit.is_approx(">",0.));
+        std::vector<size_t> cut;
+        for (auto x: del) for (auto f: faces_per_vertex[x])
+        if (std::find(cut.begin(), cut.end(), f)==cut.end()) cut.push_back(f);
+        verbose_update("Facets ",cut," are cut by the plane");
+        // find the new intersection points of two neighbouring facets and the cutting plane
+        for (size_t j=0; j<cut.size()-1; ++j) for (size_t k=j+1; k<cut.size(); ++k)
+        // check if the three planes intersect, and give a point not-outside of the polyhedron
+        if (one_intersection(normals, points, /* all polyhedron planes, to check for outsideness*/
+                             n.extract(i), p.extract(i), /* the cutting plane */
+                             normals.extract(cut[j]), points.extract(cut[j]), /* first cut plane */
+                             normals.extract(cut[k]), points.extract(cut[k]), /* second cut plane */
+                             at /* the intersection point, if it exists */ )
+              && norm(vertices-at.extract(0)).none_approx(0.) /* we would only add a point if its new */
+           ){
+               return true;
+        }
+      }
+    }
+    return false;
+  }
   Polyhedron intersection(const Polyhedron& other) const {
     ArrayVector<double> centroid = this->get_centroid();
     Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
@@ -762,7 +791,9 @@ public:
                              ni, pi, /* the cutting plane */
                              pn.extract(cut[j]), pp.extract(cut[j]), /* first cut plane */
                              pn.extract(cut[k]), pp.extract(cut[k]), /* second cut plane */
-                             at /* the intersection point, if it exists */ )){
+                             at /* the intersection point, if it exists */ )
+            && norm(pv-at.extract(0)).none_approx(0.) /* only add a point if its new */
+           ){
           // grab the index of the next-added vertex
           last_vertex = static_cast<int>(pv.size());
           // add the intersection point to all vertices

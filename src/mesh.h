@@ -29,18 +29,15 @@ public:
   Mesh3(const ArrayVector<double>& verts,
         const std::vector<std::vector<int>>& facets,
         const double max_volume=-1.0,
-        const double min_angle=-1.0,
-        const double max_angle=-1.0,
-        const double min_ratio=-1.0,
-        const int max_points=-1,
-        const double trellis_fraction=1.
+        const int num_levels=3,
+        const int max_points=-1
       ):
         data(0,0),
         shape(1,0),
         elements({0,0,0,0}),
         branches(0) {
     // this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points, trellis_fraction);
-    this->mesh = triangulate(verts, facets, max_volume, max_points);
+    this->mesh = triangulate(verts, facets, max_volume, num_levels, max_points);
   }
   Mesh3(const Mesh3<T>& other){
     this->mesh = other.mesh;

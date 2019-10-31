@@ -208,8 +208,8 @@ class SymEu:
         else:
             raise Exception("You must provide a halfN or step keyword")
 
-    def __make_mesh(self, bz, max_size=-1, min_angle=20, max_angle=-1, min_ratio=-1, max_points=-1, **kwds):
-        self.grid = sbz.BZMeshQcomplex(bz, max_size, min_angle, max_angle, min_ratio, max_points)
+    def __make_mesh(self, bz, max_size=-1, max_points=-1, num_levels=3, **kwds):
+        self.grid = sbz.BZMeshQcomplex(bz, max_size, num_levels, max_points)
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
