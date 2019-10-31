@@ -8,6 +8,7 @@
 #include <array>
 #include <vector>
 #include <complex>
+#include <chrono>
 
 // #define VERBOSE_DEBUG
 // #define DEBUG // comment-out for no debugging output
@@ -230,5 +231,45 @@ static DebugPrinter _debug_printer("");
   #define verbose_update(...)
   #define verbose_update_if(...)
 #endif
+
+template<typename TimeT = std::chrono::milliseconds>
+class Stopwatch{
+  typedef std::chrono::high_resolution_clock ClockT;
+private:
+    std::chrono::time_point<ClockT> _start, _end, _split;
+    size_t presses;
+public:
+    Stopwatch(): presses(0u){
+      tic();
+    }
+    void tic(){
+      presses = 0u;
+      _start = _end = ClockT::now();
+    }
+    double toc(){
+      _end = ClockT::now();
+      ++presses;
+      return elapsed();
+    }
+    double elapsed() const {
+      auto delta = std::chrono::duration_cast<TimeT>(_end - _start);
+      return delta.count();
+    }
+    double average() const {
+      return elapsed()/static_cast<double>(presses);
+    }
+    double jitter() const {
+      return std::sqrt(elapsed())/static_cast<double>(presses);
+    }
+    double split(){
+      auto new_split = ClockT::now();
+      auto delta = std::chrono::duration_cast<TimeT>(new_split - _split);
+      _split = new_split;
+      ++presses;
+      return delta.count();
+    }
+};
+
+
 
 #endif //_DEBUG_H_

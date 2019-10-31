@@ -10,7 +10,7 @@
 #include "permutation.h"
 #include <queue>
 
-#include "triangulation.h" // defined Delaunay
+#include "triangulation_layers.h" // defined Delaunay
 // typedef CGAL::Triangulation_vertex_base_with_info_3<unsigned, K>     Vertex_Base;
 // typedef CGAL::Delaunay_triangulation_cell_base_3<K>                  Cell_Base;
 // typedef CGAL::Triangulation_data_structure_3<Vertex_Base, Cell_Base> Tds;
@@ -19,7 +19,7 @@
 
 template<class T> class Mesh3{
 protected:
-  TetrahedralTriangulation mesh;
+  TetTri mesh;
   ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
   ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
   std::array<unsigned,4> elements; //! The number of [scalar, normalized eigenvector, vector, matrix] elements per data array
@@ -39,7 +39,8 @@ public:
         shape(1,0),
         elements({0,0,0,0}),
         branches(0) {
-    this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points, trellis_fraction);
+    // this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points, trellis_fraction);
+    this->mesh = triangulate(verts, facets, max_volume, max_points);
   }
   Mesh3(const Mesh3<T>& other){
     this->mesh = other.mesh;
@@ -139,6 +140,29 @@ public:
   template<typename R> bool consensus_sort_difference(const R w[4],
     const int f[2], const size_t so[2], ArrayVector<size_t>& p,
     std::vector<bool>& d, const size_t i, const std::vector<size_t> n) const;
+  std::string to_string(void) const {
+    std::string str="";
+    str += "( " + shape.to_string("") + ")" + " data";
+    str += " for the points of a TetTri[" + mesh.to_string() + "]";
+    if (branches>0){
+      str += " each with " + std::to_string(branches) + " mode";
+      if (branches>1) str += "s";
+    }
+    unsigned neltypes = std::count_if(elements.begin(), elements.end(), [](unsigned a){return a>0;});
+    if (neltypes>0){
+      str += " of ";
+      std::array<std::string,4> types{"scalar","eigenvector","vector","matrix"};
+      for (size_t i=0; i<4u; ++i) if (elements[i]) {
+        str += std::to_string( i==4u ? elements[i]*elements[i] : elements[i] );
+        str += " " + types[i];
+        if (--neltypes>1) str += ", ";
+        if (neltypes==1) str += " and ";
+      }
+      str += " element";
+      if (std::accumulate(elements.begin(), elements.end(), 0u)>1) str += "s";
+    }
+    return str;
+  }
 private:
   //! Ensure that the provided elements make sense
   void check_elements(void);

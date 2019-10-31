@@ -270,7 +270,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     double * mass_ptr = (double*) mi.ptr;
     for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
     return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
-  }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"));
+  }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"))
+  .def("__repr__",&Class::to_string);
 }
 
 template<class T>

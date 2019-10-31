@@ -10,7 +10,7 @@
 #include "grid.h"
 #include "grid4.h"
 
-#include "triangulation.h"
+// #include "triangulation.h"
 
 // TODO: Be clever about the map/grid creation (like spglib)?
 

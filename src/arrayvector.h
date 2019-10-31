@@ -336,6 +336,7 @@ public:
   bool all_approx(const std::string& expr, const T val, const size_t n=0) const;
   bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
   ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
+  ArrayVector<bool> is_approx(const std::string& expr, const std::vector<T>& val) const;
   bool vector_approx(const size_t i, const size_t j, const std::string& op="", const T val=0.) const;
   template<class R, size_t Nel> bool rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>&, const int order=1) const;
   //! Round all elements using std::round

@@ -215,6 +215,13 @@ public:
              const std::vector<std::vector<int>>& fpv,
              const std::vector<std::vector<int>>& vpf):
     vertices(v), points(p), normals(n), faces_per_vertex(fpv), vertices_per_face(vpf){}
+  // initialize from vertices, and vertices_per_face
+  Polyhedron(const ArrayVector<double>& v,
+             const std::vector<std::vector<int>>& vpf):
+  vertices(v), points({3u,0u}), normals({3u,0u}), vertices_per_face(vpf) {
+    this->find_face_points_and_normals();
+    this->find_all_faces_per_vertex(); // do we really need this?
+  }
   // copy constructor
   Polyhedron(const Polyhedron& other):
     vertices(other.get_vertices()),
@@ -628,6 +635,20 @@ protected:
       verbose_update("Is a convex polygonal face with vertices ", vertices_per_face[n]);
     }
     this->actual_vertex_purge();
+  }
+  void find_face_points_and_normals(void){
+    // if the Polyhedron is defined from its vertices and vertices_per_face,
+    // then we require the input to be correct, and calculate points and normals
+    this->points.resize(vertices_per_face.size());
+    this->normals.resize(vertices_per_face.size());
+    size_t count = 0;
+    for (auto face: vertices_per_face){
+      ArrayVector<double> centre(3u, 1u, 0.);
+      for (size_t v: face) centre += vertices.extract(v);
+      this->points.set(count, centre/static_cast<double>(face.size()));
+      this->normals.set(count, cross(vertices.extract(face[1])-vertices.extract(face[0]), vertices.extract(face[2])-vertices.extract(face[1])));
+      ++count;
+    }
   }
 public:
   Polyhedron centre(void) const {

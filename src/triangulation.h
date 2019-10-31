@@ -46,7 +46,7 @@ template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, c
 // };
 
 // template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type>
-class TetrahedralTriangulation{
+class TetTri{
   // L<T> vertex_positions; // (nVertices, 3), ArrayVector<T>, LQVec<T>, or LDVec<T>
   size_t nVertices;
   size_t nTetrahedra;
@@ -65,8 +65,8 @@ public:
   const ArrayVector<double>& get_vertex_positions(void) const {return vertex_positions;}
   const ArrayVector<size_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
-  TetrahedralTriangulation(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  TetrahedralTriangulation(const tetgenio& tgio, const double fraction): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){ //, tgsource(tgio){
+  TetTri(void): nVertices(0), nTetrahedra(0), vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
+  TetTri(const tetgenio& tgio, const double fraction): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){ //, tgsource(tgio){
     nVertices = static_cast<size_t>(tgio.numberofpoints);
     nTetrahedra = static_cast<size_t>(tgio.numberoftetrahedra);
     // copy-over all vertex positions:
@@ -97,6 +97,14 @@ public:
     this->correct_tetrahedra_vertex_ordering();
     // construct the tree for faster locating:
     this->make_balltree(fraction);
+    // Create a string full of object information:
+  }
+  std::string to_string(void) const {
+    std::string str;
+    str  = std::to_string(nVertices) + " vertices";
+    str += " in " + std::to_string(nTetrahedra) + " tetrahedra";
+    str += " with a Trellis[" + tetrahedraTrellis.to_string() + "]";
+    return str;
   }
   // emulate the locate functionality of CGAL -- for which we need an enumeration
   enum Locate_Type{ VERTEX, EDGE, FACET, CELL, OUTSIDE_CONVEX_HULL };
@@ -384,7 +392,7 @@ protected:
 };
 
 template <typename T>
-TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
+TetTri triangulate(const ArrayVector<T>& verts,
                                      const std::vector<std::vector<int>>& vpf,
                                      const double max_cell_size=-1.0,
                                      const double min_dihedral=-1.0,
@@ -463,8 +471,8 @@ TetrahedralTriangulation triangulate(const ArrayVector<T>& verts,
     std::string msg = "tetgen threw an undetermined error";
     throw std::runtime_error(msg);
   }
-  verbose_update("Constructing TetrahedralTriangulation object");
-  return TetrahedralTriangulation(tgo, fraction);
+  verbose_update("Constructing TetTri object");
+  return TetTri(tgo, fraction);
 }
 
 #endif // _TRIANGULATION_H_

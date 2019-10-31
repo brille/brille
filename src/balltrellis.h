@@ -214,7 +214,29 @@ public:
     );
     return to_search;
   }
+  std::string to_string(void) const {
+    std::string str = "(";
+    for (auto i: this->size()) str += " " + std::to_string(i);
+    str += " )";
+    std::array<size_t,3> min_max_tot = this->node_leaves_min_max_tot();
+    str += " {";
+    str += std::to_string(min_max_tot[0]) + "--" + std::to_string(min_max_tot[1]);
+    str += " : " + std::to_string(min_max_tot[2]/static_cast<double>(nodes_.size()));
+    str += "}";
+    return str;
+  }
 private:
+  std::array<size_t,3> node_leaves_min_max_tot(void) const {
+    std::array<size_t,3> mmt{(std::numeric_limits<size_t>::max)(), 0u, 0u};
+    size_t leavescount;
+    for (auto leaves: nodes_){
+      leavescount = leaves.size();
+      if (leavescount < mmt[0]) mmt[0] = leavescount;
+      if (leavescount > mmt[1]) mmt[1] = leavescount;
+      mmt[2] += leavescount;
+    }
+    return mmt;
+  }
   size_t sub2idx(const std::array<size_t,3>& sub) const {
     return this->sub2idx(sub, this->span());
   }

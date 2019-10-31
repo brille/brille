@@ -65,6 +65,7 @@ class CMakeBuild(build_ext):
                        '-DPYTHON_EXECUTABLE=' + sys.executable]
 
         cfg = 'Debug' if self.debug else 'Release'
+        cfg = 'Debug'
         build_args = ['--config', cfg]
 
         # make sure all library files end up in one place
@@ -78,7 +79,7 @@ class CMakeBuild(build_ext):
             build_args += ['--', '/m:4']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            build_args += ['--', '-j4']
+            build_args += ['--', '-j']
 
         env = os.environ.copy()
         cxxflags = '{} -DVERSION_INFO=\\"{}\\"'.format(

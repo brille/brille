@@ -49,14 +49,20 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, cons
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<size_t>& idx) const{
   bool allinbounds = true;
-  ArrayVector<T> out(this->numel(),0u);
-  if (idx.numel() != 1u){
-    throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 [i.e., an ArrayScalar]");
+  ArrayVector<T> out(this->numel(), 0u);
+  if (idx.numel() != 1u && idx.size() != 1u){
+    throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 or size()==1 [i.e., an ArrayScalar or ScalarVector]");
   }
-  for (size_t j=0; j<idx.size(); ++j) if (idx.getvalue(j)>=this->size()){allinbounds=false; break;}
+  for (size_t i=0; i<idx.size(); ++i) for (size_t j=0; j<idx.numel(); ++j)
+  if (idx.getvalue(i,j) >= this->size()) allinbounds = false;
   if (allinbounds){
-    out.resize(idx.size());
-    for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx.getvalue(j)) );
+    if (idx.numel()==1u){
+      out.resize(idx.size());
+      for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx.getvalue(j)) );
+    } else {
+      out.resize(idx.numel());
+      for (size_t j=0; j<idx.numel(); ++j) out.set(j, this->data(idx.getvalue(0,j)));
+    }
   }
   return out;
 }
@@ -516,6 +522,76 @@ template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::stri
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
       if (approx_scalar(this->getvalue(i,j), val))
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  std::string msg = __PRETTY_FUNCTION__;
+  msg += ": Unknown comparator " + expr;
+  throw std::runtime_error(msg);
+}
+template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const std::vector<T>& vals) const{
+  size_t n = vals.size();
+  size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  ArrayVector<bool> out(1u, this->size());
+  for (size_t i=0; i<this->size(); ++i) out.insert(false, i);
+  bool onearray;
+  if (!expr.compare("lt") || !expr.compare("<")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), vals[i]) || this->getvalue(i,j) > vals[i])
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("gt") || !expr.compare(">")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), vals[i]) || this->getvalue(i,j) < vals[i])
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), vals[i]) && this->getvalue(i,j) > vals[i])
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), vals[i]) && this->getvalue(i,j) < vals[i])
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("eq") || !expr.compare("==")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (!approx_scalar(this->getvalue(i,j), vals[i]))
+      onearray = false;
+      out.insert(onearray, i);
+    }
+    return out;
+  }
+  if (!expr.compare("neq") || !expr.compare("!=")){
+    for (size_t i=0; i<upto; ++i){
+      onearray = true;
+      for (size_t j=0; j<this->numel(); ++j)
+      if (approx_scalar(this->getvalue(i,j), vals[i]))
       onearray = false;
       out.insert(onearray, i);
     }
@@ -1227,4 +1303,24 @@ template<class T> bool ArrayVector<T>::swap(const size_t i, const size_t a, cons
     return true;
   }
   return false;
+}
+
+// template<class T> std::vector<size_t> ArrayVector<T>::find(void) const {
+//   if (this->size() != 1u || this->numel() != 1u)
+//     throw std::logic_error("Find only makes sense for ArrayScalar or ScalarVector inputs");
+//   std::vector<size_t> out;
+//   for (size_t i=0; i<this->size(); ++i) for (size_t j=0; j<this->numel(); ++j)
+//   if (this->getvalue(i,j)) out.push_back(i+j); // either i or j is zero.
+//   return out;
+// }
+template<class T, template<class> class A,
+         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type
+         >
+std::vector<size_t> find(const A<T>& a){
+  if (a.size() != 1u && a.numel() != 1u)
+    throw std::logic_error("Find only makes sense for ArrayScalar or ScalarVector inputs");
+  std::vector<size_t> out;
+  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
+  if (a.getvalue(i,j)) out.push_back(i+j); // either i or j is zero.
+  return out;
 }
