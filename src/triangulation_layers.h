@@ -4,7 +4,7 @@
 // combined:
 #include <vector>
 #include <array>
-#include <map>
+#include <omp.h>
 #include <cassert>
 #include <algorithm>
 // Tetgen header
@@ -287,46 +287,91 @@ public:
   const ArrayVector<size_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
 
 private:
-  TetMap connect(const size_t high, const size_t low) const{
-    Stopwatch<> stopwatch;
-    stopwatch.tic();
-    const TetTriLayer& hl{layers[high]}, ll{layers[low]};
-    const ArrayVector<double>& cch = hl.get_circum_centres();
-    const ArrayVector<double>& ccl = ll.get_circum_centres();
-    const std::vector<double>& crh = hl.get_circum_radii();
-    const std::vector<double>& crl = ll.get_circum_radii();
-    const ArrayVector<double>& lvrt = ll.get_vertex_positions();
-    const ArrayVector<size_t>& ltet = ll.get_vertices_per_tetrahedron();
-    TetMap map(hl.number_of_tetrahedra());
-    for (size_t i=0; i<map.size(); ++i){
-      // initialize the map
-      map[i] = TetSet();
-      ArrayVector<double> cchi = cch.extract(i);
-      // get a Polyhedron object for the ith higher-tetrahedra in case we need it
-      Polyhedron tethi = hl.get_tetrahedron(i);
-      std::vector<double> sumrad;
-      for (double r: crl) sumrad.push_back(crh[i]+r);
-      // if two circumsphere centers are closer than the sum of their radii
-      // they are close enough to possibly overlap:
-      for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
-        bool add = false;
-        // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
-        for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;
-        // even if no vertex is inside of the ith higher-tetrahedra, the two tetrahedra
-        // can overlap -- and checking for this overlap is complicated.
-        // make the Polyhedron class do the heavy lifting.
-        // if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
-        if (add || ll.get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
-        // if (add || ll.get_tetrahedron(j).fuzzy_intersects(tethi)) map[i].push_back(j);
-      }
+  // TetMap connect(const size_t high, const size_t low) const{
+  //   Stopwatch<> stopwatch;
+  //   stopwatch.tic();
+  //   const TetTriLayer& hl{layers[high]}, ll{layers[low]};
+  //   const ArrayVector<double>& cch = hl.get_circum_centres();
+  //   const ArrayVector<double>& ccl = ll.get_circum_centres();
+  //   const std::vector<double>& crh = hl.get_circum_radii();
+  //   const std::vector<double>& crl = ll.get_circum_radii();
+  //   const ArrayVector<double>& lvrt = ll.get_vertex_positions();
+  //   const ArrayVector<size_t>& ltet = ll.get_vertices_per_tetrahedron();
+  //   TetMap map(hl.number_of_tetrahedra());
+  //   for (size_t i=0; i<map.size(); ++i){
+  //     // initialize the map
+  //     map[i] = TetSet();
+  //     ArrayVector<double> cchi = cch.extract(i);
+  //     // get a Polyhedron object for the ith higher-tetrahedra in case we need it
+  //     Polyhedron tethi = hl.get_tetrahedron(i);
+  //     std::vector<double> sumrad;
+  //     for (double r: crl) sumrad.push_back(crh[i]+r);
+  //     // if two circumsphere centers are closer than the sum of their radii
+  //     // they are close enough to possibly overlap:
+  //     for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
+  //       bool add = false;
+  //       // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
+  //       for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;
+  //       // even if no vertex is inside of the ith higher-tetrahedra, the two tetrahedra
+  //       // can overlap -- and checking for this overlap is complicated.
+  //       // make the Polyhedron class do the heavy lifting.
+  //       // if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
+  //       if (add || ll.get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
+  //       // if (add || ll.get_tetrahedron(j).fuzzy_intersects(tethi)) map[i].push_back(j);
+  //     }
+  //   }
+  //   stopwatch.toc();
+  //   info_update("Connect ",hl.number_of_tetrahedra()," to ",ll.number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
+  //   // we now have a TetMap which contains, for every tetrahedral index of the
+  //   // higher level, all tetrahedral indices of the lower level which touch the
+  //   // higher tetrahedron or share some part of its volume.
+  //   return map;
+  // }
+TetMap connect(const size_t high, const size_t low) const{
+  omp_set_num_threads(omp_get_max_threads());
+  Stopwatch<> stopwatch;
+  stopwatch.tic();
+  const TetTriLayer& hl{layers[high]}, ll{layers[low]};
+  const ArrayVector<double>& cch = hl.get_circum_centres();
+  const ArrayVector<double>& ccl = ll.get_circum_centres();
+  const std::vector<double>& crh = hl.get_circum_radii();
+  const std::vector<double>& crl = ll.get_circum_radii();
+  const ArrayVector<double>& lvrt = ll.get_vertex_positions();
+  const ArrayVector<size_t>& ltet = ll.get_vertices_per_tetrahedron();
+  TetMap map(hl.number_of_tetrahedra());
+  long mapsize = unsigned_to_signed<long, size_t>(map.size());
+// #pragma omp parallel for shared(hl, ll, cch, ccl, crh, crl, lvrt, ltet, map)
+#pragma omp parallel for shared(map)
+  for (long i=0; i<mapsize; ++i){
+    // initialize the map
+    map[i] = TetSet();
+    ArrayVector<double> cchi = cch.extract(i);
+    // get a Polyhedron object for the ith higher-tetrahedra in case we need it
+    Polyhedron tethi = hl.get_tetrahedron(i);
+    std::vector<double> sumrad;
+    for (double r: crl) sumrad.push_back(crh[i]+r);
+    // if two circumsphere centers are closer than the sum of their radii
+    // they are close enough to possibly overlap:
+    for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
+      bool add = false;
+      // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
+      for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;
+      // even if no vertex is inside of the ith higher-tetrahedra, the two tetrahedra
+      // can overlap -- and checking for this overlap is complicated.
+      // make the Polyhedron class do the heavy lifting.
+      // if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
+      if (add || ll.get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
+      // if (add || ll.get_tetrahedron(j).fuzzy_intersects(tethi)) map[i].push_back(j);
     }
-    stopwatch.toc();
-    info_update("Connect ",hl.number_of_tetrahedra()," to ",ll.number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
-    // we now have a TetMap which contains, for every tetrahedral index of the
-    // higher level, all tetrahedral indices of the lower level which touch the
-    // higher tetrahedron or share some part of its volume.
-    return map;
   }
+  stopwatch.toc();
+  info_update("Connect ",hl.number_of_tetrahedra()," to ",ll.number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
+  // we now have a TetMap which contains, for every tetrahedral index of the
+  // higher level, all tetrahedral indices of the lower level which touch the
+  // higher tetrahedron or share some part of its volume.
+  return map;
+}
+
 };
 
 template <typename T>

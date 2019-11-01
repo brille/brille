@@ -180,6 +180,8 @@ class SymEu:
             # where the lattice_vectors form the columns of a matrix and here
             # they form the rows
             lattice_vectors = np.matmul(prim_tran.invPt, lattice_vectors)
+            # try to avoid rounding-error problems by truncating at 10 decimals
+            lattice_vectors = np.round(lattice_vectors, 10)
         #
         dlat = sbz.Direct(lattice_vectors, self.hall_number)
         brillouin_zone = sbz.BrillouinZone(dlat.star)
