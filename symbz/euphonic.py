@@ -73,13 +73,20 @@ class SymEu:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
         cfp_dict = {k: kwds[k] for k in cfp_keywords if k in kwds}
-        freq, vecs = self.data.calculate_fine_phonons(grid_q, **cfp_dict)
+        # calculate_fine_phonos returns the frequencies and eigenvectors
+        # equivalent to the properties .freqs and .eigenvecs
+        # but we need to make sure we grab _freqs (or _reduced_freqs)
+        # since Euphonic no longer attempts to handle varying units
+        # internally
+        self.data.calculate_fine_phonons(grid_q, **cfp_dict)
+        freq = self.data._freqs   # can this be replaced by _reduced_freqs?
+        vecs = self.data.eigenvecs# can this be replaced by _reduced_eigenvecs?
         n_pt = grid_q.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
-        vecs = degenerate_check(grid_q, freq.magnitude, vecs)
+        vecs = degenerate_check(grid_q, freq, vecs)
         frqs_vecs = np.concatenate(
-            ((freq.magnitude).reshape((n_pt, n_br, 1)),
+            (freq.reshape(n_pt, n_br, 1),
              vecs.reshape(n_pt, n_br, 3*n_io)), axis=2)
         # fill requires input shaped (n_pt, n_br, [anything])
         # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
@@ -251,8 +258,9 @@ class SymEu:
             if prim_tran.does_anything and self.data_cell_is_primitive:
                 q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
             self.data.qpts = q_pt
-            self.data.freqs = frqs*self.data.freqs.units
-            self.data.eigenvecs = vecs
+            self.data._reduced_freqs = frqs
+            self.data._reduced_eigenvecs = vecs
+            self.data._qpts_i = np.arange(n_pt, dtype=np.int32)
         else:
             if prim_tran.does_anything and self.data_cell_is_primitive:
                 q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
@@ -260,7 +268,7 @@ class SymEu:
                             'eta_scale', 'splitting')
             cfp_dict = {k: kwargs[k] for k in cfp_keywords if k in kwargs}
             self.data.calculate_fine_phonons(q_pt, **cfp_dict)
-        return self.data.freqs
+        return self.data.freqs # now a property, handles unit conversion
 
     def __call__(self, *args, **kwargs):
         """Calculate and return Sᵢ(Q) and ωᵢ(Q) or S(Q,ω) depending on input.
