@@ -42,6 +42,22 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
   const LQVec<double> & nref = is_inner ? np : n;
   this->ir_polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), nref.get_xyz(), args...);
 }
+LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
+  LQVec<double> ir_n = this->get_ir_normals();
+  LQVec<double> ir_p = this->get_ir_points();
+  LQVec<double> bz_n = this->get_normals();
+  LQVec<double> bz_p = this->get_points();
+  ArrayVector<bool> not_bz(1u, 0u);
+  for (size_t i=0; i<bz_n.size(); ++i){
+    // check if the irBZ face point is on a first BZ zone face too
+    not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
+    ir_n = ir_n.extract(not_bz);
+    ir_p = ir_p.extract(not_bz);
+  }
+  // the remaining irBZ faces are the irreducible reciprocal space wedge
+  // which we store with the opposite sign in this->ir_wedge_normals
+  return -ir_n;
+}
 bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
   bool is_outer = this->outerlattice.issame(v.get_lattice());
   bool is_inner = this->lattice.issame(v.get_lattice());
@@ -59,20 +75,7 @@ bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
   // check that the polyhedron we've specified has the desired properties
   if (this->check_ir_polyhedron()){
     // set the wedge normals as well
-    LQVec<double> ir_n = this->get_ir_normals();
-    LQVec<double> ir_p = this->get_ir_points();
-    LQVec<double> bz_n = this->get_normals();
-    LQVec<double> bz_p = this->get_points();
-    ArrayVector<bool> not_bz(1u, 0u);
-    for (size_t i=0; i<bz_n.size(); ++i){
-      // check if the irBZ face point is on a first BZ zone face too
-      not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
-      ir_n = ir_n.extract(not_bz);
-      ir_p = ir_p.extract(not_bz);
-    }
-    // the remaining irBZ faces are the irreducible reciprocal space wedge
-    // which we store with the opposite sign in this->ir_wedge_normals
-    this->set_ir_wedge_normals(-ir_n);
+    this->set_ir_wedge_normals(this->get_ir_polyhedron_wedge_normals());
     return true;
   }
   return false;
@@ -915,160 +918,21 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
     throw std::runtime_error("Q points provided to BrillouinZone::isinside_wedge must be in the standard or primitive lattice used to define the BrillouinZone object");
   std::vector<bool> out(p.size(), true); // default to true in case of no normals when all points are 'inside'
   LQVec<double> normals;
-  if (isouter)
+  if (isouter){
+    verbose_update("Check points against standard wedge normals");
     normals = this->get_ir_wedge_normals();
-  else
+  } else {
+    verbose_update("Check points against primitive wedge normals");
     normals = this->get_primitive_ir_wedge_normals();
+  }
   if (normals.size()){
     std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
     for (size_t i=0; i<p.size(); ++i)
       out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);
+    verbose_update("Comparison to normals\n",normals.to_string()," via ",cmp," yields\n",out);
   }
   return out;
 }
-
-// bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
-//   bool isouter = this->outerlattice.issame(Q.get_lattice());
-//   bool isinner = this->lattice.issame(Q.get_lattice());
-//   if (!(isouter||isinner))
-//     throw std::runtime_error("Q points provided to BrillouinZone::ir_moveinto must be in the standard or primitive lattice used to define the BrillouinZone object");
-//   /*
-//   The Pointgroup symmetry information comes from, effectively, spglib which
-//   has all rotation matrices defined in the conventional unit cell -- which is
-//   our `outerlattice`. Consequently we must work in the outerlattice here.
-//   */
-//   // get_pointgroup_symmetry constructs the PointSymmetry object from a vector<array<int,9>>
-//   // the PointSymmetry constructor automatically sorts the operations in this case.
-//   PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
-//   //PointSymmetry psym = make_pointgroup_symmetry_object(this->outerlattice.get_hall(), time_reversal);
-//   int max_order= rotation_order(psym.data(psym.size()-1)); // since they're sorted
-//
-//   LQVec<double> bz_points = this->get_points();
-//   LQVec<double> bz_normals =  this->get_normals();
-//   LQVec<int> bz_tau = (2.0*bz_points).round(); // the BZ points are each τ/2
-//
-//   LQVec<double> ir_normals = this->get_ir_wedge_normals();
-//   ArrayVector<double> bz_tau_len = norm(bz_tau);
-//
-//   // We're not building up the irreducible Brillouin zone here.
-//   // We can skip this as false is the default value for constructing in
-//   // this->inside_wedge
-//   // const bool constructing{false};
-//
-//   size_t nQ = Q.size();
-//   // ensure q, tau, and R can hold one for each Q.
-//   q.resize(nQ);
-//   tau.resize(nQ);
-//   R.resize(nQ);
-//   // We want to find R(q)+τ = Q with q ∈ IR-Bz and R ∈ Pointgroup operations.
-//   LQVec<double> qi(Q.get_lattice(), 1u), qj(Q.get_lattice(), 1u);
-//   LQVec<int> taui;
-//   std::array<int,9> Ri, Rj, RE={1,0,0, 0,1,0, 0,0,1};
-//   ArrayVector<double> q_dot_bz_normals;
-//   ArrayVector<int> Nhkl;
-//   // by chance some Q points might already be in the IR-Bz:
-//   ArrayVector<bool> in_bz = this->isinside(Q), in_ir = this->isinside_wedge(Q);
-//   // if they are we need to ensure that R is set to RE for them:
-//   for (size_t i=0; i<R.size(); ++i) R[i] = RE;
-//
-//   size_t count, count1, maxat=0, nBZtau=bz_tau.size(), nR=psym.size();
-//   int maxnm = 0;
-//   for (size_t i=0; i<nQ; ++i){
-//     count = 0;
-//     count1= 0;
-//     qi = Q.get(i);
-//     taui = 0*tau.get(i);
-//     Ri = RE;
-//     while (!(in_bz.getvalue(i) && in_ir.getvalue(i)) && count++ < 50*max_order*nR*nBZtau){
-//       while (!in_bz.getvalue(i) && count1++ < 50*nBZtau){
-//         q_dot_bz_normals = dot(qi, bz_normals);
-//         Nhkl = (q_dot_bz_normals/bz_tau_len).round();
-//         if (!Nhkl.all_zero()){ // qi is outside of the 1st Bz
-//           maxnm = 0;
-//           maxat = 0;
-//           for (size_t j=0; j<Nhkl.size(); ++j){
-//             if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_bz_normals.getvalue(j)>q_dot_bz_normals.getvalue(maxat))){
-//               maxnm = Nhkl.getvalue(j);
-//               maxat = j;
-//             }
-//           }
-//           qi -= bz_tau[maxat] * static_cast<double>(maxnm);
-//           taui += bz_tau[maxat];
-//           in_bz.insert(this->isinside(qi).getvalue(0), i);
-//         } else {
-//           in_bz.insert(true, i);
-//         }
-//       }
-//       // moving Q into the first Bz could move q in or out of the IR wedge
-//       in_ir.insert(this->isinside_wedge(qi).getvalue(0), i);
-//       // If the rotation matrices, R, form a complete pointgroup
-//       // then for every Rᵢ and Rⱼ ∈ R, RᵢRⱼ≡Rₖ ∈ R. This means that we do not
-//       // need to check combinations of rotation matrices (or powers) for
-//       // complete pointgroups.
-//       if (!in_ir.getvalue(i)){
-//         for (size_t j=0; j<nR; ++j){
-//           // we could check if the rotation axis u∥qi, but that is probably more work than just "rotating" and getting the same point
-//           multiply_matrix_vector(qj.data(0), psym.data(j), qi.data(0));
-//           if(this->isinside_wedge(qj).getvalue(0)){
-//             qi = qj;
-//             Ri = psym.get(j);
-//             in_ir.insert(true, i);
-//             break;
-//           }
-//         }
-//       }
-//       if (!in_ir.getvalue(i)){
-//         std::string msg = "Either the provided point symmetry operations do not";
-//         msg += " form a complete group or there is a bug in this code.";
-//         msg += " Either way, please fix me.";
-//         throw std::runtime_error(msg);
-//       }
-//       // moving qi into the irreducible wedge could have moved it out of the
-//       // first brillouin zone.
-//       in_bz.insert(this->isinside(qi).getvalue(0), i);
-//     }
-//     // now we have found *a* set of q, tau, R for which R⁻¹q + tau = Q
-//     q.set(i, qi);
-//     tau.set(i, taui);
-//     // We *could* calculate R⁻¹ but might run into rounding/type issues.
-//     // We know that there must be an element of R for which RᵢRⱼ=E,
-//     // the identity element. Let's look for Rⱼ instead.
-//     for (size_t j=0; j<nR; ++j){
-//       multiply_matrix_matrix(Rj.data(), psym.data(j), Ri.data());
-//       // std::cout << "( ";
-//       // for (auto iii: psym.get(j)) std::cout << " " << my_to_string(iii);
-//       // std::cout << " ) x (";
-//       // for (auto iii: Ri) std::cout << " " << my_to_string(iii);
-//       // std::cout << " ) = (";
-//       // for (auto iii: Rj) std::cout << " " << my_to_string(iii);
-//       if (approx_matrix(3, RE.data(), Rj.data())){
-//         // std::cout << " ) ok" << std::endl;
-//         R[i] = psym.get(j);
-//         break;
-//       }
-//       // std::cout << " )" << std::endl;
-//     }
-//   }
-//   // std::cout << "All per point rotations:" << std::endl;
-//   // for (auto r: R){
-//   //   std::cout << "(";
-//   //   for (auto i: r) std::cout << " " << my_to_string(i);
-//   //   std::cout << " )" << std::endl;;
-//   // }
-//   if (!in_bz.all_true() || !in_ir.all_true()){
-//     std::string msg;
-//     for (size_t i=0; i<nQ; ++i)
-//       if (!in_bz.getvalue(i) || !in_ir.getvalue(i)){
-//         msg += "Q=" + Q.to_string(i) + " is outside of the BrillouinZone "
-//             + " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i)
-//             + " R = [";
-//         for (int r: R[i]) msg += " " + std::to_string(r);
-//         msg += " ]\n" ;
-//         throw std::runtime_error(msg);
-//       }
-//   }
-//   return (in_bz.all_true() && in_ir.all_true());
-// }
 
 bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const {
   bool already_same = this->lattice.issame(Q.get_lattice());
@@ -1172,6 +1036,7 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   LQVec<double> qj(Q.get_lattice(), 1u);
   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
     multiply_matrix_vector(qj.data(0), psym.data(j), q.data(i));
+    verbose_update("R_",j,"*q = ", qj.to_string(0));
     if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
       q.set(i, qj); // keep Rⱼ⋅qᵢ as qᵢᵣ
       R[i] = psym.get_inverse(j); // and Rⱼ⁻¹ ∈ G, such that Qᵢ = Rⱼ⁻¹⋅qᵢᵣ + τᵢ.

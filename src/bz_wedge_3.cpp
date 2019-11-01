@@ -281,7 +281,9 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
     if (all_axes.is_unique().count_true() == 1u || approx_scalar(ir_volume, 2.0*goal_volume) ){
       debug_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
       Polyhedron div;
-      LQVec<double> bz_n = this->get_normals(), wg_n = this->get_ir_wedge_normals();
+      LQVec<double> bz_n = this->get_normals();
+      // LQVec<double> wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong
+      LQVec<double> wg_n = this->get_ir_polyhedron_wedge_normals(); // This pulls directly from the ir_polyhedron
       ArrayVector<double> gamma(3u, 1u);
       for (size_t i=0; i<3u; ++i) gamma.insert(0, 0, i);
       for (size_t i=0; i<bz_n.size(); ++i){

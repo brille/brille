@@ -252,6 +252,7 @@ private:
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
   bool wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num);
   bool ir_wedge_is_ok(const LQVec<double>& normals);
+  LQVec<double> get_ir_polyhedron_wedge_normals(void) const;
 };
 
 /*! \brief Determine whether a given point is between a plane and the origin
