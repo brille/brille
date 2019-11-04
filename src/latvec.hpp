@@ -310,3 +310,22 @@ L<T> sum(const L<T>& a){
   }
   return out;
 }
+
+// abs(ArrayVector)
+template<class T, template<class> class L,
+         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value&&!std::is_base_of<LatVec,L<T>>::value>::type
+        >
+L<T> abs(const L<T>& a){
+  L<T> out(a.numel(), a.size());
+  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
+    out.insert(magnitude(a.getvalue(i,j)), i,j);
+  return out;
+}
+// // abs(LatVec)
+// template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
+// L<T> abs(const L<T>& a){
+//   L<T> out(a.get_lattice(), a.size());
+//   for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
+//   out.insert(std::abs(a.getvalue(i,j), i,j));
+//   return out;
+// }

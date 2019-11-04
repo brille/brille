@@ -1,15 +1,20 @@
 #include <vector>
 #include <array>
 #include <algorithm>
+#include <omp.h>
 #include "arrayvector.h"
+#include "latvec.h"
+#include "polyhedron.h"
+#include "unsignedtosigned.h"
 
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
 
 class GeneralNode{
 public:
-  virtual size_t vertex_count() const;
-  virtual bool indices_weights() const;
+  GeneralNode() {}
+  size_t vertex_count() const {return 0u;}
+  bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const { return false; }
 };
 class CubeNode: public GeneralNode {
   std::array<size_t, 8> vertex_indices;
@@ -17,34 +22,30 @@ public:
   CubeNode(): vertex_indices({0,0,0,0,0,0,0,0}) {}
   CubeNode(const std::array<size_t,8>& vi): vertex_indices(vi) {}
   CubeNode(const std::vector<size_t>& vi): vertex_indices({0,0,0,0,0,0,0,0}) {
-    if (vi.size() != 8) throw std::logic_error("TrellisNodeCube objects take 8 indices.");
+    if (vi.size() != 8) throw std::logic_error("CubeNode objects take 8 indices.");
     for (size_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
   }
   size_t vertex_count() const { return 8u;}
-  // Calculate the relative interpolation weights for a point in the cube and
-  // return the 1-8 finite weights and their associated vertex indices.
-  // Return true if the point is in the cube, false otherwise.
-  bool indices_weights(const ArrayVector<double>& vertices, const ArrayVector<double>& x, std::vector<size_t>& indices, std::vector<double>& weights);
+  bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const;
 };
 class PolyNode: public GeneralNode {
-  std::vector<std::array<size_t,4>> vertex_indices_per_tetrahedra;
+  std::vector<std::array<size_t,4>> vi_t;
 public:
   PolyNode() {};
   // actually constructing the tetrahedra from, e.g., a Polyhedron object will
   // need to be done elsewhere
-  PolyNode(const std::vector<std::array<size_t,4>>& vit): vertex_indices_per_tetrahedra(vit) {}
+  PolyNode(const std::vector<std::array<size_t,4>>& vit): vi_t(vit) {}
   // count-up the number fo unique vertices in the tetrahedra-triangulated polyhedron
   size_t vertex_count() const {
     std::vector<size_t> vi;
-    for (auto tet: vertex_indices_per_tetrahedra)
+    for (auto tet: vi_t)
     for (auto idx: tet)
     if (std::find(vi.begin(), vi.end(), idx)==vi.end()) vi.push_back(idx);
     return vi.size();
   }
-  // this version needs to indentify *which* tetrahedron contains x first, then
-  // calculate the relative interpolation weights for the 1-4 vertex indices.
-  // Return true if the point is in one of the tetrahedra, otherwise false.
-  bool indices_weights(const ArrayVector<double>& vertices, const ArrayVector<double>& x, std::vector<size_t>& indices, std::vector<double>& weights);
+  bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const;
+private:
+  bool tetrahedra_contains(const size_t, const ArrayVector<double>&, const ArrayVector<double>&, std::array<double,4>&) const;
 };
 /* We might need an empty node, for now we can use a zero-tetrahedron PolyNode*/
 // class EmptyNode: public GeneralNode {
@@ -53,36 +54,143 @@ public:
 //   size_t vertex_count() const { return 0; }
 // };
 
+template<class T> class TrellisData{
+  typedef std::vector<size_t> ShapeType;
+  typedef std::array<unsigned,4> ElementsType;
+  ArrayVector<T> data_;             //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
+  ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data` array
+  ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
+  size_t branches_;                 //!< The number of branches contained per data array
+public:
+  TrellisData(): data_({0,0}), shape_({0,0}), elements_({0,0,0,0}), branches_(0){};
+  size_t size(void) const {return data_.size();}
+  size_t numel(void) const {return data_.numel();}
+  const ArrayVector<T>& data(void) const {return data_;}
+  const ShapeType& shape(void) const {return shape_;}
+  const ElementsType& elements(void) const {return elements_;}
+  size_t branches(void) const {return branches_;}
+  //
+  void interpolate_at(const std::vector<size_t>& indicies, const std::vector<double>& weights, ArrayVector<T>& out, const size_t to) const {
+    new_unsafe_interpolate_to(data_, elements_, branches_, indicies, weights, out, to);
+  }
+  void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const ElementsType& ne){
+    data_ = nd;
+    shape_ = ns;
+    elements_ = ne;
+    // check the input for correctness
+    size_t total_elements = 1u;
+    // scalar + eigenvector + vector + matrix*matrix elements
+    size_t known_elements = static_cast<size_t>(ne[0])+static_cast<size_t>(ne[1])+static_cast<size_t>(ne[2])
+                          + static_cast<size_t>(ne[3])*static_cast<size_t>(ne[3]);
+    // no matter what, shape[0] should be the number of gridded points
+    if (ns.size()>2){
+      // if the number of dimensions of the shape array is greater than two,
+      // the second element is the number of modes per point                    */
+      branches_ = ns[1];
+      for (size_t i=2u; i<ns.size(); ++i) total_elements *= ns[i];
+    } else {
+      // shape is [n_points, n_elements] or [n_points,], so there is only one mode
+      branches_ = 1u;
+      total_elements = ns.size() > 1 ? ns[1] : 1u;
+    }
+    if (0 == known_elements) elements_[0] = total_elements;
+    if (known_elements && known_elements != total_elements){
+      std::string msg;
+      msg = "Inconsistent elements: " + std::to_string(known_elements) + " = ";
+      msg += std::to_string(elements_[0]) + "+" + std::to_string(elements_[1]) + "+";
+      msg += std::to_string(elements_[2]) + "+" + std::to_string(elements_[3]) + "² ≠ ";
+      msg += std::to_string(total_elements);
+      throw std::runtime_error(msg);
+    }
+  }
+  void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
+    ShapeType ns{nd.size(), nd.numel()};
+    return this->replace_data(nd, ns, ne);
+  }
+  // Calculate the Debye-Waller factor for the provided Q points and ion masses
+  template<template<class> class A> ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
+private:
+  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
+  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
+};
 
-class Trellis{
+template<class T> class PolyhedronTrellis{
+  Polyhedron polyhedron_;
+  TrellisData<T> data_;
   ArrayVector<double> vertices_;
   std::vector<GeneralNode> nodes_;
-  std::array<double,9> xyz_;
   std::array<std::vector<double>,3> boundaries_;
 public:
-  Trellis(): vertices_({3,0}), xyz_({1,0,0, 0,1,0, 0,0,1}) {
+  PolyhedronTrellis(const Polyhedron& polyhedron, const double node_fraction);
+  PolyhedronTrellis(const Polyhedron& polyhedron, const size_t node_ratio);
+  PolyhedronTrellis(): vertices_({3,0}) {
     std::vector<double> everything;
     everything.push_back(std::numeric_limits<double>::lowest());
     everything.push_back((std::numeric_limits<double>::max)());
     this->boundaries(everything, everything, everything);
-  };
-  Trellis(const std::array<double,9>& abc, const std::array<std::vector<double>,3>& bounds): vertices_({3,0}){
-    this->xyz(abc);
-    this->boundaries(bounds);
-    this->node_count(); /*resizes the vector*/
   }
   size_t expected_vertex_count() const {
     size_t count = 1u;
     for (size_t i=0; i<3u; ++i) count *= boundaries_[i].size();
     return count;
   }
-  size_t vertex_count() const {
-    vertices_.size();
+  size_t vertex_count() const { return vertices_.size(); }
+  const ArrayVector<double>& vertices(void) const { return vertices_; }
+  const ArrayVector<double>& vertices(const ArrayVector<double>& v){
+    if (v.numel()==3) vertices_ = v;
+    return vertices_;
+  }
+  bool indices_weights(const ArrayVector<double>& x, std::vector<size_t>& indices, std::vector<double>& weights) const {
+    if (x.size()!=1u || x.numel()!=3u)
+      throw std::runtime_error("The indices and weights can only be found for one point at a time.");
+    return this->node(x).indices_weights(vertices_, x, indices, weights);
+  }
+  template<class R> unsigned check_before_interpolating(const ArrayVector<R>& x) const{
+    unsigned int mask = 0u;
+    if (this->data_.size()==0)
+      throw std::runtime_error("The trellis must be filled before interpolating!");
+    if (x.numel()!=3u)
+      throw std::runtime_error("PolyhedronTrellis requires x values which are three-vectors.");
+    return mask;
+  }
+  ArrayVector<T> interpolate_at(const ArrayVector<double>& x) const {
+    this->check_before_interpolating(x);
+    ArrayVector<T> out(data_.numel(), x.size());
+    std::vector<size_t> indices;
+    std::vector<double> weights;
+    for (size_t i=0; i<x.size(); ++i){
+      verbose_update("Locating ",x.to_string(i));
+      if (!this->indices_weights(x.extract(i), indices, weights))
+        throw std::runtime_error("Point not found in PolyhedronTrellis");
+      verbose_update("Interpolate between vertices ", indices," with weights ",weights);
+      data_.interpolate_at(indices, weights, out, i);
+
+    }
+    return out;
+  }
+  ArrayVector<T> interpolate_at(const ArrayVector<double>& x, const int threads) const {
+    this->check_before_interpolating(x);
+    omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
+    // shared between threads
+    ArrayVector<T> out(data_.numel(), x.size());
+    // private to each thread
+    std::vector<size_t> indices;
+    std::vector<double> weights;
+    // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+    long xsize = unsigned_to_signed<long, size_t>(x.size());
+  #pragma omp parallel for shared(x, out) private(indices, weights)
+    for (long si=0; si<xsize; ++si){
+      size_t i = signed_to_unsigned<size_t, long>(si);
+      if (!this->indices_weights(x.extract(i), indices, weights))
+        throw std::runtime_error("Point not found in PolyhedronTrellis");
+      data_.interpolate_at(indices, weights, out, i);
+    }
+    return out;
   }
   size_t node_count() {
     size_t count = 1u;
     for (size_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
-    nodes_.resize(count);
+    if (nodes_.size() != count) nodes_.resize(count);
     return count;
   }
   std::array<size_t,3> size() const {
@@ -95,86 +203,41 @@ public:
     for (size_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
   }
-  size_t boundaries(const std::array<std::vector<double>,3>& xyzb){
-    if (std::all_of(xyzb.begin(), xyzb.end(), [](const std::vector<double>& a){ return a.size()>1; }))
-      boundaries_ = xyzb;
-    return this->node_count();
-  }
-  size_t boundaries(const std::vector<double>& xb, const std::vector<double>& yb, const std::vector<double>& zb){
-    if (xb.size()>1) boundaries_[0] = xb;
-    if (yb.size()>1) boundaries_[1] = yb;
-    if (zb.size()>1) boundaries_[2] = zb;
-    return this->node_count();
-  }
-  size_t xboundaries(const std::vector<double>& xb){ return this->boundaries(xb, boundaries_[1], boundaries_[2]);}
-  size_t yboundaries(const std::vector<double>& yb){ return this->boundaries(boundaries_[0], yb, boundaries_[2]);}
-  size_t zboundaries(const std::vector<double>& zb){ return this->boundaries(boundaries_[0], boundaries_[1], zb);}
-  std::array<double,3> x() const { std::array<double,3> out{xyz_[0],xyz_[1],xyz_[2]}; return out; }
-  std::array<double,3> y() const { std::array<double,3> out{xyz_[3],xyz_[4],xyz_[5]}; return out; }
-  std::array<double,3> z() const { std::array<double,3> out{xyz_[6],xyz_[7],xyz_[8]}; return out; }
-  std::array<double,3> x(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i   ] = n[i]; return this->x();}
-  std::array<double,3> y(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i+3u] = n[i]; return this->y();}
-  std::array<double,3> z(const std::array<double,3>& n) { for (size_t i=0; i<3u; ++i) xyz_[i+6u] = n[i]; return this->z();}
-  const std::array<double,9>& xyz() const { return xyz_;}
-  const std::array<double,9>& xyz(const std::array<double,9>& n){
-    xyz_ = n;
-    return xyz_;
-  }
-  const std::array<double,9>& xyz(const std::array<double,3>& nx, const std::array<double,3>& ny, const std::array<double,3>& nz){
-    for (size_t i=0; i<3u; ++i){
-      xyz_[i   ] = nx[i];
-      xyz_[i+3u] = ny[i];
-      xyz_[i+6u] = nz[i];
-    }
-    return xyz_;
-  }
-  const std::array<double,9>& xyz(const std::array<double,3>& nx, const std::array<double,3>& ny){
-    for (size_t i=0; i<3u; ++i){
-      xyz_[i   ] = nx[i];
-      xyz_[i+3u] = ny[i];
-    }
-    vector_cross(xyz_.data()+6u, xyz_.data(), xyz_.data()+3u); // z = x × y
-    return xyz_;
-  }
-
+  const std::array<std::vector<double>,3>& boundaries(void) const {return boundaries_;}
   // Find the appropriate node for an arbitrary point:
   std::array<size_t,3> node_subscript(const std::array<double,3>& p) const {
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
-      double p_dot_e = 0;
-      for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*xyz_[dim*3u + i];
-      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < boundaries_[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<sz[dim]; ++i) if ( p[dim] < boundaries_[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
   std::array<size_t,3> node_subscript(const ArrayVector<double>& p) const {
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
-      double p_dot_e = 0;
-      for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*xyz_[dim*3u + i];
-      for (size_t i=0; i<sz[dim]; ++i) if ( p_dot_e < boundaries_[dim][i+1]) sub[dim] = i;
+      for (size_t i=0; i<sz[dim]; ++i) if ( p.getvalue(0,dim) < boundaries_[dim][i+1]) sub[dim] = i;
     }
     return sub;
   }
-  // find the node linear index for a point or leaf
-  template <class T> size_t node_index(const T& p) const { return this->sub2idx(this->node_subscript(p)); }
+  // find the node linear index for a point
+  template <class R> size_t node_index(const R& p) const { return this->sub2idx(this->node_subscript(p)); }
 
   const GeneralNode& node(const size_t idx) const {
     if (idx < nodes_.size()) return nodes_[idx];
-    throw std::domain_error("Out of bounds index for Trellis node");
+    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
   }
   GeneralNode& node(const size_t idx) {
     if (idx < nodes_.size()) return nodes_[idx];
-    throw std::domain_error("Out of bounds index for Trellis node");
+    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
   }
   const GeneralNode& node(const size_t idx, const GeneralNode& n){
     if (idx < nodes_.size()){
       nodes_[idx] = n;
       return nodes_[idx];
     }
-    throw std::domain_error("Out of bounds index for Trellis node");
+    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
   }
-  // get the leaves located at a node by point-in-the-node
+  // get a node by point-in-the-node
   const GeneralNode& node(const std::array<double,3>& p) const {
     return this->node(this->node_index(p));
   }
@@ -185,17 +248,23 @@ public:
     std::string str = "(";
     for (auto i: this->size()) str += " " + std::to_string(i);
     str += " )";
-    std::array<size_t,3> min_max_tot = this->node_leaves_min_max_tot();
-    str += " {";
-    str += std::to_string(min_max_tot[0]) + "--" + std::to_string(min_max_tot[1]);
-    str += " : " + std::to_string(min_max_tot[2]/static_cast<double>(nodes_.size()));
-    str += "}";
     return str;
   }
+  // Get a constant reference to the stored data
+  const TrellisData<T>& data(void) const {return data_;}
+  // Replace the data stored in the object
+  template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
+  // Calculate the Debye-Waller factor for the provided Q points and ion masses
+  template<template<class> class A>
+  ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
+    return data_.debye_waller(Q,M,t_K);
+  }
 private:
-
   size_t sub2idx(const std::array<size_t,3>& sub) const {
     return this->sub2idx(sub, this->span());
+  }
+  size_t idx2sub(const size_t idx) const {
+    return this->idx2sub(idx, this->span());
   }
   size_t sub2idx(const std::array<size_t,3>& sub, const std::array<size_t,3>& sp) const {
     size_t idx=0;
@@ -211,10 +280,6 @@ private:
     }
     return sub;
   }
-
 };
-
-Trellis construct_trellis(const Polyhedron& poly, const double fraction=1.);
-
 
 #endif

@@ -79,6 +79,19 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<si
   for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
   return out;
 }
+template<typename T> template<size_t Nel> ArrayVector<T> ArrayVector<T>::extract(const std::array<size_t, Nel>& idx) const{
+  ArrayVector<T> out(this->numel(),0u);
+  size_t this_size = this->size();
+  if (!std::all_of(idx.begin(), idx.end(), [this_size](size_t j){return j<this_size;})){
+    std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
+    for (auto i: idx) msg += " " + std::to_string(i);
+    msg += " ] but size() = " + std::to_string(this->size());
+    throw std::out_of_range(msg);
+  }
+  out.resize(Nel);
+  for (size_t j=0; j<Nel; ++j) out.set(j, this->data( idx[j]) );
+  return out;
+}
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<int>& idx) const{
   ArrayVector<T> out(this->numel(),0u);
   for (auto j: idx) if (j<0 || static_cast<size_t>(j)>=this->size()) {
@@ -712,6 +725,29 @@ template<typename T> ArrayVector<T> ArrayVector<T>::sum( const int dim ) const {
       for (size_t j=0; j<this->numel(); j++){
         tmp = T(0);
         for (size_t i=0; i<this->size(); i++) tmp += this->getvalue(i,j);
+        out.insert(tmp, 0,j);
+      }
+      break;
+  }
+  return out;
+}
+template<typename T> ArrayVector<T> ArrayVector<T>::prod( const int dim ) const {
+  T tmp;
+  ArrayVector<T> out;
+  switch (dim){
+    case 1:
+      out.refresh(1u,this->size());
+      for (size_t i=0; i<this->size(); i++){
+        tmp = T(1);
+        for (size_t j=0; j<this->numel(); j++) tmp *= this->getvalue(i,j);
+        out.insert(tmp, i,0);
+      }
+      break;
+    default:
+      out.refresh(this->numel(),1u);
+      for (size_t j=0; j<this->numel(); j++){
+        tmp = T(1);
+        for (size_t i=0; i<this->size(); i++) tmp *= this->getvalue(i,j);
         out.insert(tmp, 0,j);
       }
       break;

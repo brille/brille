@@ -215,6 +215,7 @@ public:
     @returns An ArrayVector containing the indicies indicated by idx
   */
   ArrayVector<T> extract(const std::vector<size_t>& idx) const;
+  template<size_t Nel> ArrayVector<T> extract(const std::array<size_t,Nel>& idx) const;
   ArrayVector<T> extract(const std::vector<int>& idx) const;
   /*! Return a collection of arrays from the ArrayVector
     @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
@@ -351,6 +352,7 @@ public:
           dim!=1 sums over the arrays, returning a one-element ArrayVector
   */
   ArrayVector<T> sum( const int dim=0 ) const;
+  ArrayVector<T> prod( const int dim=0 ) const;
   ArrayVector<bool> is_unique(void) const;
   ArrayVector<size_t> unique_idx(void) const;
   ArrayVector<T> unique(void) const;

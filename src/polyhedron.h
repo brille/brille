@@ -264,7 +264,6 @@ public:
     for (size_t i=0; i<normals.size(); ++i)
       multiply_matrix_vector<double,T,double>(newn.data(i), rot.data(), normals.data(i));
     return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
-    // return Polyhedron(newv, newp, newn);
   }
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
@@ -286,11 +285,16 @@ public:
     for (size_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(tvn+j);
     return Polyhedron(v,p,n, fpv, vpf);
   }
-  ArrayVector<double> get_vertices(void) const { return vertices; }
-  ArrayVector<double> get_points(void) const { return points; }
-  ArrayVector<double> get_normals(void) const { return normals; }
-  std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
-  std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
+  // ArrayVector<double> get_vertices(void) const { return vertices; }
+  // ArrayVector<double> get_points(void) const { return points; }
+  // ArrayVector<double> get_normals(void) const { return normals; }
+  // std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
+  // std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
+  const ArrayVector<double>& get_vertices(void) const { return vertices; }
+  const ArrayVector<double>& get_points(void) const { return points; }
+  const ArrayVector<double>& get_normals(void) const { return normals; }
+  const std::vector<std::vector<int>>& get_faces_per_vertex(void) const { return faces_per_vertex; }
+  const std::vector<std::vector<int>>& get_vertices_per_face(void) const {return vertices_per_face; }
   ArrayVector<double> get_half_edges(void) const{
     // for each face find the point halfway between each set of neighbouring vertices
     // Convex polyhedra always have edges neighbouring two faces, so we will
@@ -654,6 +658,16 @@ public:
   Polyhedron centre(void) const {
     ArrayVector<double> centroid = this->get_centroid();
     return Polyhedron(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
+  }
+  ArrayVector<bool> contains(const std::vector<std::array<double,3>>& x) const {
+    return this->contains(ArrayVector<double>(x));
+  }
+  ArrayVector<bool> contains(const ArrayVector<double>& x) const {
+    if (x.numel() != 3u) throw std::runtime_error("x must contain 3-vectors");
+    ArrayVector<bool> out(1u, x.size(), false);
+    for (size_t i=0; i<x.size(); ++i)
+      out.insert(dot(this->normals, x.extract(i)-this->points).all_approx("<=",0.), i);
+    return out;
   }
   /* Since we have the machinery to bisect a Polyhedron by a series of planes,
      the simplest way of checking for the intersection between two polyhedra is
