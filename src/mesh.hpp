@@ -113,7 +113,7 @@ ArrayVector<S> Mesh3<T>::debye_waller_sum(const ArrayVector<R>& Q, const R t_K) 
   if (this->elements[0] != 1u)
     throw std::runtime_error("Debye-Waller factor requires one scalar (energy) per mode.");
   size_t nIons = this->elements[1] / 3u;
-  if (0 == nIons || this->elements[2]*3u != nIons)
+  if (0 == nIons || this->elements[1]*3u != nIons)
     throw std::runtime_error("Debye-Waller factor requires 3-vector eigenvector(s).");
   size_t nQ = Q.size();
   ArrayVector<S> WdQ(nIons,nQ); // Wᵈ(Q) has nIons entries per Q point

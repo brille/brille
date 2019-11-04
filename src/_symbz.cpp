@@ -3,7 +3,12 @@
 
 #include "version_info.h"
 
-#include "_binding.h"
+#include "_c_to_python.h"
+#include "_grid.h"
+#include "_lattice.h"
+#include "_mesh.h"
+#include "_polyhedron.h"
+#include "_trellis.h"
 #include <pybind11/stl.h>
 
 namespace py = pybind11;
@@ -54,12 +59,6 @@ PYBIND11_MODULE(_symbz,m){
     .def_property_readonly("volume",&Lattice::get_volume)
     .def_property("hall",&Lattice::get_hall,&Lattice::set_hall)
     .def_property_readonly("spacegroup",&Lattice::get_spacegroup_object)
-    // .def("fill_covariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
-    //   py::buffer_info bi = cmt.request();
-    //   if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
-    //   if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
-    //   l.get_covariant_metric_tensor( (double *) bi.ptr);
-    // })
     .def("get_covariant_metric_tensor",[](Lattice &l){
       auto result = py::array_t<double, py::array::c_style >({3,3});
       py::buffer_info bi = result.request();
@@ -67,12 +66,6 @@ PYBIND11_MODULE(_symbz,m){
       l.get_covariant_metric_tensor( cmt );
       return result;
     })
-    // .def("fill_contravariant_metric_tensor",[](Lattice &l, py::array_t<double> cmt){
-    //   py::buffer_info bi = cmt.request();
-    //   if (bi.ndim!=2) throw std::runtime_error("Number of dimensions must be 2");
-    //   if (bi.shape[0] !=3 || bi.shape[1] != 3) throw std::runtime_error("Array must be 3x3");
-    //   l.get_contravariant_metric_tensor( (double *) bi.ptr);
-    // })
     .def("get_contravariant_metric_tensor",[](Lattice &l){
       auto result = py::array_t<double, py::array::c_style >({3,3});
       py::buffer_info bi = result.request();
@@ -231,6 +224,9 @@ PYBIND11_MODULE(_symbz,m){
     declare_bzmeshq<double>(m,"");
     declare_bzmeshq<std::complex<double>>(m,"complex");
 
+    declare_bztrellisq<double>(m,"");
+    declare_bztrellisq<std::complex<double>>(m,"complex");
+
     py::class_<PrimitiveTransform> pt(m,"PrimitiveTransform");
     pt.def(py::init<int>(),py::arg("Hall number"));
     pt.def_property_readonly("P",[](const PrimitiveTransform &p){
@@ -313,7 +309,5 @@ PYBIND11_MODULE(_symbz,m){
     psym.def_property_readonly("generators",&PointSymmetry::generators);
     psym.def("nfolds",&PointSymmetry::nfolds);
 
-    // declare_polyhedron<CentredPolyhedron>(m, "C");
-    // declare_polyhedron<FullPolyhedron>(m, "");
     declare_polyhedron<Polyhedron>(m, "");
 }
