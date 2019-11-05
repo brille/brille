@@ -13,21 +13,24 @@ public:
   BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
     PolyhedronTrellis<T>(bz.get_ir_polyhedron(), args...),
     brillouinzone(bz) {}
-  // get the BrillouinZone object
+  //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
-  // get the vertices of the trellis in absolute units
+  //! get the vertices of the trellis in absolute units
   const ArrayVector<double>& get_xyz(void) const {return this->vertices();}
-  // get the vertices of the trellis in relative lattice units
-  ArrayVector<double> get_hkl(void) const {
-    const ArrayVector<double>&  xyz{this->vertices()};
-    double toxyz[9], fromxyz[9];
-    const BrillouinZone bz = this->get_brillouinzone();
-    bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-    ArrayVector<double> hkl(3, xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
-    return hkl;
-  }
+  //! get the vertices of the inner (cubic) nodes in absolute units
+  ArrayVector<double> get_inner_xyz(void) const {return this->cube_vertices(); }
+  //! get the vertices of the outer (polyhedron) nodes in absolute units
+  ArrayVector<double> get_outer_xyz(void) const {return this->poly_vertices(); }
+  //! get the vertices of the trellis in relative lattice units
+  ArrayVector<double> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  //! get the vertices of the inner (cubic) nodes in relative lattice units
+  ArrayVector<double> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
+  //! get the vertices of the outer (polyhedron) nodes in relative lattice units
+  ArrayVector<double> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
+  //! get the indices forming the faces of the tetrahedra
+  std::vector<std::array<size_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
+
+
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());

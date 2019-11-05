@@ -1,18 +1,14 @@
 #ifndef _TRIANGULATION_H_
 #define _TRIANGULATION_H_
 /*----------------------------- HEADER INCLUDES ------------------------------*/
-// combined:
 #include <vector>
 #include <array>
 #include <omp.h>
 #include <cassert>
 #include <algorithm>
-// Tetgen header
 #include "tetgen.h"
-// debugging output
 #include "debug.h"
-// #include "balltree.h"
-#include "balltrellis.h"
+#include "polyhedron.h"
 
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);

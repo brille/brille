@@ -11,11 +11,9 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double fra
     minmax[i][1] = std::numeric_limits<double>::lowest();
   }
   const ArrayVector<double>& pv{poly.get_vertices()};
-  for (size_t i=0; i<pv.size(); ++i){
-    for (size_t j=0; i<3u; ++j){
-      if (pv.getvalue(i,j) < minmax[j][0]) minmax[j][0] = pv.getvalue(i,j);
-      if (pv.getvalue(i,j) > minmax[j][1]) minmax[j][1] = pv.getvalue(i,j);
-    }
+  for (size_t i=0; i<pv.size(); ++i) for (size_t j=0; j<3u; ++j) {
+    if (pv.getvalue(i,j) < minmax[j][0]) minmax[j][0] = pv.getvalue(i,j);
+    if (pv.getvalue(i,j) > minmax[j][1]) minmax[j][1] = pv.getvalue(i,j);
   }
   // construct the trellis boundaries:
   // boundaries_ = std::array<std::vector<double>,3>({std::vector<double>(),std::vector<double>(),std::vector<double>()});
@@ -68,9 +66,14 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double fra
   ArrayVector<double> kept_intersections = all_intersections.extract(are_inside);
   ArrayVector<double> extra_intersections(3u, 3*(all_intersections.size()-kept_intersections.size()));
   size_t nExtra=0;
-  std::vector<size_t> extra_map;
   // Now actually create the node objects (which are not fully outside)
-  for (size_t i=0; i<nNodes; ++i) if (!node_is_outside[i]) {
+  for (size_t i=0; i<nNodes; ++i)
+    if (node_is_outside[i]) {
+      // nodes_[i] = EmptyNode();
+      //nodes_.push_back(EmptyNode());
+      node_index_.push_back((std::numeric_limits<size_t>::max)());
+      node_type_.push_back(NodeType::empty);
+    } else {
     std::array<size_t,3> node_ijk = this->idx2sub(i);
     std::array<size_t,8> vert_idx; // the 8 vertex indices of the cube
     for (size_t k=0; k<8u; ++k){
@@ -79,7 +82,11 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double fra
       vert_idx[k] = map_idx[int_idx];
     }
     if (node_is_cube[i]) {
-      nodes_[i] = CubeNode(vert_idx);
+      // nodes_[i] = CubeNode(vert_idx);
+      // nodes_.push_back(CubeNode(vert_idx));
+      node_index_.push_back(cube_nodes_.size());
+      node_type_.push_back(NodeType::cube);
+      cube_nodes_.push_back(CubeNode(vert_idx));
     } else {
       // This node intersects the polyhedron. First, find the interior part
       std::array<double,3> min_corner, max_corner;
@@ -88,33 +95,53 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double fra
         max_corner[j] = boundaries_[j][node_ijk[j]+1];
       }
       Polyhedron cube = polyhedron_box(min_corner, max_corner);
-      Polyhedron cut_cube = Polyhedron::bisect(cube, poly.get_normals(), poly.get_points());
+      // the cubic node extends beyond the bounding polyhedron so we must truncate it
+      // Polyhedron pbc = poly.intersection(cube);
+      Polyhedron cbp = cube.intersection(poly); // <- this one should (probably) always be faster since the cube is smaller
+      double cut_volume = cbp.get_volume();
+      if (cbp.get_vertices().size() < 4 || cut_volume < 0 || approx_scalar(cut_volume, 0.)){
+        // less than four vertices can not be a polyhedron
+        // negative volume means something went wrong
+        // zero volume means the node is actually outside and can remain empty
+        node_index_.push_back((std::numeric_limits<size_t>::max)()-1);
+        node_type_.push_back(NodeType::empty);
+        continue;
+      }
+      if (cut_volume > cube.get_volume())
+        throw std::runtime_error("Cutting the node increased its volume?!");
+      // cut the larger polyhedron by the smaller one:
       // Then triangulate it into tetrahedra
-      SimpleTet tri_cut(cut_cube);
+      SimpleTet tri_cut(cbp);
       // we need to retain the *additional* vertices from the triangulation
       // and figure-out a local vertex index mapping
       std::vector<size_t> local_map;
       const ArrayVector<double>& triverts{tri_cut.get_vertices()};
       for (size_t j=0; j<triverts.size(); ++j){
-        std::vector<size_t> cube_idx = find(norm(cube.get_vertices()-triverts.extract(j)).is_approx("=",0.));
+        const ArrayVector<double> trij{triverts.extract(j)};
+        std::vector<size_t> cube_idx = find(norm(cube.get_vertices()-trij).is_approx("==",0.));
         if (cube_idx.size()>1) throw std::logic_error("Too many matching vertices");
         if (cube_idx.size()==1){
           // we could try to use the cube polyhedron vertices to map-back to the full trellis intersections
           // but that seems hard, so as a first attempt check this vertex against *all* kept intersections
-          cube_idx = find(norm(kept_intersections-triverts.extract(j)).is_approx("=",0.));
+          cube_idx = find(norm(kept_intersections-trij).is_approx("==",0.));
+          // info_update("Polyhedron vertex in kept_intersections: idx = ",cube_idx);
           if (cube_idx.size()==1) local_map.push_back(cube_idx[0]);
           else throw std::logic_error("Problem finding index for triangulated vertex");
         } else {
-          cube_idx = find(norm(extra_intersections-triverts.extract(j)).is_approx("=",0.));
-          if (cube_idx.size()>0) local_map.push_back(extra_map[cube_idx[0]]);
-          else {
+          std::vector<size_t> extra_idx = find(norm(extra_intersections.first(nExtra)-trij).is_approx("==",0.));
+          if (extra_idx.size()>1)
+            throw std::logic_error("How does one point match multiple points when all points should be unique?");
+          if (extra_idx.size()>0){
+            // info_update("Polyhedron vertex in extra_intersections: idx = ",cube_idx);
+            local_map.push_back(kept_intersections.size() + extra_idx[0]);
+          } else {
+            // info_update("Polyhedron vertex not in kept or extra intersections, so add it.");
             // make sure we have room to store this new intersection
             // if we don't, make room; but since this involves a memory copy make lots of room
             if (extra_intersections.size() < nExtra) extra_intersections.resize(2*nExtra);
-            // store the extra intersection
-            extra_intersections.set(nExtra, triverts.extract(j));
+            // store the extra vertex
+            extra_intersections.set(nExtra, trij);
             // and its mapping information
-            extra_map.push_back(kept_intersections.size()+nExtra);
             local_map.push_back(kept_intersections.size()+nExtra);
             ++nExtra;
           }
@@ -127,12 +154,16 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double fra
         for (size_t k=0; k<4u; ++k) one_tet[k] = local_map[local_ipt.getvalue(j,k)];
         idx_per_tet.push_back(one_tet);
       }
-      nodes_[i] = PolyNode(idx_per_tet);
+      // nodes_[i] = PolyNode(idx_per_tet);
+      // nodes_.push_back(PolyNode(idx_per_tet));
+      node_index_.push_back(poly_nodes_.size());
+      node_type_.push_back(NodeType::polyhedron);
+      poly_nodes_.push_back(PolyNode(idx_per_tet));
     }
   }
   // Now all non-empty nodes have been populated with the indices of their vertices
   // Combine the retained trellis vertices and the extra triangulated vertices
-  vertices_ = cat(kept_intersections, extra_intersections);
+  vertices_ = cat(kept_intersections, extra_intersections.first(nExtra));
 }
 
 

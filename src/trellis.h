@@ -12,11 +12,18 @@
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
 
+enum class NodeType {empty, cube, polyhedron};
+
 class GeneralNode{
 public:
   GeneralNode() {}
-  size_t vertex_count() const {return 0u;}
-  bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const { return false; }
+  virtual ~GeneralNode() = default;
+  //
+  virtual NodeType type(void) const {return NodeType::empty;}
+  virtual size_t vertex_count() const {return 0u;}
+  virtual std::vector<size_t> vertices(void) const {return std::vector<size_t>();}
+  virtual std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<size_t,4>>();}
+  virtual bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const {return false;};
 };
 class CubeNode: public GeneralNode {
   std::array<size_t, 8> vertex_indices;
@@ -27,7 +34,13 @@ public:
     if (vi.size() != 8) throw std::logic_error("CubeNode objects take 8 indices.");
     for (size_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
   }
+  NodeType type(void) const {return NodeType::cube;}
   size_t vertex_count() const { return 8u;}
+  std::vector<size_t> vertices(void) const {
+    std::vector<size_t> out;
+    for (auto v: vertex_indices) out.push_back(v);
+    return out;
+  }
   bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const;
 };
 class PolyNode: public GeneralNode {
@@ -37,24 +50,30 @@ public:
   // actually constructing the tetrahedra from, e.g., a Polyhedron object will
   // need to be done elsewhere
   PolyNode(const std::vector<std::array<size_t,4>>& vit): vi_t(vit) {}
+  NodeType type(void) const {return NodeType::polyhedron;}
   // count-up the number fo unique vertices in the tetrahedra-triangulated polyhedron
-  size_t vertex_count() const {
-    std::vector<size_t> vi;
-    for (auto tet: vi_t)
-    for (auto idx: tet)
-    if (std::find(vi.begin(), vi.end(), idx)==vi.end()) vi.push_back(idx);
-    return vi.size();
+  size_t vertex_count() const { return this->vertices().size();}
+  std::vector<size_t> vertices(void) const {
+    std::vector<size_t> out;
+    for (auto tet: vi_t) for (auto idx: tet)
+    if (std::find(out.begin(), out.end(), idx)==out.end()) out.push_back(idx);
+    return out;
   }
+  std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {return vi_t;}
   bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const;
 private:
   bool tetrahedra_contains(const size_t, const ArrayVector<double>&, const ArrayVector<double>&, std::array<double,4>&) const;
 };
 /* We might need an empty node, for now we can use a zero-tetrahedron PolyNode*/
-// class EmptyNode: public GeneralNode {
-// public:
-//   EmptyNode() {};
-//   size_t vertex_count() const { return 0; }
-// };
+class EmptyNode: public GeneralNode {
+public:
+  // EmptyNode() {};
+  // NodeType type(void) const {return NodeType::empty;}
+  // size_t vertex_count() const {return 0u;}
+  // std::vector<size_t> vertices(void) const {return std::vector<size_t>();}
+  // std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<size_t,4>>();}
+  // bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const { return false; }
+};
 
 template<class T> class TrellisData{
   typedef std::vector<size_t> ShapeType;
@@ -120,10 +139,14 @@ template<typename T> class PolyhedronTrellis{
   Polyhedron polyhedron_;
   TrellisData<T> data_;
   ArrayVector<double> vertices_;
-  std::vector<GeneralNode> nodes_;
+  // std::vector<GeneralNode> nodes_;
+  std::vector<size_t> node_index_;
+  std::vector<NodeType> node_type_;
+  std::vector<CubeNode> cube_nodes_;
+  std::vector<PolyNode> poly_nodes_;
   std::array<std::vector<double>,3> boundaries_;
 public:
-  PolyhedronTrellis(const Polyhedron& polyhedron, const double node_fraction);
+  explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double node_fraction=1.0);
   // PolyhedronTrellis(const Polyhedron& polyhedron, const size_t node_ratio);
   PolyhedronTrellis(): vertices_({3,0}) {
     std::vector<double> everything;
@@ -142,10 +165,37 @@ public:
     if (v.numel()==3) vertices_ = v;
     return vertices_;
   }
+  ArrayVector<double> node_type_vertices(const NodeType node_type=NodeType::cube) const {
+    // possible extension: replace node_type by a class enum?
+    std::vector<bool> keep(vertices_.size(), false);
+    if (node_type == NodeType::cube)
+      for (auto node: cube_nodes_)
+        for (auto idx: node.vertices())
+          keep[idx]=true;
+    if (node_type == NodeType::polyhedron)
+      for (auto node: poly_nodes_)
+        for (auto idx: node.vertices())
+          keep[idx]=true;
+    // for (auto node: nodes_) if (node.type() == node_type) for (auto idx: node.vertices()) keep[idx] = true;
+    return vertices_.extract(keep);
+  }
+  ArrayVector<double> cube_vertices(void) const {return this->node_type_vertices(NodeType::cube);}
+  ArrayVector<double> poly_vertices(void) const {return this->node_type_vertices(NodeType::polyhedron);}
+  std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {
+    std::vector<std::array<size_t,4>> out;
+    for (auto node: poly_nodes_)
+    // for (auto node: nodes_) if (node.type() == NodeType::polyhedron)
+    for (auto tet: node.vertices_per_tetrahedron()) out.push_back(tet);
+    return out;
+  }
   bool indices_weights(const ArrayVector<double>& x, std::vector<size_t>& indices, std::vector<double>& weights) const {
     if (x.size()!=1u || x.numel()!=3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-    return this->node(x).indices_weights(vertices_, x, indices, weights);
+    auto thisnode = this->node(x);
+    if (thisnode.type() != NodeType::empty)
+      return thisnode.indices_weights(vertices_, x, indices, weights);
+    else
+      return false;
   }
   template<class R> unsigned check_before_interpolating(const ArrayVector<R>& x) const{
     unsigned int mask = 0u;
@@ -192,7 +242,7 @@ public:
   size_t node_count() {
     size_t count = 1u;
     for (size_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
-    if (nodes_.size() != count) nodes_.resize(count);
+    // if (nodes_.size() != count) nodes_.resize(count); // doing this initializes new nodes to type GeneralNode!
     return count;
   }
   std::array<size_t,3> size() const {
@@ -225,17 +275,9 @@ public:
   template <class R> size_t node_index(const R& p) const { return this->sub2idx(this->node_subscript(p)); }
 
   const GeneralNode& node(const size_t idx) const {
-    if (idx < nodes_.size()) return nodes_[idx];
-    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
-  }
-  GeneralNode& node(const size_t idx) {
-    if (idx < nodes_.size()) return nodes_[idx];
-    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
-  }
-  const GeneralNode& node(const size_t idx, const GeneralNode& n){
-    if (idx < nodes_.size()){
-      nodes_[idx] = n;
-      return nodes_[idx];
+    if (idx < node_index_.size()){
+      if (NodeType::cube == node_type_[idx]) return cube_nodes_[node_index_[idx]];
+      if (NodeType::polyhedron == node_type_[idx]) return poly_nodes_[node_index_[idx]];
     }
     throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
   }

@@ -34,7 +34,7 @@ public:
 
       If the cost matrix is provided the assignment algorithm is run automatically.
   */
-  Munkres(size_t n, std::vector<T> cmat = std::vector<T>()) : N(n), step(1), cost(cmat){
+  Munkres(size_t n, std::vector<T> cmat = std::vector<T>()) : N(n), cost(cmat), step(1){
     if (cost.size()<N*N) cost.resize(N*N);
     // mask, rowcover, and colcover have their values set when run_assignment is called
     mask.resize(N*N);
@@ -80,7 +80,7 @@ public:
         case 4: step_four();  break;
         case 5: step_five();  break;
         case 6: step_six();   break;
-        case 7: finished=true;
+        case 7: finished=true; done=true; break;
         default: done=true;
       }
     }

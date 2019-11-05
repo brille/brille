@@ -11,14 +11,14 @@ TEST_CASE("BrillouinZone instantiation","[brillouinzone]"){
 
 TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   std::string spgr;
-  SECTION("Primitive spacegroup"){
+  SECTION("Primitive"){
     spgr = "P 1";
   }
-  SECTION("Body-centred spacegroup"){
+  SECTION("Body-centred"){
     spgr = "Im-3m";
   }
-  SECTION("Face-centred spacegroup"){
-    spgr = "Fmm2";
+  SECTION("Face-centred"){
+    spgr = "Fd-3c"; // the previous choice, Fmm2 is orthorhombic. Trying to use it with a=b=c prevents the BrillouinZone algorithm from working
   }
   Direct d(2.87,2.87,2.87,PI/2,PI/2,PI/2,spgr);
   Reciprocal r = d.star();

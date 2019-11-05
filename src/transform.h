@@ -91,5 +91,28 @@ LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   return out;
 }
 
+// utility functions for conversion of lattice vectors where only their components are stored
+template<class T,typename S=typename std::common_type<T,double>::type>
+ArrayVector<S> xyz_to_hkl(const Reciprocal& lat, const ArrayVector<T>& xyz){
+  // this error could be relaxed by changing to hkl(xyz.numel(), xyz.size()) below
+  if (xyz.numel()!=3u) throw std::runtime_error("coordinate transformation only defined for three-vectors");
+  double toxyz[9], fromxyz[9];
+  lat.get_xyz_transform(toxyz);
+  if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
+  ArrayVector<S> hkl(3, xyz.size());
+  for (size_t i=0; i<xyz.size(); ++i) multiply_matrix_vector<S,double,T,3>(hkl.data(i), fromxyz, xyz.data(i));
+  return hkl;
+}
+template<class T,typename S=typename std::common_type<T,double>::type>
+ArrayVector<S> hkl_to_xyz(const Reciprocal& lat, const ArrayVector<T>& hkl){
+  // this error could be relaxed by changing to xyz(hkl.numel(), hkl.size()) below
+  if (hkl.numel()!=3u) throw std::runtime_error("coordinate transformation only defined for three-vectors");
+  double toxyz[9];
+  lat.get_xyz_transform(toxyz);
+  ArrayVector<S> xyz(3, hkl.size());
+  for (size_t i=0; i<hkl.size(); ++i) multiply_matrix_vector<S,double,T,3>(xyz.data(i), toxyz, hkl.data(i));
+  return xyz;
+}
+
 
 #endif

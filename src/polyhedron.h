@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "arrayvector.h"
+#include "latvec.h"
 #include "debug.h"
 
 template <typename T>
@@ -716,10 +717,11 @@ public:
     return false;
   }
   Polyhedron intersection(const Polyhedron& other) const {
-    ArrayVector<double> centroid = this->get_centroid();
-    Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
-    Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
-    return Polyhedron(ipoly.vertices + centroid, ipoly.points + centroid, ipoly.normals, ipoly.faces_per_vertex, ipoly.vertices_per_face);
+    // ArrayVector<double> centroid = this->get_centroid();
+    // Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
+    // Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
+    // return Polyhedron(ipoly.vertices + centroid, ipoly.points + centroid, ipoly.normals, ipoly.faces_per_vertex, ipoly.vertices_per_face);
+    return Polyhedron::bisect(*this, other.normals, other.points);
   }
   bool intersects_fast(const Polyhedron& other) const {
     // check if any of our vertices are inside of the other polyhedron
@@ -879,7 +881,7 @@ public:
 
 template<class T>
 Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
-  ArrayVector<double> v(3u, 8u), p(3u, 6u);
+  ArrayVector<double> v(3u, 8u);
   v.insert(xmin[0], 0, 0); v.insert(xmin[1], 0, 1); v.insert(xmin[2], 0, 2); // 000 0
   v.insert(xmin[0], 1, 0); v.insert(xmax[1], 1, 1); v.insert(xmin[2], 1, 2); // 010 1
   v.insert(xmin[0], 2, 0); v.insert(xmax[1], 2, 1); v.insert(xmax[2], 2, 2); // 011 2
@@ -889,13 +891,7 @@ Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
   v.insert(xmax[0], 6, 0); v.insert(xmax[1], 6, 1); v.insert(xmax[2], 6, 2); // 111 6
   v.insert(xmax[0], 7, 0); v.insert(xmin[1], 7, 1); v.insert(xmax[2], 7, 2); // 101 7
   std::vector<std::vector<int>> vpf{{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}};
-  std::vector<std::vector<int>> fpv{{0,1,2},{1,2,5},{1,3,5},{0,1,3},{0,2,4},{2,4,5},{3,4,5},{0,3,4}};
-  ArrayVector<T> tmp(3u, 4u);
-  for (int i=0; i<6; ++i){
-    for(int j=0; j<4; ++j) tmp.set(j, v.extract(vpf[i][j]));
-    p.set(i, sum(tmp)/T(4));
-  }
-  return Polyhedron(v, p, p/norm(p), fpv, vpf);
+  return Polyhedron(v, vpf);
 }
 
 #endif // _POLYHEDRON_H_

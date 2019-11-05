@@ -22,6 +22,11 @@ public:
     tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
     tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
     tgb.varvolume = 1; // the simple version doesn't constrain anything
+    #ifdef VERBOSE_MESHING
+    tgb.verbose = 10000;
+    #else
+    tgb.quiet = 1;
+    #endif
     // make the input and output tetgenio objects and fill the input with our polyhedron
     verbose_update("Creating input and output `tetgenio` objects");
     tetgenio tgi, tgo;

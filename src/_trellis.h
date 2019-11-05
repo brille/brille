@@ -27,9 +27,15 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
 
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
 
-  .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_hkl());})
-
   .def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_xyz());})
+  .def_property_readonly("inner_invA",[](const Class& cobj){return av2np(cobj.get_inner_xyz());})
+  .def_property_readonly("outer_invA",[](const Class& cobj){return av2np(cobj.get_outer_xyz());})
+
+  .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_hkl());})
+  .def_property_readonly("inner_rlu",[](const Class& cobj){return av2np(cobj.get_inner_hkl());})
+  .def_property_readonly("outer_rlu",[](const Class& cobj){return av2np(cobj.get_outer_hkl());})
+
+  .def_property_readonly("tetrahedra",[](const Class& cobj){return cobj.get_vertices_per_tetrahedron();})
 
   .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
     py::buffer_info bi;
