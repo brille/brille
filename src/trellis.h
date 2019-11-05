@@ -64,24 +64,14 @@ public:
 private:
   bool tetrahedra_contains(const size_t, const ArrayVector<double>&, const ArrayVector<double>&, std::array<double,4>&) const;
 };
-/* We might need an empty node, for now we can use a zero-tetrahedron PolyNode*/
-class EmptyNode: public GeneralNode {
-public:
-  // EmptyNode() {};
-  // NodeType type(void) const {return NodeType::empty;}
-  // size_t vertex_count() const {return 0u;}
-  // std::vector<size_t> vertices(void) const {return std::vector<size_t>();}
-  // std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<size_t,4>>();}
-  // bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const { return false; }
-};
 
 template<class T> class TrellisData{
   typedef std::vector<size_t> ShapeType;
   typedef std::array<unsigned,4> ElementsType;
-  ArrayVector<T> data_;             //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
+  ArrayVector<T> data_;   //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
   ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data` array
   ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
-  size_t branches_;                 //!< The number of branches contained per data array
+  size_t branches_;       //!< The number of branches contained per data array
 public:
   TrellisData(): data_({0,0}), shape_({0,0}), elements_({0,0,0,0}), branches_(0){};
   size_t size(void) const {return data_.size();}
@@ -136,15 +126,14 @@ private:
 };
 
 template<typename T> class PolyhedronTrellis{
-  Polyhedron polyhedron_;
-  TrellisData<T> data_;
-  ArrayVector<double> vertices_;
-  // std::vector<GeneralNode> nodes_;
-  std::vector<size_t> node_index_;
-  std::vector<NodeType> node_type_;
-  std::vector<CubeNode> cube_nodes_;
-  std::vector<PolyNode> poly_nodes_;
-  std::array<std::vector<double>,3> boundaries_;
+  Polyhedron polyhedron_;                        //!< the Polyhedron bounding the Trellis
+  TrellisData<T> data_;                          //!< [optional] data stored at each Trellis vertex
+  ArrayVector<double> vertices_;                 //!< The Trellis intersections inside the bounding Polyhedron
+  std::vector<size_t> node_index_;               //!< For each Trellis node, the index into its respective NodeType vector
+  std::vector<NodeType> node_type_;              //!< The NodeType for each Trellis node
+  std::vector<CubeNode> cube_nodes_;             //!< The node objects for each unrestricted Trellis node
+  std::vector<PolyNode> poly_nodes_;             //!< The node objects for each Polyheadron-bounded Trellis node
+  std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the Trellis intersections, which bound the Trellis nodes
 public:
   explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double node_fraction=1.0);
   // PolyhedronTrellis(const Polyhedron& polyhedron, const size_t node_ratio);
@@ -165,26 +154,19 @@ public:
     if (v.numel()==3) vertices_ = v;
     return vertices_;
   }
-  ArrayVector<double> node_type_vertices(const NodeType node_type=NodeType::cube) const {
-    // possible extension: replace node_type by a class enum?
+  ArrayVector<double> cube_vertices(void) const {
     std::vector<bool> keep(vertices_.size(), false);
-    if (node_type == NodeType::cube)
-      for (auto node: cube_nodes_)
-        for (auto idx: node.vertices())
-          keep[idx]=true;
-    if (node_type == NodeType::polyhedron)
-      for (auto node: poly_nodes_)
-        for (auto idx: node.vertices())
-          keep[idx]=true;
-    // for (auto node: nodes_) if (node.type() == node_type) for (auto idx: node.vertices()) keep[idx] = true;
+    for (auto node: cube_nodes_) for (auto idx: node.vertices()) keep[idx]=true;
     return vertices_.extract(keep);
   }
-  ArrayVector<double> cube_vertices(void) const {return this->node_type_vertices(NodeType::cube);}
-  ArrayVector<double> poly_vertices(void) const {return this->node_type_vertices(NodeType::polyhedron);}
+  ArrayVector<double> poly_vertices(void) const {
+    std::vector<bool> keep(vertices_.size(), false);
+    for (auto node: poly_nodes_) for (auto idx: node.vertices()) keep[idx]=true;
+    return vertices_.extract(keep);
+  }
   std::vector<std::array<size_t,4>> vertices_per_tetrahedron(void) const {
     std::vector<std::array<size_t,4>> out;
     for (auto node: poly_nodes_)
-    // for (auto node: nodes_) if (node.type() == NodeType::polyhedron)
     for (auto tet: node.vertices_per_tetrahedron()) out.push_back(tet);
     return out;
   }
@@ -242,7 +224,6 @@ public:
   size_t node_count() {
     size_t count = 1u;
     for (size_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
-    // if (nodes_.size() != count) nodes_.resize(count); // doing this initializes new nodes to type GeneralNode!
     return count;
   }
   std::array<size_t,3> size() const {
