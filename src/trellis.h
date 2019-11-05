@@ -6,6 +6,8 @@
 #include "latvec.h"
 #include "polyhedron.h"
 #include "unsignedtosigned.h"
+#include "debug.h"
+#include "triangulation_simple.h"
 
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
@@ -114,7 +116,7 @@ private:
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
 };
 
-template<class T> class PolyhedronTrellis{
+template<typename T> class PolyhedronTrellis{
   Polyhedron polyhedron_;
   TrellisData<T> data_;
   ArrayVector<double> vertices_;
@@ -122,7 +124,7 @@ template<class T> class PolyhedronTrellis{
   std::array<std::vector<double>,3> boundaries_;
 public:
   PolyhedronTrellis(const Polyhedron& polyhedron, const double node_fraction);
-  PolyhedronTrellis(const Polyhedron& polyhedron, const size_t node_ratio);
+  // PolyhedronTrellis(const Polyhedron& polyhedron, const size_t node_ratio);
   PolyhedronTrellis(): vertices_({3,0}) {
     std::vector<double> everything;
     everything.push_back(std::numeric_limits<double>::lowest());
@@ -263,7 +265,7 @@ private:
   size_t sub2idx(const std::array<size_t,3>& sub) const {
     return this->sub2idx(sub, this->span());
   }
-  size_t idx2sub(const size_t idx) const {
+  std::array<size_t,3> idx2sub(const size_t idx) const {
     return this->idx2sub(idx, this->span());
   }
   size_t sub2idx(const std::array<size_t,3>& sub, const std::array<size_t,3>& sp) const {
@@ -274,7 +276,7 @@ private:
   std::array<size_t,3> idx2sub(const size_t idx, const std::array<size_t,3>& sp) const {
     std::array<size_t,3> sub{0,0,0};
     size_t rem{idx};
-    for (size_t dim=3u; dim>0u; dim--){
+    for (size_t dim=3u; dim--;){
       sub[dim] = rem/sp[dim];
       rem -= sub[dim]*sp[dim];
     }
@@ -282,4 +284,5 @@ private:
   }
 };
 
+#include "trellis.hpp"
 #endif

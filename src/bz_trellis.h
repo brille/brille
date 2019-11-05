@@ -9,7 +9,8 @@ typedef long slong;
 template<class T> class BrillouinZoneTrellis3: public PolyhedronTrellis<T>{
   BrillouinZone brillouinzone;
 public:
-  template<typename... A> BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
+  template<typename... A>
+  BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
     PolyhedronTrellis<T>(bz.get_ir_polyhedron(), args...),
     brillouinzone(bz) {}
   // get the BrillouinZone object

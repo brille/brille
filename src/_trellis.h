@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "_c_to_python.h"
+#include "trellis.h"
 #include "bz_trellis.h"
 #include "unsignedtosigned.h"
 
@@ -23,9 +24,13 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
   // Initializer (BrillouinZone, maximum node volume fraction)
   .def(py::init<BrillouinZone,double>(), py::arg("brillouinzone"), py::arg("node_volume_fraction")=0.1)
+
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
+
   .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_hkl());})
+
   .def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_xyz());})
+
   .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
     py::buffer_info bi;
     // copy-in the elements array
@@ -48,18 +53,9 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     for (ssize_t bisi: bi.shape) shape.push_back(signed_to_unsigned<size_t>(bisi));
     cobj.replace_data(data, shape, el);
   }, py::arg("data"), py::arg("elements"))
+
   .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
-  // .def("multi_sort_perm",
-  //   [](Class& cobj, const double wS, const double wE, const double wV,
-  //                   const double wM, const int ewf, const int vwf){
-  //   return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
-  // }, py::arg("scalar_cost_weight")=1,
-  //    py::arg("eigenvector_cost_weight")=1,
-  //    py::arg("vector_cost_weight")=1,
-  //    py::arg("matrix_cost_weight")=1,
-  //    py::arg("eigenvector_weight_function")=0,
-  //    py::arg("vector_weight_function")=0
-  // )
+
   .def("ir_interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
                            const bool& useparallel,
@@ -100,6 +96,7 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
         rptr[i*lires.numel()+j] = lires.getvalue(i,j);
     return liout;
   },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
+
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
     // handle Q
     py::buffer_info bi = pyQ.request();
@@ -120,6 +117,20 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
     return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
   }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"))
-  .def("__repr__",&Class::to_string);
+
+  // .def("__repr__",&Class::to_string)
+  //
+  // .def("multi_sort_perm",
+  //   [](Class& cobj, const double wS, const double wE, const double wV,
+  //                   const double wM, const int ewf, const int vwf){
+  //   return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
+  // }, py::arg("scalar_cost_weight")=1,
+  //    py::arg("eigenvector_cost_weight")=1,
+  //    py::arg("vector_cost_weight")=1,
+  //    py::arg("matrix_cost_weight")=1,
+  //    py::arg("eigenvector_weight_function")=0,
+  //    py::arg("vector_weight_function")=0
+  // )
+  ;
 }
 #endif

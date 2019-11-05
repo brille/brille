@@ -248,7 +248,7 @@ private:
   std::array<size_t,3> idx2sub(const size_t idx, const std::array<size_t,3>& sp) const {
     std::array<size_t,3> sub{0,0,0};
     size_t rem{idx};
-    for (size_t dim=3u; dim>0u; dim--){
+    for (size_t dim=3u; dim--;){
       sub[dim] = rem/sp[dim];
       rem -= sub[dim]*sp[dim];
     }
