@@ -9,6 +9,7 @@
 #include "_mesh.h"
 #include "_polyhedron.h"
 #include "_trellis.h"
+#include "_nest.h"
 #include <pybind11/stl.h>
 
 namespace py = pybind11;
@@ -226,6 +227,9 @@ PYBIND11_MODULE(_symbz,m){
 
     declare_bztrellisq<double>(m,"");
     declare_bztrellisq<std::complex<double>>(m,"complex");
+
+    declare_bznestq<double>(m,"");
+    declare_bznestq<std::complex<double>>(m,"complex");
 
     py::class_<PrimitiveTransform> pt(m,"PrimitiveTransform");
     pt.def(py::init<int>(),py::arg("Hall number"));

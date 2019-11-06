@@ -8,6 +8,7 @@
 #include "unsignedtosigned.h"
 #include "debug.h"
 #include "triangulation_simple.h"
+#include "interpolation_data.h"
 
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
@@ -71,69 +72,9 @@ private:
   bool tetrahedra_contains(const size_t, const ArrayVector<double>&, const ArrayVector<double>&, std::array<double,4>&) const;
 };
 
-template<class T> class TrellisData{
-  typedef std::vector<size_t> ShapeType;
-  typedef std::array<unsigned,4> ElementsType;
-  ArrayVector<T> data_;   //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
-  ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data` array
-  ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
-  size_t branches_;       //!< The number of branches contained per data array
-public:
-  TrellisData(): data_({0,0}), shape_({0,0}), elements_({0,0,0,0}), branches_(0){};
-  size_t size(void) const {return data_.size();}
-  size_t numel(void) const {return data_.numel();}
-  const ArrayVector<T>& data(void) const {return data_;}
-  const ShapeType& shape(void) const {return shape_;}
-  const ElementsType& elements(void) const {return elements_;}
-  size_t branches(void) const {return branches_;}
-  //
-  void interpolate_at(const std::vector<size_t>& indicies, const std::vector<double>& weights, ArrayVector<T>& out, const size_t to) const {
-    new_unsafe_interpolate_to(data_, elements_, branches_, indicies, weights, out, to);
-  }
-  void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const ElementsType& ne){
-    data_ = nd;
-    shape_ = ns;
-    elements_ = ne;
-    // check the input for correctness
-    size_t total_elements = 1u;
-    // scalar + eigenvector + vector + matrix*matrix elements
-    size_t known_elements = static_cast<size_t>(ne[0])+static_cast<size_t>(ne[1])+static_cast<size_t>(ne[2])
-                          + static_cast<size_t>(ne[3])*static_cast<size_t>(ne[3]);
-    // no matter what, shape[0] should be the number of gridded points
-    if (ns.size()>2){
-      // if the number of dimensions of the shape array is greater than two,
-      // the second element is the number of modes per point                    */
-      branches_ = ns[1];
-      for (size_t i=2u; i<ns.size(); ++i) total_elements *= ns[i];
-    } else {
-      // shape is [n_points, n_elements] or [n_points,], so there is only one mode
-      branches_ = 1u;
-      total_elements = ns.size() > 1 ? ns[1] : 1u;
-    }
-    if (0 == known_elements) elements_[0] = total_elements;
-    if (known_elements && known_elements != total_elements){
-      std::string msg;
-      msg = "Inconsistent elements: " + std::to_string(known_elements) + " = ";
-      msg += std::to_string(elements_[0]) + "+" + std::to_string(elements_[1]) + "+";
-      msg += std::to_string(elements_[2]) + "+" + std::to_string(elements_[3]) + "² ≠ ";
-      msg += std::to_string(total_elements);
-      throw std::runtime_error(msg);
-    }
-  }
-  void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
-    ShapeType ns{nd.size(), nd.numel()};
-    return this->replace_data(nd, ns, ne);
-  }
-  // Calculate the Debye-Waller factor for the provided Q points and ion masses
-  template<template<class> class A> ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
-private:
-  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
-  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
-};
-
 template<typename T> class PolyhedronTrellis{
   Polyhedron polyhedron_;                        //!< the Polyhedron bounding the Trellis
-  TrellisData<T> data_;                          //!< [optional] data stored at each Trellis vertex
+  InterpolationData<T> data_;                    //!< [optional] data stored at each Trellis vertex
   ArrayVector<double> vertices_;                 //!< The Trellis intersections inside the bounding Polyhedron
   std::vector<size_t> node_index_;               //!< For each Trellis node, the index into its respective NodeType vector
   std::vector<NodeType> node_type_;              //!< The NodeType for each Trellis node
@@ -182,11 +123,11 @@ public:
     size_t idx = this->node_index(x);
     switch (node_type_[idx]){
       case NodeType::cube:
-      info_update("Interpolate at ",x.to_string("")," between cube vertices\n",cube_nodes_[idx].vertices());
-      return cube_nodes_[idx].indices_weights(vertices_, x, indices, weights);
+      info_update("Interpolate at ",x.to_string("")," between cube vertices\n",cube_nodes_[node_index_[idx]].vertices());
+      return cube_nodes_[node_index_[idx]].indices_weights(vertices_, x, indices, weights);
       case NodeType::polyhedron:
-      info_update("Interpolate at ",x.to_string("")," between polyhedron vertices\n",poly_nodes_[idx].vertices());
-      return cube_nodes_[idx].indices_weights(vertices_, x, indices, weights);
+      info_update("Interpolate at ",x.to_string("")," between polyhedron vertices\n",poly_nodes_[node_index_[idx]].vertices());
+      return cube_nodes_[node_index_[idx]].indices_weights(vertices_, x, indices, weights);
       default:
       return false;
     }
@@ -286,7 +227,7 @@ public:
     return str;
   }
   // Get a constant reference to the stored data
-  const TrellisData<T>& data(void) const {return data_;}
+  const InterpolationData<T>& data(void) const {return data_;}
   // Replace the data stored in the object
   template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
   // Calculate the Debye-Waller factor for the provided Q points and ion masses

@@ -170,7 +170,7 @@ class SymEu:
         return sbz.PrimitiveTransform(self.hall_number)
 
     # pylint: disable=c0103,w0613,no-member
-    def __define_grid_or_mesh(self, mesh=False, trellis=False, **kwds):
+    def __define_grid_or_mesh(self, mesh=False, trellis=False, nest=False, **kwds):
         prim_tran = self.__get_primitive_transform()
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         # And we can check whether there's anything to do using SymBZ
@@ -189,6 +189,8 @@ class SymEu:
             self.__make_mesh(brillouin_zone, **kwds)
         elif trellis:
             self.__make_trellis(brillouin_zone, **kwds)
+        elif nest:
+            self.__make_nest(brillouin_zone, **kwds)
         else:
             self.__make_grid(brillouin_zone, **kwds)
         # We need to make sure that we pass gridded Q points in the primitive
@@ -224,6 +226,14 @@ class SymEu:
 
     def __make_trellis(self, bz, fractional_node_volume=0.1, **kwds):
         self.grid = sbz.BZTrellisQcomplex(bz, fractional_node_volume);
+
+    def __make_nest(self, bz, max_branchings=5, max_tet_volume=None, number_density=None, **kwds):
+        if max_tet_volume is not None:
+            self.grid = sbz.BZNestQcomplex(bz, max_tet_volume, max_branchings)
+        elif number_density is not None:
+            self.grid = sbz.BZNestQcomplex(bz, number_density, max_branchings)
+        else:
+            raise Exception("You must provide max_tet_volume or number_density keyword")
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""

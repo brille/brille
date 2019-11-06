@@ -12,7 +12,7 @@ class SimpleTet{
   ArrayVector<size_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
 public:
   SimpleTet(void): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  SimpleTet(const Polyhedron& poly): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
+  SimpleTet(const Polyhedron& poly, const double max_volume=-1): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
     const ArrayVector<double>& verts{poly.get_vertices()};
     const std::vector<std::vector<int>>& vpf{poly.get_vertices_per_face()};
     // create the tetgenbehavior object which contains all options/switches for tetrahedralize
@@ -21,7 +21,12 @@ public:
     tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
     tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
     tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
-    tgb.varvolume = 1; // the simple version doesn't constrain anything
+    if (max_volume > 0){
+      tgb.fixedvolume = 1;
+      tgb.maxvolume = max_volume;
+    } else{
+      tgb.varvolume = 1;
+    }
     #ifdef VERBOSE_MESHING
     tgb.verbose = 10000;
     #else
@@ -89,6 +94,14 @@ public:
       vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
       vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)) )/6.0;
     return v;
+  }
+  double maximum_volume(void) const {
+    double vol{0}, maxvol{0};
+    for (size_t i=0; i<this->number_of_tetrahedra(); ++i){
+      vol = this->volume(i);
+      if (vol > maxvol) maxvol = vol;
+    }
+    return maxvol;
   }
   size_t number_of_vertices(void) const {return vertex_positions.size();}
   size_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size();}
