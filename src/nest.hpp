@@ -25,6 +25,9 @@ void Nest<T>::construct(const Polyhedron& poly, const size_t max_branchings, con
   if (max_branchings > 0)
   for (auto b: root_.branches()) if (b.volume(vertices_) > max_volume)
     b = this->subdivide(b, 1u, max_branchings, max_volume, exponent, nVerts);
+
+  // ensure that we only keep actual vertices:
+  if (vertices_.size() > nVerts) vertices_.resize(nVerts);
 }
 
 template<typename T>
