@@ -170,7 +170,7 @@ class SymEu:
         return sbz.PrimitiveTransform(self.hall_number)
 
     # pylint: disable=c0103,w0613,no-member
-    def __define_grid_or_mesh(self, mesh=False, **kwds):
+    def __define_grid_or_mesh(self, mesh=False, trellis=False, **kwds):
         prim_tran = self.__get_primitive_transform()
         lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
         # And we can check whether there's anything to do using SymBZ
@@ -187,6 +187,8 @@ class SymEu:
         brillouin_zone = sbz.BrillouinZone(dlat.star)
         if mesh:
             self.__make_mesh(brillouin_zone, **kwds)
+        elif trellis:
+            self.__make_trellis(brillouin_zone, **kwds)
         else:
             self.__make_grid(brillouin_zone, **kwds)
         # We need to make sure that we pass gridded Q points in the primitive
@@ -219,6 +221,9 @@ class SymEu:
 
     def __make_mesh(self, bz, max_size=-1, max_points=-1, num_levels=3, **kwds):
         self.grid = sbz.BZMeshQcomplex(bz, max_size, num_levels, max_points)
+
+    def __make_trellis(self, bz, fractional_node_volume=0.1, **kwds):
+        self.grid = sbz.BZTrellisQcomplex(bz, fractional_node_volume);
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""

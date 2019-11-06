@@ -12,6 +12,12 @@
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
 
+template<class T>
+static size_t find_bin(const std::vector<T>& bin_edges, const T x){
+  auto found_at = std::find_if(bin_edges.begin(), bin_edges.end(), [x](double b){return b>x;});
+  return std::distance(bin_edges.begin(), found_at) - 1;
+}
+
 enum class NodeType {empty, cube, polyhedron};
 
 class GeneralNode{
@@ -173,11 +179,17 @@ public:
   bool indices_weights(const ArrayVector<double>& x, std::vector<size_t>& indices, std::vector<double>& weights) const {
     if (x.size()!=1u || x.numel()!=3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-    auto thisnode = this->node(x);
-    if (thisnode.type() != NodeType::empty)
-      return thisnode.indices_weights(vertices_, x, indices, weights);
-    else
+    size_t idx = this->node_index(x);
+    switch (node_type_[idx]){
+      case NodeType::cube:
+      info_update("Interpolate at ",x.to_string("")," between cube vertices\n",cube_nodes_[idx].vertices());
+      return cube_nodes_[idx].indices_weights(vertices_, x, indices, weights);
+      case NodeType::polyhedron:
+      info_update("Interpolate at ",x.to_string("")," between polyhedron vertices\n",poly_nodes_[idx].vertices());
+      return cube_nodes_[idx].indices_weights(vertices_, x, indices, weights);
+      default:
       return false;
+    }
   }
   template<class R> unsigned check_before_interpolating(const ArrayVector<R>& x) const{
     unsigned int mask = 0u;
@@ -240,35 +252,33 @@ public:
   // Find the appropriate node for an arbitrary point:
   std::array<size_t,3> node_subscript(const std::array<double,3>& p) const {
     std::array<size_t,3> sub{0,0,0}, sz=this->size();
-    for (size_t dim=0; dim<3u; ++dim){
-      for (size_t i=0; i<sz[dim]; ++i) if ( p[dim] < boundaries_[dim][i+1]) sub[dim] = i;
-    }
+    for (size_t dim=0; dim<3u; ++dim) sub[dim] = find_bin(boundaries_[dim], p[dim]);
     return sub;
   }
   std::array<size_t,3> node_subscript(const ArrayVector<double>& p) const {
-    std::array<size_t,3> sub{0,0,0}, sz=this->size();
+    std::array<size_t,3> sub{0,0,0};
     for (size_t dim=0; dim<3u; ++dim){
-      for (size_t i=0; i<sz[dim]; ++i) if ( p.getvalue(0,dim) < boundaries_[dim][i+1]) sub[dim] = i;
+      // find the first boundary no larger than the value
+      sub[dim] = find_bin(boundaries_[dim], p.getvalue(0, dim));
+      info_update("value ",p.getvalue(0, dim)," falls into bin ",sub[dim]," for bins with boundaries\n",boundaries_[dim]);
     }
+    info_update("point ",p.to_string("")," has indices ",sub);
     return sub;
   }
   // find the node linear index for a point
   template <class R> size_t node_index(const R& p) const { return this->sub2idx(this->node_subscript(p)); }
 
-  const GeneralNode& node(const size_t idx) const {
-    if (idx < node_index_.size()){
-      if (NodeType::cube == node_type_[idx]) return cube_nodes_[node_index_[idx]];
-      if (NodeType::polyhedron == node_type_[idx]) return poly_nodes_[node_index_[idx]];
-    }
-    throw std::domain_error("Out of bounds index for PolyhedronTrellis node");
+  const CubeNode& cube_node(const size_t idx) const {
+    if (idx >= node_index_.size() || NodeType::cube != node_type_[idx])
+      throw std::runtime_error("Out-of-bounds or non-cube node");
+    return cube_nodes_[node_index_[idx]];
   }
-  // get a node by point-in-the-node
-  const GeneralNode& node(const std::array<double,3>& p) const {
-    return this->node(this->node_index(p));
+  const PolyNode& poly_node(const size_t idx) const {
+    if (idx >= node_index_.size() || NodeType::polyhedron != node_type_[idx])
+      throw std::runtime_error("Out-of-bounds or non-polyhedron node");
+    return poly_nodes_[node_index_[idx]];
   }
-  const GeneralNode& node(const ArrayVector<double>& p) const {
-    return this->node(this->node_index(p));
-  }
+
   std::string to_string(void) const {
     std::string str = "(";
     for (auto i: this->size()) str += " " + std::to_string(i);
@@ -294,6 +304,7 @@ private:
   size_t sub2idx(const std::array<size_t,3>& sub, const std::array<size_t,3>& sp) const {
     size_t idx=0;
     for (size_t dim=0; dim<3u; ++dim) idx += sp[dim]*sub[dim];
+    info_update("span ",sp," gives subscript ",sub," as linear ",idx);
     return idx;
   }
   std::array<size_t,3> idx2sub(const size_t idx, const std::array<size_t,3>& sp) const {

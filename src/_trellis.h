@@ -49,10 +49,10 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     bi = pydata.request();
     ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
     //
-    if (cobj.data().size() != data.size()){
+    if (cobj.vertex_count() != data.size()){
       std::string msg = "Provided " + std::to_string(data.size())
                       + " data inputs but expected "
-                      + std::to_string(cobj.data().size()) + "!";
+                      + std::to_string(cobj.vertex_count()) + "!";
       throw std::runtime_error(msg);
     }
     std::vector<size_t> shape;
