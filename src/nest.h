@@ -66,6 +66,12 @@ public:
     std::array<double,4> w{0,0,0,0};
     return this->contains(v,x,w);
   }
+  std::string to_string(void) const {
+    std::string msg = "[";
+    for (auto i: vi) msg += " " + std::to_string(i);
+    msg += " ]";
+    return msg;
+  }
 private:
   bool might_contain(const ArrayVector<double>& v, const ArrayVector<double>& x) const {
     double is = insphere(v.data(vi[0]),v.data(vi[1]),v.data(vi[2]),v.data(vi[3]),x.data());
@@ -80,11 +86,11 @@ class NestNode{
   NestLeaf boundary_;
   std::vector<NestNode> branches_;
 public:
-  NestNode(bool ir=false): is_root_(ir), boundary_() {}
+  explicit NestNode(bool ir=false): is_root_(ir), boundary_() {}
   explicit NestNode(const NestLeaf& b): is_root_(false), boundary_(b) {}
   explicit NestNode(const std::array<size_t,4>& vit): is_root_(false), boundary_(NestLeaf(vit)) {}
   bool is_root(void) const {return is_root_;}
-  bool is_terminal(void) const {return branches_.size()==0;}
+  bool is_leaf(void) const {return branches_.size()==0;}
   const NestLeaf& boundary(void) const {return boundary_;}
   const std::vector<NestNode>& branches(void) const {return branches_;}
   std::vector<NestNode>& branches(void) {return branches_;}
@@ -98,15 +104,23 @@ public:
     std::vector<double>&w
   ) const {
     for (auto b: branches_) if (b.contains(v,x)) return b.indices_weights(v,m,x,i,w);
-    if (!is_root_ && this->is_terminal()) return boundary_.indices_weights(v,m,x,i,w);
+    if (!is_root_ && this->is_leaf()) return boundary_.indices_weights(v,m,x,i,w);
     return false;
   }
   std::vector<std::array<size_t,4>> tetrahedra(void) const {
     std::vector<std::array<size_t,4>> out;
-    for (auto b: branches_) for (auto v: b.tetrahedra()) out.push_back(v);
-    // remove is_terminal entirely and just use whether the branches_ are empty?
-    if (!is_root_ && this->is_terminal()) out.push_back(boundary_.vertices());
+    if (!is_root_ && this->is_leaf()) out.push_back(boundary_.vertices());
+    else for (auto b: branches_) for (auto v: b.tetrahedra()) out.push_back(v);
     return out;
+  }
+  std::string to_string(const std::string& prefix, const bool not_last) const {
+    std::string msg = prefix;
+    msg += is_root_ ? "───┐" : not_last ? "├──" : "└──";
+    if (!is_root_) msg += boundary_.to_string();
+    msg += "\n";
+    for (size_t i=0; i<branches_.size(); ++i)
+      msg += branches_[i].to_string(prefix+(not_last?"|  ":"   "),i+1!=branches_.size());
+    return msg;
   }
 };
 template<typename T>
@@ -116,6 +130,10 @@ class Nest{
   InterpolationData<T> data_;
   std::vector<size_t> map_; // vertices holds *all* vertices but data_ only holds information for terminal vertices!
 public:
+  std::string tree_string(void) const {
+    std::string tree = root_.to_string("",false);
+    return tree;
+  }
   // Build using maximum leaf volume
   Nest(const Polyhedron& p, const double vol, const size_t nb=5u):
     root_(true), vertices_({3u,0u})
@@ -130,13 +148,13 @@ public:
     this->construct(p, nb, p.get_volume()/static_cast<double>(rho));
     this->make_all_to_terminal_map();
   }
-  std::vector<bool> vertex_is_terminal(void) const {
+  std::vector<bool> vertex_is_leaf(void) const {
     std::vector<bool> vert_is_term(vertices_.size(), false);
     for (auto tet: root_.tetrahedra()) for (auto idx: tet) vert_is_term[idx]=true;
     return vert_is_term;
   }
   const ArrayVector<double>& all_vertices(void) const {return vertices_;}
-  ArrayVector<double> vertices(void) const{ return vertices_.extract(this->vertex_is_terminal()); }
+  ArrayVector<double> vertices(void) const{ return vertices_.extract(this->vertex_is_leaf()); }
   std::vector<std::array<size_t,4>> tetrahedra(void) const {
     std::vector<std::array<size_t,4>> all_tet = root_.tetrahedra();
     // we need to adjust indexing to be into vertices instead of all_vertices
@@ -184,7 +202,7 @@ public:
 private:
   void construct(const Polyhedron&, const size_t, const double);
   void make_all_to_terminal_map(void) {
-    std::vector<bool> vit = this->vertex_is_terminal();
+    std::vector<bool> vit = this->vertex_is_leaf();
     size_t nTerminal = std::count(vit.begin(), vit.end(), true);
     map_.clear();
     size_t idx{0};
@@ -192,7 +210,7 @@ private:
     if (idx != nTerminal)
       throw std::runtime_error("This shouldn't happen");
   }
-  NestNode subdivide(NestNode&, const size_t, const size_t, const double, const double, size_t&);
+  void subdivide(NestNode&, const size_t, const size_t, const double, const double, size_t&);
 };
 
 #include "nest.hpp"

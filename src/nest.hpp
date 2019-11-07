@@ -8,10 +8,11 @@ void Nest<T>::construct(const Polyhedron& poly, const size_t max_branchings, con
     root_tet = SimpleTet(poly, max_volume*std::pow(static_cast<double>(max_branchings)-1, exponent));
     exponent = std::log(root_tet.maximum_volume()/max_volume)/std::log(static_cast<double>(max_branchings));
   }
+  verbose_update("Largest root tetrahedron ",root_tet.maximum_volume()," and maximum leaf tetrahedron ",max_volume," give exponent ",exponent);
   // copy-over the vertices of the root node
   vertices_ = root_tet.get_vertices();
   // we need to make a guess about how many vertices we'll need:
-  size_t number_density = static_cast<size_t>(poly.get_volume()/max_volume);
+  size_t number_density = static_cast<size_t>(poly.get_volume()/max_volume); // shockingly, this is about right for total number of vertices!
   size_t nVerts = vertices_.size();
   vertices_.resize(number_density + nVerts);
   // copy over the per-tetrahedron vertex indices to the root's branches
@@ -19,23 +20,24 @@ void Nest<T>::construct(const Polyhedron& poly, const size_t max_branchings, con
   for (size_t i=0; i<tvi.size(); ++i){
     std::array<size_t,4> single;
     for (size_t j=0; j<4u; ++j) single[j] = tvi.getvalue(i,j); // no need to adjust indices at this stage
-    root_.branches().push_back(NestNode(single));
+    // create a branch for this tetrahedron
+    NestNode branch(single);
+    // and subdivide it if necessary
+    if (max_branchings > 0 && branch.volume(vertices_) > max_volume)
+      this->subdivide(branch, 1u, max_branchings, max_volume, exponent, nVerts);
+    // storing the resulting branch/leaf at this root
+    root_.branches().push_back(branch);
   }
-
-  if (max_branchings > 0)
-  for (auto b: root_.branches()) if (b.volume(vertices_) > max_volume)
-    b = this->subdivide(b, 1u, max_branchings, max_volume, exponent, nVerts);
-
   // ensure that we only keep actual vertices:
   if (vertices_.size() > nVerts) vertices_.resize(nVerts);
 }
 
 template<typename T>
-NestNode Nest<T>::subdivide(
+void Nest<T>::subdivide(
   NestNode& node, const size_t nBr, const size_t maxBr,
   const double max_volume, const double exp, size_t& nVerts
 ){
-  if (!node.is_terminal()) return node; // we can only branch un-branched nodes
+  if (!node.is_leaf()) return; // return node; // we can only branch un-branched nodes
   Polyhedron poly(vertices_.extract(node.boundary().vertices()));
   double mult = (maxBr > nBr) ? std::pow(static_cast<double>(maxBr-nBr),exp) : 1.0;
   SimpleTet node_tet(poly, max_volume*mult);
@@ -44,6 +46,7 @@ NestNode Nest<T>::subdivide(
   const ArrayVector<double>& ntv{node_tet.get_vertices()};
   for (size_t i=0; i<ntv.size(); ++i){
     const ArrayVector<double> vi{ntv.extract(i)};
+    // If we're clever we can possibly simplify this
     std::vector<size_t> idx = find(norm(vertices_.first(nVerts)-vi).is_approx("==",0.));
     if (idx.size()>1)
       throw std::runtime_error("Multiple matching vertices?!");
@@ -61,11 +64,12 @@ NestNode Nest<T>::subdivide(
   for (size_t i=0; i<tvi.size(); ++i){
     std::array<size_t,4> single;
     for (size_t j=0; j<4u; ++j) single[j] = map[tvi.getvalue(i,j)];
-    node.branches().push_back(NestNode(single));
+    // create a branch for this tetrahedron
+    NestNode branch(single);
+    // and subdivide it if necessary
+    if (nBr < maxBr && branch.volume(vertices_) > max_volume)
+      this->subdivide(branch, nBr+1u, maxBr, max_volume, exp, nVerts);
+    // storing the resulting branch/leaf at this node
+    node.branches().push_back(branch);
   }
-  // If there are still levels to go:
-  if (nBr < maxBr)
-  for (auto b: node.branches()) if (b.volume(vertices_) > max_volume)
-    b = this->subdivide(b, nBr+1u, maxBr, max_volume, exp, nVerts);
-  return node;
 }
