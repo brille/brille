@@ -289,13 +289,14 @@ public:
   // ArrayVector<double> get_vertices(void) const { return vertices; }
   // ArrayVector<double> get_points(void) const { return points; }
   // ArrayVector<double> get_normals(void) const { return normals; }
-  // std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
-  // std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
+  std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
+  std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
+  //
   const ArrayVector<double>& get_vertices(void) const { return vertices; }
   const ArrayVector<double>& get_points(void) const { return points; }
   const ArrayVector<double>& get_normals(void) const { return normals; }
-  const std::vector<std::vector<int>>& get_faces_per_vertex(void) const { return faces_per_vertex; }
-  const std::vector<std::vector<int>>& get_vertices_per_face(void) const {return vertices_per_face; }
+  // const std::vector<std::vector<int>>& get_faces_per_vertex(void) const { return faces_per_vertex; }  
+  // const std::vector<std::vector<int>>& get_vertices_per_face(void) const {return vertices_per_face; }
   ArrayVector<double> get_half_edges(void) const{
     // for each face find the point halfway between each set of neighbouring vertices
     // Convex polyhedra always have edges neighbouring two faces, so we will
@@ -319,8 +320,12 @@ public:
         hep.set(found++, (vertices.extract(a)+vertices.extract(b))/2.0);
       }
     }
-    if (found != nfv>>1)
-      throw std::runtime_error("Problem finding all half-edge points.");
+    if (found != nfv>>1){
+      std::string msg = "Found " + std::to_string(found) + " half edge";
+      msg += " points but expected to find " + std::to_string(nfv>>1);
+      if (found < nfv>>1) msg += ". Is the polyhedron open? ";
+      throw std::runtime_error(msg);
+    }
     return hep;
   }
   std::string string_repr(void) const {
