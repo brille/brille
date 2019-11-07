@@ -227,13 +227,13 @@ class SymEu:
     def __make_trellis(self, bz, fractional_node_volume=0.1, **kwds):
         self.grid = sbz.BZTrellisQcomplex(bz, fractional_node_volume);
 
-    def __make_nest(self, bz, max_branchings=5, max_tet_volume=None, number_density=None, **kwds):
-        if max_tet_volume is not None:
-            self.grid = sbz.BZNestQcomplex(bz, max_tet_volume, max_branchings)
+    def __make_nest(self, bz, max_branchings=5, max_volume=None, number_density=None, **kwds):
+        if max_volume is not None:
+            self.grid = sbz.BZNestQcomplex(bz, max_volume, max_branchings)
         elif number_density is not None:
             self.grid = sbz.BZNestQcomplex(bz, number_density, max_branchings)
         else:
-            raise Exception("You must provide max_tet_volume or number_density keyword")
+            raise Exception("You must provide max_volume or number_density keyword")
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""

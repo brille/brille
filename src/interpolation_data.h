@@ -1,5 +1,6 @@
 #include <vector>
 #include <array>
+#include <utility>
 #include "arrayvector.h"
 
 #ifndef _INTERPOLATION_DATA_H_
@@ -22,6 +23,7 @@ public:
   size_t branches(void) const {return branches_;}
   //
   void interpolate_at(const std::vector<size_t>&, const std::vector<double>&, ArrayVector<T>&, const size_t) const;
+  void interpolate_at(const std::vector<std::pair<size_t,double>>&, ArrayVector<T>&,const size_t) const;
   void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
   void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
     ShapeType ns{nd.size(), nd.numel()};
@@ -37,12 +39,30 @@ private:
 
 template<typename T>
 void InterpolationData<T>::interpolate_at(
-  const std::vector<size_t>& indicies,
+  const std::vector<size_t>& indices,
   const std::vector<double>& weights,
   ArrayVector<T>& out,
   const size_t to
 ) const {
-  new_unsafe_interpolate_to(data_, elements_, branches_, indicies, weights, out, to);
+  if (indices.size()==0 || weights.size()==0)
+    throw std::logic_error("Interpolation requires input data!");
+  new_unsafe_interpolate_to(data_, elements_, branches_, indices, weights, out, to);
+}
+template<typename T>
+void InterpolationData<T>::interpolate_at(
+  const std::vector<std::pair<size_t,double>>& indices_weights,
+  ArrayVector<T>& out,
+  const size_t to
+) const {
+  if (indices_weights.size()==0)
+    throw std::logic_error("Interpolation requires input data!");
+  std::vector<size_t> indices;
+  std::vector<double> weights;
+  for (auto iw: indices_weights){
+    indices.push_back(iw.first);
+    weights.push_back(iw.second);
+  }
+  new_unsafe_interpolate_to(data_, elements_, branches_, indices, weights, out, to);
 }
 
 template<typename T>

@@ -1,5 +1,6 @@
 #include <vector>
 #include <array>
+#include <utility>
 #include <algorithm>
 #include <omp.h>
 #include "arrayvector.h"
@@ -13,59 +14,56 @@
 #ifndef _NEST_H_
 #define _NEST_H_
 
-
+template<typename T,size_t N>
+static bool none_negative(const std::array<T,N>& x){
+  return !std::any_of(x.begin(), x.end(), [](T z){return z<0 && !approx_scalar(z,0.);});
+}
 
 class NestLeaf{
   std::array<size_t,4> vi;
+  std::array<double,4> centre_radius;
 public:
-  NestLeaf(){}
+  NestLeaf(): vi({0,0,0,0}), centre_radius({0,0,0,0}) {}
   // actually constructing the tetrahedra from, e.g., a Polyhedron object will
   // need to be done elsewhere
-  explicit NestLeaf(const std::array<size_t,4>& vit): vi(vit) {}
+  explicit NestLeaf(
+    const std::array<size_t,4>& vit,
+    const std::array<double,4>& ci
+  ): vi(vit), centre_radius(ci) {}
+  //
   const std::array<size_t,4>& vertices(void) const { return vi;}
-  bool indices_weights(
-    const ArrayVector<double>& v,
-    const std::vector<size_t>& map,
-    const ArrayVector<double>& x,
-    std::vector<size_t>& indices,
-    std::vector<double>& weights
-  ) const {
-    indices.clear();
-    weights.clear();
-    std::array<double,4> w{0,0,0,0};
-    if (this->contains(v, x, w))
-    for (size_t i=0; i<4u; ++i)
-    if (!approx_scalar(w[i], 0.)){
-      indices.push_back(map[vi[i]]);
-      weights.push_back(w[i]);
-    }
-    return indices.size()>0;
-  }
+  //
   double volume(const ArrayVector<double>& v) const {
     return orient3d(v.data(vi[0]), v.data(vi[1]), v.data(vi[2]), v.data(vi[3]))/6.0;
+  }
+  //
+  std::array<double,4> weights(const ArrayVector<double>& v, const ArrayVector<double>& x) const {
+    std::array<double,4> w{-1,-1,-1,-1};
+    if (this->might_contain(x)){
+      double vol6 = this->volume(v)*6.0;
+      w[0] = orient3d(x.data()     , v.data(vi[1]), v.data(vi[2]), v.data(vi[3])) / vol6;
+      w[1] = orient3d(v.data(vi[0]), x.data()     , v.data(vi[2]), v.data(vi[3])) / vol6;
+      w[2] = orient3d(v.data(vi[0]), v.data(vi[1]), x.data()     , v.data(vi[3])) / vol6;
+      w[3] = orient3d(v.data(vi[0]), v.data(vi[1]), v.data(vi[2]), x.data()     ) / vol6;
+    }
+    return w;
   }
   bool contains(
     const ArrayVector<double>& v,
     const ArrayVector<double>& x,
     std::array<double,4>& w
   ) const {
-    if (!this->might_contain(v,x)) return false; // is this any faster (or right?)
-    double vol6 = this->volume(v)*6.0;
-    w[0] = orient3d(x.data()     , v.data(vi[1]), v.data(vi[2]), v.data(vi[3])) / vol6;
-    w[1] = orient3d(v.data(vi[0]), x.data()     , v.data(vi[2]), v.data(vi[3])) / vol6;
-    w[2] = orient3d(v.data(vi[0]), v.data(vi[1]), x.data()     , v.data(vi[3])) / vol6;
-    w[3] = orient3d(v.data(vi[0]), v.data(vi[1]), v.data(vi[2]), x.data()     ) / vol6;
-    if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !approx_scalar(z, 0.);}))
-      return false;
-    return true;
+    if (this->might_contain(x)){
+      double vol6 = this->volume(v)*6.0;
+      w[0] = orient3d(x.data()     , v.data(vi[1]), v.data(vi[2]), v.data(vi[3])) / vol6;
+      w[1] = orient3d(v.data(vi[0]), x.data()     , v.data(vi[2]), v.data(vi[3])) / vol6;
+      w[2] = orient3d(v.data(vi[0]), v.data(vi[1]), x.data()     , v.data(vi[3])) / vol6;
+      w[3] = orient3d(v.data(vi[0]), v.data(vi[1]), v.data(vi[2]), x.data()     ) / vol6;
+      return none_negative(w);
+    }
+    return false;
   }
-  bool contains(
-    const ArrayVector<double>& v,
-    const ArrayVector<double>& x
-  ) const {
-    std::array<double,4> w{0,0,0,0};
-    return this->contains(v,x,w);
-  }
+  //
   std::string to_string(void) const {
     std::string msg = "[";
     for (auto i: vi) msg += " " + std::to_string(i);
@@ -73,9 +71,12 @@ public:
     return msg;
   }
 private:
-  bool might_contain(const ArrayVector<double>& v, const ArrayVector<double>& x) const {
-    double is = insphere(v.data(vi[0]),v.data(vi[1]),v.data(vi[2]),v.data(vi[3]),x.data());
-    return is > 0 || approx_scalar(is, 0.);
+  bool might_contain(const ArrayVector<double>& x) const {
+    std::array<double,3> d;
+    for (size_t i=0; i<3u; ++i) d[i] = x.getvalue(0,i) - centre_radius[i];
+    double d2{0}, r2 = centre_radius[3]*centre_radius[3];
+    for (size_t i=0; i<3u; ++i) d2 += d[i]*d[i];
+    return ( d2 < r2 || approx_scalar(d2,r2) );
   }
 };
 
@@ -88,29 +89,30 @@ class NestNode{
 public:
   explicit NestNode(bool ir=false): is_root_(ir), boundary_() {}
   explicit NestNode(const NestLeaf& b): is_root_(false), boundary_(b) {}
-  explicit NestNode(const std::array<size_t,4>& vit): is_root_(false), boundary_(NestLeaf(vit)) {}
+  NestNode(
+    const std::array<size_t,4>& vit,
+    const std::array<double,4>& ci
+  ): is_root_(false), boundary_(NestLeaf(vit,ci)) {}
   bool is_root(void) const {return is_root_;}
-  bool is_leaf(void) const {return branches_.size()==0;}
+  bool is_leaf(void) const {return !is_root_ && branches_.size()==0;}
   const NestLeaf& boundary(void) const {return boundary_;}
   const std::vector<NestNode>& branches(void) const {return branches_;}
   std::vector<NestNode>& branches(void) {return branches_;}
   double volume(const ArrayVector<double>& v) const {return boundary_.volume(v);}
   template<typename... A> bool contains(A... args) {return boundary_.contains(args...);}
-  bool indices_weights(
+  template<typename... A> std::array<double,4> weights(A... args) {return boundary_.weights(args...);}
+  std::vector<std::pair<size_t,double>> indices_weights(
     const ArrayVector<double>& v,
     const std::vector<size_t>& m,
-    const ArrayVector<double>& x,
-    std::vector<size_t>& i,
-    std::vector<double>&w
+    const ArrayVector<double>& x
   ) const {
-    for (auto b: branches_) if (b.contains(v,x)) return b.indices_weights(v,m,x,i,w);
-    if (!is_root_ && this->is_leaf()) return boundary_.indices_weights(v,m,x,i,w);
-    return false;
+    std::array<double,4> w;
+    return __indices_weights(v,m,x,w);
   }
   std::vector<std::array<size_t,4>> tetrahedra(void) const {
     std::vector<std::array<size_t,4>> out;
-    if (!is_root_ && this->is_leaf()) out.push_back(boundary_.vertices());
-    else for (auto b: branches_) for (auto v: b.tetrahedra()) out.push_back(v);
+    if (this->is_leaf()) out.push_back(boundary_.vertices());
+    for (auto b: branches_) for (auto v: b.tetrahedra()) out.push_back(v);
     return out;
   }
   std::string to_string(const std::string& prefix, const bool not_last) const {
@@ -121,6 +123,31 @@ public:
     for (size_t i=0; i<branches_.size(); ++i)
       msg += branches_[i].to_string(prefix+(not_last?"|  ":"   "),i+1!=branches_.size());
     return msg;
+  }
+protected:
+  std::vector<std::pair<size_t,double>> __indices_weights(
+    const ArrayVector<double>& v,
+    const std::vector<size_t>& m,
+    const ArrayVector<double>& x,
+    std::array<double,4>& w
+  ) const {
+    // This node is either the root (in which case it contains all tetrahedra)
+    // or a tetrahedra below the root which definately contains the point x
+    // In the second case w has been set for us by the calling function.
+    if (this->is_leaf()){
+      std::array<size_t,4> vi = boundary_.vertices();
+      std::vector<std::pair<size_t,double>> iw;
+      for (size_t i=0; i<4u; ++i) if (!approx_scalar(w[i], 0.))
+        iw.push_back(std::make_pair(m[vi[i]], w[i]));
+      return iw;
+    }
+    // This is not a leaf node. So continue down the tree
+    for (auto b: branches_){
+      w = b.weights(v,x);
+      if (none_negative(w)) return b.__indices_weights(v,m,x,w);
+    }
+    std::vector<std::pair<size_t,double>> empty;
+    return empty;
   }
 };
 template<typename T>
@@ -161,10 +188,10 @@ public:
     /* (do this later) */
     return all_tet;
   }
-  bool indices_weights(const ArrayVector<double>& x, std::vector<size_t>& i, std::vector<double>& w) const {
+  std::vector<std::pair<size_t,double>> indices_weights(const ArrayVector<double> &x) const {
     if (x.size()!=1u || x.numel()!=3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-    return root_.indices_weights(vertices_, map_, x, i, w);
+    return root_.indices_weights(vertices_, map_, x);
   }
   template<class R> unsigned check_before_interpolating(const ArrayVector<R>& x) const{
     unsigned int mask = 0u;
@@ -174,22 +201,37 @@ public:
       throw std::runtime_error("Nest requires x values which are three-vectors.");
     return mask;
   }
-  ArrayVector<T> interpolate_at(const ArrayVector<double>& x, const int threads=1) const {
+  ArrayVector<T> interpolate_at(const ArrayVector<double>& x) const {
+    this->check_before_interpolating(x);
+    ArrayVector<T> out(data_.numel(), x.size());
+    for (size_t i=0; i<x.size(); ++i){
+      auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
+      data_.interpolate_at(iw, out, i);
+    }
+    return out;
+  }
+  ArrayVector<T> interpolate_at(const ArrayVector<double>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // shared between threads
     ArrayVector<T> out(data_.numel(), x.size());
-    // private to each thread
-    std::vector<size_t> indices;
-    std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+    size_t unfound=0;
     long xsize = unsigned_to_signed<long, size_t>(x.size());
-  #pragma omp parallel for shared(x, out) private(indices, weights)
+  #pragma omp parallel for shared(x, out, unfound)
     for (long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long>(si);
-      if (!root_.indices_weights(vertices_, map_, x.extract(i), indices, weights))
-        throw std::runtime_error("Point not found in Nest");
-      data_.interpolate_at(indices, weights, out, i);
+      auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
+      if (iw.size()){
+        data_.interpolate_at(iw, out, i);
+      } else {
+        #pragma omp critical
+        ++unfound;
+      }
+    }
+    if (unfound > 0){
+      std::string msg = std::to_string(unfound) + " points not found in Nest";
+      throw std::runtime_error(msg);
     }
     return out;
   }

@@ -116,6 +116,17 @@ public:
     }
     return stdvpt;
   }
+  std::array<double,4> circumsphere_info(const size_t tet) const {
+    std::array<double,4> centre_radius;
+    tetgenmesh tgm; // to get access to circumsphere
+    tgm.circumsphere(
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
+      centre_radius.data(),centre_radius.data()+3);
+    return centre_radius;
+  }
 protected:
   void correct_tetrahedra_vertex_ordering(void){
     for (size_t i=0; i<this->number_of_tetrahedra(); ++i)

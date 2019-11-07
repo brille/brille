@@ -165,7 +165,7 @@ std::string long_version(){
   using namespace symbz::version;
   std::string v = version_number;
   if (!std::string(git_revision).empty()){
-    v += "-" + git_branch + "." + std::string(git_revision).substr(0,7);
+    v += "-" + std::string(git_branch) + "." + std::string(git_revision).substr(0,7);
   }
   return v;
 }

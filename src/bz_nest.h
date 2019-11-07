@@ -43,7 +43,8 @@ public:
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> ir_result = this->Nest<T>::interpolate_at(ir_q.get_xyz(), nthreads);
+    ArrayVector<T> ir_result = nthreads > 1 ? this->Nest<T>::interpolate_at(ir_q.get_xyz(), nthreads) : this->Nest<T>::interpolate_at(ir_q.get_xyz());
+    // ArrayVector<T> ir_result = this->Nest<T>::interpolate_at(ir_q.get_xyz(), nthreads);
 
     // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
     // the interpolation needs to be rotated.
@@ -102,4 +103,4 @@ public:
   }
 };
 
-#endif 
+#endif
