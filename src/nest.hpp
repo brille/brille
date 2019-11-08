@@ -21,9 +21,9 @@ void Nest<T>::construct(const Polyhedron& poly, const size_t max_branchings, con
     std::array<size_t,4> single;
     for (size_t j=0; j<4u; ++j) single[j] = tvi.getvalue(i,j); // no need to adjust indices at this stage
     // create a branch for this tetrahedron
-    NestNode branch(single, root_tet.circumsphere_info(i));
+    NestNode branch(single, root_tet.circumsphere_info(i), root_tet.volume(i));
     // and subdivide it if necessary
-    if (max_branchings > 0 && branch.volume(vertices_) > max_volume)
+    if (max_branchings > 0 && branch.volume() > max_volume)
       this->subdivide(branch, 1u, max_branchings, max_volume, exponent, nVerts);
     // storing the resulting branch/leaf at this root
     root_.branches().push_back(branch);
@@ -65,9 +65,9 @@ void Nest<T>::subdivide(
     std::array<size_t,4> single;
     for (size_t j=0; j<4u; ++j) single[j] = map[tvi.getvalue(i,j)];
     // create a branch for this tetrahedron
-    NestNode branch(single, node_tet.circumsphere_info(i));
+    NestNode branch(single, node_tet.circumsphere_info(i), node_tet.volume(i));
     // and subdivide it if necessary
-    if (nBr < maxBr && branch.volume(vertices_) > max_volume)
+    if (nBr < maxBr && branch.volume() > max_volume)
       this->subdivide(branch, nBr+1u, maxBr, max_volume, exp, nVerts);
     // storing the resulting branch/leaf at this node
     node.branches().push_back(branch);

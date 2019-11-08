@@ -71,6 +71,49 @@ public:
 private:
   bool tetrahedra_contains(const size_t, const ArrayVector<double>&, const ArrayVector<double>&, std::array<double,4>&) const;
 };
+class NullNode: public GeneralNode;
+
+// With the NodeContainer class I think we can dispense with GeneralNode and let
+// the three node-types exist as separate entities.
+class NodeContainer{
+  std::vector<std::pair<NodeType,size_t>> nodes_;
+  std::vector<CubeNode> cube_nodes_;
+  std::vector<PolyNode> poly_nodes_;
+public:
+  size_t size(void) const {return nodes_.size();}
+  void push_back(const CubeNode& n){
+    nodes_.emplace_back(NodeType::cube, cube_nodes_.size());
+    cube_nodes_.push_back(n);
+  }
+  void push_back(const PolyNode& n){
+    nodes_.emplace_back(NodeType::polyhedron, poly_nodes_.size());
+    poly_nodes_.push_back(n);
+  }
+  void push_back(const NullNode& n){
+    nodes_.emplace_back(NodeType::empty, (std::numeric_limits<size_t>::max)());
+  }
+  NodeType type(const size_t i) const {
+    return nodes_[i].first;
+  }
+  const CubeNode& cube_at(const size_t i) const {
+    return cube_nodes_[nodes_[i].second];
+  }
+  const PolyNode& polyhedron_at(const size_t i) const {
+    return poly_nodes_[nodes_[i].second];
+  }
+  size_t vertex_count(const size_t i) const {
+    switch (nodes_[i].first){
+      case NodeType::cube:
+      return cube_nodes_[nodes_[i].second].vertex_count();
+      case NodeType::polyhedron:
+      return poly_nodes_[nodes_[i].second].vertex_count();
+    }
+    return 0;
+  }
+  std::vector<size_t> vertices(const size_t i) const;
+  std::vector<std::array<size_t,4>> vertices_per_tetrahedron(const size_t i) const;
+  bool indices_weights(const size_t i, const ArrayVector<double>&, const ArrayVector<double>&, std::vector<size_t>&, std::vector<double>&) const;
+};
 
 template<typename T> class PolyhedronTrellis{
   Polyhedron polyhedron_;                        //!< the Polyhedron bounding the Trellis
