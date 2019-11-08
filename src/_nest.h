@@ -16,6 +16,7 @@ namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
 
 typedef long slong; // ssize_t is only defined for gcc?
+typedef unsigned long element_t;
 
 template<class T>
 void declare_bznestq(py::module &m, const std::string &typestr){
@@ -41,9 +42,9 @@ void declare_bznestq(py::module &m, const std::string &typestr){
     // copy-in the elements array
     bi = pyel.request();
     if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
-    std::array<unsigned, 4> el{0,0,0,0};
+    std::array<element_t, 4> el{0,0,0,0};
     int* intel = (int*)bi.ptr;
-    for (ssize_t i=0; i<bi.shape[0] && i<4; ++i) el[i] = static_cast<unsigned>(intel[i]);
+    for (ssize_t i=0; i<bi.shape[0] && i<4; ++i) el[i] = static_cast<element_t>(intel[i]);
     // copy-in the data ArrayVector
     bi = pydata.request();
     ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);

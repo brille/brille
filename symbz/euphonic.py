@@ -208,7 +208,7 @@ class SymEu:
             if isinstance(halfN, (tuple, list)):
                 halfN = np.array(halfN)
             if not isinstance(halfN, np.ndarray):
-                raise Exception('halfN must be a tuple, list, or ndarray')
+                raise Exception("'halfN' must be a tuple, list, or ndarray")
             halfN = halfN.astype('uint64')
             self.grid = sbz.BZGridQcomplex(bz, halfN)
         elif step is not None:
@@ -219,13 +219,18 @@ class SymEu:
                 isrlu = units.lower() == 'rlu'
             self.grid = sbz.BZGridQcomplex(bz, step, isrlu)
         else:
-            raise Exception("You must provide a halfN or step keyword")
+            raise Exception("keyword 'halfN' or 'step' required")
 
     def __make_mesh(self, bz, max_size=-1, max_points=-1, num_levels=3, **kwds):
         self.grid = sbz.BZMeshQcomplex(bz, max_size, num_levels, max_points)
 
-    def __make_trellis(self, bz, fractional_node_volume=0.1, **kwds):
-        self.grid = sbz.BZTrellisQcomplex(bz, fractional_node_volume);
+    def __make_trellis(self, bz, max_volume=None, number_density=None, **kwds):
+        if max_volume is not None:
+            self.grid = sbz.BZTrellisQcomplex(bz, max_volume)
+        elif number_density is not None:
+            self.grid = sbz.BZTrellisQcomplex(bz, number_density)
+        else:
+            raise Exception("keyword 'max_volume' or 'number_density' required")
 
     def __make_nest(self, bz, max_branchings=5, max_volume=None, number_density=None, **kwds):
         if max_volume is not None:
@@ -233,7 +238,7 @@ class SymEu:
         elif number_density is not None:
             self.grid = sbz.BZNestQcomplex(bz, number_density, max_branchings)
         else:
-            raise Exception("You must provide max_volume or number_density keyword")
+            raise Exception("keyword 'max_volume' or 'number_density' required")
 
     def s_q(self, q_hkl, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""

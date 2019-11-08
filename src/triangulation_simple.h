@@ -21,6 +21,7 @@ public:
     tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
     tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
     tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
+    // tgb.mindihedral = 20.; // degrees, avoid very accute edges
     if (max_volume > 0){
       tgb.fixedvolume = 1;
       tgb.maxvolume = max_volume;
@@ -117,15 +118,22 @@ public:
     return stdvpt;
   }
   std::array<double,4> circumsphere_info(const size_t tet) const {
-    std::array<double,4> centre_radius;
-    tetgenmesh tgm; // to get access to circumsphere
-    tgm.circumsphere(
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
-      vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
-      centre_radius.data(),centre_radius.data()+3);
-    return centre_radius;
+    if (tet < vertices_per_tetrahedron.size()){
+      std::array<double,4> centre_radius;
+      tetgenmesh tgm; // to get access to circumsphere
+      tgm.circumsphere(
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
+        vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
+        centre_radius.data(),centre_radius.data()+3);
+        return centre_radius;
+    }
+    std::string msg = "The provided tetrahedra index ";
+    msg += std::to_string(tet) + " is out of range for ";
+    msg += std::to_string(vertices_per_tetrahedron.size());
+    msg += " tetrahedra.";
+    throw std::out_of_range(msg);
   }
 protected:
   void correct_tetrahedra_vertex_ordering(void){

@@ -31,7 +31,8 @@ public:
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
-    const std::array<unsigned,4>& el{this->data().elements()};
+    // const std::array<unsigned,4>& el{this->data().elements()};
+    auto el{this->data().elements()};
     std::string msg;
     if (no_move){
       // Special mode for testing where no specified points are moved

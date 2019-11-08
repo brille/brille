@@ -47,14 +47,21 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const size_t n, cons
   }
   return out;
 }
-template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<size_t>& idx) const{
+template<typename T>
+template<typename I, typename>
+ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<I>& idx) const {
   bool allinbounds = true;
   ArrayVector<T> out(this->numel(), 0u);
   if (idx.numel() != 1u && idx.size() != 1u){
-    throw std::runtime_error("copying an ArrayVector by index requires ArrayVector<size_t> with numel()==1 or size()==1 [i.e., an ArrayScalar or ScalarVector]");
+    std::string msg = "copying an ArrayVector by index ArrayVector<Integer>";
+    msg += " requires numel()==1 or size()==1";
+    msg += " and the provided input has (size,numel)=(";
+    msg += std::to_string(idx.size())+","+std::to_string(idx.numel())+")";
+    throw std::runtime_error(msg);
   }
   for (size_t i=0; i<idx.size(); ++i) for (size_t j=0; j<idx.numel(); ++j)
-  if (idx.getvalue(i,j) >= this->size()) allinbounds = false;
+  if (static_cast<size_t>(idx.getvalue(i,j)) >= this->size() || idx.getvalue(i,j)<0)
+    allinbounds = false;
   if (allinbounds){
     if (idx.numel()==1u){
       out.resize(idx.size());
@@ -66,42 +73,34 @@ template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<si
   }
   return out;
 }
-template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<size_t>& idx) const{
+template<typename T>
+template<typename I, typename> // restricted to integer I
+ArrayVector<T> ArrayVector<T>::extract(const std::vector<I>& idx) const {
   ArrayVector<T> out(this->numel(),0u);
   size_t this_size = this->size();
-  if (!std::all_of(idx.begin(), idx.end(), [this_size](size_t j){return j<this_size;})){
+  if (!std::all_of(idx.begin(), idx.end(), [this_size](I j){return j>=0 || static_cast<size_t>(j)<this_size;})){
     std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
     for (auto i: idx) msg += " " + std::to_string(i);
     msg += " ] but size() = " + std::to_string(this->size());
     throw std::out_of_range(msg);
   }
   out.resize(idx.size());
-  for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
+  for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data(idx[j]) );
   return out;
 }
-template<typename T> template<size_t Nel> ArrayVector<T> ArrayVector<T>::extract(const std::array<size_t, Nel>& idx) const{
+template<typename T>
+template<typename I, typename, size_t Nel> // restricted to integer I
+ArrayVector<T> ArrayVector<T>::extract(const std::array<I, Nel>& idx) const {
   ArrayVector<T> out(this->numel(),0u);
   size_t this_size = this->size();
-  if (!std::all_of(idx.begin(), idx.end(), [this_size](size_t j){return j<this_size;})){
+  if (!std::all_of(idx.begin(), idx.end(), [this_size](I j){return j>=0 || static_cast<size_t>(j)<this_size;})){
     std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
     for (auto i: idx) msg += " " + std::to_string(i);
     msg += " ] but size() = " + std::to_string(this->size());
     throw std::out_of_range(msg);
   }
   out.resize(Nel);
-  for (size_t j=0; j<Nel; ++j) out.set(j, this->data( idx[j]) );
-  return out;
-}
-template<typename T> ArrayVector<T> ArrayVector<T>::extract(const std::vector<int>& idx) const{
-  ArrayVector<T> out(this->numel(),0u);
-  for (auto j: idx) if (j<0 || static_cast<size_t>(j)>=this->size()) {
-    std::string msg = "Attempting to extract out of bounds ArrayVector(s): [";
-    for (auto i: idx) msg += " " + std::to_string(i);
-    msg += " ] but size() = " + std::to_string(this->size());
-    throw std::out_of_range(msg);
-  }
-  out.resize(idx.size());
-  for (size_t j=0; j<idx.size(); ++j) out.set(j, this->data( idx[j]) );
+  for (size_t j=0; j<Nel; ++j) out.set(j, this->data(idx[j]) );
   return out;
 }
 template<typename T> ArrayVector<T> ArrayVector<T>::extract(const ArrayVector<bool>& tf) const{

@@ -21,7 +21,6 @@ set(CXX_SOURCES
   pointgroup.cpp
   spg_database.cpp
   symmetry.cpp
-  trellis.cpp
 )
 foreach(CXX_TARGET ${CXX_TARGETS})
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})

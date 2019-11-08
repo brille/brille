@@ -209,14 +209,20 @@ public:
     @param idx a reference to an ArrayVector containing the to-be-returned indices
     @returns An ArrayVector containing the indicies indicated by idx
   */
-  ArrayVector<T> extract(const ArrayVector<size_t>& idx) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  ArrayVector<T> extract(const ArrayVector<I>& idx) const;
   /*! Return a collection of arrays from the ArrayVector
     @param idx a reference to a standard vector containing the to-be-returned indices
     @returns An ArrayVector containing the indicies indicated by idx
   */
-  ArrayVector<T> extract(const std::vector<size_t>& idx) const;
-  template<size_t Nel> ArrayVector<T> extract(const std::array<size_t,Nel>& idx) const;
-  ArrayVector<T> extract(const std::vector<int>& idx) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  ArrayVector<T> extract(const std::vector<I>& idx) const;
+  /*! Return a collection of array from the ArrayVector
+    @param idx a reference to a standard array containing the to-be-returend indices
+    @returns an ArrayVector containing the indicies indicated by idx
+  */
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>, size_t Nel>
+  ArrayVector<T> extract(const std::array<I,Nel>& idx) const;
   /*! Return a collection of arrays from the ArrayVector
     @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
     @returns An ArrayVector containing the indicies indicated by tfvec

@@ -7,12 +7,13 @@
 #define _INTERPOLATION_DATA_H_
 
 template<class T> class InterpolationData{
+  typedef unsigned long element_t;
   typedef std::vector<size_t> ShapeType;
-  typedef std::array<unsigned,4> ElementsType;
+  typedef std::array<element_t,4> ElementsType;
   ArrayVector<T> data_;   //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
   ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data` array
   ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
-  size_t branches_;       //!< The number of branches contained per data array
+  element_t branches_;    //!< The number of branches contained per data array
 public:
   InterpolationData(): data_({0,0}), shape_({0,0}), elements_({0,0,0,0}), branches_(0){};
   size_t size(void) const {return data_.size();}
@@ -20,10 +21,14 @@ public:
   const ArrayVector<T>& data(void) const {return data_;}
   const ShapeType& shape(void) const {return shape_;}
   const ElementsType& elements(void) const {return elements_;}
-  size_t branches(void) const {return branches_;}
+  element_t branches(void) const {return branches_;}
   //
-  void interpolate_at(const std::vector<size_t>&, const std::vector<double>&, ArrayVector<T>&, const size_t) const;
-  void interpolate_at(const std::vector<std::pair<size_t,double>>&, ArrayVector<T>&,const size_t) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  void interpolate_at(const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, const size_t) const;
+  //
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&,const size_t) const;
+  //
   void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
   void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
     ShapeType ns{nd.size(), nd.numel()};
@@ -35,34 +40,83 @@ public:
 private:
   ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
+  element_t branch_span(void) const { return this->branch_span(elements_);}
+  element_t branch_span(const ElementsType& e) const { return e[0]+e[1]+e[2]+e[3]*e[3]; }
 };
 
-template<typename T>
+template<typename T> template<typename I, typename>
 void InterpolationData<T>::interpolate_at(
-  const std::vector<size_t>& indices,
+  const std::vector<I>& indices,
   const std::vector<double>& weights,
   ArrayVector<T>& out,
   const size_t to
 ) const {
   if (indices.size()==0 || weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
-  new_unsafe_interpolate_to(data_, elements_, branches_, indices, weights, out, to);
+  T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
+  element_t span = this->branch_span();
+  for (size_t x=0; x<indices.size(); ++x){
+    T *ptrX = data_.data(indices[x]);
+    // loop over the branches:
+    for (element_t b=0; b < branches_; ++b){
+      // find the weighted sum of each scalar:
+      for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += weights[x]*ptrX[b*span+s];
+      // handle any eigenvectors
+      if (elements_[1]){
+        element_t o1 = b*span + elements_[0];
+        // find the arbitrary phase eⁱᶿ between different point eigenvectors
+        T eith = antiphase(hermitian_product(elements_[1], ptr0+o1, ptrX+o1));
+        // remove the arbitrary phase while adding the weighted value
+        for (element_t e; e<elements_[1]; ++e) out_to[o1+e] += weights[x]*(eith*ptrX[o1+e]);
+      }
+      // handle any remaining standard vector or matrix elements
+      for (element_t r=elements_[0]+elements_[1]; r<span; ++r)
+        out_to[b*span+r] += weights[x]*ptrX[b*span+r];
+    }
+  }
+  // ensure that any eigenvectors are still normalised
+  if (elements_[1]) for (element_t b=0; b<branches_; ++b){
+    element_t o2 = b*span + elements_[0];
+    auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
+    for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
+  }
 }
-template<typename T>
+
+template<typename T> template<typename I, typename>
 void InterpolationData<T>::interpolate_at(
-  const std::vector<std::pair<size_t,double>>& indices_weights,
+  const std::vector<std::pair<I,double>>& indices_weights,
   ArrayVector<T>& out,
   const size_t to
 ) const {
   if (indices_weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
-  std::vector<size_t> indices;
-  std::vector<double> weights;
+  T *out_to = out.data(to), *ptr0 = data_.data(indices_weights[0].first);
+  element_t span = this->branch_span();
   for (auto iw: indices_weights){
-    indices.push_back(iw.first);
-    weights.push_back(iw.second);
+    T *ptrX = data_.data(iw.first);
+    // loop over the branches:
+    for (element_t b=0; b < branches_; ++b){
+      // find the weighted sum of each scalar:
+      for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += iw.second*ptrX[b*span+s];
+      // handle any eigenvectors
+      if (elements_[1]){
+        element_t o1 = b*span + elements_[0];
+        // find the arbitrary phase eⁱᶿ between different point eigenvectors
+        T eith = antiphase(hermitian_product(elements_[1], ptr0+o1, ptrX+o1));
+        // remove the arbitrary phase while adding the weighted value
+        for (element_t e; e<elements_[1]; ++e) out_to[o1+e] += iw.second*(eith*ptrX[o1+e]);
+      }
+      // handle any remaining standard vector or matrix elements
+      for (element_t r=elements_[0]+elements_[1]; r<span; ++r)
+        out_to[b*span+r] += iw.second*ptrX[b*span+r];
+    }
   }
-  new_unsafe_interpolate_to(data_, elements_, branches_, indices, weights, out, to);
+  // ensure that any eigenvectors are still normalised
+  if (elements_[1]) for (element_t b=0; b<branches_; ++b){
+    element_t o2 = b*span + elements_[0];
+    auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
+    for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
+  }
 }
 
 template<typename T>
@@ -75,10 +129,9 @@ void InterpolationData<T>::replace_data(
   shape_ = ns;
   elements_ = ne;
   // check the input for correctness
-  size_t total_elements = 1u;
+  element_t total_elements = 1u;
   // scalar + eigenvector + vector + matrix*matrix elements
-  size_t known_elements = static_cast<size_t>(ne[0])+static_cast<size_t>(ne[1])+static_cast<size_t>(ne[2])
-                        + static_cast<size_t>(ne[3])*static_cast<size_t>(ne[3]);
+  element_t known_elements = this->branch_span(ne);
   // no matter what, shape[0] should be the number of gridded points
   if (ns.size()>2){
     // if the number of dimensions of the shape array is greater than two,

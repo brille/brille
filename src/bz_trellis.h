@@ -28,14 +28,15 @@ public:
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
   ArrayVector<double> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
   //! get the indices forming the faces of the tetrahedra
-  std::vector<std::array<size_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
+  std::vector<std::array<index_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 
 
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());
-    const std::array<unsigned,4>& el{this->data().elements()};
+    // const std::array<element_t,4>& el{this->data().elements()};
+    auto el{this->data().elements()};
     std::string msg;
     if (no_move){
       // Special mode for testing where no specified points are moved
