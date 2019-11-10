@@ -4,32 +4,30 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
 {
   double node_length = std::cbrt(max_volume);
   // find the extents of the polyhedron
-  std::array<double,3> max;
+  std::array<std::array<double,2>,3> minmax;
   for (int i=0; i<3; ++i){
-    zero_[i] = (std::numeric_limits<double>::max)();
-    max[i] = std::numeric_limits<double>::lowest();
+    minmax[i][0] = (std::numeric_limits<double>::max)();
+    minmax[i][1] = std::numeric_limits<double>::lowest();
   }
   const ArrayVector<double>& pv{poly.get_vertices()};
   for (size_t i=0; i<pv.size(); ++i) for (int j=0; j<3; ++j) {
-    if (pv.getvalue(i,j) < zero_[j]) zero_[j] = pv.getvalue(i,j);
-    if (pv.getvalue(i,j) > max[j]) max[j] = pv.getvalue(i,j);
+    if (pv.getvalue(i,j) < minmax[j][0]) minmax[j][0] = pv.getvalue(i,j);
+    if (pv.getvalue(i,j) > minmax[j][1]) minmax[j][1] = pv.getvalue(i,j);
   }
   // construct the trellis boundaries:
+  // boundaries_ = std::array<std::vector<double>,3>({std::vector<double>(),std::vector<double>(),std::vector<double>()});
   for (int i=0; i<3; ++i){
-    step_[i] = node_length;
-    size_[i] = static_cast<index_t>(std::ceil((max[i]-zero_[i])/step_[i]));
-    // // if ceil did anything, reduce the stepsize to have exactly spanning bins
-    // step_[i] = (max[i]-zero_[i])/static_cast<double>(size_[i]);
-
+    boundaries_[i].push_back(minmax[i][0]);
+    while (boundaries_[i].back() < minmax[i][1])
+      boundaries_[i].push_back(boundaries_[i].back()+node_length);
+    debug_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
   }
   // find which trellis intersections are inside of the polyhedron
   std::vector<std::array<double,3>> va_int;
-  for (index_t k=0; k<size_[2]+1; ++k)
-  for (index_t j=0; j<size_[1]+1; ++j)
-  for (index_t i=0; i<size_[0]+1; ++i)
-  va_int.push_back({i*step_[0]+zero_[0], j*step_[1]+zero_[1], k*step_[2]+zero_[2]});
+  for (double z: boundaries_[2]) for (double y: boundaries_[1]) for (double x: boundaries_[0])
+    va_int.push_back({x,y,z});
   // the definition of this intersections span needs to match the looping order above!
-  std::array<size_t,3> intersections_span{1,size_[0]+1,(size_[0]+1)*(size_[1]+1)};
+  std::array<size_t,3> intersections_span{1,boundaries_[0].size(),boundaries_[0].size()*boundaries_[1].size()};
   ArrayVector<double> all_intersections(va_int);
   ArrayVector<bool> are_inside = poly.contains(all_intersections);
   // these will be retained as node vertices
@@ -86,8 +84,8 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       // This node intersects the polyhedron. First, find the interior part
       std::array<double,3> min_corner, max_corner;
       for (int j=0; j<3; ++j){
-        min_corner[j] = zero_[j] + step_[j]*node_ijk[j];
-        max_corner[j] = min_corner[j] + step_[j];
+        min_corner[j] = boundaries_[j][node_ijk[j]  ];
+        max_corner[j] = boundaries_[j][node_ijk[j]+1];
       }
       Polyhedron cube = polyhedron_box(min_corner, max_corner);
       debug_update("Node ",i," has bounding box\n",cube.get_vertices().to_string());

@@ -13,18 +13,39 @@
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
 
-template<class T, class I>
-static I find_bin(const T zero, const T step, const I size, const T x){
-  // we want to find i such that 0 <= i*step < x-zero < (i+1)*step
-  I i = x > zero ?  static_cast<I>(std::floor((x-zero)/static_cast<T>(step))) : 0;
-  return i < size ? i : size-1;
+/*
+  Storing the lowest bin boundary (zero[3]), constant difference (step[3]),
+  and number of bins (size[3]) and directly calculating the bin for a given x
+  is a possible solution, but one which is no faster than storing bin bounds.
+  Since storing the boundaries can enable non-uniform bins this seems like
+  the better long-term solution.
+*/
+// template<class T, class I>
+// static I find_bin(const T zero, const T step, const I size, const T x){
+//   // we want to find i such that 0 <= i*step < x-zero < (i+1)*step
+//   I i = x > zero ?  static_cast<I>(std::floor((x-zero)/static_cast<T>(step))) : 0;
+//   return i < size ? i : size-1;
+// }
+// template<class T, class I>
+// static int on_boundary(const T zero, const T step, const I size, const T x, const I i){
+//   // if x is infinitesimally smaller than zero+step*(i+1)
+//   if (i+1<size && approx_scalar(zero+step*(i+1),x)) return  1;
+//   // if x is infinitesimally larger than zero+step*i
+//   if (i  >0    && approx_scalar(zero+step*(i  ),x)) return -1;
+//   return 0;
+// }
+template<class T>
+static size_t find_bin(const std::vector<T>& bin_edges, const T x){
+  auto found_at = std::find_if(bin_edges.begin(), bin_edges.end(), [x](double b){return b>x;});
+  size_t d = std::distance(bin_edges.begin(), found_at);
+  return d>0 ? d-1 : d;
 }
-template<class T, class I>
-static int on_boundary(const T zero, const T step, const I size, const T x, const I i){
-  // if x is infinitesimally smaller than zero+step*(i+1)
-  if (i+1<size && approx_scalar(zero+step*(i+1),x)) return  1;
-  // if x is infinitesimally larger than zero+step*i
-  if (i  >0    && approx_scalar(zero+step*(i  ),x)) return -1;
+template<class T>
+static int on_boundary(const std::vector<T>& bin_edges, const T x, const size_t i){
+  // if (i==0) then above d was *either* 0 or 1, otherwise d = i + 1;
+  // if (i==0) we can't go lower in either case, so no problem.
+  if (i+2<bin_edges.size() && approx_scalar(bin_edges[i+1],x)) return  1;
+  if (i  >0                && approx_scalar(bin_edges[i  ],x)) return -1;
   return 0;
 }
 
@@ -241,9 +262,7 @@ template<typename T> class PolyhedronTrellis{
   InterpolationData<T> data_;                    //!< [optional] data stored at each Trellis vertex
   ArrayVector<double> vertices_;                 //!< The Trellis intersections inside the bounding Polyhedron
   NodeContainer nodes_;
-  std::array<double,3> zero_;
-  std::array<double,3> step_;
-  std::array<index_t,3> size_;
+  std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the Trellis intersections, which bound the Trellis nodes
 public:
   explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume);
   // explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume){
@@ -256,7 +275,7 @@ public:
   PolyhedronTrellis(): vertices_({3,0}) {}
   index_t expected_vertex_count() const {
     index_t count = 1u;
-    for (index_t i=0; i<3u; ++i) count *= size_[i]+1;
+    for (index_t i=0; i<3u; ++i) count *= boundaries_[i].size();
     return count;
   }
   index_t vertex_count() const { return vertices_.size(); }
@@ -334,13 +353,17 @@ public:
   }
   index_t node_count() {
     index_t count = 1u;
-    for (index_t i=0; i<3u; ++i) count *= size_[i];
+    for (index_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
     return count;
   }
-  std::array<index_t,3> size() const { return size_; }
+  std::array<index_t,3> size() const {
+    std::array<index_t,3> s;
+    for (index_t i=0; i<3u; ++i) s[i] = boundaries_[i].size()-1;
+    return s;
+  }
   std::array<index_t,3> span() const {
-    std::array<index_t,3> s{1,0,0};
-    for (index_t i=1; i<3; ++i) s[i] = size_[i-1]*s[i-1];
+    std::array<index_t,3> s{1,0,0}, sz=this->size();
+    for (index_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
   }
   // const std::array<std::vector<double>,3>& boundaries(void) const {return boundaries_;}
@@ -349,14 +372,14 @@ public:
   std::array<index_t,3> node_subscript(const ArrayVector<double>& p) const {
     std::array<index_t,3> sub{0,0,0};
     for (index_t dim=0; dim<3u; ++dim)
-      sub[dim] = find_bin(zero_[dim], step_[dim], size_[dim], p.getvalue(0, dim));
+      sub[dim] = find_bin(boundaries_[dim], p.getvalue(0, dim));
     bool bad = nodes_.is_null(this->sub2idx(sub));
     if (bad){
       std::array<int,3> close{0,0,0};
       // determine if we are close to a boundary along any of the three binning
       // directions. if we are, on_boundary returns the direction in which we
       // can safely take a step without leaving the binned region
-      for (int i=0; i<3; ++i) close[i] = on_boundary(zero_[i], step_[i], size_[i], p.getvalue(0,i), sub[i]);
+      for (int i=0; i<3; ++i) close[i] = on_boundary(boundaries_[i], p.getvalue(0,i), sub[i]);
       int num_close = std::count_if(close.begin(), close.end(), [](int a){return a!=0;});
       // check one
       std::array<index_t,3> newsub;
