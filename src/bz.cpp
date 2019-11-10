@@ -926,6 +926,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
     normals = this->get_primitive_ir_wedge_normals();
   }
   if (normals.size()){
+    verbose_update("Checking if points are within wedge\n",normals.to_string());
     std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
     for (size_t i=0; i<p.size(); ++i)
       out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);

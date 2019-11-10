@@ -4,28 +4,32 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
 {
   double node_length = std::cbrt(max_volume);
   // find the extents of the polyhedron
-  std::array<std::array<double,2>,3> minmax;
+  std::array<double,3> max;
   for (int i=0; i<3; ++i){
-    minmax[i][0] = (std::numeric_limits<double>::max)();
-    minmax[i][1] = std::numeric_limits<double>::lowest();
+    zero_[i] = (std::numeric_limits<double>::max)();
+    max[i] = std::numeric_limits<double>::lowest();
   }
   const ArrayVector<double>& pv{poly.get_vertices()};
   for (size_t i=0; i<pv.size(); ++i) for (int j=0; j<3; ++j) {
-    if (pv.getvalue(i,j) < minmax[j][0]) minmax[j][0] = pv.getvalue(i,j);
-    if (pv.getvalue(i,j) > minmax[j][1]) minmax[j][1] = pv.getvalue(i,j);
+    if (pv.getvalue(i,j) < zero_[j]) zero_[j] = pv.getvalue(i,j);
+    if (pv.getvalue(i,j) > max[j]) max[j] = pv.getvalue(i,j);
   }
   // construct the trellis boundaries:
-  // boundaries_ = std::array<std::vector<double>,3>({std::vector<double>(),std::vector<double>(),std::vector<double>()});
   for (int i=0; i<3; ++i){
-    boundaries_[i].push_back(minmax[i][0]);
-    while (boundaries_[i].back() < minmax[i][1])
-      boundaries_[i].push_back(boundaries_[i].back()+node_length);
-    debug_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
+    step_[i] = node_length;
+    size_[i] = static_cast<index_t>(std::ceil((max[i]-zero_[i])/step_[i]));
+    // // if ceil did anything, reduce the stepsize to have exactly spanning bins
+    // step_[i] = (max[i]-zero_[i])/static_cast<double>(size_[i]);
+
   }
   // find which trellis intersections are inside of the polyhedron
   std::vector<std::array<double,3>> va_int;
-  for (double z: boundaries_[2]) for (double y: boundaries_[1]) for (double x: boundaries_[0])
-    va_int.push_back({x,y,z});
+  for (index_t k=0; k<size_[2]+1; ++k)
+  for (index_t j=0; j<size_[1]+1; ++j)
+  for (index_t i=0; i<size_[0]+1; ++i)
+  va_int.push_back({i*step_[0]+zero_[0], j*step_[1]+zero_[1], k*step_[2]+zero_[2]});
+  // the definition of this intersections span needs to match the looping order above!
+  std::array<size_t,3> intersections_span{1,size_[0]+1,(size_[0]+1)*(size_[1]+1)};
   ArrayVector<double> all_intersections(va_int);
   ArrayVector<bool> are_inside = poly.contains(all_intersections);
   // these will be retained as node vertices
@@ -41,8 +45,6 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
   index_t nNodes = this->node_count();
   // the order of the cube node intersections is paramount:
   std::vector<std::array<index_t,3>> node_intersections{{0,0,0},{1,0,0},{1,1,0},{0,1,0},{1,0,1},{0,0,1},{0,1,1},{1,1,1}};
-  // the definition of this intersections span needs to match the looping order on line 28 above!
-  std::array<size_t,3> intersections_span{1,boundaries_[0].size(),boundaries_[0].size()*boundaries_[1].size()};
   std::vector<bool> node_is_cube(nNodes, true), node_is_outside(nNodes, false);
   for (index_t i=0; i<nNodes; ++i){
     std::array<index_t,3> node_ijk = this->idx2sub(i);
@@ -84,8 +86,8 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       // This node intersects the polyhedron. First, find the interior part
       std::array<double,3> min_corner, max_corner;
       for (int j=0; j<3; ++j){
-        min_corner[j] = boundaries_[j][node_ijk[j]  ];
-        max_corner[j] = boundaries_[j][node_ijk[j]+1];
+        min_corner[j] = zero_[j] + step_[j]*node_ijk[j];
+        max_corner[j] = min_corner[j] + step_[j];
       }
       Polyhedron cube = polyhedron_box(min_corner, max_corner);
       debug_update("Node ",i," has bounding box\n",cube.get_vertices().to_string());
@@ -105,6 +107,15 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       // cut the larger polyhedron by the smaller one:
       // Then triangulate it into tetrahedra
       SimpleTet tri_cut(cbp);
+      if (tri_cut.get_vertices().size()<4){
+        //something went wrong.
+        /* A (somehow) likely cuplrit is that a face is missing from the cut
+        cube and therefor is not a piecewise linear complex. try to re-form
+        the input polyhedron and then re-triangulate.*/
+        tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()));
+        if (tri_cut.get_vertices().size()<4)
+          throw std::runtime_error("Error determining cut cube triangulation");
+      }
       // we need to retain the *additional* vertices from the triangulation
       // and figure-out a local vertex index mapping
       std::vector<index_t> local_map;
@@ -120,7 +131,10 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
           auto kept_idx = find(norm(kept_intersections-trij).is_approx("==",0.));
           // info_update("Polyhedron vertex in kept_intersections: idx = ",cube_idx);
           if (kept_idx.size()==1) local_map.push_back(kept_idx[0]);
-          else throw std::logic_error("Problem finding index for triangulated vertex");
+          else {
+            info_update("point ",trij.to_string("")," not found in:\n",kept_intersections.to_string());
+            throw std::logic_error("Problem finding index for triangulated vertex");
+          }
           debug_update("Tetrahedron vertex ",trij.to_string("")," is kept-vertex ",kept_idx[0]);
         } else {
           auto extra_idx = find(norm(extra_intersections.first(nExtra)-trij).is_approx("==",0.));

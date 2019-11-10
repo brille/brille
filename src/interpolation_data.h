@@ -29,6 +29,9 @@ public:
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
   void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&,const size_t) const;
   //
+  bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&) const;
+  bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
+  //
   void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
   void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
     ShapeType ns{nd.size(), nd.numel()};
@@ -42,6 +45,11 @@ private:
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
   element_t branch_span(void) const { return this->branch_span(elements_);}
   element_t branch_span(const ElementsType& e) const { return e[0]+e[1]+e[2]+e[3]*e[3]; }
+  ElementsType count_scalars_eigenvectors_vectors_matrices(void) const {
+    ElementsType no{elements_[0],0,0,0};
+    for (int i=1; i<4; ++i) no[i] = elements_[i]/3u;
+    return no;
+  }
 };
 
 template<typename T> template<typename I, typename>
@@ -128,6 +136,12 @@ void InterpolationData<T>::replace_data(
   data_ = nd;
   shape_ = ns;
   elements_ = ne;
+  if (ne[1]%3)
+    throw std::logic_error("Eigenvectors must have 3 elements per atom per branch");
+  if (ne[2]%3)
+    throw std::logic_error("Vectors must consist of 3N elements per branch");
+  if (ne[3] && ne[3]!=3u)
+    throw std::logic_error("Matrices must be 3x3 for each branch");
   // check the input for correctness
   element_t total_elements = 1u;
   // scalar + eigenvector + vector + matrix*matrix elements
@@ -231,5 +245,81 @@ ArrayVector<double> InterpolationData<T>::debye_waller(
   return factor;
 }
 
+template<typename T>
+bool InterpolationData<T>::rotate_in_place(
+  ArrayVector<T>& x, const std::vector<std::array<int,9>>& r
+) const {
+  ElementsType no = this->count_scalars_eigenvectors_vectors_matrices();
+  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
+    return false;
+  T tmp_v[3], tmp_m[9];
+  std::vector<std::array<int,9>> invR;
+  if (no[3]){
+    invR.resize(r.size());
+    for (size_t i=0; i<r.size(); ++i) matrix_inverse(invR[i].data(), r[i].data());
+  }
+  element_t offset, nvec = no[1]+no[2], sp = this->branch_span();
+  for (size_t i=0; i<x.size(); ++i)
+  if (r[i][0] + r[i][4] + r[i][8] != 3)
+  for (element_t b=0; b<branches_; ++b){
+    // scalar elements do not need to be rotated, so skip them
+    offset = b*sp + no[0];
+    // eigenvectors and regular vectors rotate the same way
+    for (element_t v=0; v<nvec; ++v){
+      mul_mat_vec(tmp_v, 3u, r[i].data(), x.data(i, offset+v*3u));
+      for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
+    }
+    offset += nvec*3u;
+    for (element_t m=0; m<no[3]; ++m){
+      // Calculate R*M*R⁻¹ in two steps
+      // first calculate M*R⁻¹, storing in tmp_m
+      mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), invR[i].data());
+      // next calculate R*tmp_m, storing back in the x array
+      mul_mat_mat(x.data(i, offset+m*9u), 3u, r[i].data(), tmp_m);
+    }
+  }
+  return true;
+}
 
+template<typename T>
+bool InterpolationData<T>::rotate_in_place(
+  ArrayVector<T>& x, const std::vector<std::array<int,9>>& r, const int nthreads
+) const {
+  omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
+  ElementsType no = this->count_scalars_eigenvectors_vectors_matrices();
+  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
+    return false;
+  T tmp_v[3], tmp_m[9];
+  std::vector<std::array<int,9>> invR;
+  if (no[3]){
+    invR.resize(r.size());
+    for (size_t i=0; i<r.size(); ++i) matrix_inverse(invR[i].data(), r[i].data());
+  }
+  element_t offset, nvec = no[1]+no[2], sp = this->branch_span();
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
+#pragma omp parallel for shared(x) private(offset, tmp_v, tmp_m) firstprivate(nvec, no, sp)
+  for (long long si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    if (r[i][0] + r[i][4] + r[i][8] != 3)
+    for (element_t b=0; b<branches_; ++b){
+      // scalar elements do not need to be rotated, so skip them
+      offset = b*sp + no[0];
+      // eigenvectors and regular vectors rotate the same way
+      for (element_t v=0; v<nvec; ++v){
+        mul_mat_vec(tmp_v, 3u, r[i].data(), x.data(i, offset+v*3u));
+        for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
+      }
+      offset += nvec*3u;
+      for (element_t m=0; m<no[3]; ++m){
+        // Calculate R*M*R⁻¹ in two steps
+        // first calculate M*R⁻¹, storing in tmp_m
+        mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), invR[i].data());
+        // next calculate R*tmp_m, storing back in the x array
+        mul_mat_mat(x.data(i, offset+m*9u), 3u, r[i].data(), tmp_m);
+      }
+    }
+  }
+  return true;
+}
  #endif
