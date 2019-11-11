@@ -129,7 +129,8 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=False,
     axs.set_zlim(bottom=xyz_min[2], top=xyz_max[2])
     if isinstance(Q, np.ndarray) and Q.ndim == 2 and Q.shape[1] == 3:
         axs.scatter(Q[:, 0], Q[:, 1], Q[:, 2])
-    axs.set_aspect('equal', 'box')
+    # axs.set_aspect('equal', 'box') # removed from newer Matplotlib
+    # axs.auto_scale_xyz(1.,1.,1.) # supposed-workaround, probably need to set scaling based on figure size and view
     if show:
         pp.show()
     return axs
