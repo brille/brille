@@ -286,16 +286,16 @@ public:
     for (size_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(tvn+j);
     return Polyhedron(v,p,n, fpv, vpf);
   }
-  // ArrayVector<double> get_vertices(void) const { return vertices; }
-  // ArrayVector<double> get_points(void) const { return points; }
-  // ArrayVector<double> get_normals(void) const { return normals; }
+  ArrayVector<double> get_vertices(void) const { return vertices; }
+  ArrayVector<double> get_points(void) const { return points; }
+  ArrayVector<double> get_normals(void) const { return normals; }
   std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
   std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
   //
-  const ArrayVector<double>& get_vertices(void) const { return vertices; }
-  const ArrayVector<double>& get_points(void) const { return points; }
-  const ArrayVector<double>& get_normals(void) const { return normals; }
-  // const std::vector<std::vector<int>>& get_faces_per_vertex(void) const { return faces_per_vertex; }  
+  // const ArrayVector<double>& get_vertices(void) const { return vertices; }
+  // const ArrayVector<double>& get_points(void) const { return points; }
+  // const ArrayVector<double>& get_normals(void) const { return normals; }
+  // const std::vector<std::vector<int>>& get_faces_per_vertex(void) const { return faces_per_vertex; }
   // const std::vector<std::vector<int>>& get_vertices_per_face(void) const {return vertices_per_face; }
   ArrayVector<double> get_half_edges(void) const{
     // for each face find the point halfway between each set of neighbouring vertices
@@ -760,14 +760,13 @@ public:
       throw std::runtime_error("Wrong number of vector elements");
     if (n.size()!=p.size())
       throw std::runtime_error("Equal number of vectors and points required");
-    ArrayVector<bool> keep, valid, added(1u,0u);
+    ArrayVector<bool> keep, valid;
     Polyhedron pout(pin);
     ArrayVector<double> pn, pp, pv=pout.get_vertices();
     std::vector<std::vector<int>> fpv, vpf;
     std::vector<int> del_vertices, cut, face_vertices, new_vector;
     std::vector<int> vertex_map;
     ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u);
-    size_t count;
     int last_face, last_vertex;
     // copy the current vertices, normals, and relational information
     pv=pout.get_vertices();
@@ -802,45 +801,52 @@ public:
           cut.push_back(f); // add f to the list if it's not present already
         verbose_update("Facets ",cut," are cut by the plane");
         // find the new intersection points of two neighbouring facets and the cutting plane
-        count = 0;
         new_vector.clear();
         last_face = static_cast<int>(pn.size()); // the to-be-index of the new facet (normal)
+        unsigned new_face_vertex_count{0}, new_vertex_count{0};
         for (size_t j=0; j<cut.size()-1; ++j)
         for (size_t k=j+1; k<cut.size(); ++k)
         // check if the three planes intersect, and give a point not-outside of the polyhedron
-        if (one_intersection(pn, pp, /* all polyhedron planes, to check for outsideness*/
+        if ( at.size() > 0 &&
+            one_intersection(pn, pp, /* all polyhedron planes, to check for outsideness*/
                              ni, pi, /* the cutting plane */
                              pn.extract(cut[j]), pp.extract(cut[j]), /* first cut plane */
                              pn.extract(cut[k]), pp.extract(cut[k]), /* second cut plane */
                              at /* the intersection point, if it exists */ )
-            && norm(pv-at.extract(0)).none_approx(0.) /* only add a point if its new */
            ){
-          // grab the index of the next-added vertex
-          last_vertex = static_cast<int>(pv.size());
-          // add the intersection point to all vertices
-          pv = cat(pv, at.extract(0));
-          // add the new vertex to the list for each existing facet
-          vpf[cut[j]].push_back(last_vertex);
-          vpf[cut[k]].push_back(last_vertex);
-          // and the yet-to-be-created facet`
-          new_vector.push_back(last_vertex);
-          // keeping track of how many points we've added
-          ++count;
-          // plus add the face index to the faces_per_vertex list for this new vertex
-          fpv.push_back({cut[j], cut[k], last_face});
-          // this will be a problem if two sets of facets give the same intersection point
+          int lv;
+          if (norm(pv-at.extract(0)).none_approx(0.)){  /* only add a point if its new */
+            // grab the index of the next-added vertex
+            lv = static_cast<int>(pv.size());
+            // add the intersection point to all vertices
+            verbose_update("adding the intersection point ",at.to_string("")," to existing points\n",pv.to_string());
+            pv = cat(pv, at.extract(0));
+            // plus add the face index to the faces_per_vertex list for this new vertex
+            fpv.push_back({cut[j], cut[k], last_face});
+            // track how many new vertices we add
+            ++new_vertex_count;
+          } else {
+            // find the matching index that already is in the list:
+            lv = static_cast<int>(find(norm(pv-at.extract(0)).is_approx("==",0.))[0]);
+            verbose_update("Reusing existing intersection point ",pv.to_string(lv)," for found intersection ",at.to_string(""));
+          }
+          // add the new vertex to the list for each existing facet -- if its not already present
+          if (std::find(vpf[cut[j]].begin(), vpf[cut[j]].end(), lv)==vpf[cut[j]].end()) vpf[cut[j]].push_back(lv);
+          if (std::find(vpf[cut[k]].begin(), vpf[cut[k]].end(), lv)==vpf[cut[k]].end()) vpf[cut[k]].push_back(lv);
+          // and the yet-to-be-created facet
+          new_vector.push_back(lv);
+          // keeping track of how many points
+          ++new_face_vertex_count;
         }
-        debug_exec(if(new_vector.size()!=count) throw std::runtime_error("New vertices error");)
+        debug_update_if(new_vector.size()!=new_face_vertex_count, "New vertices is wrong size!");
         // extend the vertices per face vector
         if (new_vector.size()) vpf.push_back(new_vector);
         // extend the keep ArrayVector<bool> to cover the new points
-        added.resize(count);
-        for (size_t j=0; j<count; ++j) added.insert(true, j);
-        keep = cat(keep, added);
+        keep = cat(keep, ArrayVector<bool>(1u, new_vertex_count, true));
         verbose_update("keep? vertices:\n",pv.to_string(keep));
         // find the new indices for all vertices, and extract the kept vertices
         vertex_map.resize(pv.size());
-        count = 0;
+        int count{0};
         for (size_t j=0; j<pv.size(); ++j)
           vertex_map[j]= (keep.getvalue(j) ? count++ : -1);
         pv = pv.extract(keep);
