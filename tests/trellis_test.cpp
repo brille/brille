@@ -1,5 +1,6 @@
 #include <catch.hpp>
-
+#include <omp.h>
+#include "debug.h"
 #include "bz_trellis.h"
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
@@ -34,14 +35,16 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis]"){
   BrillouinZoneTrellis3<double> bzt(bz, max_volume);
 
   ArrayVector<double> Qmap = bzt.get_hkl();
-  bzt.replace_data( bzt.get_xyz() );
+  std::vector<size_t> shape{Qmap.size(), 3};
+  std::array<unsigned long,4> elements{0,0,3,0};
+  bzt.replace_data( bzt.get_xyz(), shape, elements);
 
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
   // So let's stick to points that are random linear interpolations between
   // neighbouring mesh vertices
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-  std::uniform_real_distribution<double> distribution(0.,1.);
+  std::uniform_real_distribution<double> distribution(-5.,5.);
 
   size_t nQmap = Qmap.size(), nQ = 10000;//10000;
   LQVec<double> Q(r,nQ);
@@ -51,8 +54,18 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis]"){
     Q.set(i, rli*Qmap.extract(i%nQmap) + (1-rli)*Qmap.extract((i+1)%nQmap) );
   }
 
-  ArrayVector<double> intres = bzt.interpolate_at(Q,1);
-  ArrayVector<double> antres = Q.get_xyz();
+  ArrayVector<double> intres, antres=Q.get_xyz();
+  Stopwatch timer = Stopwatch<>();
+  for (int threads=1; threads<12; ++threads){
+    bool again = true;
+    timer.tic();
+    while (again && timer.elapsed()<10000){
+      intres = bzt.interpolate_at(Q, threads);
+      timer.toc();
+      again = timer.jitter()/timer.average() > 0.02;
+    }
+    info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
+  }
 
   ArrayVector<double> diff = intres - antres;
   // printf("\nInterpolation results:\n");

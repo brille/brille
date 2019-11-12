@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(symbz)
+project(fibril)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
@@ -43,26 +43,26 @@ find_package(PythonInterp)
 
 # Python c++ bindings
 find_package(pybind11 REQUIRED)
-pybind11_add_module(_symbz ${PROJECT_SOURCE_DIR}/src/_symbz.cpp "")
+pybind11_add_module(_fibril ${PROJECT_SOURCE_DIR}/src/_fibril.cpp "")
 
 if(MSVC)
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-		target_link_options(_symbz PUBLIC /DEBUG)
+		target_link_options(_fibril PUBLIC /DEBUG)
 	endif()
 endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
 	add_custom_target(write_version_info
-	                  COMMAND python ${CMAKE_SOURCE_DIR}/write_version_info.py ${CMAKE_BINARY_DIR}/version_info.h
+	                  COMMAND python ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
 	                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	)
-	add_dependencies(_symbz write_version_info)
+	add_dependencies(_fibril write_version_info)
 endif()
-execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/write_version_info.py ${CMAKE_BINARY_DIR}/version_info.h WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
-execute_process(COMMAND python -c "from write_version_info import print_version_number; print_version_number()"
+execute_process(COMMAND python -c "from version_info import version_number; version_number()"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE SYMBZ_VERSION)
-message(STATUS "Building version ${SYMBZ_VERSION}")
+        OUTPUT_VARIABLE FIBRIL_VERSION)
+message(STATUS "Building version ${FIBRIL_VERSION}")
 
 
 
@@ -71,20 +71,17 @@ enable_testing()
 # to see output from failed tests, run via, e.g., CTEST_OUTPUT_ON_FAILURE=1 make check
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 set(CMAKE_CTEST_COMMAND ctest -V)
-add_executable(test_cpp EXCLUDE_FROM_ALL "")
-add_test(NAME C++ COMMAND test_cpp)
-add_dependencies(check test_cpp)
 # Catch2 based tests
-add_executable(test_catch EXCLUDE_FROM_ALL "")
-add_dependencies(check test_catch)
-add_test(NAME catch2 COMMAND test_catch)
+add_executable(catch2 EXCLUDE_FROM_ALL "")
+add_dependencies(check catch2)
+add_test(NAME catch2 COMMAND catch2)
 # Python unittest based tests
 if (${PYTHONINTERP_FOUND})
 	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR})
-	add_dependencies(check _symbz)
+	add_dependencies(check _fibril)
 endif()
 
-set(CXX_TARGETS _symbz test_cpp test_catch)
+set(CXX_TARGETS _fibril catch2)
 foreach(CXX_TARGET ${CXX_TARGETS})
   set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 17)
 endforeach(CXX_TARGET)
@@ -93,7 +90,7 @@ endforeach(CXX_TARGET)
 # OpenMP support:
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
-		set(OMP_TARGETS _symbz test_catch)
+		set(OMP_TARGETS _fibril catch2)
 		foreach(OMP_TARGET ${OMP_TARGETS})
 			target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
 		endforeach(OMP_TARGET)
@@ -102,8 +99,8 @@ endif()
 # if(MSVC)
 # 	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")
 # 		find_package(Matlab)
-# 		target_link_libraries(_symbz PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
-# 		set_property(TARGET _symbz APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
+# 		target_link_libraries(_fibril PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
+# 		set_property(TARGET _fibril APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
 # 	endif()
 # else()
 # endif()

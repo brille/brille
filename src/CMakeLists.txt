@@ -8,13 +8,11 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-set(CXX_TARGETS _symbz test_cpp test_catch)
+set(CXX_TARGETS _fibril catch2)
 
 set(CXX_SOURCES
-  arithmetic.cpp
-  #balltree.cpp
-  balltrellis.cpp
   bz.cpp
+  bz_wedge.cpp
   debug.cpp
   lattice.cpp
   neighbours.cpp

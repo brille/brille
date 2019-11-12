@@ -1,4 +1,21 @@
-#include "neighbours.h"
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+#include "neighbours.hpp"
 
 // int make_all_indices(LQVec<int> *ijk, const int extent){
 //   if (ijk->numel()!=3u) throw "expected three vectors";
@@ -45,7 +62,8 @@ ArrayVector<int> make_relative_neighbour_indices_prime(const int extent){
   int min = -extent, max = extent+1;
   int num = max-min;
   ArrayVector<int> out(3u,num*num*num-1);  //-1 because we're skipping the origin
-  int *tmp = new int[3];
+  int *tmp = nullptr;
+  tmp = new int[3];
   int n=0;
   for (int e=0; e<3; ++e){
     for (int j=min; j<max; ++j){
@@ -84,7 +102,8 @@ ArrayVector<int> make_relative_neighbour_indices4(const int extent){
   int min = -extent, max = extent+1;
   int num = max-min;
   ArrayVector<int> out(4u,num*num*num*num-1);  //-1 because we're skipping the origin
-  int *tmp = new int[4];
+  int *tmp = nullptr;
+  tmp = new int[4];
   int n=0;
   for (int i=min; i<max; i++){
     tmp[0] = i;

@@ -702,11 +702,12 @@ public:
   void syntax();
   void usage();
 
-  // Command line parse routine.
-  bool parse_commandline(int argc, char **argv);
-  bool parse_commandline(char *switches) {
-    return parse_commandline(0, &switches);
-  }
+  /* Commented out 2019-11-12 by Greg Tucker as it is not used by fibril */
+  // // Command line parse routine.
+  // bool parse_commandline(int argc, char **argv);
+  // bool parse_commandline(char *switches) {
+  //   return parse_commandline(0, &switches);
+  // }
 
   // Initialize all variables.
   tetgenbehavior()
@@ -2299,10 +2300,10 @@ public:
 void tetrahedralize(tetgenbehavior *b, tetgenio *in, tetgenio *out,
                     tetgenio *addin = NULL, tetgenio *bgmin = NULL);
 
-#ifdef TETLIBRARY
-void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
-                    tetgenio *addin = NULL, tetgenio *bgmin = NULL);
-#endif // #ifdef TETLIBRARY
+// #ifdef TETLIBRARY
+// void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
+//                     tetgenio *addin = NULL, tetgenio *bgmin = NULL);
+// #endif // #ifdef TETLIBRARY
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

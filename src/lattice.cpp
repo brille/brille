@@ -1,4 +1,21 @@
-#include "lattice.h"
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+#include "lattice.hpp"
 
 Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0};
@@ -54,7 +71,7 @@ void Lattice::check_hall_number(const int h){
   this->hall = hall_number_ok(h) ? h : 0;
 }
 void Lattice::check_IT_name(const std::string& itname){
-  this->hall = international_string_to_hall_number(itname);
+  this->hall = string_to_hall_number(itname);
 }
 double Lattice::unitvolume() const{
   // The volume of a parallelpiped with unit length sides and our body angles
@@ -142,7 +159,8 @@ void Lattice::get_covariant_metric_tensor(double *mt) const {
   this->get_metric_tensor(mt);
 }
 void Lattice::get_contravariant_metric_tensor(double *mt) const {
-  double *tmp = new double[9]();
+  double *tmp = nullptr;
+  tmp = new double[9]();
   this->get_metric_tensor(tmp);
   matrix_inverse(mt,tmp);
   delete[] tmp;
