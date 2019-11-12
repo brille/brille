@@ -1,0 +1,76 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cr B'
+ 
+loop_
+_publ_author_name
+ 'Shigeru Okada'
+ 'Tetsuzo Atoda'
+ 'Iwami Higashi'
+_journal_name_full
+;
+Journal of Solid State Chemistry
+;
+_journal_volume 68
+_journal_year 1987
+_journal_page_first 61
+_journal_page_last 67
+_publ_Section_title
+;
+ Structural investigation of Cr$_2$B$_3$, Cr$_3$B$_4$, and CrB by single-crystal diffractometry
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_0455627
+
+_aflow_proto 'AB_oC8_63_c_c' 
+_aflow_params 'a,b/a,c/a,y1,y2' 
+_aflow_params_values '2.9782,2.64253575985,0.985360284736,0.436,0.14525' 
+_aflow_Strukturbericht 'B33' 
+_aflow_Pearson 'oC8' 
+
+_symmetry_space_group_name_Hall "-C 2c 2"
+_symmetry_space_group_name_H-M "C m c m"
+_symmetry_Int_Tables_number 63
+
+_cell_length_a    2.97820
+_cell_length_b    7.87000
+_cell_length_c    2.93460
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z+1/2
+4 -x,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z+1/2
+8 x,y,-z+1/2
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+B1  B    4 c 0.00000 0.43600 0.25000 1.00000
+Cr1 Cr   4 c 0.00000 0.14525 0.25000 1.00000

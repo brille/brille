@@ -1,0 +1,66 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'S-carbon'
+_chemical_formula_sum 'C'
+
+loop_
+_publ_author_name
+ 'H. Niu'
+ 'X.-Q. Chen'
+ 'S. Wang'
+ 'D. Li'
+ 'W. L. Mao'
+ 'Y. Li'
+_journal_name_full_name
+;
+ Physical Review Letters
+;
+_journal_volume 108
+_journal_year 2012
+_journal_page_first 135501
+_journal_page_last 135501
+_publ_Section_title
+;
+ Families of Superhard Crystalline Carbon Allotropes Constructed via Cold Compression of Graphite and Nanotubes
+;
+
+_aflow_title 'S-carbon Structure'
+_aflow_proto 'A_mP8_10_2m2n'
+_aflow_params 'a,b/a,c/a,\beta,x_{1},z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4}'
+_aflow_params_values '4.7302,0.527461840937,0.86332501797,106.1,0.1175,0.6746,0.5344,0.3333,0.1131,0.8977,0.4209,0.1319'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP8'
+
+_symmetry_space_group_name_H-M "P 1 2/m 1"
+_symmetry_Int_Tables_number 10
+ 
+_cell_length_a    4.73020
+_cell_length_b    2.49500
+_cell_length_c    4.08370
+_cell_angle_alpha 90.00000
+_cell_angle_beta  106.10000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1 C   2 m 0.11750 0.00000 0.67460 1.00000
+C2 C   2 m 0.53440 0.00000 0.33330 1.00000
+C3 C   2 n 0.11310 0.50000 0.89770 1.00000
+C4 C   2 n 0.42090 0.50000 0.13190 1.00000

@@ -1,0 +1,63 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'V2MoO8'
+_chemical_formula_sum 'Mo O8 V2'
+
+loop_
+_publ_author_name
+ 'P. Mah{\\'e}-Pailleret'
+_journal_year 1970
+_publ_Section_title
+;
+ Contribution {\`a} l\'{\\'e}tude chimique et structurale des compos{\\'e}s AB$_{2}$O rencontr{\\'e}s dans les syst{\`e}mes Mo-VO, UVO et U-Mo-O
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'V$_{2}$MoO$_{8}$ Structure'
+_aflow_proto 'AB8C2_oC22_35_a_ab3e_e'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},z_{3},y_{4},z_{4},y_{5},z_{5},y_{6},z_{6},y_{7},z_{7}'
+_aflow_params_values '4.534758023,1.1408839779,2.72580110498,0.0,0.5838,-0.042,0.189,0.5461,0.0961,0.122,0.2982,0.1399,0.1866,0.0038'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC22'
+
+_cell_length_a    4.5347580230
+_cell_length_b    5.1736327721
+_cell_length_c    12.3608484299
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "C m m 2"
+_symmetry_Int_Tables_number 35
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z
+4 x,-y,z
+5 x+1/2,y+1/2,z
+6 -x+1/2,-y+1/2,z
+7 -x+1/2,y+1/2,z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mo1 Mo   2 a 0.00000 0.00000 0.00000  1.00000
+O1  O    2 a 0.00000 0.00000 0.58380  1.00000
+O2  O    2 b 0.00000 0.50000 -0.04200 1.00000
+O3  O    4 e 0.00000 0.18900 0.54610  1.00000
+O4  O    4 e 0.00000 0.09610 0.12200  1.00000
+O5  O    4 e 0.00000 0.29820 0.13990  1.00000
+V1  V    4 e 0.00000 0.18660 0.00380  1.00000

@@ -1,0 +1,60 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H3S'
+_chemical_formula_sum 'H3 S'
+
+_aflow_title 'H$_{3}$S (60~GPa) Structure'
+_aflow_proto 'A3B_oC64_66_gi2lm_2l'
+_aflow_params 'a,b/a,c/a,x_{1},z_{2},x_{3},y_{3},x_{4},y_{4},x_{5},y_{5},x_{6},y_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '8.157,1.00294225818,0.59212945936,0.54552,0.3287,0.39296,0.16145,0.33837,0.89039,0.24136,0.07877,0.42337,0.74171,0.33285,0.66798,0.24948'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC64'
+
+_symmetry_space_group_name_H-M "C 2/c 2/c 2/m"
+_symmetry_Int_Tables_number 66
+ 
+_cell_length_a    8.15700
+_cell_length_b    8.18100
+_cell_length_c    4.83000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z+1/2
+7 x,-y,z+1/2
+8 x,y,-z
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z+1/2
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1 H   8 g 0.54552  0.00000  0.25000 1.00000
+H2 H   8 i 0.00000  0.00000  0.32870 1.00000
+H3 H   8 l 0.39296  0.16145  0.00000 1.00000
+H4 H   8 l 0.33837  0.89039  0.00000 1.00000
+S1 S   8 l 0.24136  0.07877  0.00000 1.00000
+S2 S   8 l 0.42337  0.74171  0.00000 1.00000
+H5 H  16 m 0.33285  0.66798  0.24948 1.00000

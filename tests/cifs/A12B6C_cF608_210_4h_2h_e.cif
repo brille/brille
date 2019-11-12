@@ -1,0 +1,162 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Te[OH]6'
+_chemical_formula_sum 'H12 O6 Te'
+
+loop_
+_publ_author_name
+ 'D. F. Mullica'
+ 'J. D. Korp'
+ 'W. O. Milligan'
+ 'G. W. Beall'
+ 'I. Bernal'
+_journal_name_full_name
+;
+ Acta Crystallographica Section B: Structural Science
+;
+_journal_volume 36
+_journal_year 1980
+_journal_page_first 2565
+_journal_page_last 2570
+_publ_Section_title
+;
+ Neutron structural refinement of cubic orthotelluric acid
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Te[OH]$_{6}$ Structure'
+_aflow_proto 'A12B6C_cF608_210_4h_2h_e'
+_aflow_params 'a,x_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '16.4321054599,0.3771,0.0157,0.2009,0.1224,0.5287,0.1425,0.0068,0.0949,0.2596,0.2225,0.6117,0.1785,0.0224,0.0928,0.2607,0.1616,0.0194,0.0793,0.3503'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cF608'
+
+_cell_length_a    16.4321054599
+_cell_length_b    16.4321054599
+_cell_length_c    16.4321054599
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "F 41 3 2"
+_symmetry_Int_Tables_number 210
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -y+1/4,-x+1/4,-z+1/4
+14 -y+1/4,x+1/4,z+1/4
+15 y+1/4,-x+1/4,z+1/4
+16 y+1/4,x+1/4,-z+1/4
+17 -x+1/4,-z+1/4,-y+1/4
+18 -x+1/4,z+1/4,y+1/4
+19 x+1/4,-z+1/4,y+1/4
+20 x+1/4,z+1/4,-y+1/4
+21 -z+1/4,-y+1/4,-x+1/4
+22 -z+1/4,y+1/4,x+1/4
+23 z+1/4,-y+1/4,x+1/4
+24 z+1/4,y+1/4,-x+1/4
+25 x,y+1/2,z+1/2
+26 x,-y+1/2,-z+1/2
+27 -x,y+1/2,-z+1/2
+28 -x,-y+1/2,z+1/2
+29 y,z+1/2,x+1/2
+30 y,-z+1/2,-x+1/2
+31 -y,z+1/2,-x+1/2
+32 -y,-z+1/2,x+1/2
+33 z,x+1/2,y+1/2
+34 z,-x+1/2,-y+1/2
+35 -z,x+1/2,-y+1/2
+36 -z,-x+1/2,y+1/2
+37 -y+1/4,-x+3/4,-z+3/4
+38 -y+1/4,x+3/4,z+3/4
+39 y+1/4,-x+3/4,z+3/4
+40 y+1/4,x+3/4,-z+3/4
+41 -x+1/4,-z+3/4,-y+3/4
+42 -x+1/4,z+3/4,y+3/4
+43 x+1/4,-z+3/4,y+3/4
+44 x+1/4,z+3/4,-y+3/4
+45 -z+1/4,-y+3/4,-x+3/4
+46 -z+1/4,y+3/4,x+3/4
+47 z+1/4,-y+3/4,x+3/4
+48 z+1/4,y+3/4,-x+3/4
+49 x+1/2,y,z+1/2
+50 x+1/2,-y,-z+1/2
+51 -x+1/2,y,-z+1/2
+52 -x+1/2,-y,z+1/2
+53 y+1/2,z,x+1/2
+54 y+1/2,-z,-x+1/2
+55 -y+1/2,z,-x+1/2
+56 -y+1/2,-z,x+1/2
+57 z+1/2,x,y+1/2
+58 z+1/2,-x,-y+1/2
+59 -z+1/2,x,-y+1/2
+60 -z+1/2,-x,y+1/2
+61 -y+3/4,-x+1/4,-z+3/4
+62 -y+3/4,x+1/4,z+3/4
+63 y+3/4,-x+1/4,z+3/4
+64 y+3/4,x+1/4,-z+3/4
+65 -x+3/4,-z+1/4,-y+3/4
+66 -x+3/4,z+1/4,y+3/4
+67 x+3/4,-z+1/4,y+3/4
+68 x+3/4,z+1/4,-y+3/4
+69 -z+3/4,-y+1/4,-x+3/4
+70 -z+3/4,y+1/4,x+3/4
+71 z+3/4,-y+1/4,x+3/4
+72 z+3/4,y+1/4,-x+3/4
+73 x+1/2,y+1/2,z
+74 x+1/2,-y+1/2,-z
+75 -x+1/2,y+1/2,-z
+76 -x+1/2,-y+1/2,z
+77 y+1/2,z+1/2,x
+78 y+1/2,-z+1/2,-x
+79 -y+1/2,z+1/2,-x
+80 -y+1/2,-z+1/2,x
+81 z+1/2,x+1/2,y
+82 z+1/2,-x+1/2,-y
+83 -z+1/2,x+1/2,-y
+84 -z+1/2,-x+1/2,y
+85 -y+3/4,-x+3/4,-z+1/4
+86 -y+3/4,x+3/4,z+1/4
+87 y+3/4,-x+3/4,z+1/4
+88 y+3/4,x+3/4,-z+1/4
+89 -x+3/4,-z+3/4,-y+1/4
+90 -x+3/4,z+3/4,y+1/4
+91 x+3/4,-z+3/4,y+1/4
+92 x+3/4,z+3/4,-y+1/4
+93 -z+3/4,-y+3/4,-x+1/4
+94 -z+3/4,y+3/4,x+1/4
+95 z+3/4,-y+3/4,x+1/4
+96 z+3/4,y+3/4,-x+1/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Te1 Te  32 e 0.37710 0.37710 0.37710 1.00000
+H1  H   96 h 0.01570 0.20090 0.12240 1.00000
+H2  H   96 h 0.52870 0.14250 0.00680 1.00000
+H3  H   96 h 0.09490 0.25960 0.22250 1.00000
+H4  H   96 h 0.61170 0.17850 0.02240 1.00000
+O1  O   96 h 0.09280 0.26070 0.16160 1.00000
+O2  O   96 h 0.01940 0.07930 0.35030 1.00000

@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'gamma nitrogen'
+_chemical_formula_sum 'N'
+ 
+loop_
+_publ_author_name
+ 'R. L. Mills'
+ 'A. F. Schuch'
+_journal_name_full
+;
+Physical Review Letters
+;
+_journal_volume 23
+_journal_year 1969
+_journal_page_first 1154
+_journal_page_last 1156
+_publ_Section_title
+;
+ Crystal Structure of Gamma Nitrogen
+;
+
+# Found in  Donohue, pp. 207-208
+
+_aflow_proto 'A_tP4_136_f' 
+_aflow_params 'a,c/a,x1' 
+_aflow_params_values '3.957,1.29112964367,0.098' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tP4' 
+
+_symmetry_space_group_name_Hall "-P 4n 2n"
+_symmetry_space_group_name_H-M "P 42/m n m"
+_symmetry_Int_Tables_number 136
+
+_cell_length_a    3.95700
+_cell_length_b    3.95700
+_cell_length_c    5.10900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z+1/2
+7 y+1/2,-x+1/2,z+1/2
+8 y,x,-z
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z+1/2
+11 x+1/2,-y+1/2,z+1/2
+12 x,y,-z
+13 y,x,z
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+N1 N   4 f 0.09800 0.09800 0.00000 1.00000

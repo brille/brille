@@ -1,0 +1,79 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\beta$-ThI$_{3}$'
+_chemical_formula_sum 'I3 Th'
+
+loop_
+_publ_author_name
+ 'H. P. Beck'
+ 'C. Strobel'
+_journal_name_full_name
+;
+ Angewandte Chemie
+;
+_journal_volume 94
+_journal_year 1982
+_journal_page_first 558
+_journal_page_last 559
+_publ_Section_title
+;
+ ThI$_{3}$, ein Janus unter den Verbindungen mit Metall-Metall-Wechselwirkungen
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title '$\beta$-ThI$_{3}$ Structure'
+_aflow_proto 'A3B_oC64_66_kl2m_bdl'
+_aflow_params 'a,b/a,c/a,z_{3},x_{4},y_{4},x_{5},y_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '8.735,2.32364052662,1.67842014883,0.1826,-0.0318,0.1994,0.327,0.1716,0.2894,0.451,0.1302,0.1133,0.3773,0.3708'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC64'
+
+_symmetry_space_group_name_H-M "C 2/c 2/c 2/m"
+_symmetry_Int_Tables_number 66
+ 
+_cell_length_a    8.73500
+_cell_length_b    20.29700
+_cell_length_c    14.66100
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z+1/2
+7 x,-y,z+1/2
+8 x,y,-z
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z+1/2
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Th1 Th   4 b 0.00000 0.50000 0.25000 1.00000
+Th2 Th   4 d 0.00000 0.50000 0.00000 1.00000
+I1  I    8 k 0.25000 0.25000 0.18260 1.00000
+I2  I    8 l -0.03180  0.19940 0.00000 1.00000
+Th3 Th   8 l 0.32700 0.17160 0.00000 1.00000
+I3  I   16 m 0.28940 0.45100 0.13020 1.00000
+I4  I   16 m 0.11330 0.37730 0.37080 1.00000

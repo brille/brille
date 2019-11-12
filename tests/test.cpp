@@ -159,9 +159,9 @@ int test_bz_info(){
 	size_t fc = bz.faces_count();
 	size_t vc = bz.vertices_count();
 	//
-	// double *verts = safealloc<double>(3*vc);
-	// int *faces = safealloc<int>(3*fc);
-	// int *faces_per_vertex = safealloc<int>(3*vc);
+	// double *verts = new double[3*vc]();
+	// int *faces = new int[3*fc]();
+	// int *faces_per_vertex = new int[3*vc]();
 	// //
 	// // bz.get_faces_bare(3*fc,faces);
 	// // bz.get_vertices_bare(3*vc,verts);

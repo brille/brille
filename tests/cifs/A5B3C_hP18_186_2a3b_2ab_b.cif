@@ -1,0 +1,78 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Aluminum carbonitride'
+_chemical_formula_sum 'Al5 C3 N'
+ 
+loop_
+_publ_author_name
+ 'G. A. Jeffrey'
+ 'Victor Y. Wu'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 20
+_journal_year 1966
+_journal_page_first 538
+_journal_page_last 547
+_publ_Section_title
+;
+ The structure of the aluminum carbonitrides. II
+;
+
+# Found in  http://materials.springer.com/lb/docs/sm_lbs_978-3-540-44820-4_208
+
+_aflow_proto 'A5B3C_hP18_186_2a3b_2ab_b' 
+_aflow_params 'a,c/a,z1,z2,z3,z4,z5,z6,z7,z8,z9' 
+_aflow_params_values '3.281,6.57726302956,0.155,0.345,0.0,0.248,0.045,0.261,0.455,0.367,0.137' 
+_aflow_Strukturbericht 'E9_4' 
+_aflow_Pearson 'hP18' 
+
+_symmetry_space_group_name_Hall "P 6c -2c"
+_symmetry_space_group_name_H-M "P 63 m c"
+_symmetry_Int_Tables_number 186
+
+_cell_length_a    3.28100
+_cell_length_b    3.28100
+_cell_length_c    21.58000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z
+8 -x,-x+y,z+1/2
+9 -y,-x,z
+10 x-y,-y,z+1/2
+11 x,x-y,z
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   2 a 0.00000 0.00000 0.15500 1.00000
+Al2 Al   2 a 0.00000 0.00000 0.34500 1.00000
+C1  C    2 a 0.00000 0.00000 0.00000 1.00000
+C2  C    2 a 0.00000 0.00000 0.24800 1.00000
+Al3 Al   2 b 0.33333 0.66667 0.04500 1.00000
+Al4 Al   2 b 0.33333 0.66667 0.26100 1.00000
+Al5 Al   2 b 0.33333 0.66667 0.45500 1.00000
+C3  C    2 b 0.33333 0.66667 0.36700 1.00000
+N1  N    2 b 0.33333 0.66667 0.13700 1.00000

@@ -1,0 +1,76 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'alpha-Sm3Ge5'
+_chemical_formula_sum 'Ge5 Sm3'
+
+loop_
+_publ_author_name
+ 'P. H. Tobash'
+ 'D. Lins'
+ 'S. Bobev'
+ 'N. Hur'
+ 'J. D. Thompson'
+ 'J. L. Sarrao'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 45
+_journal_year 2006
+_journal_page_first 7286
+_journal_page_last 7294
+_publ_Section_title
+;
+ Vacancy ordering in SmGe$_{2-x}$ and GdGe$_{2-x}$ ($x$ = 0.33): Structure and properties of two Sm$_{3}$Ge$_{5}$ polymorphs and of Gd$_{3}$Ge$_{5}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title '$\alpha$-Sm$_{3}$Ge$_{5}$ (High-temperature) Structure'
+_aflow_proto 'A5B3_hP16_190_bdh_g'
+_aflow_params 'a,c/a,x_{3},x_{4},y_{4}'
+_aflow_params_values '6.9236970109,1.22634969237,0.3313,0.0628,0.6682'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP16'
+
+_cell_length_a    6.9236970109
+_cell_length_b    6.9236970109
+_cell_length_c    8.4908736994
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P -6 2 c"
+_symmetry_Int_Tables_number 190
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z
+5 y,x,-z
+6 -x,-x+y,-z
+7 -x+y,-x,-z+1/2
+8 x,y,-z+1/2
+9 -y,x-y,-z+1/2
+10 -x,-x+y,z+1/2
+11 x-y,-y,z+1/2
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ge1 Ge   2 b 0.00000 0.00000 0.25000 1.00000
+Ge2 Ge   2 d 0.66667 0.33333 0.25000 1.00000
+Sm1 Sm   6 g 0.33130 0.00000 0.00000 1.00000
+Ge3 Ge   6 h 0.06280 0.66820 0.25000 1.00000

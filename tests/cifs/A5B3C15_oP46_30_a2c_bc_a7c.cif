@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Bi5Nb3O15'
+_chemical_formula_sum 'Bi5 Nb3 O15'
+
+loop_
+_publ_author_name
+ 'S. Tahara'
+ 'A. Shimada'
+ 'N. Kumada'
+ 'Y. Sugahara'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 180
+_journal_year 2007
+_journal_page_first 2517
+_journal_page_last 2524
+_publ_Section_title
+;
+ Characterization of Bi$_{5}$Nb$_{3}$O$_{15}$ by refinement of neutron diffraction pattern, acid treatment and reaction of the acid-treated product with $n$-alkylamines
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Bi$_{5}$Nb$_{3}$O$_{15}$ Structure'
+_aflow_proto 'A5B3C15_oP46_30_a2c_bc_a7c'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13}'
+_aflow_params_values '5.4630061801,1.00183049606,3.84605528098,0.5,0.107,0.523,0.2442,0.513,0.019,0.3675,0.026,0.016,0.1074,0.003,0.02,0.1949,0.05,0.074,0.097,0.687,0.22,0.0844,0.254,0.226,0.413,0.52,0.105,0.505,0.718,0.31,0.305,0.763,0.271,0.695,0.752,0.289'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP46'
+
+_cell_length_a    5.4630061801
+_cell_length_b    5.4730061914
+_cell_length_c    21.0110237690
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P n c 2"
+_symmetry_Int_Tables_number 30
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y+1/2,z+1/2
+4 x,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Bi1 Bi   2 a 0.00000 0.00000 0.50000 1.00000
+O1  O    2 a 0.00000 0.00000 0.10700 1.00000
+Nb1 Nb   2 b 0.50000 0.00000 0.52300 1.00000
+Bi2 Bi   4 c 0.24420 0.51300 0.01900 1.00000
+Bi3 Bi   4 c 0.36750 0.02600 0.01600 1.00000
+Nb2 Nb   4 c 0.10740 0.00300 0.02000 1.00000
+O2  O    4 c 0.19490 0.05000 0.07400 1.00000
+O3  O    4 c 0.09700 0.68700 0.22000 1.00000
+O4  O    4 c 0.08440 0.25400 0.22600 1.00000
+O5  O    4 c 0.41300 0.52000 0.10500 1.00000
+O6  O    4 c 0.50500 0.71800 0.31000 1.00000
+O7  O    4 c 0.30500 0.76300 0.27100 1.00000
+O8  O    4 c 0.69500 0.75200 0.28900 1.00000

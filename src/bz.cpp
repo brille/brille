@@ -1,4 +1,21 @@
-#include "bz.h"
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+#include "bz.hpp"
 
 template<typename... A>
 void BrillouinZone::set_polyhedron(const LQVec<double>& v, const LQVec<double>& p, A... args){
@@ -296,12 +313,6 @@ void BrillouinZone::print() const {
   msg += std::to_string(this->faces_count()) + " faces";
   std::cout << msg << std::endl;
 }
-
-// #include "bz_wedge_0.cpp" // defines different wedge_search versions for MSVC
-#include "bz_wedge_1.cpp" // defines wedge_search
-// #include "bz_wedge_2.cpp" // defines wedge_brute_force
-#include "bz_wedge_3.cpp" // defines new wedge_brute_force
-#include "bz_wedge_explicit.cpp" // defines wedge_explicit
 
 bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num){
   std::string msg = "Considering " + n.to_string(0,"... ");
@@ -743,7 +754,8 @@ void BrillouinZone::vertex_search(const int extent){
   // planes with smallest norm
 
   // First, find the first vertex which is unique of equivalent vertices
-  bool *vertisunique = new bool[in_cnt]();
+  bool *vertisunique = nullptr;
+  vertisunique = new bool[in_cnt]();
   for (int i=0; i<in_cnt; i++) vertisunique[i] = true;
   for (int i=0; i<in_cnt-1; i++){
     if (vertisunique[i]){
@@ -756,15 +768,18 @@ void BrillouinZone::vertex_search(const int extent){
     }
   }
   // count up the unique vertices and keep track of their indices
-  int unqcnt=0, *unqidx = new int[in_cnt]();
+  int unqcnt=0, *unqidx = nullptr;
+  unqidx = new int[in_cnt]();
   for (int i=0; i<in_cnt; i++) if (vertisunique[i]) unqidx[unqcnt++]=i;
 
   //printf("%d unique vertices\n",unqcnt);
 
   // create a mapping which holds the indices of all equivalent vertices
   // so unqidxmap[1,:] are all of the indices which equal the first unique vertex
-  int *unqidxmap = new int[in_cnt*unqcnt]();
-  int *numidxmap = new int[unqcnt]();
+  int *unqidxmap = nullptr;
+  unqidxmap = new int[in_cnt*unqcnt]();
+  int *numidxmap = nullptr;
+  numidxmap = new int[unqcnt]();
   for (int i=0; i<unqcnt; i++){
     numidxmap[i]=1;
     unqidxmap[i*in_cnt] = unqidx[i];
@@ -780,7 +795,8 @@ void BrillouinZone::vertex_search(const int extent){
   // which gave the same vertex
   int maxequiv = 0;
   for (int i=0; i<unqcnt; i++) if ( numidxmap[i]>maxequiv) maxequiv=numidxmap[i];
-  double *unqlenmap = new double[maxequiv*unqcnt](); // no need to allocate in_cnt*unqcnt memory when maxequiv is known
+  double *unqlenmap = nullptr;
+  unqlenmap = new double[maxequiv*unqcnt](); // no need to allocate in_cnt*unqcnt memory when maxequiv is known
   for (int i=0; i<unqcnt; i++){
     for (int j=0; j<numidxmap[i]; j++){
       unqlenmap[i*maxequiv + j] = 0;
@@ -790,8 +806,10 @@ void BrillouinZone::vertex_search(const int extent){
     }
   }
   // use the "length" information to select which equivalent vertex we should keep
-  int *minequividx = new int[unqcnt]();
-  double *minequivlen = new double[unqcnt]();
+  int *minequividx = nullptr;
+  minequividx = new int[unqcnt]();
+  double *minequivlen = nullptr;
+  minequivlen = new double[unqcnt]();
   for (int i=0; i<unqcnt; i++){
     minequivlen[i] = (std::numeric_limits<double>::max)(); // better than 1./0.
     for (int j=0; j<numidxmap[i]; j++){
@@ -818,7 +836,8 @@ void BrillouinZone::vertex_search(const int extent){
   delete[] minequividx;
 
   // determine which of the taus actually contribute to at least one vertex
-  int ncontrib=0, *contrib = new int[ntau]();
+  int ncontrib=0, *contrib = nullptr;
+  contrib = new int[ntau]();
   for (int i=0; i<ntau; i++)
   for (int j=0; j<unqcnt; j++)
   if ( unq_ijk.getvalue(j,0) == i || unq_ijk.getvalue(j,1) == i || unq_ijk.getvalue(j,2) == i ){
@@ -1062,7 +1081,8 @@ bool three_plane_intersection(const LQVec<double>& n,                // plane no
                               const int idx)                         // the index where the intersection is inserted if found
                               {
   // we need to check whether the matrix formed by the orthonormal-frame components of the three planes is nearly-singular
-  double *M = new double[9];
+  double *M = nullptr;
+  M = new double[9];
   xyz.get(i, M);
   xyz.get(j, M+3);
   xyz.get(k, M+6);

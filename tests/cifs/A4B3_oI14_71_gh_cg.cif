@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ta3B4'
+_chemical_formula_sum 'B4 Ta3'
+
+loop_
+_publ_author_name
+ 'R. Kiessling'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 3
+_journal_year 1949
+_journal_page_first 603
+_journal_page_last 615
+_publ_Section_title
+;
+ The Borides of Tantalum
+;
+
+# Found in Transition-metal borides with the tantalum boride (Ta$_{3}$B$_{4}$) crystal structure: their electronic and bonding properties, 1991
+
+_aflow_title 'Ta$_{3}$B$_{4}$ ($D7_{b}$) Structure'
+_aflow_proto 'A4B3_oI14_71_gh_cg'
+_aflow_params 'a,b/a,c/a,y_{2},y_{3},y_{4}'
+_aflow_params_values '3.29,4.25531914894,0.951367781155,0.375,0.18,0.444'
+_aflow_Strukturbericht '$D7_{b}$'
+_aflow_Pearson 'oI14'
+
+_symmetry_space_group_name_H-M "I 2/m 2/m 2/m"
+_symmetry_Int_Tables_number 71
+ 
+_cell_length_a    3.29000
+_cell_length_b    14.00000
+_cell_length_c    3.13000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z
+8 x,y,-z
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z+1/2
+14 -x+1/2,y+1/2,z+1/2
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ta1 Ta   2 c 0.50000 0.50000 0.00000  1.00000
+B1  B    4 g 0.00000 0.37500 0.00000  1.00000
+Ta2 Ta   4 g 0.00000 0.18000 0.00000  1.00000
+B2  B    4 h 0.00000 0.44400 0.50000  1.00000

@@ -1,0 +1,70 @@
+# CIF file
+ 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'As K3 S4'
+ 
+loop_
+_publ_author_name
+ 'M. Palazzi'
+ 'S. Jaulmes'
+ 'P. Laruelle'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 30
+_journal_year 1974
+_journal_page_first 2378
+_journal_page_last 2381
+_publ_Section_title
+;
+ Structure cristalline de K$_3$AsS$_4$
+;
+
+# Found in  Pearson's Handbook, Vol. I, p. 1164
+
+_aflow_proto 'AB3C4_oP32_33_a_3a_4a'
+_aflow_params 'a,b/a,c/a,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7,x8,y8,z8'
+_aflow_params_values '9.11,1.01866081229,1.1613611416,0.2187,0.4807,0.2031,0.4418,0.2052,0.0015,0.4488,0.1967,0.4146,0.1422,0.9176,0.2246,0.191,0.2506,0.2228,0.3424,0.5361,0.0415,0.0069,0.5876,0.2212,0.3355,0.546,0.3761'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP32'
+
+_symmetry_space_group_name_Hall "P 2c -2n"
+_symmetry_space_group_name_H-M "P n a 21"
+_symmetry_Int_Tables_number 33
+
+_cell_length_a    9.11000
+_cell_length_b    9.28000
+_cell_length_c    10.58000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -x+1/2,y+1/2,z+1/2
+4 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   4 a 0.21870 0.48070  0.20310 1.00000
+K1  K    4 a 0.44180 0.20520  0.00150 1.00000
+K2  K    4 a 0.44880 0.19670  0.41460 1.00000
+K3  K    4 a 0.14220 0.91760  0.22460 1.00000
+S1  S    4 a 0.19100 0.25060  0.22280 1.00000
+S2  S    4 a 0.34240 0.53610  0.04150 1.00000
+S3  S    4 a 0.00690 0.58760  0.22120 1.00000
+S4  S    4 a 0.33550 0.54600  0.37610 1.00000

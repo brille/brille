@@ -1,0 +1,74 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'NbAs'
+_chemical_formula_sum 'As Nb'
+
+loop_
+_publ_author_name
+ 'S. Furuseth'
+ 'A. Kjekshus'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 18
+_journal_year 1964
+_journal_page_first 1180
+_journal_page_last 1195
+_publ_Section_title
+;
+ On the Arsenides and Antimonides of Niobium
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'NbAs Structure'
+_aflow_proto 'AB_tI8_109_a_a'
+_aflow_params 'a,c/a,z_{1},z_{2}'
+_aflow_params_values '3.4517145504,3.38383984705,0.416,0.0'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI8'
+
+_cell_length_a    3.4517145504
+_cell_length_b    3.4517145504
+_cell_length_c    11.6800492363
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 41 m d"
+_symmetry_Int_Tables_number 109
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x+1/2,z+1/4
+4 y,-x+1/2,z+1/4
+5 -x,y,z
+6 x,-y,z
+7 y,x+1/2,z+1/4
+8 -y,-x+1/2,z+1/4
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y+1/2,z+1/2
+11 -y+1/2,x,z+3/4
+12 y+1/2,-x,z+3/4
+13 -x+1/2,y+1/2,z+1/2
+14 x+1/2,-y+1/2,z+1/2
+15 y+1/2,x,z+3/4
+16 -y+1/2,-x,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   4 a 0.00000 0.00000 0.41600 1.00000
+Nb1 Nb   4 a 0.00000 0.00000 0.00000 1.00000

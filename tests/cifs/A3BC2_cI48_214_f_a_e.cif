@@ -1,0 +1,106 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Petzite'
+_chemical_formula_sum 'Ag3 Au Te2'
+
+loop_
+_publ_author_name
+ 'A. J. {Frueh, Jr.}'
+_journal_name_full_name
+;
+ American Mineralogist
+;
+_journal_volume 44
+_journal_year 1959
+_journal_page_first 693
+_journal_page_last 701
+_publ_Section_title
+;
+ Crystallography of petzite, Ag$_{3}$AuTe$_{2}$
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title 'Petzite (Ag$_{3}$AuTe$_{2}$) Structure'
+_aflow_proto 'A3BC2_cI48_214_f_a_e'
+_aflow_params 'a,x_{2},x_{3}'
+_aflow_params_values '10.38,0.266,0.365'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cI48'
+
+_symmetry_space_group_name_H-M "I 41 3 2"
+_symmetry_Int_Tables_number 214
+ 
+_cell_length_a    10.38000
+_cell_length_b    10.38000
+_cell_length_c    10.38000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 y,z,x
+6 y,-z,-x+1/2
+7 -y+1/2,z,-x
+8 -y,-z+1/2,x
+9 z,x,y
+10 z,-x,-y+1/2
+11 -z+1/2,x,-y
+12 -z,-x+1/2,y
+13 -y+1/4,-x+1/4,-z+1/4
+14 -y+1/4,x+3/4,z+1/4
+15 y+1/4,-x+1/4,z+3/4
+16 y+3/4,x+1/4,-z+1/4
+17 -x+1/4,-z+1/4,-y+1/4
+18 -x+1/4,z+3/4,y+1/4
+19 x+1/4,-z+1/4,y+3/4
+20 x+3/4,z+1/4,-y+1/4
+21 -z+1/4,-y+1/4,-x+1/4
+22 -z+1/4,y+3/4,x+1/4
+23 z+1/4,-y+1/4,x+3/4
+24 z+3/4,y+1/4,-x+1/4
+25 x+1/2,y+1/2,z+1/2
+26 x+1/2,-y+1/2,-z
+27 -x,y+1/2,-z+1/2
+28 -x+1/2,-y,z+1/2
+29 y+1/2,z+1/2,x+1/2
+30 y+1/2,-z+1/2,-x
+31 -y,z+1/2,-x+1/2
+32 -y+1/2,-z,x+1/2
+33 z+1/2,x+1/2,y+1/2
+34 z+1/2,-x+1/2,-y
+35 -z,x+1/2,-y+1/2
+36 -z+1/2,-x,y+1/2
+37 -y+3/4,-x+3/4,-z+3/4
+38 -y+3/4,x+1/4,z+3/4
+39 y+3/4,-x+3/4,z+1/4
+40 y+1/4,x+3/4,-z+3/4
+41 -x+3/4,-z+3/4,-y+3/4
+42 -x+3/4,z+1/4,y+3/4
+43 x+3/4,-z+3/4,y+1/4
+44 x+1/4,z+3/4,-y+3/4
+45 -z+3/4,-y+3/4,-x+3/4
+46 -z+3/4,y+1/4,x+3/4
+47 z+3/4,-y+3/4,x+1/4
+48 z+1/4,y+3/4,-x+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Au1 Au   8 a 0.12500 0.12500 0.12500 1.00000
+Te1 Te  16 e 0.26600 0.26600 0.26600 1.00000
+Ag1 Ag  24 f 0.36500 0.00000 0.25000 1.00000

@@ -1,0 +1,70 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Coesite'
+_chemical_formula_sum 'Si O2'
+ 
+loop_
+_publ_author_name
+ 'Louise Levien'
+ 'Charles T. Prewitt'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 66
+_journal_year 1981
+_journal_page_first 324
+_journal_page_last 333
+_publ_Section_title
+;
+ High-pressure crystal structure and compressibility of coesite
+;
+
+_aflow_proto 'A2B_mC48_15_ae3f_2f' 
+_aflow_params 'a,b/a,c/a,\beta,y2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7' 
+_aflow_params_values '7.1356,1.73344918437,1.00532541062,120.34,0.1163,0.266,0.1234,0.9401,0.3114,0.1038,0.3282,0.0172,0.2117,0.4782,0.14033,0.10833,0.07227,0.50682,0.15799,0.54077'
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mC48' 
+
+_symmetry_space_group_name_Hall "-C 2yc"
+_symmetry_space_group_name_H-M "C 1 2/c 1"
+_symmetry_Int_Tables_number 15
+
+_cell_length_a    7.13560
+_cell_length_b    12.36920
+_cell_length_c    7.17360
+_cell_angle_alpha 90.00000
+_cell_angle_beta  120.34000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z+1/2
+3 -x,-y,-z
+4 x,-y,z+1/2
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z+1/2
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 a 0.00000 0.00000 0.00000  1.00000
+O2  O    4 e 0.00000 0.11630 0.25000  1.00000
+O3  O    8 f 0.26600 0.12340 0.94010  1.00000
+O4  O    8 f 0.31140 0.10380 0.32820  1.00000
+O5  O    8 f 0.01720 0.21170 0.47820  1.00000
+Si1 Si   8 f 0.14033 0.10833 0.07227 1.00000
+Si2 Si   8 f 0.50682 0.15799 0.54077  1.00000

@@ -1,0 +1,73 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Silicon Disuphide'
+_chemical_formula_sum 'Si S2'
+ 
+loop_
+_publ_author_name
+ 'Johannes Peters'
+ 'Bernt Krebs'
+_journal_name_full
+;
+Acta Crystallographic B
+;
+_journal_volume 38
+_journal_year 1982
+_journal_page_first 1270
+_journal_page_last 1272
+_publ_Section_title
+;
+ Silicon disulphide and silicon diselenide: a reinvestigation
+;
+
+_aflow_proto 'A2B_oI12_72_j_a' 
+_aflow_params 'a,b/a,c/a,x2,y2' 
+_aflow_params_values '9.583,0.585829072316,0.578837524783,0.1182,0.2088' 
+_aflow_Strukturbericht 'C42' 
+_aflow_Pearson 'oI12' 
+
+_symmetry_space_group_name_Hall "-I 2 2c"
+_symmetry_space_group_name_H-M "I b a m"
+_symmetry_Int_Tables_number 72
+
+_cell_length_a    9.58300
+_cell_length_b    5.61400
+_cell_length_c    5.54700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z+1/2
+7 x,-y,z+1/2
+8 x,y,-z
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z+1/2
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   4 a 0.00000 0.00000 0.25000 1.00000
+S1  S    8 j 0.11820 0.20880 0.00000 1.00000

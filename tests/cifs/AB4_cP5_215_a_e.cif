@@ -1,0 +1,83 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Iron carbide'
+_chemical_formula_sum 'Fe4 C'
+ 
+loop_
+_publ_author_name
+ 'Z. G. Pinsker'
+ 'S. V. Kaverin'
+_journal_name_full
+;
+Soviet Physics-Crystallography, translated from Kristallografiya
+;
+_journal_volume 1
+_journal_year 1956
+_journal_page_first 48
+_journal_page_last 53
+_publ_Section_title
+;
+ Electron-Diffraction Determination of the Structure of Iron Carbide Fe$_4$C
+;
+
+# Found in  Pearson's Handbook, Vol. II, pp. 1895
+
+_aflow_proto 'AB4_cP5_215_a_e' 
+_aflow_params 'a,x2' 
+_aflow_params_values '3.878,0.265' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'cP5' 
+
+_symmetry_space_group_name_Hall "P -4 2 3"
+_symmetry_space_group_name_H-M "P -4 3 m"
+_symmetry_Int_Tables_number 215
+
+_cell_length_a    3.87800
+_cell_length_b    3.87800
+_cell_length_c    3.87800
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+17 x,z,y
+18 x,-z,-y
+19 -x,z,-y
+20 -x,-z,y
+21 z,y,x
+22 z,-y,-x
+23 -z,y,-x
+24 -z,-y,x
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    1 a 0.00000 0.00000 0.00000 1.00000
+Fe1 Fe   4 e 0.26500 0.26500 0.26500 1.00000

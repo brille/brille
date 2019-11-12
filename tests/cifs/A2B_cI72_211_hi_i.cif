@@ -1,0 +1,109 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'SiO2'
+_chemical_formula_sum 'O2 Si'
+
+loop_
+_publ_author_name
+ 'M. D. Foster'
+ 'O. {Delgado Friedrichs}'
+ 'R. G. Bell'
+ 'F. A. {Almeida Paz}and J. Klinowski'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 126
+_journal_year 2004
+_journal_page_first 9769
+_journal_page_last 9775
+_publ_Section_title
+;
+ Chemical Evaluation of Hypothetical Uninodal Zeolites
+;
+
+# Found in Inorganic Crystal Structure Database
+
+_aflow_title 'SiO$_{2}$ Structure'
+_aflow_proto 'A2B_cI72_211_hi_i'
+_aflow_params 'a,y_{1},y_{2},y_{3}'
+_aflow_params_values '9.68882,0.37338,0.15866,0.38235'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cI72'
+
+_cell_length_a    9.6888200000
+_cell_length_b    9.6888200000
+_cell_length_c    9.6888200000
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 4 3 2"
+_symmetry_Int_Tables_number 211
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -y,-x,-z
+14 -y,x,z
+15 y,-x,z
+16 y,x,-z
+17 -x,-z,-y
+18 -x,z,y
+19 x,-z,y
+20 x,z,-y
+21 -z,-y,-x
+22 -z,y,x
+23 z,-y,x
+24 z,y,-x
+25 x+1/2,y+1/2,z+1/2
+26 x+1/2,-y+1/2,-z+1/2
+27 -x+1/2,y+1/2,-z+1/2
+28 -x+1/2,-y+1/2,z+1/2
+29 y+1/2,z+1/2,x+1/2
+30 y+1/2,-z+1/2,-x+1/2
+31 -y+1/2,z+1/2,-x+1/2
+32 -y+1/2,-z+1/2,x+1/2
+33 z+1/2,x+1/2,y+1/2
+34 z+1/2,-x+1/2,-y+1/2
+35 -z+1/2,x+1/2,-y+1/2
+36 -z+1/2,-x+1/2,y+1/2
+37 -y+1/2,-x+1/2,-z+1/2
+38 -y+1/2,x+1/2,z+1/2
+39 y+1/2,-x+1/2,z+1/2
+40 y+1/2,x+1/2,-z+1/2
+41 -x+1/2,-z+1/2,-y+1/2
+42 -x+1/2,z+1/2,y+1/2
+43 x+1/2,-z+1/2,y+1/2
+44 x+1/2,z+1/2,-y+1/2
+45 -z+1/2,-y+1/2,-x+1/2
+46 -z+1/2,y+1/2,x+1/2
+47 z+1/2,-y+1/2,x+1/2
+48 z+1/2,y+1/2,-x+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O   24 h 0.00000 0.37338 0.37338 1.00000
+O2  O   24 i 0.25000 0.15866 0.34134 1.00000
+Si1 Si  24 i 0.25000 0.38235 0.11765 1.00000

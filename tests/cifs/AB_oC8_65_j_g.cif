@@ -1,0 +1,75 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'alpha iridium vanadium'
+_chemical_formula_sum 'Ir V'
+ 
+loop_
+_publ_author_name
+ 'B. C. Giessen'
+ 'N. J. Grant'
+_journal_name_full
+;
+Acta Crytallographica
+;
+_journal_volume 18
+_journal_year 1965
+_journal_page_first 1080
+_journal_page_last 1081
+_publ_Section_title
+;
+ New intermediate phases in transition metal systems, III
+;
+
+# Found in  Pearson's Handbook, Vol. IV, pp. 4139
+
+_aflow_proto 'AB_oC8_65_j_g' 
+_aflow_params 'a,b/a,c/a,x1,y2' 
+_aflow_params_values '5.971,1.1314687657,0.468263272484,0.28,0.22' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oC8' 
+
+_symmetry_space_group_name_Hall "-C 2 2 "
+_symmetry_space_group_name_H-M "C m m m"
+_symmetry_Int_Tables_number 65
+
+_cell_length_a    5.97100
+_cell_length_b    6.75600
+_cell_length_c    2.79600
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z
+8 x,y,-z
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z
+12 -x+1/2,-y+1/2,z
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z
+16 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+V1  V    4 g 0.28000 0.00000 0.00000 1.00000
+Ir1 Ir   4 j 0.00000 0.22000 0.50000 1.00000

@@ -1,0 +1,72 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta Plutonium'
+_chemical_formula_sum 'Pu'
+ 
+loop_
+_publ_author_name
+ 'W. H. Zachariasen'
+ 'F. H. Ellinger'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 16
+_journal_year 1963
+_journal_page_first 369
+_journal_page_last 375
+_publ_Section_title
+;
+ The Crystal Structure of Beta Plutonium Metal
+;
+
+# Found in  Donohue, pp. 162-165
+
+_aflow_proto 'A_mC34_12_ah3i2j' 
+_aflow_params 'a,b/a,c/a,\beta,y2,x3,z3,x4,z4,x5,z5,x6,y6,z6,x7,y7,z7' 
+_aflow_params_values '11.93871,0.876392843113,0.658278825769,129.00411,0.22,0.854,0.241,0.663,0.745,0.566,0.238,0.355,0.232,-0.037,0.333,0.35,0.586' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mC34' 
+
+_symmetry_space_group_name_Hall "-C 2y"
+_symmetry_space_group_name_H-M "C 1 2/m 1"
+_symmetry_Int_Tables_number 12
+
+_cell_length_a    11.93871
+_cell_length_b    10.46300
+_cell_length_c    7.85900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  129.00411
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pu1 Pu   2 a 0.00000 0.00000 0.00000  1.00000
+Pu2 Pu   4 h 0.00000 0.22000 0.50000  1.00000
+Pu3 Pu   4 i 0.85400 0.00000 0.24100  1.00000
+Pu4 Pu   4 i 0.66300 0.00000 0.74500  1.00000
+Pu5 Pu   4 i 0.56600 0.00000 0.23800  1.00000
+Pu6 Pu   8 j 0.35500 0.23200 -0.03700 1.00000
+Pu7 Pu   8 j 0.33300 0.35000 0.58600  1.00000

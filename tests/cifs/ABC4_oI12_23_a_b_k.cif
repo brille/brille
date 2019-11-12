@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BPS4'
+_chemical_formula_sum 'B P S4'
+
+loop_
+_publ_author_name
+ 'A. Weiss'
+ 'H. Sch{\"a}fer'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Naturforschung B
+;
+_journal_volume 18
+_journal_year 1963
+_journal_page_first 81
+_journal_page_last 82
+_publ_Section_title
+;
+ Zur Kenntnis von Bortetrathiophosphat BPS$_{4}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BPS$_{4}$ Structure'
+_aflow_proto 'ABC4_oI12_23_a_b_k'
+_aflow_params 'a,b/a,c/a,x_{3},y_{3},z_{3}'
+_aflow_params_values '5.2501580231,1.06666666665,1.7219047619,0.21,0.2,0.115'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI12'
+
+_cell_length_a    5.2501580231
+_cell_length_b    5.6001685579
+_cell_length_c    9.0402721007
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 2 2 2"
+_symmetry_Int_Tables_number 23
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,-z+1/2
+7 -x+1/2,y+1/2,-z+1/2
+8 -x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+B1 B   2 a 0.00000 0.00000 0.00000 1.00000
+P1 P   2 b 0.50000 0.00000 0.00000 1.00000
+S1 S   8 k 0.21000 0.20000 0.11500 1.00000

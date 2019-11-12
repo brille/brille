@@ -1,0 +1,95 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cu Pt'
+ 
+loop_
+_publ_author_name
+ 'C. H. Johansson'
+ 'J. O. Linde'
+_journal_name_full
+;
+Annalen der Physik
+;
+_journal_volume 387
+_journal_year 1927
+_journal_page_first 449
+_journal_page_last 478
+_publ_Section_title
+;
+ Gitterstruktur und elektrisches Leitverm\"{o}gen der Mischkristallreihen Au-Cu, Pd-Cu und Pt-Cu
+;
+
+# Found in  http://materials.springer.com/lb/docs/sm_lbs_978-3-540-46933-9_359
+
+_aflow_proto 'AB_hR2_166_a_b' 
+_aflow_params 'a,c/a' 
+_aflow_params_values '3.13,4.78594249201' 
+_aflow_Strukturbericht 'L1_1' 
+_aflow_Pearson 'hR2' 
+
+_symmetry_space_group_name_Hall "-R 3 2"
+_symmetry_space_group_name_H-M "R -3 m:H"
+_symmetry_Int_Tables_number 166
+
+_cell_length_a    3.13000
+_cell_length_b    3.13000
+_cell_length_c    14.98000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 y,x,-z
+5 -x,-x+y,-z
+6 x-y,-y,-z
+7 -x,-y,-z
+8 y,-x+y,-z
+9 x-y,x,-z
+10 -y,-x,z
+11 x,x-y,z
+12 -x+y,y,z
+13 x+1/3,y+2/3,z+2/3
+14 -y+1/3,x-y+2/3,z+2/3
+15 -x+y+1/3,-x+2/3,z+2/3
+16 y+1/3,x+2/3,-z+2/3
+17 -x+1/3,-x+y+2/3,-z+2/3
+18 x-y+1/3,-y+2/3,-z+2/3
+19 -x+1/3,-y+2/3,-z+2/3
+20 y+1/3,-x+y+2/3,-z+2/3
+21 x-y+1/3,x+2/3,-z+2/3
+22 -y+1/3,-x+2/3,z+2/3
+23 x+1/3,x-y+2/3,z+2/3
+24 -x+y+1/3,y+2/3,z+2/3
+25 x+2/3,y+1/3,z+1/3
+26 -y+2/3,x-y+1/3,z+1/3
+27 -x+y+2/3,-x+1/3,z+1/3
+28 y+2/3,x+1/3,-z+1/3
+29 -x+2/3,-x+y+1/3,-z+1/3
+30 x-y+2/3,-y+1/3,-z+1/3
+31 -x+2/3,-y+1/3,-z+1/3
+32 y+2/3,-x+y+1/3,-z+1/3
+33 x-y+2/3,x+1/3,-z+1/3
+34 -y+2/3,-x+1/3,z+1/3
+35 x+2/3,x-y+1/3,z+1/3
+36 -x+y+2/3,y+1/3,z+1/3
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   3 a 0.00000 0.00000 0.00000 1.00000
+Pt1 Pt   3 b 0.00000 0.00000 0.50000 1.00000

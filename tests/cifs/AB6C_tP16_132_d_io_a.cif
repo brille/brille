@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'AgUF6'
+_chemical_formula_sum 'Ag F6 U'
+
+loop_
+_publ_author_name
+ 'P. Charpin'
+_journal_name_full_name
+;
+ Comptes Rendus Hebdomadaires des S{\'eances de l'Acad{\'e}mie des Sciences
+;
+_journal_volume 260
+_journal_year 1965
+_journal_page_first 1914
+_journal_page_last 1916
+_publ_Section_title
+;
+ Structure cristalline des hexafluorures complexes d\'uranium V et d\'argent de potassium d\'ammonium de rubidium ou de thallium
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'AgUF$_{6}$ Structure'
+_aflow_proto 'AB6C_tP16_132_d_io_a'
+_aflow_params 'a,c/a,x_{3},x_{4},z_{4}'
+_aflow_params_values '5.4229923801,1.46597824081,0.3,0.2,0.333'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP16'
+
+_cell_length_a    5.4229923801
+_cell_length_b    5.4229923801
+_cell_length_c    7.9499888293
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42/m 2/c 2/m"
+_symmetry_Int_Tables_number 132
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y,x,z+1/2
+7 y,-x,z+1/2
+8 y,x,-z
+9 -x,-y,-z
+10 -x,y,z+1/2
+11 x,-y,z+1/2
+12 x,y,-z
+13 y,x,z
+14 y,-x,-z+1/2
+15 -y,x,-z+1/2
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+U1  U    2 a 0.00000 0.00000 0.00000 1.00000
+Ag1 Ag   2 d 0.50000 0.50000 0.25000 1.00000
+F1  F    4 i 0.30000 0.30000 0.00000 1.00000
+F2  F    8 o 0.20000 0.20000 0.33300 1.00000

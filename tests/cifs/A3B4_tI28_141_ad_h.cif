@@ -1,0 +1,91 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Hausmannite'
+_chemical_formula_sum 'Mn3 O4'
+ 
+loop_
+_publ_author_name
+ 'D. Jarosch'
+_journal_name_full
+;
+Mineralogy and Petrology
+;
+_journal_volume 37
+_journal_year 1987
+_journal_page_first 15
+_journal_page_last 23
+_publ_Section_title
+;
+ Crystal structure refinement and reflectance measurements of hausmannite, Mn$_3$O$_4$
+;
+
+# Found in  Pearson IV, pp. 4347
+
+_aflow_proto 'A3B4_tI28_141_ad_h' 
+_aflow_params 'a,c/a,y3,z3' 
+_aflow_params_values '5.765,1.63781439722,0.0278,0.2589' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tI28' 
+
+_symmetry_space_group_name_Hall "-I 4bd 2"
+_symmetry_space_group_name_H-M "I 41/a m d:2"
+_symmetry_Int_Tables_number 141
+
+_cell_length_a    5.76500
+_cell_length_b    5.76500
+_cell_length_c    9.44200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y+1/2,-z
+4 -x,-y+1/2,z
+5 -y+1/4,-x+1/4,-z+3/4
+6 -y+1/4,x+3/4,z+1/4
+7 y+3/4,-x+3/4,z+1/4
+8 y+3/4,x+1/4,-z+3/4
+9 -x,-y,-z
+10 -x,y,z
+11 x,-y+1/2,z
+12 x,y+1/2,-z
+13 y+3/4,x+3/4,z+1/4
+14 y+3/4,-x+1/4,-z+3/4
+15 -y+1/4,x+1/4,-z+3/4
+16 -y+1/4,-x+3/4,z+1/4
+17 x+1/2,y+1/2,z+1/2
+18 x+1/2,-y+1/2,-z+1/2
+19 -x+1/2,y,-z+1/2
+20 -x+1/2,-y,z+1/2
+21 -y+3/4,-x+3/4,-z+1/4
+22 -y+3/4,x+1/4,z+3/4
+23 y+1/4,-x+1/4,z+3/4
+24 y+1/4,x+3/4,-z+1/4
+25 -x+1/2,-y+1/2,-z+1/2
+26 -x+1/2,y+1/2,z+1/2
+27 x+1/2,-y,z+1/2
+28 x+1/2,y,-z+1/2
+29 y+1/4,x+1/4,z+3/4
+30 y+1/4,-x+3/4,-z+1/4
+31 -y+3/4,x+3/4,-z+1/4
+32 -y+3/4,-x+1/4,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mn1 Mn   4 a 0.00000 0.75000 0.12500 1.00000
+Mn2 Mn   8 d 0.00000 0.00000 0.50000 1.00000
+O1  O   16 h 0.00000 0.02780 0.25890 1.00000

@@ -1,0 +1,95 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Buckminsterfullerene'
+_chemical_formula_sum 'C'
+
+loop_
+_publ_author_name
+ 'W. I. F. David'
+ 'R. M. Ibberson'
+ 'J. C. Matthewman'
+ 'K. Prassides'
+ 'T. J. S. Dennis'
+ 'J. P. Hare'
+ 'H. W. Kroto'
+ 'R. Taylor'
+ 'D. R. M. Walton'
+_journal_name_full_name
+;
+ Nature
+;
+_journal_volume 353
+_journal_year 1991
+_journal_page_first 147
+_journal_page_last 149
+_publ_Section_title
+;
+ Crystal structure and bonding of ordered C$_{60}$
+;
+
+_aflow_title 'Simple Cubic C$_{60}$ Buckminsterfullerene Structure'
+_aflow_proto 'A_cP240_205_10d'
+_aflow_params 'a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10}'
+_aflow_params_values '14.04078,0.2294,-0.0325,0.101,0.2467,-0.054,0.0061,0.2081,0.0646,0.1289,0.2066,0.8599,-0.036,0.171,-0.0963,0.159,0.2236,0.1122,-0.0371,0.2439,0.0192,-0.0636,0.2053,0.1349,0.0616,0.1503,0.7983,0.0202,0.1323,0.8207,0.1186'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cP240'
+
+_symmetry_space_group_name_H-M "P 21/a -3"
+_symmetry_Int_Tables_number 205
+ 
+_cell_length_a    14.04078
+_cell_length_b    14.04078
+_cell_length_c    14.04078
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+13 -x,-y,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z+1/2
+16 x+1/2,y,-z+1/2
+17 -y,-z,-x
+18 -y+1/2,z+1/2,x
+19 y,-z+1/2,x+1/2
+20 y+1/2,z,-x+1/2
+21 -z,-x,-y
+22 -z+1/2,x+1/2,y
+23 z,-x+1/2,y+1/2
+24 z+1/2,x,-y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C  24 d 0.22940 -0.03250 0.10100  1.00000
+C2  C  24 d 0.24670 -0.05400 0.00610  1.00000
+C3  C  24 d 0.20810 0.06460  0.12890  1.00000
+C4  C  24 d 0.20660 0.85990  -0.03600 1.00000
+C5  C  24 d 0.17100 -0.09630 0.15900  1.00000
+C6  C  24 d 0.22360 0.11220  -0.03710 1.00000
+C7  C  24 d 0.24390 0.01920  -0.06360 1.00000
+C8  C  24 d 0.20530 0.13490  0.06160  1.00000
+C9  C  24 d 0.15030 0.79830  0.02020  1.00000
+C10 C  24 d 0.13230 0.82070  0.11860  1.00000

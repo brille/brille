@@ -1,0 +1,61 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cu Ni Sb2'
+
+loop_
+_publ_author_name
+ 'R. L. Kift'
+_journal_year 2010
+_publ_Section_title
+;
+ Intermetallic Compounds by Reductive Annealing
+;
+
+_aflow_title 'CuNiSb$_{2}$ Structure'
+_aflow_proto 'ABC2_hP4_164_a_b_d'
+_aflow_params 'a,c/a,z_{3}'
+_aflow_params_values '4.0482,1.26777333136,0.271'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP4'
+
+_symmetry_space_group_name_H-M "P -3 2/m 1"
+_symmetry_Int_Tables_number 164
+ 
+_cell_length_a    4.04820
+_cell_length_b    4.04820
+_cell_length_c    5.13220
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z
+5 y,x,-z
+6 -x,-x+y,-z
+7 -x,-y,-z
+8 y,-x+y,-z
+9 x-y,x,-z
+10 -x+y,y,z
+11 -y,-x,z
+12 x,x-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   1 a 0.00000 0.00000 0.00000 1.00000
+Ni1 Ni   1 b 0.00000 0.00000 0.50000 1.00000
+Sb1 Sb   2 d 0.33333 0.66667 0.27100 1.00000

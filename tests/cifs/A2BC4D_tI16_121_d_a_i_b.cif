@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Stannite'
+_chemical_formula_sum 'Cu2 Fe S4 Sn'
+ 
+loop_
+_publ_author_name
+ 'L. O. Brockway'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 89
+_journal_year 1934
+_journal_page_first 434
+_journal_page_last 441
+_publ_Section_title
+;
+ The Crystal Structure of Stannite, Cu$_2$FeSnS$_4$
+;
+
+_aflow_proto 'A2BC4D_tI16_121_d_a_i_b' 
+_aflow_params 'a,c/a,x4,z4' 
+_aflow_params_values '5.46,1.96428571429,0.245,0.132' 
+_aflow_Strukturbericht 'H2_6' 
+_aflow_Pearson 'tI16' 
+
+_symmetry_space_group_name_Hall "I -4 2"
+_symmetry_space_group_name_H-M "I -4 2 m"
+_symmetry_Int_Tables_number 121
+
+_cell_length_a    5.46000
+_cell_length_b    5.46000
+_cell_length_c    10.72500
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,x,z
+6 y,-x,-z
+7 -y,x,-z
+8 -y,-x,z
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 y+1/2,x+1/2,z+1/2
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   2 a 0.00000 0.00000 0.00000 1.00000
+Sn1 Sn   2 b 0.00000 0.00000 0.50000 1.00000
+Cu1 Cu   4 d 0.00000 0.50000 0.25000 1.00000
+S1  S    8 i 0.24500 0.24500 0.13200 1.00000

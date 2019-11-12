@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'TiAl2Br8'
+_chemical_formula_sum 'Al2 Br8 Ti'
+
+loop_
+_publ_author_name
+ 'S. I. Troyanov'
+ 'V. B. Rybakov'
+ 'V. M. Ionov'
+_journal_name_full_name
+;
+ Russian Journal of Inorganic Chemistry
+;
+_journal_volume 35
+_journal_year 1990
+_journal_page_first 882
+_journal_page_last 887
+_publ_Section_title
+;
+ Synthesis and Crystal Structure of TiBr$_{4}$, TiBr$_{3}$ and Ti(AlBr$_{4}$)$_{2}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'TiAl$_{2}$Br$_{8}$ Structure'
+_aflow_proto 'A2B8C_oP22_34_c_4c_a'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '6.2740008991,2.04032515143,1.38284985656,0.5,0.605,0.8135,0.499,0.7349,0.6796,0.009,0.743,-0.0925,0.3064,0.2388,0.5935,0.2196,0.7131,0.6459,0.513'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP22'
+
+_cell_length_a    6.2740008991
+_cell_length_b    12.8010018345
+_cell_length_c    8.6760012434
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P n n 2"
+_symmetry_Int_Tables_number 34
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x+1/2,y+1/2,z+1/2
+4 x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ti1 Ti   2 a 0.00000 0.00000  0.50000 1.00000
+Al1 Al   4 c 0.60500 0.81350  0.49900 1.00000
+Br1 Br   4 c 0.73490 0.67960  0.00900 1.00000
+Br2 Br   4 c 0.74300 -0.09250 0.30640 1.00000
+Br3 Br   4 c 0.23880 0.59350  0.21960 1.00000
+Br4 Br   4 c 0.71310 0.64590  0.51300 1.00000

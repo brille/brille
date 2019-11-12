@@ -1,0 +1,61 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ti3P'
+_chemical_formula_sum 'P Ti3'
+
+loop_
+_publ_author_name
+ 'V. N. Eremenko'
+ 'V. E. Listovnichii'
+_journal_year 1965
+_publ_Section_title
+;
+ State diagram of the Ti-P system
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Ti$_{3}$P Structure'
+_aflow_proto 'AB3_tP32_86_g_3g'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '9.997999333,0.499899979999,0.0439,0.20812,0.5354,0.11009,0.22151,0.0295,0.14275,0.66613,0.7153,0.53342,0.06957,0.7593'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP32'
+
+_cell_length_a    9.9979993330
+_cell_length_b    9.9979993330
+_cell_length_c    4.9979996666
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42/n (origin choice 2)"
+_symmetry_Int_Tables_number 86
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x+1/2,-y+1/2,z
+3 -y,x+1/2,z+1/2
+4 y+1/2,-x,z+1/2
+5 -x,-y,-z
+6 x+1/2,y+1/2,-z
+7 y,-x+1/2,-z+1/2
+8 -y+1/2,x,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P    8 g 0.04390 0.20812 0.53540 1.00000
+Ti1 Ti   8 g 0.11009 0.22151 0.02950 1.00000
+Ti2 Ti   8 g 0.14275 0.66613 0.71530 1.00000
+Ti3 Ti   8 g 0.53342 0.06957 0.75930 1.00000

@@ -1,331 +1,372 @@
-// [ArrayVector] dot
-template<class T, class R, template<class> class L1, template<class> class L2,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L1<T>>::value&&!std::is_base_of<LatVec,L1<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,L2<R>>::value&&!std::is_base_of<LatVec,L2<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-ArrayVector<S> dot(const L1<T> &a, const L2<R> &b){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.scalara||si.scalarb) throw std::runtime_error("dot product requires two vectors");
-  ArrayVector<double> out(1,si.n);
-  double tmp=0;
-  for (size_t i=0; i<si.n; i++) {
-    for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
-    out.insert(tmp, i);
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+#ifndef _LATVEC_CLASS_H_
+#define _LATVEC_CLASS_H_
+
+#include <typeinfo> // for std::bad_cast
+#include <exception>
+#include "lattice.hpp"
+#include "arrayvector.hpp"
+
+/*! \brief Superclass to identify both LDVec and LQVec
+
+The two Lattice vector classes, LDVec and LQVec, are subclasses of ArrayVector.
+In order to distinguish between the Lattice vector types and "bare" ArrayVector
+objects in operator- and function-overloading it is advantageous to have a
+shared superclass on which to enable templates. Thus LatVec is a superclass used
+for logic only which has no properties and defines no methods.
+*/
+class LatVec{};
+template<typename T> class LDVec;
+template<typename T> class LQVec;
+
+/*! \brief 3-vector(s) expressed in units of a Direct lattice
+
+By adding a Direct lattice to a 3-element ArrayVector this class represents one
+or more 3-vector in units of a real-space-spanning lattice.
+*/
+template<typename T> class LDVec: public LatVec, public ArrayVector<T>{
+  Direct lattice;
+public:
+  //! Default constructor, enforces that 3-vectors are held
+  LDVec(const Direct& lat=Direct(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
+  //! Constructor taking a possibly non-contigous and/or non-row-ordered input
+  template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
+  LDVec(const Direct& lat,
+        const T*d,
+        const std::vector<Integer>& shape,
+        const std::vector<Integer>& strides,
+        const int flag=1): ArrayVector<T>(d,shape,strides), lattice(lat){
+    this->check_arrayvector(flag);
   }
-  return out;
-}
-// [ArrayVector] norm
-template<class T, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value>::type
-        >
-ArrayVector<double> norm(const L<T> &a){
-  ArrayVector<double> out = dot(a,a);
-  for (size_t i=0; i<out.size(); ++i) out.insert(sqrt(out.getvalue(i)),i);
-  return out;
-}
-
-template<typename T,typename R> double same_lattice_dot(const R* x, const T* y, const double* len, const double* ang){
-  double out = double(x[0])*double(y[0])*len[0]*len[0]
-             + double(x[1])*double(y[1])*len[1]*len[1]
-             + double(x[2])*double(y[2])*len[2]*len[2]
-             + (double(x[0])*double(y[1])+double(x[1])*double(y[0]))*len[0]*len[1]*cos(ang[2])
-             + (double(x[1])*double(y[2])+double(x[2])*double(y[1]))*len[1]*len[2]*cos(ang[0])
-             + (double(x[2])*double(y[0])+double(x[0])*double(y[2]))*len[2]*len[0]*cos(ang[1]);
-  return out;
-}
-// template<typename T,typename R> double same_lattice_dot(const R& x, const T& y, const double* len, const double* ang){
-//   double out = double(x[0])*double(y[0])*len[0]*len[0]
-//              + double(x[1])*double(y[1])*len[1]*len[1]
-//              + double(x[2])*double(y[2])*len[2]*len[2]
-//              + (double(x[0])*double(y[1])+double(x[1])*double(y[0]))*len[0]*len[1]*cos(ang[2])
-//              + (double(x[1])*double(y[2])+double(x[2])*double(y[1]))*len[1]*len[2]*cos(ang[0])
-//              + (double(x[2])*double(y[0])+double(x[0])*double(y[2]))*len[2]*len[0]*cos(ang[1]);
-//   return out;
-// }
-
-// cross (LatVec × LatVec)
-template<class T, class R, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type
-        >
-L<double> cross(const L<T>& a, const L<R>& b) {
-  assert( a.samelattice(b) );
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("cross product is only defined for three vectors");
-  typename LatticeTraits<L<T>>::type lat = a.get_lattice();
-  typename LatVecTraits<L<T>,double>::star tmp( lat.star(), si.n);
-  for (size_t i=0; i<si.n; i++)
-    vector_cross<double,T,R,3>(tmp.data(i), a.data(si.oneveca?0:i), b.data(si.onevecb?0:i));
-  tmp *= lat.get_volume()/2.0/PI;
-  return tmp.star();
-}
-
-// dot [LatVec ⋅ LatVec]
-template<class T, class R, template<class> class L1, template<class> class L2,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L1<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L2<R>>::value>::type
-        >
-ArrayVector<double> dot(const L1<T> &a, const L2<R> &b){
-  bool issame = a.samelattice(b);
-  if (!( issame || a.starlattice(b) )){
-    debug_update("Incompatible lattices\n",a.get_lattice().string_repr(),"\n",b.get_lattice().string_repr());
-    throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
-  }
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m!=3u) throw std::runtime_error("Lattice dot product is only defined for three vectors");
-  if (si.scalara||si.scalarb) throw std::runtime_error("Lattice dot product requires two three-vectors");
-  ArrayVector<double> out(1,si.n);
-  if (issame){
-    typename LatticeTraits<L1<T>>::type lat = a.get_lattice();
-    double len[3] = {lat.get_a(),lat.get_b(),lat.get_c()};
-    double ang[3] = {lat.get_alpha(),lat.get_beta(),lat.get_gamma()};
-    for (size_t i=0; i<si.n; i++)
-      out.insert( same_lattice_dot( a.data(si.oneveca?0:i), b.data(si.onevecb?0:i), len, ang), i);
-  } else {
-    double tmp=0;
-    for (size_t i=0; i<si.n; i++) {
-      for (size_t j=0; j<si.m; j++) tmp += a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,j);
-      out.insert(2*PI*tmp, i);
+  //! Copy constructor, optionally verifying that only 3-element arrays are provided.
+  LDVec(const Direct& lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){ this->check_arrayvector(flag); }
+  //! [Optional type conversion] copy constructor
+  template<class R> LDVec(const LDVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
+  //! std::vector<std::array<T,3>> copy constructor
+  template<class R> LDVec(const Direct& lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
+  //! Explicit copy constructor
+  // required in gcc 9+ since we define our own operator= below:
+  LDVec(const LDVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}
+  //! Assignment operator reusing data if we can
+  LDVec<T>& operator=(const LDVec<T>& other){
+    if (this != &other){ // do nothing if called by, e.g., a = a;
+      this->lattice = other.get_lattice();
+      size_t m = other.numel();
+      size_t n = other.size();
+      // reuse the data-block if we can. otherwise, refresh/resize it
+      if ( m !=this->numel() ) this->refresh(m,n);
+      if ( n !=this->size()  ) this->resize(n);
+      // copy-over the data (if it exists)
+      if (other._data && m && n)
+        for(size_t i=0; i<m*n; i++)
+          this->_data[i] = other._data[i];
     }
+    return *this;
   }
-  return out;
-}
+  //! Extract the 3-vector with index `i`
+  const LDVec<T> operator[](const size_t i) const{
+    bool isok = i < this->size();
+    LDVec<T> out(this->lattice, isok ? 1u: 0u);
+    if (isok) out = this->get(i);
+    return out;
+  }
 
-// // [LatVec] norm
-// template<class T, template<class> class L,
-//          typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type
-//         >
-// ArrayVector<double> norm(const L<T> &a){
-//   ArrayVector<double> out = dot(a,a);
-//   for (size_t i=0; i<out.size(); ++i) out.insert(sqrt(out.getvalue(i)),i);
-//   return out;
-// }
+  Direct get_lattice() const { return lattice; }
+  template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
+  // extract overloads preserving lattice information
+  //! Return the ith single-array LDVec
+  LDVec<T> extract(const size_t i=0) const ;
+  LDVec<T> first(const size_t num) const;
+  /*! Return a collection of arrays from the LDVec
+    @param n the number of arrays to return
+    @param i a pointer to the first index of the n arrays to return
+    @returns A LDVec containing the n arrays
+  */
+  LDVec<T> extract(const size_t n, const size_t *i) const;
+  /*! Return a collection of arrays from the LDVec
+    @param idx a reference to an LDVec containing the to-be-returned indices
+    @returns A LDVec containing the indicies indicated by idx
+  */
+  LDVec<T> extract(const ArrayVector<size_t>& idx) const;
+  /*! Return a collection of arrays from the LDVec
+    @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
+    @returns An LDVec containing the indicies indicated by tfvec
+  */
+  LDVec<T> extract(const ArrayVector<bool>& idx) const;
+  LDVec<T> extract(const std::vector<bool>& idx) const;
+  //! extract the 3-vector with index `i`
+  LDVec<T> get(const size_t i) const;
+  //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
+  ArrayVector<T> get_hkl() const;
+  //! Extract the coordinates in *an* orthonormal frame
+  ArrayVector<double> get_xyz() const;
+  //! Return the vector(s) expressed in units of the Reciprocal lattice
+  LQVec<double> star() const;
 
-// [LatVec] cat
-template<class T, class R, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> cat(const L<T>& a, const L<R>& b){
-  if (!a.samelattice(b))
-    throw std::runtime_error("LatVec cat requires vectors in the same lattice.");
-  L<S> out(a.get_lattice(), a.size()+b.size());
-  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<3u; ++j)
-    out.insert( static_cast<S>(a.getvalue(i,j)), i, j);
-  for (size_t i=0; i<b.size(); ++i) for (size_t j=0; j<3u; ++j)
-    out.insert( static_cast<S>(b.getvalue(i,j)), a.size()+i, j);
-  return out;
-}
+  //! Determine the scalar product between two vectors in the object
+  double dot(const size_t i, const size_t j) const;
+  //! Determine the absolute length of a vector in the object
+  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
+  //! Determine the cross product of two vectors in the object
+  LDVec<double> cross(const size_t i, const size_t j) const;
 
-// star
-template<class T, template <class R> class L,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
-typename LatVecTraits<L<T>,double>::star star(const L<T>& v){
-  double *cvmt = safealloc<double>(9);
-  v.get_lattice().get_covariant_metric_tensor(cvmt);
-  typename LatVecTraits<L<T>,double>::star vstar( v.get_lattice().star(), v.size() );
-  for (size_t i=0; i<v.size(); ++i)
-    multiply_matrix_vector(vstar.data(i), cvmt, v.data(i));
-  delete[] cvmt;
-  return vstar;
-}
+  LDVec<T>& operator-=(const LDVec<T>& av);
+  LDVec<T>& operator+=(const LDVec<T>& av);
 
-// LatVec + ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator+(const L<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( a.getvalue(si.oneveca?0:i,j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
-  return out;
-}
-// LatVec - ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator-(const L<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( a.getvalue(si.oneveca?0:i,j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
-  return out;
-}
-// LatVec * ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator*(const L<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( a.getvalue(si.oneveca?0:i,j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
-  return out;
-}
-// LatVec / ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         // typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type,
-         typename=typename std::enable_if<std::is_floating_point<S>::value>::type>
-L<S> operator/(const L<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( a.getvalue(si.oneveca?0:i,j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j);
-  return out;
-}
+  LDVec<T>& operator+=(const T& av);
+  LDVec<T>& operator-=(const T& av);
+  LDVec<T>& operator*=(const T& av);
+  LDVec<T>& operator/=(const T& av);
+  // LDVec<T> operator -(); // unary subtraction is not actually defined anywhere
 
-// ArrayVec + LatVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator+(const A<R>& b, const L<T>& a){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) + a.getvalue(si.oneveca?0:i,j), i,j);
-  return out;
-}
-// ArrayVec - LatVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator-(const A<R>& b, const L<T>& a){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) - a.getvalue(si.oneveca?0:i,j), i,j);
-  return out;
-}
-// LatVec * ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type>
-L<S> operator*(const A<R>& b, const L<T>& a){
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) * a.getvalue(si.oneveca?0:i,j), i,j);
-  return out;
-}
-// LatVec / ArrayVec
-template<class T, class R, template<class> class L, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<R>,A<R>>::value&&!std::is_base_of<LatVec,A<R>>::value>::type,
-         class S = typename std::common_type<T,R>::type,
-         typename=typename std::enable_if<std::is_floating_point<S>::value>::type>
-L<S> operator/(const A<R>& b, const L<T>& a){
-  if (!(a.samelattice(b)))
-    throw std::runtime_error("Adding lattice vectors requires they're represented in the same lattice");
-  AVSizeInfo si = a.consistency_check(b);
-  if (si.m != 3u) throw std::runtime_error("lattice vectors should always have numel()==3");
-  L<S> out(a.get_lattice(),si.n);
-  for (size_t i=0; i<si.n; ++i)
-    for (size_t j=0; j<si.m; ++j)
-      out.insert( b.getvalue(si.onevecb?0:i,si.scalarb?0:j) / a.getvalue(si.oneveca?0:i,j), i,j);
-  return out;
-}
-
-// Matrix * LatVec
-template<class T, class R, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type,
-         typename=typename std::enable_if<std::is_floating_point<S>::value>::type>
-L<S> operator*(const std::array<R,9>& m, const L<T>& a){
-  L<S> out(a.get_lattice(), a.size());
-  S tmp[3];
-  for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,R,T,3>(out.data(i), m.data(), a.data(i) );
-  return out;
-}
-
-// -LatVec
-template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
-L<T> operator-(const L<T>& a){
-  L<T> out(a.get_lattice(),a.size());
-  for (size_t i=0; i<a.size(); ++i)
-    for (size_t j=0; j<a.numel(); ++j)
-      out.insert( -a.getvalue(i,j), i,j);
-  return out;
-}
+  //! Verify two LDVec objects are compatible for binary operations
+  template<class R> AVSizeInfo consistency_check(const LDVec<R>& b) const {
+    if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
+  template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
+    if (!(this->starlattice(b))) throw std::runtime_error("Real and reciprocal space vectors must be in dual lattices.");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
+  //! Verify that a ArrayVector object is consistent for binary operations
+  template<class R, template<class> class A,
+    typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
+    >
+  AVSizeInfo consistency_check(const A<R>& b) const {
+    return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
+  }
+  //! Check whether a second LDVec is approximately the same as this object
+  template<typename R> bool isapprox(const LDVec<R>& that){ return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); }
+  //! Check whether two vectors in the object are approximately the same
+  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);}
+  //! Round all elements using std::round
+  LDVec<int> round() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::round()); }
+  //! Find the floor of all elements using std::floor
+  LDVec<int> floor() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::floor()); }
+  //! Find the ceiling of all elements using std::ceil
+  LDVec<int> ceil() const {return LDVec<int>(this->lattice, this->ArrayVector<T>::ceil()); }
+protected:
+  void check_arrayvector(const int);
+};
 
 
-// sum(ArrayVector)
-template<class T, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value&&!std::is_base_of<LatVec,L<T>>::value>::type
-        >
-L<T> sum(const L<T>& a, const int dim=0){
-  T tmp;
-  L<T> out;
-  switch (dim){
-    case 1:
-      out.refresh(1u, a.size());
-      for (size_t i=0; i<a.size(); ++i){
-        tmp = T(0);
-        for (size_t j=0; j<a.numel(); ++j) tmp += a.getvalue(i,j);
-        out.insert(tmp, i, 0);
-      }
-      break;
-    default:
-      out.refresh(a.numel(), 1u);
-      for (size_t j=0; j<a.numel(); ++j){
-        tmp = T(0);
-        for (size_t i=0; i<a.size(); ++i) tmp += a.getvalue(i, j);
-        out.insert(tmp, 0, j);
-      }
-      break;
+/*! \brief 3-vector(s) expressed in units of a Reciprocal lattice
+
+By adding a Reciprocal lattice to a 3-element ArrayVector this class represents one
+or more 3-vector in units of a reciprocal-space-spanning lattice.
+*/
+template<typename T> class LQVec:  public LatVec, public ArrayVector<T>{
+  Reciprocal lattice;
+public:
+  //! Default constructor, enforces that 3-vectors are held
+  LQVec(const Reciprocal& lat=Reciprocal(), const size_t n=0, const T *d=nullptr): ArrayVector<T>(3,n,d), lattice(lat){}
+  //! Constructor taking a possibly non-contigous and/or non-row-ordered input
+  template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
+  LQVec(const Reciprocal& lat, const T*d,
+        const std::vector<Integer>& shape,
+        const std::vector<Integer>& strides,
+        const int flag=1): ArrayVector<T>(d,shape,strides), lattice(lat){
+    this->check_arrayvector(flag);
+  }
+  //! Copy constructor, optionally verifying that only 3-element arrays are provided.
+  LQVec(const Reciprocal& lat, const ArrayVector<T>& vec, const int flag=1): ArrayVector<T>(vec), lattice(lat){  this->check_arrayvector(flag); }
+  //! [Optional type conversion] copy constructor
+  template<class R> LQVec(const LQVec<R>& vec): ArrayVector<T>(vec.numel(),vec.size(),vec.data()), lattice(vec.get_lattice()) {}
+  //! std::vector<std::array<T,3>> copy constructor
+  template<class R> LQVec(const Reciprocal& lat, const std::vector<std::array<R,3>>& va): ArrayVector<T>(va), lattice(lat){}
+  //! Explicit copy constructor
+  // required in gcc 9+ since we define our own operator= below:
+  LQVec(const LQVec<T>& other): ArrayVector<T>(3u,other.size(),other.data()), lattice(other.get_lattice()) {}
+  //! Assignment operator reusing data if we can
+  LQVec<T>& operator=(const LQVec<T>& other){
+    if (this != &other){ // do nothing if called by, e.g., a = a;
+      this->lattice = other.get_lattice();
+      size_t m = other.numel();
+      size_t n = other.size();
+      // reuse the data-block if we can. otherwise, refresh/resize it
+      if ( m !=this->numel() ) this->refresh(m,n);
+      if ( n !=this->size()  ) this->resize(n);
+      // copy-over the data (if it exists)
+      if (m && n)
+        for(size_t i=0; i<m*n; i++)
+          this->_data[i] = other._data[i];
     }
-return out;
-}
-// sum(LatVec)
-template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
-L<T> sum(const L<T>& a){
-  T tmp;
-  L<T> out(a.get_lattice(), 1u);
-  for (size_t j=0; j<a.numel(); ++j){
-    tmp = T(0);
-    for (size_t i=0; i<a.size(); ++i) tmp += a.getvalue(i, j);
-    out.insert(tmp, 0, j);
+    return *this;
   }
-  return out;
-}
+  //! Extract the 3-vector with index `i`
+  const LQVec<T> operator[](const size_t i) const{
+    bool isok = i < this->size();
+    LQVec<T> out(this->lattice, isok ? 1u: 0u);
+    if (isok) out = this->get(i);
+    return out;
+  }
 
-// abs(ArrayVector)
-template<class T, template<class> class L,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,L<T>>::value&&!std::is_base_of<LatVec,L<T>>::value>::type
-        >
-L<T> abs(const L<T>& a){
-  L<T> out(a.numel(), a.size());
-  for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
-    out.insert(magnitude(a.getvalue(i,j)), i,j);
-  return out;
-}
-// // abs(LatVec)
-// template<class T, template<class> class L, typename=typename std::enable_if<std::is_base_of<LatVec,L<T>>::value>::type>
-// L<T> abs(const L<T>& a){
-//   L<T> out(a.get_lattice(), a.size());
-//   for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
-//   out.insert(std::abs(a.getvalue(i,j), i,j));
-//   return out;
-// }
+  Reciprocal get_lattice() const { return lattice; }
+  template<typename R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> *)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<typename R> bool samelattice(const LQVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<typename R> bool samelattice(const LDVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LQVec<R> &)    const { return false; }
+  template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
+  // extract overloads preserving lattice information
+  //! Return the ith single-array LQVec
+  LQVec<T> extract(const size_t i=0) const ;
+  LQVec<T> first(const size_t num) const;
+  /*! Return a collection of arrays from the LQVec
+    @param n the number of arrays to return
+    @param i a pointer to the first index of the n arrays to return
+    @returns A LQVec containing the n arrays
+  */
+  LQVec<T> extract(const size_t n, const size_t *i) const;
+  /*! Return a collection of arrays from the LQVec
+    @param idx a reference to an LQVec containing the to-be-returned indices
+    @returns A LQVec containing the indicies indicated by idx
+  */
+  LQVec<T> extract(const ArrayVector<size_t>& idx) const;
+  /*! Return a collection of arrays from the LQVec
+    @param tfvec a reference to an ArrayVector<bool> with true for the to-be-returned indices
+    @returns An LQVec containing the indicies indicated by tfvec
+  */
+  LQVec<T> extract(const ArrayVector<bool>& idx) const;
+  LQVec<T> extract(const std::vector<bool>& idx) const;
+  //! Extract the 3-vector with index `i`
+  LQVec<T> get(const size_t i) const;
+  //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)
+  ArrayVector<T> get_hkl() const;
+  /*! Extract the coordinates in an orthonormal frame with its first axis, x,
+  along a*, its second, y, perpendicular with y⋅b*>0 , and it's third forming
+  the right-handed set z=x×y.
+  */
+  ArrayVector<double> get_xyz() const;
+  //! Return the vector(s) expressed in units of the Direct lattice
+  LDVec<double> star() const;
+
+  //! Determine the scalar product between two vectors in the object.
+  double dot(const size_t i, const size_t j) const;
+  //! Determine the absolute length of a vector in the object.
+  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
+  //! Determine the cross product of two vectors in the object.
+  LQVec<double> cross(const size_t i, const size_t j) const;
+
+  LQVec<T>& operator+=(const LQVec<T>& av);
+  LQVec<T>& operator-=(const LQVec<T>& av);
+  LQVec<T>& operator+=(const T& av);
+  LQVec<T>& operator-=(const T& av);
+  LQVec<T>& operator*=(const T& av);
+  LQVec<T>& operator/=(const T& av);
+  // LQVec<T> operator -();
+
+  //! Verify that a second LQVec object is compatible for binary operations
+  template<class R> AVSizeInfo consistency_check(const LQVec<R>& b) const {
+    if (!(this->samelattice(b))) throw std::runtime_error("arithmetic between Lattice vectors requires they have the same lattice");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
+  template<class R> AVSizeInfo consistency_check(const LDVec<R>& b) const {
+    if (!(this->starlattice(b))) throw std::runtime_error("Reciprocal and real space vectors must be in dual lattices.");
+    return this->ArrayVector<T>::consistency_check(b);
+  }
+  //! Verify that an ArrayVector object is compatible for binary operations
+  template<class R, template<class> class A,
+    typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value && std::is_base_of<ArrayVector<R>,A<R>>::value >::type
+    >
+  AVSizeInfo consistency_check(const A<R>& b) const {
+    return this->ArrayVector<T>::consistency_check(b); // b has no lattice, so nothing to check
+  }
+  //! Check whether a second LQVec is approximately the same as this object
+  template<typename R> bool isapprox(const LQVec<R>& that) const { return (this->samelattice(that) && this->ArrayVector<T>::isapprox(that)); }
+  //! Check whether two vectors in the object are approximately the same.
+  bool isapprox(const size_t i, const size_t j) const { return this->ArrayVector<T>::isapprox(i,j);}
+  //! Round all elements using std::round
+  LQVec<int> round() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::round()); }
+  //! Find the floor of all elements using std::floor
+  LQVec<int> floor() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::floor()); }
+  //! Find the ceiling of all elements using std::ceil
+  LQVec<int> ceil() const {return LQVec<int>(this->lattice, this->ArrayVector<T>::ceil()); }
+protected:
+  void check_arrayvector(const int);
+};
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+// extend the lattice traits structs
+template<class T> struct LatticeTraits<LDVec<T>>{
+  using type = Direct;
+  using star = Reciprocal;
+};
+template<class T> struct LatticeTraits<LQVec<T>>{
+  using type = Reciprocal;
+  using star = Direct;
+};
+#endif
+
+/*! \brief Vector type information for Lattice and LatVec objects
+
+Some templated functions require internal variables or return types which
+depend on *which* subtype of Lattice of LatVec are provided. This traits struct
+provides the typename of an appropriate LatVec subclass and its inverse for
+those cases.
+
+The two `using` typnames `type` and `star` are defined based on the templated
+typename as
+
+| templated typename | type | star |
+| --- | --- | --- |
+| Direct | LDVec<R> | LQVec<R> |
+| Reciprocal | LQVec<R> | LDVec<R> |
+| LDVec | LDVec<R> | LQVec<R> |
+| LQVec | LQVec<R> | LDVec<R> |
+*/
+template<class T, class R> struct LatVecTraits{
+  using type = void; //< LDVec<R> or LQVec<R>
+  using star = void; //< LQVec<R> or LDVec<R>
+};
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+template <class R, class S> struct LatVecTraits<LDVec<R>,S>{
+  using type = LDVec<S>;
+  using star = LQVec<S>;
+};
+template <class R, class S> struct LatVecTraits<LQVec<R>,S>{
+  using type = LQVec<S>;
+  using star = LDVec<S>;
+};
+template <class S> struct LatVecTraits<Direct,S>{
+  using type = LDVec<S>;
+  using star = LQVec<S>;
+};
+template <class S> struct LatVecTraits<Reciprocal,S>{
+  using type = LQVec<S>;
+  using star = LDVec<S>;
+};
+#endif
+
+
+#include "latvec.tpp"
+#include "ldvec.tpp"
+#include "lqvec.tpp"
+
+#endif

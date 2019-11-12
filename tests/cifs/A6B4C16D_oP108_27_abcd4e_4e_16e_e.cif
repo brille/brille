@@ -1,0 +1,91 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ca4Al6O16S'
+_chemical_formula_sum 'Al6 Ca4 O16 S'
+
+loop_
+_publ_author_name
+ 'N. J. Calos'
+ 'C. H. L. Kennard'
+ 'A. K. Whittaker'
+ 'R. L. Davis'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 119
+_journal_year 1995
+_journal_page_first 1
+_journal_page_last 7
+_publ_Section_title
+;
+ Structure of calcium aluminate sulfate Ca$_{4}$Al$_{6}$O$_{16}$S
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Ca$_{4}$Al$_{6}$O$_{16}$S Structure'
+_aflow_proto 'A6B4C16D_oP108_27_abcd4e_4e_16e_e'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},z_{3},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13},x_{14},y_{14},z_{14},x_{15},y_{15},z_{15},x_{16},y_{16},z_{16},x_{17},y_{17},z_{17},x_{18},y_{18},z_{18},x_{19},y_{19},z_{19},x_{20},y_{20},z_{20},x_{21},y_{21},z_{21},x_{22},y_{22},z_{22},x_{23},y_{23},z_{23},x_{24},y_{24},z_{24},x_{25},y_{25},z_{25},x_{26},y_{26},z_{26},x_{27},y_{27},z_{27},x_{28},y_{28},z_{28},x_{29},y_{29},z_{29}'
+_aflow_params_values '13.0409854622,0.999877309088,0.703110981603,0.0,0.005,0.03,0.05,0.373,0.379,0.296,0.122,0.125,0.249,0.369,0.129,0.28,0.122,0.376,0.26,0.058,0.751,0.449,0.237,0.574,0.086,0.257,0.012,0.554,0.483,0.247,0.028,0.729,0.183,0.412,0.162,0.684,0.26,0.23,0.164,0.679,0.651,0.299,0.6217,0.4,0.254,0.238,0.433,0.091,0.44,0.445,0.395,0.455,0.245,0.09,0.304,0.404,0.057,0.126,0.093,0.054,0.102,0.243,0.402,0.336,0.099,0.466,0.124,0.392,0.467,0.154,0.103,0.253,0.191,0.047,0.385,0.425,0.052,0.111,0.41,0.74634,0.2513,0.28218'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP108'
+
+_cell_length_a    13.0409854622
+_cell_length_b    13.0393854518
+_cell_length_c    9.1692600894
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P c c 2"
+_symmetry_Int_Tables_number 27
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z+1/2
+4 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   2 a 0.00000 0.00000 0.00000 1.00000
+Al2 Al   2 b 0.00000 0.50000 0.00500 1.00000
+Al3 Al   2 c 0.50000 0.00000 0.03000 1.00000
+Al4 Al   2 d 0.50000 0.50000 0.05000 1.00000
+Al5 Al   4 e 0.37300 0.37900 0.29600 1.00000
+Al6 Al   4 e 0.12200 0.12500 0.24900 1.00000
+Al7 Al   4 e 0.36900 0.12900 0.28000 1.00000
+Al8 Al   4 e 0.12200 0.37600 0.26000 1.00000
+Ca1 Ca   4 e 0.05800 0.75100 0.44900 1.00000
+Ca2 Ca   4 e 0.23700 0.57400 0.08600 1.00000
+Ca3 Ca   4 e 0.25700 0.01200 0.55400 1.00000
+Ca4 Ca   4 e 0.48300 0.24700 0.02800 1.00000
+O1  O    4 e 0.72900 0.18300 0.41200 1.00000
+O2  O    4 e 0.16200 0.68400 0.26000 1.00000
+O3  O    4 e 0.23000 0.16400 0.67900 1.00000
+O4  O    4 e 0.65100 0.29900 0.62170 1.00000
+O5  O    4 e 0.40000 0.25400 0.23800 1.00000
+O6  O    4 e 0.43300 0.09100 0.44000 1.00000
+O7  O    4 e 0.44500 0.39500 0.45500 1.00000
+O8  O    4 e 0.24500 0.09000 0.30400 1.00000
+O9  O    4 e 0.40400 0.05700 0.12600 1.00000
+O10 O    4 e 0.09300 0.05400 0.10200 1.00000
+O11 O    4 e 0.24300 0.40200 0.33600 1.00000
+O12 O    4 e 0.09900 0.46600 0.12400 1.00000
+O13 O    4 e 0.39200 0.46700 0.15400 1.00000
+O14 O    4 e 0.10300 0.25300 0.19100 1.00000
+O15 O    4 e 0.04700 0.38500 0.42500 1.00000
+O16 O    4 e 0.05200 0.11100 0.41000 1.00000
+S1  S    4 e 0.74634 0.25130 0.28218 1.00000

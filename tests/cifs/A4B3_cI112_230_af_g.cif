@@ -1,0 +1,158 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ga4 Ni3'
+ 
+loop_
+_publ_author_name
+ 'M. Ellner'
+ 'K. J. Best'
+ 'H. Jacobi'
+ 'K. Schubert'
+_journal_name_full
+;
+Journal of the Less-Common Metals
+;
+_journal_volume 19
+_journal_year 1969
+_journal_page_first 294
+_journal_page_last 296
+_publ_Section_title
+;
+ Struktur von Ni$_3$Ga$_4$
+;
+
+# Found in  http://materials.springer.com/lb/docs/sm_lbs_978-3-540-45199-0_4
+
+_aflow_proto 'A4B3_cI112_230_af_g' 
+_aflow_params 'a,x2,y3' 
+_aflow_params_values '11.411,0.0,0.625' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'cI112' 
+
+_symmetry_space_group_name_Hall "-I 4bd 2c 3"
+_symmetry_space_group_name_H-M "I a -3 d"
+_symmetry_Int_Tables_number 230
+
+_cell_length_a    11.41100
+_cell_length_b    11.41100
+_cell_length_c    11.41100
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 y,z,x
+6 y,-z,-x+1/2
+7 -y+1/2,z,-x
+8 -y,-z+1/2,x
+9 z,x,y
+10 z,-x,-y+1/2
+11 -z+1/2,x,-y
+12 -z,-x+1/2,y
+13 -y+1/4,-x+1/4,-z+1/4
+14 -y+1/4,x+3/4,z+1/4
+15 y+1/4,-x+1/4,z+3/4
+16 y+3/4,x+1/4,-z+1/4
+17 -x+1/4,-z+1/4,-y+1/4
+18 -x+1/4,z+3/4,y+1/4
+19 x+1/4,-z+1/4,y+3/4
+20 x+3/4,z+1/4,-y+1/4
+21 -z+1/4,-y+1/4,-x+1/4
+22 -z+1/4,y+3/4,x+1/4
+23 z+1/4,-y+1/4,x+3/4
+24 z+3/4,y+1/4,-x+1/4
+25 -x,-y,-z
+26 -x,y,z+1/2
+27 x+1/2,-y,z
+28 x,y+1/2,-z
+29 -y,-z,-x
+30 -y,z,x+1/2
+31 y+1/2,-z,x
+32 y,z+1/2,-x
+33 -z,-x,-y
+34 -z,x,y+1/2
+35 z+1/2,-x,y
+36 z,x+1/2,-y
+37 y+1/4,x+1/4,z+1/4
+38 y+1/4,-x+3/4,-z+1/4
+39 -y+1/4,x+1/4,-z+3/4
+40 -y+3/4,-x+1/4,z+1/4
+41 x+1/4,z+1/4,y+1/4
+42 x+1/4,-z+3/4,-y+1/4
+43 -x+1/4,z+1/4,-y+3/4
+44 -x+3/4,-z+1/4,y+1/4
+45 z+1/4,y+1/4,x+1/4
+46 z+1/4,-y+3/4,-x+1/4
+47 -z+1/4,y+1/4,-x+3/4
+48 -z+3/4,-y+1/4,x+1/4
+49 x+1/2,y+1/2,z+1/2
+50 x+1/2,-y+1/2,-z
+51 -x,y+1/2,-z+1/2
+52 -x+1/2,-y,z+1/2
+53 y+1/2,z+1/2,x+1/2
+54 y+1/2,-z+1/2,-x
+55 -y,z+1/2,-x+1/2
+56 -y+1/2,-z,x+1/2
+57 z+1/2,x+1/2,y+1/2
+58 z+1/2,-x+1/2,-y
+59 -z,x+1/2,-y+1/2
+60 -z+1/2,-x,y+1/2
+61 -y+3/4,-x+3/4,-z+3/4
+62 -y+3/4,x+1/4,z+3/4
+63 y+3/4,-x+3/4,z+1/4
+64 y+1/4,x+3/4,-z+3/4
+65 -x+3/4,-z+3/4,-y+3/4
+66 -x+3/4,z+1/4,y+3/4
+67 x+3/4,-z+3/4,y+1/4
+68 x+1/4,z+3/4,-y+3/4
+69 -z+3/4,-y+3/4,-x+3/4
+70 -z+3/4,y+1/4,x+3/4
+71 z+3/4,-y+3/4,x+1/4
+72 z+1/4,y+3/4,-x+3/4
+73 -x+1/2,-y+1/2,-z+1/2
+74 -x+1/2,y+1/2,z
+75 x,-y+1/2,z+1/2
+76 x+1/2,y,-z+1/2
+77 -y+1/2,-z+1/2,-x+1/2
+78 -y+1/2,z+1/2,x
+79 y,-z+1/2,x+1/2
+80 y+1/2,z,-x+1/2
+81 -z+1/2,-x+1/2,-y+1/2
+82 -z+1/2,x+1/2,y
+83 z,-x+1/2,y+1/2
+84 z+1/2,x,-y+1/2
+85 y+3/4,x+3/4,z+3/4
+86 y+3/4,-x+1/4,-z+3/4
+87 -y+3/4,x+3/4,-z+1/4
+88 -y+1/4,-x+3/4,z+3/4
+89 x+3/4,z+3/4,y+3/4
+90 x+3/4,-z+1/4,-y+3/4
+91 -x+3/4,z+3/4,-y+1/4
+92 -x+1/4,-z+3/4,y+3/4
+93 z+3/4,y+3/4,x+3/4
+94 z+3/4,-y+1/4,-x+3/4
+95 -z+3/4,y+3/4,-x+1/4
+96 -z+1/4,-y+3/4,x+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ga1 Ga  16 a 0.00000 0.00000 0.00000 1.00000
+Ga2 Ga  48 f 0.00000 0.00000 0.25000 1.00000
+Ni1 Ni  48 g 0.12500 0.62500 0.62500 1.00000

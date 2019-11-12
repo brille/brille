@@ -1,0 +1,67 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Calaverite'
+_chemical_formula_sum 'Au Te2'
+ 
+loop_
+_publ_author_name
+ 'K. Reithmayer'
+ 'W. Steurer'
+ 'H. Schulz'
+ 'J. L. de Boer'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 49
+_journal_year 1993
+_journal_page_first 6
+_journal_page_last 11
+_publ_Section_title
+;
+ High-pressure single-crystal structure study on calaverite, AuTe$_2$
+;
+
+_aflow_proto 'AB2_mC6_12_a_i' 
+_aflow_params 'a,b/a,c/a,\beta,x2,z2' 
+_aflow_params_values '7.189,0.613019891501,0.705105021561,90.04,0.6879,0.2889' 
+_aflow_Strukturbericht 'C34' 
+_aflow_Pearson 'mC6' 
+
+_symmetry_space_group_name_Hall "-C 2y"
+_symmetry_space_group_name_H-M "C 1 2/m 1"
+_symmetry_Int_Tables_number 12
+
+_cell_length_a    7.18900
+_cell_length_b    4.40700
+_cell_length_c    5.06900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.04000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Au1 Au   2 a 0.00000 0.00000 0.00000 1.00000
+Te1 Te   4 i 0.68790 0.00000 0.28890 1.00000

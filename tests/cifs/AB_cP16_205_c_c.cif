@@ -1,0 +1,83 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'SC16 CuCl, stable at 5GPa'
+_chemical_formula_sum 'Cu Cl'
+ 
+loop_
+_publ_author_name
+ 'S. Hull'
+ 'D. A. Keen'
+_journal_name_full
+;
+Physical Review B
+;
+_journal_volume 50
+_journal_year 1994
+_journal_page_first 5868
+_journal_page_last 5885
+_publ_Section_title
+;
+ High-pressure polymorphism of the copper(I) halides: A neutron-diffraction study to ~10 GPa
+;
+
+# Found in  Crain, RPP 58, pp. 705 (1995)
+
+_aflow_proto 'AB_cP16_205_c_c' 
+_aflow_params 'a,x1,x2' 
+_aflow_params_values '6.4162,0.1527,0.6297' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'cP16' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2ab 3 Pa(-3)"
+_symmetry_space_group_name_H-M "P a -3"
+_symmetry_Int_Tables_number 205
+
+_cell_length_a    6.41620
+_cell_length_b    6.41620
+_cell_length_c    6.41620
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+13 -x,-y,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z+1/2
+16 x+1/2,y,-z+1/2
+17 -y,-z,-x
+18 -y+1/2,z+1/2,x
+19 y,-z+1/2,x+1/2
+20 y+1/2,z,-x+1/2
+21 -z,-x,-y
+22 -z+1/2,x+1/2,y
+23 z,-x+1/2,y+1/2
+24 z+1/2,x,-y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   8 c 0.15270 0.15270 0.15270 1.00000
+Cu1 Cu   8 c 0.62970 0.62970 0.62970 1.00000

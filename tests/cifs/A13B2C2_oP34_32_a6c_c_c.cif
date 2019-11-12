@@ -1,0 +1,69 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Re2O5[SO4]2'
+_chemical_formula_sum 'O13 Re2 S2'
+
+loop_
+_publ_author_name
+ 'U. Betke'
+ 'M. S. Wickleder'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 50
+_journal_year 2011
+_journal_page_first 858
+_journal_page_last 872
+_publ_Section_title
+;
+ Sulfates of the Refractory Metals: Crystal Structure and Thermal Behavior of Nb$_{2}$O$_{2}$(SO$_{4}$)$_{3}$, MoO$_{2}$(SO$_{4}$), WO(SO$_{4}$)$_{2}$, and Two Modifications of Re$_{2}$O$_{5}$(SO$_{4}$)$_{2}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Re$_{2}$O$_{5}$[SO$_{4}$]$_{2}$ Structure'
+_aflow_proto 'A13B2C2_oP34_32_a6c_c_c'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9}'
+_aflow_params_values '8.4261784988,1.1450866366,0.701103726564,0.0,0.808,0.55,0.8946,0.614,0.7595,-0.0255,0.8197,0.8044,0.642,0.5367,0.6481,0.3894,0.7689,-0.0703,0.2917,0.8392,0.688,0.2793,0.67666,0.60773,0.0844,0.8643,0.8235,0.4147'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP34'
+
+_cell_length_a    8.4261784988
+_cell_length_b    9.6487043966
+_cell_length_c    5.9076251462
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P b a 2"
+_symmetry_Int_Tables_number 32
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x+1/2,y+1/2,z
+4 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 a 0.00000 0.00000  0.00000  1.00000
+O2  O    4 c 0.80800 0.55000  0.89460  1.00000
+O3  O    4 c 0.61400 0.75950  -0.02550 1.00000
+O4  O    4 c 0.81970 0.80440  0.64200  1.00000
+O5  O    4 c 0.53670 0.64810  0.38940  1.00000
+O6  O    4 c 0.76890 -0.07030 0.29170  1.00000
+O7  O    4 c 0.83920 0.68800  0.27930  1.00000
+Re1 Re   4 c 0.67666 0.60773  0.08440  1.00000
+S1  S    4 c 0.86430 0.82350  0.41470  1.00000

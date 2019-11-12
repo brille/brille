@@ -1,0 +1,69 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'GeAs2'
+_chemical_formula_sum 'As2 Ge'
+
+loop_
+_publ_author_name
+ 'T. Wadsten'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 21
+_journal_year 1967
+_journal_page_first 593
+_journal_page_last 594
+_publ_Section_title
+;
+ Crystal structures of SiP$_{2}$, SiAs$_{2}$, and GeP
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'GeAs$_{2}$ Structure'
+_aflow_proto 'A2B_oP24_55_2g2h_gh'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},x_{2},y_{2},x_{3},y_{3},x_{4},y_{4},x_{5},y_{5},x_{6},y_{6}'
+_aflow_params_values '10.1600191136,1.45275590551,0.366929133855,0.0628,0.4022,0.1014,0.1118,0.2024,0.2667,0.226,0.0384,0.3532,0.2953,0.4192,0.1378'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP24'
+
+_cell_length_a    10.1600191136
+_cell_length_b    14.7600277674
+_cell_length_c    3.7280070133
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 21/b 21/a 2/m"
+_symmetry_Int_Tables_number 55
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z
+7 x+1/2,-y+1/2,z
+8 x,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   4 g 0.06280 0.40220 0.00000 1.00000
+As2 As   4 g 0.10140 0.11180 0.00000 1.00000
+Ge1 Ge   4 g 0.20240 0.26670 0.00000 1.00000
+As3 As   4 h 0.22600 0.03840 0.50000 1.00000
+As4 As   4 h 0.35320 0.29530 0.50000 1.00000
+Ge2 Ge   4 h 0.41920 0.13780 0.50000 1.00000

@@ -1,0 +1,73 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Potassium Silver Cyanide'
+_chemical_formula_sum 'Ag C2 K N2'
+ 
+loop_
+_publ_author_name
+ 'J. L. Hoard'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 84
+_journal_year 1933
+_journal_page_first 231
+_journal_page_last 255
+_publ_Section_title
+;
+ The Crystal Structure of Potassium Silver Cyanide
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_1253381
+
+_aflow_proto 'AB2CD2_hP36_163_h_i_bf_i' 
+_aflow_params 'a,c/a,z2,x3,x4,y4,z4,x5,y5,z5' 
+_aflow_params_values '7.384,2.37716684724,0.01,0.833,0.33333,0.03833,0.141,0.03167,0.365,0.083' 
+_aflow_Strukturbericht 'F5_10' 
+_aflow_Pearson 'hP36' 
+
+_symmetry_space_group_name_Hall "-P 3 2c"
+_symmetry_space_group_name_H-M "P -3 1 c"
+_symmetry_Int_Tables_number 163
+
+_cell_length_a    7.38400
+_cell_length_b    7.38400
+_cell_length_c    17.55300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x,x-y,-z+1/2
+5 -x+y,y,-z+1/2
+6 -y,-x,-z+1/2
+7 -x,-y,-z
+8 y,-x+y,-z
+9 x-y,x,-z
+10 -x,-x+y,z+1/2
+11 x-y,-y,z+1/2
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+K1  K    2 b 0.00000 0.00000 0.00000 1.00000
+K2  K    4 f 0.33333 0.66667 0.01000 1.00000
+Ag1 Ag   6 h 0.83300 0.16700 0.25000 1.00000
+C1  C   12 i 0.33333 0.03833 0.14100 1.00000
+N1  N   12 i 0.03167 0.36500 0.08300 1.00000

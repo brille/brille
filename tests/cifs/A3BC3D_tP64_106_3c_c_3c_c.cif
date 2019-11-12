@@ -1,0 +1,72 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'NaZn[OH]3'
+_chemical_formula_sum 'H3 Na O3 Zn'
+
+loop_
+_publ_author_name
+ 'R. Stahl'
+ 'H. Jacobs'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische und Allgemeine Chemie
+;
+_journal_volume 624
+_journal_year 1998
+_journal_page_first 25
+_journal_page_last 29
+_publ_Section_title
+;
+ Synthese und Kristallstruktur von NaZn(OH)$_{3}${\textperiodcentered}3H$_{2}$O und NaZn(OH)$_{3}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'NaZn[OH]$_{3}$ Structure'
+_aflow_proto 'A3BC3D_tP64_106_3c_c_3c_c'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8}'
+_aflow_params_values '10.8312004139,0.492105992062,0.836,0.614,0.2,0.531,0.845,0.11,0.858,0.825,0.08,0.5929,0.62036,0.0343,0.8146,0.6194,0.0688,0.5681,0.8298,0.1322,0.8669,-0.0994,0.0636,0.69285,-0.05677,0.0'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP64'
+
+_cell_length_a    10.8312004139
+_cell_length_b    10.8312004139
+_cell_length_c    5.3300986249
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42 b c"
+_symmetry_Int_Tables_number 106
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z+1/2
+4 y,-x,z+1/2
+5 -x+1/2,y+1/2,z
+6 x+1/2,-y+1/2,z
+7 y+1/2,x+1/2,z+1/2
+8 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1  H    8 c 0.83600 0.61400  0.20000 1.00000
+H2  H    8 c 0.53100 0.84500  0.11000 1.00000
+H3  H    8 c 0.85800 0.82500  0.08000 1.00000
+Na1 Na   8 c 0.59290 0.62036  0.03430 1.00000
+O1  O    8 c 0.81460 0.61940  0.06880 1.00000
+O2  O    8 c 0.56810 0.82980  0.13220 1.00000
+O3  O    8 c 0.86690 -0.09940 0.06360 1.00000
+Zn1 Zn   8 c 0.69285 -0.05677 0.00000 1.00000

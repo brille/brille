@@ -1,0 +1,67 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'FeOCl'
+_chemical_formula_sum 'Cl Fe O'
+
+loop_
+_publ_author_name
+ 'S. M. Kauzlarich'
+ 'J. L. Stanton'
+ 'J. Faber'
+ 'B. A. Averill'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 108
+_journal_year 1986
+_journal_page_first 7946
+_journal_page_last 7951
+_publ_Section_title
+;
+ Neutron profile refinement of the structure of FeOCl and FeOCl(TTF)$_{1/8.5}$
+;
+
+_aflow_title 'FeOCl ($E0_{5}$) Structure'
+_aflow_proto 'ABC_oP6_59_a_b_a'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},z_{3}'
+_aflow_params_values '3.301,1.14298697364,2.39612238716,0.32961,-0.04795,0.89243'
+_aflow_Strukturbericht '$E0_{5}$'
+_aflow_Pearson 'oP6'
+
+_symmetry_space_group_name_H-M "P m m n:2"
+_symmetry_Int_Tables_number 59
+ 
+_cell_length_a    3.30100
+_cell_length_b    3.77300
+_cell_length_c    7.90960
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z
+3 -x,y+1/2,-z
+4 -x+1/2,-y+1/2,z
+5 -x,-y,-z
+6 -x+1/2,y,z
+7 x,-y+1/2,z
+8 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   2 a 0.25000 0.25000 0.32961  1.00000
+O1  O    2 a 0.25000 0.25000 -0.04795 1.00000
+Fe1 Fe   2 b 0.25000 0.75000 0.89243  1.00000

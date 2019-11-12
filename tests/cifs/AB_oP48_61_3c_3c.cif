@@ -1,0 +1,69 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Benzene'
+_chemical_formula_sum 'C H'
+
+loop_
+_publ_author_name
+ 'S. K Nayak'
+ 'R. Sathishkumar'
+ 'T. N. {Guru Row}'
+_journal_name_full_name
+;
+ CrystEngComm
+;
+_journal_volume 12
+_journal_year 2010
+_journal_page_first 3112
+_journal_page_last 3118
+_publ_Section_title
+;
+ Directing role of functional groups in selective generation of C-H-$\pi$ interactions: In situ cryo-crystallographic studies on benzyl derivatives
+;
+
+_aflow_title 'Benzene Structure'
+_aflow_proto 'AB_oP48_61_3c_3c'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '6.914,1.08128435059,1.38313566676,0.1297,0.5762,0.40803,0.1235,0.6328,0.54518,0.0057,0.4432,0.36289,0.2172,0.6275,0.346,0.2068,0.7225,0.5756,0.0095,0.4051,0.2704'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP48'
+
+_symmetry_space_group_name_H-M "P 21/b 21/c 21/a"
+_symmetry_Int_Tables_number 61
+ 
+_cell_length_a    6.91400
+_cell_length_b    7.47600
+_cell_length_c    9.56300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z
+7 x,-y+1/2,z+1/2
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1 C   8 c 0.12970 0.57620 0.40803  1.00000
+C2 C   8 c 0.12350 0.63280 0.54518  1.00000
+C3 C   8 c 0.00570 0.44320 0.36289  1.00000
+H1 H   8 c 0.21720 0.62750 0.34600  1.00000
+H2 H   8 c 0.20680 0.72250 0.57560  1.00000
+H3 H   8 c 0.00950 0.40510 0.27040  1.00000

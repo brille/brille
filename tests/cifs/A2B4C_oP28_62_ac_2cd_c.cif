@@ -1,0 +1,67 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Forsterite'
+_chemical_formula_sum 'Mg2 O4 Si'
+
+loop_
+_publ_author_name
+ 'R. M. Hazen'
+_journal_name_full_name
+;
+ American Mineralogist
+;
+_journal_volume 61
+_journal_year 1976
+_journal_page_first 1280
+_journal_page_last 1293
+_publ_Section_title
+;
+ Effects of temperature and pressure on the crystal structure of forsterite
+;
+
+_aflow_title 'Forsterite (Mg$_{2}$SiO$_{4}$, $S1_{2}$) Structure'
+_aflow_proto 'A2B4C_oP28_62_ac_2cd_c'
+_aflow_params 'a,b/a,c/a,x_{2},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '10.193,0.586382811734,0.466202295693,0.2774,-0.0085,0.0913,0.7657,0.4474,0.2215,0.094,0.4262,0.1628,0.0331,0.2777'
+_aflow_Strukturbericht '$S1_{2}$'
+_aflow_Pearson 'oP28'
+
+_symmetry_space_group_name_H-M "P 21/n 21/m 21/a"
+_symmetry_Int_Tables_number 62
+ 
+_cell_length_a    10.19300
+_cell_length_b    5.97700
+_cell_length_c    4.75200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mg1 Mg   4 a 0.00000 0.00000 0.00000 1.00000
+Mg2 Mg   4 c 0.27740 0.25000 -0.00850 1.00000
+O1  O    4 c 0.09130 0.25000 0.76570 1.00000
+O2  O    4 c 0.44740 0.25000 0.22150 1.00000
+Si1 Si   4 c 0.09400 0.25000 0.42620 1.00000
+O3  O    8 d 0.16280 0.03310 0.27770 1.00000

@@ -1,0 +1,68 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Cementite'
+_chemical_formula_sum 'Fe3 C'
+ 
+loop_
+_publ_author_name
+ 'F. H. Herbstein'
+ 'J. Smuts'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 17
+_journal_year 1964
+_journal_page_first 1331
+_journal_page_last 1332
+_publ_Section_title
+;
+ Comparison of X-ray and neutron-diffraction refinements of the structure of cementite Fe$_3$C
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB3_oP16_62_c_cd' 
+_aflow_params 'a,b/a,c/a,x1,z1,x2,z2,x3,y3,z3' 
+_aflow_params_values '5.09,1.3257367387,0.888605108055,0.39,0.05,0.036,0.852,0.186,0.063,0.328' 
+_aflow_Strukturbericht 'D0_11' 
+_aflow_Pearson 'oP16' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2n"
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+
+_cell_length_a    5.09000
+_cell_length_b    6.74800
+_cell_length_c    4.52300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    4 c 0.39000  0.25000 0.05000 1.00000
+Fe1 Fe   4 c 0.03600  0.25000 0.85200 1.00000
+Fe2 Fe   8 d 0.18600  0.06300 0.32800 1.00000

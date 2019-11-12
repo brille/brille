@@ -1,0 +1,71 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Fe Si'
+ 
+loop_
+_publ_author_name
+ 'L. Vo\v{c}adlo'
+ 'K. S. Knight'
+ 'G. D. Price'
+ 'I. G. Wood'
+_journal_name_full
+;
+Physics and Chemistry of Minerals
+;
+_journal_volume 29
+_journal_year 2002
+_journal_page_first 132
+_journal_page_last 139
+_publ_Section_title
+;
+ Thermal expansion and crystal structure of FeSi between 4 and 1173 K determined by time-of-flight neutron powder diffraction
+;
+
+_aflow_proto 'AB_cP8_198_a_a' 
+_aflow_params 'a,x1,x2' 
+_aflow_params_values '4.48688,0.13652,0.8424' 
+_aflow_Strukturbericht 'B20' 
+_aflow_Pearson 'cP8' 
+
+_symmetry_space_group_name_Hall "P 2ac 2ab 3 P2_13"
+_symmetry_space_group_name_H-M "P 21 3"
+_symmetry_Int_Tables_number 198
+
+_cell_length_a    4.48688
+_cell_length_b    4.48688
+_cell_length_c    4.48688
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   4 a 0.13652 0.13652 0.13652 1.00000
+Si1 Si   4 a 0.84240 0.84240 0.84240 1.00000

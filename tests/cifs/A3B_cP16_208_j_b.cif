@@ -1,0 +1,82 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'PH3'
+_chemical_formula_sum 'H3 P'
+
+loop_
+_publ_author_name
+ 'G. Natta'
+ 'E. Casazza'
+_journal_name_full_name
+;
+ Gazzetta Chimica Italiana
+;
+_journal_volume 60
+_journal_year 1930
+_journal_page_first 851
+_journal_page_last 859
+_publ_Section_title
+;
+ La struttura dell\'idrogeno fosforato (PH$_{3}$) e dell\'idrogeno arsenicale (AsH$_{3}$)
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title 'PH$_{3}$ Structure'
+_aflow_proto 'A3B_cP16_208_j_b'
+_aflow_params 'a,x_{2}'
+_aflow_params_values '6.31,0.184'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cP16'
+
+_symmetry_space_group_name_H-M "P 42 3 2"
+_symmetry_Int_Tables_number 208
+ 
+_cell_length_a    6.31000
+_cell_length_b    6.31000
+_cell_length_c    6.31000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -y+1/2,-x+1/2,-z+1/2
+14 -y+1/2,x+1/2,z+1/2
+15 y+1/2,-x+1/2,z+1/2
+16 y+1/2,x+1/2,-z+1/2
+17 -x+1/2,-z+1/2,-y+1/2
+18 -x+1/2,z+1/2,y+1/2
+19 x+1/2,-z+1/2,y+1/2
+20 x+1/2,z+1/2,-y+1/2
+21 -z+1/2,-y+1/2,-x+1/2
+22 -z+1/2,y+1/2,x+1/2
+23 z+1/2,-y+1/2,x+1/2
+24 z+1/2,y+1/2,-x+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1 P   4 b 0.25000 0.25000 0.25000 1.00000
+H1 H  12 j 0.18400 0.50000 0.00000 1.00000

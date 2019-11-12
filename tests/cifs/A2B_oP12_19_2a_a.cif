@@ -1,0 +1,63 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ag2 Se'
+ 
+loop_
+_publ_author_name
+ 'G. A. Wiegers'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 56
+_journal_year 1971
+_journal_page_first 1882
+_journal_page_last 1888
+_publ_Section_title
+;
+ The Crystal Structure of the Low-Temperature Form of Silver Selenide
+;
+
+# Found in  Pearson's Handbook, Vol I., page 626
+
+_aflow_proto 'A2B_oP12_19_2a_a' 
+_aflow_params 'a,b/a,c/a,x1,y1,z1,x2,y2,z2,x3,y3,z3' 
+_aflow_params_values '7.764,0.909582689335,0.558088614116,0.185,0.07,0.465,0.055,0.765,-0.008,0.884,-0.011,0.391' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP12' 
+
+_symmetry_space_group_name_Hall "P 2ac 2ab"
+_symmetry_space_group_name_H-M "P 21 21 21"
+_symmetry_Int_Tables_number 19
+
+_cell_length_a    7.76400
+_cell_length_b    7.06200
+_cell_length_c    4.33300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ag1 Ag   4 a 0.18500 0.07000 0.46500 1.00000
+Ag2 Ag   4 a 0.05500 0.76500 -0.00800  1.00000
+Se1 Se   4 a 0.88400 -0.01100 0.39100  1.00000

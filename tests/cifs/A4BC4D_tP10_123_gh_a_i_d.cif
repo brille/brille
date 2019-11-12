@@ -1,0 +1,83 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'CaRbFe4As4'
+_chemical_formula_sum 'As4 Ca Fe4 Rb'
+
+loop_
+_publ_author_name
+ 'A. Iyo'
+ 'K. Kawashima'
+ 'T. Kinjo'
+ 'T. Nishio'
+ 'S. Ishida'
+ 'H. Fujihisa'
+ 'Y. Gotoh'
+ 'K. Kihou'
+ 'H. Eisaki'
+ 'Y. Yoshida'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 138
+_journal_year 2016
+_journal_page_first 3410
+_journal_page_last 3415
+_publ_Section_title
+;
+ New-Structure-Type Fe-Based Superconductors: CaAFe$_{4}$As$_{4}$ (A = K, Rb, Cs) and SrAFe$_{4}$As$_{4}$ (A = Rb, Cs)
+;
+
+_aflow_title 'CaRbFe$_{4}$As$_{4}$ (Superconducting) Structure'
+_aflow_proto 'A4BC4D_tP10_123_gh_a_i_d'
+_aflow_params 'a,c/a,z_{3},z_{4},z_{5}'
+_aflow_params_values '3.8757,3.38106664603,0.3336,0.1193,0.2246'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP10'
+
+_symmetry_space_group_name_H-M "P 4/m 2/m 2/m"
+_symmetry_Int_Tables_number 123
+ 
+_cell_length_a    3.87570
+_cell_length_b    3.87570
+_cell_length_c    13.10400
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z
+9 -x,-y,-z
+10 -x,y,z
+11 x,-y,z
+12 x,y,-z
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ca1 Ca   1 a 0.00000 0.00000 0.00000 1.00000
+Rb1 Rb   1 d 0.50000 0.50000 0.50000 1.00000
+As1 As   2 g 0.00000 0.00000 0.33360 1.00000
+As2 As   2 h 0.50000 0.50000 0.11930 1.00000
+Fe1 Fe   4 i 0.00000 0.50000 0.22460 1.00000

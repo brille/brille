@@ -1,0 +1,77 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'HoCuP2'
+_chemical_formula_sum 'Cu Ho P2'
+
+loop_
+_publ_author_name
+ 'Y. Mozharivsky'
+ 'D. Kaczorowski'
+ 'H. F. Franzen'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische und Allgemeine Chemie
+;
+_journal_volume 627
+_journal_year 2001
+_journal_page_first 2163
+_journal_page_last 2172
+_publ_Section_title
+;
+ Symmetry-Breaking Transitions in HoCuAs$_{2-x}$P$_{x}$ and ErCuAs$_{2-x}$P$_{x}$ ($x=0-2$): Crystal Structure, Application of Landau Theory, Magnetic and Electrical Properties
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'HoCuP$_{2}$ Structure'
+_aflow_proto 'ABC2_oC16_67_b_g_ag'
+_aflow_params 'a,b/a,c/a,z_{3},z_{4}'
+_aflow_params_values '5.2729860526,1.00606865161,1.82912952778,0.765,0.3403'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC16'
+
+_cell_length_a    5.2729860526
+_cell_length_b    5.3049859679
+_cell_length_c    9.6449744884
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "C 2/m 2/m 2/a"
+_symmetry_Int_Tables_number 67
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x+1/2,y,-z
+4 -x+1/2,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x+1/2,-y,z
+8 x+1/2,y,-z
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x,y+1/2,-z
+12 -x,-y+1/2,z
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z
+16 x,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P    4 a 0.25000 0.00000 0.00000 1.00000
+Cu1 Cu   4 b 0.25000 0.00000 0.50000 1.00000
+Ho1 Ho   4 g 0.00000 0.25000 0.76500 1.00000
+P2  P    4 g 0.00000 0.25000 0.34030 1.00000

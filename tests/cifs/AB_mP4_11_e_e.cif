@@ -1,0 +1,64 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ni Ti'
+
+loop_
+_publ_author_name
+ 'H. Sitepu'
+ 'W. W. Schmal'
+ 'J. K. Stalick'
+_journal_name_full
+;
+Applied Physics A
+;
+_journal_volume 74
+_journal_year 2002
+_journal_page_first S1719
+_journal_page_last S1721
+_publ_Section_title
+;
+ Correction of intensities for preferred orientation in neutron-diffraction data of NiTi shape-memory alloy using the generalized spherical-harmonic description
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB_mP4_11_e_e'
+_aflow_params 'a,b/a,c/a,\beta,x1,z1,x2,z2'
+_aflow_params_values '2.8837,1.42393452856,1.61854561848,82.062,0.0387,0.8252,0.5887,0.7184'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP4'
+
+_symmetry_space_group_name_Hall "-P 2yb"
+_symmetry_space_group_name_H-M "P 1 21/m 1"
+_symmetry_Int_Tables_number 11
+
+_cell_length_a    2.88370
+_cell_length_b    4.10620
+_cell_length_c    4.66740
+_cell_angle_alpha 90.00000
+_cell_angle_beta  82.06200
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z
+3 -x,-y,-z
+4 x,-y+1/2,z
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ni1 Ni   2 e 0.03870 0.25000 0.82520 1.00000
+Ti1 Ti   2 e 0.58870 0.25000 0.71840 1.00000

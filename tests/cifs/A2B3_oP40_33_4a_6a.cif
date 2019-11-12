@@ -1,0 +1,73 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\kappa$-alumina'
+_chemical_formula_sum 'Al2 O3'
+
+loop_
+_publ_author_name
+ 'B. Ollivier'
+ 'R. Retoux'
+ 'P. Lacorre'
+ 'D. Massiot'
+ 'G. F\\'{e}rey'
+_journal_name_full_name
+;
+ Journal of Materials Chemistry
+;
+_journal_volume 7
+_journal_year 1997
+_journal_page_first 1049
+_journal_page_last 1056
+_publ_Section_title
+;
+ Crystal structure of $\kappa$-alumina: an X-ray powder diffraction, TEM and NMR study
+;
+
+# Found in Field-induced current modulation in epitaxial film of deep-ultraviolet transparent oxide semiconductor Ga$_{2}$O$_{3}$, 2006
+
+_aflow_title '$\kappa$-alumina (Al$_{2}$O$_{3}$) Structure'
+_aflow_proto 'A2B3_oP40_33_4a_6a'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10}'
+_aflow_params_values '4.8437,1.71975968784,1.84873134174,0.6787,0.8416,0.0,0.1846,0.3432,0.7868,0.8115,0.6489,0.6972,0.6677,0.4696,0.9993,0.329,0.8313,0.8927,0.0248,0.4908,0.6292,0.4717,0.6647,0.6381,0.5145,0.6728,0.1212,0.8608,0.3301,0.8662,0.336,0.4992,0.9'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP40'
+
+_symmetry_space_group_name_H-M "P n a 21"
+_symmetry_Int_Tables_number 33
+ 
+_cell_length_a    4.84370
+_cell_length_b    8.33000
+_cell_length_c    8.95470
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -x+1/2,y+1/2,z+1/2
+4 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 a 0.67870 0.84160 0.00000  1.00000
+Al2 Al   4 a 0.18460 0.34320 0.78680  1.00000
+Al3 Al   4 a 0.81150 0.64890 0.69720  1.00000
+Al4 Al   4 a 0.66770 0.46960 0.99930  1.00000
+O1  O    4 a 0.32900 0.83130 0.89270  1.00000
+O2  O    4 a 0.02480 0.49080 0.62920  1.00000
+O3  O    4 a 0.47170 0.66470 0.63810  1.00000
+O4  O    4 a 0.51450 0.67280 0.12120  1.00000
+O5  O    4 a 0.86080 0.33010 0.86620  1.00000
+O6  O    4 a 0.33600 0.49920 0.90000  1.00000

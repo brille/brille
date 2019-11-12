@@ -1,0 +1,66 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ba S3'
+
+loop_
+_publ_author_name
+ 'W. S. Miller'
+ 'A. J. King'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 94
+_journal_year 1936
+_journal_page_first 439
+_journal_page_last 446
+_publ_Section_title
+;
+ The Structure of Polysuflides: 1 Barium Trisulfide
+;
+
+# Found in  Pearson's Handbook II, p. 1701
+
+_aflow_proto 'AB3_oP16_18_ab_3c'
+_aflow_params 'a,b/a,c/a,z1,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5'
+_aflow_params_values '8.32,1.15865384615,0.579326923077,0.0,0.0,0.25,0.25,0.0,0.25,0.5,0.5,0.124,0.309,0.382'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP16'
+
+_symmetry_space_group_name_Hall "P 2 2ab"
+_symmetry_space_group_name_H-M "P 21 21 2"
+_symmetry_Int_Tables_number 18
+
+_cell_length_a    8.32000
+_cell_length_b    9.64000
+_cell_length_c    4.82000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ba1 Ba   2 a 0.00000 0.00000 0.00000 1.00000
+Ba2 Ba   2 b 0.00000 0.50000 0.00000 1.00000
+S1  S    4 c 0.25000 0.25000 0.00000 1.00000
+S2  S    4 c 0.25000 0.50000 0.50000 1.00000
+S3  S    4 c 0.12400 0.30900 0.38200 1.00000

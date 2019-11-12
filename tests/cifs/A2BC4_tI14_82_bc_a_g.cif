@@ -1,0 +1,72 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cd Al2 S4'
+ 
+loop_
+_publ_author_name
+ 'Harry Hahn'
+ 'G\"{u}nter Frank'
+ 'Wilhelm Klingler'
+ 'Anne-Dorothee St\"{o}rger'
+ 'Georg St\"{o}rger'
+_journal_name_full
+;
+Zeitschrift f\"{u}r anorganische und allgemeine Chemie
+;
+_journal_volume 279
+_journal_year 1955
+_journal_page_first 241
+_journal_page_last 270
+_publ_Section_title
+;
+ Untersuchungen \"{u}ber tern\"{a}re Chalkogenide. VI. \"{U}ber tern\"{a}re Chalogenide des Aluminiums, Galliums und Indiums mit Zink, Cadmium und Quecksilber
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_0301428
+
+_aflow_proto 'A2BC4_tI14_82_bc_a_g' 
+_aflow_params 'a,c/a,x4,y4,z4' 
+_aflow_params_values '5.55,1.85585585586,0.26,0.25,0.13' 
+_aflow_Strukturbericht 'E3' 
+_aflow_Pearson 'tI14' 
+
+_symmetry_space_group_name_Hall "I -4"
+_symmetry_space_group_name_H-M "I -4"
+_symmetry_Int_Tables_number 82
+
+_cell_length_a    5.55000
+_cell_length_b    5.55000
+_cell_length_c    10.30000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 y,-x,-z
+4 -y,x,-z
+5 x+1/2,y+1/2,z+1/2
+6 -x+1/2,-y+1/2,z+1/2
+7 y+1/2,-x+1/2,-z+1/2
+8 -y+1/2,x+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cd1 Cd   2 a 0.00000 0.00000 0.00000 1.00000
+Al1 Al   2 b 0.00000 0.00000 0.50000 1.00000
+Al2 Al   2 c 0.00000 0.50000 0.25000 1.00000
+S1  S    8 g 0.26000 0.25000 0.13000 1.00000

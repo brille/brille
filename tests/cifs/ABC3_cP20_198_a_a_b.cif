@@ -1,0 +1,71 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sodium chlorate'
+_chemical_formula_sum 'Cl Na O3'
+
+loop_
+_publ_author_name
+ 'G. N. Ramachandran'
+ 'K. S. Chandrasekaran'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 10
+_journal_year 1957
+_journal_page_first 671
+_journal_page_last 675
+_publ_Section_title
+;
+ The absolute configuration of sodium chlorate
+;
+
+# Found in Acentric cubic NaClO$_{3}$--a new crystal for Raman lasers, 1998
+
+_aflow_title 'Sodium Chlorate (NaClO$_{3}$, $G3$) Structure'
+_aflow_proto 'ABC3_cP20_198_a_a_b'
+_aflow_params 'a,x_{1},x_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '6.57,0.417,0.064,0.303,0.592,0.5'
+_aflow_Strukturbericht '$G3$'
+_aflow_Pearson 'cP20'
+
+_symmetry_space_group_name_H-M "P 21 3"
+_symmetry_Int_Tables_number 198
+ 
+_cell_length_a    6.57000
+_cell_length_b    6.57000
+_cell_length_c    6.57000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   4 a 0.41700 0.41700 0.41700 1.00000
+Na1 Na   4 a 0.06400 0.06400 0.06400 1.00000
+O1  O   12 b 0.30300 0.59200 0.50000 1.00000

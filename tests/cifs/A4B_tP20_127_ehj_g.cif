@@ -1,0 +1,74 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'ThB4'
+_chemical_formula_sum 'B4 Th'
+
+loop_
+_publ_author_name
+ 'A. Zalkin'
+ 'D. H. Templeton'
+_journal_name_full_name
+;
+ Journal of Chemical Physics
+;
+_journal_volume 18
+_journal_year 1950
+_journal_page_first 391
+_journal_page_last 391
+_publ_Section_title
+;
+ The Crystal Structures of CeB$_{4}$, ThB$_{4}$, and UB$_{4}$
+;
+
+_aflow_title 'ThB$_{4}$ ($D1_{e}$) Structure'
+_aflow_proto 'A4B_tP20_127_ehj_g'
+_aflow_params 'a,c/a,z_{1},x_{2},x_{3},x_{4},y_{4}'
+_aflow_params_values '7.256,0.56684123484,0.2,0.31,0.1,0.2,0.04'
+_aflow_Strukturbericht '$D1_{e}$'
+_aflow_Pearson 'tP20'
+
+_symmetry_space_group_name_H-M "P 4/m 21/b 2/m"
+_symmetry_Int_Tables_number 127
+ 
+_cell_length_a    7.25600
+_cell_length_b    7.25600
+_cell_length_c    4.11300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 -y+1/2,-x+1/2,-z
+6 -y,x,z
+7 y,-x,z
+8 y+1/2,x+1/2,-z
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z
+11 x+1/2,-y+1/2,z
+12 x,y,-z
+13 y+1/2,x+1/2,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+B1  B    4 e 0.00000 0.00000 0.20000 1.00000
+Th1 Th   4 g 0.31000 0.81000 0.00000 1.00000
+B2  B    4 h 0.10000 0.60000 0.50000 1.00000
+B3  B    8 j 0.20000 0.04000 0.50000 1.00000

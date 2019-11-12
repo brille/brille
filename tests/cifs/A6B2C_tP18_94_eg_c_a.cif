@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Li2MoF6'
+_chemical_formula_sum 'F6 Li2 Mo'
+
+loop_
+_publ_author_name
+ 'G. Brunton'
+_journal_name_full_name
+;
+ Materials Research Bulletin
+;
+_journal_volume 6
+_journal_year 1971
+_journal_page_first 555
+_journal_page_last 560
+_publ_Section_title
+;
+ The crystal structure of Li$_{2}$MoF$_{6}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Li$_{2}$MoF$_{6}$ Structure'
+_aflow_proto 'A6B2C_tP18_94_eg_c_a'
+_aflow_params 'a,c/a,z_{2},x_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '4.6863209101,1.96124874637,0.6623,0.7093,0.684,0.707,0.6579'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP18'
+
+_cell_length_a    4.6863209101
+_cell_length_b    4.6863209101
+_cell_length_c    9.1910410100
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42 21 2"
+_symmetry_Int_Tables_number 94
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z+1/2
+7 y+1/2,-x+1/2,z+1/2
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mo1 Mo   2 a 0.00000 0.00000 0.00000 1.00000
+Li1 Li   4 c 0.00000 0.00000 0.66230 1.00000
+F1  F    4 e 0.70930 0.70930 0.00000 1.00000
+F2  F    8 g 0.68400 0.70700 0.65790 1.00000

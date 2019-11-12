@@ -1,0 +1,64 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Potassium chlorate'
+_chemical_formula_sum 'K Cl O3'
+ 
+loop_
+_publ_author_name
+ 'Jacob Danielsen'
+ 'Alan Hazell'
+ 'Finn Krebs Larsen'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 37
+_journal_year 1981
+_journal_page_first 913
+_journal_page_last 915
+_publ_Section_title
+;
+ The Structure of Potassium Chlorate at 77 and 298 K
+;
+
+_aflow_proto 'ABC3_mP10_11_e_e_ef' 
+_aflow_params 'a,b/a,c/a,\beta,x1,z1,x2,z2,x3,z3,x4,y4,z4' 
+_aflow_params_values '4.63,1.20259179266,1.52203023758,110.21,0.121,0.1745,0.3531,0.7086,0.4009,0.1165,0.8544,0.5361,0.6943' 
+_aflow_Strukturbericht 'G0_6' 
+_aflow_Pearson 'mP10' 
+
+_symmetry_space_group_name_Hall "-P 2yb"
+_symmetry_space_group_name_H-M "P 1 21/m 1"
+_symmetry_Int_Tables_number 11
+
+_cell_length_a    4.63000
+_cell_length_b    5.56800
+_cell_length_c    7.04700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  110.2100
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z
+3 -x,-y,-z
+4 x,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   2 e 0.12100 0.25000 0.17450 1.00000
+K1  K    2 e 0.35310 0.25000 0.70860 1.00000
+O1  O    2 e 0.40090 0.25000 0.11650 1.00000
+O2  O    4 f 0.85440 0.53610 0.69430 1.00000

@@ -1,0 +1,70 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Magnesium tetraboride'
+_chemical_formula_sum 'Mg B4'
+
+loop_
+_publ_author_name
+ 'Roger Naslain'
+ 'Alain Guette'
+ 'Michel Barret'
+_journal_name_full
+;
+Journal of Solid State Chemistry
+;
+_journal_volume 8
+_journal_year 1973
+_journal_page_first 68
+_journal_page_last 85
+_publ_Section_title
+;
+ Sur le diborure et le t\'{e}traborure de magn\'{e}sium. Consid\'{e}rations cristallochimiques sur les t\'{e}traborures
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_1906993
+
+_aflow_proto 'A4B_oP20_62_2cd_c'
+_aflow_params 'a,b/a,c/a,x1,z1,x2,z2,x3,z3,x4,y4,z4'
+_aflow_params_values '5.464,0.810395314788,1.36749633968,0.22451,0.65626,0.55801,0.6466,0.05131,0.36362,0.13079,0.0579,0.06543'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP20'
+
+_symmetry_space_group_name_Hall "-P 2ac 2n"
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+
+_cell_length_a    5.46400
+_cell_length_b    4.42800
+_cell_length_c    7.47200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+B1  B    4 c 0.22451 0.25000 0.65626 1.00000
+B2  B    4 c 0.55801 0.25000 0.64660 1.00000
+Mg1 Mg   4 c 0.05131 0.25000 0.36362 1.00000
+B3  B    8 d 0.13079 0.05790 0.06543 1.00000

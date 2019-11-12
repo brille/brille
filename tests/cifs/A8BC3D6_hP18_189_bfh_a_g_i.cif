@@ -1,0 +1,74 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\pi$-FeMg$_{3}$Al$_{8}$Si$_{6}$'
+_chemical_formula_sum 'Al8 Fe Mg3 Si6'
+
+loop_
+_publ_author_name
+ 'H. Perlitz'
+ 'A. Westgren'
+_journal_name_full_name
+;
+ Arkiv f{\"o}r Kemi, Mineralogi och Geologi
+;
+_journal_volume 15B
+_journal_year 1942
+_journal_page_first 1
+_journal_page_last 8
+_publ_Section_title
+;
+ The Crystal Structure of Al$_{8}$Si$_{6}$Mg$_{3}$Fe
+;
+
+# Found in Determination of the crystal structure of the $\pi$-AlFeMgSi phase using symmetry- and site-sensitive electron microscope techniques, 2003
+
+_aflow_title '$\pi$-FeMg$_{3}$Al$_{8}$Si$_{6}$ ($E9_{b}$) Structure'
+_aflow_proto 'A8BC3D6_hP18_189_bfh_a_g_i'
+_aflow_params 'a,c/a,x_{3},x_{4},z_{5},x_{6},z_{6}'
+_aflow_params_values '6.62,1.20241691843,0.403,0.444,0.231,0.75,0.222'
+_aflow_Strukturbericht '$E9_{b}$'
+_aflow_Pearson 'hP18'
+
+_symmetry_space_group_name_H-M "P -6 2 m"
+_symmetry_Int_Tables_number 189
+ 
+_cell_length_a    6.62000
+_cell_length_b    6.62000
+_cell_length_c    7.96000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z
+5 y,x,-z
+6 -x,-x+y,-z
+7 -x+y,-x,-z
+8 x,y,-z
+9 -y,x-y,-z
+10 -x,-x+y,z
+11 x-y,-y,z
+12 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   1 a 0.00000 0.00000 0.00000 1.00000
+Al1 Al   1 b 0.00000 0.00000 0.50000 1.00000
+Al2 Al   3 f 0.40300 0.00000 0.00000 1.00000
+Mg1 Mg   3 g 0.44400 0.00000 0.50000 1.00000
+Al3 Al   4 h 0.33333 0.66667 0.23100 1.00000
+Si1 Si   6 i 0.75000 0.00000 0.22200 1.00000

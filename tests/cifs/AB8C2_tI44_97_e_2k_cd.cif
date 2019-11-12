@@ -1,0 +1,80 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ta2Se8I'
+_chemical_formula_sum 'I Se8 Ta2'
+
+loop_
+_publ_author_name
+ 'P. Gressier'
+ 'A. Meerschaut'
+ 'L. Guemas'
+ 'J. Rouxel'
+ 'P. Monceau'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 51
+_journal_year 1984
+_journal_page_first 141
+_journal_page_last 151
+_publ_Section_title
+;
+ Characterization of the new series of quasi one-dimensional compounds ($MX_{4}$)$_{n}Y$ ($M$ = Nb, Ta; $X$ = S, Se; $Y$ = Br, I)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Ta$_{2}$Se$_{8}$I Structure'
+_aflow_proto 'AB8C2_tI44_97_e_2k_cd'
+_aflow_params 'a,c/a,z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '9.5317026755,1.33879580768,0.1553,0.0449,0.284,0.3693,0.312,0.1212,0.1191'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI44'
+
+_cell_length_a    9.5317026755
+_cell_length_b    9.5317026755
+_cell_length_c    12.7610035820
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 4 2 2"
+_symmetry_Int_Tables_number 97
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -y+1/2,-x+1/2,-z+1/2
+14 -y+1/2,x+1/2,z+1/2
+15 y+1/2,-x+1/2,z+1/2
+16 y+1/2,x+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ta1 Ta   4 c 0.00000 0.50000 0.00000 1.00000
+Ta2 Ta   4 d 0.00000 0.50000 0.25000 1.00000
+I1  I    4 e 0.00000 0.00000 0.15530 1.00000
+Se1 Se  16 k 0.04490 0.28400 0.36930 1.00000
+Se2 Se  16 k 0.31200 0.12120 0.11910 1.00000

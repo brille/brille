@@ -1,0 +1,72 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H3Cl'
+_chemical_formula_sum 'Cl H3'
+
+loop_
+_publ_author_name
+ 'D. Duan'
+ 'X. Huang'
+ 'F. Tian'
+ 'Y. Liu'
+ 'Da Li'
+ 'H. Yu'
+ 'B. Liu'
+ 'W. Tian'
+ 'T. Cui'
+_journal_name_full_name
+;
+ Journal of Physical Chemistry A
+;
+_journal_volume 119
+_journal_year 2015
+_journal_page_first 11059
+_journal_page_last 11065
+_publ_Section_title
+;
+ Predicted Formation of H$_{3}^{+}$ in Solid Halogen Polyhydrides at High Pressures
+;
+
+_aflow_title 'H$_{3}$Cl (50~GPa) Structure'
+_aflow_proto 'AB3_mC16_15_e_cf'
+_aflow_params 'a,b/a,c/a,\beta,y_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '3.282,2.64137720902,0.970749542962,91.9,0.86,0.577,0.068,0.169'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mC16'
+
+_symmetry_space_group_name_H-M "C 1 2/c 1"
+_symmetry_Int_Tables_number 15
+ 
+_cell_length_a    3.28200
+_cell_length_b    8.66900
+_cell_length_c    3.18600
+_cell_angle_alpha 90.00000
+_cell_angle_beta  91.90000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z+1/2
+3 -x,-y,-z
+4 x,-y,z+1/2
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z+1/2
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1  H    4 c 0.25000 0.25000 0.00000 1.00000
+Cl1 Cl   4 e 0.00000 0.86000 0.25000 1.00000
+H2  H    8 f 0.57700 0.06800 0.16900 1.00000

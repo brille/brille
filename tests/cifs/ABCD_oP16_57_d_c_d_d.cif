@@ -1,0 +1,70 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Potassium thiocyanate'
+_chemical_formula_sum 'K C N S'
+ 
+loop_
+_publ_author_name
+ 'D. J. Cookson'
+ 'M. M. Elcombe'
+ 'T. R. Finlayson'
+_journal_name_full
+;
+Journal of Physics: Condensed Matter
+;
+_journal_volume 4
+_journal_year 1992
+_journal_page_first 7851
+_journal_page_last 7864
+_publ_Section_title
+;
+ Phonon dispersion relations for potassium thiocyanate at and above room temperature
+;
+
+# Found in  http://materials.springer.com/lb/docs/sm_lbs_978-3-540-31353-3_141
+
+_aflow_proto 'ABCD_oP16_57_d_c_d_d' 
+_aflow_params 'a,b/a,c/a,x1,x2,y2,x3,y3,x4,y4' 
+_aflow_params_values '6.707,0.997614432682,1.13627553303,0.208,0.7704,0.2871,0.889,0.4154,0.605,0.1087' 
+_aflow_Strukturbericht 'F5_9' 
+_aflow_Pearson 'oP16' 
+
+_symmetry_space_group_name_Hall "-P 2c 2b"
+_symmetry_space_group_name_H-M "P b c m"
+_symmetry_Int_Tables_number 57
+
+_cell_length_a    6.70700
+_cell_length_b    6.69100
+_cell_length_c    7.62100
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x,-y,z+1/2
+5 -x,-y,-z
+6 -x,y+1/2,z
+7 x,-y+1/2,z+1/2
+8 x,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+K1 K   4 c 0.20800 0.25000 0.00000 1.00000
+C1 C   4 d 0.77040 0.28710 0.25000 1.00000
+N1 N   4 d 0.88900 0.41540 0.25000 1.00000
+S1 S   4 d 0.60500 0.10870 0.25000 1.00000

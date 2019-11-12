@@ -1,0 +1,69 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'alpha-CuAlCl4'
+_chemical_formula_sum 'Al Cl4 Cu'
+
+loop_
+_publ_author_name
+ 'J. D. Martin'
+ 'B. R. Leafblad'
+ 'R. M. Sullivan'
+ 'P. D. Boyle'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 37
+_journal_year 1998
+_journal_page_first 1341
+_journal_page_last 1346
+_publ_Section_title
+;
+ $\alpha$-and $\beta$-CuAlCl$_{4}$: Framework Construction Using Corner-Shared Tetrahedral Metal-Halide Building Blocks
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title '$\alpha$-CuAlCl$_{4}$ Structure'
+_aflow_proto 'AB4C_tP12_112_b_n_e'
+_aflow_params 'a,c/a,x_{3},y_{3},z_{3}'
+_aflow_params_values '5.4410982776,1.85862633019,0.2334,0.2761,0.6295'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP12'
+
+_cell_length_a    5.4410982776
+_cell_length_b    5.4410982776
+_cell_length_c    10.1129685239
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 2 c"
+_symmetry_Int_Tables_number 112
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 y,x,z+1/2
+6 y,-x,-z
+7 -y,x,-z
+8 -y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   2 b 0.50000 0.00000 0.25000 1.00000
+Cu1 Cu   2 e 0.00000 0.00000 0.00000 1.00000
+Cl1 Cl   8 n 0.23340 0.27610 0.62950 1.00000

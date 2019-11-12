@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'NaFeS2'
+_chemical_formula_sum 'Fe Na S2'
+
+loop_
+_publ_author_name
+ 'H. Boller'
+ 'H. Blaha'
+_journal_name_full_name
+;
+ Monatshefte f{\"u}r Chemie - Chemical Monthly
+;
+_journal_volume 114
+_journal_year 1983
+_journal_page_first 145
+_journal_page_last 154
+_publ_Section_title
+;
+ Zur Kenntnis des Natriumthioferrates (III)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'NaFeS$_{2}$ Structure'
+_aflow_proto 'ABC2_oI16_23_ab_i_k'
+_aflow_params 'a,b/a,c/a,z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '5.3999384419,1.15740740741,2.00555555555,0.28,0.25,0.2,0.115'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI16'
+
+_cell_length_a    5.3999384419
+_cell_length_b    6.2499287522
+_cell_length_c    10.8298765418
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 2 2 2"
+_symmetry_Int_Tables_number 23
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,-z+1/2
+7 -x+1/2,y+1/2,-z+1/2
+8 -x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   2 a 0.00000 0.00000 0.00000 1.00000
+Fe2 Fe   2 b 0.50000 0.00000 0.00000 1.00000
+Na1 Na   4 i 0.00000 0.00000 0.28000 1.00000
+S1  S    8 k 0.25000 0.20000 0.11500 1.00000

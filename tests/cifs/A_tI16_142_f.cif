@@ -1,0 +1,91 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'S-III'
+_chemical_formula_sum 'S'
+
+loop_
+_publ_author_name
+ 'Olga Degtyareva'
+ 'Eugene Gregoryanz'
+ 'Maddury Somayazulu'
+ 'Przemyslaw Dera'
+ 'Ho-kwang Mao'
+ 'Russell J. Hemley'
+_journal_name_full_name
+;
+ Nature Materials
+;
+_journal_volume 4
+_journal_year 2005
+_journal_page_first 152
+_journal_page_last 155
+_publ_Section_title
+;
+ Novel chain structures in group VI elements
+;
+
+_aflow_title 'S-III Structure'
+_aflow_proto 'A_tI16_142_f'
+_aflow_params 'a,c/a,x_{1}'
+_aflow_params_values '8.5939,0.420984651904,0.1405'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI16'
+
+_symmetry_space_group_name_H-M "I 41/a 2/c 2/d (origin choice 2)"
+_symmetry_Int_Tables_number 142
+ 
+_cell_length_a    8.59390
+_cell_length_b    8.59390
+_cell_length_c    3.61790
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 -y+1/4,-x+1/4,-z+1/4
+6 -y+1/4,x+3/4,z+1/4
+7 y+3/4,-x+3/4,z+1/4
+8 y+3/4,x+1/4,-z+1/4
+9 -x,-y,-z
+10 -x,y,z+1/2
+11 x,-y+1/2,z+1/2
+12 x,y+1/2,-z
+13 y+1/4,x+1/4,z+1/4
+14 y+3/4,-x+1/4,-z+3/4
+15 -y+1/4,x+1/4,-z+3/4
+16 -y+3/4,-x+1/4,z+1/4
+17 x+1/2,y+1/2,z+1/2
+18 x,-y,-z+1/2
+19 -x,y+1/2,-z+1/2
+20 -x+1/2,-y,z+1/2
+21 -y+3/4,-x+3/4,-z+3/4
+22 -y+3/4,x+1/4,z+3/4
+23 y+1/4,-x+1/4,z+3/4
+24 y+1/4,x+3/4,-z+3/4
+25 -x+1/2,-y+1/2,-z+1/2
+26 -x+1/2,y+1/2,z
+27 x+1/2,-y,z
+28 x+1/2,y,-z+1/2
+29 y+3/4,x+3/4,z+3/4
+30 y+1/4,-x+3/4,-z+1/4
+31 -y+3/4,x+3/4,-z+1/4
+32 -y+1/4,-x+3/4,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1 S  16 f 0.14050 0.39050 0.12500 1.00000

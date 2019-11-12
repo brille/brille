@@ -1,0 +1,95 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ga2 Hf'
+
+loop_
+_publ_author_name
+ 'K. Schubert', 
+ 'H. G. Meissner', 
+ 'M. P{\"o}tzschke'
+ 'W. Rossteutscher'
+ 'E. Stolz'
+_journal_name_full
+;
+Naturwissenschaften
+;
+_journal_volume 49
+_journal_year 1962
+_journal_page_first 57
+_journal_page_last 57
+_publ_Section_title
+;
+ Einige Strukturdaten metallischer Phasen (7)
+;
+
+# Found in  Pearson, Vol. III, pp. 3436
+
+_aflow_proto 'A2B_tI24_141_2e_e'
+_aflow_params 'a,c/a,z1,z2,z3'
+_aflow_params_values '4.046,6.28917449333,0.125,0.289,-0.051'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI24'
+
+_symmetry_space_group_name_Hall "-I 4bd 2"
+_symmetry_space_group_name_H-M "I 41/a m d:2"
+_symmetry_Int_Tables_number 141
+
+_cell_length_a    4.04600
+_cell_length_b    4.04600
+_cell_length_c    25.44600
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y+1/2,-z
+4 -x,-y+1/2,z
+5 -y+1/4,-x+1/4,-z+3/4
+6 -y+1/4,x+3/4,z+1/4
+7 y+3/4,-x+3/4,z+1/4
+8 y+3/4,x+1/4,-z+3/4
+9 -x,-y,-z
+10 -x,y,z
+11 x,-y+1/2,z
+12 x,y+1/2,-z
+13 y+3/4,x+3/4,z+1/4
+14 y+3/4,-x+1/4,-z+3/4
+15 -y+1/4,x+1/4,-z+3/4
+16 -y+1/4,-x+3/4,z+1/4
+17 x+1/2,y+1/2,z+1/2
+18 x+1/2,-y+1/2,-z+1/2
+19 -x+1/2,y,-z+1/2
+20 -x+1/2,-y,z+1/2
+21 -y+3/4,-x+3/4,-z+1/4
+22 -y+3/4,x+1/4,z+3/4
+23 y+1/4,-x+1/4,z+3/4
+24 y+1/4,x+3/4,-z+1/4
+25 -x+1/2,-y+1/2,-z+1/2
+26 -x+1/2,y+1/2,z+1/2
+27 x+1/2,-y,z+1/2
+28 x+1/2,y,-z+1/2
+29 y+1/4,x+1/4,z+3/4
+30 y+1/4,-x+3/4,-z+1/4
+31 -y+3/4,x+3/4,-z+1/4
+32 -y+3/4,-x+1/4,z+3/4
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ga1 Ga   8 e 0.00000 0.25000 0.12500  1.00000
+Ga2 Ga   8 e 0.00000 0.25000 0.28900  1.00000
+Hf1 Hf   8 e 0.00000 0.25000 -0.05100  1.00000

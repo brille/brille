@@ -1,0 +1,60 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'High Pressure (4-7GPa) Tellurium'
+_chemical_formula_sum 'Te'
+ 
+loop_
+_publ_author_name
+ 'Katsutoshi Aoki'
+ 'Osamu Shimomura'
+ 'Shigeru Minomura'
+_journal_name_full
+;
+Journal of the Physical Society of Japan
+;
+_journal_volume 48
+_journal_year 1980
+_journal_page_first 551
+_journal_page_last 556
+_publ_Section_title
+;
+ Crystal Structure of the High-Pressure Phase of Tellurium
+;
+
+_aflow_proto 'A_mP4_4_2a' 
+_aflow_params 'a,b/a,c/a,\beta,x1,y1,z1,x2,y2,z2' 
+_aflow_params_values '3.104,2.42042525773,1.53350515464,92.71,0.25,0.23,0.48,0.48,0.0,0.02' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mP4' 
+
+_symmetry_space_group_name_Hall "P 2yb"
+_symmetry_space_group_name_H-M "P 1 21 1"
+_symmetry_Int_Tables_number 4
+
+_cell_length_a    3.10400
+_cell_length_b    7.51300
+_cell_length_c    4.76000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  92.71000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Te1 Te   2 a 0.25000 0.23000 0.48000 1.00000
+Te2 Te   2 a 0.48000 0.00000 0.02000 1.00000

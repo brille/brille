@@ -1,0 +1,71 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BiGaO3'
+_chemical_formula_sum 'Bi Ga O3'
+
+loop_
+_publ_author_name
+ 'H. Yusa'
+ 'A. A. Belik'
+ 'E. {Takayama-Muromachi}'
+ 'N. Hirao'
+ 'Y. Ohishi'
+_journal_name_full_name
+;
+ Physical Review B
+;
+_journal_volume 80
+_journal_year 2009
+_journal_page_first 214103
+_journal_page_last 214103
+_publ_Section_title
+;
+ High-pressure phase transitions in Bi$M$O$_{3}$ ($M$ = Al, Ga, and In): {\it In situ} x-ray diffraction and Raman scattering experiments
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BiGaO$_{3}$ Structure'
+_aflow_proto 'ABC3_oP20_54_e_d_cf'
+_aflow_params 'a,b/a,c/a,y_{1},z_{2},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '5.3467489374,0.956627452436,1.81710213776,0.8667,0.6417,0.8902,0.4055,0.2686,0.5503'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP20'
+
+_cell_length_a    5.3467489374
+_cell_length_b    5.1148468148
+_cell_length_c    9.7155889242
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 21/c 2/c 2/a"
+_symmetry_Int_Tables_number 54
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x+1/2,-y,z
+5 -x,-y,-z
+6 -x+1/2,y,z+1/2
+7 x,-y,z+1/2
+8 x+1/2,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 c 0.00000 0.86670 0.25000 1.00000
+Ga1 Ga   4 d 0.25000 0.00000 0.64170 1.00000
+Bi1 Bi   4 e 0.25000 0.50000 0.89020 1.00000
+O2  O    8 f 0.40550 0.26860 0.55030 1.00000

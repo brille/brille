@@ -1,0 +1,76 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Hg I2'
+
+loop_
+_publ_author_name
+ 'D. Schwarzenbach'
+ 'H. Birkedal'
+ 'M. Hostettler'
+ 'P. Fischer'
+_journal_name_full_name
+;
+ Acta Crystallographica Section B: Structural Science
+;
+_journal_volume 63
+_journal_year 2007
+_journal_page_first 826
+_journal_page_last 835
+_publ_Section_title
+;
+ Neutron diffraction investigation of the temperature dependence of crystal structure and thermal motions of red HgI$_{2}$
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title 'HgI$_{2}$ ($C13$) Structure'
+_aflow_proto 'AB2_tP6_137_a_d'
+_aflow_params 'a,c/a,z_{2}'
+_aflow_params_values '4.3675,2.8551803091,0.389'
+_aflow_Strukturbericht '$C13$'
+_aflow_Pearson 'tP6'
+
+_symmetry_space_group_name_H-M "P 42/n 21/m 2/c (origin choice 2)"
+_symmetry_Int_Tables_number 137
+ 
+_cell_length_a    4.36750
+_cell_length_b    4.36750
+_cell_length_c    12.47000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z
+3 -x,y+1/2,-z
+4 -x+1/2,-y+1/2,z
+5 -y,-x,-z+1/2
+6 -y+1/2,x,z+1/2
+7 y,-x+1/2,z+1/2
+8 y+1/2,x+1/2,-z+1/2
+9 -x,-y,-z
+10 -x+1/2,y,z
+11 x,-y+1/2,z
+12 x+1/2,y+1/2,-z
+13 y,x,z+1/2
+14 y+1/2,-x,-z+1/2
+15 -y,x+1/2,-z+1/2
+16 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Hg1 Hg   2 a 0.75000 0.25000 0.75000 1.00000
+I1  I    4 d 0.25000 0.25000 0.38900 1.00000

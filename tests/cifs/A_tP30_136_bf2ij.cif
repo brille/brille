@@ -1,0 +1,78 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta Uranium'
+_chemical_formula_sum 'U'
+ 
+loop_
+_publ_author_name
+ 'Charles W. Tucker, Jr.'
+ 'Peter Senio'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 6
+_journal_year 1953
+_journal_page_first 753
+_journal_page_last 760
+_publ_Section_title
+;
+ An improved determination of the crystal structure of $\beta$-uranium
+;
+
+# Found in  Donohue, pp. 134-147
+
+_aflow_proto 'A_tP30_136_bf2ij' 
+_aflow_params 'a,c/a,x2,x3,y3,x4,y4,x5,z5' 
+_aflow_params_values '10.59,0.532011331445,0.1033,0.3667,0.0383,0.5608,0.2354,0.3183,0.27' 
+_aflow_Strukturbericht 'A_b' 
+_aflow_Pearson 'tP30' 
+
+_symmetry_space_group_name_Hall "-P 4n 2n"
+_symmetry_space_group_name_H-M "P 42/m n m"
+_symmetry_Int_Tables_number 136
+
+_cell_length_a    10.59000
+_cell_length_b    10.59000
+_cell_length_c    5.63400
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z+1/2
+7 y+1/2,-x+1/2,z+1/2
+8 y,x,-z
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z+1/2
+11 x+1/2,-y+1/2,z+1/2
+12 x,y,-z
+13 y,x,z
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+U1 U   2 b 0.00000 0.00000 0.50000 1.00000
+U2 U   4 f 0.10330 0.10330 0.00000 1.00000
+U3 U   8 i 0.36670 0.03830 0.00000 1.00000
+U4 U   8 i 0.56080 0.23540 0.00000 1.00000
+U5 U   8 j 0.31830 0.31830 0.27000 1.00000

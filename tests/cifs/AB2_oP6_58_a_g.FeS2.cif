@@ -1,0 +1,71 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Marcasite'
+_chemical_formula_sum 'Fe S2'
+ 
+loop_
+_publ_author_name
+ 'Milan Rieder'
+ 'John C. Crelling'
+ 'Ond\v{r}ej \v{S}ustai'
+ 'Milan Dr\'{a}bek'
+ 'Zden\v{e}k Weiss'
+ 'Mariana Klementov\'{a,'
+_journal_name_full
+;
+International Journal of Coal Geology
+;
+_journal_volume 71
+_journal_year 2007
+_journal_page_first 115
+_journal_page_last 121
+_publ_Section_title
+;
+ Arsenic in iron disulfides in a brown coal from the North Bohemian Basin, Czech Republic
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB2_oP6_58_a_g' 
+_aflow_params 'a,b/a,c/a,x2,y2' 
+_aflow_params_values '4.4446,1.22049228277,0.761913333033,0.2004,0.3787' 
+_aflow_Strukturbericht 'C18' 
+_aflow_Pearson 'oP6' 
+
+_symmetry_space_group_name_Hall "-P 2 2n"
+_symmetry_space_group_name_H-M "P n n m"
+_symmetry_Int_Tables_number 58
+
+_cell_length_a    4.44460
+_cell_length_b    5.42460
+_cell_length_c    3.38640
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x+1/2,-y+1/2,z+1/2
+8 x,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   2 a 0.00000 0.00000 0.00000 1.00000
+S1  S    4 g 0.20040 0.37870 0.00000 1.00000 

@@ -1,0 +1,96 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Calcite'
+_chemical_formula_sum 'Ca C O3'
+ 
+loop_
+_publ_author_name
+ 'S. A. Markgraf'
+ 'R. J. Reeder'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 70
+_journal_year 1985
+_journal_page_first 590
+_journal_page_last 600
+_publ_Section_title
+;
+ High-temperature structure refinements of calcite and magnesite
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'ABC3_hR10_167_a_b_e' 
+_aflow_params 'a,c/a,x3' 
+_aflow_params_values '4.988,3.42040898156,0.5067' 
+_aflow_Strukturbericht 'G0_1' 
+_aflow_Pearson 'hR10' 
+
+_symmetry_space_group_name_Hall "-R 3 2c"
+_symmetry_space_group_name_H-M "R -3 c:H"
+_symmetry_Int_Tables_number 167
+
+_cell_length_a    4.98800
+_cell_length_b    4.98800
+_cell_length_c    17.06100
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 y,x,-z+1/2
+5 -x,-x+y,-z+1/2
+6 x-y,-y,-z+1/2
+7 -x,-y,-z
+8 y,-x+y,-z
+9 x-y,x,-z
+10 -y,-x,z+1/2
+11 x,x-y,z+1/2
+12 -x+y,y,z+1/2
+13 x+1/3,y+2/3,z+2/3
+14 -y+1/3,x-y+2/3,z+2/3
+15 -x+y+1/3,-x+2/3,z+2/3
+16 y+1/3,x+2/3,-z+1/6
+17 -x+1/3,-x+y+2/3,-z+1/6
+18 x-y+1/3,-y+2/3,-z+1/6
+19 -x+1/3,-y+2/3,-z+2/3
+20 y+1/3,-x+y+2/3,-z+2/3
+21 x-y+1/3,x+2/3,-z+2/3
+22 -y+1/3,-x+2/3,z+1/6
+23 x+1/3,x-y+2/3,z+1/6
+24 -x+y+1/3,y+2/3,z+1/6
+25 x+2/3,y+1/3,z+1/3
+26 -y+2/3,x-y+1/3,z+1/3
+27 -x+y+2/3,-x+1/3,z+1/3
+28 y+2/3,x+1/3,-z+5/6
+29 -x+2/3,-x+y+1/3,-z+5/6
+30 x-y+2/3,-y+1/3,-z+5/6
+31 -x+2/3,-y+1/3,-z+1/3
+32 y+2/3,-x+y+1/3,-z+1/3
+33 x-y+2/3,x+1/3,-z+1/3
+34 -y+2/3,-x+1/3,z+5/6
+35 x+2/3,x-y+1/3,z+5/6
+36 -x+y+2/3,y+1/3,z+5/6
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    6 a 0.00000 0.00000 0.25000 1.00000
+Ca1 Ca   6 b 0.00000 0.00000 0.00000 1.00000
+O1  O   18 e 0.74330 0.00000 0.25000 1.00000

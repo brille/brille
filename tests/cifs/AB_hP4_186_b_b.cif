@@ -1,0 +1,71 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Wurtzite'
+_chemical_formula_sum 'Zn S'
+ 
+loop_
+_publ_author_name
+ 'Erich H. Kisi'
+ 'Margaret M. Elcombe'
+_journal_name_full
+;
+Acta Crystallographica C
+;
+_journal_volume 45
+_journal_year 1989
+_journal_page_first 1867
+_journal_page_last 1870
+_publ_Section_title
+;
+ $u$ parameters for the wurtzite structure of ZnS and ZnO using powder neutron diffraction
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB_hP4_186_b_b' 
+_aflow_params 'a,c/a,z1,z2' 
+_aflow_params_values '3.8227,1.63776911607,0.3748,0.0' 
+_aflow_Strukturbericht 'B4' 
+_aflow_Pearson 'hP4' 
+
+_symmetry_space_group_name_Hall "P 6c -2c"
+_symmetry_space_group_name_H-M "P 63 m c"
+_symmetry_Int_Tables_number 186
+
+_cell_length_a    3.82270
+_cell_length_b    3.82270
+_cell_length_c    6.26070
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z
+8 -x,-x+y,z+1/2
+9 -y,-x,z
+10 x-y,-y,z+1/2
+11 x,x-y,z
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1  S    2 b 0.33333 0.66667 0.37480 1.00000
+Zn1 Zn   2 b 0.33333 0.66667 0.00000 1.00000

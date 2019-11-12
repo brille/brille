@@ -1,0 +1,69 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'alpha Pu'
+_chemical_formula_sum 'Pu'
+ 
+loop_
+_publ_author_name
+ 'W. H. Zachariasen'
+ 'F. H. Ellinger'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 16
+_journal_year 1963
+_journal_page_first 777
+_journal_page_last 783
+_publ_Section_title
+;
+ The Crystal Structure of Alpha Plutonium Metal
+;
+
+# Found in  Donohue, pp. 159-162
+
+_aflow_proto 'A_mP16_11_8e' 
+_aflow_params 'a,b/a,c/a,\beta,x1,z1,x2,z2,x3,z3,x4,z4,x5,z5,x6,z6,x7,z7,x8,z8' 
+_aflow_params_values '6.183,0.779880316998,1.77308749798,101.79,0.345,0.162,0.767,0.168,0.128,0.34,0.657,0.457,0.025,0.618,0.473,0.653,0.328,-0.074,0.869,0.894' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mP16' 
+
+_symmetry_space_group_name_Hall "-P 2yb"
+_symmetry_space_group_name_H-M "P 1 21/m 1"
+_symmetry_Int_Tables_number 11
+
+_cell_length_a    6.18300
+_cell_length_b    4.82200
+_cell_length_c    10.96300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  101.79000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z
+3 -x,-y,-z
+4 x,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pu1 Pu   2 e 0.34500 0.25000 0.16200  1.00000
+Pu2 Pu   2 e 0.76700 0.25000 0.16800  1.00000
+Pu3 Pu   2 e 0.12800 0.25000 0.34000  1.00000
+Pu4 Pu   2 e 0.65700 0.25000 0.45700  1.00000
+Pu5 Pu   2 e 0.02500 0.25000 0.61800  1.00000
+Pu6 Pu   2 e 0.47300 0.25000 0.65300  1.00000
+Pu7 Pu   2 e 0.32800 0.25000 -0.07400 1.00000
+Pu8 Pu   2 e 0.86900 0.25000 0.89400  1.00000

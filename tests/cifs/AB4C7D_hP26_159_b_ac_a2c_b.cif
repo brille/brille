@@ -1,0 +1,74 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'YbBaCo4O7'
+_chemical_formula_sum 'Ba Co4 O7 Yb'
+
+loop_
+_publ_author_name
+ 'A. Huq'
+ 'J. F. Mitchell'
+ 'H. Zheng'
+ 'L. C. Chapon'
+ 'P. G. Radaelli'
+ 'K. S. Knight'
+ 'P. W. Stephens'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 179
+_journal_year 2006
+_journal_page_first 1136
+_journal_page_last 1145
+_publ_Section_title
+;
+ Structural and magnetic properties of the Kagom{\\'e} antiferromagnet YbBaCo$_{4}$O$_{7}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'YbBaCo$_{4}$O$_{7}$ Structure'
+_aflow_proto 'AB4C7D_hP26_159_b_ac_a2c_b'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '6.2653109789,1.6324735851,0.0,0.3057,0.0613,0.4379,0.3425,0.1575,0.2472,0.0015,0.5149,0.3102,0.3347,0.1157,0.0618'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP26'
+
+_cell_length_a    6.2653109789
+_cell_length_b    6.2653109789
+_cell_length_c    10.2279546755
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 3 1 c"
+_symmetry_Int_Tables_number 159
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 -x,-x+y,z+1/2
+5 x-y,-y,z+1/2
+6 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Co1 Co   2 a 0.00000 0.00000 0.00000 1.00000
+O1  O    2 a 0.00000 0.00000 0.30570 1.00000
+Ba1 Ba   2 b 0.33333 0.66667 0.06130 1.00000
+Yb1 Yb   2 b 0.33333 0.66667 0.43790 1.00000
+Co2 Co   6 c 0.34250 0.15750 0.24720 1.00000
+O2  O    6 c 0.00150 0.51490 0.31020 1.00000
+O3  O    6 c 0.33470 0.11570 0.06180 1.00000

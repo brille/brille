@@ -1,0 +1,110 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ca3Al2O6'
+_chemical_formula_sum 'Al2 Ca3 O6'
+
+loop_
+_publ_author_name
+ 'F. A. Steele'
+ 'W. P. Davey'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 51
+_journal_year 1929
+_journal_page_first 2283
+_journal_page_last 2293
+_publ_Section_title
+;
+ The Crystal Structure of Tricalcium Aluminate
+;
+
+# Found in The crystal structure of tricalcium aluminate, Ca$_{3}$Al$_{2}$O$_{6}$, 1975
+
+_aflow_title 'Ca$_{3}$Al$_{2}$O$_{6}$ ($E9_{1}$) Structure'
+_aflow_proto 'A2B3C6_cP33_221_cd_ag_fh'
+_aflow_params 'a,x_{4},x_{5},x_{6}'
+_aflow_params_values '7.624,0.3,0.2,0.2'
+_aflow_Strukturbericht '$E9_{1}$'
+_aflow_Pearson 'cP33'
+
+_symmetry_space_group_name_H-M "P 4/m -3 2/m"
+_symmetry_Int_Tables_number 221
+ 
+_cell_length_a    7.62400
+_cell_length_b    7.62400
+_cell_length_c    7.62400
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -y,-x,-z
+14 -y,x,z
+15 y,-x,z
+16 y,x,-z
+17 -x,-z,-y
+18 -x,z,y
+19 x,-z,y
+20 x,z,-y
+21 -z,-y,-x
+22 -z,y,x
+23 z,-y,x
+24 z,y,-x
+25 -x,-y,-z
+26 -x,y,z
+27 x,-y,z
+28 x,y,-z
+29 -y,-z,-x
+30 -y,z,x
+31 y,-z,x
+32 y,z,-x
+33 -z,-x,-y
+34 -z,x,y
+35 z,-x,y
+36 z,x,-y
+37 y,x,z
+38 y,-x,-z
+39 -y,x,-z
+40 -y,-x,z
+41 x,z,y
+42 x,-z,-y
+43 -x,z,-y
+44 -x,-z,y
+45 z,y,x
+46 z,-y,-x
+47 -z,y,-x
+48 -z,-y,x
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ca1 Ca   1 a 0.00000 0.00000 0.00000 1.00000
+Al1 Al   3 c 0.00000 0.50000 0.50000 1.00000
+Al2 Al   3 d 0.50000 0.00000 0.00000 1.00000
+O1  O    6 f 0.30000 0.50000 0.50000 1.00000
+Ca2 Ca   8 g 0.20000 0.20000 0.20000 1.00000
+O2  O   12 h 0.20000 0.50000 0.00000 1.00000

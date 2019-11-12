@@ -1,0 +1,76 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Downeyite'
+_chemical_formula_sum 'O2 Se'
+
+loop_
+_publ_author_name
+ 'K. St{\aa}hl'
+ 'J. P. Legros'
+ 'J. Galy'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 202
+_journal_year 1992
+_journal_page_first 99
+_journal_page_last 107
+_publ_Section_title
+;
+ The crystal structure of SeO$_{2}$ at 139 and 286 K
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title 'Downeyite (SeO$_{2}$, $C47$) Structure'
+_aflow_proto 'A2B_tP24_135_gh_h'
+_aflow_params 'a,c/a,x_{1},x_{2},y_{2},x_{3},y_{3}'
+_aflow_params_values '8.3218,0.607332548247,0.36248,-0.05789,0.17358,0.13396,0.20929'
+_aflow_Strukturbericht '$C47$'
+_aflow_Pearson 'tP24'
+
+_symmetry_space_group_name_H-M "P 42/m 21/b 2/c"
+_symmetry_Int_Tables_number 135
+ 
+_cell_length_a    8.32180
+_cell_length_b    8.32180
+_cell_length_c    5.05410
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 -y+1/2,-x+1/2,-z+1/2
+6 -y,x,z+1/2
+7 y,-x,z+1/2
+8 y+1/2,x+1/2,-z+1/2
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z
+11 x+1/2,-y+1/2,z
+12 x,y,-z
+13 y+1/2,x+1/2,z+1/2
+14 y,-x,-z+1/2
+15 -y,x,-z+1/2
+16 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    8 g 0.36248 0.86248 0.25000 1.00000
+O2  O    8 h -0.05789 0.17358 0.00000 1.00000
+Se1 Se   8 h 0.13396 0.20929 0.00000 1.00000

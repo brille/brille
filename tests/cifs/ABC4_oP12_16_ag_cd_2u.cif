@@ -1,0 +1,65 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Al P S4'
+ 
+loop_
+_publ_author_name
+ 'A. Weiss'
+ 'H. Sch{\"a}fer'
+_journal_name_full
+;
+Naturwissenschaften
+;
+_journal_volume 47
+_journal_year 1960
+_journal_page_first 495
+_journal_page_last 495
+_publ_Section_title
+;
+ Zur Kenntnis von Aluminiumthiophosphat AlPS$_4$
+;
+
+_aflow_proto 'ABC4_oP12_16_ag_cd_2u' 
+_aflow_params 'a,b/a,c/a,x5,y5,z5,x6,y6,z6' 
+_aflow_params_values '5.61,1.01069518717,1.61319073084,0.2,0.26,0.125,0.74,0.8,0.63' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP12' 
+
+_symmetry_space_group_name_Hall "P 2 2"
+_symmetry_space_group_name_H-M "P 2 2 2"
+_symmetry_Int_Tables_number 16
+
+_cell_length_a    5.61000
+_cell_length_b    5.67000
+_cell_length_c    9.05000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   1 a 0.00000 0.00000 0.00000 1.00000
+P1  P    1 c 0.00000 0.50000 0.00000 1.00000
+P2  P    1 d 0.00000 0.00000 0.50000 1.00000
+Al2 Al   1 g 0.00000 0.50000 0.50000 1.00000
+S1  S    4 u 0.20000 0.26000 0.12500 1.00000
+S2  S    4 u 0.74000 0.80000 0.63000 1.00000

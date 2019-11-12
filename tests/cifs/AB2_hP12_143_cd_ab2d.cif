@@ -1,0 +1,66 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'MoS2'
+_chemical_formula_sum 'Mo S2'
+
+loop_
+_publ_author_name
+ 'K. E. Dungey'
+ 'M. D. Curtis'
+ 'J. E. {Penner-Hahn}'
+_journal_name_full_name
+;
+ Chemistry of Materials
+;
+_journal_volume 10
+_journal_year 1998
+_journal_page_first 2152
+_journal_page_last 2161
+_publ_Section_title
+;
+ Structural characterization and thermal stability of MoS$_{2}$ intercalation compounds
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'MoS$_{2}$ Structure'
+_aflow_proto 'AB2_hP12_143_cd_ab2d'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '6.5003859369,0.944615384626,0.0,0.5,0.25,0.0548,0.2679,0.25,0.33333,0.16667,0.5,0.0,0.5,0.0'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP12'
+
+_cell_length_a    6.5003859369
+_cell_length_b    6.5003859369
+_cell_length_c    6.1403645620
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 3"
+_symmetry_Int_Tables_number 143
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1  S    1 a 0.00000 0.00000 0.00000 1.00000
+S2  S    1 b 0.33333 0.66667 0.50000 1.00000
+Mo1 Mo   1 c 0.66667 0.33333 0.25000 1.00000
+Mo2 Mo   3 d 0.05480 0.26790 0.25000 1.00000
+S3  S    3 d 0.33333 0.16667 0.50000 1.00000
+S4  S    3 d 0.00000 0.50000 0.00000 1.00000

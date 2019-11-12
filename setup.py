@@ -91,7 +91,7 @@ class CMakeBuild(build_ext):
             ['cmake', ext.sourcedir] + cmake_args,
             cwd=self.build_temp, env=env)
         check_call(
-            ['cmake', '--build', '.', '--target', "_symbz"] + build_args,
+            ['cmake', '--build', '.', '--target', "_fibril"] + build_args,
             cwd=self.build_temp)
 
 
@@ -99,17 +99,17 @@ with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
 KEYWORDARGS = dict(
-    name='symbz',
+    name='fibril',
     version=get_version_info()[3],
     author='Greg Tucker',
     author_email='greg.tucker@stfc.ac.uk',
-    description='First Brillouin zone symmetry and interpolation.',
+    description='First irreducible Brillouin zone symmetry and interpolation.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    ext_modules=[CMakeExtension('symbz._symbz')],
+    ext_modules=[CMakeExtension('fibril._fibril')],
     packages=find_packages(),
     cmdclass=dict(build_ext=CMakeBuild),
-    url="https://github.com/g5t/symbz",
+    url="https://github.com/g5t/fibril",
     zip_safe=False,
 )
 

@@ -1,0 +1,67 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Aluminum trichloride'
+_chemical_formula_sum 'Al Cl3'
+ 
+loop_
+_publ_author_name
+ 'S. I. Troyanov'
+_journal_name_full
+;
+(Russian) Journal of Inorganic Chemistry (translated from Zhurnal Neorganicheskoi Khimii)
+;
+_journal_volume 37
+_journal_year 1992
+_journal_page_first 121
+_journal_page_last 124
+_publ_Section_title
+;
+ The crystal structure of titanium(II) tetrachloroaluminate Ti(AlCl$_4$)$_2$ and refinement of the crystal structure of AlCl$_3$
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_1250120
+
+_aflow_proto 'AB3_mC16_12_g_ij' 
+_aflow_params 'a,b/a,c/a,\beta,y1,x2,z2,x3,y3,z3' 
+_aflow_params_values '5.914,1.73047007102,1.03956712885,108.25,0.1662,0.2147,0.2263,0.2518,0.32131,0.2248' 
+_aflow_Strukturbericht 'D0_15' 
+_aflow_Pearson 'mC16' 
+
+_symmetry_space_group_name_Hall "-C 2y"
+_symmetry_space_group_name_H-M "C 1 2/m 1"
+_symmetry_Int_Tables_number 12
+
+_cell_length_a    5.91400
+_cell_length_b    10.23400
+_cell_length_c    6.14800
+_cell_angle_alpha 90.00000
+_cell_angle_beta  108.25000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 g 0.00000 0.16620 0.00000 1.00000
+Cl1 Cl   4 i 0.21470 0.00000 0.22630 1.00000
+Cl2 Cl   8 j 0.25180 0.32131 0.22480 1.00000

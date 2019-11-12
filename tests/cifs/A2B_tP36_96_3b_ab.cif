@@ -1,0 +1,71 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Keatite'
+_chemical_formula_sum 'Si O2'
+ 
+loop_
+_publ_author_name
+ 'Joseph Shropshire'
+ 'Paul P. Keat'
+ 'Philip A. Vaughan'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie
+;
+_journal_volume 112
+_journal_year 1959
+_journal_page_first 409
+_journal_page_last 413
+_publ_Section_title
+;
+ The crystal structure of keatite, a new form of silica
+;
+
+# Found in  demuth99:keatite
+
+_aflow_proto 'A2B_tP36_96_3b_ab' 
+_aflow_params 'a,c/a,x1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5' 
+_aflow_params_values '7.464,1.15487674169,0.41,0.445,0.132,0.4,0.117,0.123,0.296,0.344,0.297,0.143,0.326,0.12,0.248'
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tP36' 
+
+_symmetry_space_group_name_Hall "P 4nw 2abw"
+_symmetry_space_group_name_H-M "P 43 21 2"
+_symmetry_Int_Tables_number 96
+
+_cell_length_a    7.46400
+_cell_length_b    7.46400
+_cell_length_c    8.62000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/4
+3 -x+1/2,y+1/2,-z+3/4
+4 -x,-y,z+1/2
+5 -y,-x,-z+1/2
+6 -y+1/2,x+1/2,z+3/4
+7 y+1/2,-x+1/2,z+1/4
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   4 a 0.41000 0.41000 0.00000 1.00000
+O1  O    8 b 0.44500 0.13200 0.40000 1.00000
+O2  O    8 b 0.11700 0.12300 0.29600 1.00000
+O3  O    8 b 0.34400 0.29700 0.14300 1.00000
+Si2 Si   8 b 0.32600 0.12000 0.24800 1.00000

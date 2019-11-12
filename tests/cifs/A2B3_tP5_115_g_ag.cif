@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Rh3P2'
+_chemical_formula_sum 'P2 Rh3'
+
+loop_
+_publ_author_name
+ 'E. H. {El Ghadraoui}'
+ 'R. Guerin'
+ 'M. Sergent'
+_journal_name_full_name
+;
+ Acta Crystallographica Section C: Structural Chemistry
+;
+_journal_volume 39
+_journal_year 1983
+_journal_page_first 1493
+_journal_page_last 1494
+_publ_Section_title
+;
+ Diphosphure de trirhodium, Rh$_{3}$P$_{2}$: premier exemple d\'une structure lacunaire ordonn{\\'e}e de type {\it anti}-PbFCl
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Rh$_{3}$P$_{2}$ Structure'
+_aflow_proto 'A2B3_tP5_115_g_ag'
+_aflow_params 'a,c/a,z_{2},z_{3}'
+_aflow_params_values '3.3269188443,1.84881274424,0.253,0.6308'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP5'
+
+_cell_length_a    3.3269188443
+_cell_length_b    3.3269188443
+_cell_length_c    6.1508499584
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 m 2"
+_symmetry_Int_Tables_number 115
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,-x,-z
+4 y,x,-z
+5 -x,y,z
+6 x,-y,z
+7 y,-x,-z
+8 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Rh1 Rh   1 a 0.00000 0.00000 0.00000 1.00000
+P1  P    2 g 0.00000 0.50000 0.25300 1.00000
+Rh2 Rh   2 g 0.00000 0.50000 0.63080 1.00000

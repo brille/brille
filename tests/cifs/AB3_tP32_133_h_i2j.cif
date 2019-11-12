@@ -1,0 +1,76 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta-V3S'
+_chemical_formula_sum 'S V3'
+
+loop_
+_publ_author_name
+ 'B. Pedersen'
+ 'F. Gr{\o}nvold'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 12
+_journal_year 1959
+_journal_page_first 1022
+_journal_page_last 1027
+_publ_Section_title
+;
+ The crystal structures of $\alpha$-V$_{3}$S and $\beta$-V$_{3}$S
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title '$\beta$-V$_{3}$S Structure'
+_aflow_proto 'AB3_tP32_133_h_i2j'
+_aflow_params 'a,c/a,x_{1},x_{2},x_{3},x_{4}'
+_aflow_params_values '9.3810096033,0.497068542799,-0.0329,0.8986,0.658,0.0472'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP32'
+
+_cell_length_a    9.3810096033
+_cell_length_b    9.3810096033
+_cell_length_c    4.6630047735
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42/n 2/b 2/c (origin choice 2)"
+_symmetry_Int_Tables_number 133
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z
+3 -x+1/2,y,-z
+4 -x+1/2,-y+1/2,z
+5 -y+1/2,-x+1/2,-z+1/2
+6 -y+1/2,x,z+1/2
+7 y,-x+1/2,z+1/2
+8 y,x,-z+1/2
+9 -x,-y,-z
+10 -x,y+1/2,z
+11 x+1/2,-y,z
+12 x+1/2,y+1/2,-z
+13 y+1/2,x+1/2,z+1/2
+14 y+1/2,-x,-z+1/2
+15 -y,x+1/2,-z+1/2
+16 -y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1 S   8 h -0.03290 0.25000 0.00000 1.00000
+V1 V   8 i 0.89860  0.25000 0.50000 1.00000
+V2 V   8 j 0.65800  0.65800 0.25000 1.00000
+V3 V   8 j 0.04720  0.04720 0.25000 1.00000

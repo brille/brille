@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ru2Sn3'
+_chemical_formula_sum 'Ru2 Sn3'
+
+loop_
+_publ_author_name
+ 'O. Schwomma'
+ 'H. Nowotny'
+ 'A. Wittmann'
+_journal_name_full_name
+;
+ Monatshefte f{\"u}r Chemie - Chemical Monthly
+;
+_journal_volume 95
+_journal_year 1964
+_journal_page_first 1538
+_journal_page_last 1543
+_publ_Section_title
+;
+ Untersuchungen im System: Ru--Sn
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Ru$_{2}$Sn$_{3}$ Structure'
+_aflow_proto 'A2B3_tP20_116_bci_fj'
+_aflow_params 'a,c/a,x_{3},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '6.1720115185,1.606448477,0.177,0.625,0.655,0.216,0.582'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP20'
+
+_cell_length_a    6.1720115185
+_cell_length_b    6.1720115185
+_cell_length_c    9.9150185039
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 c 2"
+_symmetry_Int_Tables_number 116
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,-x,-z+1/2
+4 y,x,-z+1/2
+5 -x,y,z+1/2
+6 x,-y,z+1/2
+7 y,-x,-z
+8 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ru1 Ru   2 b 0.50000 0.50000 0.25000 1.00000
+Ru2 Ru   2 c 0.00000 0.00000 0.00000 1.00000
+Sn1 Sn   4 f 0.17700 0.17700 0.75000 1.00000
+Ru3 Ru   4 i 0.00000 0.50000 0.62500 1.00000
+Sn2 Sn   8 j 0.65500 0.21600 0.58200 1.00000

@@ -1,0 +1,83 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Ba2 Cu3 O7 Y'
+ 
+loop_
+_publ_author_name
+ 'W. I. F. David'
+ 'W. T. A. Harrison'
+ 'J. M. F. Gunn'
+ 'O. Moze, A. K. Soper'
+ 'P. Day'
+ 'J. D. Jorgensen'
+ 'D. G. Hinks'
+ 'M. A. Beno'
+ 'L. Soderholm'
+ 'D. W. Capone II'
+ 'I. K. Schuller'
+ 'C. U. Segre'
+ 'K. Zhang'
+ 'J. D. Grace'
+_journal_name_full
+;
+Nature
+;
+_journal_volume 327
+_journal_year 1987
+_journal_page_first 310
+_journal_page_last 312
+_publ_Section_title
+;
+ Structure and crystal chemistry of the high-Tc superconductor YBa$_2$Cu$_3$O$_{7-x}$
+;
+
+_aflow_proto 'A2B3C7D_oP13_47_t_aq_eqrs_h' 
+_aflow_params 'a,b/a,c/a,z4,z5,z6,z7,z8' 
+_aflow_params_values '3.8187,1.01691675177,3.05567339671,0.3554,0.1579,0.3771,0.3788,0.18445' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP13' 
+
+_symmetry_space_group_name_Hall "-P 2 2"
+_symmetry_space_group_name_H-M "P m m m"
+_symmetry_Int_Tables_number 47
+
+_cell_length_a    3.81870
+_cell_length_b    3.88330
+_cell_length_c    11.66870
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z
+8 x,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   1 a 0.00000 0.00000 0.00000 1.00000
+O1  O    1 e 0.00000 0.50000 0.00000 1.00000
+Y1  Y    1 h 0.50000 0.50000 0.50000 1.00000
+Cu2 Cu   2 q 0.00000 0.00000 0.35540 1.00000
+O2  O    2 q 0.00000 0.00000 0.15790 1.00000
+O3  O    2 r 0.00000 0.50000 0.37710 1.00000
+O4  O    2 s 0.50000 0.00000 0.37880 1.00000
+Ba1 Ba   2 t 0.50000 0.50000 0.18445 1.00000

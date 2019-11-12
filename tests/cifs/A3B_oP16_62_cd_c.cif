@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\epsilon$-NiAl$_{3}$'
+_chemical_formula_sum 'Al3 Ni'
+
+loop_
+_publ_author_name
+ 'A. J. Bradley'
+ 'A. Taylor'
+_journal_name_full_name
+;
+ Philosophical Magazine
+;
+_journal_volume 23
+_journal_year 1937
+_journal_page_first 1049
+_journal_page_last 1067
+_publ_Section_title
+;
+ The crystal structures of Ni$_{2}$Al$_{3}$ and NiAl$_{3}$
+;
+
+# Found in A Handbook of Lattice Spacings and Structures of Metals and Alloys, 1958
+
+_aflow_title '$\epsilon$-NiAl$_{3}$ ($D0_{20}$) Structure'
+_aflow_proto 'A3B_oP16_62_cd_c'
+_aflow_params 'a,b/a,c/a,x_{1},z_{1},x_{2},z_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '6.5982,1.11416750023,0.727789397108,0.011,0.415,0.369,0.555,0.174,0.053,0.856'
+_aflow_Strukturbericht '$D0_{20}$'
+_aflow_Pearson 'oP16'
+
+_symmetry_space_group_name_H-M "P 21/n 21/m 21/a"
+_symmetry_Int_Tables_number 62
+ 
+_cell_length_a    6.59820
+_cell_length_b    7.35150
+_cell_length_c    4.80210
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 c 0.01100 0.25000 0.41500 1.00000
+Ni1 Ni   4 c 0.36900 0.25000 0.55500 1.00000
+Al2 Al   8 d 0.17400 0.05300 0.85600 1.00000

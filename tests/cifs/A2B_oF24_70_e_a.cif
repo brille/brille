@@ -1,0 +1,88 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Titanium Disilicide'
+_chemical_formula_sum 'Ti Si2'
+ 
+loop_
+_publ_author_name
+ 'W. Jeitschko'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 33
+_journal_year 1977
+_journal_page_first 2347
+_journal_page_last 2348
+_publ_Section_title
+;
+ Refinement of the crystal structure of TiSi$_2$ and some comments on bonding in TiSi$_2$ and related compounds
+;
+
+_aflow_proto 'A2B_oF24_70_e_a' 
+_aflow_params 'a,b/a,c/a,x2' 
+_aflow_params_values '8.2671,0.580614725841,1.0342804611,0.4615' 
+_aflow_Strukturbericht 'C54' 
+_aflow_Pearson 'oF24' 
+
+_symmetry_space_group_name_Hall "-F 2uv 2vw"
+_symmetry_space_group_name_H-M "F d d d:2"
+_symmetry_Int_Tables_number 70
+
+_cell_length_a    8.26710
+_cell_length_b    4.80000
+_cell_length_c    8.55050
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+3/4,-z+3/4
+3 -x+3/4,y,-z+3/4
+4 -x+3/4,-y+3/4,z
+5 -x,-y,-z
+6 -x,y+1/4,z+1/4
+7 x+1/4,-y,z+1/4
+8 x+1/4,y+1/4,-z
+9 x,y+1/2,z+1/2
+10 x,-y+1/4,-z+1/4
+11 -x+3/4,y+1/2,-z+1/4
+12 -x+3/4,-y+1/4,z+1/2
+13 -x,-y+1/2,-z+1/2
+14 -x,y+3/4,z+3/4
+15 x+1/4,-y+1/2,z+3/4
+16 x+1/4,y+3/4,-z+1/2
+17 x+1/2,y,z+1/2
+18 x+1/2,-y+3/4,-z+1/4
+19 -x+1/4,y,-z+1/4
+20 -x+1/4,-y+3/4,z+1/2
+21 -x+1/2,-y,-z+1/2
+22 -x+1/2,y+1/4,z+3/4
+23 x+3/4,-y,z+3/4
+24 x+3/4,y+1/4,-z+1/2
+25 x+1/2,y+1/2,z
+26 x+1/2,-y+1/4,-z+3/4
+27 -x+1/4,y+1/2,-z+3/4
+28 -x+1/4,-y+1/4,z
+29 -x+1/2,-y+1/2,-z
+30 -x+1/2,y+3/4,z+1/4
+31 x+3/4,-y+1/2,z+1/4
+32 x+3/4,y+3/4,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ti1 Ti   8 a 0.12500 0.12500 0.12500 1.00000
+Si1 Si  16 e 0.46150 0.12500 0.12500 1.00000

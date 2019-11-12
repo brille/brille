@@ -1,0 +1,66 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Pd4Se'
+_chemical_formula_sum 'Pd4 Se'
+
+loop_
+_publ_author_name
+ 'F. Gr{\o}nvold'
+ 'E. R{\o}st'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 10
+_journal_year 1956
+_journal_page_first 1620
+_journal_page_last 1634
+_publ_Section_title
+;
+ On the sulfides, selenides and tellurides of palladium
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Pd$_{4}$Se Structure'
+_aflow_proto 'A4B_tP10_114_e_a'
+_aflow_params 'a,c/a,x_{2},y_{2},z_{2}'
+_aflow_params_values '5.2323591487,1.07923706139,0.626,0.768,0.846'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP10'
+
+_cell_length_a    5.2323591487
+_cell_length_b    5.2323591487
+_cell_length_c    5.6469559118
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 21 c"
+_symmetry_Int_Tables_number 114
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 y+1/2,x+1/2,z+1/2
+6 y,-x,-z
+7 -y,x,-z
+8 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Se1 Se   2 a 0.00000 0.00000 0.00000 1.00000
+Pd1 Pd   8 e 0.62600 0.76800 0.84600 1.00000

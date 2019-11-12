@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Tl4HgI6'
+_chemical_formula_sum 'Hg I6 Tl4'
+
+loop_
+_publ_author_name
+ 'D. V. Badikov'
+ 'V. V. Badikov'
+ 'G. M. {Kuz\'micheva}'
+ 'V. L. Panyutin'
+ 'V. B. Rybakov'
+ 'V. I. Chizhikov'
+ 'G. S. Shevyrdyaeva'
+ 'E. S. Shcherbakova'
+_journal_name_full_name
+;
+ Inorganic Materials
+;
+_journal_volume 40
+_journal_year 2004
+_journal_page_first 314
+_journal_page_last 320
+_publ_Section_title
+;
+ Growth and X-ray diffraction study of Tl$_{4}$HgI$_{6}$ crystals
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Tl$_{4}$HgI$_{6}$ Structure'
+_aflow_proto 'AB6C4_tP22_104_a_2ac_c'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '9.3940153509,0.981690440703,0.786,0.5,0.0649,0.8297,0.6458,0.286,0.6491,0.8588,0.036'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP22'
+
+_cell_length_a    9.3940153509
+_cell_length_b    9.3940153509
+_cell_length_c    9.2220150698
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4 n c"
+_symmetry_Int_Tables_number 104
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+5 -x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,z+1/2
+7 y+1/2,x+1/2,z+1/2
+8 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Hg1 Hg   2 a 0.00000 0.00000 0.78600 1.00000
+I1  I    2 a 0.00000 0.00000 0.50000 1.00000
+I2  I    2 a 0.00000 0.00000 0.06490 1.00000
+I3  I    8 c 0.82970 0.64580 0.28600 1.00000
+Tl1 Tl   8 c 0.64910 0.85880 0.03600 1.00000

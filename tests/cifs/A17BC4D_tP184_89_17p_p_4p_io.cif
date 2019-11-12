@@ -1,0 +1,88 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'C17FeO4Pt'
+_chemical_formula_sum 'C17 Fe O4 Pt'
+
+loop_
+_publ_author_name
+ 'S. Tanaka'
+ 'K. Mashima'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 50
+_journal_year 2011
+_journal_page_first 11384
+_journal_page_last 11393
+_publ_Section_title
+;
+ Interaction of Ferrocene Moieties Across a Square Pt$_{4}$ Unit: Synthesis, Characterization, and Electrochemical Properties of Carboxylate-Bridged Bimetallic Pt$_{4}$Fe$_{n}$ ($n$ = 2, 3, and 4) Complexes
+;
+
+# Found in The Cambridge Structural Database, 2016
+
+_aflow_title 'C$_{17}$FeO$_{4}$Pt Structure'
+_aflow_proto 'A17BC4D_tP184_89_17p_p_4p_io'
+_aflow_params 'a,c/a,z_{1},x_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13},x_{14},y_{14},z_{14},x_{15},y_{15},z_{15},x_{16},y_{16},z_{16},x_{17},y_{17},z_{17},x_{18},y_{18},z_{18},x_{19},y_{19},z_{19},x_{20},y_{20},z_{20},x_{21},y_{21},z_{21},x_{22},y_{22},z_{22},x_{23},y_{23},z_{23},x_{24},y_{24},z_{24}'
+_aflow_params_values '16.2503,0.81957871547,0.86772,0.10962,0.1709,0.485,0.7893,0.2334,0.4627,0.7103,0.2146,0.4383,0.6125,0.2885,0.416,0.5631,0.354,0.4242,0.6323,0.3206,0.4579,0.7209,0.234,0.226,0.661,0.3111,0.2275,0.696,0.3148,0.2616,0.794,0.236,0.287,0.818,0.179,0.265,0.733,-0.0696,0.3435,-0.084,-0.078,0.2512,-0.097,-0.004,0.378,0.549,-0.01,0.309,0.593,-0.003,0.238,0.558,-0.006,0.165,0.6,0.2676,0.3463,0.6943,0.1965,0.4869,0.8803,0.096,0.4889,0.7614,0.1143,0.375,0.0177,-0.0146,0.3768,0.8623'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP184'
+
+_cell_length_a    16.2503000000
+_cell_length_b    16.2503000000
+_cell_length_c    13.3184000000
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4 2 2"
+_symmetry_Int_Tables_number 89
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pt1 Pt   4 i 0.00000  0.50000 0.86772  1.00000
+Pt2 Pt   4 o 0.10962  0.50000 0.00000  1.00000
+C1  C    8 p 0.17090  0.48500 0.78930  1.00000
+C2  C    8 p 0.23340  0.46270 0.71030  1.00000
+C3  C    8 p 0.21460  0.43830 0.61250  1.00000
+C4  C    8 p 0.28850  0.41600 0.56310  1.00000
+C5  C    8 p 0.35400  0.42420 0.63230  1.00000
+C6  C    8 p 0.32060  0.45790 0.72090  1.00000
+C7  C    8 p 0.23400  0.22600 0.66100  1.00000
+C8  C    8 p 0.31110  0.22750 0.69600  1.00000
+C9  C    8 p 0.31480  0.26160 0.79400  1.00000
+C10 C    8 p 0.23600  0.28700 0.81800  1.00000
+C11 C    8 p 0.17900  0.26500 0.73300  1.00000
+C12 C    8 p -0.06960 0.34350 -0.08400 1.00000
+C13 C    8 p -0.07800 0.25120 -0.09700 1.00000
+C14 C    8 p -0.00400 0.37800 0.54900  1.00000
+C15 C    8 p -0.01000 0.30900 0.59300  1.00000
+C16 C    8 p -0.00300 0.23800 0.55800  1.00000
+C17 C    8 p -0.00600 0.16500 0.60000  1.00000
+Fe1 Fe   8 p 0.26760  0.34630 0.69430  1.00000
+O1  O    8 p 0.19650  0.48690 0.88030  1.00000
+O2  O    8 p 0.09600  0.48890 0.76140  1.00000
+O3  O    8 p 0.11430  0.37500 0.01770  1.00000
+O4  O    8 p -0.01460 0.37680 0.86230  1.00000

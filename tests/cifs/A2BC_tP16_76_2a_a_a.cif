@@ -1,0 +1,66 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'LaRhC2'
+_chemical_formula_sum 'C2 La Rh'
+
+loop_
+_publ_author_name
+ 'A. O. Tsokol\''
+ 'O. I. Bodak'
+ 'E. P. Marusin'
+ 'V. E. Zavodnik'
+_journal_name_full_name
+;
+ Kristallografiya, English title: Crystallography Reports
+;
+_journal_volume 33
+_journal_year 1988
+_journal_page_first 345
+_journal_page_last 348
+_publ_Section_title
+;
+ X-ray diffraction studies of ternary $R$RhC$_{2}$ ($R$ = La, Ce, Pr, Nd, Sm) compounds
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'LaRhC$_{2}$ Structure'
+_aflow_proto 'A2BC_tP16_76_2a_a_a'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '3.9810644174,3.85606631503,0.143,0.173,0.1347,0.353,0.141,0.2027,0.3461,0.3475,0.5937,0.1519,0.1578,0.0'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP16'
+
+_cell_length_a    3.9810644174
+_cell_length_b    3.9810644174
+_cell_length_c    15.3512483979
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 41"
+_symmetry_Int_Tables_number 76
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -y,x,z+1/4
+4 y,-x,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    4 a 0.14300 0.17300 0.13470 1.00000
+C2  C    4 a 0.35300 0.14100 0.20270 1.00000
+La1 La   4 a 0.34610 0.34750 0.59370 1.00000
+Rh1 Rh   4 a 0.15190 0.15780 0.00000 1.00000

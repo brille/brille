@@ -1,0 +1,84 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Covellite'
+_chemical_formula_sum 'Cu S'
+ 
+loop_
+_publ_author_name
+ 'Masaaki Ohmasa'
+ 'Masatoshi Suzuki'
+ 'Yoshio Tak\'{e}uchi'
+_journal_name_full
+;
+Mineralogical Journal
+;
+_journal_volume 8
+_journal_year 1977
+_journal_page_first 311
+_journal_page_last 319
+_publ_Section_title
+;
+ A refinement of the crystal structure of covellite, CuS
+;
+
+_aflow_proto 'AB_hP12_194_df_ce' 
+_aflow_params 'a,c/a,z3,z4' 
+_aflow_params_values '3.976,4.12022132797,0.0637,0.10724' 
+_aflow_Strukturbericht 'B18' 
+_aflow_Pearson 'hP12' 
+
+_symmetry_space_group_name_Hall "-P 6c 2c"
+_symmetry_space_group_name_H-M "P 63/m m c"
+_symmetry_Int_Tables_number 194
+
+_cell_length_a    3.97600
+_cell_length_b    3.97600
+_cell_length_c    16.38200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 x-y,-y,-z
+8 x,x-y,-z+1/2
+9 y,x,-z
+10 -x+y,y,-z+1/2
+11 -x,-x+y,-z
+12 -y,-x,-z+1/2
+13 -x,-y,-z
+14 -x+y,-x,-z+1/2
+15 y,-x+y,-z
+16 x,y,-z+1/2
+17 x-y,x,-z
+18 -y,x-y,-z+1/2
+19 -x+y,y,z
+20 -x,-x+y,z+1/2
+21 -y,-x,z
+22 x-y,-y,z+1/2
+23 x,x-y,z
+24 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1  S    2 c 0.33333 0.66667 0.25000 1.00000
+Cu1 Cu   2 d 0.33333 0.66667 0.75000 1.00000
+S2  S    4 e 0.00000 0.00000 0.06370 1.00000
+Cu2 Cu   4 f 0.33333 0.66667 0.10724 1.00000

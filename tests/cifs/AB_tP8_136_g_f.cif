@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta beryllia'
+_chemical_formula_sum 'Be O'
+ 
+loop_
+_publ_author_name
+ 'Deane K. Smith'
+ 'Carl F. Cline'
+ 'Stanley B. Austerman'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 18
+_journal_year 1965
+_journal_page_first 393
+_journal_page_last 397
+_publ_Section_title
+;
+ The Crystal Structure of $\beta$-Beryllia
+;
+
+_aflow_proto 'AB_tP8_136_g_f' 
+_aflow_params 'a,c/a,x1,x2' 
+_aflow_params_values '4.75,0.576842105263,0.31,0.336' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tP8' 
+
+_symmetry_space_group_name_Hall "-P 4n 2n"
+_symmetry_space_group_name_H-M "P 42/m n m"
+_symmetry_Int_Tables_number 136
+
+_cell_length_a    4.75000
+_cell_length_b    4.75000
+_cell_length_c    2.74000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z+1/2
+7 y+1/2,-x+1/2,z+1/2
+8 y,x,-z
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z+1/2
+11 x+1/2,-y+1/2,z+1/2
+12 x,y,-z
+13 y,x,z
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 f 0.31000 0.31000 0.00000 1.00000
+Be1 Be   4 g 0.33600 0.66400 0.00000 1.00000

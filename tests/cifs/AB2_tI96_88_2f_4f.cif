@@ -1,0 +1,79 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\alpha$-NbO$_{2}$'
+_chemical_formula_sum 'Nb O2'
+
+loop_
+_publ_author_name
+ 'R. Pynn'
+ 'J. D. Axe'
+ 'R. Thomas'
+_journal_name_full_name
+;
+ Physical Review B
+;
+_journal_volume 13
+_journal_year 1976
+_journal_page_first 2965
+_journal_page_last 2975
+_publ_Section_title
+;
+ Structural distortions in the low-temperature phase of NbO$_{2}$
+;
+
+# Found in A Powder Neutron Diffraction Study of Semiconducting and Metallic Niobium Dioxide, 1994
+
+_aflow_title '$\alpha$-NbO$_{2}$ Structure'
+_aflow_proto 'AB2_tI96_88_2f_4f'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '13.66,0.436603221083,0.1155,0.1249,0.4746,0.1356,0.125,0.0267,-0.0134,0.1262,-0.0046,-0.0251,0.1252,0.5,0.2739,0.1245,-0.0002,0.2631,0.1241,0.5043'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI96'
+
+_symmetry_space_group_name_H-M "I 41/a:2"
+_symmetry_Int_Tables_number 88
+ 
+_cell_length_a    13.66000
+_cell_length_b    13.66000
+_cell_length_c    5.96400
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y+1/2,z
+3 -y+3/4,x+1/4,z+1/4
+4 y+1/4,-x+1/4,z+1/4
+5 -x,-y,-z
+6 x,y+1/2,-z
+7 y+1/4,-x+3/4,-z+3/4
+8 -y+3/4,x+3/4,-z+3/4
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y,z+1/2
+11 -y+1/4,x+3/4,z+3/4
+12 y+3/4,-x+3/4,z+3/4
+13 -x+1/2,-y+1/2,-z+1/2
+14 x+1/2,y,-z+1/2
+15 y+3/4,-x+1/4,-z+1/4
+16 -y+1/4,x+1/4,-z+1/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Nb1 Nb  16 f  0.11550 0.12490 0.47460 1.00000
+Nb2 Nb  16 f  0.13560 0.12500 0.02670 1.00000
+O1  O   16 f -0.01340 0.12620 -0.00460 1.00000
+O2  O   16 f -0.02510 0.12520 0.50000 1.00000
+O3  O   16 f  0.27390 0.12450 -0.00020 1.00000
+O4  O   16 f  0.26310 0.12410 0.50430 1.00000

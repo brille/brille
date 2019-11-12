@@ -1,0 +1,71 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Na3As'
+_chemical_formula_sum 'As Na3'
+
+loop_
+_publ_author_name
+ 'P. Hafner'
+ 'K.-J. Range'
+_journal_name_full_name
+;
+ Journal of Alloys and Compounds
+;
+_journal_volume 216
+_journal_year 1994
+_journal_page_first 7
+_journal_page_last 10
+_publ_Section_title
+;
+ Na$_{3}$As revisited: high-pressure synthesis of single crystals and structure refinement
+;
+
+_aflow_title 'Na$_{3}$As Structure'
+_aflow_proto 'AB3_hP24_185_c_ab2c'
+_aflow_params 'a,c/a,z_{1},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5}'
+_aflow_params_values '8.7838,1.02449964708,0.2684,0.2311,0.3321,0.25,0.3153,0.5863,0.3518,-0.0769'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP24'
+
+_symmetry_space_group_name_H-M "P 63 c m"
+_symmetry_Int_Tables_number 185
+ 
+_cell_length_a    8.78380
+_cell_length_b    8.78380
+_cell_length_c    8.99900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z+1/2
+8 -x,-x+y,z
+9 -y,-x,z+1/2
+10 x-y,-y,z
+11 x,x-y,z+1/2
+12 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Na1 Na   2 a 0.00000 0.00000 0.26840  1.00000
+Na2 Na   4 b 0.33333 0.66667 0.23110  1.00000
+As1 As   6 c 0.33210 0.00000 0.25000  1.00000
+Na3 Na   6 c 0.31530 0.00000 0.58630  1.00000
+Na4 Na   6 c 0.35180 0.00000 -0.07690 1.00000

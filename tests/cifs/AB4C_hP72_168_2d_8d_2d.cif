@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Al[PO4]'
+_chemical_formula_sum 'Al O4 P'
+
+loop_
+_publ_author_name
+ 'J. W. {Richardson Jnr}'
+ 'J. J. Pluth'
+ 'J. V. Smith'
+_journal_name_full_name
+;
+ Acta Crystallographica Section C: Structural Chemistry
+;
+_journal_volume 43
+_journal_year 1987
+_journal_page_first 1469
+_journal_page_last 1472
+_publ_Section_title
+;
+ Aluminophosphate number 5: time-of-flight neutron powder diffraction study of calcined powder at 295 K
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Al[PO$_{4}$] Structure'
+_aflow_proto 'AB4C_hP72_168_2d_8d_2d'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12}'
+_aflow_params_values '13.759939558,0.609738372094,0.4498,0.113,0.6253,0.1278,0.466,0.1246,0.4154,0.2053,0.0456,0.2066,0.4189,0.5576,0.4218,0.0894,0.8248,0.1514,0.4907,0.3249,0.3746,0.0106,0.0948,0.0083,0.3667,0.4879,0.5693,0.1616,0.0357,0.1505,0.5625,0.5943,0.4451,0.1173,0.0,0.1291,0.4589,0.4993'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP72'
+
+_cell_length_a    13.7599395580
+_cell_length_b    13.7599395580
+_cell_length_c    8.3899631462
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 6"
+_symmetry_Int_Tables_number 168
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   6 d 0.44980 0.11300 0.62530 1.00000
+Al2 Al   6 d 0.12780 0.46600 0.12460 1.00000
+O1  O    6 d 0.41540 0.20530 0.04560 1.00000
+O2  O    6 d 0.20660 0.41890 0.55760 1.00000
+O3  O    6 d 0.42180 0.08940 0.82480 1.00000
+O4  O    6 d 0.15140 0.49070 0.32490 1.00000
+O5  O    6 d 0.37460 0.01060 0.09480 1.00000
+O6  O    6 d 0.00830 0.36670 0.48790 1.00000
+O7  O    6 d 0.56930 0.16160 0.03570 1.00000
+O8  O    6 d 0.15050 0.56250 0.59430 1.00000
+P1  P    6 d 0.44510 0.11730 0.00000 1.00000
+P2  P    6 d 0.12910 0.45890 0.49930 1.00000

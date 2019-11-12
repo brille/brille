@@ -1,0 +1,76 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Matlockite'
+_chemical_formula_sum 'Pb F Cl'
+ 
+loop_
+_publ_author_name
+ 'N. Pasero'
+ 'N. Perchiazzi'
+_journal_name_full
+;
+Mineralogical Magazine
+;
+_journal_volume 60
+_journal_year 1996
+_journal_page_first 833
+_journal_page_last 836
+_publ_Section_title
+;
+ Crystal structure refinement of matlockite
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'ABC_tP6_129_c_a_c' 
+_aflow_params 'a,c/a,z2,z3' 
+_aflow_params_values '4.11,1.76301703163,0.6497,0.2058' 
+_aflow_Strukturbericht 'E0_1' 
+_aflow_Pearson 'tP6' 
+
+_symmetry_space_group_name_Hall "-P 4a 2a"
+_symmetry_space_group_name_H-M "P 4/n m m:2"
+_symmetry_Int_Tables_number 129
+
+_cell_length_a    4.11000
+_cell_length_b    4.11000
+_cell_length_c    7.24600
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z
+3 -x,y+1/2,-z
+4 -x+1/2,-y+1/2,z
+5 -y,-x,-z
+6 -y+1/2,x,z
+7 y,-x+1/2,z
+8 y+1/2,x+1/2,-z
+9 -x,-y,-z
+10 -x+1/2,y,z
+11 x,-y+1/2,z
+12 x+1/2,y+1/2,-z
+13 y,x,z
+14 y+1/2,-x,-z
+15 -y,x+1/2,-z
+16 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+F1  F    2 a 0.75000 0.25000 0.00000 1.00000
+Cl1 Cl   2 c 0.25000 0.25000 0.64970 1.00000
+Pb1 Pb   2 c 0.25000 0.25000 0.20580 1.00000

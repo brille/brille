@@ -1,0 +1,62 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'High Pressure Cadmuum Telluride'
+_chemical_formula_sum 'Cd Te'
+ 
+loop_
+_publ_author_name
+ 'Jing Zhu Hu'
+_journal_name_full
+;
+Solid State Communications
+;
+_journal_volume 63
+_journal_year 1987
+_journal_page_first 471
+_journal_page_last 474
+_publ_Section_title
+;
+ A New High Pressure Phase of CdTe
+;
+
+# Found in  Pearson's Handbook, II, p. 2816
+
+_aflow_proto 'AB_oP2_25_b_a' 
+_aflow_params 'a,b/a,c/a,z1,z2' 
+_aflow_params_values '2.8102,1.87104120703,1.0769696107,0.0,0.25' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP2' 
+
+_symmetry_space_group_name_Hall "P 2 -2"
+_symmetry_space_group_name_H-M "P m m 2"
+_symmetry_Int_Tables_number 25
+
+_cell_length_a    2.81020
+_cell_length_b    5.25800
+_cell_length_c    3.02650
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z
+4 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Te1 Te   1 a 0.00000 0.00000 0.00000 1.00000
+Cd1 Cd   1 b 0.00000 0.50000 0.25000 1.00000

@@ -1,0 +1,73 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Na2MgAlF7'
+_chemical_formula_sum 'Al F7 Mg Na2'
+
+loop_
+_publ_author_name
+ 'O. Knop'
+ 'T. S. Cameron'
+ 'K. Jochem'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 43
+_journal_year 1982
+_journal_page_first 213
+_journal_page_last 221
+_publ_Section_title
+;
+ What is the true space group of weberite?
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Weberite (Na$_{2}$MgAlF$_{7}$) Structure'
+_aflow_proto 'AB7CD2_oI44_24_a_b3d_c_ac'
+_aflow_params 'a,b/a,c/a,x_{1},x_{2},y_{3},z_{4},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8}'
+_aflow_params_values '7.0501914381,1.035035461,1.41546099291,0.7511,0.2496,0.1361,-0.0003,0.5002,0.7501,0.2213,0.3356,0.5662,0.0681,0.1362,-0.0648,0.0709,0.1385'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI44'
+
+_cell_length_a    7.0501914381
+_cell_length_b    7.2971981453
+_cell_length_c    9.9792709732
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 21 21 21"
+_symmetry_Int_Tables_number 24
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,-z
+7 -x,y+1/2,-z+1/2
+8 -x+1/2,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 a 0.75110  0.00000 0.25000  1.00000
+Na1 Na   4 a 0.24960  0.00000 0.25000  1.00000
+F1  F    4 b 0.25000  0.13610 0.00000  1.00000
+Mg1 Mg   4 c 0.00000  0.25000 -0.00030 1.00000
+Na2 Na   4 c 0.00000  0.25000 0.50020  1.00000
+F2  F    8 d 0.75010  0.22130 0.33560  1.00000
+F3  F    8 d 0.56620  0.06810 0.13620  1.00000
+F4  F    8 d -0.06480 0.07090 0.13850  1.00000

@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'LaPtSi'
+_chemical_formula_sum 'La Pt Si'
+
+loop_
+_publ_author_name
+ 'K. Klepp'
+ 'E. Parth{\\'e}'
+_journal_name_full_name
+;
+ Acta Crystallographica Section B: Structural Science
+;
+_journal_volume 38
+_journal_year 1982
+_journal_page_first 1105
+_journal_page_last 1108
+_publ_Section_title
+;
+ $R$PtSi phases ($R$ = La, Ce, Pr, Nd, Sm and Gd) with an ordered ThSi$_{2}$ derivative structure
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'LaPtSi Structure'
+_aflow_proto 'ABC_tI12_109_a_a_a'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3}'
+_aflow_params_values '4.2490694941,3.42174629325,0.081,0.666,0.5'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI12'
+
+_cell_length_a    4.2490694941
+_cell_length_b    4.2490694941
+_cell_length_c    14.5392377912
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 41 m d"
+_symmetry_Int_Tables_number 109
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x+1/2,z+1/4
+4 y,-x+1/2,z+1/4
+5 -x,y,z
+6 x,-y,z
+7 y,x+1/2,z+1/4
+8 -y,-x+1/2,z+1/4
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y+1/2,z+1/2
+11 -y+1/2,x,z+3/4
+12 y+1/2,-x,z+3/4
+13 -x+1/2,y+1/2,z+1/2
+14 x+1/2,-y+1/2,z+1/2
+15 y+1/2,x,z+3/4
+16 -y+1/2,-x,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+La1 La   4 a 0.00000 0.00000 0.08100 1.00000
+Pt1 Pt   4 a 0.00000 0.00000 0.66600 1.00000
+Si1 Si   4 a 0.00000 0.00000 0.50000 1.00000

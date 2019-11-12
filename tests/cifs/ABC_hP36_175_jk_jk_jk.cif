@@ -1,0 +1,81 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Mg[NH]'
+_chemical_formula_sum 'H Mg N'
+
+loop_
+_publ_author_name
+ 'F. Dolci'
+ 'E. Napolitano'
+ 'E. Weidner'
+ 'S. Enzo'
+ 'P. Moretto'
+ 'M. Brunelli'
+ 'T. Hansen'
+ 'M. Fichtner'
+ 'W. Lohstroh'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 50
+_journal_year 2011
+_journal_page_first 1116
+_journal_page_last 1122
+_publ_Section_title
+;
+ Magnesium imide: synthesis and structure determination of an unconventional alkaline earth imide from decomposition of magnesium amide
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Mg[NH] Structure'
+_aflow_proto 'ABC_hP36_175_jk_jk_jk'
+_aflow_params 'a,c/a,x_{1},y_{1},x_{2},y_{2},x_{3},y_{3},x_{4},y_{4},x_{5},y_{5},x_{6},y_{6}'
+_aflow_params_values '11.5799622371,0.317895264089,0.255,0.0598,0.1323,0.416,0.3483,0.0762,0.2334,0.5727,0.4279,0.0715,0.1367,0.5046'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP36'
+
+_cell_length_a    11.5799622371
+_cell_length_b    11.5799622371
+_cell_length_c    3.6812151535
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 6/m"
+_symmetry_Int_Tables_number 175
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+7 -x,-y,-z
+8 -x+y,-x,-z
+9 y,-x+y,-z
+10 x,y,-z
+11 x-y,x,-z
+12 -y,x-y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1  H    6 j 0.25500 0.05980 0.00000 1.00000
+Mg1 Mg   6 j 0.13230 0.41600 0.00000 1.00000
+N1  N    6 j 0.34830 0.07620 0.00000 1.00000
+H2  H    6 k 0.23340 0.57270 0.50000 1.00000
+Mg2 Mg   6 k 0.42790 0.07150 0.50000 1.00000
+N2  N    6 k 0.13670 0.50460 0.50000 1.00000

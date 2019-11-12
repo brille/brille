@@ -1,0 +1,82 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Co5Ge7'
+_chemical_formula_sum 'Co5 Ge7'
+
+loop_
+_publ_author_name
+ 'K. Schubert'
+ 'T. R. Anantharaman'
+ 'H. O. K. Ata'
+ 'H. G. Meissner'
+ 'M. P{\"o}tzschke'
+ 'W. Rossteutscher'
+ 'E. Stolz'
+_journal_name_full_name
+;
+ Naturwissenschaften
+;
+_journal_volume 47
+_journal_year 1960
+_journal_page_first 512
+_journal_page_last 512
+_publ_Section_title
+;
+ Einige strukturelle Ergebnisse an metallischen Phasen (6)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Co$_{5}$Ge$_{7}$ Structure'
+_aflow_proto 'A5B7_tI24_107_ac_abd'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},z_{4},x_{5},z_{5}'
+_aflow_params_values '7.6400197048,0.760471204184,0.0,0.056,0.04,0.22,0.0,0.243,0.29'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI24'
+
+_cell_length_a    7.6400197048
+_cell_length_b    7.6400197048
+_cell_length_c    5.8100149849
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 4 m m"
+_symmetry_Int_Tables_number 107
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+5 -x,y,z
+6 x,-y,z
+7 y,x,z
+8 -y,-x,z
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y+1/2,z+1/2
+11 -y+1/2,x+1/2,z+1/2
+12 y+1/2,-x+1/2,z+1/2
+13 -x+1/2,y+1/2,z+1/2
+14 x+1/2,-y+1/2,z+1/2
+15 y+1/2,x+1/2,z+1/2
+16 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Co1 Co   2 a 0.00000 0.00000 0.00000 1.00000
+Ge1 Ge   2 a 0.00000 0.00000 0.05600 1.00000
+Ge2 Ge   4 b 0.00000 0.50000 0.04000 1.00000
+Co2 Co   8 c 0.22000 0.22000 0.00000 1.00000
+Ge3 Ge   8 d 0.24300 0.00000 0.29000 1.00000

@@ -1,0 +1,66 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\gamma$-PdCl2'
+_chemical_formula_sum 'Cl2 Pd'
+
+loop_
+_publ_author_name
+ 'J. Evers'
+ 'W. Beck'
+ 'M. G\"{o}bel'
+ 'S. Jakob'
+ 'P. Mayer'
+ 'G. Oehlinger'
+ 'M. Rotter'
+ 'T. M. Klap\"{o}tke'
+_journal_name_full_name
+;
+ Angewandte Chemie (International ed.)
+;
+_journal_volume 49
+_journal_year 2010
+_journal_page_first 5677
+_journal_page_last 5682
+_publ_Section_title
+;
+ The Structures of $\delta$-PdCl$_{2}$ and $\gamma$-PdCl$_{2}$: Phases with Negative Thermal Expansion in One Direction
+;
+
+_aflow_title '$\gamma$-PdCl$_{2}$ Structure'
+_aflow_proto 'A2B_mP6_14_e_a'
+_aflow_params 'a,b/a,c/a,\beta,x_{2},y_{2},z_{2}'
+_aflow_params_values '5.5496,0.695689779444,1.15512829753,107.151,0.255,0.2573,0.3141'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP6'
+
+_symmetry_space_group_name_H-M "P 1 21/c 1"
+_symmetry_Int_Tables_number 14
+ 
+_cell_length_a    5.54960
+_cell_length_b    3.86080
+_cell_length_c    6.41050
+_cell_angle_alpha 90.00000
+_cell_angle_beta  107.15100
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z+1/2
+3 -x,-y,-z
+4 x,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pd1 Pd   2 a 0.00000 0.00000 0.00000 1.00000
+Cl1 Cl   4 e 0.25500 0.25730 0.31410 1.00000

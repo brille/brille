@@ -1,0 +1,77 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'sigma phase CrFe, different elements used to distinguish Wyckoff positions'
+_chemical_formula_sum 'Pd Rh2 Ni4 Cr4 Fe4'
+ 
+loop_
+_publ_author_name
+ 'H. L. Yakel'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 39
+_journal_year 1983
+_journal_page_first 20
+_journal_page_last 28
+_publ_Section_title
+;
+ Atom distributions in sigma phases. I. Fe and Cr atom distributions in a binary sigma phase equilibrated at 1063, 1013 and 923 K
+;
+
+# Found in  Pearson Vol II. pp. 2639
+
+_aflow_proto 'sigma_tP30_136_bf2ij' 
+_aflow_params 'a,c/a,x2,x3,y3,x4,y4,x5,z5' 
+_aflow_params_values '8.7966,0.518177477662,0.39864,0.13122,0.46349,0.06609,0.73933,0.18267,0.25202' 
+_aflow_Strukturbericht 'D8_b' 
+_aflow_Pearson 'tP30' 
+
+_symmetry_space_group_name_Hall "-P 4n 2n"
+_symmetry_space_group_name_H-M "P 42/m n m"
+_symmetry_Int_Tables_number 136
+
+_cell_length_a    8.79660
+_cell_length_b    8.79660
+_cell_length_c    4.55820
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z+1/2
+7 y+1/2,-x+1/2,z+1/2
+8 y,x,-z
+9 -x,-y,-z
+10 -x+1/2,y+1/2,z+1/2
+11 x+1/2,-y+1/2,z+1/2
+12 x,y,-z
+13 y,x,z
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pd1 Pd   2 b 0.00000  0.00000 0.50000 1.00000
+Rh1 Rh   4 f 0.39864  0.39864 0.00000 1.00000
+Ni1 Ni   8 i 0.13122  0.46349 0.00000 1.00000
+Cr1 Cr   8 i 0.06609  0.73933 0.00000 1.00000
+Fe1 Fe   8 j 0.18267  0.18267 0.25202 1.00000

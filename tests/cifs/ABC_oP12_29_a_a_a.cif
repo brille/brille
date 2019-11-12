@@ -1,0 +1,63 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'CoAsS'
+_chemical_formula_sum 'As Co S'
+
+loop_
+_publ_author_name
+ 'M. E. Fleet'
+ 'P. C. Burns'
+_journal_name_full_name
+;
+ Canadian Mineralogist
+;
+_journal_volume 28
+_journal_year 1990
+_journal_page_first 719
+_journal_page_last 723
+_publ_Section_title
+;
+ Structure and twinning of cobaltite
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Cobaltite (CoAsS) Structure'
+_aflow_proto 'ABC_oP12_29_a_a_a'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '5.2594682584,0.963498098863,0.965209125484,0.61885,0.63065,0.11668,0.50496,0.24091,0.0,0.61734,0.13129,0.37996'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP12'
+
+_cell_length_a    5.2594682584
+_cell_length_b    5.0674876680
+_cell_length_c    5.0764867582
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P c a 21"
+_symmetry_Int_Tables_number 29
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -x+1/2,y,z+1/2
+4 x+1/2,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   4 a 0.61885 0.63065 0.11668 1.00000
+Co1 Co   4 a 0.50496 0.24091 0.00000 1.00000
+S1  S    4 a 0.61734 0.13129 0.37996 1.00000

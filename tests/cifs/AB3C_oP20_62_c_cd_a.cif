@@ -1,0 +1,70 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Orthorhombic Perovskite'
+_chemical_formula_sum 'Ca Ti O3'
+ 
+loop_
+_publ_author_name
+ 'Takamitsu Yamanaka'
+ 'Noriyuki Hirai'
+ 'Yutaka Komatsu'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 87
+_journal_year 2002
+_journal_page_first 1183
+_journal_page_last 1189
+_publ_Section_title
+;
+ Structure change of Ca$_{1-x}$Sr$_x$TiO$_3$ perovskite with composition and pressure
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB3C_oP20_62_c_cd_a' 
+_aflow_params 'a,b/a,c/a,x2,z2,x3,z3,x4,y4,z4' 
+_aflow_params_values '5.4224,1.41099881971,0.996661994689,0.4877,-0.0084,0.0313,0.0586,0.288,0.537,0.213' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP20' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2n"
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+
+_cell_length_a    5.42240
+_cell_length_b    7.65100
+_cell_length_c    5.40430
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ti1 Ti   4 a 0.00000  0.00000 0.00000  1.00000
+Ca1 Ca   4 c 0.48770  0.25000 -0.00840 1.00000
+O1  O    4 c 0.03130 0.25000 0.05860  1.00000
+O2  O    8 d 0.28800  0.53700 0.21300  1.00000

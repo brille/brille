@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'As2Ba'
+_chemical_formula_sum 'As2 Ba'
+
+loop_
+_publ_author_name
+ 'F. Emmerling'
+ 'D. Petri'
+ 'C. R{\"o}hr'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische und Allgemeine Chemie
+;
+_journal_volume 630
+_journal_year 2004
+_journal_page_first 2490
+_journal_page_last 2501
+_publ_Section_title
+;
+ Neue Arsenide mit As$^{-}$-Ketten und -Ringen: BaAs$_{2}$ und $A^{I}$Ba$_{2}$As$_{5}$ ($A^{I}$ = K, Rb)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'As$_{2}$Ba Structure'
+_aflow_proto 'A2B_mP18_7_6a_3a'
+_aflow_params 'a,b/a,c/a,\beta,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9}'
+_aflow_params_values '6.5499839723,1.91328244277,1.22717557252,127.75,0.6753,0.4828,0.3393,0.4711,0.6498,0.3067,0.4174,0.3433,0.0893,0.2883,0.1551,0.3432,0.1472,0.1112,0.5582,0.0,0.0746,0.0,0.5693,0.07852,0.0933,0.1184,0.41567,0.2938,0.8473,0.27155,0.6656'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP18'
+
+_cell_length_a    6.5499839723
+_cell_length_b    12.5319693346
+_cell_length_c    8.0379803312
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  127.7500000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 1 c 1"
+_symmetry_Int_Tables_number 7
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   2 a 0.67530 0.48280 0.33930 1.00000
+As2 As   2 a 0.47110 0.64980 0.30670 1.00000
+As3 As   2 a 0.41740 0.34330 0.08930 1.00000
+As4 As   2 a 0.28830 0.15510 0.34320 1.00000
+As5 As   2 a 0.14720 0.11120 0.55820 1.00000
+As6 As   2 a 0.00000 0.07460 0.00000 1.00000
+Ba1 Ba   2 a 0.56930 0.07852 0.09330 1.00000
+Ba2 Ba   2 a 0.11840 0.41567 0.29380 1.00000
+Ba3 Ba   2 a 0.84730 0.27155 0.66560 1.00000

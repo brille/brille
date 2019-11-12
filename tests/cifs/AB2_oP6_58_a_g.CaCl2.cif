@@ -1,0 +1,67 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Hydrophilite'
+_chemical_formula_sum 'Ca Cl2'
+ 
+loop_
+_publ_author_name
+ 'A. K. van Bever'
+ 'W. Nieuwenkamp'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 90
+_journal_year 1935
+_journal_page_first 374
+_journal_page_last 376
+_publ_Section_title
+;
+ Die Kristallstruktur von Calciumchlorid, CaCl$_2$
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB2_oP6_58_a_g' 
+_aflow_params 'a,b/a,c/a,x2,y2' 
+_aflow_params_values '6.24,1.03044871795,0.673076923077,0.275,0.325' 
+_aflow_Strukturbericht 'C35' 
+_aflow_Pearson 'oP6' 
+
+_symmetry_space_group_name_Hall "-P 2 2n"
+_symmetry_space_group_name_H-M "P n n m"
+_symmetry_Int_Tables_number 58
+
+_cell_length_a    6.24000
+_cell_length_b    6.43000
+_cell_length_c    4.20000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x+1/2,-y+1/2,z+1/2
+8 x,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ca1 Ca   2 a 0.00000 0.00000 0.00000 1.00000
+Cl1 Cl   4 g 0.27500 0.32500 0.00000 1.00000 

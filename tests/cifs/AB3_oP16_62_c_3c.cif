@@ -1,0 +1,67 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Molybdite'
+_chemical_formula_sum 'Mo O3'
+
+loop_
+_publ_author_name
+ 'H. Sitepu'
+ 'B. H. {O\'Connor}'
+ 'D. Li'
+_journal_name_full_name
+;
+ Journal of Applied Crystallography
+;
+_journal_volume 38
+_journal_year 2005
+_journal_page_first 158
+_journal_page_last 167
+_publ_Section_title
+;
+ Comparative evaluation of the March and generalized spherical harmonic preferred orientation models using X-ray diffraction data for molybdite and calcite powders
+;
+
+_aflow_title 'Molybdite (MoO$_{3}$, $D0_{8}$) Structure'
+_aflow_proto 'AB3_oP16_62_c_3c'
+_aflow_params 'a,b/a,c/a,x_{1},z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4}'
+_aflow_params_values '13.855,0.266791771923,0.28601948755,0.398,0.425,0.074,-0.026,0.414,-0.066,0.276,0.49'
+_aflow_Strukturbericht '$D0_{8}$'
+_aflow_Pearson 'oP16'
+
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+ 
+_cell_length_a    13.85500
+_cell_length_b    3.69640
+_cell_length_c    3.96280
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mo1 Mo   4 c 0.39800  0.25000 0.42500 1.00000
+O1  O    4 c 0.07400  0.25000 -0.02600 1.00000
+O2  O    4 c 0.41400  0.25000 -0.06600 1.00000
+O3  O    4 c 0.27600  0.25000 0.49000 1.00000

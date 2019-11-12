@@ -1,0 +1,73 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'C3 Cr7'
+ 
+loop_
+_publ_author_name
+ 'M. A. Rouault'
+ 'P. Herpin'
+ 'M. R. Fruchart'
+_journal_name_full
+;
+Annales de Chimie (Paris)
+;
+_journal_volume 5
+_journal_year 1970
+_journal_page_first 461
+_journal_page_last 470
+_publ_Section_title
+;
+ Etude Cristallographique des Carbures Cr$_7$C$_3$ et Mn$_7$C$_3$
+;
+
+# Found in  Pearson's Handbook Vol. II, p. 1873
+
+_aflow_proto 'A3B7_oP40_62_cd_3c2d' 
+_aflow_params 'a,b/a,c/a,x1,z1,x2,z2,x3,z3,x4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7' 
+_aflow_params_values '4.526,1.54882898807,2.68272205038,0.4594,0.5629,0.0579,0.6261,0.2501,0.2063,0.2619,0.4165,0.0288,0.0291,0.3428,0.0565,0.0642,0.8119,0.2509,0.0657,0.0218' 
+_aflow_Strukturbericht 'D10_1' 
+_aflow_Pearson 'oP40' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2n"
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+
+_cell_length_a    4.52600
+_cell_length_b    7.01000
+_cell_length_c    12.14200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    4 c 0.45940 0.25000 0.56290 1.00000
+Cr1 Cr   4 c 0.05790 0.25000 0.62610  1.00000
+Cr2 Cr   4 c 0.25010 0.25000 0.20630  1.00000
+Cr3 Cr   4 c 0.26190 0.25000 0.41650  1.00000
+C2  C    8 d 0.02880 0.02910 0.34280  1.00000
+Cr4 Cr   8 d 0.05650 0.06420 0.81190  1.00000
+Cr5 Cr   8 d 0.25090 0.06570 0.02180  1.00000

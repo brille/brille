@@ -1,0 +1,76 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'CuBi2O4'
+_chemical_formula_sum 'Bi2 Cu O4'
+
+loop_
+_publ_author_name
+ 'J.-C. Boivin'
+ 'J. Trehoux'
+ 'D. Thomas'
+_journal_name_full_name
+;
+ Bulletin of Research Laboratory of Precision Machinery and Electronics
+;
+_journal_volume 99
+_journal_year 1976
+_journal_page_first 193
+_journal_page_last 196
+_publ_Section_title
+;
+ {\\'E}tude structurale de CuBi$_{2}$O$_{4}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'CuBi$_{2}$O$_{4}$ Structure'
+_aflow_proto 'A2BC4_tP28_130_f_c_g'
+_aflow_params 'a,c/a,z_{1},x_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '8.5103337343,0.683196239716,0.58,0.5815,0.045,0.136,0.597'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP28'
+
+_cell_length_a    8.5103337343
+_cell_length_b    8.5103337343
+_cell_length_c    5.8142280060
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4/n 21/c 2/c (origin choice 2)"
+_symmetry_Int_Tables_number 130
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z+1/2
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y+1/2,z
+5 -y,-x,-z+1/2
+6 -y+1/2,x,z
+7 y,-x+1/2,z
+8 y+1/2,x+1/2,-z+1/2
+9 -x,-y,-z
+10 -x+1/2,y,z+1/2
+11 x,-y+1/2,z+1/2
+12 x+1/2,y+1/2,-z
+13 y,x,z+1/2
+14 y+1/2,-x,-z
+15 -y,x+1/2,-z
+16 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   4 c 0.25000 0.25000 0.58000 1.00000
+Bi1 Bi   8 f 0.58150 0.41850 0.25000 1.00000
+O1  O   16 g 0.04500 0.13600 0.59700 1.00000

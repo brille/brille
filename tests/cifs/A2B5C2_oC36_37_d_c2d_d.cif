@@ -1,0 +1,72 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Li2Si2O5'
+_chemical_formula_sum 'Li2 O5 Si2'
+
+loop_
+_publ_author_name
+ 'B. H. W. S {de Jong}'
+ 'P. G. G. Slaats'
+ 'H. T. J. Sup{\`e}r'
+ 'N. Veldman'
+ 'A. L. Spek'
+_journal_name_full_name
+;
+ Journal of Non-Crystalline Solids
+;
+_journal_volume 176
+_journal_year 1994
+_journal_page_first 164
+_journal_page_last 171
+_publ_Section_title
+;
+ Extended structures in crystalline phyllosilicates: silica ring systems in lithium, rubidium, cesium, and cesium/lithium phyllosilicate
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Li$_{2}$Si$_{2}$O$_{5}$ Structure'
+_aflow_proto 'A2B5C2_oC36_37_d_c2d_d'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '5.8071602545,2.51110728429,0.821939039086,0.0,0.654,0.0584,0.0469,0.6705,0.0718,0.471,0.0932,0.1377,0.4004,0.1552,0.14836,0.0571'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC36'
+
+_cell_length_a    5.8071602545
+_cell_length_b    14.5824024161
+_cell_length_c    4.7731317194
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "C c c 2"
+_symmetry_Int_Tables_number 37
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z+1/2
+4 x,-y,z+1/2
+5 x+1/2,y+1/2,z
+6 -x+1/2,-y+1/2,z
+7 -x+1/2,y+1/2,z+1/2
+8 x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 c 0.25000 0.25000 0.00000 1.00000
+Li1 Li   8 d 0.65400 0.05840 0.04690 1.00000
+O2  O    8 d 0.67050 0.07180 0.47100 1.00000
+O3  O    8 d 0.09320 0.13770 0.40040 1.00000
+Si1 Si   8 d 0.15520 0.14836 0.05710 1.00000

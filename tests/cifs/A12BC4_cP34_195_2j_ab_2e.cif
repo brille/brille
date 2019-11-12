@@ -1,0 +1,78 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'PrRu4P12'
+_chemical_formula_sum 'P12 Pr Ru4'
+
+loop_
+_publ_author_name
+ 'C. H. Lee'
+ 'H. Matsuhata'
+ 'H. Yamaguchi'
+ 'C. Sekine'
+ 'K. Kihou'
+ 'I. Shirotani'
+_journal_name_full_name
+;
+ Journal of Magnetism and Magnetic Materials
+;
+_journal_volume 272-27
+_journal_year 2004
+_journal_page_first 426
+_journal_page_last 427
+_publ_Section_title
+;
+ A study of the crystal structure at low temperature in the metal--insulator transition compound PrRu$_{4}$P$_{12}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'PrRu$_{4}$P$_{12}$ Structure'
+_aflow_proto 'A12BC4_cP34_195_2j_ab_2e'
+_aflow_params 'a,x_{3},x_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '8.0357772599,0.2493,0.7507,0.14225,0.5,0.35579,0.0002,0.14286,0.35831'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cP34'
+
+_cell_length_a    8.0357772599
+_cell_length_b    8.0357772599
+_cell_length_c    8.0357772599
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 2 3"
+_symmetry_Int_Tables_number 195
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pr1 Pr   1 a 0.00000 0.00000 0.00000 1.00000
+Pr2 Pr   1 b 0.50000 0.50000 0.50000 1.00000
+Ru1 Ru   4 e 0.24930 0.24930 0.24930 1.00000
+Ru2 Ru   4 e 0.75070 0.75070 0.75070 1.00000
+P1  P   12 j 0.14225 0.50000 0.35579 1.00000
+P2  P   12 j 0.00020 0.14286 0.35831 1.00000

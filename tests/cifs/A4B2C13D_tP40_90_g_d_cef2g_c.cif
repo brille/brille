@@ -1,0 +1,76 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Na4Ti2Si8O22[H2O]4'
+_chemical_formula_sum 'H4 Na2 O13 Ti'
+
+loop_
+_publ_author_name
+ 'S. Ferdov'
+ 'U. Kolitsch'
+ 'C. Lengauer'
+ 'E. Tillmanns'
+ 'Z. Lin'
+ 'R. A. {S{\\'a} Ferreira}'
+_journal_name_full_name
+;
+ Acta Crystallographica Section E: Crystallographic Communications
+;
+_journal_volume 63
+_journal_year 2007
+_journal_page_first i186
+_journal_page_last i186
+_publ_Section_title
+;
+ Refinement of the layered titanosilicate AM-1 from single-crystal X-ray diffraction data
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Na$_{4}$Ti$_{2}$Si$_{8}$O$_{22}$[H$_{2}$O]$_{4}$ Structure'
+_aflow_proto 'A4B2C13D_tP40_90_g_d_cef2g_c'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},x_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8}'
+_aflow_params_values '7.3739946979,1.45226471387,-0.0654,0.7769,0.83072,0.6476,0.7846,0.648,0.751,0.001,0.7502,0.5354,0.32757,0.7289,0.8811,0.2635'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP40'
+
+_cell_length_a    7.3739946979
+_cell_length_b    7.3739946979
+_cell_length_c    10.7089923000
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4 21 2"
+_symmetry_Int_Tables_number 90
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z
+7 y+1/2,-x+1/2,z
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 c 0.00000 0.50000 -0.06540 1.00000
+Ti1 Ti   2 c 0.00000 0.50000 0.77690  1.00000
+Na1 Na   4 d 0.00000 0.00000 0.83072  1.00000
+O2  O    4 e 0.64760 0.64760 0.00000  1.00000
+O3  O    4 f 0.78460 0.78460 0.50000  1.00000
+H1  H    8 g 0.64800 0.75100 0.00100  1.00000
+O4  O    8 g 0.75020 0.53540 0.32757  1.00000
+O5  O    8 g 0.72890 0.88110 0.26350  1.00000

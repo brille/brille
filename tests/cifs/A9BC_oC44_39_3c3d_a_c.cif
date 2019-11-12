@@ -1,0 +1,74 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'VPCl9'
+_chemical_formula_sum 'Cl9 P V'
+
+loop_
+_publ_author_name
+ 'M. L. Ziegler'
+ 'B. Nuber'
+ 'K. Weidenhammer'
+ 'G. Hoch'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Naturforschung B
+;
+_journal_volume 32
+_journal_year 1977
+_journal_page_first 18
+_journal_page_last 21
+_publ_Section_title
+;
+ Die Molek{\"u}l-und Kristallstruktur von Tetrachlorophosphoniumpentachlorovanadat (IV),[PCl$_{4}$][VCl$_{5}$]/ The Molecular and Crystal Structure of Tetrachlorophosphoniumpentachlorovanadate (IV),[PCl$_{4}$][VCl$_{5}$]
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'VPCl$_{9}$ Structure'
+_aflow_proto 'A9BC_oC44_39_3c3d_a_c'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8}'
+_aflow_params_values '6.2123847492,1.90215711527,2.62509658728,0.5,0.2673,0.7493,0.6176,0.8879,0.6246,0.6059,0.6191,0.7476,0.2266,0.0857,0.2459,0.1789,0.5932,0.0649,0.18,0.5948,0.4281'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC44'
+
+_cell_length_a    6.2123847492
+_cell_length_b    11.8169318535
+_cell_length_c    16.3081100040
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "A b m 2"
+_symmetry_Int_Tables_number 39
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 x,-y,z+1/2
+4 -x,y,z+1/2
+5 x,y+1/2,z+1/2
+6 -x,-y+1/2,z+1/2
+7 x,-y+1/2,z
+8 -x,y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P    4 a 0.00000 0.00000 0.50000 1.00000
+Cl1 Cl   4 c 0.26730 0.25000 0.74930 1.00000
+Cl2 Cl   4 c 0.61760 0.25000 0.88790 1.00000
+Cl3 Cl   4 c 0.62460 0.25000 0.60590 1.00000
+V1  V    4 c 0.61910 0.25000 0.74760 1.00000
+Cl4 Cl   8 d 0.22660 0.08570 0.24590 1.00000
+Cl5 Cl   8 d 0.17890 0.59320 0.06490 1.00000
+Cl6 Cl   8 d 0.18000 0.59480 0.42810 1.00000

@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'MnGa2Sb2'
+_chemical_formula_sum 'Ga2 Mn Sb2'
+
+loop_
+_publ_author_name
+ 'W. Sakakibara'
+ 'Y. Hayashi'
+ 'H. Takizawa'
+_journal_name_full_name
+;
+ Journal of The Ceramic Society of Japan
+;
+_journal_volume 117
+_journal_year 2009
+_journal_page_first 72
+_journal_page_last 75
+_publ_Section_title
+;
+ MnGa$_{2}$Sb$_{2}$, a new ferromagnetic compound synthesized under high pressure
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'MnGa$_{2}$Sb$_{2}$ Structure'
+_aflow_proto 'A2BC2_oI20_45_c_b_c'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '5.9678340183,1.97721179624,0.981568364609,0.25,0.2729,0.629,0.493,0.2296,0.8629,0.474'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI20'
+
+_cell_length_a    5.9678340183
+_cell_length_b    11.7996718190
+_cell_length_c    5.8578370776
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I b a 2"
+_symmetry_Int_Tables_number 45
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z+1/2
+4 x,-y,z+1/2
+5 x+1/2,y+1/2,z+1/2
+6 -x+1/2,-y+1/2,z+1/2
+7 -x+1/2,y+1/2,z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mn1 Mn   4 b 0.00000 0.50000 0.25000 1.00000
+Ga1 Ga   8 c 0.27290 0.62900 0.49300 1.00000
+Sb1 Sb   8 c 0.22960 0.86290 0.47400 1.00000

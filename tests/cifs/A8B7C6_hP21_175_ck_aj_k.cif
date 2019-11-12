@@ -1,0 +1,83 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Nb7Ru6B8'
+_chemical_formula_sum 'B8 Nb7 Ru6'
+
+loop_
+_publ_author_name
+ 'Q. Zheng'
+ 'M. Kohout'
+ 'R. Gumeniuk'
+ 'N. Abramchuk'
+ 'H. Borrmann'
+ 'Y. Prots'
+ 'U. Burkhardt'
+ 'W. Schnelle'
+ 'L. Akselrud'
+ 'H. Gu'
+ 'A. {Leithe-Jasper}'
+ 'Y. Grin'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 51
+_journal_year 2012
+_journal_page_first 7472
+_journal_page_last 7483
+_publ_Section_title
+;
+ TM$_{7}$ TM\'$_{6}$B$_{8}$ (TM = Ta, Nb; TM\' = Ru, Rh, Ir): New Compounds with [B$_{6}$] Ring Polyanions
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Nb$_{7}$Ru$_{6}$B$_{8}$ Structure'
+_aflow_proto 'A8B7C6_hP21_175_ck_aj_k'
+_aflow_params 'a,c/a,x_{3},y_{3},x_{4},y_{4},x_{5},y_{5}'
+_aflow_params_values '9.5057625379,0.329093950194,0.36335,0.08627,0.0661,0.221,0.15405,0.51373'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP21'
+
+_cell_length_a    9.5057625379
+_cell_length_b    9.5057625379
+_cell_length_c    3.1282889432
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 6/m"
+_symmetry_Int_Tables_number 175
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+7 -x,-y,-z
+8 -x+y,-x,-z
+9 y,-x+y,-z
+10 x,y,-z
+11 x-y,x,-z
+12 -y,x-y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Nb1 Nb   1 a 0.00000 0.00000 0.00000 1.00000
+B1  B    2 c 0.33333 0.66667 0.00000 1.00000
+Nb2 Nb   6 j 0.36335 0.08627 0.00000 1.00000
+B2  B    6 k 0.06610 0.22100 0.50000 1.00000
+Ru1 Ru   6 k 0.15405 0.51373 0.50000 1.00000

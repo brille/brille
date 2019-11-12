@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'K2CdPb'
+_chemical_formula_sum 'Cd K2 Pb'
+
+loop_
+_publ_author_name
+ 'R. Matthes'
+ 'H.-U. Schuster'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Naturforschung B
+;
+_journal_volume 34
+_journal_year 1979
+_journal_page_first 541
+_journal_page_last 543
+_publ_Section_title
+;
+ Synthese und Struktur der Phasen K$_{2}$CdSn und K$_{2}$CdPb/ Synthesis and Structure of the Phase K$_{2}$CdSn and K$_{2}$CdPb
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'K$_{2}$CdPb Structure'
+_aflow_proto 'AB2C_oC16_40_a_2b_b'
+_aflow_params 'a,b/a,c/a,z_{1},y_{2},z_{2},y_{3},z_{3},y_{4},z_{4}'
+_aflow_params_values '6.4580033647,1.33199132859,1.69634561784,0.0,0.3467,0.1773,0.8661,0.3301,0.7281,0.0093'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC16'
+
+_cell_length_a    6.4580033647
+_cell_length_b    8.6020044818
+_cell_length_c    10.9550057077
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "A m a 2"
+_symmetry_Int_Tables_number 40
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 x+1/2,-y,z
+4 -x+1/2,y,z
+5 x,y+1/2,z+1/2
+6 -x,-y+1/2,z+1/2
+7 x+1/2,-y+1/2,z+1/2
+8 -x+1/2,y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cd1 Cd   4 a 0.00000 0.00000 0.00000 1.00000
+K1  K    4 b 0.25000 0.34670 0.17730 1.00000
+K2  K    4 b 0.25000 0.86610 0.33010 1.00000
+Pb1 Pb   4 b 0.25000 0.72810 0.00930 1.00000

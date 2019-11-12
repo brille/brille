@@ -1,0 +1,64 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'alpha Selenium'
+_chemical_formula_sum 'Se'
+ 
+loop_
+_publ_author_name
+ 'Paul Cherin'
+ 'Phyllis Unger'
+_journal_name_full
+;
+Inorganic Chemistry
+;
+_journal_volume 6
+_journal_year 1967
+_journal_page_first 1589
+_journal_page_last 1591
+_publ_Section_title
+;
+ The crystal structure of trigonal selenium
+;
+
+# Found in  Donohue, pp. 370-372
+
+_aflow_proto 'A_hP3_152_a' 
+_aflow_params 'a,c/a,x1' 
+_aflow_params_values '4.3662,1.13453346159,0.2254' 
+_aflow_Strukturbericht 'A8' 
+_aflow_Pearson 'hP3' 
+
+_symmetry_space_group_name_Hall "P 31 2"
+_symmetry_space_group_name_H-M "P 31 2 1"
+_symmetry_Int_Tables_number 152
+
+_cell_length_a    4.36620
+_cell_length_b    4.36620
+_cell_length_c    4.95360
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z+1/3
+3 -x+y,-x,z+2/3
+4 x-y,-y,-z+2/3
+5 y,x,-z
+6 -x,-x+y,-z+1/3
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Se1 Se   3 a 0.22540 0.00000 0.33333 1.00000

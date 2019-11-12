@@ -1,0 +1,72 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Fresnoite'
+_chemical_formula_sum 'Ba2 O8 Si2 Ti'
+
+loop_
+_publ_author_name
+ 'S. A. Markgraf'
+ 'A. Halliya'
+ 'A. S. Bhalla'
+ 'R. E. Newnham'
+ 'C. T. Prewitt'
+_journal_name_full_name
+;
+ Ferroelectrics
+;
+_journal_volume 62
+_journal_year 1985
+_journal_page_first 17
+_journal_page_last 26
+_publ_Section_title
+;
+ X-ray structure refinement and pyroelectric investigation of fresnoite, Ba$_{2}$TiSi$_{2}$O$_{8}$
+;
+
+_aflow_title 'Fresnoite (Ba$_{2}$TiSi$_{2}$O$_{8}$) Structure'
+_aflow_proto 'A2B8C2D_tP26_100_c_abcd_c_a'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '8.527,0.611047261639,0.7904,0.4646,0.3707,0.32701,0.0,0.1259,0.7949,0.1282,0.4871,0.2924,0.5772,0.3571'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP26'
+
+_symmetry_space_group_name_H-M "P 4 b m"
+_symmetry_Int_Tables_number 100
+ 
+_cell_length_a    8.52700
+_cell_length_b    8.52700
+_cell_length_c    5.21040
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+5 -x+1/2,y+1/2,z
+6 x+1/2,-y+1/2,z
+7 y+1/2,x+1/2,z
+8 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 a 0.00000 0.00000 0.79040 1.00000
+Ti1 Ti   2 a 0.00000 0.00000 0.46460 1.00000
+O2  O    2 b 0.50000 0.00000 0.37070 1.00000
+Ba1 Ba   4 c 0.32701 0.82701 0.00000 1.00000
+O3  O    4 c 0.12590 0.62590 0.79490 1.00000
+Si1 Si   4 c 0.12820 0.62820 0.48710 1.00000
+O4  O    8 d 0.29240 0.57720 0.35710 1.00000

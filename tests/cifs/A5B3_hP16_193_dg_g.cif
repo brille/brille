@@ -1,0 +1,84 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Mn5Si3'
+_chemical_formula_sum 'Mn5 Si3'
+
+loop_
+_publ_author_name
+ 'B. Aronsson'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 14
+_journal_year 1960
+_journal_page_first 1414
+_journal_page_last 1418
+_publ_Section_title
+;
+ A note on the compositions and crystal structures of MnB$_{2}$, Mn$_{3}$Si, Mn$_{5}$Si$_{3}$, and FeSi$_{2}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Mavlyanovite (Mn$_{5}$Si$_{3}$, $D8_{8}$) Structure'
+_aflow_proto 'A5B3_hP16_193_dg_g'
+_aflow_params 'a,c/a,x_{2},x_{3}'
+_aflow_params_values '6.9104160691,0.696671490596,0.2358,0.5992'
+_aflow_Strukturbericht '$D8_{8}$'
+_aflow_Pearson 'hP16'
+
+_cell_length_a    6.9104160691
+_cell_length_b    6.9104160691
+_cell_length_c    4.8142898635
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+
+_aflow_Strukturbericht '$D8_{8}$'
+ 
+_symmetry_space_group_name_H-M "P 63/m 2/c 2/m"
+_symmetry_Int_Tables_number 193
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 x-y,-y,-z+1/2
+8 x,x-y,-z
+9 y,x,-z+1/2
+10 -x+y,y,-z
+11 -x,-x+y,-z+1/2
+12 -y,-x,-z
+13 -x,-y,-z
+14 -x+y,-x,-z+1/2
+15 y,-x+y,-z
+16 x,y,-z+1/2
+17 x-y,x,-z
+18 -y,x-y,-z+1/2
+19 -x+y,y,z+1/2
+20 -x,-x+y,z
+21 -y,-x,z+1/2
+22 x-y,-y,z
+23 x,x-y,z+1/2
+24 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mn1 Mn   4 d 0.33333 0.66667 0.00000 1.00000
+Mn2 Mn   6 g 0.23580 0.00000 0.25000 1.00000
+Si1 Si   6 g 0.59920 0.00000 0.25000 1.00000

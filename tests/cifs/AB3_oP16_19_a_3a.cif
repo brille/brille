@@ -1,0 +1,69 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H3Cl'
+_chemical_formula_sum 'Cl H3'
+
+loop_
+_publ_author_name
+ 'D. Duan'
+ 'X. Huang'
+ 'F. Tian'
+ 'Y. Liu'
+ 'Da Li'
+ 'H. Yu'
+ 'B. Liu'
+ 'W. Tian'
+ 'T. Cui'
+_journal_name_full_name
+;
+ Journal of Physical Chemistry A
+;
+_journal_volume 119
+_journal_year 2015
+_journal_page_first 11059
+_journal_page_last 11065
+_publ_Section_title
+;
+ Predicted Formation of H$_{3}^{+}$ in Solid Halogen Polyhydrides at High Pressures
+;
+
+_aflow_title 'H$_{3}$Cl (100~GPa) Structure'
+_aflow_proto 'AB3_oP16_19_a_3a'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '5.668,0.758997882851,0.528757939308,0.584,0.123,0.027,0.31,0.159,0.417,0.257,0.073,0.603,0.983,0.124,0.227'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP16'
+
+_symmetry_space_group_name_H-M "P 21 21 21"
+_symmetry_Int_Tables_number 19
+ 
+_cell_length_a    5.66800
+_cell_length_b    4.30200
+_cell_length_c    2.99700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   4 a 0.58400  0.12300 0.02700  1.00000
+H1  H    4 a 0.31000  0.15900 0.41700  1.00000
+H2  H    4 a 0.25700  0.07300 0.60300  1.00000
+H3  H    4 a 0.98300  0.12400 0.22700  1.00000

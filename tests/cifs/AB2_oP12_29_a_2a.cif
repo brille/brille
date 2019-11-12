@@ -1,0 +1,62 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'FeS2'
+_chemical_formula_sum 'Fe S2'
+
+loop_
+_publ_author_name
+ 'P. Bayliss'
+_journal_name_full_name
+;
+ American Mineralogist
+;
+_journal_volume 74
+_journal_year 1989
+_journal_page_first 1168
+_journal_page_last 1176
+_publ_Section_title
+;
+ Crystal chemistry and crystallography of some minerals within the pyrite group
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Pyrite (FeS$_{2}$, Low-temperature) Structure'
+_aflow_proto 'AB2_oP12_29_a_2a'
+_aflow_params 'a,b/a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '5.4179557747,1.0,1.0,0.5049,0.2419,0.0,0.615,0.135,0.3834,0.615,0.635,0.1134'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP12'
+
+_cell_length_a    5.4179557747
+_cell_length_b    5.4179557747
+_cell_length_c    5.4179557747
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P c a 21"
+_symmetry_Int_Tables_number 29
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -x+1/2,y,z+1/2
+4 x+1/2,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   4 a 0.50490 0.24190 0.00000 1.00000
+S1  S    4 a 0.61500 0.13500 0.38340 1.00000
+S2  S    4 a 0.61500 0.63500 0.11340 1.00000

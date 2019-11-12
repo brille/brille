@@ -1,0 +1,71 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Fe3Te3Tl'
+_chemical_formula_sum 'Fe3 Te3 Tl'
+
+loop_
+_publ_author_name
+ 'K. Klepp'
+ 'H. Boller'
+_journal_name_full_name
+;
+ Acta Crystallographica Section A: Foundations and Advances
+;
+_journal_volume 34
+_journal_year 1978
+_journal_page_first S160
+_journal_page_last S161
+_publ_Section_title
+;
+ Crystal Structures of Thallium-Iron Chalcogenides
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Fe$_{3}$Te$_{3}$Tl Structure'
+_aflow_proto 'A3B3C_hP14_176_h_h_c'
+_aflow_params 'a,c/a,x_{2},y_{2},x_{3},y_{3}'
+_aflow_params_values '9.3500327107,0.451336898402,0.1493,0.1701,0.357,0.0462'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP14'
+
+_cell_length_a    9.3500327107
+_cell_length_b    9.3500327107
+_cell_length_c    4.2200147636
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 63/m"
+_symmetry_Int_Tables_number 176
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x,-y,-z
+8 -x+y,-x,-z+1/2
+9 y,-x+y,-z
+10 x,y,-z+1/2
+11 x-y,x,-z
+12 -y,x-y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Tl1 Tl   2 c 0.33333 0.66667 0.25000 1.00000
+Fe1 Fe   6 h 0.14930 0.17010 0.25000 1.00000
+Te1 Te   6 h 0.35700 0.04620 0.25000 1.00000

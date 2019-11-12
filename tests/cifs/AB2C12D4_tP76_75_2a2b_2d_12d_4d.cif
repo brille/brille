@@ -1,0 +1,82 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BaCr2Ru4O12'
+_chemical_formula_sum 'Ba Cr2 O12 Ru4'
+
+loop_
+_publ_author_name
+ 'M. C. Cad{\\'e}e'
+ 'A. Prodan'
+_journal_name_full_name
+;
+ Materials Research Bulletin
+;
+_journal_volume 14
+_journal_year 1979
+_journal_page_first 613
+_journal_page_last 618
+_publ_Section_title
+;
+ Tripling of the short axis in the hollandite structure
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BaCr$_{2}$Ru$_{4}$O$_{12}$ Structure'
+_aflow_proto 'AB2C12D4_tP76_75_2a2b_2d_12d_4d'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13},x_{14},y_{14},z_{14},x_{15},y_{15},z_{15},x_{16},y_{16},z_{16},x_{17},y_{17},z_{17},x_{18},y_{18},z_{18},x_{19},y_{19},z_{19},x_{20},y_{20},z_{20},x_{21},y_{21},z_{21},x_{22},y_{22},z_{22}'
+_aflow_params_values '9.8880614494,0.922431229769,0.3333,0.0,0.5003,0.1666,0.167,0.348,0.1666,0.333,0.152,0.0,0.208,0.152,0.8333,0.458,0.152,0.8333,0.292,0.348,0.6666,0.042,0.348,0.6666,0.208,0.152,0.5,0.458,0.152,0.5,0.292,0.348,0.3333,0.042,0.348,0.3333,0.208,0.152,0.1666,0.458,0.152,0.1666,0.292,0.348,0.0,0.042,0.348,0.0,0.167,0.348,0.8333,0.333,0.152,0.6666,0.167,0.348,0.5,0.333,0.152,0.3333'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP76'
+
+_cell_length_a    9.8880614494
+_cell_length_b    9.8880614494
+_cell_length_c    9.1210566828
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4"
+_symmetry_Int_Tables_number 75
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ba1 Ba   1 a 0.00000 0.00000 0.33330 1.00000
+Ba2 Ba   1 a 0.00000 0.00000 0.00000 1.00000
+Ba3 Ba   1 b 0.50000 0.50000 0.50030 1.00000
+Ba4 Ba   1 b 0.50000 0.50000 0.16660 1.00000
+Cr1 Cr   4 d 0.16700 0.34800 0.16660 1.00000
+Cr2 Cr   4 d 0.33300 0.15200 0.00000 1.00000
+O1  O    4 d 0.20800 0.15200 0.83330 1.00000
+O2  O    4 d 0.45800 0.15200 0.83330 1.00000
+O3  O    4 d 0.29200 0.34800 0.66660 1.00000
+O4  O    4 d 0.04200 0.34800 0.66660 1.00000
+O5  O    4 d 0.20800 0.15200 0.50000 1.00000
+O6  O    4 d 0.45800 0.15200 0.50000 1.00000
+O7  O    4 d 0.29200 0.34800 0.33330 1.00000
+O8  O    4 d 0.04200 0.34800 0.33330 1.00000
+O9  O    4 d 0.20800 0.15200 0.16660 1.00000
+O10 O    4 d 0.45800 0.15200 0.16660 1.00000
+O11 O    4 d 0.29200 0.34800 0.00000 1.00000
+O12 O    4 d 0.04200 0.34800 0.00000 1.00000
+Ru1 Ru   4 d 0.16700 0.34800 0.83330 1.00000
+Ru2 Ru   4 d 0.33300 0.15200 0.66660 1.00000
+Ru3 Ru   4 d 0.16700 0.34800 0.50000 1.00000
+Ru4 Ru   4 d 0.33300 0.15200 0.33330 1.00000

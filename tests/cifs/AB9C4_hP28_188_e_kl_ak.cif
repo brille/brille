@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BaSi4O9'
+_chemical_formula_sum 'Ba O9 Si4'
+
+loop_
+_publ_author_name
+ 'L. W. Finger'
+ 'R. M. Hazen'
+ 'B. A. Fursenko'
+_journal_name_full_name
+;
+ Journal of Physics and Chemistry of Solids
+;
+_journal_volume 56
+_journal_year 1995
+_journal_page_first 1389
+_journal_page_last 1393
+_publ_Section_title
+;
+ Refinement of the crystal structure of BaSi$_{4}$O$_{9}$ in the benitoite form
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BaSi$_{4}$O$_{9}$ ($S3_{2}$) Structure'
+_aflow_proto 'AB9C4_hP28_188_e_kl_ak'
+_aflow_params 'a,c/a,x_{3},y_{3},x_{4},y_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '6.4953629976,1.43896355826,0.07103,0.48306,0.12023,0.75436,0.22923,0.00127,0.6032'
+_aflow_Strukturbericht '$S3_{2}$'
+_aflow_Pearson 'hP28'
+
+_cell_length_a    6.4953629976
+_cell_length_b    6.4953629976
+_cell_length_c    9.3465906512
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P -6 c 2"
+_symmetry_Int_Tables_number 188
+_aflow_Strukturbericht '$S3_{2}$'
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x,x-y,-z
+5 -x+y,y,-z
+6 -y,-x,-z
+7 -x+y,-x,-z+1/2
+8 x,y,-z+1/2
+9 -y,x-y,-z+1/2
+10 -x+y,y,z+1/2
+11 -y,-x,z+1/2
+12 x,x-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   2 a 0.00000 0.00000 0.00000 1.00000
+Ba1 Ba   2 e 0.66667 0.33333 0.00000 1.00000
+O1  O    6 k 0.07103 0.48306 0.25000 1.00000
+Si2 Si   6 k 0.12023 0.75436 0.25000 1.00000
+O2  O   12 l 0.22923 0.00127 0.60320 1.00000

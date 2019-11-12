@@ -1,0 +1,75 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Nb4CoSi'
+_chemical_formula_sum 'Co Nb4 Si'
+
+loop_
+_publ_author_name
+ 'E. I. Gladyshevskii'
+ '{Yu}. B. {Kuz\'ma}'
+_journal_name_full_name
+;
+ Journal of Structural Chemistry
+;
+_journal_volume 6
+_journal_year 1965
+_journal_page_first 60
+_journal_page_last 63
+_publ_Section_title
+;
+ The compounds Nb$_{4}$FeSi, Nb$_{4}$CoSi, Nb$_{4}$NiSi and their crystal structures
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Nb$_{4}$CoSi Structure'
+_aflow_proto 'AB4C_tP12_124_a_m_c'
+_aflow_params 'a,c/a,x_{3},y_{3}'
+_aflow_params_values '6.1884808485,0.816448537725,0.162,0.662'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP12'
+
+_cell_length_a    6.1884808485
+_cell_length_b    6.1884808485
+_cell_length_c    5.0525761395
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4/m 2/c 2/c"
+_symmetry_Int_Tables_number 124
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z+1/2
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z+1/2
+9 -x,-y,-z
+10 -x,y,z+1/2
+11 x,-y,z+1/2
+12 x,y,-z
+13 y,x,z+1/2
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Co1 Co   2 a 0.00000 0.00000 0.25000 1.00000
+Si1 Si   2 c 0.50000 0.50000 0.25000 1.00000
+Nb1 Nb   8 m 0.16200 0.66200 0.00000 1.00000

@@ -1,0 +1,73 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Nb P S'
+
+loop_
+_publ_author_name
+ 'P. C. Donohue'
+ 'P. E. Bierstedt'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 8
+_journal_year 1969
+_journal_page_first 2690
+_journal_page_last 2694
+_publ_Section_title
+;
+ Synthesis, crystal structure, and superconducting properties of niobium phosphorus sulfide, niobium phosphorus selenide and tantalum phosphorus sulfide
+;
+
+_aflow_title 'NbPS Structure'
+_aflow_proto 'ABC_oI12_71_h_j_g'
+_aflow_params 'a,b/a,c/a,y_{1},y_{2},z_{3}'
+_aflow_params_values '3.438,3.4554973822,1.37434554974,0.212,0.1232,0.235'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI12'
+
+_symmetry_space_group_name_H-M "I 2/m 2/m 2/m"
+_symmetry_Int_Tables_number 71
+ 
+_cell_length_a    3.43800
+_cell_length_b    11.88000
+_cell_length_c    4.72500
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z
+8 x,y,-z
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y+1/2,-z+1/2
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z+1/2
+14 -x+1/2,y+1/2,z+1/2
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1  S    4 g 0.00000 0.21200 0.00000 1.00000
+Nb1 Nb   4 h 0.00000 0.12320 0.50000 1.00000
+P1  P    4 j 0.50000 0.00000 0.23500 1.00000

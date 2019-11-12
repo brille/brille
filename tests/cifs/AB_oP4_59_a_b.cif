@@ -1,0 +1,67 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Vulcanite'
+_chemical_formula_sum 'Cu Te'
+ 
+loop_
+_publ_author_name
+ 'Eugene N. Cameron'
+ 'Ian M. Threadgold'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 46
+_journal_year 1961
+_journal_page_first 258
+_journal_page_last 268
+_publ_Section_title
+;
+ Vulcanite, a new copper telluride from Colorado, with notes on certain associated minerals
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB_oP4_59_a_b' 
+_aflow_params 'a,b/a,c/a,z1,z2' 
+_aflow_params_values '3.15,1.29841269841,2.20634920635,0.051,0.277' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP4' 
+
+_symmetry_space_group_name_Hall "-P 2ab 2a"
+_symmetry_space_group_name_H-M "P m m n:2"
+_symmetry_Int_Tables_number 59
+
+_cell_length_a    3.15000
+_cell_length_b    4.09000
+_cell_length_c    6.95000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z
+3 -x,y+1/2,-z
+4 -x+1/2,-y+1/2,z
+5 -x,-y,-z
+6 -x+1/2,y,z
+7 x,-y+1/2,z
+8 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   2 a 0.25000 0.25000 0.05100 1.00000
+Te1 Te   2 b 0.25000 0.75000 0.27700 1.00000

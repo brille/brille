@@ -1,0 +1,85 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Co U'
+ 
+loop_
+_publ_author_name
+ 'N. C. Baenziger'
+ 'R. E. Rundle'
+ 'A. I. Snow'
+ 'A. S. Wilson'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 3
+_journal_year 1950
+_journal_page_first 34
+_journal_page_last 40
+_publ_Section_title
+;
+ Compounds of uranium with the transition metals of the first long period
+;
+
+# Found in  rough58:UTh
+
+_aflow_proto 'AB_cI16_199_a_a' 
+_aflow_params 'a,x1,x2' 
+_aflow_params_values '6.3557,0.294,0.0347' 
+_aflow_Strukturbericht 'B_a' 
+_aflow_Pearson 'cI16' 
+
+_symmetry_space_group_name_Hall "I 2b 2c 3"
+_symmetry_space_group_name_H-M "I 21 3"
+_symmetry_Int_Tables_number 199
+
+_cell_length_a    6.35570
+_cell_length_b    6.35570
+_cell_length_c    6.35570
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 y,z,x
+6 y,-z,-x+1/2
+7 -y+1/2,z,-x
+8 -y,-z+1/2,x
+9 z,x,y
+10 z,-x,-y+1/2
+11 -z+1/2,x,-y
+12 -z,-x+1/2,y
+13 x+1/2,y+1/2,z+1/2
+14 x+1/2,-y+1/2,-z
+15 -x,y+1/2,-z+1/2
+16 -x+1/2,-y,z+1/2
+17 y+1/2,z+1/2,x+1/2
+18 y+1/2,-z+1/2,-x
+19 -y,z+1/2,-x+1/2
+20 -y+1/2,-z,x+1/2
+21 z+1/2,x+1/2,y+1/2
+22 z+1/2,-x+1/2,-y
+23 -z,x+1/2,-y+1/2
+24 -z+1/2,-x,y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Co1 Co   8 a 0.29400 0.29400 0.29400 1.00000
+U1  U    8 a 0.03470 0.03470 0.03470 1.00000

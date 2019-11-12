@@ -1,0 +1,66 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Hg Cl2'
+ 
+loop_
+_publ_author_name
+ 'H. Braekken'
+ 'W. Scholten'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 89
+_journal_year 1934
+_journal_page_first 448
+_journal_page_last 455
+_publ_Section_title
+;
+ Die Kristallstruktur des Quecksilberchloride HgCl$_2$
+;
+
+_aflow_proto 'A2B_oP12_62_2c_c' 
+_aflow_params 'a,b/a,c/a,x1,z1,x2,z2,x3,z3' 
+_aflow_params_values '12.735,0.468237141735,0.339615233608,0.733,0.125,0.508,0.722,0.874,0.447' 
+_aflow_Strukturbericht 'C25' 
+_aflow_Pearson 'oP12' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2n"
+_symmetry_space_group_name_H-M "P n m a"
+_symmetry_Int_Tables_number 62
+
+_cell_length_a    12.73500
+_cell_length_b    5.96300
+_cell_length_c    4.32500
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x,y+1/2,-z
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x+1/2,y+1/2,z+1/2
+7 x,-y+1/2,z
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   4 c 0.73300 0.25000 0.12500 1.00000
+Cl2 Cl   4 c 0.50800 0.25000 0.72200 1.00000
+Hg1 Hg   4 c 0.87400 0.25000 0.44700 1.00000

@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'MnF2'
+_chemical_formula_sum 'F2 Mn'
+
+loop_
+_publ_author_name
+ 'T. Yagi'
+ 'J. C. Jamieson'
+ 'P. B. Moore'
+_journal_name_full_name
+;
+ Journal of Geophysical Research: Solid Earth
+;
+_journal_volume 84
+_journal_year 1979
+_journal_page_first 1113
+_journal_page_last 1115
+_publ_Section_title
+;
+ Polymorphism in MnF$_{2}$ (rutile type) at high pressures
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'MnF$_{2}$ Structure'
+_aflow_proto 'A2B_tP12_111_2n_adf'
+_aflow_params 'a,c/a,x_{4},z_{4},x_{5},z_{5}'
+_aflow_params_values '5.1219931862,1.02616165562,0.205,0.28,0.301,0.622'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP12'
+
+_cell_length_a    5.1219931862
+_cell_length_b    5.1219931862
+_cell_length_c    5.2559930080
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 2 m"
+_symmetry_Int_Tables_number 111
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,x,z
+6 y,-x,-z
+7 -y,x,-z
+8 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mn1 Mn   1 a 0.00000 0.00000 0.00000 1.00000
+Mn2 Mn   1 d 0.50000 0.50000 0.00000 1.00000
+Mn3 Mn   2 f 0.50000 0.00000 0.50000 1.00000
+F1  F    4 n 0.20500 0.20500 0.28000 1.00000
+F2  F    4 n 0.30100 0.30100 0.62200 1.00000

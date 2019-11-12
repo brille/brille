@@ -1,0 +1,88 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '$\gamma$-brass Cu$_{9}$Al$_{4}$'
+_chemical_formula_sum 'Al4 Cu9'
+
+loop_
+_publ_author_name
+ 'L. Arnberg'
+ 'S. Westman'
+_journal_name_full_name
+;
+ Acta Crystallographica Section A: Foundations and Advances
+;
+_journal_volume 34
+_journal_year 1978
+_journal_page_first 399
+_journal_page_last 404
+_publ_Section_title
+;
+ Crystal perfection in a noncentrosymmetric alloy. Refinement and test of twinning of the $\gamma$Cu$_{9}$Al$_{4}$ structure
+;
+
+# Found in Structure Types, 2005
+
+_aflow_title '$\gamma$-brass (Cu$_{9}$Al$_{4}$, $D8_{3}$) Structure'
+_aflow_proto 'A4B9_cP52_215_ei_3efgi'
+_aflow_params 'a,x_{1},x_{2},x_{3},x_{4},x_{5},x_{6},x_{7},z_{7},x_{8},z_{8}'
+_aflow_params_values '8.7068,0.1157,0.8296,0.3253,0.6066,0.3534,0.8549,0.8113,0.5332,0.3153,0.0322'
+_aflow_Strukturbericht '$D8_{3}$'
+_aflow_Pearson 'cP52'
+
+_symmetry_space_group_name_H-M "P -4 3 m"
+_symmetry_Int_Tables_number 215
+ 
+_cell_length_a    8.70680
+_cell_length_b    8.70680
+_cell_length_c    8.70680
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+17 x,z,y
+18 x,-z,-y
+19 -x,z,-y
+20 -x,-z,y
+21 z,y,x
+22 z,-y,-x
+23 -z,y,-x
+24 -z,-y,x
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 e 0.11570 0.11570 0.11570 1.00000
+Cu1 Cu   4 e 0.82960 0.82960 0.82960 1.00000
+Cu2 Cu   4 e 0.32530 0.32530 0.32530 1.00000
+Cu3 Cu   4 e 0.60660 0.60660 0.60660 1.00000
+Cu4 Cu   6 f 0.35340 0.00000 0.00000 1.00000
+Cu5 Cu   6 g 0.85490 0.50000 0.50000 1.00000
+Al2 Al  12 i 0.81130 0.81130 0.53320 1.00000
+Cu6 Cu  12 i 0.31530 0.31530 0.03220 1.00000

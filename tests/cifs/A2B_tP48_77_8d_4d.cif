@@ -1,0 +1,72 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H2S III'
+_chemical_formula_sum 'H2 S'
+
+loop_
+_publ_author_name
+ 'E. S\\'{a}ndor'
+ 'S. O. Ogunade'
+_journal_name_full_name
+;
+ Nature
+;
+_journal_volume 224
+_journal_year 1969
+_journal_page_first 905
+_journal_page_last 907
+_publ_Section_title
+;
+ Structure and Phase Transition in Solid Hydrogen and Deuterium Sulphides
+;
+
+# Found in Pressure-temperature phase diagram of solid hydrogen sulfide determined by Raman spectroscopy, 1995
+
+_aflow_title 'H$_{2}$S III Structure'
+_aflow_proto 'A2B_tP48_77_8d_4d'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12}'
+_aflow_params_values '13.47,0.304380103935,0.193,0.14,0.163,0.091,0.059,0.837,0.693,0.14,0.163,0.591,0.059,0.837,0.193,0.64,0.163,0.193,0.64,0.837,0.693,0.64,0.837,0.591,0.559,0.163,0.11,0.14,0.0,0.61,0.14,0.0,0.11,0.64,0.0,0.61,0.64,0.0'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP48'
+
+_symmetry_space_group_name_H-M "P 42"
+_symmetry_Int_Tables_number 77
+ 
+_cell_length_a    13.47000
+_cell_length_b    13.47000
+_cell_length_c    4.10000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z+1/2
+4 y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1 H   4 d 0.19300 0.14000 0.16300 1.00000
+H2 H   4 d 0.09100 0.05900 0.83700 1.00000
+H3 H   4 d 0.69300 0.14000 0.16300 1.00000
+H4 H   4 d 0.59100 0.05900 0.83700 1.00000
+H5 H   4 d 0.19300 0.64000 0.16300 1.00000
+H6 H   4 d 0.19300 0.64000 0.83700 1.00000
+H7 H   4 d 0.69300 0.64000 0.83700 1.00000
+H8 H   4 d 0.59100 0.55900 0.16300 1.00000
+S1 S   4 d 0.11000 0.14000 0.00000 1.00000
+S2 S   4 d 0.61000 0.14000 0.00000 1.00000
+S3 S   4 d 0.11000 0.64000 0.00000 1.00000
+S4 S   4 d 0.61000 0.64000 0.00000 1.00000

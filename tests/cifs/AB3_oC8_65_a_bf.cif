@@ -1,0 +1,73 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cd Pt3'
+ 
+loop_
+_publ_author_name
+ 'Gus L. W. Hart'
+_journal_name_full
+;
+Physical Review B
+;
+_journal_volume 80
+_journal_year 2009
+_journal_page_first 014106
+_journal_page_last 014106
+_publ_Section_title
+;
+ Verifying predictions of the L1$_3$ crystal structure in Cd-Pt and Pd-Pt by exhaustive enumeration
+;
+
+_aflow_proto 'AB3_oC8_65_a_bf' 
+_aflow_params 'a,b/a,c/a' 
+_aflow_params_values '5.82068,1.35259626023,0.493507631411' 
+_aflow_Strukturbericht 'L1_3' 
+_aflow_Pearson 'oC8' 
+
+_symmetry_space_group_name_Hall "-C 2 2 "
+_symmetry_space_group_name_H-M "C m m m"
+_symmetry_Int_Tables_number 65
+
+_cell_length_a    5.82068
+_cell_length_b    7.87303
+_cell_length_c    2.87255
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z
+8 x,y,-z
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z
+12 -x+1/2,-y+1/2,z
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z
+16 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cd1 Cd   2 a 0.00000 0.00000 0.00000 1.00000
+Pt1 Pt   2 b 0.50000 0.00000 0.00000 1.00000
+Pt2 Pt   4 f 0.25000 0.25000 0.50000 1.00000

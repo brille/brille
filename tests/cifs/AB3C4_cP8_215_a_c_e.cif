@@ -1,0 +1,84 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Lavarevi\'{c}ite'
+_chemical_formula_sum 'As Cu3 S4'
+ 
+loop_
+_publ_author_name
+ 'C. B. Sclar'
+ 'M. Drovenik'
+_journal_name_full
+;
+Geological Society of America Bulletin
+;
+_journal_volume 71
+_journal_year 1960
+_journal_page_first 1970
+_journal_page_last 1970
+_publ_Section_title
+;
+ Lazarevi\'{c}ite, A New Cubic Copper-Arsenic Sulfied from Bor, Jugoslavia
+;
+
+# Found in  Pearson's Handbook, Vol. I, pp. 1111-1112, Fleischer 1961
+
+_aflow_proto 'AB3C4_cP8_215_a_c_e' 
+_aflow_params 'a,x3' 
+_aflow_params_values '5.28,0.25' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'cP8' 
+
+_symmetry_space_group_name_Hall "P -4 2 3"
+_symmetry_space_group_name_H-M "P -4 3 m"
+_symmetry_Int_Tables_number 215
+
+_cell_length_a    5.28000
+_cell_length_b    5.28000
+_cell_length_c    5.28000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+17 x,z,y
+18 x,-z,-y
+19 -x,z,-y
+20 -x,-z,y
+21 z,y,x
+22 z,-y,-x
+23 -z,y,-x
+24 -z,-y,x
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   1 a 0.00000 0.00000 0.00000 1.00000
+Cu1 Cu   3 c 0.00000 0.50000 0.50000 1.00000
+S1  S    4 e 0.25000 0.25000 0.25000 1.00000

@@ -1,0 +1,65 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'TlF-II'
+_chemical_formula_sum 'Tl F'
+
+loop_
+_publ_author_name
+ 'P. Berastegui'
+ 'S. Hull'
+_journal_name_full
+;
+Journal of Solid State Chemistry
+;
+_journal_volume 150
+_journal_year 2000
+_journal_page_first 266
+_journal_page_last 275
+_publ_Section_title
+;
+ The Crystal Structures of Thallium(I) Fluoride
+;
+
+_aflow_proto 'AB_oP8_57_d_d'
+_aflow_params 'a,b/a,c/a,x1,y1,x2,y2'
+_aflow_params_values '6.09556,0.900425883758,0.850291031505,0.8593,0.0628,0.255,0.0096'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP8'
+
+_symmetry_space_group_name_Hall "-P 2c 2b"
+_symmetry_space_group_name_H-M "P b c m"
+_symmetry_Int_Tables_number 57
+
+_cell_length_a    6.09556
+_cell_length_b    5.48860
+_cell_length_c    5.18300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x,-y,z+1/2
+5 -x,-y,-z
+6 -x,y+1/2,z
+7 x,-y+1/2,z+1/2
+8 x,y,-z+1/2
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+F1  F    4 d 0.85930 0.06280 0.25000 1.00000
+Tl1 Tl   4 d 0.25500 0.00960 0.25000 1.00000

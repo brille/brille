@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'RuIn3'
+_chemical_formula_sum 'In3 Ru'
+
+loop_
+_publ_author_name
+ 'R. B. Roof'
+ 'Z. Fisk'
+ 'J. L. Smith'
+_journal_name_full_name
+;
+ Powder Diffraction
+;
+_journal_volume 1
+_journal_year 1986
+_journal_page_first 20
+_journal_page_last 21
+_publ_Section_title
+;
+ Crystal data for RuIn$_{3}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'RuIn$_{3}$ Structure'
+_aflow_proto 'A3B_tP16_118_ei_f'
+_aflow_params 'a,c/a,z_{1},x_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '6.9983025398,1.03510852635,0.237,0.15,0.343,0.149,0.509'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP16'
+
+_cell_length_a    6.9983025398
+_cell_length_b    6.9983025398
+_cell_length_c    7.2440026289
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 n 2"
+_symmetry_Int_Tables_number 118
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y+1/2,-x+1/2,-z+1/2
+4 y+1/2,x+1/2,-z+1/2
+5 -x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,z+1/2
+7 y,-x,-z
+8 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+In1 In   4 e 0.00000 0.00000 0.23700 1.00000
+Ru1 Ru   4 f 0.15000 0.35000 0.25000 1.00000
+In2 In   8 i 0.34300 0.14900 0.50900 1.00000

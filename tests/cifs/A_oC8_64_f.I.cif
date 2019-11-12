@@ -1,0 +1,75 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'I'
+
+loop_
+_publ_author_name
+ 'C. Petrillo'
+ 'O. Moze'
+ 'R. M. Ibberson'
+_journal_name_full
+;
+Physica B
+;
+_journal_volume 180-181
+_journal_year 1992
+_journal_page_first 639
+_journal_page_last 641
+_publ_Section_title
+;
+ High resolution neutron powder diffraction investigation of the low temperature crystal structure of molecular iodine (I$_2$)
+;
+
+# Found in  http://www.webelements.com/iodine/crystal_structure.html
+
+_aflow_proto 'A_oC8_64_f'
+_aflow_params 'a,b/a,c/a,y1,z1'
+_aflow_params_values '7.11906,0.654575182679,1.37596817557,0.15485,0.1175'
+_aflow_Strukturbericht 'A14'
+_aflow_Pearson 'oC8'
+
+_symmetry_space_group_name_Hall "-C 2bc 2"
+_symmetry_space_group_name_H-M "C m c a"
+_symmetry_Int_Tables_number 64
+
+_cell_length_a    7.11906
+_cell_length_b    4.65996
+_cell_length_c    9.79560
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x+1/2,y,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x+1/2,-y,z+1/2
+8 x+1/2,y,-z+1/2
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x,y+1/2,-z+1/2
+12 -x,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z+1/2
+16 x,y+1/2,-z+1/2
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+I1 I   8 f 0.00000 0.15485 0.11750 1.00000

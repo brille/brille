@@ -1,0 +1,74 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'K2Ta4O9F4'
+_chemical_formula_sum 'K2 O13 Ta4'
+
+loop_
+_publ_author_name
+ 'A. Boukhari'
+ 'J. P. Chaminade'
+ 'M. Vlasse'
+ 'M. Pouchard'
+_journal_name_full_name
+;
+ Acta Crystallographica Section B: Structural Science
+;
+_journal_volume 35
+_journal_year 1979
+_journal_page_first 1983
+_journal_page_last 1986
+_publ_Section_title
+;
+ Structure cristalline de l\'oxyfluorure de tantale et de potassium, K$_{2}$Ta$_{4}$F$_{4}$O$_{9}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'K$_{2}$Ta$_{4}$O$_{9}$F$_{4}$ Structure'
+_aflow_proto 'A2B13C4_hP57_168_d_c6d_2d'
+_aflow_params 'a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10}'
+_aflow_params_values '15.9361426085,0.244226907628,0.0,0.4965,0.179,0.555,0.035,0.187,0.007,0.349,0.034,0.018,0.168,0.388,0.01,0.195,0.569,0.02,0.093,0.454,0.539,0.273,0.095,0.555,0.2634,0.09,0.086,0.0789,0.4368,0.071'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP57'
+
+_cell_length_a    15.9361426085
+_cell_length_b    15.9361426085
+_cell_length_c    3.8920348288
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 6"
+_symmetry_Int_Tables_number 168
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    3 c 0.50000 0.00000 0.00000 1.00000
+K1  K    6 d 0.49650 0.17900 0.55500 1.00000
+O2  O    6 d 0.03500 0.18700 0.00700 1.00000
+O3  O    6 d 0.34900 0.03400 0.01800 1.00000
+O4  O    6 d 0.16800 0.38800 0.01000 1.00000
+O5  O    6 d 0.19500 0.56900 0.02000 1.00000
+O6  O    6 d 0.09300 0.45400 0.53900 1.00000
+O7  O    6 d 0.27300 0.09500 0.55500 1.00000
+Ta1 Ta   6 d 0.26340 0.09000 0.08600 1.00000
+Ta2 Ta   6 d 0.07890 0.43680 0.07100 1.00000

@@ -1,0 +1,63 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Baddeleyite'
+_chemical_formula_sum 'Zr O2'
+ 
+loop_
+_publ_author_name
+ 'C. J. Howard'
+ 'R. J. Hill'
+ 'B. E. Reichert'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 44
+_journal_year 1988
+_journal_page_first 116
+_journal_page_last 120
+_publ_Section_title
+;
+ Structures of ZrO$_2$ polymorphs at room temperature by high-resolution neutron powder diffraction
+;
+
+_aflow_proto 'A2B_mP12_14_2e_e' 
+_aflow_params 'a,b/a,c/a,\beta,x1,y1,z1,x2,y2,z2,x3,y3,z3' 
+_aflow_params_values '5.1505,1.01186292593,1.03238520532,99.23,0.07,0.3317,0.3447,0.4496,0.7569,0.4792,0.2754,0.0395,0.2083' 
+_aflow_Strukturbericht 'C43' 
+_aflow_Pearson 'mP12' 
+
+_symmetry_space_group_name_Hall "-P 2ybc"
+_symmetry_space_group_name_H-M "P 1 21/c 1"
+_symmetry_Int_Tables_number 14
+
+_cell_length_a    5.15050
+_cell_length_b    5.21160
+_cell_length_c    5.31730
+_cell_angle_alpha 90.00000
+_cell_angle_beta  99.23000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z+1/2
+3 -x,-y,-z
+4 x,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 e 0.07000 0.33170 0.34470 1.00000
+O2  O    4 e 0.44960 0.75690 0.47920 1.00000
+Zr1 Zr   4 e 0.27540 0.03950 0.20830 1.00000

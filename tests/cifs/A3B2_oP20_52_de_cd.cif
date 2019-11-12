@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sr2Bi3'
+_chemical_formula_sum 'Bi3 Sr2'
+
+loop_
+_publ_author_name
+ 'F. Merlo'
+ 'M. L. Fornasini'
+_journal_name_full_name
+;
+ Materials Research Bulletin
+;
+_journal_volume 29
+_journal_year 1994
+_journal_page_first 149
+_journal_page_last 154
+_publ_Section_title
+;
+ Crystal structure of some phases and alloying behaviour in alkaline earths, europium and ytterbium pnictides
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Sr$_{2}$Bi$_{3}$ Structure'
+_aflow_proto 'A3B2_oP20_52_de_cd'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},x_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '15.5832022616,0.434585119311,0.426069989123,0.443,0.4294,0.0001,0.6539,0.064,0.0788'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP20'
+
+_cell_length_a    15.5832022616
+_cell_length_b    6.7722278141
+_cell_length_c    6.6395348181
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 2/n 21/n 2/a"
+_symmetry_Int_Tables_number 52
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x+1/2,-y,z
+5 -x,-y,-z
+6 -x,y+1/2,z+1/2
+7 x+1/2,-y+1/2,z+1/2
+8 x+1/2,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Sr1 Sr   4 c 0.25000 0.00000 0.44300 1.00000
+Bi1 Bi   4 d 0.42940 0.25000 0.25000 1.00000
+Sr2 Sr   4 d 0.00010 0.25000 0.25000 1.00000
+Bi2 Bi   8 e 0.65390 0.06400 0.07880 1.00000

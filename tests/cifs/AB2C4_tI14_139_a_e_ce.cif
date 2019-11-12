@@ -1,0 +1,97 @@
+# CIF file
+ 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral '(La,Ba)CuO4'
+_chemical_formula_sum 'La2 Cu O4'
+ 
+loop_
+_publ_author_name
+ 'J. D. Jorgensen'
+ 'H.-B. Sch\"{u}ttler'
+ 'D. G. Hinks'
+ 'D. W. Capone, II'
+ 'K. Zhang'
+ 'M. B. Brodsky'
+_journal_name_full
+;
+Physical Review Letters
+;
+_journal_volume 58
+_journal_year 1987
+_journal_page_first 1024
+_journal_page_last 1029
+_publ_Section_title
+;
+ Lattice instability and high-$T_c$ superconductivity in La$_{2-x}$Ba$_x$CuO$_4$
+;
+
+# Found in  shaked94:hightcstruct
+
+_aflow_proto 'AB2C4_tI14_139_a_e_ce' 
+_aflow_params 'a,c/a,z3,z4' 
+_aflow_params_values '3.7817,3.50337149959,0.36075,0.1824' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tI14' 
+
+_symmetry_space_group_name_Hall "-I 4 2"
+_symmetry_space_group_name_H-M "I 4/m m m"
+_symmetry_Int_Tables_number 139
+
+_cell_length_a    3.78170
+_cell_length_b    3.78170
+_cell_length_c    13.24870
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z
+9 -x,-y,-z
+10 -x,y,z
+11 x,-y,z
+12 x,y,-z
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+17 x+1/2,y+1/2,z+1/2
+18 x+1/2,-y+1/2,-z+1/2
+19 -x+1/2,y+1/2,-z+1/2
+20 -x+1/2,-y+1/2,z+1/2
+21 -y+1/2,-x+1/2,-z+1/2
+22 -y+1/2,x+1/2,z+1/2
+23 y+1/2,-x+1/2,z+1/2
+24 y+1/2,x+1/2,-z+1/2
+25 -x+1/2,-y+1/2,-z+1/2
+26 -x+1/2,y+1/2,z+1/2
+27 x+1/2,-y+1/2,z+1/2
+28 x+1/2,y+1/2,-z+1/2
+29 y+1/2,x+1/2,z+1/2
+30 y+1/2,-x+1/2,-z+1/2
+31 -y+1/2,x+1/2,-z+1/2
+32 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   2 a 0.00000 0.00000 0.00000 1.00000
+O1  O    4 c 0.00000 0.50000 0.00000 1.00000
+La1 La   4 e 0.00000 0.00000 0.36075 1.00000
+O2  O    4 e 0.00000 0.00000 0.18240 1.00000

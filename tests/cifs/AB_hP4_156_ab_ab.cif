@@ -1,0 +1,65 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta-CuI'
+_chemical_formula_sum 'Cu I'
+
+loop_
+_publ_author_name
+ 'T. Sakuma'
+_journal_name_full_name
+;
+ Journal of the Physical Society of Japan
+;
+_journal_volume 57
+_journal_year 1988
+_journal_page_first 565
+_journal_page_last 569
+_publ_Section_title
+;
+ Crystal structure of $\beta$-CuI
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title '$\beta$-CuI Structure'
+_aflow_proto 'AB_hP4_156_ab_ab'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},z_{4}'
+_aflow_params_values '4.2794836776,1.67515774714,0.636,0.0,0.894,0.5'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP4'
+
+_cell_length_a    4.2794836776
+_cell_length_b    4.2794836776
+_cell_length_c    7.1688102363
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 3 m 1"
+_symmetry_Int_Tables_number 156
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 -x+y,y,z
+5 -y,-x,z
+6 x,x-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   1 a 0.00000 0.00000 0.63600 1.00000 
+I1  I    1 a 0.00000 0.00000 0.00000 1.00000
+Cu2 Cu   1 b 0.33333 0.66667 0.89400 1.00000 
+I2  I    1 b 0.33333 0.66667 0.50000 1.00000

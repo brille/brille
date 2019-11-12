@@ -1,0 +1,68 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'low (alpha) Cristobalite'
+_chemical_formula_sum 'Si O2'
+ 
+loop_
+_publ_author_name
+ 'J. J. Pluth'
+ 'J. V. Smith'
+ 'J. Faber, Jr.'
+_journal_name_full
+;
+Journal of Applied Physics
+;
+_journal_volume 57
+_journal_year 1985
+_journal_page_first 1045
+_journal_page_last 1049
+_publ_Section_title
+;
+ Crystal structure of low cristobalite at 10, 293, and 473 K: Variation of framework geometry with temperature
+;
+
+# Found in  Pearson's Handbook, Vol. IV, pp. 4759
+
+_aflow_proto 'A2B_tP12_92_b_a' 
+_aflow_params 'a,c/a,x1,x2,y2,z2' 
+_aflow_params_values '4.957,1.39001412144,0.3047,0.2381,0.1109,0.1826' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tP12' 
+
+_symmetry_space_group_name_Hall "P 4abw 2nw"
+_symmetry_space_group_name_H-M "P 41 21 2"
+_symmetry_Int_Tables_number 92
+
+_cell_length_a    4.95700
+_cell_length_b    4.95700
+_cell_length_c    6.89030
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+3/4
+3 -x+1/2,y+1/2,-z+1/4
+4 -x,-y,z+1/2
+5 -y,-x,-z+1/2
+6 -y+1/2,x+1/2,z+1/4
+7 y+1/2,-x+1/2,z+3/4
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   4 a 0.30470 0.30470 0.00000 1.00000
+O1  O    8 b 0.23810 0.11090 0.18260 1.00000

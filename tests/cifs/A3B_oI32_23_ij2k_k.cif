@@ -1,0 +1,70 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H3S'
+_chemical_formula_sum 'H3 S'
+
+loop_
+_publ_author_name
+ 'T. A. Strobel'
+ 'P. Ganesh'
+ 'M. Somayazulu'
+ 'P. R. C. Kent'
+ 'R. J. Hemley'
+_journal_name_full_name
+;
+ Physical Review Letters
+;
+_journal_volume 107
+_journal_year 2011
+_journal_page_first 255503
+_journal_page_last 255503
+_publ_Section_title
+;
+ Novel Cooperative Interactions and Structural Ordering in H$_{2}$S-H$_{2}$
+;
+
+_aflow_title 'H$_{3}$S (5~GPa) Structure'
+_aflow_proto 'A3B_oI32_23_ij2k_k'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '5.82463,1.24369101557,1.32254065924,0.04851,0.45153,0.75475,0.49255,0.20405,0.4421,0.23223,0.28616,0.76005,0.8216,0.36488'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oI32'
+
+_symmetry_space_group_name_H-M "I 2 2 2"
+_symmetry_Int_Tables_number 23
+ 
+_cell_length_a    5.82463
+_cell_length_b    7.24404
+_cell_length_c    7.70331
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,-z+1/2
+7 -x+1/2,y+1/2,-z+1/2
+8 -x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1 H   4 i 0.00000 0.00000 0.04851 1.00000
+H2 H   4 j 0.00000 0.50000 0.45153 1.00000
+H3 H   8 k 0.75475 0.49255 0.20405 1.00000
+H4 H   8 k 0.44210 0.23223 0.28616 1.00000
+S1 S   8 k 0.76005 0.82160 0.36488 1.00000

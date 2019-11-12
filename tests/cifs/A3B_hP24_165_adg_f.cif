@@ -1,0 +1,73 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'H3 Ho'
+ 
+loop_
+_publ_author_name
+ 'M. Mansmann'
+ 'W. E. Wallace'
+_journal_name_full
+;
+Le Journal de Physique
+;
+_journal_volume 25
+_journal_year 1964
+_journal_page_first 454
+_journal_page_last 459
+_publ_Section_title
+;
+ The Structure of HoD$_3$
+;
+
+# Found in  Pearson's Handbook, Vol III, pp. 3829
+
+_aflow_proto 'A3B_hP24_165_adg_f' 
+_aflow_params 'a,c/a,z2,x3,x4,y4,z4' 
+_aflow_params_values '6.308,1.03994927077,0.167,0.666,0.356,0.028,0.096' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'hP24' 
+
+_symmetry_space_group_name_Hall "-P 3 2c"
+_symmetry_space_group_name_H-M "P -3 c 1"
+_symmetry_Int_Tables_number 165
+
+_cell_length_a    6.30800
+_cell_length_b    6.30800
+_cell_length_c    6.56000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z+1/2
+5 y,x,-z+1/2
+6 -x,-x+y,-z+1/2
+7 -x,-y,-z
+8 y,-x+y,-z
+9 x-y,x,-z
+10 -x+y,y,z+1/2
+11 -y,-x,z+1/2
+12 x,x-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+H1  H    2 a 0.00000 0.00000 0.25000 1.00000
+H2  H    4 d 0.33333 0.66667 0.16700 1.00000
+Ho1 Ho   6 f 0.66600 0.00000 0.25000 1.00000
+H3  H   12 g 0.35600 0.02800 0.09600 1.00000

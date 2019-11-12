@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'B P O4'
+ 
+loop_
+_publ_author_name
+ 'M. Schmidt'
+ 'B. Ewald'
+ 'Yu. Prots'
+ 'R. Cardoso-Gil'
+ 'M. Armbrüster'
+ 'I. Loa'
+ 'L. Zhang'
+ 'Ya-Xi Huang'
+ 'U. Schwarz'
+ 'R. Kniep'
+_journal_name_full
+;
+Zeitschrift f\"{u}r anorganische und allgemeine Chemie
+;
+_journal_volume 630
+_journal_year 2004
+_journal_page_first 655
+_journal_page_last 662
+_publ_Section_title
+;
+ Growth and Characterization of BPO$_4$ Single Crystals
+;
+
+_aflow_proto 'AB4C_tI12_82_c_g_a' 
+_aflow_params 'a,c/a,x3,y3,z3' 
+_aflow_params_values '4.3404,1.53216293429,0.256,0.2566,0.3722' 
+_aflow_Strukturbericht 'H0_7' 
+_aflow_Pearson 'tI12' 
+
+_symmetry_space_group_name_Hall "I -4"
+_symmetry_space_group_name_H-M "I -4"
+_symmetry_Int_Tables_number 82
+
+_cell_length_a    4.34040
+_cell_length_b    4.34040
+_cell_length_c    6.65020
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 y,-x,-z
+4 -y,x,-z
+5 x+1/2,y+1/2,z+1/2
+6 -x+1/2,-y+1/2,z+1/2
+7 y+1/2,-x+1/2,-z+1/2
+8 -y+1/2,x+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1 P   2 a 0.00000 0.00000 0.00000 1.00000
+B1 B   2 c 0.00000 0.50000 0.25000 1.00000
+O1 O   8 g 0.25600 0.25660 0.37220 1.00000

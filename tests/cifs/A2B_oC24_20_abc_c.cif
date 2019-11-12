@@ -1,0 +1,66 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'High (Orthorhombic) Tridymite'
+_chemical_formula_sum 'Si O2'
+ 
+loop_
+_publ_author_name
+ 'W. A. Dollase'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 23
+_journal_year 1967
+_journal_page_first 617
+_journal_page_last 623
+_publ_Section_title
+;
+ The crystal structure at 220$^\circ$C of orthorhombic high tridymite from the Steinbach meteorite
+;
+
+_aflow_proto 'A2B_oC24_20_abc_c' 
+_aflow_params 'a,b/a,c/a,x1,y2,x3,y3,z3,x4,y4,z4' 
+_aflow_params_values '8.74,0.576659038902,0.942791762014,0.3336,0.4403,0.2453,0.1971,0.2713,0.33154,0.03589,0.81143' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oC24' 
+
+_symmetry_space_group_name_Hall "C 2c 2"
+_symmetry_space_group_name_H-M "C 2 2 21"
+_symmetry_Int_Tables_number 20
+
+_cell_length_a    8.74000
+_cell_length_b    5.04000
+_cell_length_c    8.24000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z+1/2
+4 -x,-y,z+1/2
+5 x+1/2,y+1/2,z
+6 x+1/2,-y+1/2,-z
+7 -x+1/2,y+1/2,-z+1/2
+8 -x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 a 0.33360 0.00000 0.00000 1.00000
+O2  O    4 b 0.00000 0.44030 0.25000 1.00000
+O3  O    8 c 0.24530 0.19710 0.27130 1.00000
+Si1 Si   8 c 0.33154 0.03589 0.81143 1.00000

@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'SeO3'
+_chemical_formula_sum 'O3 Se'
+
+loop_
+_publ_author_name
+ 'F. C. Mijlhoff'
+ 'C. H. {MacGillavry}'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 15
+_journal_year 1962
+_journal_page_first 620
+_journal_page_last 620
+_publ_Section_title
+;
+ Symmetry and unit-cell dimensions of selenium trioxide
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'SeO$_{3}$ Structure'
+_aflow_proto 'A3B_tP32_114_3e_e'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '9.6362543341,0.547945205485,0.6,0.743,0.809,0.836,0.555,0.604,0.881,0.899,0.844,0.5125,0.7273,0.563'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP32'
+
+_cell_length_a    9.6362543341
+_cell_length_b    9.6362543341
+_cell_length_c    5.2801393612
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 21 c"
+_symmetry_Int_Tables_number 114
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z+1/2
+3 -x+1/2,y+1/2,-z+1/2
+4 -x,-y,z
+5 y+1/2,x+1/2,z+1/2
+6 y,-x,-z
+7 -y,x,-z
+8 -y+1/2,-x+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    8 e 0.60000 0.74300 0.80900 1.00000
+O2  O    8 e 0.83600 0.55500 0.60400 1.00000
+O3  O    8 e 0.88100 0.89900 0.84400 1.00000
+Se1 Se   8 e 0.51250 0.72730 0.56300 1.00000

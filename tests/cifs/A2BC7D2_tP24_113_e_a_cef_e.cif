@@ -1,0 +1,70 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Akermanite'
+_chemical_formula_sum 'Ca2 Mg O7 Si2'
+
+loop_
+_publ_author_name
+ 'H. Yang'
+ 'R. M. Hazen'
+ 'R. T. Downs'
+ 'L. W. Finger'
+_journal_name_full_name
+;
+ Physics and Chemistry of Minerals
+;
+_journal_volume 24
+_journal_year 1997
+_journal_page_first 510
+_journal_page_last 519
+_publ_Section_title
+;
+ Structural change associated with the incommensurate-normal phase transition in akermanite, Ca$_{2}$MgSi$_{2}$O$_{7}$, at high pressure
+;
+
+_aflow_title 'Akermanite (Ca$_{2}$MgSi$_{2}$O$_{7}$, $S5_{3}$) Structure'
+_aflow_proto 'A2BC7D2_tP24_113_e_a_cef_e'
+_aflow_params 'a,c/a,z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},y_{6},z_{6}'
+_aflow_params_values '7.8338,0.639306594501,0.8201,0.8324,0.4935,0.6407,0.7471,0.6396,0.0642,0.0798,0.1862,0.7856'
+_aflow_Strukturbericht '$S5_{3}$'
+_aflow_Pearson 'tP24'
+
+_symmetry_space_group_name_H-M "P -4 21 m"
+_symmetry_Int_Tables_number 113
+ 
+_cell_length_a    7.83380
+_cell_length_b    7.83380
+_cell_length_c    5.00820
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 y+1/2,x+1/2,z
+6 y,-x,-z
+7 -y,x,-z
+8 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mg1 Mg   2 a 0.00000 0.00000 0.00000 1.00000
+O1  O    2 c 0.00000 0.50000 0.82010 1.00000
+Ca1 Ca   4 e 0.83240 0.33240 0.49350 1.00000
+O2  O    4 e 0.64070 0.14070 0.74710 1.00000
+Si1 Si   4 e 0.63960 0.13960 0.06420 1.00000
+O3  O    8 f 0.07980 0.18620 0.78560 1.00000

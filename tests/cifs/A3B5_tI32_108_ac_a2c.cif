@@ -1,0 +1,79 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sr5Si3'
+_chemical_formula_sum 'Si3 Sr5'
+
+loop_
+_publ_author_name
+ 'G. Nagorsen'
+ 'G. Rockt{\"a}schel'
+ 'H. Sch{\"a}fer'
+ 'A. Weiss'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Naturforschung B
+;
+_journal_volume 22
+_journal_year 1967
+_journal_page_first 101
+_journal_page_last 102
+_publ_Section_title
+;
+ Die Kristallstruktur der Phase Sr$_{5}$Si$_{3}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Sr$_{5}$Si$_{3}$ Structure'
+_aflow_proto 'A3B5_tI32_108_ac_a2c'
+_aflow_params 'a,c/a,z_{1},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5}'
+_aflow_params_values '8.0549870847,1.94761018001,0.007,0.75,0.109,0.257,0.676,0.114,0.676,0.4'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tI32'
+
+_cell_length_a    8.0549870847
+_cell_length_b    8.0549870847
+_cell_length_c    15.6879748460
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "I 4 c m"
+_symmetry_Int_Tables_number 108
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+5 -x,y,z+1/2
+6 x,-y,z+1/2
+7 y,x,z+1/2
+8 -y,-x,z+1/2
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y+1/2,z+1/2
+11 -y+1/2,x+1/2,z+1/2
+12 y+1/2,-x+1/2,z+1/2
+13 -x+1/2,y+1/2,z
+14 x+1/2,-y+1/2,z
+15 y+1/2,x+1/2,z
+16 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   4 a 0.00000 0.00000 0.00700 1.00000
+Sr1 Sr   4 a 0.00000 0.00000 0.75000 1.00000
+Si2 Si   8 c 0.10900 0.60900 0.25700 1.00000
+Sr2 Sr   8 c 0.67600 0.17600 0.11400 1.00000
+Sr3 Sr   8 c 0.67600 0.17600 0.40000 1.00000

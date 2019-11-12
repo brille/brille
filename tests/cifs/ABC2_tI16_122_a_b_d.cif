@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Chalcopyrite'
+_chemical_formula_sum 'Cu Fe S2'
+ 
+loop_
+_publ_author_name
+ 'S. R. Hall'
+ 'J. M. Stewart'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 29
+_journal_year 1973
+_journal_page_first 579
+_journal_page_last 585
+_publ_Section_title
+;
+ The Crystal Structure Refinement of Chalcopyrite, CuFeS$_2$
+;
+
+_aflow_proto 'ABC2_tI16_122_a_b_d' 
+_aflow_params 'a,c/a,x3' 
+_aflow_params_values '5.289,1.97069389299,0.2574' 
+_aflow_Strukturbericht 'E1_1' 
+_aflow_Pearson 'tI16' 
+
+_symmetry_space_group_name_Hall "I -4 2bw"
+_symmetry_space_group_name_H-M "I -4 2 d"
+_symmetry_Int_Tables_number 122
+
+_cell_length_a    5.28900
+_cell_length_b    5.28900
+_cell_length_c    10.42300
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z+1/4
+3 -x,y+1/2,-z+1/4
+4 -x,-y,z
+5 y,x+1/2,z+1/4
+6 y,-x,-z
+7 -y,x,-z
+8 -y,-x+1/2,z+1/4
+9 x+1/2,y+1/2,z+1/2
+10 x+1/2,-y,-z+3/4
+11 -x+1/2,y,-z+3/4
+12 -x+1/2,-y+1/2,z+1/2
+13 y+1/2,x,z+3/4
+14 y+1/2,-x+1/2,-z+1/2
+15 -y+1/2,x+1/2,-z+1/2
+16 -y+1/2,-x,z+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   4 a 0.00000 0.00000 0.00000 1.00000
+Fe1 Fe   4 b 0.00000 0.00000 0.50000 1.00000
+S1  S    8 d 0.25740 0.25000 0.12500 1.00000

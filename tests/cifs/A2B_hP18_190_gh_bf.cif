@@ -1,0 +1,69 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Li2 Sb'
+
+loop_
+_publ_author_name
+ 'Wiking M\"{u}ller'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Naturforschung B
+;
+_journal_volume 32
+_journal_year 1977
+_journal_page_first 357
+_journal_page_last 359
+_publ_Section_title
+;
+ Darstellung und Struktur der Phase Li$_{2}$Sb
+;
+
+_aflow_title 'Li$_{2}$Sb Structure'
+_aflow_proto 'A2B_hP18_190_gh_bf'
+_aflow_params 'a,c/a,z_{2},x_{3},x_{4},y_{4}'
+_aflow_params_values '7.946,0.789076264787,0.0225,0.294,0.612,0.01'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP18'
+
+_symmetry_space_group_name_H-M "P -6 2 c"
+_symmetry_Int_Tables_number 190
+ 
+_cell_length_a    7.94600
+_cell_length_b    7.94600
+_cell_length_c    6.27000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z
+5 y,x,-z
+6 -x,-x+y,-z
+7 -x+y,-x,-z+1/2
+8 x,y,-z+1/2
+9 -y,x-y,-z+1/2
+10 -x,-x+y,z+1/2
+11 x-y,-y,z+1/2
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Sb1 Sb   2 b 0.00000 0.00000  0.25000 1.00000
+Sb2 Sb   4 f 0.33333 0.66667  0.02250 1.00000
+Li1 Li   6 g 0.29400 0.00000  0.00000 1.00000
+Li2 Li   6 h 0.61200 0.01000  0.25000 1.00000

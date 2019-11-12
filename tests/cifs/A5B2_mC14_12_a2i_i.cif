@@ -1,0 +1,68 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Au5 Mn2'
+ 
+loop_
+_publ_author_name
+ 'S. G. Humble'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 17
+_journal_year 1964
+_journal_page_first 1485
+_journal_page_last 1486
+_publ_Section_title
+;
+ Establishment of an ordered phase of composition Au$_5$Mn$_2$ in the gold-manganese system
+;
+
+# Found in  Pearson, 346-348
+
+_aflow_proto 'A5B2_mC14_12_a2i_i' 
+_aflow_params 'a,b/a,c/a,\beta,x2,z2,x3,z3,x4,z4' 
+_aflow_params_values '9.188,0.430343926861,0.705158902917,97.56,0.14286,0.42857,0.28571,0.85714,0.42857,0.28571' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mC14' 
+
+_symmetry_space_group_name_Hall "-C 2y"
+_symmetry_space_group_name_H-M "C 1 2/m 1"
+_symmetry_Int_Tables_number 12
+
+_cell_length_a    9.18800
+_cell_length_b    3.95400
+_cell_length_c    6.47900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  97.56000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+5 x+1/2,y+1/2,z
+6 -x+1/2,y+1/2,-z
+7 -x+1/2,-y+1/2,-z
+8 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Au1 Au   2 a 0.00000 0.00000 0.00000 1.00000
+Au2 Au   4 i 0.14286 0.00000 0.42857 1.00000
+Au3 Au   4 i 0.28571 0.00000 0.85714 1.00000
+Mn1 Mn   4 i 0.42857 0.00000 0.28571 1.00000

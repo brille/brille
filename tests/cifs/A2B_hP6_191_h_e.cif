@@ -1,0 +1,82 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Cu2 Te'
+ 
+loop_
+_publ_author_name
+ 'H. Nowotny'
+_journal_name_full
+;
+Zeitschrift f\"{u}r Metallkunde
+;
+_journal_volume 37
+_journal_year 1946
+_journal_page_first 40
+_journal_page_last 42
+_publ_Section_title
+;
+ Die Kristallstruktur von Cu$_2$Te
+;
+
+# Found in  Pearson's Handbook, Vol. III, pp. 3014
+
+_aflow_proto 'A2B_hP6_191_h_e' 
+_aflow_params 'a,c/a,z1,z2' 
+_aflow_params_values '4.237,1.71040830776,0.306,0.16' 
+_aflow_Strukturbericht 'C_h' 
+_aflow_Pearson 'hP6' 
+
+_symmetry_space_group_name_Hall "-P 6 2"
+_symmetry_space_group_name_H-M "P 6/m m m"
+_symmetry_Int_Tables_number 191
+
+_cell_length_a    4.23700
+_cell_length_b    4.23700
+_cell_length_c    7.24700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+7 x-y,-y,-z
+8 x,x-y,-z
+9 y,x,-z
+10 -x+y,y,-z
+11 -x,-x+y,-z
+12 -y,-x,-z
+13 -x,-y,-z
+14 -x+y,-x,-z
+15 y,-x+y,-z
+16 x,y,-z
+17 x-y,x,-z
+18 -y,x-y,-z
+19 -x+y,y,z
+20 -x,-x+y,z
+21 -y,-x,z
+22 x-y,-y,z
+23 x,x-y,z
+24 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Te1 Te   2 e 0.00000 0.00000 0.30600 1.00000
+Cu1 Cu   4 h 0.33333 0.66667 0.16000 1.00000

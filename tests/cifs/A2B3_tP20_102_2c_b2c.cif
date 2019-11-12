@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Gd3Al2'
+_chemical_formula_sum 'Al2 Gd3'
+
+loop_
+_publ_author_name
+ 'K. H. J. Buschow'
+_journal_name_full_name
+;
+ Journal of the Less-Common Metals
+;
+_journal_volume 8
+_journal_year 1965
+_journal_page_first 209
+_journal_page_last 212
+_publ_Section_title
+;
+ Rare earth-aluminium intermetallic compounds of the form $R$Al and $R_{3}$Al$_{2}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Gd$_{3}$Al$_{2}$ Structure'
+_aflow_proto 'A2B3_tP20_102_2c_b2c'
+_aflow_params 'a,c/a,z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5}'
+_aflow_params_values '8.3289849893,0.909833113223,0.5,0.604,0.439,0.623,0.031,0.795,0.725,0.848,0.251'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP20'
+
+_cell_length_a    8.3289849893
+_cell_length_b    8.3289849893
+_cell_length_c    7.5779863428
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42 n m"
+_symmetry_Int_Tables_number 102
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y+1/2,x+1/2,z+1/2
+4 y+1/2,-x+1/2,z+1/2
+5 -x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,z+1/2
+7 y,x,z
+8 -y,-x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Gd1 Gd   4 b 0.00000 0.50000 0.50000 1.00000
+Al1 Al   4 c 0.60400 0.60400 0.43900 1.00000
+Al2 Al   4 c 0.62300 0.62300 0.03100 1.00000
+Gd2 Gd   4 c 0.79500 0.79500 0.72500 1.00000
+Gd3 Gd   4 c 0.84800 0.84800 0.25100 1.00000

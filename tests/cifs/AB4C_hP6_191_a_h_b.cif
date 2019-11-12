@@ -1,0 +1,86 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Al B4 Mg'
+ 
+loop_
+_publ_author_name
+ 'Serena Margadonna'
+ 'Kosmas Prassides'
+ 'Ioannis Arvanitidis'
+ 'Michael Pissas'
+ 'Georgios Papavassiliou'
+ 'Andrew N. Fitch'
+_journal_name_full
+;
+Physical Review B
+;
+_journal_volume 66
+_journal_year 2002
+_journal_page_first 014518
+_journal_page_last 014518
+_publ_Section_title
+;
+ Crystal structure of the Mg$_{1-x}$Al$_x$B$_2$ superconductors near $x \approx 0.5$
+;
+
+_aflow_proto 'AB4C_hP6_191_a_h_b' 
+_aflow_params 'a,c/a,z3' 
+_aflow_params_values '3.04436,2.20489035462,0.2413' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'hP6' 
+
+_symmetry_space_group_name_Hall "-P 6 2 "
+_symmetry_space_group_name_H-M "P 6/m m m"
+_symmetry_Int_Tables_number 191
+
+_cell_length_a    3.04436
+_cell_length_b    3.04436
+_cell_length_c    6.71248
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+7 x-y,-y,-z
+8 x,x-y,-z
+9 y,x,-z
+10 -x+y,y,-z
+11 -x,-x+y,-z
+12 -y,-x,-z
+13 -x,-y,-z
+14 -x+y,-x,-z
+15 y,-x+y,-z
+16 x,y,-z
+17 x-y,x,-z
+18 -y,x-y,-z
+19 -x+y,y,z
+20 -x,-x+y,z
+21 -y,-x,z
+22 x-y,-y,z
+23 x,x-y,z
+24 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   1 a 0.00000 0.00000 0.00000 1.00000
+Mg1 Mg   1 b 0.00000 0.00000 0.50000 1.00000
+B1  B    4 h 0.33333 0.66667 0.24130 1.00000

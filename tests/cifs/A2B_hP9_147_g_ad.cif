@@ -1,0 +1,64 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'zeta silver zinc'
+_chemical_formula_sum 'Ag2 Zn'
+ 
+loop_
+_publ_author_name
+ 'Gunnar Bergman'
+ 'Robert W. Jaross'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 8
+_journal_year 1955
+_journal_page_first 232
+_journal_page_last 235
+_publ_Section_title
+;
+ On the Crystal Structure of the $\zeta$ Phase in the Silver-Zinc System and the Mechanism of the $\beta-\zeta$ Transformation
+;
+
+_aflow_proto 'A2B_hP9_147_g_ad' 
+_aflow_params 'a,c/a,z2,x3,y3,z3' 
+_aflow_params_values '7.636,0.369264012572,0.25,0.33333,0.0,0.25' 
+_aflow_Strukturbericht 'B_b' 
+_aflow_Pearson 'hP9' 
+
+_symmetry_space_group_name_Hall "-P 3"
+_symmetry_space_group_name_H-M "P -3"
+_symmetry_Int_Tables_number 147
+
+_cell_length_a    7.63600
+_cell_length_b    7.63600
+_cell_length_c    2.81970
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 -x,-y,-z
+5 y,-x+y,-z
+6 x-y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Zn1 Zn   1 a 0.00000 0.00000 0.00000 1.00000
+Zn2 Zn   2 d 0.33333 0.66667 0.25000 1.00000
+Ag1 Ag   6 g 0.33333 0.00000 0.25000 1.00000

@@ -1,0 +1,98 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'La43Ni17Mg5'
+_chemical_formula_sum 'La43 Mg5 Ni17'
+
+loop_
+_publ_author_name
+ 'P. Solokha'
+ 'S. {De Negri}'
+ 'V. Pavlyuk'
+ 'A. Saccone'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 48
+_journal_year 2009
+_journal_page_first 11586
+_journal_page_last 11593
+_publ_Section_title
+;
+ Anti-Mackay Polyicosahedral Clusters in {La-Ni-Mg} Ternary Compounds: Synthesis and Crystal Structure of the La$_{43}$Ni$_{17}$Mg$_{5}$ New Intermetallic Phase
+;
+
+_aflow_title 'La$_{43}$Ni$_{17}$Mg$_{5}$ Structure'
+_aflow_proto 'A43B5C17_oC260_63_c8fg6h_cfg_ce3f2h'
+_aflow_params 'a,b/a,c/a,y_{1},y_{2},y_{3},x_{4},y_{5},z_{5},y_{6},z_{6},y_{7},z_{7},y_{8},z_{8},y_{9},z_{9},y_{10},z_{10},y_{11},z_{11},y_{12},z_{12},y_{13},z_{13},y_{14},z_{14},y_{15},z_{15},y_{16},z_{16},x_{17},y_{17},x_{18},y_{18},x_{19},y_{19},z_{19},x_{20},y_{20},z_{20},x_{21},y_{21},z_{21},x_{22},y_{22},z_{22},x_{23},y_{23},z_{23},x_{24},y_{24},z_{24},x_{25},y_{25},z_{25},x_{26},y_{26},z_{26}'
+_aflow_params_values '10.11895,1.73974572461,4.16742843872,0.38998,0.0432,0.5987,0.1275,0.13992,0.17412,0.7278,0.20648,0.19723,0.62632,0.1388,0.02884,0.39065,0.0988,0.06788,0.55569,0.59876,0.1328,0.28079,0.54761,0.0678,0.6912,0.07797,0.09224,0.45337,0.1675,0.43146,0.0091,0.18607,0.20422,0.3338,0.3774,0.18828,0.32898,0.174,0.19344,0.2014,0.10123,0.30731,0.03499,0.20655,0.30495,0.49596,0.12681,0.19578,0.33018,0.026,0.31697,0.03483,0.04522,0.2812,0.17213,0.16828,0.2807,0.35936,0.09067'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC260'
+
+_symmetry_space_group_name_H-M "C 2/m 2/c 21/m"
+_symmetry_Int_Tables_number 63
+ 
+_cell_length_a    10.11895
+_cell_length_b    17.60440
+_cell_length_c    42.17000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z+1/2
+4 -x,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z+1/2
+8 x,y,-z+1/2
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+La1  La   4 c 0.00000 0.38998 0.25000 1.00000
+Mg1  Mg   4 c 0.00000 0.04320 0.25000 1.00000
+Ni1  Ni   4 c 0.00000 0.59870 0.25000 1.00000
+Ni2  Ni   8 e 0.12750 0.00000 0.00000 1.00000
+La2  La   8 f 0.00000 0.13992 0.17412 1.00000
+La3  La   8 f 0.00000 0.72780 0.20648 1.00000
+La4  La   8 f 0.00000 0.19723 0.62632 1.00000
+La5  La   8 f 0.00000 0.13880 0.02884 1.00000
+La6  La   8 f 0.00000 0.39065 0.09880 1.00000
+La7  La   8 f 0.00000 0.06788 0.55569 1.00000
+La8  La   8 f 0.00000 0.59876 0.13280 1.00000
+La9  La   8 f 0.00000 0.28079 0.54761 1.00000
+Mg2  Mg   8 f 0.00000 0.06780 0.69120 1.00000
+Ni3  Ni   8 f 0.00000 0.07797 0.09224 1.00000
+Ni4  Ni   8 f 0.00000 0.45337 0.16750 1.00000
+Ni5  Ni   8 f 0.00000 0.43146 0.00910 1.00000
+La10 La   8 g 0.18607 0.20422 0.25000 1.00000
+Mg3  Mg   8 g 0.33380 0.37740 0.25000 1.00000
+La11 La  16 h 0.18828 0.32898 0.17400 1.00000
+La12 La  16 h 0.19344 0.20140 0.10123 1.00000
+La13 La  16 h 0.30731 0.03499 0.20655 1.00000
+La14 La  16 h 0.30495 0.49596 0.12681 1.00000
+La15 La  16 h 0.19578 0.33018 0.02600 1.00000
+La16 La  16 h 0.31697 0.03483 0.04522 1.00000
+Ni6  Ni  16 h 0.28120 0.17213 0.16828 1.00000
+Ni7  Ni  16 h 0.28070 0.35936 0.09067 1.00000

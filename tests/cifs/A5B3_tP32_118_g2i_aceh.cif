@@ -1,0 +1,72 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ir3Ga5'
+_chemical_formula_sum 'Ga5 Ir3'
+
+loop_
+_publ_author_name
+ 'H. V{\"o}llenkle'
+ 'A. Wittmann'
+ 'H. Nowotny'
+_journal_name_full_name
+;
+ Monatshefte f{\"u}r Chemie - Chemical Monthly
+;
+_journal_volume 98
+_journal_year 1967
+_journal_page_first 176
+_journal_page_last 183
+_publ_Section_title
+;
+ Die Kristallstrukturen von Rh$_{10}$Ga$_{17}$ und Ir$_{3}$Ga$_{5}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Ir$_{3}$Ga$_{5}$ Structure'
+_aflow_proto 'A5B3_tP32_118_g2i_aceh'
+_aflow_params 'a,c/a,z_{3},x_{4},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '5.8229835854,2.43860552978,0.6709,0.675,0.5861,0.73,0.85,0.5515,0.84,0.8,0.15'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP32'
+
+_cell_length_a    5.8229835854
+_cell_length_b    5.8229835854
+_cell_length_c    14.1999599712
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 n 2"
+_symmetry_Int_Tables_number 118
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y+1/2,-x+1/2,-z+1/2
+4 y+1/2,x+1/2,-z+1/2
+5 -x+1/2,y+1/2,z+1/2
+6 x+1/2,-y+1/2,z+1/2
+7 y,-x,-z
+8 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ir1 Ir   2 a 0.00000 0.00000 0.00000 1.00000
+Ir2 Ir   2 c 0.00000 0.50000 0.25000 1.00000
+Ir3 Ir   4 e 0.00000 0.00000 0.67090 1.00000
+Ga1 Ga   4 g 0.67500 0.17500 0.25000 1.00000
+Ir4 Ir   4 h 0.00000 0.50000 0.58610 1.00000
+Ga2 Ga   8 i 0.73000 0.85000 0.55150 1.00000
+Ga3 Ga   8 i 0.84000 0.80000 0.15000 1.00000

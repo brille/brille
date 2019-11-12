@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Upper Bainite'
+_chemical_formula_sum 'Fe3 C'
+ 
+loop_
+_publ_author_name
+ 'Marianne Reibold'
+ 'Alexander A. Levin'
+ 'Dirk C. Meyer'
+ 'Peter Paufler'
+ 'Werner Kochmann'
+_journal_name_full
+;
+International Journal of Materials Research
+;
+_journal_volume 97
+_journal_year 2006
+_journal_page_first 1172
+_journal_page_last 1182
+_publ_Section_title
+;
+ Microstructure of a Damascene sabre after annealing
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_1817306
+
+_aflow_proto 'AB3_hP8_182_c_g' 
+_aflow_params 'a,c/a,x2' 
+_aflow_params_values '4.8507,0.866967654153,0.3249' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'hP8' 
+
+_symmetry_space_group_name_Hall "P 6c 2c"
+_symmetry_space_group_name_H-M "P 63 2 2"
+_symmetry_Int_Tables_number 182
+
+_cell_length_a    4.85070
+_cell_length_b    4.85070
+_cell_length_c    4.20540
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 x-y,-y,-z
+8 x,x-y,-z+1/2
+9 y,x,-z
+10 -x+y,y,-z+1/2
+11 -x,-x+y,-z
+12 -y,-x,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    2 c 0.33333 0.66667 0.25000 1.00000
+Fe1 Fe   6 g 0.32490 0.00000 0.00000 1.00000

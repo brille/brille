@@ -1,0 +1,86 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Pd17Se15'
+_chemical_formula_sum 'Pd17 Se15'
+
+loop_
+_publ_author_name
+ 'S. Geller'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 15
+_journal_year 1962
+_journal_page_first 713
+_journal_page_last 721
+_publ_Section_title
+;
+ The crystal structure of Pd$_{17}$Se$_{15}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Pd$_{17}$Se$_{15}$ Structure'
+_aflow_proto 'A17B15_cP64_207_acfk_eij'
+_aflow_params 'a,x_{3},x_{4},y_{5},y_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '10.6058825779,0.2422,0.2622,0.3319,0.2701,0.142,0.1539,0.3498'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cP64'
+
+_cell_length_a    10.6058825779
+_cell_length_b    10.6058825779
+_cell_length_c    10.6058825779
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4 3 2"
+_symmetry_Int_Tables_number 207
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -y,-x,-z
+14 -y,x,z
+15 y,-x,z
+16 y,x,-z
+17 -x,-z,-y
+18 -x,z,y
+19 x,-z,y
+20 x,z,-y
+21 -z,-y,-x
+22 -z,y,x
+23 z,-y,x
+24 z,y,-x
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pd1 Pd   1 a 0.00000 0.00000 0.00000 1.00000
+Pd2 Pd   3 c 0.00000 0.50000 0.50000 1.00000
+Se1 Se   6 e 0.24220 0.00000 0.00000 1.00000
+Pd3 Pd   6 f 0.26220 0.50000 0.50000 1.00000
+Se2 Se  12 i 0.00000 0.33190 0.33190 1.00000
+Se3 Se  12 j 0.50000 0.27010 0.27010 1.00000
+Pd4 Pd  24 k 0.14200 0.15390 0.34980 1.00000

@@ -1,0 +1,72 @@
+# CIF file
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'black P'
+_chemical_formula_sum 'P'
+
+loop_
+_publ_author_name
+ 'Allan Brown'
+ 'Stig Rundqvist'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 19
+_journal_year 1965
+_journal_page_first 684
+_journal_page_last 685
+_publ_Section_title
+;
+ Refinement of the crystal structure of black phosphorus
+;
+
+_aflow_proto 'A_oC8_64_f'
+_aflow_params 'a,b/a,c/a,y1,z1'
+_aflow_params_values '3.3136,3.16211974891,1.32070859488,0.10168,0.08056'
+_aflow_Strukturbericht 'A17'
+_aflow_Pearson 'oC8'
+
+_symmetry_space_group_name_Hall "-C 2bc 2"
+_symmetry_space_group_name_H-M "C m c a"
+_symmetry_Int_Tables_number 64
+
+_cell_length_a    3.31360
+_cell_length_b    10.47800
+_cell_length_c    4.37630
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x+1/2,y,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x+1/2,-y,z+1/2
+8 x+1/2,y,-z+1/2
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x,y+1/2,-z+1/2
+12 -x,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z+1/2
+16 x,y+1/2,-z+1/2
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1 P   8 f 0.00000 0.10168 0.08056 1.00000

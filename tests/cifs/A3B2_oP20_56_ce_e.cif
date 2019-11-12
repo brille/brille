@@ -1,0 +1,66 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Antimony trioxide'
+_chemical_formula_sum 'Sb2 O3'
+ 
+loop_
+_publ_author_name
+ 'C. Svensson'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 30
+_journal_year 1974
+_journal_page_first 458
+_journal_page_last 461
+_publ_Section_title
+;
+ The crystal structure of orthorhombic antimony trioxide, Sb$_2$O$_3$
+;
+# Found in AMS Database
+
+_aflow_proto 'A3B2_oP20_56_ce_e' 
+_aflow_params 'a,b/a,c/a,z1,x2,y2,z2,x3,y3,z3' 
+_aflow_params_values '4.911,2.53797597231,1.10201588271,0.029,0.147,0.058,0.861,0.044,0.128,0.179' 
+_aflow_Strukturbericht 'D5_11' 
+_aflow_Pearson 'oP20' 
+
+_symmetry_space_group_name_Hall "-P 2ab 2ac"
+_symmetry_space_group_name_H-M "P c c n"
+_symmetry_Int_Tables_number 56
+
+_cell_length_a    4.91100
+_cell_length_b    12.46400
+_cell_length_c    5.41200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z+1/2
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y+1/2,z
+5 -x,-y,-z
+6 -x+1/2,y,z+1/2
+7 x,-y+1/2,z+1/2
+8 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    4 c 0.25000 0.25000 0.02900 1.00000
+O2  O    8 e 0.14700 0.05800 0.86100 1.00000
+Sb1 Sb   8 e 0.04400 0.12800 0.17900 1.00000

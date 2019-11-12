@@ -1,0 +1,80 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'W3O10'
+_chemical_formula_sum 'O10 W3'
+
+loop_
+_publ_author_name
+ 'B. Gerand'
+ 'G. Nowogrocki'
+ 'M. Figlarz'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 38
+_journal_year 1981
+_journal_page_first 312
+_journal_page_last 320
+_publ_Section_title
+;
+ A new tungsten trioxide hydrate, WO$_{3}${\textperiodcentered}1/3H$_{2}$O: Preparation, characterization, and crystallographic study
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'W$_{3}$O$_{10}$ Structure'
+_aflow_proto 'A10B3_oF52_42_2abce_ab'
+_aflow_params 'a,b/a,c/a,z_{1},z_{2},z_{3},z_{4},z_{5},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '7.4494846573,1.70036689767,1.04688136975,0.76,0.27,0.0,0.31,0.06,0.79,0.6,0.17,0.11,0.07'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oF52'
+
+_cell_length_a    7.4494846573
+_cell_length_b    12.6668571160
+_cell_length_c    7.7987267020
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "F m m 2"
+_symmetry_Int_Tables_number 42
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x,y,z
+4 x,-y,z
+5 x,y+1/2,z+1/2
+6 -x,-y+1/2,z+1/2
+7 -x,y+1/2,z+1/2
+8 x,-y+1/2,z+1/2
+9 x+1/2,y,z+1/2
+10 -x+1/2,-y,z+1/2
+11 -x+1/2,y,z+1/2
+12 x+1/2,-y,z+1/2
+13 x+1/2,y+1/2,z
+14 -x+1/2,-y+1/2,z
+15 -x+1/2,y+1/2,z
+16 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1   O   4 a 0.00000 0.00000 0.76000 1.00000
+O2 O   4 a 0.00000 0.00000 0.27000 1.00000
+W1   W   4 a 0.00000 0.00000 0.00000 1.00000
+O3   O   8 b 0.25000 0.25000 0.31000 1.00000
+W2   W   8 b 0.25000 0.25000 0.06000 1.00000
+O4   O   8 c 0.00000 0.79000 0.60000 1.00000
+O5   O  16 e 0.17000 0.11000 0.07000 1.00000

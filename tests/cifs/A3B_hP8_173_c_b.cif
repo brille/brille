@@ -1,0 +1,65 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'PI3'
+_chemical_formula_sum 'I3 P'
+
+loop_
+_publ_author_name
+ 'E. T. Lance'
+ 'J. M. Haschke'
+ 'D. R. Peacor'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 15
+_journal_year 1976
+_journal_page_first 780
+_journal_page_last 781
+_publ_Section_title
+;
+ Crystal and molecular structure of phosphorus triiodide
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'PI$_{3}$ Structure'
+_aflow_proto 'A3B_hP8_173_c_b'
+_aflow_params 'a,c/a,z_{1},x_{2},y_{2},z_{2}'
+_aflow_params_values '7.1329719992,1.03939436422,0.0,0.0337,0.3475,0.146'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP8'
+
+_cell_length_a    7.1329719992
+_cell_length_b    7.1329719992
+_cell_length_c    7.4139708961
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 63"
+_symmetry_Int_Tables_number 173
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1 P   2 b 0.33333 0.66667 0.00000 1.00000
+I1 I   6 c 0.03370 0.34750 0.14600 1.00000

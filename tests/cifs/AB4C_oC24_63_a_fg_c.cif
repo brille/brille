@@ -1,0 +1,76 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Mg O4 S'
+
+loop_
+_publ_author_name
+ 'P. J. Rentzeperis'
+ 'C. T. Soldatos'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 11
+_journal_year 1958
+_journal_page_first 686
+_journal_page_last 688
+_publ_Section_title
+;
+ The crystal structure of the anhydrous magnesium sulphate
+;
+
+# Found in The American Mineralogist Crystal Structure Database, 2003
+
+_aflow_title 'MgSO$_{4}$ Structure'
+_aflow_proto 'AB4C_oC24_63_a_fg_c'
+_aflow_params 'a,b/a,c/a,y_{2},y_{3},z_{3},x_{4},y_{4}'
+_aflow_params_values '5.182,1.52315708221,1.25549980702,0.37,0.25,0.06,0.25,0.47'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC24'
+
+_symmetry_space_group_name_H-M "C 2/m 2/c 21/m"
+_symmetry_Int_Tables_number 63
+ 
+_cell_length_a    5.18200
+_cell_length_b    7.89300
+_cell_length_c    6.50600
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z+1/2
+4 -x,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x,-y,z+1/2
+8 x,y,-z+1/2
+9 x+1/2,y+1/2,z
+10 x+1/2,-y+1/2,-z
+11 -x+1/2,y+1/2,-z+1/2
+12 -x+1/2,-y+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z
+14 -x+1/2,y+1/2,z
+15 x+1/2,-y+1/2,z+1/2
+16 x+1/2,y+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mg1 Mg   4 a 0.00000 0.00000 0.00000 1.00000
+S1  S    4 c 0.00000 0.37000 0.25000 1.00000
+O1  O    8 f 0.00000 0.25000 0.06000 1.00000
+O2  O    8 g 0.25000 0.47000 0.25000 1.00000

@@ -1,0 +1,77 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Fe2 P'
+ 
+loop_
+_publ_author_name
+ 'Hironobu Fujii'
+ 'Shigehiro Komura'
+ 'Takayoshi Takeda'
+ 'Tetsuhiko Okamoto'
+ 'Yuji Ito'
+ 'Jun Akimitsu'
+_journal_name_full
+;
+Journal of the Physical Society of Japan
+;
+_journal_volume 46
+_journal_year 1979
+_journal_page_first 1616
+_journal_page_last 1621
+_publ_Section_title
+;
+ Polarized Neutron Diffraction Study of Fe$_2$P Single Crystal
+;
+
+# Found in  Wyckoff, Vol. I, (IV,h1) pp. 360
+
+_aflow_proto 'A2B_hP9_189_fg_bc' 
+_aflow_params 'a,c/a,x3,x4' 
+_aflow_params_values '5.877,0.584822188191,0.256,0.589' 
+_aflow_Strukturbericht 'C22' 
+_aflow_Pearson 'hP9' 
+
+_symmetry_space_group_name_Hall "P -6 -2"
+_symmetry_space_group_name_H-M "P -6 2 m"
+_symmetry_Int_Tables_number 189
+
+_cell_length_a    5.87700
+_cell_length_b    5.87700
+_cell_length_c    3.43700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 x-y,-y,-z
+5 y,x,-z
+6 -x,-x+y,-z
+7 -x+y,-x,-z
+8 x,y,-z
+9 -y,x-y,-z
+10 -x,-x+y,z
+11 x-y,-y,z
+12 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P    1 b 0.00000 0.00000 0.50000 1.00000
+P2  P    2 c 0.33333 0.66667 0.00000 1.00000
+Fe1 Fe   3 f 0.25600 0.00000 0.00000 1.00000
+Fe2 Fe   3 g 0.58900 0.00000 0.50000 1.00000

@@ -1,0 +1,73 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BaCu4[VO][PO4]4'
+_chemical_formula_sum 'Ba Cu4 O17 P4 V'
+
+loop_
+_publ_author_name
+ 'S. Meyer'
+ '{Hk.} {M{\"u}ller-Buschbaum}'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische und Allgemeine Chemie
+;
+_journal_volume 623
+_journal_year 1997
+_journal_page_first 1693
+_journal_page_last 1698
+_publ_Section_title
+;
+ Cu$_{4}$O$_{12}$-Baugruppen aus planaren CuO$_{4}$-Polygonen im Barium-Vanadyl-Oxocuprat(II)-phosphat Ba(VO)Cu$_{4}$(PO$_{4}$)$_{4}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BaCu$_{4}$[VO][PO$_{4}$]$_{4}$ Structure'
+_aflow_proto 'AB4C17D4E_tP54_90_a_g_c4g_g_c'
+_aflow_params 'a,c/a,z_{2},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9}'
+_aflow_params_values '9.5601062765,0.748953974895,0.2035,-0.023,0.7639,0.5152,0.407,0.6525,0.8664,0.4465,0.8786,0.838,0.2708,0.6666,0.8964,0.0943,0.6838,0.656,0.2468,0.7207,0.8114,0.2609'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP54'
+
+_cell_length_a    9.5601062765
+_cell_length_b    9.5601062765
+_cell_length_c    7.1600795962
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4 21 2"
+_symmetry_Int_Tables_number 90
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x+1/2,y+1/2,-z
+4 -x,-y,z
+5 -y,-x,-z
+6 -y+1/2,x+1/2,z
+7 y+1/2,-x+1/2,z
+8 y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ba1 Ba   2 a 0.00000 0.00000 0.00000  1.00000
+O1  O    2 c 0.00000 0.50000 0.20350  1.00000
+V1  V    2 c 0.00000 0.50000 -0.02300 1.00000
+Cu1 Cu   8 g 0.76390 0.51520 0.40700  1.00000
+O2  O    8 g 0.65250 0.86640 0.44650  1.00000
+O3  O    8 g 0.87860 0.83800 0.27080  1.00000
+O4  O    8 g 0.66660 0.89640 0.09430  1.00000
+O5  O    8 g 0.68380 0.65600 0.24680  1.00000
+P1  P    8 g 0.72070 0.81140 0.26090  1.00000

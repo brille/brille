@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Pt S'
+ 
+loop_
+_publ_author_name
+ 'Fredrik Gronvold'
+ 'Haakon Haraldsen'
+ 'Arne Kjekshus'
+_journal_name_full
+;
+Acta Chemica Scandinavica
+;
+_journal_volume 14
+_journal_year 1960
+_journal_page_first 1879
+_journal_page_last 1893
+_publ_Section_title
+;
+ On the Sulfides, Selenides and Tellurides of Platinum
+;
+
+_aflow_proto 'AB_tP4_131_c_e' 
+_aflow_params 'a,c/a' 
+_aflow_params_values '4.9073,1.24500234345' 
+_aflow_Strukturbericht 'B17' 
+_aflow_Pearson 'tP4' 
+
+_symmetry_space_group_name_Hall "-P 4c 2"
+_symmetry_space_group_name_H-M "P 42/m m c"
+_symmetry_Int_Tables_number 131
+
+_cell_length_a    4.90730
+_cell_length_b    4.90730
+_cell_length_c    6.10960
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 -y,-x,-z+1/2
+6 -y,x,z+1/2
+7 y,-x,z+1/2
+8 y,x,-z+1/2
+9 -x,-y,-z
+10 -x,y,z
+11 x,-y,z
+12 x,y,-z
+13 y,x,z+1/2
+14 y,-x,-z+1/2
+15 -y,x,-z+1/2
+16 -y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Pt1 Pt   2 c 0.00000 0.50000 0.00000 1.00000
+S1  S    2 e 0.00000 0.00000 0.25000 1.00000

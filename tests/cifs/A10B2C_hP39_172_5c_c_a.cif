@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sr[S2O6][H2O]4'
+_chemical_formula_sum 'O10 S2 Sr'
+
+loop_
+_publ_author_name
+ 'R. N. Hargreaves'
+ 'E. Stanley'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 135
+_journal_year 1972
+_journal_page_first 399
+_journal_page_last 407
+_publ_Section_title
+;
+ The structure of strontium dithionate tetrahydrate
+;
+
+_aflow_title 'Sr[S$_{2}$O$_{6}$][H$_{2}$O]$_{4}$ Structure'
+_aflow_proto 'A10B2C_hP39_172_5c_c_a'
+_aflow_params 'a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7}'
+_aflow_params_values '6.3199906634,3.05221518986,0.0,-0.004,0.253,0.76367,0.015,0.248,0.88966,0.681,0.192,0.83267,0.448,0.188,0.70467,0.449,0.25,-0.048,0.373,0.065,0.49533'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP39'
+
+_cell_length_a    6.3199906634
+_cell_length_b    6.3199906634
+_cell_length_c    19.2899715026
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 64"
+_symmetry_Int_Tables_number 172
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+2/3
+3 -y,x-y,z+1/3
+4 -x,-y,z
+5 -x+y,-x,z+2/3
+6 y,-x+y,z+1/3
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Sr1 Sr   3 a 0.00000  0.00000 0.00000  1.00000
+O1  O    6 c -0.00400 0.25300 0.76367  1.00000
+O2  O    6 c 0.01500  0.24800 0.88966  1.00000
+O3  O    6 c 0.68100  0.19200 0.83267  1.00000
+O4  O    6 c 0.44800  0.18800 0.70467  1.00000
+O5  O    6 c 0.44900  0.25000 -0.04800 1.00000
+S1  S    6 c 0.37300  0.06500 0.49533  1.00000

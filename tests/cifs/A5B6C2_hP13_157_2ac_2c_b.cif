@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Ag5Pb2O6'
+_chemical_formula_sum 'Ag5 O6 Pb2'
+
+loop_
+_publ_author_name
+ 'A. Bystr{\"o}m'
+ 'L. Evers'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 4
+_journal_year 1950
+_journal_page_first 613
+_journal_page_last 627
+_publ_Section_title
+;
+ The Crystal Structures of Ag$_{2}$PbO$_{2}$ and Ag$_{5}$Pb$_{2}$O$_{6}$
+;
+
+# Found in Pearson's Handbook of Crystallographic Data for Intermetallic Phases, 1985
+
+_aflow_title 'Ag$_{5}$Pb$_{2}$O$_{6}$ Structure'
+_aflow_proto 'A5B6C2_hP13_157_2ac_2c_b'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},z_{6}'
+_aflow_params_values '5.939,1.08233709379,0.264,0.736,0.022,0.5,0.522,0.603,0.215,0.397,0.829'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP13'
+
+_cell_length_a    5.9390000000
+_cell_length_b    5.9390000000
+_cell_length_c    6.4280000000
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 3 1 m"
+_symmetry_Int_Tables_number 157
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 -x,-x+y,z
+5 x-y,-y,z
+6 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ag1 Ag   1 a 0.00000 0.00000 0.26400 1.00000
+Ag2 Ag   1 a 0.00000 0.00000 0.73600 1.00000
+Pb1 Pb   2 b 0.33333 0.66667 0.02200 1.00000
+Ag3 Ag   3 c 0.50000 0.00000 0.52200 1.00000
+O1  O    3 c 0.60300 0.00000 0.21500 1.00000
+O2  O    3 c 0.39700 0.00000 0.82900 1.00000

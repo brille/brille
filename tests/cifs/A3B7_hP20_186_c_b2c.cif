@@ -1,0 +1,73 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Fe3 Th7'
+
+loop_
+_publ_author_name
+ 'J. V. Florio'
+ 'N. C. Baenziger'
+ 'R. E. Rundle'
+_journal_name_full_name
+;
+ Acta Cristallographica
+;
+_journal_volume 9
+_journal_year 1956
+_journal_page_first 367
+_journal_page_last 372
+_publ_Section_title
+;
+ Compounds of thorium with transition metals. II. Systems with iron, cobalt and nickel
+;
+
+# Found in Inorganic Crystal Structure Database, {ID 401657},
+
+_aflow_title 'Fe$_{3}$Th$_{7}$ ($D10_{2}$) Structure'
+_aflow_proto 'A3B7_hP20_186_c_b2c'
+_aflow_params 'a,c/a,z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4}'
+_aflow_params_values '9.85,0.624365482234,0.06,0.815,0.31,0.126,0.25,0.544,0.31'
+_aflow_Strukturbericht '$D10_{2}$'
+_aflow_Pearson 'hP20'
+
+_symmetry_space_group_name_H-M "P 63 m c"
+_symmetry_Int_Tables_number 186
+ 
+_cell_length_a    9.85000
+_cell_length_b    9.85000
+_cell_length_c    6.15000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z
+8 -x,-x+y,z+1/2
+9 -y,-x,z
+10 x-y,-y,z+1/2
+11 x,x-y,z
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Th1 Th   2 b 0.33333 0.66667 0.06000 1.00000
+Fe1 Fe   6 c 0.81500 0.18500 0.31000 1.00000
+Th2 Th   6 c 0.12600 0.87400 0.25000 1.00000
+Th3 Th   6 c 0.54400 0.45600 0.31000 1.00000

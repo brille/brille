@@ -1,0 +1,65 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H2S'
+_chemical_formula_sum 'H2 S'
+
+loop_
+_publ_author_name
+ 'Y. Li'
+ 'J. Hao'
+ 'H. Liu'
+ 'Y. Li'
+ 'Y. Ma'
+_journal_name_full_name
+;
+ Journal of Chemical Physics
+;
+_journal_volume 140
+_journal_year 2014
+_journal_page_first 174712
+_journal_page_last 174712
+_publ_Section_title
+;
+ The metallization and superconductivity of dense hydrogen sulfide
+;
+
+_aflow_title 'H$_{2}$S (15~GPa) Structure'
+_aflow_proto 'A2B_mP12_13_2g_ef'
+_aflow_params 'a,b/a,c/a,\beta,y_{1},y_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '5.6255,0.61198115723,1.23780997245,127.44,0.1808,-0.004,0.155,0.346,0.225,0.345,0.273,0.573'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP12'
+
+_symmetry_space_group_name_H-M "P 1 2/c 1"
+_symmetry_Int_Tables_number 13
+ 
+_cell_length_a    5.62550
+_cell_length_b    3.44270
+_cell_length_c    6.96330
+_cell_angle_alpha 90.00000
+_cell_angle_beta  127.44000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z+1/2
+3 -x,-y,-z
+4 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+S1 S   2 e 0.00000 0.18080  0.25000 1.00000
+S2 S   2 f 0.50000 -0.00400 0.25000 1.00000
+H1 H   4 g 0.15500 0.34600  0.22500 1.00000
+H2 H   4 g 0.34500 0.27300  0.57300 1.00000

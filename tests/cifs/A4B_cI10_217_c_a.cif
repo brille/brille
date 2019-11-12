@@ -1,0 +1,105 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Silicon tetrafluoride'
+_chemical_formula_sum 'Si F4'
+ 
+loop_
+_publ_author_name
+ 'Maso Atoji'
+ 'William N. Lipscomb'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 7
+_journal_year 1954
+_journal_page_first 597
+_journal_page_last 597
+_publ_Section_title
+;
+ The structure of SiF$_4$
+;
+
+_aflow_proto 'A4B_cI10_217_c_a' 
+_aflow_params 'a,x2' 
+_aflow_params_values '5.45858,0.165' 
+_aflow_Strukturbericht '$D1_{2}$' 
+_aflow_Pearson 'cI10' 
+
+_symmetry_space_group_name_Hall "I -4 2 3"
+_symmetry_space_group_name_H-M "I -4 3 m"
+_symmetry_Int_Tables_number 217
+
+_cell_length_a    5.45858
+_cell_length_b    5.45858
+_cell_length_c    5.45858
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 y,x,z
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z
+17 x,z,y
+18 x,-z,-y
+19 -x,z,-y
+20 -x,-z,y
+21 z,y,x
+22 z,-y,-x
+23 -z,y,-x
+24 -z,-y,x
+25 x+1/2,y+1/2,z+1/2
+26 x+1/2,-y+1/2,-z+1/2
+27 -x+1/2,y+1/2,-z+1/2
+28 -x+1/2,-y+1/2,z+1/2
+29 y+1/2,z+1/2,x+1/2
+30 y+1/2,-z+1/2,-x+1/2
+31 -y+1/2,z+1/2,-x+1/2
+32 -y+1/2,-z+1/2,x+1/2
+33 z+1/2,x+1/2,y+1/2
+34 z+1/2,-x+1/2,-y+1/2
+35 -z+1/2,x+1/2,-y+1/2
+36 -z+1/2,-x+1/2,y+1/2
+37 y+1/2,x+1/2,z+1/2
+38 y+1/2,-x+1/2,-z+1/2
+39 -y+1/2,x+1/2,-z+1/2
+40 -y+1/2,-x+1/2,z+1/2
+41 x+1/2,z+1/2,y+1/2
+42 x+1/2,-z+1/2,-y+1/2
+43 -x+1/2,z+1/2,-y+1/2
+44 -x+1/2,-z+1/2,y+1/2
+45 z+1/2,y+1/2,x+1/2
+46 z+1/2,-y+1/2,-x+1/2
+47 -z+1/2,y+1/2,-x+1/2
+48 -z+1/2,-y+1/2,x+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Si1 Si   2 a 0.00000 0.00000 0.00000 1.00000
+F1  F    8 c 0.16500 0.16500 0.16500 1.00000

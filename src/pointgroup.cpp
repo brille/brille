@@ -1,4 +1,26 @@
-/* Copyright (C) 2008 Atsushi Togo
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+/* This file has evolved from pointgroup.cpp distributed as part of spglib.
+   Changes have been made to introduce C++ style classes as well as other
+   modifications to suit the needs of fibril.
+   spglib was licensed under the following BSD 3-clause license:
+
+ Copyright (C) 2008 Atsushi Togo
  All rights reserved.
 
  This file is part of spglib. https://github.com/atztogo/spglib
@@ -36,13 +58,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "pointgroup.h"
-#include "symmetry.h"
-#include "linear_algebra.h"
-#include "spg_database.h"
+#include "pointgroup.hpp"
+#include "symmetry.hpp"
+#include "utilities.hpp"
+#include "spg_database.hpp"
 
-#include "arrayvector.h"
-#include "safealloc.h"
+#include "arrayvector.hpp"
 
 #define NUM_ROT_AXES 73
 #define ZERO_PREC 1e-10
@@ -358,7 +379,8 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
 	// if there are no perpendicular axes something is wrong.
   if (!num_ortho_axis) return 0;
 
-	int * norm_squared = new int[num_ortho_axis]();
+	int * norm_squared = nullptr;
+  norm_squared = new int[num_ortho_axis]();
 	const int max_norm=8;
 	int below_count = 0;
 	for (int i=0; i<num_ortho_axis; ++i){

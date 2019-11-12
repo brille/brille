@@ -1,0 +1,72 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'AuCN'
+_chemical_formula_sum 'Au C N'
+
+loop_
+_publ_author_name
+ 'S. J. Hibble'
+ 'A. C. Hannon'
+ 'S. M. Cheyne'
+_journal_name_full_name
+;
+ Inorganic Chemistry
+;
+_journal_volume 42
+_journal_year 2003
+_journal_page_first 4724
+_journal_page_last 4730
+_publ_Section_title
+;
+ Structure of AuCN determined from total neutron diffraction
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'AuCN Structure'
+_aflow_proto 'ABC_hP3_183_a_a_a'
+_aflow_params 'a,c/a,z_{1},z_{2},z_{3}'
+_aflow_params_values '3.3908401495,1.49568037743,0.608,0.0,0.226'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP3'
+
+_cell_length_a    3.3908401495
+_cell_length_b    3.3908401495
+_cell_length_c    5.0716130746
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 6 m m"
+_symmetry_Int_Tables_number 183
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z
+3 -y,x-y,z
+4 -x,-y,z
+5 -x+y,-x,z
+6 y,-x+y,z
+7 -x+y,y,z
+8 -x,-x+y,z
+9 -y,-x,z
+10 x-y,-y,z
+11 x,x-y,z
+12 y,x,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Au1 Au   1 a 0.00000 0.00000 0.60800 1.00000
+C1  C    1 a 0.00000 0.00000 0.00000 1.00000
+N1  N    1 a 0.00000 0.00000 0.22600 1.00000

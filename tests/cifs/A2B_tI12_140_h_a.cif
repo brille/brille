@@ -1,0 +1,88 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Khatyrkite'
+_chemical_formula_sum 'Al2 Cu'
+ 
+loop_
+_publ_author_name
+ 'James B. Friauf'
+_journal_name_full
+;
+Journal of the American Chemical Society
+;
+_journal_volume 49
+_journal_year 1927
+_journal_page_first 3107
+_journal_page_last 3114
+_publ_Section_title
+;
+ The Crystal Structures of Two Intermetallic Compounds
+;
+
+_aflow_proto 'A2B_tI12_140_h_a' 
+_aflow_params 'a,c/a,x2' 
+_aflow_params_values '6.04,0.804635761589,0.158' 
+_aflow_Strukturbericht 'C16' 
+_aflow_Pearson 'tI12' 
+
+_symmetry_space_group_name_Hall "-I 4 2c"
+_symmetry_space_group_name_H-M "I 4/m c m"
+_symmetry_Int_Tables_number 140
+
+_cell_length_a    6.04000
+_cell_length_b    6.04000
+_cell_length_c    4.86000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x,y,-z+1/2
+4 -x,-y,z
+5 -y,-x,-z+1/2
+6 -y,x,z
+7 y,-x,z
+8 y,x,-z+1/2
+9 -x,-y,-z
+10 -x,y,z+1/2
+11 x,-y,z+1/2
+12 x,y,-z
+13 y,x,z+1/2
+14 y,-x,-z
+15 -y,x,-z
+16 -y,-x,z+1/2
+17 x+1/2,y+1/2,z+1/2
+18 x+1/2,-y+1/2,-z
+19 -x+1/2,y+1/2,-z
+20 -x+1/2,-y+1/2,z+1/2
+21 -y+1/2,-x+1/2,-z
+22 -y+1/2,x+1/2,z+1/2
+23 y+1/2,-x+1/2,z+1/2
+24 y+1/2,x+1/2,-z
+25 -x+1/2,-y+1/2,-z+1/2
+26 -x+1/2,y+1/2,z
+27 x+1/2,-y+1/2,z
+28 x+1/2,y+1/2,-z+1/2
+29 y+1/2,x+1/2,z
+30 y+1/2,-x+1/2,-z+1/2
+31 -y+1/2,x+1/2,-z+1/2
+32 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cu1 Cu   4 a 0.00000 0.00000 0.25000 1.00000
+Al1 Al   8 h 0.15800 0.65800 0.00000 1.00000

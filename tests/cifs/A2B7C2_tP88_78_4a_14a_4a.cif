@@ -1,0 +1,82 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sr2As2O7'
+_chemical_formula_sum 'As2 O7 Sr2'
+
+loop_
+_publ_author_name
+ 'A. Mbarek'
+ 'F. Edhokkar'
+_journal_name_full_name
+;
+ Acta Crystallographica Section E: Crystallographic Communications
+;
+_journal_volume 69
+_journal_year 2013
+_journal_page_first i84
+_journal_page_last i84
+_publ_Section_title
+;
+ The P4$_{3}$ enantiomorph of Sr$_{2}$As$_{2}$O$_{7}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Sr$_{2}$As$_{2}$O$_{7}$ Structure'
+_aflow_proto 'A2B7C2_tP88_78_4a_14a_4a'
+_aflow_params 'a,c/a,x_{1},y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13},x_{14},y_{14},z_{14},x_{15},y_{15},z_{15},x_{16},y_{16},z_{16},x_{17},y_{17},z_{17},x_{18},y_{18},z_{18},x_{19},y_{19},z_{19},x_{20},y_{20},z_{20},x_{21},y_{21},z_{21},x_{22},y_{22},z_{22}'
+_aflow_params_values '7.1088964505,3.60337042297,0.14561,0.23414,0.69696,0.22057,0.48276,0.79885,0.18673,0.10525,0.29124,0.24906,0.35443,0.19001,0.4586,0.3299,0.02876,0.0936,0.3899,0.1424,0.4187,0.2147,0.16739,0.1085,0.2261,0.23449,0.2999,0.2626,0.32782,0.0777,0.3681,0.7514,0.2725,0.3751,0.65898,0.0556,0.3427,0.02051,0.3251,0.3037,0.52047,0.4811,0.0546,0.59334,0.0026,0.0009,0.31632,0.3813,0.3334,0.82115,0.2817,0.0576,0.71776,0.168,0.0503,-0.08181,0.26434,0.22687,0.42638,0.02701,0.34822,0.57318,0.15408,0.39584,-0.07135,0.37469,0.25769,0.06464'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP88'
+
+_cell_length_a    7.1088964505
+_cell_length_b    7.1088964505
+_cell_length_c    25.6159872097
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 43"
+_symmetry_Int_Tables_number 78
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -y,x,z+3/4
+4 y,-x,z+1/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   4 a 0.14561 0.23414 0.69696  1.00000
+As2 As   4 a 0.22057 0.48276 0.79885  1.00000
+As3 As   4 a 0.18673 0.10525 0.29124  1.00000
+As4 As   4 a 0.24906 0.35443 0.19001  1.00000
+O1  O    4 a 0.45860 0.32990 0.02876  1.00000
+O2  O    4 a 0.09360 0.38990 0.14240  1.00000
+O3  O    4 a 0.41870 0.21470 0.16739  1.00000
+O4  O    4 a 0.10850 0.22610 0.23449  1.00000
+O5  O    4 a 0.29990 0.26260 0.32782  1.00000
+O6  O    4 a 0.07770 0.36810 0.75140  1.00000
+O7  O    4 a 0.27250 0.37510 0.65898  1.00000
+O8  O    4 a 0.05560 0.34270 0.02051  1.00000
+O9  O    4 a 0.32510 0.30370 0.52047  1.00000
+O10 O    4 a 0.48110 0.05460 0.59334  1.00000
+O11 O    4 a 0.00260 0.00090 0.31632  1.00000
+O12 O    4 a 0.38130 0.33340 0.82115  1.00000
+O13 O    4 a 0.28170 0.05760 0.71776  1.00000
+O14 O    4 a 0.16800 0.05030 -0.08181 1.00000
+Sr1 Sr   4 a 0.26434 0.22687 0.42638  1.00000
+Sr2 Sr   4 a 0.02701 0.34822 0.57318  1.00000
+Sr3 Sr   4 a 0.15408 0.39584 -0.07135 1.00000
+Sr4 Sr   4 a 0.37469 0.25769 0.06464  1.00000

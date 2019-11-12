@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'beta-Bi2O3'
+_chemical_formula_sum 'Bi2 O3'
+
+loop_
+_publ_author_name
+ 'L. G. Sill{\\'e}n'
+_journal_name_full_name
+;
+ Arkiv f{\"o}r Kemi, Mineralogi och Geologi
+;
+_journal_volume 12A
+_journal_year 1937
+_journal_page_first 1
+_journal_page_last 15
+_publ_Section_title
+;
+ X-ray studies on bismuth trioxide
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title '$\beta$-Bi$_{2}$O$_{3}$ (High-temperature, $D5_{12}$) Structure'
+_aflow_proto 'A2B3_tP20_117_i_adgh'
+_aflow_params 'a,c/a,x_{3},x_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '7.7289660931,0.727131582349,0.73,0.73,0.75,0.52,0.25'
+_aflow_Strukturbericht '$D5_{12}$'
+_aflow_Pearson 'tP20'
+
+_cell_length_a    7.7289660931
+_cell_length_b    7.7289660931
+_cell_length_c    5.6199753452
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4 b 2"
+_symmetry_Int_Tables_number 117
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y+1/2,-x+1/2,-z
+4 y+1/2,x+1/2,-z
+5 -x+1/2,y+1/2,z
+6 x+1/2,-y+1/2,z
+7 y,-x,-z
+8 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 a 0.00000 0.00000 0.00000 1.00000
+O2  O    2 d 0.00000 0.50000 0.50000 1.00000
+O3  O    4 g 0.73000 0.23000 0.00000 1.00000
+O4  O    4 h 0.73000 0.23000 0.50000 1.00000
+Bi1 Bi   8 i 0.75000 0.52000 0.25000 1.00000

@@ -1,0 +1,71 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Bi2O3'
+_chemical_formula_sum 'Bi2 O3'
+
+loop_
+_publ_author_name
+ 'T. Locherer'
+ 'D. L. V. K. Prasad'
+ 'R. Dinnebier'
+ 'U. Wedig'
+ 'M. Jansen'
+ 'G. Garbarino'
+ 'T. Hansen'
+_journal_name_full_name
+;
+ Physical Review B
+;
+_journal_volume 83
+_journal_year 2011
+_journal_page_first 214102
+_journal_page_last 214102
+_publ_Section_title
+;
+ High-pressure structural evolution of HP-Bi$_{2}$O$_{3}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Bi$_{2}$O$_{3}$ (High-pressure) Structure'
+_aflow_proto 'A2B3_hP20_159_bc_2c'
+_aflow_params 'a,c/a,z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '7.7488577892,0.813266227893,0.0,0.337,0.154,0.021,0.451,0.061,0.287,0.149,0.282,0.083'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP20'
+
+_cell_length_a    7.7488577892
+_cell_length_b    7.7488577892
+_cell_length_c    6.3018843447
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 3 1 c"
+_symmetry_Int_Tables_number 159
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -y,x-y,z
+3 -x+y,-x,z
+4 -x,-x+y,z+1/2
+5 x-y,-y,z+1/2
+6 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Bi1 Bi   2 b 0.33333 0.66667 0.00000 1.00000
+Bi2 Bi   6 c 0.33700 0.15400 0.02100 1.00000
+O1  O    6 c 0.45100 0.06100 0.28700 1.00000
+O2  O    6 c 0.14900 0.28200 0.08300 1.00000

@@ -1,4 +1,26 @@
-/* Copyright (C) 2010 Atsushi Togo
+/* Copyright 2019 Greg Tucker
+//
+// This file is part of fibril.
+//
+// fibril is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// fibril is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+// or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with fibril. If not, see <https://www.gnu.org/licenses/>.            */
+
+/* This file has evolved from spg_database.cpp distributed as part of spglib.
+   Changes have been made to introduce C++ style classes as well as other
+   modifications to suit the needs of fibril.
+   spglib was licensed under the following BSD 3-clause license:
+
+ Copyright (C) 2010 Atsushi Togo
  All rights reserved.
 
  This file is part of spglib. https://github.com/atztogo/spglib
@@ -34,7 +56,7 @@
 
 #include <stdlib.h>
 #include <cstring>
-#include "spg_database.h"
+#include "spg_database.hpp"
 
 std::string bravais_string(const Bravais b){
   std::string repr;
@@ -62,12 +84,8 @@ std::string bravais_string(const Bravais b){
 '        R_CENTER' --> 'Bravais::R'
 '            BASE' --> 'Bravais::X' (not present)
 2019-05-28 G Tucker */
-
-/* To switch from fixed-length character arrays to strings, the regex
-    "([A-Za-z0-9^=\-\s_/\(]*[A-Za-z0-9=\)])(\s+)"
-   can be used to select all strings with trailing spaces, to be replaced by
-    "$1"$2
-*/
+/* The ALL_SPACEGROUP Spacegroup array has been switched from fixed-length char
+   arrays to variable length const std::strings (once initialized)            */
 
 /* In Hall symbols (3rd column), '=' is used instead of '"'. */
 static const Spacegroup ALL_SPACEGROUPS[] = {
@@ -8638,6 +8656,13 @@ int hall_symbol_to_hall_number(const std::string& hsymbol){
   return 0; // no exact matches
 }
 
+// When we don't know if we're searching for a Hall Symbol or
+// International Table Name/Symbol search for either, starting with Hall symbols
+int string_to_hall_number(const std::string& str){
+  int tmp = hall_symbol_to_hall_number(str);
+  if (!tmp) tmp = international_string_to_hall_number(str);
+  return tmp;
+}
 
 // std::string trim(const std::string& str,
 //                  const std::string& whitespace = " \t")

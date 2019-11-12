@@ -1,0 +1,68 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Cyanogen Chloride'
+_chemical_formula_sum 'C N Cl'
+ 
+loop_
+_publ_author_name
+ 'R. B. Heiart'
+ 'G. B. Carpenter'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 9
+_journal_year 1956
+_journal_page_first 889
+_journal_page_last 895
+_publ_Section_title
+;
+ The crystal structure of cyanogen chloride
+;
+
+# Found in  Wyckoff, Vol. I, pp. 173-174
+
+_aflow_proto 'ABC_oP6_59_a_a_a' 
+_aflow_params 'a,b/a,c/a,z1,z2,z3' 
+_aflow_params_values '5.68,0.700704225352,1.01056338028,0.1499,0.4237,0.6255' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'oP6' 
+
+_symmetry_space_group_name_Hall "-P 2ab 2a"
+_symmetry_space_group_name_H-M "P m m n:2"
+_symmetry_Int_Tables_number 59
+
+_cell_length_a    5.68000
+_cell_length_b    3.98000
+_cell_length_c    5.74000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z
+3 -x,y+1/2,-z
+4 -x+1/2,-y+1/2,z
+5 -x,-y,-z
+6 -x+1/2,y,z
+7 x,-y+1/2,z
+8 x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    2 a 0.25000 0.25000 0.14990 1.00000
+Cl1 Cl   2 a 0.25000 0.25000 0.42370 1.00000
+N1  N    2 a 0.25000 0.25000 0.62550 1.00000

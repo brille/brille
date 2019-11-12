@@ -1,0 +1,77 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'red selenium'
+_chemical_formula_sum 'Se'
+ 
+loop_
+_publ_author_name
+ 'Olav Foss'
+ 'Vitalijus Janickis'
+_journal_name_full
+;
+Journal of the Chemical Society, Chemical Communications
+;
+_journal_volume
+_journal_year 1977
+_journal_page_first 834
+_journal_page_last 835
+_publ_Section_title
+;
+ X-Ray crystal structure of a new red, monoclinic form of cyclo-octaselenium, Se$_{8}$
+;
+
+# Found in  Pearson's Hanbook, Vol. IV, p. 5716
+
+_aflow_proto 'A_mP64_14_16e' 
+_aflow_params 'a,b/a,c/a,\beta,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7,x8,y8,z8,x9,y9,z9,x10,y10,z10,x11,y11,z11,x12,y12,z12,x13,y13,z13,x14,y14,z14,x15,y15,z15,x16,y16,z16' 
+_aflow_params_values '15.018,0.979691037422,0.585231056066,93.61,0.18313,0.14063,0.03451,0.22856,0.28408,0.12262,0.35548,0.31907,-0.00548,0.47826,0.28776,0.16131,0.52853,0.14438,0.09345,0.47966,0.04033,0.27102,0.36296,-0.02818,0.15123,0.22521,0.04261,0.2343,0.09552,0.48601,0.14213,0.01298,0.58883,0.27815,-0.01931,0.71476,0.12135,0.08347,0.82945,0.18553,0.19177,0.81338,0.00963,0.3102,0.73961,0.14402,0.30834,0.59137,0.04778,0.24353,0.50553,0.23353' 
+_aflow_Strukturbericht 'A_k' 
+_aflow_Pearson 'mP64' 
+
+_symmetry_space_group_name_Hall "-P 2ybc"
+_symmetry_space_group_name_H-M "P 1 21/c 1"
+_symmetry_Int_Tables_number 14
+
+_cell_length_a    15.01800
+_cell_length_b    14.71300
+_cell_length_c    8.78900
+_cell_angle_alpha 90.00000
+_cell_angle_beta  93.61000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y+1/2,-z+1/2
+3 -x,-y,-z
+4 x,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Se1  Se   4 e 0.18313  0.14063  0.03451  1.00000
+Se2  Se   4 e 0.22856  0.28408  0.12262  1.00000
+Se3  Se   4 e 0.35548  0.31907  -0.00548 1.00000
+Se4  Se   4 e 0.47826  0.28776  0.16131  1.00000
+Se5  Se   4 e 0.52853  0.14438  0.09345  1.00000
+Se6  Se   4 e 0.47966  0.04033  0.27102  1.00000
+Se7  Se   4 e 0.36296  -0.02818  0.15123  1.00000
+Se8  Se   4 e 0.22521  0.04261  0.23430  1.00000
+Se9  Se   4 e 0.09552  0.48601 0.14213  1.00000
+Se10 Se   4 e 0.01298  0.58883  0.27815  1.00000
+Se11 Se   4 e -0.01931 0.71476  0.12135  1.00000
+Se12 Se   4 e 0.08347  0.82945  0.18553  1.00000
+Se13 Se   4 e 0.19177  0.81338  0.00963  1.00000
+Se14 Se   4 e 0.31020  0.73961  0.14402  1.00000
+Se15 Se   4 e 0.30834  0.59137  0.04778  1.00000
+Se16 Se   4 e 0.24353  0.50553  0.23353  1.00000

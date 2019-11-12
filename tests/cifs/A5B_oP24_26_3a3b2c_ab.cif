@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'TlP5'
+_chemical_formula_sum 'P5 Tl'
+
+loop_
+_publ_author_name
+ 'O. Olofsson'
+ 'J. Gullman'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 25
+_journal_year 1971
+_journal_page_first 1327
+_journal_page_last 1337
+_publ_Section_title
+;
+ The crystal structure of TlP$_{5}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'TlP$_{5}$ Structure'
+_aflow_proto 'A5B_oP24_26_3a3b2c_ab'
+_aflow_params 'a,b/a,c/a,y_{1},z_{1},y_{2},z_{2},y_{3},z_{3},y_{4},z_{4},y_{5},z_{5},y_{6},z_{6},y_{7},z_{7},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10}'
+_aflow_params_values '6.465013742,1.07113689096,1.87440061873,0.1628,0.2907,0.112,0.0,0.1452,0.8256,0.4859,0.1227,0.1146,0.0096,0.3286,0.1358,0.1565,0.2905,0.7214,0.2818,0.2489,0.2854,0.3947,0.249,0.0963,0.5436'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP24'
+
+_cell_length_a    6.4650137420
+_cell_length_b    6.9249147196
+_cell_length_c    12.1180257581
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P m c 21"
+_symmetry_Int_Tables_number 26
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z+1/2
+3 -x,y,z
+4 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P    2 a 0.00000 0.16280 0.29070 1.00000
+P2  P    2 a 0.00000 0.11200 0.00000 1.00000
+P3  P    2 a 0.00000 0.14520 0.82560 1.00000
+Tl1 Tl   2 a 0.00000 0.48590 0.12270 1.00000
+P4  P    2 b 0.50000 0.11460 0.00960 1.00000
+P5  P    2 b 0.50000 0.32860 0.13580 1.00000
+P6  P    2 b 0.50000 0.15650 0.29050 1.00000
+Tl2 Tl   2 b 0.50000 0.72140 0.28180 1.00000
+P7  P    4 c 0.24890 0.28540 0.39470 1.00000
+P8  P    4 c 0.24900 0.09630 0.54360 1.00000

@@ -1,0 +1,77 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Titanium telluride'
+_chemical_formula_sum 'Ti5 Te4'
+ 
+loop_
+_publ_author_name
+ 'F. Gr\onvold'
+ 'A. Kjekshus'
+ 'F. Raaum'
+_journal_name_full
+;
+Acta Crystallographica
+;
+_journal_volume 14
+_journal_year 1961
+_journal_page_first 930
+_journal_page_last 934
+_publ_Section_title
+;
+ The crystal structure of Ti$_5$Te$_4$
+;
+
+# Found in  Pearson's Handbook, Vol. IV, pp. 5321
+
+_aflow_proto 'A4B5_tI18_87_h_ah' 
+_aflow_params 'a,c/a,x2,y2,x3,y3' 
+_aflow_params_values '10.164,0.37111373475,0.2797,-0.0589,0.3752,0.6856' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'tI18' 
+
+_symmetry_space_group_name_Hall "-I 4"
+_symmetry_space_group_name_H-M "I 4/m"
+_symmetry_Int_Tables_number 87
+
+_cell_length_a    10.16400
+_cell_length_b    10.16400
+_cell_length_c    3.77200
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z
+4 y,-x,z
+5 -x,-y,-z
+6 x,y,-z
+7 y,-x,-z
+8 -y,x,-z
+9 x+1/2,y+1/2,z+1/2
+10 -x+1/2,-y+1/2,z+1/2
+11 -y+1/2,x+1/2,z+1/2
+12 y+1/2,-x+1/2,z+1/2
+13 -x+1/2,-y+1/2,-z+1/2
+14 x+1/2,y+1/2,-z+1/2
+15 y+1/2,-x+1/2,-z+1/2
+16 -y+1/2,x+1/2,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ti1 Ti   2 a 0.00000 0.00000  0.00000 1.00000
+Te1 Te   8 h 0.27970 -0.05890 0.00000 1.00000
+Ti2 Ti   8 h 0.37520 0.68560  0.00000 1.00000

@@ -2847,7 +2847,8 @@ char* tetgenio::findnextfield(char *string)
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-char* tetgenio::readnumberline(char *string, FILE *infile, char *infilename)
+// char* tetgenio::readnumberline(char *string, FILE *infile, char *infilename)
+char* tetgenio::readnumberline(char *string, FILE *infile, char *) // modified 2019-11-12 Greg Tucker
 {
   char *result;
 
@@ -3028,591 +3029,592 @@ void tetgenbehavior::usage()
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool tetgenbehavior::parse_commandline(int argc, char **argv)
-{
-  int startindex;
-  int increment;
-  int meshnumber;
-  int i, j, k;
-  char workstring[1024];
-
-  // First determine the input style of the switches.
-  if (argc == 0) {
-    startindex = 0;                    // Switches are given without a dash.
-    argc = 1;                    // For running the following for-loop once.
-    commandline[0] = '\0';
-  } else {
-    startindex = 1;
-    strcpy(commandline, argv[0]);
-    strcat(commandline, " ");
-  }
-
-  for (i = startindex; i < argc; i++) {
-    // Remember the command line for output.
-    strcat(commandline, argv[i]);
-    strcat(commandline, " ");
-    if (startindex == 1) {
-      // Is this string a filename?
-      if (argv[i][0] != '-') {
-        strncpy(infilename, argv[i], 1024 - 1);
-        infilename[1024 - 1] = '\0';
-        continue;
-      }
-    }
-    // Parse the individual switch from the string.
-    for (j = startindex; argv[i][j] != '\0'; j++) {
-      if (argv[i][j] == 'p') {
-        plc = 1;
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          facet_separate_ang_tol = (REAL) strtod(workstring, (char **) NULL);
-        }
-		if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
-                 (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            facet_overlap_ang_tol = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            facet_small_ang_tol = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-      } else if (argv[i][j] == 's') {
-        psc = 1;
-      } else if (argv[i][j] == 'Y') {
-        nobisect = 1;
-        if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-          nobisect_nomerge = (argv[i][j + 1] - '0');
-          j++;
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-            supsteiner_level = (argv[i][j + 1] - '0');
-            j++;
-          }
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-            addsteiner_algo = (argv[i][j + 1] - '0');
-            j++;
-          }
-        }
-      } else if (argv[i][j] == 'r') {
-        refine = 1;
-      } else if (argv[i][j] == 'q') {
-        quality = 1;
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          minratio = (REAL) strtod(workstring, (char **) NULL);
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            mindihedral = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-      } else if (argv[i][j] == 'R') {
-        coarsen = 1;
-        if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-          coarsen_param = (argv[i][j + 1] - '0');
-          j++;
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            coarsen_percent = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-      } else if (argv[i][j] == 'w') {
-        weighted = 1;
-        if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-          weighted_param = (argv[i][j + 1] - '0');
-          j++;
-        }
-      } else if (argv[i][j] == 'b') {
-        // -b(brio_threshold/brio_ratio/hilbert_limit/hilbert_order)
-        brio_hilbert = 1;
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          brio_threshold = (int) strtol(workstring, (char **) &workstring, 0);
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            brio_ratio = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            hilbert_limit = (int) strtol(workstring, (char **) &workstring, 0);
-          }
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            hilbert_order = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-        if (brio_threshold == 0) { // -b0
-          brio_hilbert = 0; // Turn off BRIO-Hilbert sorting.
-        }
-        if (brio_ratio >= 1.0) { // -b/1
-          no_sort = 1;
-          brio_hilbert = 0; // Turn off BRIO-Hilbert sorting.
-        }
-      } else if (argv[i][j] == 'l') {
-        incrflip = 1;
-      } else if (argv[i][j] == 'L') {
-        flipinsert = 1;
-      } else if (argv[i][j] == 'm') {
-        metric = 1;
-      } else if (argv[i][j] == 'a') {
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          fixedvolume = 1;
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
-                 (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          maxvolume = (REAL) strtod(workstring, (char **) NULL);
-        } else {
-          varvolume = 1;
-        }
-      } else if (argv[i][j] == 'A') {
-        regionattrib = 1;
-      } else if (argv[i][j] == 'D') {
-        cdtrefine = 1;
-        if (argv[i][j + 1] == 'l') {
-          use_equatorial_lens = 1;
-        } else if ((argv[i][j + 1] >= '1') && (argv[i][j + 1] <= '3')) {
-          reflevel = (argv[i][j + 1] - '1') + 1;
-          j++;
-        }
-      } else if (argv[i][j] == 'i') {
-        insertaddpoints = 1;
-      } else if (argv[i][j] == 'd') {
-        diagnose = 1;
-      } else if (argv[i][j] == 'c') {
-        convex = 1;
-      } else if (argv[i][j] == 'M') {
-        nomergefacet = 1;
-        nomergevertex = 1;
-        if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '1')) {
-          nomergefacet = (argv[i][j + 1] - '0');
-          j++;
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '1')) {
-            nomergevertex = (argv[i][j + 1] - '0');
-            j++;
-          }
-        }
-      } else if (argv[i][j] == 'X') {
-        if (argv[i][j + 1] == '1') {
-          nostaticfilter = 1;
-          j++;
-        } else {
-          noexact = 1;
-        }
-      } else if (argv[i][j] == 'z') {
-        if (argv[i][j + 1] == '1') {  // -z1
-          reversetetori = 1;
-          j++;
-        } else {
-          zeroindex = 1; // -z
-        }
-      } else if (argv[i][j] == 'f') {
-        facesout++;
-      } else if (argv[i][j] == 'e') {
-        edgesout++;
-      } else if (argv[i][j] == 'n') {
-        neighout++;
-      } else if (argv[i][j] == 'v') {
-        voroout = 1;
-      } else if (argv[i][j] == 'g') {
-        meditview = 1;
-      } else if (argv[i][j] == 'k') {
-        vtkview = 1;
-      } else if (argv[i][j] == 'J') {
-        nojettison = 1;
-      } else if (argv[i][j] == 'B') {
-        nobound = 1;
-      } else if (argv[i][j] == 'N') {
-        nonodewritten = 1;
-      } else if (argv[i][j] == 'E') {
-        noelewritten = 1;
-      } else if (argv[i][j] == 'F') {
-        nofacewritten = 1;
-      } else if (argv[i][j] == 'I') {
-        noiterationnum = 1;
-      } else if (argv[i][j] == 'S') {
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
-                 (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          steinerleft = (int) strtol(workstring, (char **) NULL, 0);
-        }
-      } else if (argv[i][j] == 'o') {
-        if (argv[i][j + 1] == '2') {
-          order = 2;
-          j++;
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-              (argv[i][j + 1] == '.')) {
-            k = 0;
-            while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                   (argv[i][j + 1] == '.')) {
-              j++;
-              workstring[k] = argv[i][j];
-              k++;
-            }
-            workstring[k] = '\0';
-            optmaxdihedral = (REAL) strtod(workstring, (char **) NULL);
-          }
-        }
-      } else if (argv[i][j] == 'O') {
-        if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
-          optlevel = (argv[i][j + 1] - '0');
-          j++;
-        }
-        if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
-          j++;
-          if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '7')) {
-            optscheme = (argv[i][j + 1] - '0');
-            j++;
-          }
-        }
-      } else if (argv[i][j] == 'T') {
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
-                 (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          epsilon = (REAL) strtod(workstring, (char **) NULL);
-        }
-      } else if (argv[i][j] == 'C') {
-        docheck++;
-      } else if (argv[i][j] == 'Q') {
-        quiet = 1;
-      } else if (argv[i][j] == 'V') {
-        verbose++;
-      } else if (argv[i][j] == 'x') {
-        if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-            (argv[i][j + 1] == '.')) {
-          k = 0;
-          while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
-                 (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
-                 (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
-            j++;
-            workstring[k] = argv[i][j];
-            k++;
-          }
-          workstring[k] = '\0';
-          tetrahedraperblock = (int) strtol(workstring, (char **) NULL, 0);
-          if (tetrahedraperblock > 8188) {
-            vertexperblock = tetrahedraperblock / 2;
-            shellfaceperblock = vertexperblock / 2;
-          } else {
-            tetrahedraperblock = 8188;
-          }
-        }
-      } else if (argv[i][j] == 'H') {
-        if (argv[i+1][0] != '-') {
-          hole_mesh = 1;
-          // It is a filename following by -H
-          strncpy(hole_mesh_filename, argv[i+1], 1024 - 1);
-          hole_mesh_filename[1024 - 1] = '\0';
-          i++; // Skip the next string.
-          break; // j
-        }
-      } else if (argv[i][j] == 'K') {
-        apply_flow_bc = 1;
-      } else if ((argv[i][j] == 'h') || // (argv[i][j] == 'H')
-                 (argv[i][j] == '?')) {
-        usage();
-      } else {
-        printf("Warning:  Unknown switch -%c.\n", argv[i][j]);
-      }
-    }
-  }
-
-  if (startindex == 0) {
-    // Set a temporary filename for debugging output.
-    strcpy(infilename, "tetgen-tmpfile");
-  } else {
-    if (infilename[0] == '\0') {
-      // No input file name. Print the syntax and exit.
-      syntax();
-      terminatetetgen(NULL, 0);
-    }
-    // Recognize the object from file extension if it is available.
-    if (!strcmp(&infilename[strlen(infilename) - 5], ".node")) {
-      infilename[strlen(infilename) - 5] = '\0';
-      object = NODES;
-    } else if (!strcmp(&infilename[strlen(infilename) - 5], ".poly")) {
-      infilename[strlen(infilename) - 5] = '\0';
-      object = POLY;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 6], ".smesh")) {
-      infilename[strlen(infilename) - 6] = '\0';
-      object = POLY;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".off")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = OFF;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".ply")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = PLY;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".stl")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = STL;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 5], ".mesh")) {
-      infilename[strlen(infilename) - 5] = '\0';
-      object = MEDIT;
-      if (!refine) plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".vtk")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = VTK;
-      plc = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".ele")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = MESH;
-      refine = 1;
-    } else if (!strcmp(&infilename[strlen(infilename) - 4], ".neu")) {
-      infilename[strlen(infilename) - 4] = '\0';
-      object = NEU_MESH;
-      refine = 1;
-    }
-  }
-
-  if (nobisect && (!plc && !refine)) { // -Y
-    plc = 1; // Default -p option.
-  }
-  if (quality && (!plc && !refine)) { // -q
-    plc = 1; // Default -p option.
-  }
-  if (diagnose && !plc) { // -d
-    plc = 1;
-  }
-  if (refine && !quality) { // -r only
-    // Reconstruct a mesh, no mesh optimization.
-    optlevel = 0;
-  }
-  if (insertaddpoints && (optlevel == 0)) { // with -i option
-    optlevel = 2;
-  }
-  if (coarsen && (optlevel == 0)) { // with -R option
-    optlevel = 2;
-  }
-
-  // Detect improper combinations of switches.
-  if ((refine || plc) && weighted) {
-    printf("Error:  Switches -w cannot use together with -p or -r.\n");
-    return false;
-  }
-
-  if (convex) { // -c
-    if (plc && !regionattrib) {
-      // -A (region attribute) is needed for marking exterior tets (-1).
-      regionattrib = 1;
-    }
-  }
-
-  // Note: -A must not used together with -r option.
-  // Be careful not to add an extra attribute to each element unless the
-  //   input supports it (PLC in, but not refining a preexisting mesh).
-  if (refine || !plc) {
-    regionattrib = 0;
-  }
-  // Be careful not to allocate space for element area constraints that
-  //   will never be assigned any value (other than the default -1.0).
-  if (!refine && !plc) {
-    varvolume = 0;
-  }
-  // If '-a' or '-aa' is in use, enable '-q' option too.
-  if (fixedvolume || varvolume) {
-    if (quality == 0) {
-      quality = 1;
-      if (!plc && !refine) {
-        plc = 1; // enable -p.
-      }
-    }
-  }
-  // No user-specified dihedral angle bound. Use default ones.
-  if (!quality) {
-    if (optmaxdihedral < 179.0) {
-      if (nobisect) {  // with -Y option
-        optmaxdihedral = 179.0;
-      } else { // -p only
-        optmaxdihedral = 179.999;
-      }
-    }
-    if (optminsmtdihed < 179.999) {
-      optminsmtdihed = 179.999;
-    }
-    if (optminslidihed < 179.999) {
-      optminslidihed = 179.999;
-    }
-  }
-
-  increment = 0;
-  strcpy(workstring, infilename);
-  j = 1;
-  while (workstring[j] != '\0') {
-    if ((workstring[j] == '.') && (workstring[j + 1] != '\0')) {
-      increment = j + 1;
-    }
-    j++;
-  }
-  meshnumber = 0;
-  if (increment > 0) {
-    j = increment;
-    do {
-      if ((workstring[j] >= '0') && (workstring[j] <= '9')) {
-        meshnumber = meshnumber * 10 + (int) (workstring[j] - '0');
-      } else {
-        increment = 0;
-      }
-      j++;
-    } while (workstring[j] != '\0');
-  }
-  if (noiterationnum) {
-    strcpy(outfilename, infilename);
-  } else if (increment == 0) {
-    strcpy(outfilename, infilename);
-    strcat(outfilename, ".1");
-  } else {
-    workstring[increment] = '%';
-    workstring[increment + 1] = 'd';
-    workstring[increment + 2] = '\0';
-    sprintf(outfilename, workstring, meshnumber + 1);
-  }
-  // Additional input file name has the end ".a".
-  strcpy(addinfilename, infilename);
-  strcat(addinfilename, ".a");
-  // Background filename has the form "*.b.ele", "*.b.node", ...
-  strcpy(bgmeshfilename, infilename);
-  strcat(bgmeshfilename, ".b");
-
-  return true;
-}
+/* Commented out 2019-11-12 by Greg Tucker as it is not used by fibril */
+// bool tetgenbehavior::parse_commandline(int argc, char **argv)
+// {
+//   int startindex;
+//   int increment;
+//   int meshnumber;
+//   int i, j, k;
+//   char workstring[1024];
+//
+//   // First determine the input style of the switches.
+//   if (argc == 0) {
+//     startindex = 0;                    // Switches are given without a dash.
+//     argc = 1;                    // For running the following for-loop once.
+//     commandline[0] = '\0';
+//   } else {
+//     startindex = 1;
+//     strcpy(commandline, argv[0]);
+//     strcat(commandline, " ");
+//   }
+//
+//   for (i = startindex; i < argc; i++) {
+//     // Remember the command line for output.
+//     strcat(commandline, argv[i]);
+//     strcat(commandline, " ");
+//     if (startindex == 1) {
+//       // Is this string a filename?
+//       if (argv[i][0] != '-') {
+//         strncpy(infilename, argv[i], 1024 - 1);
+//         infilename[1024 - 1] = '\0';
+//         continue;
+//       }
+//     }
+//     // Parse the individual switch from the string.
+//     for (j = startindex; argv[i][j] != '\0'; j++) {
+//       if (argv[i][j] == 'p') {
+//         plc = 1;
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           facet_separate_ang_tol = (REAL) strtod(workstring, (char **) NULL);
+//         }
+// 		if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
+//                  (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             facet_overlap_ang_tol = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             facet_small_ang_tol = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//       } else if (argv[i][j] == 's') {
+//         psc = 1;
+//       } else if (argv[i][j] == 'Y') {
+//         nobisect = 1;
+//         if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//           nobisect_nomerge = (argv[i][j + 1] - '0');
+//           j++;
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//             supsteiner_level = (argv[i][j + 1] - '0');
+//             j++;
+//           }
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//             addsteiner_algo = (argv[i][j + 1] - '0');
+//             j++;
+//           }
+//         }
+//       } else if (argv[i][j] == 'r') {
+//         refine = 1;
+//       } else if (argv[i][j] == 'q') {
+//         quality = 1;
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           minratio = (REAL) strtod(workstring, (char **) NULL);
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             mindihedral = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//       } else if (argv[i][j] == 'R') {
+//         coarsen = 1;
+//         if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//           coarsen_param = (argv[i][j + 1] - '0');
+//           j++;
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             coarsen_percent = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//       } else if (argv[i][j] == 'w') {
+//         weighted = 1;
+//         if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//           weighted_param = (argv[i][j + 1] - '0');
+//           j++;
+//         }
+//       } else if (argv[i][j] == 'b') {
+//         // -b(brio_threshold/brio_ratio/hilbert_limit/hilbert_order)
+//         brio_hilbert = 1;
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           brio_threshold = (int) strtol(workstring, (char **) &workstring, 0);
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             brio_ratio = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             hilbert_limit = (int) strtol(workstring, (char **) &workstring, 0);
+//           }
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.') || (argv[i][j + 1] == '-')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             hilbert_order = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//         if (brio_threshold == 0) { // -b0
+//           brio_hilbert = 0; // Turn off BRIO-Hilbert sorting.
+//         }
+//         if (brio_ratio >= 1.0) { // -b/1
+//           no_sort = 1;
+//           brio_hilbert = 0; // Turn off BRIO-Hilbert sorting.
+//         }
+//       } else if (argv[i][j] == 'l') {
+//         incrflip = 1;
+//       } else if (argv[i][j] == 'L') {
+//         flipinsert = 1;
+//       } else if (argv[i][j] == 'm') {
+//         metric = 1;
+//       } else if (argv[i][j] == 'a') {
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           fixedvolume = 1;
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
+//                  (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           maxvolume = (REAL) strtod(workstring, (char **) NULL);
+//         } else {
+//           varvolume = 1;
+//         }
+//       } else if (argv[i][j] == 'A') {
+//         regionattrib = 1;
+//       } else if (argv[i][j] == 'D') {
+//         cdtrefine = 1;
+//         if (argv[i][j + 1] == 'l') {
+//           use_equatorial_lens = 1;
+//         } else if ((argv[i][j + 1] >= '1') && (argv[i][j + 1] <= '3')) {
+//           reflevel = (argv[i][j + 1] - '1') + 1;
+//           j++;
+//         }
+//       } else if (argv[i][j] == 'i') {
+//         insertaddpoints = 1;
+//       } else if (argv[i][j] == 'd') {
+//         diagnose = 1;
+//       } else if (argv[i][j] == 'c') {
+//         convex = 1;
+//       } else if (argv[i][j] == 'M') {
+//         nomergefacet = 1;
+//         nomergevertex = 1;
+//         if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '1')) {
+//           nomergefacet = (argv[i][j + 1] - '0');
+//           j++;
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '1')) {
+//             nomergevertex = (argv[i][j + 1] - '0');
+//             j++;
+//           }
+//         }
+//       } else if (argv[i][j] == 'X') {
+//         if (argv[i][j + 1] == '1') {
+//           nostaticfilter = 1;
+//           j++;
+//         } else {
+//           noexact = 1;
+//         }
+//       } else if (argv[i][j] == 'z') {
+//         if (argv[i][j + 1] == '1') {  // -z1
+//           reversetetori = 1;
+//           j++;
+//         } else {
+//           zeroindex = 1; // -z
+//         }
+//       } else if (argv[i][j] == 'f') {
+//         facesout++;
+//       } else if (argv[i][j] == 'e') {
+//         edgesout++;
+//       } else if (argv[i][j] == 'n') {
+//         neighout++;
+//       } else if (argv[i][j] == 'v') {
+//         voroout = 1;
+//       } else if (argv[i][j] == 'g') {
+//         meditview = 1;
+//       } else if (argv[i][j] == 'k') {
+//         vtkview = 1;
+//       } else if (argv[i][j] == 'J') {
+//         nojettison = 1;
+//       } else if (argv[i][j] == 'B') {
+//         nobound = 1;
+//       } else if (argv[i][j] == 'N') {
+//         nonodewritten = 1;
+//       } else if (argv[i][j] == 'E') {
+//         noelewritten = 1;
+//       } else if (argv[i][j] == 'F') {
+//         nofacewritten = 1;
+//       } else if (argv[i][j] == 'I') {
+//         noiterationnum = 1;
+//       } else if (argv[i][j] == 'S') {
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
+//                  (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           steinerleft = (int) strtol(workstring, (char **) NULL, 0);
+//         }
+//       } else if (argv[i][j] == 'o') {
+//         if (argv[i][j + 1] == '2') {
+//           order = 2;
+//           j++;
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//               (argv[i][j + 1] == '.')) {
+//             k = 0;
+//             while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                    (argv[i][j + 1] == '.')) {
+//               j++;
+//               workstring[k] = argv[i][j];
+//               k++;
+//             }
+//             workstring[k] = '\0';
+//             optmaxdihedral = (REAL) strtod(workstring, (char **) NULL);
+//           }
+//         }
+//       } else if (argv[i][j] == 'O') {
+//         if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) {
+//           optlevel = (argv[i][j + 1] - '0');
+//           j++;
+//         }
+//         if ((argv[i][j + 1] == '/') || (argv[i][j + 1] == ',')) {
+//           j++;
+//           if ((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '7')) {
+//             optscheme = (argv[i][j + 1] - '0');
+//             j++;
+//           }
+//         }
+//       } else if (argv[i][j] == 'T') {
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
+//                  (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           epsilon = (REAL) strtod(workstring, (char **) NULL);
+//         }
+//       } else if (argv[i][j] == 'C') {
+//         docheck++;
+//       } else if (argv[i][j] == 'Q') {
+//         quiet = 1;
+//       } else if (argv[i][j] == 'V') {
+//         verbose++;
+//       } else if (argv[i][j] == 'x') {
+//         if (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//             (argv[i][j + 1] == '.')) {
+//           k = 0;
+//           while (((argv[i][j + 1] >= '0') && (argv[i][j + 1] <= '9')) ||
+//                  (argv[i][j + 1] == '.') || (argv[i][j + 1] == 'e') ||
+//                  (argv[i][j + 1] == '-') || (argv[i][j + 1] == '+')) {
+//             j++;
+//             workstring[k] = argv[i][j];
+//             k++;
+//           }
+//           workstring[k] = '\0';
+//           tetrahedraperblock = (int) strtol(workstring, (char **) NULL, 0);
+//           if (tetrahedraperblock > 8188) {
+//             vertexperblock = tetrahedraperblock / 2;
+//             shellfaceperblock = vertexperblock / 2;
+//           } else {
+//             tetrahedraperblock = 8188;
+//           }
+//         }
+//       } else if (argv[i][j] == 'H') {
+//         if (argv[i+1][0] != '-') {
+//           hole_mesh = 1;
+//           // It is a filename following by -H
+//           strncpy(hole_mesh_filename, argv[i+1], 1024 - 1);
+//           hole_mesh_filename[1024 - 1] = '\0';
+//           i++; // Skip the next string.
+//           break; // j
+//         }
+//       } else if (argv[i][j] == 'K') {
+//         apply_flow_bc = 1;
+//       } else if ((argv[i][j] == 'h') || // (argv[i][j] == 'H')
+//                  (argv[i][j] == '?')) {
+//         usage();
+//       } else {
+//         printf("Warning:  Unknown switch -%c.\n", argv[i][j]);
+//       }
+//     }
+//   }
+//
+//   if (startindex == 0) {
+//     // Set a temporary filename for debugging output.
+//     strcpy(infilename, "tetgen-tmpfile");
+//   } else {
+//     if (infilename[0] == '\0') {
+//       // No input file name. Print the syntax and exit.
+//       syntax();
+//       terminatetetgen(NULL, 0);
+//     }
+//     // Recognize the object from file extension if it is available.
+//     if (!strcmp(&infilename[strlen(infilename) - 5], ".node")) {
+//       infilename[strlen(infilename) - 5] = '\0';
+//       object = NODES;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 5], ".poly")) {
+//       infilename[strlen(infilename) - 5] = '\0';
+//       object = POLY;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 6], ".smesh")) {
+//       infilename[strlen(infilename) - 6] = '\0';
+//       object = POLY;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".off")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = OFF;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".ply")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = PLY;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".stl")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = STL;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 5], ".mesh")) {
+//       infilename[strlen(infilename) - 5] = '\0';
+//       object = MEDIT;
+//       if (!refine) plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".vtk")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = VTK;
+//       plc = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".ele")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = MESH;
+//       refine = 1;
+//     } else if (!strcmp(&infilename[strlen(infilename) - 4], ".neu")) {
+//       infilename[strlen(infilename) - 4] = '\0';
+//       object = NEU_MESH;
+//       refine = 1;
+//     }
+//   }
+//
+//   if (nobisect && (!plc && !refine)) { // -Y
+//     plc = 1; // Default -p option.
+//   }
+//   if (quality && (!plc && !refine)) { // -q
+//     plc = 1; // Default -p option.
+//   }
+//   if (diagnose && !plc) { // -d
+//     plc = 1;
+//   }
+//   if (refine && !quality) { // -r only
+//     // Reconstruct a mesh, no mesh optimization.
+//     optlevel = 0;
+//   }
+//   if (insertaddpoints && (optlevel == 0)) { // with -i option
+//     optlevel = 2;
+//   }
+//   if (coarsen && (optlevel == 0)) { // with -R option
+//     optlevel = 2;
+//   }
+//
+//   // Detect improper combinations of switches.
+//   if ((refine || plc) && weighted) {
+//     printf("Error:  Switches -w cannot use together with -p or -r.\n");
+//     return false;
+//   }
+//
+//   if (convex) { // -c
+//     if (plc && !regionattrib) {
+//       // -A (region attribute) is needed for marking exterior tets (-1).
+//       regionattrib = 1;
+//     }
+//   }
+//
+//   // Note: -A must not used together with -r option.
+//   // Be careful not to add an extra attribute to each element unless the
+//   //   input supports it (PLC in, but not refining a preexisting mesh).
+//   if (refine || !plc) {
+//     regionattrib = 0;
+//   }
+//   // Be careful not to allocate space for element area constraints that
+//   //   will never be assigned any value (other than the default -1.0).
+//   if (!refine && !plc) {
+//     varvolume = 0;
+//   }
+//   // If '-a' or '-aa' is in use, enable '-q' option too.
+//   if (fixedvolume || varvolume) {
+//     if (quality == 0) {
+//       quality = 1;
+//       if (!plc && !refine) {
+//         plc = 1; // enable -p.
+//       }
+//     }
+//   }
+//   // No user-specified dihedral angle bound. Use default ones.
+//   if (!quality) {
+//     if (optmaxdihedral < 179.0) {
+//       if (nobisect) {  // with -Y option
+//         optmaxdihedral = 179.0;
+//       } else { // -p only
+//         optmaxdihedral = 179.999;
+//       }
+//     }
+//     if (optminsmtdihed < 179.999) {
+//       optminsmtdihed = 179.999;
+//     }
+//     if (optminslidihed < 179.999) {
+//       optminslidihed = 179.999;
+//     }
+//   }
+//
+//   increment = 0;
+//   strcpy(workstring, infilename);
+//   j = 1;
+//   while (workstring[j] != '\0') {
+//     if ((workstring[j] == '.') && (workstring[j + 1] != '\0')) {
+//       increment = j + 1;
+//     }
+//     j++;
+//   }
+//   meshnumber = 0;
+//   if (increment > 0) {
+//     j = increment;
+//     do {
+//       if ((workstring[j] >= '0') && (workstring[j] <= '9')) {
+//         meshnumber = meshnumber * 10 + (int) (workstring[j] - '0');
+//       } else {
+//         increment = 0;
+//       }
+//       j++;
+//     } while (workstring[j] != '\0');
+//   }
+//   if (noiterationnum) {
+//     strcpy(outfilename, infilename);
+//   } else if (increment == 0) {
+//     strcpy(outfilename, infilename);
+//     strcat(outfilename, ".1");
+//   } else {
+//     workstring[increment] = '%';
+//     workstring[increment + 1] = 'd';
+//     workstring[increment + 2] = '\0';
+//     sprintf(outfilename, workstring, meshnumber + 1);
+//   }
+//   // Additional input file name has the end ".a".
+//   strcpy(addinfilename, infilename);
+//   strcat(addinfilename, ".a");
+//   // Background filename has the form "*.b.ele", "*.b.node", ...
+//   strcpy(bgmeshfilename, infilename);
+//   strcat(bgmeshfilename, ".b");
+//
+//   return true;
+// }
 
 ////                                                                       ////
 ////                                                                       ////
@@ -15610,7 +15612,8 @@ enum tetgenmesh::interresult
 ///////////////////////////////////////////////////////////////////////////////
 
 enum tetgenmesh::interresult tetgenmesh::scoutsegment(point startpt,point endpt,
-  face *sedge, triface* searchtet, point* refpt, arraypool* intfacelist)
+  // face *sedge, triface* searchtet, point* refpt, arraypool* intfacelist)
+  face *sedge, triface* searchtet, point* refpt, arraypool*) // modified 2019-11-12 by Greg Tucker
 {
   point pd;
   enum interresult dir;
@@ -19602,7 +19605,7 @@ int tetgenmesh::add_steinerpt_in_segment(face* misseg, int searchlevel)
   enum interresult dir;
   REAL P[3], Q[3], tp, tq;
   REAL len, smlen = 0, split = 0, split_q = 0;
-  int success;
+  // int success; // removed 2019-11-12 Greg Tucker
   int i;
 
   startpt = sorg(*misseg);
@@ -19623,10 +19626,12 @@ int tetgenmesh::add_steinerpt_in_segment(face* misseg, int searchlevel)
 
   if (dir == ACROSSFACE) {
     // A face is intersected with the segment. Try to flip it.
-    success = removefacebyflips(&searchtet, &fc);
+    // success = removefacebyflips(&searchtet, &fc);
+    removefacebyflips(&searchtet, &fc); // modified 2019-11-12 Greg Tucker
   } else if (dir == ACROSSEDGE) {
     // An edge is intersected with the segment. Try to flip it.
-    success = removeedgebyflips(&searchtet, &fc);
+    // success = removeedgebyflips(&searchtet, &fc);
+    removeedgebyflips(&searchtet, &fc); // modified 2019-11-12 Greg Tucker
   }
 
   split = 0;
@@ -25174,9 +25179,12 @@ int tetgenmesh::checkseg4split(face *chkseg, point& encpt, int& qflag)
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-int tetgenmesh::splitsegment(face *splitseg, point encpt, REAL rrp,
-                             point encpt1, point encpt2, int qflag,
-                             int chkencflag)
+// int tetgenmesh::splitsegment(face *splitseg, point encpt, REAL rrp,
+//                              point encpt1, point encpt2, int qflag,
+//                              int chkencflag)
+int tetgenmesh::splitsegment(face *splitseg, point encpt, REAL,
+                             point, point, int qflag,
+                             int chkencflag) // modified 2019-11-12 by Greg Tucker
 {
 
   if (!qflag && smarktest3ed(*splitseg)) {
@@ -32456,7 +32464,7 @@ void tetrahedralize(tetgenbehavior *b, tetgenio *in, tetgenio *out,
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-int main(int argc, char *argv[])
+// int main(int argc, char *argv[])
 
 #else // with TETLIBRARY
 
@@ -32466,54 +32474,55 @@ int main(int argc, char *argv[])
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
-                    tetgenio *addin, tetgenio *bgmin)
-
+/* Commented out 2019-11-12 by Greg Tucker as fibril does not use this interface */
+// void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
+//                     tetgenio *addin, tetgenio *bgmin)
+//
 #endif // not TETLIBRARY
-
-{
-  tetgenbehavior b;
-
+//
+// {
+//   tetgenbehavior b;
+//
 #ifndef TETLIBRARY
-
-  tetgenio in, addin, bgmin;
-
-  if (!b.parse_commandline(argc, argv)) {
-    terminatetetgen(NULL, 10);
-  }
-
-  // Read input files.
-  if (b.refine) { // -r
-    if (!in.load_tetmesh(b.infilename, (int) b.object)) {
-      terminatetetgen(NULL, 10);
-    }
-  } else { // -p
-    if (!in.load_plc(b.infilename, (int) b.object)) {
-      terminatetetgen(NULL, 10);
-    }
-  }
-  if (b.insertaddpoints) { // -i
-    // Try to read a .a.node file.
-    addin.load_node(b.addinfilename);
-  }
-  if (b.metric) { // -m
-    // Try to read a background mesh in files .b.node, .b.ele.
-    bgmin.load_tetmesh(b.bgmeshfilename, (int) b.object);
-  }
-
-  tetrahedralize(&b, &in, NULL, &addin, &bgmin);
-
-  return 0;
-
+//
+//   tetgenio in, addin, bgmin;
+//
+//   if (!b.parse_commandline(argc, argv)) {
+//     terminatetetgen(NULL, 10);
+//   }
+//
+//   // Read input files.
+//   if (b.refine) { // -r
+//     if (!in.load_tetmesh(b.infilename, (int) b.object)) {
+//       terminatetetgen(NULL, 10);
+//     }
+//   } else { // -p
+//     if (!in.load_plc(b.infilename, (int) b.object)) {
+//       terminatetetgen(NULL, 10);
+//     }
+//   }
+//   if (b.insertaddpoints) { // -i
+//     // Try to read a .a.node file.
+//     addin.load_node(b.addinfilename);
+//   }
+//   if (b.metric) { // -m
+//     // Try to read a background mesh in files .b.node, .b.ele.
+//     bgmin.load_tetmesh(b.bgmeshfilename, (int) b.object);
+//   }
+//
+//   tetrahedralize(&b, &in, NULL, &addin, &bgmin);
+//
+//   return 0;
+//
 #else // with TETLIBRARY
-
-  if (!b.parse_commandline(switches)) {
-    terminatetetgen(NULL, 10);
-  }
-  tetrahedralize(&b, in, out, addin, bgmin);
-
+//
+//   if (!b.parse_commandline(switches)) {
+//     terminatetetgen(NULL, 10);
+//   }
+//   tetrahedralize(&b, in, out, addin, bgmin);
+//
 #endif // not TETLIBRARY
-}
+// }
 
 ////                                                                       ////
 ////                                                                       ////

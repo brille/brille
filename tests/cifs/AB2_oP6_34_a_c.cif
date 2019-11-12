@@ -1,0 +1,62 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'FeSb2'
+_chemical_formula_sum 'Fe Sb2'
+
+loop_
+_publ_author_name
+ 'H. Holseth'
+ 'A. Kjekshus'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 23
+_journal_year 1969
+_journal_page_first 3043
+_journal_page_last 3050
+_publ_Section_title
+;
+ Compounds with the Marcasite Type Crystal Structure. IV. The Crystal Structure of FeSb$_{2}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'FeSb$_{2}$ Structure'
+_aflow_proto 'AB2_oP6_34_a_c'
+_aflow_params 'a,b/a,c/a,z_{1},x_{2},y_{2},z_{2}'
+_aflow_params_values '5.8327827022,1.12083390481,0.548158688784,0.5,0.6881,0.8565,0.0097'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP6'
+
+_cell_length_a    5.8327827022
+_cell_length_b    6.5375806120
+_cell_length_c    3.1972905180
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P n n 2"
+_symmetry_Int_Tables_number 34
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -x+1/2,y+1/2,z+1/2
+4 x+1/2,-y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   2 a 0.00000 0.00000 0.50000 1.00000
+Sb1 Sb   4 c 0.68810 0.85650 0.00970 1.00000

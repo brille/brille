@@ -1,0 +1,68 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Pb (Zr_0.50 Ti_0.48) O_3'
+_chemical_formula_sum 'Pb Zr O3'
+ 
+loop_
+_publ_author_name
+ 'B. Noheda'
+ 'J. A. Gonzalo'
+ 'L. E. Cross'
+ 'R. Guo'
+ 'S.-E. Park'
+ 'D. E. Cox'
+ 'G. Shirane'
+_journal_name_full
+;
+Physical Review B
+;
+_journal_volume 61
+_journal_year 2000
+_journal_page_first 8687
+_journal_page_last 8695
+_publ_Section_title
+;
+ Tetragonal-to-monoclinic phase transition in a ferroelectric perovskite: The structure of PbZr$_{0.52}$Ti$_{0.48}$O$_3$
+;
+
+_aflow_proto 'A3BC_mC10_8_ab_a_a' 
+_aflow_params 'a,b/a,c/a,\beta,x1,z1,x2,z2,x3,z3,x4,y4,z4' 
+_aflow_params_values '5.72204,0.9978207073,0.722908263486,90.498,0.5515,-0.0994,0.0,0.0,0.523,0.4492,0.288,0.2434,0.3729' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mC10' 
+
+_symmetry_space_group_name_Hall "C -2y"
+_symmetry_space_group_name_H-M "C 1 m 1"
+_symmetry_Int_Tables_number 8
+
+_cell_length_a    5.72204
+_cell_length_b    5.70957
+_cell_length_c    4.13651
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.49800
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,z
+3 x+1/2,y+1/2,z
+4 x+1/2,-y+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 a 0.55150 0.00000 -0.09940 1.00000
+Pb1 Pb   2 a 0.00000 0.00000 0.00000  1.00000
+Zr1 Zr   2 a 0.52300 0.00000 0.44920  1.00000
+O2  O    4 b 0.28800 0.24340 0.37290  1.00000

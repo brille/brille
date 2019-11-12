@@ -1,0 +1,75 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Moissanite-4H'
+_chemical_formula_sum 'Si C'
+ 
+loop_
+_publ_author_name
+ 'A. Bauer'
+ 'P. Reischauer'
+ 'J. Kr\"{a}usslich'
+ 'N. Schell'
+ 'W. Matz'
+ 'K. Goetz'
+_journal_name_full
+;
+Acta Crystallographica A
+;
+_journal_volume 57
+_journal_year 2001
+_journal_page_first 60
+_journal_page_last 67
+_publ_Section_title
+;
+ Structure refinement of the silicon carbide polytypes 4H and 6H: unambiguous determination of the refinement parameters
+;
+
+_aflow_proto 'AB_hP8_186_ab_ab' 
+_aflow_params 'a,c/a,z1,z2,z3,z4' 
+_aflow_params_values '3.08051,3.27374363336,0.18784,0.0,0.43671,0.24982' 
+_aflow_Strukturbericht 'B5' 
+_aflow_Pearson 'hP8' 
+
+_symmetry_space_group_name_Hall "P 6c -2c"
+_symmetry_space_group_name_H-M "P 63 m c"
+_symmetry_Int_Tables_number 186
+
+_cell_length_a    3.08051
+_cell_length_b    3.08051
+_cell_length_c    10.08480
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z
+8 -x,-x+y,z+1/2
+9 -y,-x,z
+10 x-y,-y,z+1/2
+11 x,x-y,z
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1  C    2 a 0.00000 0.00000 0.18784 1.00000
+Si1 Si   2 a 0.00000 0.00000 0.00000 1.00000
+C2  C    2 b 0.33333 0.66667 0.43671 1.00000
+Si2 Si   2 b 0.33333 0.66667 0.24982 1.00000

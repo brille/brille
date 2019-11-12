@@ -1,0 +1,68 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'GeSe2'
+_chemical_formula_sum 'Ge Se2'
+
+loop_
+_publ_author_name
+ 'A. Grzechnik'
+ 'S. St{\o}len'
+ 'E. Bakken'
+ 'T. Grande'
+ 'M. Mezouar'
+_journal_name_full_name
+;
+ Journal of Solid State Chemistry
+;
+_journal_volume 150
+_journal_year 2000
+_journal_page_first 121
+_journal_page_last 127
+_publ_Section_title
+;
+ Structural transformations in three-dimensional crystalline GeSe$_{2}$ at high pressures and high temperatures
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'GeSe$_{2}$ (High-pressure) Structure'
+_aflow_proto 'AB2_tP12_81_adg_2h'
+_aflow_params 'a,c/a,z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5}'
+_aflow_params_values '5.3391020438,1.87980670176,0.25,0.2739,0.234,0.128,0.2289,0.23,0.6373'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP12'
+
+_cell_length_a    5.3391020438
+_cell_length_b    5.3391020438
+_cell_length_c    10.0364798033
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P -4"
+_symmetry_Int_Tables_number 81
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 y,-x,-z
+4 -y,x,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ge1 Ge   1 a 0.00000 0.00000 0.00000 1.00000
+Ge2 Ge   1 d 0.50000 0.50000 0.50000 1.00000
+Ge3 Ge   2 g 0.00000 0.50000 0.25000 1.00000
+Se1 Se   4 h 0.27390 0.23400 0.12800 1.00000
+Se2 Se   4 h 0.22890 0.23000 0.63730 1.00000

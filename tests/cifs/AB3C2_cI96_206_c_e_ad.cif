@@ -1,0 +1,108 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Al Li3 N2'
+
+loop_
+_publ_author_name
+ 'R. Juza'
+ 'F. Hund'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische Chemie
+;
+_journal_volume 257
+_journal_year 1948
+_journal_page_first 13
+_journal_page_last 25
+_publ_Section_title
+;
+ Die tern\"{a}ren Nitride Li$_{3}$AlN$_{2}$ und Li$_{3}$GaN$_{2}$. 17. Mitteilung \"{u}ber Metallamide und Metallnitride
+;
+
+# Found in Exploration of the formation of XLi$_{3}$N$_{2}$ compounds (X=Sc-Zn) by means of density functional theory, 2012
+
+_aflow_title 'AlLi$_{3}$N$_{2}$ ($E9_{d}$) Structure'
+_aflow_proto 'AB3C2_cI96_206_c_e_ad'
+_aflow_params 'a,x_{2},x_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '9.46,0.115,0.205,0.16,0.382,0.11'
+_aflow_Strukturbericht '$E9_{d}$'
+_aflow_Pearson 'cI96'
+
+_symmetry_space_group_name_H-M "I 21/a -3"
+_symmetry_Int_Tables_number 206
+ 
+_cell_length_a    9.46000
+_cell_length_b    9.46000
+_cell_length_c    9.46000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z+1/2
+3 -x+1/2,y,-z
+4 -x,-y+1/2,z
+5 y,z,x
+6 y,-z,-x+1/2
+7 -y+1/2,z,-x
+8 -y,-z+1/2,x
+9 z,x,y
+10 z,-x,-y+1/2
+11 -z+1/2,x,-y
+12 -z,-x+1/2,y
+13 -x,-y,-z
+14 -x,y,z+1/2
+15 x+1/2,-y,z
+16 x,y+1/2,-z
+17 -y,-z,-x
+18 -y,z,x+1/2
+19 y+1/2,-z,x
+20 y,z+1/2,-x
+21 -z,-x,-y
+22 -z,x,y+1/2
+23 z+1/2,-x,y
+24 z,x+1/2,-y
+25 x+1/2,y+1/2,z+1/2
+26 x+1/2,-y+1/2,-z
+27 -x,y+1/2,-z+1/2
+28 -x+1/2,-y,z+1/2
+29 y+1/2,z+1/2,x+1/2
+30 y+1/2,-z+1/2,-x
+31 -y,z+1/2,-x+1/2
+32 -y+1/2,-z,x+1/2
+33 z+1/2,x+1/2,y+1/2
+34 z+1/2,-x+1/2,-y
+35 -z,x+1/2,-y+1/2
+36 -z+1/2,-x,y+1/2
+37 -x+1/2,-y+1/2,-z+1/2
+38 -x+1/2,y+1/2,z
+39 x,-y+1/2,z+1/2
+40 x+1/2,y,-z+1/2
+41 -y+1/2,-z+1/2,-x+1/2
+42 -y+1/2,z+1/2,x
+43 y,-z+1/2,x+1/2
+44 y+1/2,z,-x+1/2
+45 -z+1/2,-x+1/2,-y+1/2
+46 -z+1/2,x+1/2,y
+47 z,-x+1/2,y+1/2
+48 z+1/2,x,-y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+N1  N    8 a 0.00000 0.00000 0.00000 1.00000
+Al1 Al  16 c 0.11500 0.11500 0.11500 1.00000
+N2  N   24 d 0.20500 0.00000 0.25000 1.00000
+Li1 Li  48 e 0.16000 0.38200 0.11000 1.00000

@@ -1,0 +1,64 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Sylvanite'
+_chemical_formula_sum 'Ag Au Te4'
+ 
+loop_
+_publ_author_name
+ 'F. Pertlik'
+_journal_name_full
+;
+Tschermaks mineralogische und petrographische Mitteilungen
+;
+_journal_volume 33
+_journal_year 1984
+_journal_page_first 203
+_journal_page_last 212
+_publ_Section_title
+;
+ Kristallchemie nat\"{u}rlicher Telluride I: Verfeinerung der Kristallstruktur des Sylvanits, AuAgTe$_4$
+;
+
+# Found in  http://materials.springer.com/isp/crystallographic/docs/sd_1702950
+
+_aflow_proto 'ABC4_mP12_13_e_a_2g' 
+_aflow_params 'a,b/a,c/a,\beta,y2,x3,y3,z3,x4,y4,z4' 
+_aflow_params_values '8.95,0.500335195531,1.63360893855,145.35,0.5182,0.2986,0.0278,0.0003,0.2821,0.4045,0.2366' 
+_aflow_Strukturbericht 'E1_b' 
+_aflow_Pearson 'mP12' 
+
+_symmetry_space_group_name_Hall "-P 2yc"
+_symmetry_space_group_name_H-M "P 1 2/c 1"
+_symmetry_Int_Tables_number 13
+
+_cell_length_a    8.95000
+_cell_length_b    4.47800
+_cell_length_c    14.62080
+_cell_angle_alpha 90.00000
+_cell_angle_beta  145.35000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z+1/2
+3 -x,-y,-z
+4 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Au1 Au   2 a 0.00000 0.00000 0.00000 1.00000
+Ag1 Ag   2 e 0.00000 0.51820 0.25000 1.00000
+Te1 Te   4 g 0.29860 0.02780 0.00030 1.00000
+Te2 Te   4 g 0.28210 0.40450 0.23660 1.00000

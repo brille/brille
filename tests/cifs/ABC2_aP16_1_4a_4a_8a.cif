@@ -1,0 +1,74 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'As K Se2'
+ 
+loop_
+_publ_author_name
+ 'W. S. Sheldrick'
+ 'H. J. Ha\"usler'
+_journal_name_full
+;
+Zeitschrift f\"{u}r anorganische und allgemeine Chemie
+;
+_journal_volume 561
+_journal_year 1988
+_journal_page_first 139
+_journal_page_last 148
+_publ_Section_title
+;
+ Zur Kenntnis von Alkalimetaselenoarseniten Darstellung und Kristallstrukturen von MAsSe$_2$, M = K, Rb, Cs
+;
+
+# Found in  Pearson's Handbook, Vol I., P. 1165
+
+_aflow_proto 'ABC2_aP16_1_4a_4a_8a' 
+_aflow_params 'a,b/a,c/a,\alpha,\beta,\gamma,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7,x8,y8,z8,x9,y9,z9,x10,y10,z10,x11,y11,z11,x12,y12,z12,x13,y13,z13,x14,y14,z14,x15,y15,z15,x16,y16,z16' 
+_aflow_params_values '6.554,1.00061031431,1.92662496186,100.43475,100.46074,107.53,0.3267,0.582,0.177,0.565,-0.0132,0.4424,0.5217,0.3883,0.6767,-0.0744,0.6254,-0.0574,0.0338,0.0476,0.2599,0.0831,0.6072,0.4974,-0.0131,0.0949,0.7583,0.5449,0.1443,-0.0022,-0.0211,0.5213,0.2073,0.2907,0.5956,-0.0183,-0.0616,0.0602,0.4998,0.5068,-0.0175,0.2448,0.4596,0.0397,0.708,0.5326,0.352,0.4818,0.0,0.0,0.0,-0.078,0.569,0.7448' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'aP16' 
+
+_symmetry_space_group_name_Hall "P 1"
+_symmetry_space_group_name_H-M "P 1"
+_symmetry_Int_Tables_number 1
+
+_cell_length_a    6.55400
+_cell_length_b    6.55800
+_cell_length_c    12.62710
+_cell_angle_alpha 100.43475
+_cell_angle_beta  100.46074
+_cell_angle_gamma 107.53000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+As1 As   1 a 0.32670  0.58200  0.17700  1.00000
+As2 As   1 a 0.56500  -0.01320 0.44240  1.00000
+As3 As   1 a 0.52170  0.38830  0.67670  1.00000
+As4 As   1 a -0.07440 0.62540  -0.05740 1.00000
+K1  K    1 a 0.03380  0.04760  0.25990  1.00000
+K2  K    1 a 0.08310  0.60720  0.49740  1.00000
+K3  K    1 a -0.01310 0.09490  0.75830  1.00000
+K4  K    1 a 0.54490  0.14430  -0.00220 1.00000
+Se1 Se   1 a -0.02110 0.52130  0.20730  1.00000
+Se2 Se   1 a 0.29070  0.59560  -0.01830 1.00000
+Se3 Se   1 a -0.06160 0.06020  0.49980  1.00000
+Se4 Se   1 a 0.50680  -0.01750 0.24480  1.00000
+Se5 Se   1 a 0.45960  0.03970  0.70800  1.00000
+Se6 Se   1 a 0.53260  0.35200  0.48180  1.00000
+Se7 Se   1 a 0.00000  0.00000  0.00000  1.00000
+Se8 Se   1 a -0.07800 0.56900  0.74480  1.00000

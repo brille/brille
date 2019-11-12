@@ -1,0 +1,70 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'B N'
+ 
+loop_
+_publ_author_name
+ 'A. Brager'
+_journal_name_full
+;
+Acta Physicochimica URSS
+;
+_journal_volume 7
+_journal_year 1937
+_journal_page_first 699
+_journal_page_last 706
+_publ_Section_title
+;
+ X-ray examination of the structure of boron nitride
+;
+
+# Found in  Structure Reports, Vol 18, 125-126 (1940-41)
+
+_aflow_proto 'AB_hP4_186_b_a' 
+_aflow_params 'a,c/a,z1,z2' 
+_aflow_params_values '2.51,2.66932270916,0.0,0.05' 
+_aflow_Strukturbericht 'B12' 
+_aflow_Pearson 'hP4' 
+
+_symmetry_space_group_name_Hall "P 6c -2c"
+_symmetry_space_group_name_H-M "P 63 m c"
+_symmetry_Int_Tables_number 186
+
+_cell_length_a    2.51000
+_cell_length_b    2.51000
+_cell_length_c    6.70000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 120.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x+y,y,z
+8 -x,-x+y,z+1/2
+9 -y,-x,z
+10 x-y,-y,z+1/2
+11 x,x-y,z
+12 y,x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+N1 N   2 a 0.00000 0.00000 0.00000 1.00000
+B1 B   2 b 0.33333 0.66667 0.05000 1.00000

@@ -1,0 +1,81 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'BiAl2S4'
+_chemical_formula_sum 'Al2 Bi S4'
+
+loop_
+_publ_author_name
+ 'H. Kalpen'
+ 'W. H{\"o}nle'
+ 'M. Somer'
+ 'U. Schwarz'
+ 'K. Peters'
+ 'H. G. {von Schnering}'
+ 'R. Blachnik'
+_journal_name_full_name
+;
+ Zeitschrift fur Anorganische und Allgemeine Chemie
+;
+_journal_volume 624
+_journal_year 1998
+_journal_page_first 1137
+_journal_page_last 1147
+_publ_Section_title
+;
+ Bismut(II)-chalkogenometallate(III) Bi$_{2}M_{4}X_{8}$, Verbindungen mit Bi$_{2}^{4+}$-Hanteln ($M$ = Al, Ga; $X$ = S, Se)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'BiAl$_{2}$S$_{4}$ Structure'
+_aflow_proto 'A2BC4_tP28_126_cd_e_k'
+_aflow_params 'a,c/a,z_{3},x_{4},y_{4},z_{4}'
+_aflow_params_values '7.4920241479,1.58609183128,0.11808,0.0865,0.5924,0.1254'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP28'
+
+_cell_length_a    7.4920241479
+_cell_length_b    7.4920241479
+_cell_length_c    11.8830383007
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 4/n 2/n 2/c (origin choice 2)"
+_symmetry_Int_Tables_number 126
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y+1/2,-z+1/2
+3 -x+1/2,y,-z+1/2
+4 -x+1/2,-y+1/2,z
+5 -y+1/2,-x+1/2,-z+1/2
+6 -y+1/2,x,z
+7 y,-x+1/2,z
+8 y,x,-z+1/2
+9 -x,-y,-z
+10 -x,y+1/2,z+1/2
+11 x+1/2,-y,z+1/2
+12 x+1/2,y+1/2,-z
+13 y+1/2,x+1/2,z+1/2
+14 y+1/2,-x,-z
+15 -y,x+1/2,-z
+16 -y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Al1 Al   4 c 0.25000 0.75000 0.75000 1.00000
+Al2 Al   4 d 0.25000 0.75000 0.00000 1.00000
+Bi1 Bi   4 e 0.25000 0.25000 0.11808 1.00000
+S1  S   16 k 0.08650 0.59240 0.12540 1.00000

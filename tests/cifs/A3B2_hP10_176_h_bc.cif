@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Er3Ru2'
+_chemical_formula_sum 'Er3 Ru2'
+
+loop_
+_publ_author_name
+ 'A. Palenzona'
+_journal_name_full_name
+;
+ Journal of the Less-Common Metals
+;
+_journal_volume 159
+_journal_year 1990
+_journal_page_first L21
+_journal_page_last L23
+_publ_Section_title
+;
+ The phase diagram of the Er-Ru system
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Er$_{3}$Ru$_{2}$ Structure'
+_aflow_proto 'A3B2_hP10_176_h_bc'
+_aflow_params 'a,c/a,x_{3},y_{3}'
+_aflow_params_values '7.8700439404,0.50025412961,0.3847,0.0915'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'hP10'
+
+_cell_length_a    7.8700439404
+_cell_length_b    7.8700439404
+_cell_length_c    3.9370219814
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 120.0000000000
+ 
+_symmetry_space_group_name_H-M "P 63/m"
+_symmetry_Int_Tables_number 176
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x-y,x,z+1/2
+3 -y,x-y,z
+4 -x,-y,z+1/2
+5 -x+y,-x,z
+6 y,-x+y,z+1/2
+7 -x,-y,-z
+8 -x+y,-x,-z+1/2
+9 y,-x+y,-z
+10 x,y,-z+1/2
+11 x-y,x,-z
+12 -y,x-y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ru1 Ru   2 b 0.00000 0.00000 0.00000 1.00000
+Ru2 Ru   2 c 0.33333 0.66667 0.25000 1.00000
+Er1 Er   6 h 0.38470 0.09150 0.25000 1.00000

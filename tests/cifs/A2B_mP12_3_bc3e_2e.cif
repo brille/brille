@@ -1,0 +1,65 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Si O2'
+ 
+loop_
+_publ_author_name
+ 'M. B. Boisen, Jr.'
+ 'G. V. Gibbs'
+ 'M. S. T. Bukowinski'
+_journal_name_full
+;
+Physics and Chemistry of Minerals
+;
+_journal_volume 21
+_journal_year 1994
+_journal_page_first 269
+_journal_page_last 284
+_publ_Section_title
+;
+ Framework silica structures generated using simulated annealing with a potential energy function based on an H$_6$Si$_2$O$_7$ molecule
+;
+
+_aflow_proto 'A2B_mP12_3_bc3e_2e' 
+_aflow_params 'a,b/a,c/a,\beta,y1,y2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7' 
+_aflow_params_values '4.1605,0.992524936907,1.78370388174,101.3752,0.15907,0.73859,0.02399,0.752,0.18927,0.38562,0.71473,0.64074,0.48963,0.20196,0.18802,0.18244,0.0,0.69651,0.38098,0.58564,0.17797' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mP12' 
+
+_symmetry_space_group_name_Hall "P 2y"
+_symmetry_space_group_name_H-M "P 1 2 1"
+_symmetry_Int_Tables_number 3
+
+_cell_length_a    4.16050
+_cell_length_b    4.12940
+_cell_length_c    7.42110
+_cell_angle_alpha 90.00000
+_cell_angle_beta  101.37520
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    1 b 0.00000 0.15907 0.50000 1.00000
+O2  O    1 c 0.50000 0.73859 0.00000 1.00000
+O3  O    2 e 0.02399 0.75200 0.18927 1.00000
+O4  O    2 e 0.38562 0.71473 0.64074 1.00000
+O5  O    2 e 0.48963 0.20196 0.18802 1.00000
+Si1 Si   2 e 0.18244 0.00000 0.69651 1.00000
+Si2 Si   2 e 0.38098 0.58564 0.17797 1.00000

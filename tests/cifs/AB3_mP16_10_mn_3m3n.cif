@@ -1,0 +1,69 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'H3Cl'
+_chemical_formula_sum 'Cl H3'
+
+loop_
+_publ_author_name
+ 'Q. Zeng'
+ 'S. Yu'
+ 'D. Li'
+ 'A. R. Oganov'
+ 'G. Frapper'
+_journal_name_full_name
+;
+ Physical Chemistry Chemical Physics
+;
+_journal_volume 19
+_journal_year 2017
+_journal_page_first 8236
+_journal_page_last 8242
+_publ_Section_title
+;
+ Emergence of novel hydrogen chlorides under high pressure
+;
+
+_aflow_title 'H$_{3}$Cl (400~GPa) Structure'
+_aflow_proto 'AB3_mP16_10_mn_3m3n'
+_aflow_params 'a,b/a,c/a,\beta,x_{1},z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},z_{6},x_{7},z_{7},x_{8},z_{8}'
+_aflow_params_values '3.678,0.71098423056,1.23817292007,91.0,0.263,0.339,0.08,0.059,0.795,0.341,0.438,-0.069,0.763,0.161,0.705,0.841,0.58,0.441,0.062,0.431'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP16'
+
+_symmetry_space_group_name_H-M "P 1 2/m 1"
+_symmetry_Int_Tables_number 10
+ 
+_cell_length_a    3.67800
+_cell_length_b    2.61500
+_cell_length_c    4.55400
+_cell_angle_alpha 90.00000
+_cell_angle_beta  91.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Cl1 Cl   2 m 0.26300 0.00000 0.33900  1.00000
+H1  H    2 m 0.08000 0.00000 0.05900  1.00000
+H2  H    2 m 0.79500 0.00000 0.34100  1.00000
+H3  H    2 m 0.43800 0.00000 -0.06900 1.00000
+Cl2 Cl   2 n 0.76300 0.50000 0.16100  1.00000
+H4  H    2 n 0.70500 0.50000 0.84100  1.00000
+H5  H    2 n 0.58000 0.50000 0.44100  1.00000
+H6  H    2 n 0.06200 0.50000 0.43100  1.00000

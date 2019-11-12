@@ -1,0 +1,83 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'T12'
+_chemical_formula_sum 'C'
+
+loop_
+_publ_author_name
+ 'Z. Zhao'
+ 'F. Tian'
+ 'X. Dong'
+ 'Q. Li'
+ 'Q. Wang'
+ 'H. Wang'
+ 'X. Zhong'
+ 'B. Xu'
+ 'D. Yu'
+ 'J. He'
+ 'H.-T. Wang'
+ 'Y. Ma'
+ 'Y. Tian'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 134
+_journal_year 2012
+_journal_page_first 12362
+_journal_page_last 12365
+_publ_Section_title
+;
+ Tetragonal Allotrope of Group 14 Elements
+;
+
+_aflow_title 'C (T12 Group IV) Structure'
+_aflow_proto 'A_tP12_138_bi'
+_aflow_params 'a,c/a,x_{2},z_{2}'
+_aflow_params_values '3.388,1.77420306966,0.086,0.107'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP12'
+
+_symmetry_space_group_name_H-M "P 42/n 21/c 2/m (origin choice 2)"
+_symmetry_Int_Tables_number 138
+ 
+_cell_length_a    3.38800
+_cell_length_b    3.38800
+_cell_length_c    6.01100
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y,-z+1/2
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y+1/2,z
+5 -y,-x,-z
+6 -y+1/2,x,z+1/2
+7 y,-x+1/2,z+1/2
+8 y+1/2,x+1/2,-z
+9 -x,-y,-z
+10 -x+1/2,y,z+1/2
+11 x,-y+1/2,z+1/2
+12 x+1/2,y+1/2,-z
+13 y,x,z
+14 y+1/2,-x,-z+1/2
+15 -y,x+1/2,-z+1/2
+16 -y+1/2,-x+1/2,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1 C   4 b 0.75000 0.25000 0.75000 1.00000
+C2 C   8 i 0.08600 0.08600 0.10700 1.00000

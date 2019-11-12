@@ -1,0 +1,65 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'AuAgTe2'
+_chemical_formula_sum 'Ag Au Te2'
+
+loop_
+_publ_author_name
+ 'L. Bindi'
+_journal_name_full_name
+;
+ Philosophical Magazine Letters
+;
+_journal_volume 88
+_journal_year 2008
+_journal_page_first 533
+_journal_page_last 541
+_publ_Section_title
+;
+ Commensurate-incommensurate phase transition in muthmannite, AuAgTe$_2$: first evidence of a modulated structure at low temperature
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Muthmannite (AuAgTe$_{2}$) Structure'
+_aflow_proto 'ABC2_mP8_10_ac_eh_mn'
+_aflow_params 'a,b/a,c/a,\beta,x_{5},z_{5},x_{6},z_{6}'
+_aflow_params_values '5.1177434753,0.86107854631,1.45123094959,90.021,0.6089,0.24179,0.1277,0.24913'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP8'
+
+_cell_length_a    5.1177434753
+_cell_length_b    4.4067791121
+_cell_length_c    7.4270277234
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0210000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 1 2/m 1"
+_symmetry_Int_Tables_number 10
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 -x,-y,-z
+4 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ag1 Ag   1 a 0.00000 0.00000 0.00000 1.00000
+Ag2 Ag   1 c 0.00000 0.00000 0.50000 1.00000
+Au1 Au   1 e 0.50000 0.50000 0.00000 1.00000
+Au2 Au   1 h 0.50000 0.50000 0.50000 1.00000
+Te1 Te   2 m 0.60890 0.00000 0.24179 1.00000
+Te2 Te   2 n 0.12770 0.50000 0.24913 1.00000

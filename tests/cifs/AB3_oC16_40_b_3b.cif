@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'CeTe3'
+_chemical_formula_sum 'Ce Te3'
+
+loop_
+_publ_author_name
+ 'C. Malliakas'
+ 'S. J. L. Billinge'
+ 'H. J. Kim'
+ 'M. G. Kanatzidis'
+_journal_name_full_name
+;
+ Journal of the American Chemical Society
+;
+_journal_volume 127
+_journal_year 2005
+_journal_page_first 6510
+_journal_page_last 6511
+_publ_Section_title
+;
+ Square Nets of Tellurium: Rare-Earth Dependent Variation in the Charge-Density Wave of $RE$Te$_{3}$ ($RE$ = Rare-Earth Element)
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'CeTe$_{3}$ Structure'
+_aflow_proto 'AB3_oC16_40_b_3b'
+_aflow_params 'a,b/a,c/a,y_{1},z_{1},y_{2},z_{2},y_{3},z_{3},y_{4},z_{4}'
+_aflow_params_values '4.3850022361,5.92335058951,0.997331752147,0.83109,0.0,0.70417,0.0021,0.56971,0.4966,-0.07002,0.4978'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oC16'
+
+_cell_length_a    4.3850022361
+_cell_length_b    25.9739055802
+_cell_length_c    4.3733019633
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "A m a 2"
+_symmetry_Int_Tables_number 40
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 x+1/2,-y,z
+4 -x+1/2,y,z
+5 x,y+1/2,z+1/2
+6 -x,-y+1/2,z+1/2
+7 x+1/2,-y+1/2,z+1/2
+8 -x+1/2,y+1/2,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ce1 Ce   4 b 0.25000 0.83109  0.00000 1.00000
+Te1 Te   4 b 0.25000 0.70417  0.00210 1.00000
+Te2 Te   4 b 0.25000 0.56971  0.49660 1.00000
+Te3 Te   4 b 0.25000 -0.07002 0.49780 1.00000

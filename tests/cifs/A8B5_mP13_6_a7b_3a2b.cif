@@ -1,0 +1,70 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Mo8P5'
+_chemical_formula_sum 'Mo8 P5'
+
+loop_
+_publ_author_name
+ 'T. Johnsson'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 26
+_journal_year 1972
+_journal_page_first 365
+_journal_page_last 382
+_publ_Section_title
+;
+ The crystal structure of Mo$_{8}$P$_{5}$ from twin-crystal data
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Mo$_{8}$P$_{5}$ (High-temperature) Structure'
+_aflow_proto 'A8B5_mP13_6_a7b_3a2b'
+_aflow_params 'a,b/a,c/a,\beta,x_{1},z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4},x_{5},z_{5},x_{6},z_{6},x_{7},z_{7},x_{8},z_{8},x_{9},z_{9},x_{10},z_{10},x_{11},z_{11},x_{12},z_{12},x_{13},z_{13}'
+_aflow_params_values '6.5369054321,0.490874879533,1.43786810261,109.592,0.5119,0.7172,0.4546,0.4285,0.044,0.5911,0.37,0.0053,0.3887,0.2195,0.6277,0.0001,0.1818,0.4663,0.7456,0.5256,0.1826,0.7901,0.7824,0.2724,0.0,0.0,0.8188,0.8026,0.0123,0.2051'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP13'
+
+_cell_length_a    6.5369054321
+_cell_length_b    3.2088026665
+_cell_length_c    9.3992078106
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  109.5920000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 1 m 1"
+_symmetry_Int_Tables_number 6
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Mo1 Mo   1 a 0.51190 0.00000 0.71720 1.00000
+P1  P    1 a 0.45460 0.00000 0.42850 1.00000
+P2  P    1 a 0.04400 0.00000 0.59110 1.00000
+P3  P    1 a 0.37000 0.00000 0.00530 1.00000
+Mo2 Mo   1 b 0.38870 0.50000 0.21950 1.00000
+Mo3 Mo   1 b 0.62770 0.50000 0.00010 1.00000
+Mo4 Mo   1 b 0.18180 0.50000 0.46630 1.00000
+Mo5 Mo   1 b 0.74560 0.50000 0.52560 1.00000
+Mo6 Mo   1 b 0.18260 0.50000 0.79010 1.00000
+Mo7 Mo   1 b 0.78240 0.50000 0.27240 1.00000
+Mo8 Mo   1 b 0.00000 0.50000 0.00000 1.00000
+P4  P    1 b 0.81880 0.50000 0.80260 1.00000
+P5  P    1 b 0.01230 0.50000 0.20510 1.00000

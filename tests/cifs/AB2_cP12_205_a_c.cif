@@ -1,0 +1,82 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Pyrite'
+_chemical_formula_sum 'Fe S2'
+ 
+loop_
+_publ_author_name
+ 'Peter Bayliss'
+_journal_name_full
+;
+American Mineralogist
+;
+_journal_volume 62
+_journal_year 1977
+_journal_page_first 1168
+_journal_page_last 1172
+_publ_Section_title
+;
+ Crystal structure refinement of a weakly anisotropic pyrite
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'AB2_cP12_205_a_c' 
+_aflow_params 'a,x2' 
+_aflow_params_values '5.417,0.3851' 
+_aflow_Strukturbericht 'C2' 
+_aflow_Pearson 'cP12' 
+
+_symmetry_space_group_name_Hall "-P 2ac 2ab 3 Pa(-3)"
+_symmetry_space_group_name_H-M "P a -3"
+_symmetry_Int_Tables_number 205
+
+_cell_length_a    5.41700
+_cell_length_b    5.41700
+_cell_length_c    5.41700
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+13 -x,-y,-z
+14 -x+1/2,y+1/2,z
+15 x,-y+1/2,z+1/2
+16 x+1/2,y,-z+1/2
+17 -y,-z,-x
+18 -y+1/2,z+1/2,x
+19 y,-z+1/2,x+1/2
+20 y+1/2,z,-x+1/2
+21 -z,-x,-y
+22 -z+1/2,x+1/2,y
+23 z,-x+1/2,y+1/2
+24 z+1/2,x,-y+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Fe1 Fe   4 a 0.00000 0.00000 0.00000 1.00000
+S1  S    8 c 0.38510 0.38510 0.38510 1.00000

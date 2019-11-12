@@ -1,0 +1,67 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'TaNiTe2'
+_chemical_formula_sum 'Ni Ta Te2'
+
+loop_
+_publ_author_name
+ 'W. Tremel'
+_journal_name_full_name
+;
+ Angewandte Chemie (International ed.)
+;
+_journal_volume 30
+_journal_year 1991
+_journal_page_first 840
+_journal_page_last 843
+_publ_Section_title
+;
+ Isolated and Condensed Ta$_{2}$Ni$_{2}$ Clusters in the Layered Tellurides Ta$_{2}$Ni$_{2}$Te$_{4}$ and Ta$_{2}$Ni$_{3}$Te$_{5}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'TaNiTe$_{2}$ Structure'
+_aflow_proto 'ABC2_oP16_53_h_e_gh'
+_aflow_params 'a,b/a,c/a,x_{1},y_{2},y_{3},z_{3},y_{4},z_{4}'
+_aflow_params_values '11.6904618594,0.282132455361,0.78890717994,0.79514,0.3193,0.1198,0.3549,0.224,0.7493'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'oP16'
+
+_cell_length_a    11.6904618594
+_cell_length_b    3.2982587087
+_cell_length_c    9.2226892977
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 2/m 2/n 21/a"
+_symmetry_Int_Tables_number 53
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x+1/2,y,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 -x,-y,-z
+6 -x,y,z
+7 x+1/2,-y,z+1/2
+8 x+1/2,y,-z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ta1 Ta   4 e 0.79514 0.00000 0.00000 1.00000
+Te1 Te   4 g 0.25000 0.31930 0.25000 1.00000
+Ni1 Ni   4 h 0.00000 0.11980 0.35490 1.00000
+Te2 Te   4 h 0.00000 0.22400 0.74930 1.00000

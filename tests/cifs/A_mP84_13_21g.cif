@@ -1,0 +1,82 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Hittorf'
+_chemical_formula_sum 'P'
+ 
+loop_
+_publ_author_name
+ 'H. Thurn'
+ 'H. Krebs'
+_journal_name_full
+;
+Acta Crystallographica B
+;
+_journal_volume 25
+_journal_year 1969
+_journal_page_first 125
+_journal_page_last 135
+_publ_Section_title
+;
+ "{U}ber Struktur und Eigenschaften der Halbmetalle. XXII. Die Kristallstruktur des Hittorfschen Phosphors
+;
+
+# Found in  Donohue, pp. 292-295
+
+_aflow_proto 'A_mP84_13_21g' 
+_aflow_params 'a,b/a,c/a,\beta,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x5,y5,z5,x6,y6,z6,x7,y7,z7,x8,y8,z8,x9,y9,z9,x10,y10,z10,x11,y11,z11,x12,y12,z12,x13,y13,z13,x14,y14,z14,x15,y15,z15,x16,y16,z16,x17,y17,z17,x18,y18,z18,x19,y19,z19,x20,y20,z20,x21,y21,z21' 
+_aflow_params_values '9.21,0.99348534202,2.45385450597,106.1,0.30089,0.20127,0.18147,0.17387,0.03262,0.11695,0.05014,-0.05231,0.18035,-0.07589,0.78099,0.11634,0.79463,0.67872,0.1738,0.68463,0.51532,0.10402,0.56601,0.44932,0.17224,0.42424,0.27741,0.11672,0.0412,0.39067,0.07245,-0.00092,0.15881,0.04497,0.78847,0.13878,0.07346,0.7486,-0.09081,0.04464,0.53574,0.87264,0.06842,0.50833,0.63715,0.03304,0.30515,0.63715,0.06617,0.25041,0.40555,0.0442,0.146,0.38905,0.17219,0.86038,0.10055,0.17357,0.59606,0.82384,0.1694,0.41856,0.64581,0.16732,-0.05418,0.32296,0.2006' 
+_aflow_Strukturbericht 'None' 
+_aflow_Pearson 'mP84' 
+
+_symmetry_space_group_name_Hall "-P 2yc"
+_symmetry_space_group_name_H-M "P 1 2/c 1"
+_symmetry_Int_Tables_number 13
+
+_cell_length_a    9.21000
+_cell_length_b    9.15000
+_cell_length_c    22.60000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  106.10000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z+1/2
+3 -x,-y,-z
+4 x,-y,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+P1  P   4 g 0.30089  0.20127  0.18147 1.00000
+P2  P   4 g 0.17387  0.03262  0.11695 1.00000
+P3  P   4 g 0.05014  -0.05231 0.18035 1.00000
+P4  P   4 g -0.07589 0.78099  0.11634 1.00000
+P5  P   4 g 0.79463  0.67872  0.17380 1.00000
+P6  P   4 g 0.68463  0.51532  0.10402 1.00000
+P7  P   4 g 0.56601  0.44932  0.17224 1.00000
+P8  P   4 g 0.42424  0.27741  0.11672 1.00000
+P9  P   4 g 0.04120  0.39067  0.07245 1.00000
+P10 P   4 g -0.00092 0.15881  0.04497 1.00000
+P11 P   4 g 0.78847  0.13878  0.07346 1.00000
+P12 P   4 g 0.74860  -0.09081 0.04464 1.00000
+P13 P   4 g 0.53574  0.87264  0.06842 1.00000
+P14 P   4 g 0.50833  0.63715  0.03304 1.00000
+P15 P   4 g 0.30515  0.63715  0.06617 1.00000
+P16 P   4 g 0.25041  0.40555  0.04420 1.00000
+P17 P   4 g 0.14600  0.38905  0.17219 1.00000
+P18 P   4 g 0.86038  0.10055  0.17357 1.00000
+P19 P   4 g 0.59606  0.82384  0.16940 1.00000
+P20 P   4 g 0.41856  0.64581  0.16732 1.00000
+P21 P   4 g -0.05418 0.32296  0.20060 1.00000

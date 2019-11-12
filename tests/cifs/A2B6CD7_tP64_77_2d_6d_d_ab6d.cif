@@ -1,0 +1,77 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'MgB2O(OH)6'
+_chemical_formula_sum 'B2 H6 Mg O7'
+
+loop_
+_publ_author_name
+ 'E. A. Genkina'
+ 'Y. A. Malinovskii'
+_journal_name_full_name
+;
+ Soviet Physics Crystallography
+;
+_journal_volume 28
+_journal_year 1983
+_journal_page_first 475
+_journal_page_last 477
+_publ_Section_title
+;
+ Refinement of the structure of pinnoite: Location of hydrogen atoms
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Pinnoite (MgB$_{2}$O(OH)$_{6}$) Structure'
+_aflow_proto 'A2B6CD7_tP64_77_2d_6d_d_ab6d'
+_aflow_params 'a,c/a,z_{1},z_{2},x_{3},y_{3},z_{3},x_{4},y_{4},z_{4},x_{5},y_{5},z_{5},x_{6},y_{6},z_{6},x_{7},y_{7},z_{7},x_{8},y_{8},z_{8},x_{9},y_{9},z_{9},x_{10},y_{10},z_{10},x_{11},y_{11},z_{11},x_{12},y_{12},z_{12},x_{13},y_{13},z_{13},x_{14},y_{14},z_{14},x_{15},y_{15},z_{15},x_{16},y_{16},z_{16},x_{17},y_{17},z_{17}'
+_aflow_params_values '7.6159522234,1.07480314961,0.0,0.035,0.1167,0.1203,0.418,0.392,0.3817,0.132,0.362,0.099,0.309,0.136,0.393,0.161,0.192,0.355,0.442,0.312,0.133,0.03,0.028,0.14,0.14,0.47,0.35,0.32,0.2491,0.7483,0.273,0.2602,0.0188,0.013,0.2316,0.4834,0.184,0.1644,0.2577,0.529,0.3406,0.2365,0.012,0.0182,0.2119,0.275,0.4808,0.3008,0.268'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'tP64'
+
+_cell_length_a    7.6159522234
+_cell_length_b    7.6159522234
+_cell_length_c    8.1856494370
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 42"
+_symmetry_Int_Tables_number 77
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,-y,z
+3 -y,x,z+1/2
+4 y,-x,z+1/2
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1  O    2 a 0.00000 0.00000 0.00000 1.00000
+O2  O    2 b 0.50000 0.50000 0.03500 1.00000
+B1  B    4 d 0.11670 0.12030 0.41800 1.00000
+B2  B    4 d 0.39200 0.38170 0.13200 1.00000
+H1  H    4 d 0.36200 0.09900 0.30900 1.00000
+H2  H    4 d 0.13600 0.39300 0.16100 1.00000
+H3  H    4 d 0.19200 0.35500 0.44200 1.00000
+H4  H    4 d 0.31200 0.13300 0.03000 1.00000
+H5  H    4 d 0.02800 0.14000 0.14000 1.00000
+H6  H    4 d 0.47000 0.35000 0.32000 1.00000
+Mg1 Mg   4 d 0.24910 0.74830 0.27300 1.00000
+O3  O    4 d 0.26020 0.01880 0.01300 1.00000
+O4  O    4 d 0.23160 0.48340 0.18400 1.00000
+O5  O    4 d 0.16440 0.25770 0.52900 1.00000
+O6  O    4 d 0.34060 0.23650 0.01200 1.00000
+O7  O    4 d 0.01820 0.21190 0.27500 1.00000
+O8  O    4 d 0.48080 0.30080 0.26800 1.00000

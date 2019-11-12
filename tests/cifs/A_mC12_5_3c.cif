@@ -1,0 +1,65 @@
+# CIF file 
+
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral ''
+_chemical_formula_sum 'Po'
+ 
+loop_
+_publ_author_name
+ 'M. A. Rollier'
+ 'S. B. Hendricks'
+ 'Louis R. Maxwell'
+_journal_name_full
+;
+Journal of Chemical Physics
+;
+_journal_volume 4
+_journal_year 1936
+_journal_page_first 648
+_journal_page_last 652
+_publ_Section_title
+;
+ The Crystal Structure of Polonium by Electron Diffraction
+;
+
+# Found in  AMS Database
+
+_aflow_proto 'A_mC12_5_3c' 
+_aflow_params 'a,b/a,c/a,\beta,x1,y1,z1,x2,y2,z2,x3,y3,z3' 
+_aflow_params_values '7.42,0.578167115903,1.90026954178,92.0,0.05,0.27,0.245,0.63,0.3,0.4,0.245,0.43,0.07' 
+_aflow_Strukturbericht 'A19' 
+_aflow_Pearson 'mC12' 
+
+_symmetry_space_group_name_Hall "C 2y"
+_symmetry_space_group_name_H-M "C 1 2 1"
+_symmetry_Int_Tables_number 5
+
+_cell_length_a    7.42000
+_cell_length_b    4.29000
+_cell_length_c    14.10000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  92.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 -x,y,-z
+3 x+1/2,y+1/2,z
+4 -x+1/2,y+1/2,-z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Po1 Po   4 c 0.05000 0.27000 0.24500 1.00000
+Po2 Po   4 c 0.63000 0.30000 0.40000 1.00000
+Po3 Po   4 c 0.24500 0.43000 0.07000 1.00000

@@ -1,0 +1,155 @@
+# CIF file 
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Buckminsterfullerene'
+_chemical_formula_sum 'C'
+
+loop_
+_publ_author_name
+ 'D. L. Dorset'
+ 'M. P. McCourt'
+_journal_name_full_name
+;
+ Acta Crystallographica Section A: Foundations and Advances
+;
+_journal_volume 50
+_journal_year 1994
+_journal_page_first 344
+_journal_page_last 351
+_publ_Section_title
+;
+ Disorder and the molecular packing of C$_{60}$
+                  buckminsterfullerene: a direct
+                  electron-crystallographic analysis
+;
+
+_aflow_title 'FCC C$_{60}$ Buckminsterfullerene Structure'
+_aflow_proto 'A_cF240_202_h2i'
+_aflow_params 'a,y_{1},z_{1},x_{2},y_{2},z_{2},x_{3},y_{3},z_{3}'
+_aflow_params_values '14.26,0.249,0.052,0.105,0.085,0.22,0.185,0.052,0.165'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cF240'
+
+_symmetry_space_group_name_H-M "F 2/m -3"
+_symmetry_Int_Tables_number 202
+ 
+_cell_length_a    14.26000
+_cell_length_b    14.26000
+_cell_length_c    14.26000
+_cell_angle_alpha 90.00000
+_cell_angle_beta  90.00000
+_cell_angle_gamma 90.00000
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -x,-y,-z
+14 -x,y,z
+15 x,-y,z
+16 x,y,-z
+17 -y,-z,-x
+18 -y,z,x
+19 y,-z,x
+20 y,z,-x
+21 -z,-x,-y
+22 -z,x,y
+23 z,-x,y
+24 z,x,-y
+25 x,y+1/2,z+1/2
+26 x,-y+1/2,-z+1/2
+27 -x,y+1/2,-z+1/2
+28 -x,-y+1/2,z+1/2
+29 y,z+1/2,x+1/2
+30 y,-z+1/2,-x+1/2
+31 -y,z+1/2,-x+1/2
+32 -y,-z+1/2,x+1/2
+33 z,x+1/2,y+1/2
+34 z,-x+1/2,-y+1/2
+35 -z,x+1/2,-y+1/2
+36 -z,-x+1/2,y+1/2
+37 -x,-y+1/2,-z+1/2
+38 -x,y+1/2,z+1/2
+39 x,-y+1/2,z+1/2
+40 x,y+1/2,-z+1/2
+41 -y,-z+1/2,-x+1/2
+42 -y,z+1/2,x+1/2
+43 y,-z+1/2,x+1/2
+44 y,z+1/2,-x+1/2
+45 -z,-x+1/2,-y+1/2
+46 -z,x+1/2,y+1/2
+47 z,-x+1/2,y+1/2
+48 z,x+1/2,-y+1/2
+49 x+1/2,y,z+1/2
+50 x+1/2,-y,-z+1/2
+51 -x+1/2,y,-z+1/2
+52 -x+1/2,-y,z+1/2
+53 y+1/2,z,x+1/2
+54 y+1/2,-z,-x+1/2
+55 -y+1/2,z,-x+1/2
+56 -y+1/2,-z,x+1/2
+57 z+1/2,x,y+1/2
+58 z+1/2,-x,-y+1/2
+59 -z+1/2,x,-y+1/2
+60 -z+1/2,-x,y+1/2
+61 -x+1/2,-y,-z+1/2
+62 -x+1/2,y,z+1/2
+63 x+1/2,-y,z+1/2
+64 x+1/2,y,-z+1/2
+65 -y+1/2,-z,-x+1/2
+66 -y+1/2,z,x+1/2
+67 y+1/2,-z,x+1/2
+68 y+1/2,z,-x+1/2
+69 -z+1/2,-x,-y+1/2
+70 -z+1/2,x,y+1/2
+71 z+1/2,-x,y+1/2
+72 z+1/2,x,-y+1/2
+73 x+1/2,y+1/2,z
+74 x+1/2,-y+1/2,-z
+75 -x+1/2,y+1/2,-z
+76 -x+1/2,-y+1/2,z
+77 y+1/2,z+1/2,x
+78 y+1/2,-z+1/2,-x
+79 -y+1/2,z+1/2,-x
+80 -y+1/2,-z+1/2,x
+81 z+1/2,x+1/2,y
+82 z+1/2,-x+1/2,-y
+83 -z+1/2,x+1/2,-y
+84 -z+1/2,-x+1/2,y
+85 -x+1/2,-y+1/2,-z
+86 -x+1/2,y+1/2,z
+87 x+1/2,-y+1/2,z
+88 x+1/2,y+1/2,-z
+89 -y+1/2,-z+1/2,-x
+90 -y+1/2,z+1/2,x
+91 y+1/2,-z+1/2,x
+92 y+1/2,z+1/2,-x
+93 -z+1/2,-x+1/2,-y
+94 -z+1/2,x+1/2,y
+95 z+1/2,-x+1/2,y
+96 z+1/2,x+1/2,-y
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+C1 C  48 h 0.00000 0.24900 0.05200 1.00000
+C2 C  96 i 0.10500 0.08500 0.22000 1.00000
+C3 C  96 i 0.18500 0.05200 0.16500 1.00000

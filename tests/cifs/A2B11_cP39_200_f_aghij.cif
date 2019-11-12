@@ -1,0 +1,85 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'Mg2Zn11'
+_chemical_formula_sum 'Mg2 Zn11'
+
+loop_
+_publ_author_name
+ 'S. Samson'
+_journal_name_full_name
+;
+ Acta Chemica Scandinavica
+;
+_journal_volume 3
+_journal_year 1949
+_journal_page_first 835
+_journal_page_last 843
+_publ_Section_title
+;
+ Die Kristallstruktur von Mg$_{2}$Zn$_{11}$ Isomorphie zwischen Mg$_{2}$Zn$_{11}$ und Mg$_{2}$Cu$_{6}$Al$_{5}$
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'Mg$_{2}$Zn$_{11}$ ($D8_{c}$) Structure'
+_aflow_proto 'A2B11_cP39_200_f_aghij'
+_aflow_params 'a,x_{2},x_{3},x_{4},x_{5},y_{6},z_{6}'
+_aflow_params_values '8.5520223662,0.18,0.34,0.265,0.278,0.157,0.257'
+_aflow_Strukturbericht '$D8_{c}$'
+_aflow_Pearson 'cP39'
+
+_cell_length_a    8.5520223662
+_cell_length_b    8.5520223662
+_cell_length_c    8.5520223662
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 2/m -3"
+_symmetry_Int_Tables_number 200
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,-z
+3 -x,y,-z
+4 -x,-y,z
+5 y,z,x
+6 y,-z,-x
+7 -y,z,-x
+8 -y,-z,x
+9 z,x,y
+10 z,-x,-y
+11 -z,x,-y
+12 -z,-x,y
+13 -x,-y,-z
+14 -x,y,z
+15 x,-y,z
+16 x,y,-z
+17 -y,-z,-x
+18 -y,z,x
+19 y,-z,x
+20 y,z,-x
+21 -z,-x,-y
+22 -z,x,y
+23 z,-x,y
+24 z,x,-y
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Zn1 Zn   1 a 0.00000 0.00000 0.00000 1.00000
+Mg1 Mg   6 f 0.18000 0.00000 0.50000 1.00000
+Zn2 Zn   6 g 0.34000 0.50000 0.00000 1.00000
+Zn3 Zn   6 h 0.26500 0.50000 0.50000 1.00000
+Zn4 Zn   8 i 0.27800 0.27800 0.27800 1.00000
+Zn5 Zn  12 j 0.00000 0.15700 0.25700 1.00000

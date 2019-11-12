@@ -1,0 +1,83 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'SrSi2'
+_chemical_formula_sum 'Si2 Sr'
+
+loop_
+_publ_author_name
+ 'K. Janzon'
+ 'H. Sch{\"a}fer'
+ 'A. Weiss'
+_journal_name_full_name
+;
+ Angewandte Chemie
+;
+_journal_volume 77
+_journal_year 1965
+_journal_page_first 258
+_journal_page_last 259
+_publ_Section_title
+;
+ Kristallstruktur von Strontiumdisilicid SrSi$_{2}$
+;
+
+# Found in Pearson's Handbook of Crystallographic Data for Intermetallic Phases, 1985
+
+_aflow_title 'SrSi$_{2}$ Structure'
+_aflow_proto 'A2B_cP12_212_c_a'
+_aflow_params 'a,x_{2}'
+_aflow_params_values '6.54,0.428'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'cP12'
+
+_cell_length_a    6.5400000000
+_cell_length_b    6.5400000000
+_cell_length_c    6.5400000000
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0000000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 43 3 2"
+_symmetry_Int_Tables_number 212
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x+1/2,-y+1/2,-z
+3 -x,y+1/2,-z+1/2
+4 -x+1/2,-y,z+1/2
+5 y,z,x
+6 y+1/2,-z+1/2,-x
+7 -y,z+1/2,-x+1/2
+8 -y+1/2,-z,x+1/2
+9 z,x,y
+10 z+1/2,-x+1/2,-y
+11 -z,x+1/2,-y+1/2
+12 -z+1/2,-x,y+1/2
+13 -y+1/4,-x+1/4,-z+1/4
+14 -y+3/4,x+1/4,z+3/4
+15 y+3/4,-x+3/4,z+1/4
+16 y+1/4,x+3/4,-z+3/4
+17 -x+1/4,-z+1/4,-y+1/4
+18 -x+3/4,z+1/4,y+3/4
+19 x+3/4,-z+3/4,y+1/4
+20 x+1/4,z+3/4,-y+3/4
+21 -z+1/4,-y+1/4,-x+1/4
+22 -z+3/4,y+1/4,x+3/4
+23 z+3/4,-y+3/4,x+1/4
+24 z+1/4,y+3/4,-x+3/4
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Sr1 Sr   4 a 0.12500 0.12500 0.12500 1.00000
+Si1 Si   8 c 0.42800 0.42800 0.42800 1.00000

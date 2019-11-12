@@ -1,0 +1,63 @@
+# CIF file
+data_findsym-output
+_audit_creation_method FINDSYM
+
+_chemical_name_mineral 'FeNi'
+_chemical_formula_sum 'Fe Ni'
+
+loop_
+_publ_author_name
+ 'T. Tagai'
+ 'H. Takeda'
+ 'T. Fukuda'
+_journal_name_full_name
+;
+ Zeitschrift f{\"u}r Kristallographie - Crystalline Materials
+;
+_journal_volume 210
+_journal_year 1995
+_journal_page_first 14
+_journal_page_last 18
+_publ_Section_title
+;
+ Superstructure of tetrataenite from the Saint Severin meteorite
+;
+
+# Found in Pearson's Crystal Data - Crystal Structure Database for Inorganic Compounds, 2013
+
+_aflow_title 'FeNi Structure'
+_aflow_proto 'AB_mP4_6_2b_2a'
+_aflow_params 'a,b/a,c/a,\beta,x_{1},z_{1},x_{2},z_{2},x_{3},z_{3},x_{4},z_{4}'
+_aflow_params_values '3.580975428,1.00027925162,1.00167550965,90.04,0.0,0.0,0.518,0.507,0.026,0.501,0.529,0.027'
+_aflow_Strukturbericht 'None'
+_aflow_Pearson 'mP4'
+
+_cell_length_a    3.5809754280
+_cell_length_b    3.5819754212
+_cell_length_c    3.5869753869
+_cell_angle_alpha 90.0000000000
+_cell_angle_beta  90.0400000000
+_cell_angle_gamma 90.0000000000
+ 
+_symmetry_space_group_name_H-M "P 1 m 1"
+_symmetry_Int_Tables_number 6
+ 
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 x,y,z
+2 x,-y,z
+ 
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+Ni1 Ni   1 a 0.00000 0.00000 0.00000 1.00000
+Ni2 Ni   1 a 0.51800 0.00000 0.50700 1.00000
+Fe1 Fe   1 b 0.02600 0.50000 0.50100 1.00000
+Fe2 Fe   1 b 0.52900 0.50000 0.02700 1.00000
