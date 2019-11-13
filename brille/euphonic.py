@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with brille. If not, see <https://www.gnu.org/licenses/>.
 """
-Define a class FibEu to act as the interface between brille and Euphonic.
+Define a class BrEu to act as the interface between brille and Euphonic.
 
 Thus enabling efficient interpolation of CASTEP-derived phonons at arbitrary
 Q points.
@@ -33,7 +33,7 @@ import brille as sbz
 from brille.evn import degenerate_check
 
 
-class FibEu:
+class BrEu:
     """
     Efficient interpolation of phonon intensity at arbitrary Q points.
 
@@ -53,16 +53,16 @@ class FibEu:
     first-irreducible-Brillouin-zone point, q, for any arbitrary reciprocal
     space point, Q.
 
-    The FibEu object uses lattice information from the Euphonic object and the
+    The BrEu object uses lattice information from the Euphonic object and the
     package spglib to determine the conventional unit cell equivalent to that
     used in, e.g., CASTEP calculations. This unit cell information is then used
     to construct the primitive first irreducible Brillouin zone and a brille
     grid. The gridded-points are then used by the Euphonic object to calculate
     ωᵢ(q) and ϵᵢⱼ(q), which are placed in the brille object at their respective
-    grid points. When an external request is made to the FibEu object to
+    grid points. When an external request is made to the BrEu object to
     calculate Sᵢ(Q) it first uses the filled brille object to interpolate ωᵢ(Q)
     and ϵᵢⱼ(Q) and then the Euphonic object to convert Q and ϵᵢⱼ(Q) into Sᵢ(Q).
-    The more-likely use for FibEu, however, will be in calculating S(Q,ω) in
+    The more-likely use for BrEu, however, will be in calculating S(Q,ω) in
     which case ωᵢ(Q) and Sᵢ(Q) are calculated as above and then a simple
     distribution (selected by the caller) is used to broaden each of the i
     phonon branches before combining their intensities.
@@ -72,7 +72,7 @@ class FibEu:
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
                  hall_number=None, parallel=False, **kwds):
-        """Initialize a new FibEu object from an existing Euphonic object."""
+        """Initialize a new BrEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
             print(msg.format(type(SPData)))

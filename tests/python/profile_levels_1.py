@@ -13,7 +13,7 @@ for module in [('euphonic', 'data', 'interpolation'), ('brille', 'euphonic')]:
         if find_spec(check) is None:
             raise Exception('Required module {} not found'.format(check))
 from euphonic.data.interpolation import InterpolationData
-from brille.euphonic import SymEu
+from brille.euphonic import BrEu
 import brille
 
 def load_interpolation_data(named):
@@ -81,7 +81,7 @@ print('Interpolation of {} points:'.format(q.shape[0]))
 it = np.nditer([max_sizes,num_levels, None, None, None],op_dtypes=('double','int','double','double','double'))
 for m, n, s, i, ie in it:
     tictoc.tic()
-    se = SymEu(nb, mesh=True, max_size=m, num_levels=n)
+    se = BrEu(nb, mesh=True, max_size=m, num_levels=n)
     s[...] = tictoc.toc()
     tictoc.tic()
     while not (tictoc.elapsed() > 5 or tictoc.relative_uncertainty() < 0.01):
