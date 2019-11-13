@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run tests of SymEu and Euphonic."""
+"""Run tests of BrEu and Euphonic."""
 import os
 import sys
 import unittest
@@ -19,7 +19,7 @@ sys.path.append(ADDPATH)
 # We need to find the pure-python submodule brille.euphonic:
 sys.path.append(os.path.split(os.getcwd())[0])
 if find_spec('brille') is not None and find_spec('brille.euphonic') is not None:
-    from brille.euphonic import SymEu
+    from brille.euphonic import BrEu
 else:
     raise Exception("Required brille.euphonic module not found!")
 
@@ -39,7 +39,7 @@ def hermitian_product(v_0, v_1, first=None, last=None):
 
 
 class TestEuphonic(unittest.TestCase):
-    """A TestCase object class to run tests of the SymEu object."""
+    """A TestCase object class to run tests of the BrEu object."""
 
     def test_a(self):
         """Test whether SimPhony gives the same result *at* grid points.
@@ -60,7 +60,7 @@ class TestEuphonic(unittest.TestCase):
         intensity calculations.
         """
         i_data = load_interpolation_data('nb')
-        symsim = SymEu(i_data, halfN=(2, 2, 2))
+        symsim = BrEu(i_data, halfN=(2, 2, 2))
 
         q_rlu = symsim.grid.rlu
         int_freq, int_vecs = symsim.frqs_vecs(q_rlu, interpolate=True,
@@ -87,7 +87,7 @@ class TestEuphonic(unittest.TestCase):
     def test_b(self):
         """Do something."""
         i_data = load_interpolation_data('nb')
-        symsim = SymEu(i_data, halfN=(10, 10, 10))
+        symsim = BrEu(i_data, halfN=(10, 10, 10))
         print(symsim.grid.centre_sort_perm())
 
 

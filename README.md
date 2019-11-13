@@ -1,11 +1,11 @@
 # brille
-A C++ library for symmetry operations and linear interpolation with emphasis
-on the **f**irst **i**rreducible **Bril**louin zone.
+A C++ library for symmetry operations and linear interpolation within an
+irreducible part of the first Brillouin zone.
 Wrapped for use in python using [pybind11](https://github.com/pybind/pybind11).
 
 # Dependencies
 ## TetGen
-A slightly modified version of [TetGen](http://tetgen.org) is used to create
+A modified version of [TetGen](http://tetgen.org) is used to create
 refined tetrahedral meshes in the irreducible portion of the first Brillouin
 zone.
 

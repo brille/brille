@@ -54,7 +54,7 @@ classdef Euphonic < handle
         pykwds{2*(i-1)+1} = keys{i};
         pykwds{2*(i-1)+2} = brille.m2p(kwds.(keys{i}));
       end
-      obj.pyobj = py.brille.euphonic.FibEu(euphonic, pyargs(pykwds{:}));
+      obj.pyobj = py.brille.euphonic.BrEu(euphonic, pyargs(pykwds{:}));
     end % intializer
     sqw = horace_sqw(obj,qh,qk,ql,en,varargin)
     wq  = w_q(obj,qh,qk,ql,varargin)

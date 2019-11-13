@@ -25,7 +25,7 @@ function wq = w_q(obj,qh,qk,ql,varargin)
 %              Some keywords control aspects of this function:
 %              'coordtrans' - a matrix to transform the input coordinates
 %                             (qh,qk,ql,en) before being sent to the
-%                             py.brille.euphonic.FibEu object's method.
+%                             py.brille.euphonic.BrEu object's method.
 %                             [default: eye(4) % identity]
 %
 %              Any additional keyword parameters will be passed to SymSim
