@@ -3,6 +3,8 @@ A C++ library for symmetry operations and linear interpolation within an
 irreducible part of the first Brillouin zone.
 Wrapped for use in python using [pybind11](https://github.com/pybind/pybind11).
 
+![brille for Horace](brille.png)
+
 # Dependencies
 ## TetGen
 A modified version of [TetGen](http://tetgen.org) is used to create
