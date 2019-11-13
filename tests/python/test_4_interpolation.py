@@ -6,19 +6,19 @@ import unittest
 from importlib.util import find_spec
 import numpy as np
 
-# Try to find the fibril module:
+# Try to find the brille module:
 # It might be in the current directory, or a sub-directory called, e.g., Debug
 ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH += "\\Debug"
 sys.path.append(ADDPATH)
 # Now the actual search for the module
-if find_spec('fibril') is not None and find_spec('fibril._fibril') is not None:
-    import fibril as s
-elif find_spec('_fibril') is not None:
-    import _fibril as s
+if find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille as s
+elif find_spec('_brille') is not None:
+    import _brille as s
 else:
-    raise Exception("Required fibril module not found!")
+    raise Exception("Required brille module not found!")
 
 
 def sqwfunc_ones(Q):

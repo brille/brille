@@ -702,7 +702,7 @@ public:
   void syntax();
   void usage();
 
-  /* Commented out 2019-11-12 by Greg Tucker as it is not used by fibril */
+  /* Commented out 2019-11-12 by Greg Tucker as it is not used by brille */
   // // Command line parse routine.
   // bool parse_commandline(int argc, char **argv);
   // bool parse_commandline(char *switches) {

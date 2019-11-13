@@ -3029,7 +3029,7 @@ void tetgenbehavior::usage()
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-/* Commented out 2019-11-12 by Greg Tucker as it is not used by fibril */
+/* Commented out 2019-11-12 by Greg Tucker as it is not used by brille */
 // bool tetgenbehavior::parse_commandline(int argc, char **argv)
 // {
 //   int startindex;
@@ -32474,7 +32474,7 @@ void tetrahedralize(tetgenbehavior *b, tetgenio *in, tetgenio *out,
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-/* Commented out 2019-11-12 by Greg Tucker as fibril does not use this interface */
+/* Commented out 2019-11-12 by Greg Tucker as brille does not use this interface */
 // void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
 //                     tetgenio *addin, tetgenio *bgmin)
 //

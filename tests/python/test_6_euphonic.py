@@ -10,23 +10,23 @@ except ImportError:
     raise Exception("This test requires importlib.util (and Python3)")
 import numpy as np
 
-# Try to find the fibril module:
+# Try to find the brille module:
 # It might be in the current directory, or a sub-directory called, e.g., Debug
 ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH = os.path.join(ADDPATH, 'Debug')
 sys.path.append(ADDPATH)
-# We need to find the pure-python submodule fibril.euphonic:
+# We need to find the pure-python submodule brille.euphonic:
 sys.path.append(os.path.split(os.getcwd())[0])
-if find_spec('fibril') is not None and find_spec('fibril.euphonic') is not None:
-    from fibril.euphonic import SymEu
+if find_spec('brille') is not None and find_spec('brille.euphonic') is not None:
+    from brille.euphonic import SymEu
 else:
-    raise Exception("Required fibril.euphonic module not found!")
+    raise Exception("Required brille.euphonic module not found!")
 
 
 def load_interpolation_data(named):
     """Load a data file from the tests folder."""
-    test_spec = find_spec('fibril.test')
+    test_spec = find_spec('brille.test')
     if test_spec is None:
         raise Exception('Could not locate the test submodule directory')
     seed = os.path.join(test_spec.submodule_search_locations[0], named)
@@ -47,12 +47,12 @@ class TestEuphonic(unittest.TestCase):
         This test should always pass, since the BZGridQcomplex object is filled
         by calculating eigen-energies and eigen-vectors using SimPhony.
         Unfortunately, due to rounding errors, this test can fail to run if an
-        out-of-bounds interpolation point is required by fibril.
+        out-of-bounds interpolation point is required by brille.
 
         The moveinto keyword is what makes it possible to verify the
         "interpolation" result against the SimPhony result. This same keyword
         also opens up the possibility of rounding-errors leading to a runtime
-        error of fibril.
+        error of brille.
         With the moveinto keyword omitted (or set to True), out-of-zone grid
         points *will* likely have different polarization vectors compared to
         the SimPhony result as one interpolates at q=Q-τ and the other

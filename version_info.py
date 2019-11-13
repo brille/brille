@@ -31,7 +31,7 @@ if __name__ =="__main__":
     output_file = sys.argv[1]
     with open(output_file, "w") as fout:
         fout.write("""#pragma once
-namespace fibril{{ namespace version{{
+namespace brille{{ namespace version{{
     auto constexpr git_revision = u8"{0}";
     auto constexpr git_branch = u8"{1}";
     auto constexpr build_datetime = u8"{2}";

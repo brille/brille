@@ -7,14 +7,14 @@ except ImportError:
 from timeit import default_timer
 import numpy as np, matplotlib.pyplot as pp
 
-for module in [('euphonic', 'data', 'interpolation'), ('fibril', 'euphonic')]:
+for module in [('euphonic', 'data', 'interpolation'), ('brille', 'euphonic')]:
     for i in range(len(module)):
         check = '.'.join(np.array(module)[0:i+1])
         if find_spec(check) is None:
             raise Exception('Required module {} not found'.format(check))
 from euphonic.data.interpolation import InterpolationData
-from fibril.euphonic import SymEu
-import fibril
+from brille.euphonic import SymEu
+import brille
 
 def load_interpolation_data(named):
     """Load a data file from the repository tests folder
@@ -24,9 +24,9 @@ def load_interpolation_data(named):
     which builds the C++ library and installs it inside of the repository
     structure with simlinks in the usual package location(s).
     """
-    test_spec = find_spec('fibril')
-    fibrilroot = test_spec.submodule_search_locations[0]
-    seed = os.path.join(fibrilroot,'..','tests',named)
+    test_spec = find_spec('brille')
+    brilleroot = test_spec.submodule_search_locations[0]
+    seed = os.path.join(brilleroot,'..','tests',named)
     return InterpolationData(seed)
 
 class timer:
@@ -68,8 +68,8 @@ def cen2corner(Z):
 def pcolormesh(X,Y,Z, *args,**kwargs):
     return pp.pcolormesh(cen2corner(X), cen2corner(Y), Z, *args, **kwargs)
 
-dlat = fibril.Direct((5.,5.,5.), (90.,90.,90.), 525)
-bz = fibril.BrillouinZone(dlat.star)
+dlat = brille.Direct((5.,5.,5.), (90.,90.,90.), 525)
+bz = brille.BrillouinZone(dlat.star)
 nb = load_interpolation_data('nb')
 
 # Next investigate now choice of maximum tetrahedra size and trellis size

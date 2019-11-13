@@ -11,7 +11,7 @@ try:
 except ImportError:
     raise Exception("This test requires importlib.util (and Python3)")
 
-# We need to tell Python where it can find the fibril module.
+# We need to tell Python where it can find the brille module.
 ADDPATH = os.getcwd()
 # It's either in the working directory where python was called or in
 # a sub-directory (called Debug using Visual Studio under Windows)
@@ -19,13 +19,13 @@ if os.path.exists('Debug'):
     ADDPATH += "\\Debug"
 sys.path.append(ADDPATH)
 
-if util.find_spec('fibril') is not None and util.find_spec('fibril._fibril') is not None:
-    import fibril as s
-elif util.find_spec('_fibril') is not None:
+if util.find_spec('brille') is not None and util.find_spec('brille._brille') is not None:
+    import brille as s
+elif util.find_spec('_brille') is not None:
     # pylint: disable=e0401
-    import _fibril as s
+    import _brille as s
 else:
-    raise Exception("fibril module not found!")
+    raise Exception("brille module not found!")
 
 def cif2direct(filename):
     print(filename)
@@ -43,9 +43,9 @@ def findcifdir():
     which builds the C++ library and installs it inside of the repository
     structure with simlinks in the usual package location(s).
     """
-    test_spec = find_spec('fibril')
-    fibrilroot = test_spec.submodule_search_locations[0]
-    cifsdir = os.path.join(fibrilroot,'..','tests','cifs')
+    test_spec = find_spec('brille')
+    brilleroot = test_spec.submodule_search_locations[0]
+    cifsdir = os.path.join(brilleroot,'..','tests','cifs')
     return cifsdir
 
 class AllSpacegroups (unittest.TestCase):
