@@ -2,7 +2,7 @@
 import os, sys, unittest
 import numpy as np
 
-# We need to tell Python where it can find the fibril module.
+# We need to tell Python where it can find the brille module.
 addpath = os.getcwd()
 # It's either in the working directory where python was called or in
 # a sub-directory (called Debug using Visual Studio under Windows)
@@ -12,12 +12,12 @@ sys.path.append(addpath)
 
 from importlib import util
 
-if util.find_spec('fibril') is not None and util.find_spec('fibril._fibril') is not None:
-    import fibril as s
-elif util.find_spec('_fibril') is not None:
-    import _fibril as s
+if util.find_spec('brille') is not None and util.find_spec('brille._brille') is not None:
+    import brille as s
+elif util.find_spec('_brille') is not None:
+    import _brille as s
 else:
-    raise Exception("fibril module not found!")
+    raise Exception("brille module not found!")
 
 
 class Lattice (unittest.TestCase):

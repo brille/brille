@@ -4,7 +4,7 @@ else()
   add_compile_options(-O3)
 endif()
 
-set(TETGEN_TARGETS _fibril catch2)
+set(TETGEN_TARGETS _brille catch2)
 
 set(TETGEN_SOURCES tetgen.cxx predicates.cxx)
 foreach(TETGEN_TARGET ${TETGEN_TARGETS})

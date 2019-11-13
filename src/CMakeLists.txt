@@ -8,7 +8,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-set(CXX_TARGETS _fibril catch2)
+set(CXX_TARGETS _brille catch2)
 
 set(CXX_SOURCES
   bz.cpp

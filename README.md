@@ -1,4 +1,4 @@
-# fibril
+# brille
 A C++ library for symmetry operations and linear interpolation with emphasis
 on the **f**irst **i**rreducible **Bril**louin zone.
 Wrapped for use in python using [pybind11](https://github.com/pybind/pybind11).

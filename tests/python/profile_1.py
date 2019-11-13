@@ -7,14 +7,14 @@ except ImportError:
 from timeit import default_timer
 import numpy as np, matplotlib.pyplot as pp
 
-for module in [('euphonic', 'data', 'interpolation'), ('fibril', 'euphonic')]:
+for module in [('euphonic', 'data', 'interpolation'), ('brille', 'euphonic')]:
     for i in range(len(module)):
         check = '.'.join(np.array(module)[0:i+1])
         if find_spec(check) is None:
             raise Exception('Required module {} not found'.format(check))
 from euphonic.data.interpolation import InterpolationData
-from fibril.euphonic import SymEu
-import fibril
+from brille.euphonic import SymEu
+import brille
 
 def load_interpolation_data(named):
     """Load a data file from the repository tests folder
@@ -24,9 +24,9 @@ def load_interpolation_data(named):
     which builds the C++ library and installs it inside of the repository
     structure with simlinks in the usual package location(s).
     """
-    test_spec = find_spec('fibril')
-    fibrilroot = test_spec.submodule_search_locations[0]
-    seed = os.path.join(fibrilroot,'..','tests',named)
+    test_spec = find_spec('brille')
+    brilleroot = test_spec.submodule_search_locations[0]
+    seed = os.path.join(brilleroot,'..','tests',named)
     return InterpolationData(seed)
 
 class timer:
@@ -70,8 +70,8 @@ def pcolormesh(X,Y,Z, *args,**kwargs):
 
 
 
-dlat = fibril.Direct((5.,5.,5.), (90.,90.,90.), 525)
-bz = fibril.BrillouinZone(dlat.star)
+dlat = brille.Direct((5.,5.,5.), (90.,90.,90.), 525)
+bz = brille.BrillouinZone(dlat.star)
 
 # max_sizes = 1/np.arange(100,5000,500)
 # trellis_r = 1/(np.arange(1,30002,5000)**(1/3))
@@ -87,7 +87,7 @@ smat, tmat = np.meshgrid(max_sizes, trellis_r)
 #     tictoc.tic()
 #     # while not (tictoc.elapsed() > 10 or tictoc.relative_uncertainty() < 0.1):
 #     while not (tictoc.elapsed() > 1 or tictoc.relative_uncertainty() < 0.5):
-#         fibril.BZMeshQ(bz, max_size=s, lattice_ratio=t)
+#         brille.BZMeshQ(bz, max_size=s, lattice_ratio=t)
 #         tictoc.toc()
 #     c[...] = tictoc.average()
 #     e[...] = tictoc.uncertainty()
