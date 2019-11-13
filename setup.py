@@ -7,7 +7,7 @@ from subprocess import CalledProcessError, check_output, check_call
 from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from write_version_info import get_version_info
+from version_info import version_info
 
 def is_vsc():
     platform = get_platform()
@@ -100,10 +100,10 @@ with open("README.md", "r") as fh:
 
 KEYWORDARGS = dict(
     name='brille',
-    version=get_version_info()[3],
+    version=version_info()[3],
     author='Greg Tucker',
     author_email='greg.tucker@stfc.ac.uk',
-    description='First irreducible Brillouin zone symmetry and interpolation.',
+    description='Irreducible Brillouin zone symmetry and interpolation.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension('brille._brille')],
@@ -111,6 +111,16 @@ KEYWORDARGS = dict(
     cmdclass=dict(build_ext=CMakeBuild),
     url="https://github.com/g5t/brille",
     zip_safe=False,
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+        "Operating System :: Microsoft :: Windows :: Windows 10",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: C++",
+        "Programming Language :: Python :: 3",
+        "Topic :: Scientific/Engineering :: Physics",
+    ]
 )
 
 try:

@@ -46,10 +46,10 @@ def plot(*args, **kwds):
         else:
             return plot_points(*args, **kwds)
     if len(args) is 2:
-        if isinstance(args[1], list) or isinstance(args[1], np.ndarray) and issubclass(args[1].dtype.type, np.integer)
-            return plot_tetrahedra(*args, **kwds)
-        else:
+        if (isinstance(args[1], np.ndarray)) and not issubclass(args[1].dtype.type, np.integer):
             return plot_points_with_lines(*args, **kwds)
+        else:
+            return plot_tetrahedra(*args, **kwds)
     else:
         raise Exception("Unknown number of non-keyword arguments for plot")
 
