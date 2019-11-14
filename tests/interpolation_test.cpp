@@ -2,9 +2,9 @@
 #include <chrono>
 #include <catch.hpp>
 
-#include "grid.h"
-#include "bz_grid.h"
-#include "interpolation.h"
+#include "grid.hpp"
+#include "bz_grid.hpp"
+#include "interpolation.hpp"
 
 ArrayVector<double> f_of_Q(const ArrayVector<double>& Q){
   size_t i,j,n = 40u;

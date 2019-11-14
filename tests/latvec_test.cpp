@@ -1,7 +1,7 @@
 #include <catch.hpp>
 
-#include "lattice.h"
-#include "latvec.h"
+#include "lattice.hpp"
+#include "latvec.hpp"
 
 TEST_CASE("Lattice Vector tests","[latvec]"){
   Direct d(1.,1.,1.);

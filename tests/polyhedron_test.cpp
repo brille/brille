@@ -1,7 +1,7 @@
 #include <catch.hpp>
 
-#include "arrayvector.h"
-#include "polyhedron.h"
+#include "arrayvector.hpp"
+#include "polyhedron.hpp"
 
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};

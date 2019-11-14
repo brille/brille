@@ -1,7 +1,7 @@
 // #include "catch.hpp"
 #include <catch.hpp>
 
-#include "lattice.h"
+#include "lattice.hpp"
 
 TEST_CASE("Lattice and its subclasses are tested","[lattice]"){
   Lattice l(2*PI,2*PI,2*PI,PI/2,PI/2,PI/2);
