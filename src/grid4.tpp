@@ -150,16 +150,17 @@ template<class T> int MapGrid4<T>::lin2map(const size_t l, size_t& m) const {
 }
 //
 template<class T> size_t MapGrid4<T>::numel(void) const {
-  return (N==nullptr) ? 0u : this->N[0]*this->N[1]*this->N[2]*this->N[3];
+  // return (N==nullptr) ? 0u : this->N[0]*this->N[1]*this->N[2]*this->N[3];
+  return this->N[0]*this->N[1]*this->N[2]*this->N[3];
 }
 template<class T> size_t MapGrid4<T>::size(const size_t i) const {
-  return (i<4u && N!=nullptr) ? this->N[i] : 0;
+  return (i<4u /*&& N!=nullptr*/) ? this->N[i] : 0;
 }
 // template<class T> size_t MapGrid4<T>::span(const size_t i) const {
 //   return (i<4u && span!=nullptr) ? span[i] : 0;
 // }
 template<class T> size_t MapGrid4<T>::stride(const size_t i) const {
-  return sizeof(T)*( (i<4u && span!=nullptr) ? span[i] : 0);
+  return sizeof(T)*( (i<4u /*&& span!=nullptr*/) ? span[i] : 0);
 }
 //
 template<class T> size_t MapGrid4<T>::resize(const size_t n0, const size_t n1, const size_t n2, const size_t n3) {
@@ -210,7 +211,7 @@ template<class T> void MapGrid4<T>::set_size(const size_t *n){
   this->instantiate_map();
 }
 template<class T> void MapGrid4<T>::calc_span(){
-  if (N==nullptr || this->numel()==0){
+  if (/*N==nullptr ||*/ this->numel()==0){
     this->span[0]=0u; this->span[1]=0u; this->span[2]=0u; this->span[3]=0u;
   } else {
     this->span[0] = this->N[3]*this->N[2]*this->N[1];

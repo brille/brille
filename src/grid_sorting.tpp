@@ -682,7 +682,7 @@ bool MapGrid3<T>::multi_sort_difference(
 template<class T> template<class R>
 bool MapGrid3<T>::multi_sort_derivative(
   const R scales[4], const int funcs[2], const size_t spobj[2],
-  ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+  ArrayVector<size_t>& perm, std::vector<bool>& ,//sorted,
   const size_t cidx, const std::vector<size_t> nidx,
   const std::vector<size_t> nnidx, const size_t no_pairs
 ) const {

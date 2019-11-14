@@ -75,128 +75,128 @@ def vector_lists_match(A, B):
     return np.allclose(A[pA], B[pB])
 
 class BrillouinZone (unittest.TestCase):
-#     def test_a_init_unit_cube(self):
-#         # instantiate a cubic lattice with unit-length vectors
-#         # and its reciprocal lattice, still cubic with 2π-length vectors
-#         d, r = make_dr(1, 1, 1)
-#         # creating a BrillouinZone objects requires that we pass the reciprocal
-#         # lattice object, and passing a Direct object is a TypeError:
-#         with self.assertRaises(TypeError):
-#             s.BrillouinZone(d)
-#         # its first Brillouin zone is a cube in reciprocal space
-#         bz = s.BrillouinZone(r)
-#         # with six faces, defined by: (00̄1),(0̄10),(̄100),(100),(010),(001)
-#         p = bz.points
-#         self.assertEqual(p.ndim, 2)
-#         self.assertEqual(p.shape[0], 6) # and there is one for each of the six faces
-#         self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
-#         n = bz.normals
-#         self.assertEqual(n.ndim, 2)
-#         self.assertEqual(n.shape[0], 6) # and there is one for each of the six faces
-#         self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
-#         n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
-#         self.assertTrue((n_dot_p == 1.0).all())
-#
-#         expected = np.array([[-1,0,0],[0,-1,0],[0,0,-1],[0,0,1],[0,1,0],[1,0,0]])
-#         self.assertTrue(vector_lists_match(p, expected/2))
-#         self.assertTrue(vector_lists_match(np.array([x/norm(x) for x in n]), expected))
-#         #
-#         # the vertices of the first Brillouin zone are the 8 corners of the 1/2-unit cube:
-#         expected = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]])/2
-#         verts = bz.vertices
-#         self.assertEqual(verts.ndim, 2)
-#         self.assertEqual(verts.shape[0], 8)
-#         self.assertEqual(verts.shape[1], 3)
-#         self.assertTrue(vector_lists_match(verts, expected))
-#
-#     def test_b_isinside_unit_cube(self):
-#         d, r = make_dr(1, 1, 1)
-#         bz = s.BrillouinZone(r)
-#         # the first Brillouin zone of this unit-cube is bounded by
-#         # {(00̄1),(0̄10),(̄100),(100),(010),(001)}/2
-#         face_centres = np.array([ [-1, 0, 0], [0,-1, 0], [0, 0,-1], [0, 0, 1], [0, 1, 0], [1, 0, 0] ], dtype='double')/2
-#         self.assertTrue( (bz.isinside(face_centres)).all() )
-#         # including the vertices (since they are the corners of the zone)
-#         corners = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]], dtype='double')/2
-#         self.assertTrue( (bz.isinside(corners)).all() )
-#         # so all points with h, k, and l in the range [-0.5, 0.5] are in the zone
-#         Q = np.random.rand(100, 3) - 0.5 # this is a uniform distribution over [-0.5, 0.5) -- close enough
-#         self.assertTrue( bz.isinside(Q).all() )
-#         self.assertFalse( bz.isinside(Q+5).all() )
-#
-#     def test_c_moveinto_unit_cube(self):
-#         d, r = make_dr(1, 1, 1)
-#         bz = s.BrillouinZone(r)
-#         Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
-#         if bz.isinside(Q).all(): # this is vanishingly-unlikely
-#             Q += 100.0
-#         self.assertFalse( bz.isinside(Q).all() )
-#         (q, tau) = bz.moveinto(Q)
-#         self.assertTrue( bz.isinside(q).all() )
-#         self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
-# #
-# #
-# #
-#     def test_a_init_hexagonal(self):
-#         # instantiate a hexagonal lattice and its reciprocal lattice, still hexagonal
-#         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
-#         # creating a BrillouinZone objects requires that we pass the reciprocal
-#         # lattice object, and passing a Direct object is a TypeError:
-#         with self.assertRaises(TypeError):
-#             s.BrillouinZone(d)
-#         # its first Brillouin zone is a cube in reciprocal space
-#         bz = s.BrillouinZone(r)
-#         # with eight faces, defined by: (̄100),(̄110),(0̄10),(001),(001),(010),(1̄10),(100)
-#         p = bz.points
-#         self.assertEqual(p.ndim, 2)
-#         self.assertEqual(p.shape[0], 8) # and there is one for each of the eight faces
-#         self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
-#         n = bz.normals
-#         self.assertEqual(n.ndim, 2)
-#         self.assertEqual(n.shape[0], 8) # and there is one for each of the six faces
-#         self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
-#         n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
-#         self.assertTrue(np.allclose(n_dot_p, 1.))
-#
-#         expected= np.array([ [-1, 0, 0],[-1, 1, 0],[0,-1, 0],[0, 0,-1],[0, 0, 1],[0, 1, 0],[1,-1, 0],[1, 0, 0] ])
-#         self.assertTrue(vector_lists_match(p, expected/2))
-#         n_compare = np.array([x/np.max(np.abs(x)) for x in n])
-#         self.assertTrue(vector_lists_match(n_compare, expected))
-#         self.assertTrue( (bz.isinside(expected/2)).all() )
-#         #
-#         # the vertices of the first Brillouin zone are the 12 corners of the hexagonal-prism:
-#         expected = np.array([[-4, 2,-3],[-2,-2,-3],[-4, 2, 3],[-2,-2, 3],[-2, 4,-3],[-2, 4, 3],
-#                              [ 2,-4,-3],[ 2,-4, 3],[ 2, 2,-3],[ 4,-2,-3],[ 2, 2, 3],[ 4,-2, 3]])/6
-#         verts = bz.vertices
-#         self.assertEqual(verts.ndim, 2)
-#         self.assertEqual(verts.shape[0], 12)
-#         self.assertEqual(verts.shape[1], 3)
-#         self.assertTrue(vector_lists_match(verts, expected))
-#         self.assertTrue( (bz.isinside(expected)).all() )
-#
-#     def test_b_isinside_hexagonal(self):
-#         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
-#         bz = s.BrillouinZone(r)
-#         # Q = (np.random.rand(1000, 3)-0.5) * 2 # this is a uniform distribution over [-1, 1)
-#         x=np.linspace(-1, 1, 100)
-#         X, Y, Z=np.meshgrid(x, x, 0)
-#         Q = np.stack( (X.flatten(), Y.flatten(), Z.flatten()), axis=-1)
-#         Qin = bz.isinside(Q)
-#         B = r.get_B_matrix()
-#         X = np.stack( [ np.matmul(B, v) for v in Q[Qin,:] ] )
-#         # plot_2d_points(X)
+    def test_a_init_unit_cube(self):
+        # instantiate a cubic lattice with unit-length vectors
+        # and its reciprocal lattice, still cubic with 2π-length vectors
+        d, r = make_dr(1, 1, 1)
+        # creating a BrillouinZone objects requires that we pass the reciprocal
+        # lattice object, and passing a Direct object is a TypeError:
+        with self.assertRaises(TypeError):
+            s.BrillouinZone(d)
+        # its first Brillouin zone is a cube in reciprocal space
+        bz = s.BrillouinZone(r)
+        # with six faces, defined by: (00̄1),(0̄10),(̄100),(100),(010),(001)
+        p = bz.points
+        self.assertEqual(p.ndim, 2)
+        self.assertEqual(p.shape[0], 6) # and there is one for each of the six faces
+        self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
+        n = bz.normals
+        self.assertEqual(n.ndim, 2)
+        self.assertEqual(n.shape[0], 6) # and there is one for each of the six faces
+        self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
+        n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
+        self.assertTrue((n_dot_p == 1.0).all())
+
+        expected = np.array([[-1,0,0],[0,-1,0],[0,0,-1],[0,0,1],[0,1,0],[1,0,0]])
+        self.assertTrue(vector_lists_match(p, expected/2))
+        self.assertTrue(vector_lists_match(np.array([x/norm(x) for x in n]), expected))
+        #
+        # the vertices of the first Brillouin zone are the 8 corners of the 1/2-unit cube:
+        expected = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]])/2
+        verts = bz.vertices
+        self.assertEqual(verts.ndim, 2)
+        self.assertEqual(verts.shape[0], 8)
+        self.assertEqual(verts.shape[1], 3)
+        self.assertTrue(vector_lists_match(verts, expected))
+
+    def test_b_isinside_unit_cube(self):
+        d, r = make_dr(1, 1, 1)
+        bz = s.BrillouinZone(r)
+        # the first Brillouin zone of this unit-cube is bounded by
+        # {(00̄1),(0̄10),(̄100),(100),(010),(001)}/2
+        face_centres = np.array([ [-1, 0, 0], [0,-1, 0], [0, 0,-1], [0, 0, 1], [0, 1, 0], [1, 0, 0] ], dtype='double')/2
+        self.assertTrue( (bz.isinside(face_centres)).all() )
+        # including the vertices (since they are the corners of the zone)
+        corners = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]], dtype='double')/2
+        self.assertTrue( (bz.isinside(corners)).all() )
+        # so all points with h, k, and l in the range [-0.5, 0.5] are in the zone
+        Q = np.random.rand(100, 3) - 0.5 # this is a uniform distribution over [-0.5, 0.5) -- close enough
+        self.assertTrue( bz.isinside(Q).all() )
+        self.assertFalse( bz.isinside(Q+5).all() )
+
+    def test_c_moveinto_unit_cube(self):
+        d, r = make_dr(1, 1, 1)
+        bz = s.BrillouinZone(r)
+        Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
+        if bz.isinside(Q).all(): # this is vanishingly-unlikely
+            Q += 100.0
+        self.assertFalse( bz.isinside(Q).all() )
+        (q, tau) = bz.moveinto(Q)
+        self.assertTrue( bz.isinside(q).all() )
+        self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
 #
 #
-#     def test_c_moveinto_hexagonal(self):
-#         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
-#         bz = s.BrillouinZone(r)
-#         Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
-#         if bz.isinside(Q).all(): # this is vanishingly-unlikely
-#             Q += 100.0
-#         self.assertFalse( bz.isinside(Q).all() )
-#         (q, tau) = bz.moveinto(Q)
-#         self.assertTrue( bz.isinside(q).all() )
-#         self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
+#
+    def test_a_init_hexagonal(self):
+        # instantiate a hexagonal lattice and its reciprocal lattice, still hexagonal
+        d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
+        # creating a BrillouinZone objects requires that we pass the reciprocal
+        # lattice object, and passing a Direct object is a TypeError:
+        with self.assertRaises(TypeError):
+            s.BrillouinZone(d)
+        # its first Brillouin zone is a cube in reciprocal space
+        bz = s.BrillouinZone(r)
+        # with eight faces, defined by: (̄100),(̄110),(0̄10),(001),(001),(010),(1̄10),(100)
+        p = bz.points
+        self.assertEqual(p.ndim, 2)
+        self.assertEqual(p.shape[0], 8) # and there is one for each of the eight faces
+        self.assertEqual(p.shape[1], 3) # the face vectors are 3-vectors
+        n = bz.normals
+        self.assertEqual(n.ndim, 2)
+        self.assertEqual(n.shape[0], 8) # and there is one for each of the six faces
+        self.assertEqual(n.shape[1], 3) # the face normals are 3-vectors
+        n_dot_p = np.array([np.dot(x/norm(x),y/norm(y)) for x,y in zip(n,p)])
+        self.assertTrue(np.allclose(n_dot_p, 1.))
+
+        expected= np.array([ [-1, 0, 0],[-1, 1, 0],[0,-1, 0],[0, 0,-1],[0, 0, 1],[0, 1, 0],[1,-1, 0],[1, 0, 0] ])
+        self.assertTrue(vector_lists_match(p, expected/2))
+        n_compare = np.array([x/np.max(np.abs(x)) for x in n])
+        self.assertTrue(vector_lists_match(n_compare, expected))
+        self.assertTrue( (bz.isinside(expected/2)).all() )
+        #
+        # the vertices of the first Brillouin zone are the 12 corners of the hexagonal-prism:
+        expected = np.array([[-4, 2,-3],[-2,-2,-3],[-4, 2, 3],[-2,-2, 3],[-2, 4,-3],[-2, 4, 3],
+                             [ 2,-4,-3],[ 2,-4, 3],[ 2, 2,-3],[ 4,-2,-3],[ 2, 2, 3],[ 4,-2, 3]])/6
+        verts = bz.vertices
+        self.assertEqual(verts.ndim, 2)
+        self.assertEqual(verts.shape[0], 12)
+        self.assertEqual(verts.shape[1], 3)
+        self.assertTrue(vector_lists_match(verts, expected))
+        self.assertTrue( (bz.isinside(expected)).all() )
+
+    def test_b_isinside_hexagonal(self):
+        d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
+        bz = s.BrillouinZone(r)
+        # Q = (np.random.rand(1000, 3)-0.5) * 2 # this is a uniform distribution over [-1, 1)
+        x=np.linspace(-1, 1, 100)
+        X, Y, Z=np.meshgrid(x, x, 0)
+        Q = np.stack( (X.flatten(), Y.flatten(), Z.flatten()), axis=-1)
+        Qin = bz.isinside(Q)
+        B = r.get_B_matrix()
+        X = np.stack( [ np.matmul(B, v) for v in Q[Qin,:] ] )
+        # plot_2d_points(X)
+
+
+    def test_c_moveinto_hexagonal(self):
+        d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
+        bz = s.BrillouinZone(r)
+        Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
+        if bz.isinside(Q).all(): # this is vanishingly-unlikely
+            Q += 100.0
+        self.assertFalse( bz.isinside(Q).all() )
+        (q, tau) = bz.moveinto(Q)
+        self.assertTrue( bz.isinside(q).all() )
+        self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
 
     def test_d_all_hallgroups(self):
         tested = 0
@@ -282,7 +282,7 @@ class BrillouinZone (unittest.TestCase):
 
 
         if failed > 0:
-            print("\nFailed to find correct irreducible Brillouin zone for",failed,"out of",tested,"(max 530) Hall groups")
+            print("\nFailed to find irreducible Brillouin zone for",failed,"out of",tested,"(max 530) Hall groups")
             for spg, ptg, lat, rat in zip(failed_spg, failed_ptg, failed_lat, failed_ratio):
                 print(spg,ptg,lat,rat)
         if errored > 0:
@@ -290,6 +290,7 @@ class BrillouinZone (unittest.TestCase):
             for spg, ptg, lat, arg in zip(errored_spg, errored_ptg, errored_lat, errored_arg):
                 print(arg)
                 print(spg,ptg,lat)
+        self.assertTrue(errored == 0)
 
 
 if __name__ == '__main__':

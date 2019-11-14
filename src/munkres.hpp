@@ -84,7 +84,7 @@ public:
     reset();
     // check that we *can* perform an assignment
     T sum = 0;
-    for (size_t i=0; i < cost.size(); ++i) sum+=abs(cost[i]);
+    for (size_t i=0; i < cost.size(); ++i) sum+=std::abs(cost[i]);
     // If there is cost information we're not done yet.
     bool done = (sum>0) ? false : true;
     while (!done) {

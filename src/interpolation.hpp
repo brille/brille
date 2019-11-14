@@ -162,7 +162,7 @@ int floor_corners_and_weights(const T<R>* that, const double* zero, const double
       m[i] = 1.0 - p[i];
     }
     std::vector<size_t> t(N);
-    for (int i=0; i<N; ++i) t[i] = ijk[i];
+    for (size_t i=0; i<N; ++i) t[i] = ijk[i];
     int oob=0;
     switch (ndims){
       case 4:
