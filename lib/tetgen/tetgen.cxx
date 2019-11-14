@@ -2410,41 +2410,42 @@ bool tetgenio::load_plc(char* filebasename, int object)
   return success;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//                                                                           //
-// load_mesh()    Load a tetrahedral mesh from file(s).                      //
-//                                                                           //
-///////////////////////////////////////////////////////////////////////////////
-
-bool tetgenio::load_tetmesh(char* filebasename, int object)
-{
-  bool success;
-
-  if (object == (int) tetgenbehavior::MEDIT) {
-    success = load_medit(filebasename, 1);
-  } else if (object == (int) tetgenbehavior::NEU_MESH) {
-    //success = load_neumesh(filebasename, 1);
-  } else {
-    success = load_node(filebasename);
-    if (success) {
-      success = load_tet(filebasename);
-    }
-    if (success) {
-      // Try to load the following files (.face, .edge, .vol).
-      load_face(filebasename);
-      load_edge(filebasename);
-      load_vol(filebasename);
-    }
-  }
-
-  //if (success) {
-    // Try to load the following files (.var, .mtr).
-    load_var(filebasename);
-    load_mtr(filebasename);
-  //}
-
-  return success;
-}
+// unused by brille: 2019-11-14 Greg Tucker.
+// ///////////////////////////////////////////////////////////////////////////////
+// //                                                                           //
+// // load_mesh()    Load a tetrahedral mesh from file(s).                      //
+// //                                                                           //
+// ///////////////////////////////////////////////////////////////////////////////
+//
+// bool tetgenio::load_tetmesh(char* filebasename, int object)
+// {
+//   bool success;
+//
+//   if (object == (int) tetgenbehavior::MEDIT) {
+//     success = load_medit(filebasename, 1);
+//   } else if (object == (int) tetgenbehavior::NEU_MESH) {
+//     //success = load_neumesh(filebasename, 1);
+//   } else {
+//     success = load_node(filebasename);
+//     if (success) {
+//       success = load_tet(filebasename);
+//     }
+//     if (success) {
+//       // Try to load the following files (.face, .edge, .vol).
+//       load_face(filebasename);
+//       load_edge(filebasename);
+//       load_vol(filebasename);
+//     }
+//   }
+//
+//   //if (success) {
+//     // Try to load the following files (.var, .mtr).
+//     load_var(filebasename);
+//     load_mtr(filebasename);
+//   //}
+//
+//   return success;
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# This file should not be renamed 'test*.py' until module/submodule loading is
+# figured out from within a build directory.
+# At the moment, if you've built the _brille binary but not installed it for
+# python to find on its path, this script puts the empty (__import__.py only)
+# brille 'package' on the python search path in order to load the euphonic
+# submodule. When the submodule is loaded the empty 'package' gets loaded as
+# well, and then the whole thing fails to run.
 """Run tests of BrEu and Euphonic."""
 import os
 import sys
@@ -16,6 +23,14 @@ ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH = os.path.join(ADDPATH, 'Debug')
 sys.path.append(ADDPATH)
+# Make sure we can load the binary module before the euphonic submodule tries:
+if find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille
+elif find_spec('_brille') is not None:
+    # pylint: disable=e0401
+    import _brille as brille
+else:
+    raise Exception("Required brille module not found!")
 # We need to find the pure-python submodule brille.euphonic:
 sys.path.append(os.path.split(os.getcwd())[0])
 if find_spec('brille') is not None and find_spec('brille.euphonic') is not None:
@@ -26,11 +41,15 @@ else:
 
 def load_interpolation_data(named):
     """Load a data file from the tests folder."""
-    test_spec = find_spec('brille.test')
-    if test_spec is None:
-        raise Exception('Could not locate the test submodule directory')
-    seed = os.path.join(test_spec.submodule_search_locations[0], named)
-    return InterpolationData(seed)
+    b = find_spec('brille')
+    if b is None:
+        bdir = '.' # punt! maybe we're in a build directory?
+    else:
+        bdir = b.submodule_search_locations[0]
+    testdir = os.path.join(bdir, '..', 'tests')
+    if not os.path.exists(testdir):
+        raise Exception('Could not locate the tests directory')
+    return InterpolationData(seedname=named, path=testdir)
 
 
 def hermitian_product(v_0, v_1, first=None, last=None):

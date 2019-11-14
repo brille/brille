@@ -77,7 +77,7 @@ add_dependencies(check catch2)
 add_test(NAME catch2 COMMAND catch2)
 # Python unittest based tests
 if (${PYTHONINTERP_FOUND})
-	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR})
+	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR}/tests)
 	add_dependencies(check _brille)
 endif()
 

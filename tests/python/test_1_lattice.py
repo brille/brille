@@ -60,7 +60,7 @@ class Lattice (unittest.TestCase):
         b = np.array([90,90,120])*np.pi/180
         l = s.Lattice(a,b)
         with self.assertRaises(RuntimeError):
-            l.star()
+            l.star
         with self.assertRaises(RuntimeError):
             l.isstar(l)
     def test_d_equality(self):
@@ -76,8 +76,8 @@ class Lattice (unittest.TestCase):
         r = s.Reciprocal(np.array([1,1,1])*np.pi*2, np.array([1,1,1])*np.pi/2)
         self.assertTrue( d.isstar(r) )
         self.assertTrue( r.isstar(d) )
-        self.assertEqual( d, r.star() )
-        self.assertEqual( r, d.star() )
+        self.assertEqual( d, r.star )
+        self.assertEqual( r, d.star )
 
 if __name__ == '__main__':
   unittest.main()

@@ -19,9 +19,9 @@ TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   for (auto cf: poly.get_vertices_per_face()){
     for (auto f: vpf){
       if (cf.size()==f.size() &&
-         (cf[0]==f[0] && cf[1]==f[1] && cf[2]==f[2]) ||
-         (cf[0]==f[1] && cf[1]==f[2] && cf[2]==f[0]) ||
-         (cf[0]==f[2] && cf[1]==f[0] && cf[2]==f[1])
+         ((cf[0]==f[0] && cf[1]==f[1] && cf[2]==f[2]) ||
+          (cf[0]==f[1] && cf[1]==f[2] && cf[2]==f[0]) ||
+          (cf[0]==f[2] && cf[1]==f[0] && cf[2]==f[1])   )
        ) ++num_faces_matching;
     }
   }

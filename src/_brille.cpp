@@ -88,7 +88,7 @@ PYBIND11_MODULE(_brille,m){
       l.get_contravariant_metric_tensor((double *) bi.ptr );
       return result;
     })
-    .def("star",[](Lattice &){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
+    .def_property_readonly("star",[](Lattice &){throw std::runtime_error("Bare Lattices do not have a reciprocal!");})
     .def("issame",&Lattice::issame)
     .def("__eq__",&Lattice::issame)
     .def("isapprox",&Lattice::isapprox)

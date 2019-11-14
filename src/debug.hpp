@@ -85,7 +85,7 @@ const std::string my_to_string(const std::complex<T> x, const size_t w=0){
 template<typename T, template<class> class C,
         typename=typename std::enable_if<!is_container<T>::value>::type,
         typename=typename std::enable_if<is_container<C<T>>::value>::type>
-const std::string my_to_string(const std::vector<C<T>>& v, const size_t w=0){
+const std::string my_to_string(const std::vector<C<T>>& v, const size_t){
   std::string s;
   for (C<T> x: v) s += my_to_string(x) + "\n";
   return s;

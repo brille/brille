@@ -358,7 +358,7 @@ public:
   bool load_medit(char*, int);
   bool load_neumesh(char*, int);
   bool load_plc(char*, int);
-  bool load_tetmesh(char*, int);
+  // bool load_tetmesh(char*, int); 2019-11-14 Greg Tucker
   void save_nodes(char*);
   void save_elements(char*);
   void save_faces(char*);
