@@ -1,7 +1,7 @@
 #include <random>
 #include <chrono>
 #include <catch.hpp>
-#include "bz.h"
+#include "bz.hpp"
 
 TEST_CASE("BrillouinZone instantiation","[brillouinzone]"){
   Direct d(3.,3.,3.,PI/2,PI/2,PI/2*3);

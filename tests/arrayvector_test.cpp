@@ -4,7 +4,7 @@
 // #include "catch.hpp"
 #include <catch.hpp>
 
-#include "arrayvector.h"
+#include "arrayvector.hpp"
 
 TEST_CASE("ArrayVector creation","[arrayvector]"){
   ArrayVector<double> novalues(3,3);

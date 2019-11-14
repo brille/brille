@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "linear_algebra.h"
+#include "utilities.hpp"
 
 // Put in TEST_CASEs for all functions defined in linear_algebra, starting from the top
 

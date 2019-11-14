@@ -1,6 +1,6 @@
 #include <catch.hpp>
 
-#include "bz_nest.h"
+#include "bz_nest.hpp"
 
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   // The conventional cell for Nb

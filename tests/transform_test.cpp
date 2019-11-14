@@ -3,11 +3,11 @@
 #include <catch.hpp>
 #include <array>
 
-#include "spg_database.h"
-#include "linear_algebra.h"
-#include "lattice.h"
-#include "latvec.h"
-#include "transform.h"
+#include "spg_database.hpp"
+#include "utilities.hpp"
+#include "lattice.hpp"
+#include "latvec.hpp"
+#include "transform.hpp"
 
 TEST_CASE("primitive transforms","[transform]"){
   Bravais c;

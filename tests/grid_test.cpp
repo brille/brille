@@ -1,8 +1,8 @@
 #include <catch.hpp>
 
-#include "grid.h"
-#include "bz_grid.h"
-#include "interpolation.h"
+#include "grid.hpp"
+#include "bz_grid.hpp"
+#include "interpolation.hpp"
 
 TEST_CASE("MapGrid3 instantiation","[grid]"){
   MapGrid3<int> a;

@@ -2,7 +2,7 @@
 #include<array>
 #include <catch.hpp>
 
-#include "munkres.h"
+#include "munkres.hpp"
 
 TEST_CASE("Munkres' Assignment algorithm","[munkres]"){
   // double cost[9] = {1.,2.,3., 2.,4.,6., 3.,6.,9.};
