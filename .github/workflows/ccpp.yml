@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: update cmake and pytest
+      run: sudo pip3 install --upgrade cmake
     - name: install pybind11
       run: git clone https://github.com/pybind/pybind11 && mkdir pybind11/build && cd pybind11/build && cmake .. && make install
-    - name: update cmake
-      run: sudo pip3 install --upgrade cmake
     - uses: actions/checkout@v1
     - name: configure
       run: mkdir build && cd build && cmake ..
