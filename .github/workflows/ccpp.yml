@@ -12,7 +12,7 @@ jobs:
     - name: update cmake and pytest
       run: sudo pip3 install --upgrade cmake pytest
     - name: install pybind11
-      run: git clone https://github.com/pybind/pybind11 && mkdir pybind11/build && cd pybind11/build && cmake .. && make install
+      run: git clone https://github.com/pybind/pybind11 && mkdir pybind11/build && cd pybind11/build && cmake .. && sudo make install/fast
     - uses: actions/checkout@v1
     - name: configure
       run: mkdir build && cd build && cmake ..
