@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.13) # tested working 3.13.0, 3.13.4, 3.14.5
+cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
 project(brille)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -50,19 +51,17 @@ if(MSVC)
 		target_link_options(_brille PUBLIC /DEBUG)
 	endif()
 endif()
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	add_custom_target(write_version_info
-	                  COMMAND python ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
-	                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	)
-	add_dependencies(_brille write_version_info)
-endif()
-execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+add_custom_target(write_version_info
+                  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
+                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+add_dependencies(_brille write_version_info)
+execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
-execute_process(COMMAND python -c "from version_info import version_number; version_number()"
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from version_info import version_number; version_number()"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE FIBRIL_VERSION)
-message(STATUS "Building version ${FIBRIL_VERSION}")
+        OUTPUT_VARIABLE BRILLE_VERSION)
+message(STATUS "Building version ${BRILLE_VERSION}")
 
 
 
