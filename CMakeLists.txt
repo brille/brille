@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.12)
 
 project(brille)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
