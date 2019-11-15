@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: install pybind11
-      run: git clone https://github.com/pybind/pybind11; mkdir pybind11/build; cd pybind11/build; cmake ..; make install
+      run: git clone https://github.com/pybind/pybind11 && mkdir pybind11/build && cd pybind11/build && cmake .. && make install
     - name: update cmake
       run: sudo pip3 install --upgrade cmake
     - uses: actions/checkout@v1
