@@ -3,14 +3,7 @@ name: C/C++ CI
 on: [push]
 
 jobs:
-  setup-ubuntu:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: install pybind11
-        run: sudo apt install -y pybind11-dev
-
+  
   build-ubuntu:
 
     runs-on: ubuntu-latest
@@ -18,6 +11,8 @@ jobs:
     needs: setup-ubuntu
 
     steps:
+    - name: install pybind11
+      run: sudo apt install -y pybind11-dev
     - uses: actions/checkout@v1
     - name: configure
       run: mkdir build && cd build && cmake ..
