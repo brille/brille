@@ -23,6 +23,17 @@
 #include "latvec.hpp"
 #include "debug.hpp"
 
+template<typename T> static std::vector<T> unique(const std::vector<T>& x){
+    std::vector<T> out;
+    out.push_back(x[0]);
+    for (auto & v: x) if (std::find(out.begin(), out.end(), v) == out.end())
+        out.push_back(v);
+    return out;
+}
+template<typename T> static size_t count_unique(const std::vector<T>& x){
+    return unique(x).size();
+}
+
 template <typename T>
 std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, const ArrayVector<T>& n){
   if (vecs.numel()!=3u)
@@ -238,7 +249,19 @@ public:
              const std::vector<std::vector<int>>& vpf):
   vertices(v), points({3u,0u}), normals({3u,0u}), vertices_per_face(vpf) {
     this->find_face_points_and_normals();
+    this->sort_polygons();
     this->find_all_faces_per_vertex(); // do we really need this?
+  }
+  // initialize from vertices, point, normals, and vertices_per_face (which needs sorting)
+  Polyhedron(
+          const ArrayVector<double>& v,
+          const ArrayVector<double>& p,
+          const ArrayVector<double>& n,
+          const std::vector<std::vector<int>>& vpf
+          ):
+          vertices(v), points(p), normals(n), vertices_per_face(vpf){
+      this->sort_polygons();
+      this->find_all_faces_per_vertex();
   }
   // copy constructor
   Polyhedron(const Polyhedron& other):
@@ -812,9 +835,12 @@ public:
         verbose_update("Vertices beyond the cut ", del_vertices);
         // and the list of facets which need to be cut or removed
         cut.clear();
-        for (auto x: del_vertices) for (auto f: fpv[x])
-        if (std::find(cut.begin(), cut.end(), f)==cut.end())
-          cut.push_back(f); // add f to the list if it's not present already
+        for (size_t f=0; f<vpf.size(); ++f){
+            bool tocut = false;
+            for (auto x: del_vertices)
+                if (std::find(vpf[f].begin(), vpf[f].end(), x) != vpf[f].end()) tocut = true;
+            if (tocut) cut.push_back(f);
+        }
         verbose_update("Facets ",cut," are cut by the plane");
         // find the new intersection points of two neighbouring facets and the cutting plane
         new_vector.clear();
@@ -865,14 +891,19 @@ public:
         int count{0};
         for (size_t j=0; j<pv.size(); ++j)
           vertex_map[j]= (keep.getvalue(j) ? count++ : -1);
+        if (count == 0){
+            // Without any kept vertices we do not have a Polyhedron.
+            return Polyhedron();
+        }
         pv = pv.extract(keep);
         verbose_update("vertex mapping:", vertex_map);
         // go through the vertices_per_face array, replacing vertex indicies
         // and making a face map to skip now-empty faces
-        for (size_t j=0; j<vpf.size(); ++j){
+        for (auto & face : vpf){
           new_vector.clear();
-          for (auto x: vpf[j]) if (keep.getvalue(x)) new_vector.push_back(vertex_map[x]);
-          vpf[j] = new_vector;
+          for (auto x: face) if (keep.getvalue(x)) new_vector.push_back(vertex_map[x]);
+          if (new_vector.empty()) new_vector.push_back(0); // avoid having an unallocated face. Removed later
+          face = unique(new_vector); // remove duplicates (where do they come from?)
         }
         // add the normal and point for the new face
         pn = cat(pn, ni);
@@ -884,13 +915,20 @@ public:
           // store the centroid as the on-plane point, but don't divide by zero
           if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
         }
-        // remove any faces without vertices
+        // remove any faces without three vertices
         keep.resize(pp.size());
-        for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>0, j);
+//        for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>2, j);
+        for (size_t j=0; j<pp.size(); ++j) keep.insert(count_unique(vpf[j])>2, j);
+        // and remove their empty vertex lists
+        verbose_update("vpf goes from\n",vpf);
+        for (auto i = vpf.begin(); i != vpf.end(); ){
+            if (count_unique(*i)<3) vpf.erase(i); else ++i;
+        }
+        verbose_update("to\n",vpf);
         verbose_update("keep? plane normals:\n",pn.to_string(keep));
         verbose_update("keep? plane points:\n",pp.to_string(keep));
         // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
-        pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep));
+        pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep), vpf);
         // pout = Polyhedron(pv);
         verbose_update("New ",pout.string_repr());
         // copy the updated vertices, normals, and relational information
