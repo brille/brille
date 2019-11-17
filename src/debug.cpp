@@ -42,11 +42,11 @@
   int terminal_width(void){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    return w.ws_col;
+    return w.ws_col > 0 ? w.ws_col : std::numeric_limits<int>::max();
   }
   int terminal_height(void){
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    return w.ws_row;
+    return w.ws_row > 0 ? w.ws_row : std::numeric_limits<int>::max();
   }
 #endif
