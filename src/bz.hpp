@@ -85,7 +85,12 @@ public:
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){
       this->wedge_brute_force();
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false /*no special 2-fold treatment*/);
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false);
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false);
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false, false);
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false, false);
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false);
+
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/true);
@@ -192,7 +197,7 @@ public:
   the irreducible wedge.
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
-  void wedge_brute_force(const bool special2folds = true);
+  void wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true);
   void wedge_triclinic(void);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space

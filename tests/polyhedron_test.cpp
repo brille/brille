@@ -41,3 +41,24 @@ TEST_CASE("Polyhedron intersection","[polyhedron]"){
   REQUIRE(poly_box.get_volume() == Approx(box.get_volume()/2));
   REQUIRE(box_poly.get_volume() == Approx(box.get_volume()/2));
 }
+
+TEST_CASE("Polyhedron bisect","[polyhedron]"){
+    double a{0.457225}, c{0.753723};
+    std::vector<std::array<double,3>> v{{a,0,0},{0,0,c},{a,a,c},{a,0,c},{a,a,0},{0,0,0}};
+    auto poly = Polyhedron(ArrayVector<double>(v));
+    auto doubled_poly = poly + poly.mirror();
+    ArrayVector<double> n(3u,1u,0.), p(3u, 1u, 0.);
+    SECTION("Hanging line"){
+        n.insert(-1.0,0,0);
+    }
+    SECTION("Hanging triangular face"){
+        n.insert(-1,0,2);
+    }
+    SECTION("Hanging rectangular face"){
+        n.insert(-1.,0,0);
+        n.insert(1.,0,1);
+    }
+    auto cut = Polyhedron::bisect(doubled_poly, n, p);
+    REQUIRE(cut.get_volume() == Approx(poly.get_volume()));
+    REQUIRE(cut.get_vertices().size() == 6u);
+}

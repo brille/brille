@@ -61,7 +61,8 @@ def test_aflow_crystaldatabase():
     errored_file = []
     errored_lat = []
     errored_arg = []
-    hall_groups_passed = np.zeros(531,dtype='int')
+    hall_groups_passed = np.zeros(530,dtype='int')
+    hall_groups_failed = np.zeros(530,dtype='int')
     for dirpath, dirs, files in os.walk(findcifdir()):
         for filename in files:
             dlat = cif2direct(os.path.join(dirpath, filename))
@@ -76,21 +77,24 @@ def test_aflow_crystaldatabase():
                     failed_file.append(filename)
                     failed_lat.append(dlat)
                     failed_ratio.append(vol_ir/vol_bz*s.PointSymmetry(i).size)
+                    hall_groups_failed[i-1] += 1
                 else:
-                    hall_groups_passed[i] += 1
+                    hall_groups_passed[i-1] += 1
             except Exception as err:
                 errored += 1
                 errored_file.append(filename)
                 errored_lat.append(dlat)
                 errored_arg.append(err.args)
     if failed > 0:
-        print("\nFailed to find correct irreducible Brillouin zone for",failed,"out of",tested,"(max 530) Hall groups")
+        print("\nFailed to find correct irreducible Brillouin zone for",failed,"out of",tested," Hall groups")
         for file, lat, rat in zip(failed_file, failed_lat, failed_ratio):
             print(file,lat,rat)
     if errored > 0:
         print("\nException raised for",errored,"out of",tested,"(max 530) Hall Groups")
         for file, lat, arg in zip(errored_file, errored_lat, errored_arg):
             print(file,lat,arg)
+    print("Hall groups passed\n",hall_groups_passed)
+    print("Hall groups failed\n",hall_groups_failed)
 
 
 if __name__ == '__main__':

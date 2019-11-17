@@ -152,12 +152,13 @@ bool BrillouinZone::check_ir_polyhedron(void){
   PointSymmetry ps = fullps.higher(1);
   for (size_t i=0; i<ps.size(); ++i){
     Rt = transpose(ps.get(i)); // Rᵀ
+    debug_update("\n\n\n\n\ntranspose(R)\n",Rt);
     multiply_matrix_matrix(RtinvB.data(), Rt.data(), invB.data()); // Rᵀ*B⁻¹
-    verbose_update("transpose(R) inverse(B)\n",RtinvB);
+    debug_update("transpose(R) inverse(B)\n",RtinvB);
     multiply_matrix_matrix(BRtinvB.data(), B.data(), RtinvB.data()); // B*Rᵀ*B⁻¹
-    verbose_update("Rotate the polyhedron by\n", BRtinvB);
+    debug_update("Rotate the polyhedron by\n", BRtinvB);
     rotated = irbz.rotate(BRtinvB);
-    verbose_update("Checking for intersection ",i);
+    debug_update("Checking for intersection ",i);
     if (irbz.intersects(rotated)){
       debug_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
       return false;

@@ -243,7 +243,9 @@ public:
              const ArrayVector<double>& n,
              const std::vector<std::vector<int>>& fpv,
              const std::vector<std::vector<int>>& vpf):
-    vertices(v), points(p), normals(n), faces_per_vertex(fpv), vertices_per_face(vpf){}
+    vertices(v), points(p), normals(n), faces_per_vertex(fpv), vertices_per_face(vpf){
+      this->special_keep_unique_vertices(); // for + below, which doesn't check for vertex uniqueness
+  }
   // initialize from vertices, and vertices_per_face
   Polyhedron(const ArrayVector<double>& v,
              const std::vector<std::vector<int>>& vpf):
@@ -439,6 +441,34 @@ protected:
       if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.data(i), vertices.data(j), t);
     this->vertices = this->vertices.extract(flg);
   }
+    void special_keep_unique_vertices(){
+        std::vector<bool> flg(vertices.size(), true);
+        int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
+        size_t n = vertices.numel();
+        for (size_t i=1; i<vertices.size(); ++i)
+            for (size_t j=0; j<i; ++j)
+                if (flg[i] && flg[j])
+                    flg[i] = !approx_vector(n, vertices.data(i), vertices.data(j), t);
+        if (std::count(flg.begin(), flg.end(), false)){
+            // we need to correct vertices_per_face
+            std::vector<int> map;
+            int count{0};
+            for (auto f: flg) map.push_back( f ? count++ : -1);
+            // find the equivalent vertices for the non-unique ones:
+            for (size_t i=0; i<vertices.size(); ++i)
+                if (map[i]<0)
+                    for (size_t j=0; j<vertices.size(); ++j)
+                        if (i != j && map[j]>=0 && approx_vector(n, vertices.data(i), vertices.data(j), t))
+                            map[i] = map[j];
+            for (auto & face: vertices_per_face){
+                std::vector<int> one;
+                for (auto & f: face) one.push_back(map[f]);
+                face = one;
+            }
+            // keep only the unique vertices
+            this->vertices = this->vertices.extract(flg);
+        }
+    }
   void find_convex_hull(void){
     /* Find the set of planes which contain all vertices.
        The cross product between two vectors connecting three points defines a
@@ -881,8 +911,13 @@ public:
           ++new_face_vertex_count;
         }
         debug_update_if(new_vector.size()!=new_face_vertex_count, "New vertices is wrong size!");
-        // extend the vertices per face vector
-        if (new_vector.size()) vpf.push_back(new_vector);
+        if (new_vector.size()){
+            // add the normal and point for the new face
+            pn = cat(pn, ni);
+            pp = cat(pp, pi);
+            // extend the vertices per face vector
+            vpf.push_back(new_vector);
+        }
         // extend the keep ArrayVector<bool> to cover the new points
         keep = cat(keep, ArrayVector<bool>(1u, new_vertex_count, true));
         verbose_update("keep? vertices:\n",pv.to_string(keep));
@@ -905,9 +940,7 @@ public:
           if (new_vector.empty()) new_vector.push_back(0); // avoid having an unallocated face. Removed later
           face = unique(new_vector); // remove duplicates (where do they come from?)
         }
-        // add the normal and point for the new face
-        pn = cat(pn, ni);
-        pp = cat(pp, pi);
+
         // we need to calculate the face centres
         for (size_t j=0; j<vpf.size(); ++j){
           at.resize(vpf[j].size());
@@ -916,19 +949,63 @@ public:
           if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
         }
         // remove any faces without three vertices
-        keep.resize(pp.size());
-//        for (size_t j=0; j<pp.size(); ++j) keep.insert(vpf[j].size()>2, j);
+        keep.resize(pp.size());\
         for (size_t j=0; j<pp.size(); ++j) keep.insert(count_unique(vpf[j])>2, j);
+        pp = pp.extract(keep);
+        pn = pn.extract(keep);
         // and remove their empty vertex lists
-        verbose_update("vpf goes from\n",vpf);
         for (auto i = vpf.begin(); i != vpf.end(); ){
             if (count_unique(*i)<3) vpf.erase(i); else ++i;
         }
+        // remove any faces that are not connected on all sides
+        bool check_again{true};
+        while (check_again){
+            // find the number of adjacent faces for each vertes
+            std::vector<size_t> adjacent_face_no(pv.size(), 0u);
+            for (size_t j=0; j<pv.size(); ++j){
+                for (auto & face: vpf)
+                    if (std::find(face.begin(), face.end(), static_cast<int>(j))!=face.end())
+                        adjacent_face_no[j]++;
+            }
+            // for each face now check if all vertices are adjacent to 3+ faces
+            keep.resize(pp.size());
+            size_t face_idx{0};
+            for (auto i = vpf.begin(); i != vpf.end(); ){
+                bool ok{true};
+                for (auto & x: *i) ok &= adjacent_face_no[x] > 2u;
+                if (ok) ++i; else vpf.erase(i);
+                keep.insert(ok, face_idx++);
+            }
+            check_again = keep.count_true() < pp.size();
+            if (check_again){
+                pp = pp.extract(keep);
+                pn = pn.extract(keep);
+            }
+        }
+
+        // remove any vertices not on a face
+        std::vector<bool> kv(pv.size(), false);
+        for (auto & face: vpf) for (auto & x: face) kv[x] = true;
+//        info_update("vertices per face\n",vpf,"\nkeeping vertices ",kv);
+        if (std::count(kv.begin(), kv.end(), false)){
+//            info_update("cut vertices\n",pv.to_string());
+            std::vector<int> kv_map;
+            int kv_count{0};
+            for (auto && j : kv) kv_map.push_back(j ? kv_count++ : -1);
+            for (auto & face: vpf){
+                new_vector.clear();
+                for (auto & x: face) new_vector.push_back(kv_map[x]);
+                face = new_vector;
+            }
+            pv = pv.extract(kv);
+//            info_update("become\n",pv.to_string());
+        }
+
         verbose_update("to\n",vpf);
         verbose_update("keep? plane normals:\n",pn.to_string(keep));
         verbose_update("keep? plane points:\n",pp.to_string(keep));
         // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
-        pout = Polyhedron(pv, pp.extract(keep), pn.extract(keep), vpf);
+        pout = Polyhedron(pv, pp, pn, vpf);
         // pout = Polyhedron(pv);
         verbose_update("New ",pout.string_repr());
         // copy the updated vertices, normals, and relational information

@@ -201,7 +201,7 @@ ArrayVector<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& poi
   return keep;
 }
 
-void BrillouinZone::wedge_brute_force(const bool special2folds){
+void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length){
   debug_exec(std::string msg;)
   Spacegroup sg = this->outerlattice.get_spacegroup_object();
   // For P1 the irreducible Brillouin zone *is* the first Brillouin zone
@@ -238,15 +238,18 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
   // before [111]).
   std::vector<size_t> perm(ps.size());
   std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
-  std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
-    LQVec<int> lq(this->outerlattice, 2u);
-    lq.set(0u, ps.axis(a));
-    lq.set(1u, ps.axis(b));
-    return lq.dot(0u,0u) < lq.dot(1u,1u);
-  });
-  // std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
-  //   return ps.order(a) > ps.order(b);
-  // });
+  if (sort_by_length){
+      std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+          LQVec<int> lq(this->outerlattice, 2u);
+          lq.set(0u, ps.axis(a));
+          lq.set(1u, ps.axis(b));
+          return lq.dot(0u,0u) < lq.dot(1u,1u);
+      });
+  } else {
+       std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+         return ps.order(a) > ps.order(b);
+       });
+  }
   ps.permute(perm); // ps now sorted with shortest stationary axis first
 
   ArrayVector<bool> keep(1u, 0u);
@@ -261,7 +264,6 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
   //     special = special.extract(keep);
   //   }
   // }
-  debug_update("Deal with 2-fold axes along highest-symmetry directions first");
 
   std::vector<bool> sym_unused(ps.size(), true);
   // deal with any two-fold axes along êᵢ first:
@@ -275,9 +277,12 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
   for (size_t i=0; i<reis.size(); ++i) reis.set(i, eiv[i]);
   size_t is_nth_ei;
 
-  if (special2folds){
+  if (special_2_folds){
+    debug_update("Deal with 2-fold axes along highest-symmetry directions first");
     size_t e1, e2;
-    for (size_t i=0; i<ps.size(); ++i) if (ps.order(i)==2){
+    for (size_t i=0; i<ps.size(); ++i)
+      if (ps.order(i)==2 && (special_mirrors || ps.isometry(i)==2)){
+//      if (ps.order(i)==2){
       vec.set(0, ps.axis(i));
       // First check if this stationary axis is along a reciprocal space vector
       is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
@@ -333,6 +338,7 @@ void BrillouinZone::wedge_brute_force(const bool special2folds){
   std::vector<bool> unfound(special.size(), true), type_unfound;
   for (size_t i=0; i<ps.size(); ++i) if (sym_unused[i]){
     debug_update("Unused symmetry ",i," with order ", ps.order(i));
+    debug_update(ps.get(i));
     one_sym.clear();
     for (auto b: unfound) b = true;
     for (size_t j=0; j<special.size(); ++j) if (unfound[j]){
