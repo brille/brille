@@ -286,11 +286,11 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       vec.set(0, ps.axis(i));
       // First check if this stationary axis is along a reciprocal space vector
       is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
-      if (is_nth_ei < 9 /* This is less than great practice */){
+      if (is_nth_ei < 9 && is_nth_ei != 1 /* This is less than great practice */){
         debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
         switch (is_nth_ei){
           case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
-          case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break;
+          case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break; // we're skipping this case in the if statement above
           case 2: /* (001)⋆ */ e1=1; e2=2; /* n = (010)×(001)⋆ */ break;
           case 3: /* (110)⋆ */ e1=3; e2=2; /* n = (110)×(001)⋆ */ break;
           case 4: /* (1̄10)⋆ */ e1=2; e2=4; /* n = (001)×(1̄10)⋆ */ break;

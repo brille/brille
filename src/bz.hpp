@@ -85,11 +85,11 @@ public:
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){
       this->wedge_brute_force();
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false);
+      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false);
       if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false);
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false, false);
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false, false);
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false);
+      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false, false);
+      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false, false);
+      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false);
 
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
       // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
