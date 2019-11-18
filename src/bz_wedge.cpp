@@ -277,58 +277,69 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   for (size_t i=0; i<reis.size(); ++i) reis.set(i, eiv[i]);
   size_t is_nth_ei;
 
-  if (special_2_folds){
-    debug_update("Deal with 2-fold axes along highest-symmetry directions first");
-    size_t e1, e2;
-    for (size_t i=0; i<ps.size(); ++i)
-      if (ps.order(i)==2 && (special_mirrors || ps.isometry(i)==2)){
-//      if (ps.order(i)==2){
-      vec.set(0, ps.axis(i));
-      // First check if this stationary axis is along a reciprocal space vector
-      is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
-      if (is_nth_ei < 9 && is_nth_ei != 1 /* This is less than great practice */){
-        debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
-        switch (is_nth_ei){
-          case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
-          case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break; // we're skipping this case in the if statement above
-          case 2: /* (001)⋆ */ e1=1; e2=2; /* n = (010)×(001)⋆ */ break;
-          case 3: /* (110)⋆ */ e1=3; e2=2; /* n = (110)×(001)⋆ */ break;
-          case 4: /* (1̄10)⋆ */ e1=2; e2=4; /* n = (001)×(1̄10)⋆ */ break;
-          case 5: /* (101)⋆ */ e1=1; e2=5; /* n = (010)×(101)⋆ */ break;
-          case 6: /* (011)⋆ */ e1=6; e2=0; /* n = (011)×(100)⋆ */ break;
-          case 7: /* (10̄1)⋆ */ e1=7; e2=1; /* n = (10̄1)×(010)⋆ */ break;
-          case 8: /* (01̄1)⋆ */ e1=0; e2=8; /* n = (100)×(01̄1)* */ break;
-          default: e1=0; e2=0;
-        }
-        // The plane normal is the cross product of the first real space vector
-        // (expressed in units of the reciprocal lattice) and the second
-        // reciprocal space vector.
-        nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
-        // // The plane normal is the cross produce of the first reciprocal space
-        // // vector and the second reciprocal space vector;
-        // nrm.set(0, eis.cross(e1, e2));
-        if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
-          // keep any special points beyond the bounding plane
-          keep = dot(nrm, special).is_approx(">=", 0.);
-          debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
-          special = special.extract(keep);
-          sym_unused[i] = false;
-        }
+  debug_update_if(special_2_folds,"Deal with 2-fold rotations with axes along highest-symmetry directions first");
+  if (special_2_folds) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==2){
+    vec.set(0, ps.axis(i));
+    // First check if this stationary axis is along a reciprocal space vector
+    is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
+    if (is_nth_ei < 9 /* This is less than great practice */){
+      debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
+      size_t e1, e2;
+      switch (is_nth_ei){
+        case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
+        case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break;
+        case 2: /* (001)⋆ */ e1=1; e2=2; /* n = (010)×(001)⋆ */ break;
+        case 3: /* (110)⋆ */ e1=3; e2=2; /* n = (110)×(001)⋆ */ break;
+        case 4: /* (1̄10)⋆ */ e1=2; e2=4; /* n = (001)×(1̄10)⋆ */ break;
+        case 5: /* (101)⋆ */ e1=1; e2=5; /* n = (010)×(101)⋆ */ break;
+        case 6: /* (011)⋆ */ e1=6; e2=0; /* n = (011)×(100)⋆ */ break;
+        case 7: /* (10̄1)⋆ */ e1=7; e2=1; /* n = (10̄1)×(010)⋆ */ break;
+        case 8: /* (01̄1)⋆ */ e1=0; e2=8; /* n = (100)×(01̄1)* */ break;
+        default: e1=0; e2=0;
       }
-      // Stationary axis along real space basis vector
-      is_nth_ei = norm(cross(reis, vec)).is_approx("==", 0.).first_true();
-      if (sym_unused[i] && is_nth_ei < 2){
-        debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
-        switch (is_nth_ei){
-          case 0: nrm.set(0, eiv[1]); break; /* (100) → n = (010)* */
-          case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
-        }
+      // The plane normal is the cross product of the first real space vector
+      // (expressed in units of the reciprocal lattice) and the second
+      // reciprocal space vector.
+      nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
+      // // The plane normal is the cross produce of the first reciprocal space
+      // // vector and the second reciprocal space vector;
+      // nrm.set(0, eis.cross(e1, e2));
+      if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is_approx(">=", 0.);
         debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
         special = special.extract(keep);
         sym_unused[i] = false;
       }
+    }
+    // Stationary axis along real space basis vector
+    is_nth_ei = norm(cross(reis, vec)).is_approx("==", 0.).first_true();
+    if (sym_unused[i] && is_nth_ei < 2){
+      debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
+      switch (is_nth_ei){
+        case 0: nrm.set(0, eiv[1]); break; /* (100) → n = (010)* */
+        case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
+      }
+      // keep any special points beyond the bounding plane
+      keep = dot(nrm, special).is_approx(">=", 0.);
+      debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+      special = special.extract(keep);
+      sym_unused[i] = false;
+    }
+  }
+  debug_update_if(special_mirrors,"Deal with mirror planes");
+  if (special_mirrors) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==-2){
+    vec.set(0, ps.axis(i)); // the mirror plane normal is in the direct lattice
+    nrm.set(0, vec.star()); // and we want the normal in the reciprocal lattice
+    keep = dot(nrm, special).is_approx(">=", 0.);
+    // we need at least three points (plus Γ) to define a polyhedron
+    // If we are not keeping three points, check if applying the mirror plane
+    // pointing the other way works for us:
+    if (keep.count_true() < 3) keep = dot(nrm, special).is_approx("<=", 0.);
+    if (keep.count_true() > 2){
+      debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >=0:\n", special.to_string(keep));
+      special = special.extract(keep);
+      sym_unused[i] = false;
     }
   }
   debug_update("Now figure out how all special points are related for each symmetry operation");

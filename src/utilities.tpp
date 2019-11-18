@@ -15,6 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
+// 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
+// but setting it any lower (9000 tried) causes other test lattices, namely,
+// (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
+const int TOL_MULT=10000;
+
 template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
 
 // trace of a square matrix
@@ -48,7 +53,7 @@ template<typename T, typename R> static enable_if_t<
   ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
   (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
 inner_approx_scalar(const T a, const R b, const int tol){
-  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  R Rtol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   if ( a == T(0) && std::abs(b) <= Rtol )
     return true;
   else
@@ -58,7 +63,7 @@ template<typename T, typename R> static enable_if_t<
   (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
   ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
 inner_approx_scalar(const T a, const R b, const int tol){
-  R Ttol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  R Ttol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   if ( std::abs(a) <= Ttol && b == R(0) )
     return true;
   else
@@ -70,8 +75,8 @@ template<typename T, typename R> static enable_if_t<
 inner_approx_scalar(const T a, const R b, const int tol){
   bool isfpT = std::is_floating_point<T>::value;
   bool isfpR = std::is_floating_point<R>::value;
-  T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*TOL_MULT)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   if (isfpT && isfpR && !std::is_convertible<R,T>::value) return false; // they can't be equal if they're not expressible in the same format
   /* isfpT | isfpR | which? | why?
      ------|-------|--------|-----
@@ -91,8 +96,8 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b, const 
 template<typename T, typename R> bool approx_array(const int N, const int M, const T *A, const R *B, const int tol){
   bool isfpT = std::is_floating_point<T>::value;
   bool isfpR = std::is_floating_point<R>::value;
-  T Ttol = static_cast<T>(tol*10000)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = static_cast<R>(tol*10000)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  T Ttol = static_cast<T>(tol*TOL_MULT)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
   bool useTtol = false;
   if ( isfpT || isfpR ){
     if (isfpT && isfpR){

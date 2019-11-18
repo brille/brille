@@ -85,17 +85,13 @@ public:
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){
       this->wedge_brute_force();
-      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false);
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false);
-      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false, false);
-      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false, false);
-      // if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false);
-
-      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
-      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/true,  /*parallel ok*/false);
-      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/true);
-      // if (!this->check_ir_polyhedron()) this->wedge_search(/*prefer basis vectors*/false, /*parallel ok*/false);
-      this->check_ir_polyhedron();
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false); // no special 2-fold or mirror handling
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false); // no special mirror handling (maybe not useful)
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
+      // other combinations of special_2_folds, special_mirrors,
+      // and sort_by_length are possible but not necessarily useful.
+      if (!this->check_ir_polyhedron())
+        info_update("Failed to find an irreducible Brillouin zone.");
     }
   }
   bool check_ir_polyhedron(void);
