@@ -4,6 +4,7 @@ from importlib import util
 import os
 import sys
 import unittest
+import json
 import numpy as np
 import pymatgen
 try:
@@ -27,16 +28,8 @@ elif util.find_spec('_brille') is not None:
 else:
     raise Exception("brille module not found!")
 
-def cif2direct(filename):
-    print(filename)
-    cif = pymatgen.Structure.from_file(filename)
-    sym = pymatgen.symmetry.analyzer.SpacegroupAnalyzer(cif) # uses spglib?
-    l = cif.lattice
-    d = s.Direct(l.abc, l.angles, sym.get_hall())
-    return d
-
-def findcifdir():
-    """Locate the cifs directory in the repository tests folder
+def find_tests_dir():
+    """Locate the tests directory in the repository folder
 
     Note that this only works if the package is installed via
         python setup.py develop [--user]
@@ -48,54 +41,59 @@ def findcifdir():
         brilleroot = '.' #punt. maybe we're running this from a build directory?
     else:
         brilleroot = test_spec.submodule_search_locations[0]
-    cifsdir = os.path.join(brilleroot,'..','tests','cifs')
+    cifsdir = os.path.join(brilleroot,'..','tests')
     return cifsdir
+
+def get_aflow_lattices():
+    jsonfile = os.path.join(find_tests_dir(),'aflow_lattices.json')
+    with open(jsonfile,'r') as f:
+        data = json.load(f)
+    return data
+
+def n2chr(n):
+    return chr(48+n) if n<10 else chr(65-10+n)
 
 def test_aflow_crystaldatabase():
     tested = 0
     failed = 0
     errored = 0
-    failed_file = []
-    failed_lat = []
+    failed_afl = []
     failed_ratio = []
-    errored_file = []
-    errored_lat = []
+    errored_afl = []
     errored_arg = []
     hall_groups_passed = np.zeros(530,dtype='int')
     hall_groups_failed = np.zeros(530,dtype='int')
-    for dirpath, dirs, files in os.walk(findcifdir()):
-        for filename in files:
-            dlat = cif2direct(os.path.join(dirpath, filename))
-            i = dlat.hall
-            try:
-                bz = s.BrillouinZone(dlat.star)
-                vol_bz = bz.polyhedron.volume
-                vol_ir = bz.ir_polyhedron.volume
-                tested += 1
-                if not np.isclose(vol_ir, vol_bz/s.PointSymmetry(i).size):
-                    failed += 1
-                    failed_file.append(filename)
-                    failed_lat.append(dlat)
-                    failed_ratio.append(vol_ir/vol_bz*s.PointSymmetry(i).size)
-                    hall_groups_failed[i-1] += 1
-                else:
-                    hall_groups_passed[i-1] += 1
-            except Exception as err:
-                errored += 1
-                errored_file.append(filename)
-                errored_lat.append(dlat)
-                errored_arg.append(err.args)
+    for afl in get_aflow_lattices():
+        dlat = s.Direct(*afl[1:])
+        i = dlat.hall
+        try:
+            bz = s.BrillouinZone(dlat.star)
+            vol_bz = bz.polyhedron.volume
+            vol_ir = bz.ir_polyhedron.volume
+            tested += 1
+            if not np.isclose(vol_ir, vol_bz/s.PointSymmetry(i).size):
+                failed += 1
+                failed_afl.append(afl)
+                failed_ratio.append(vol_ir/vol_bz*s.PointSymmetry(i).size)
+                hall_groups_failed[i-1] += 1
+            else:
+                hall_groups_passed[i-1] += 1
+        except Exception as err:
+            errored += 1
+            errored_afl.append(afl)
+            errored_arg.append(err.args)
     if failed > 0:
-        print("\nFailed to find correct irreducible Brillouin zone for",failed,"out of",tested," Hall groups")
-        for file, lat, rat in zip(failed_file, failed_lat, failed_ratio):
-            print(file,lat,rat)
+        print("\nFailed to find correct irreducible Brillouin zone for",failed,"out of",tested,"lattices")
+        for file,  rat in zip(failed_afl, failed_ratio):
+            print(file,rat)
     if errored > 0:
-        print("\nException raised for",errored,"out of",tested,"(max 530) Hall Groups")
-        for file, lat, arg in zip(errored_file, errored_lat, errored_arg):
+        print("\nException raised for",errored,"out of",tested,"lattices")
+        for file,  arg in zip(errored_afl,  errored_arg):
             print(file,lat,arg)
-    print("Hall groups passed\n",hall_groups_passed)
-    print("Hall groups failed\n",hall_groups_failed)
-
+    print("\nHall groups passed")
+    encoded_hgp = [n2chr(x) for x in hall_groups_passed]
+    for x in [encoded_hgp[i*53:(i+1)*53] for i in range(10)]:
+        print(''.join(x))
 
 if __name__ == '__main__':
     test_aflow_crystaldatabase()
