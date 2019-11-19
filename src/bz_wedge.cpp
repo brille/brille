@@ -338,8 +338,8 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       one_type.push_back(j);
       unfound[j] = false;
       for (size_t k=j+1; k<special.size(); ++k)
-      // if (unfound[k] && special.rotate_approx(k, j, ps.get(i), -ps.order(i))){ // -order checks all possible rotations
-      if (unfound[k] && special.rotate_approx(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations
+      if (unfound[k] && special.rotate_approx(k, j, transpose(ps.get(i)), -ps.order(i))){ // -order checks all possible rotations
+      // if (unfound[k] && special.rotate_approx(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations
         one_type.push_back(k);
         unfound[k] = false;
       }
@@ -351,8 +351,8 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
       for (int o=0; o<ps.order(i); ++o)
       for (size_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
-        // if (special.rotate_approx(one_type[k], j, ps.get(i), o)){
-        if (special.rotate_approx(one_type[k], j, transpose(ps.get_proper(i)), o)){
+        if (special.rotate_approx(one_type[k], j, transpose(ps.get(i)), o)){
+        // if (special.rotate_approx(one_type[k], j, transpose(ps.get_proper(i)), o)){
           type_order[o] = one_type[k];
           type_unfound[k] = false;
         }

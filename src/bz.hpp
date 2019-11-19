@@ -86,6 +86,7 @@ public:
     if (wedge_search){
       this->wedge_brute_force();
       if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false); // no special 2-fold or mirror handling
+      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,true); // no special 2-fold handling (but special mirror handling)
       if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false); // no special mirror handling (maybe not useful)
       if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
       // other combinations of special_2_folds, special_mirrors,
