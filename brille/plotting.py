@@ -259,20 +259,21 @@ def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
         tetidx = np.array(tetidx)
     if not (tetidx.ndim == 2 and tetidx.shape[1] == 4):
         raise RuntimeError('Tetrahedra indexes are not the correct shape')
-
-    colours = kwds.pop('color', get_named_colors_mapping().keys())
-    if isinstance(colours, collections.Iterable):
-        colours = list(colours)
-    if isinstance(colours, str) or (isinstance(colours, (list, tuple)) and len(colours)==3):
-        colours = [colours]
-    if not isinstance(colours, np.ndarray):
-        colours = np.array(colours);
-    #if not 'str' in colours.dtype.name:
-    if colours.shape[0] < tetidx.shape[0]:
-        colours = np.tile(colours, 1+tetidx.shape[0]//colours.shape[0])
-    colours = colours[0:tetidx.shape[0]]
-
+    colours = make_colours(tetidx.shape[0], **kwds)
     # we want to ensure all tetrahedra end up in the same set of axes
     axs = _check_axes(axs)
     for tet, colour in zip(tetidx, colours):
         plot_tetrahedron(allverts[tet], color=colour, **kwds)
+
+def make_colours(n, color=None, **kwds):
+    if color is None:
+        color = get_named_colors_mapping().keys()
+    if isinstance(color, collections.Iterable):
+        color = list(color)
+    if isinstance(color, str) or (isinstance(color, (list, tuple)) and len(color)==3):
+        color = [color]
+    if not isinstance(color, np.ndarray):
+        color = np.array(color)
+    if color.shape[0] < n:
+        color = np.tile(color, 1+n//color.shape[0])
+    return color[0:n]
