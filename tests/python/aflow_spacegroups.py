@@ -64,7 +64,7 @@ def test_aflow_crystaldatabase():
     hall_groups_passed = np.zeros(530,dtype='int')
     hall_groups_failed = np.zeros(530,dtype='int')
     for afl in get_aflow_lattices():
-        dlat = s.Direct(*afl[1:])
+        dlat = s.Direct(afl[1], afl[2], afl[0]) # use the pre-determined Hall number
         i = dlat.hall
         try:
             bz = s.BrillouinZone(dlat.star)
