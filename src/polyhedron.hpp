@@ -836,7 +836,7 @@ public:
     std::vector<std::vector<int>> fpv, vpf;
     std::vector<int> del_vertices, cut, face_vertices, new_vector;
     std::vector<int> vertex_map;
-    ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u);
+    ArrayVector<double> at(3u, 1u), ni(3u,1u), pi(3u,1u), cen(3u,0u);
     // copy the current vertices, normals, and relational information
     pv=pout.get_vertices();
     pn=pout.get_normals();
@@ -891,7 +891,7 @@ public:
             // grab the index of the next-added vertex
             lv = static_cast<int>(pv.size());
             // add the intersection point to all vertices
-            verbose_update("adding the intersection point ",at.to_string("")," to existing points\n",pv.to_string());
+            verbose_update("adding the intersection point ",at.to_string(0)," to existing points\n",pv.to_string());
             pv = cat(pv, at.extract(0));
             // plus add the face index to the faces_per_vertex list for this new vertex
             fpv.push_back({cut[j], cut[k], last_face});
@@ -900,7 +900,7 @@ public:
           } else {
             // find the matching index that already is in the list:
             lv = static_cast<int>(find(norm(pv-at.extract(0)).is_approx("==",0.))[0]);
-            verbose_update("Reusing existing intersection point ",pv.to_string(lv)," for found intersection ",at.to_string(""));
+            verbose_update("Reusing existing intersection point ",pv.to_string(lv)," for found intersection ",at.to_string(0));
           }
           // add the new vertex to the list for each existing facet -- if its not already present
           if (std::find(vpf[cut[j]].begin(), vpf[cut[j]].end(), lv)==vpf[cut[j]].end()) vpf[cut[j]].push_back(lv);
@@ -943,10 +943,10 @@ public:
 
         // we need to calculate the face centres
         for (size_t j=0; j<vpf.size(); ++j){
-          at.resize(vpf[j].size());
-          for (size_t k=0; k<vpf[j].size(); ++k) at.set(k, pv.extract(vpf[j][k]));
+          cen.resize(vpf[j].size());
+          for (size_t k=0; k<vpf[j].size(); ++k) cen.set(k, pv.extract(vpf[j][k]));
           // store the centroid as the on-plane point, but don't divide by zero
-          if (at.size()) pp.set(j, sum(at)/static_cast<double>(at.size()) );
+          if (cen.size()) pp.set(j, sum(cen)/static_cast<double>(cen.size()) );
         }
         // remove any faces without three vertices
         keep.resize(pp.size());\

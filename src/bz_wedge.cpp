@@ -315,7 +315,10 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     // we need at least three points (plus Γ) to define a polyhedron
     // If we are not keeping three points, check if applying the mirror plane
     // pointing the other way works for us:
-    if (keep.count_true() < 3) keep = dot(nrm, special).is_approx("<=", 0.);
+    if (keep.count_true() < 3){
+      nrm = -1*nrm; // - change nrm since we save it for later
+      keep = dot(nrm, special).is_approx(">=", 0.);
+    }
     if (keep.count_true() > 2){
       debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >=0:\n", special.to_string(keep));
       special = special.extract(keep);
@@ -430,7 +433,8 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
 
   // debug_update("Remaining special points\n", special.to_string());
   ArrayVector<double> cn = cutting_normals.first(n_cut).get_xyz(); // the cutting direction is opposite the normal
-  this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, cn, 0*cn);
+  ArrayVector<double> cp(3u, cn.size(), 0.);
+  this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, -1*cn, cp);
   // copy functionality of set_ir_vertices, which set the normals as well
   if (this->check_ir_polyhedron())
     this->set_ir_wedge_normals(this->get_ir_polyhedron_wedge_normals());
