@@ -215,30 +215,17 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   // Get and combine the characteristic points of the first Brillouin zone:
   // The face centres, face corners, and mid-face-edge points.
   LQVec<double> special = cat(this->get_points(), this->get_vertices(), this->get_half_edges());
-  // prioritising mid-edges over face corners
-  // LQVec<double> special = cat(this->get_points(), this->get_half_edges(), this->get_vertices());
-
-  // // Since we're assuming inversion symmetry (rectified later if necessary),
-  // // for every Friedel-pair of points we can immediately discard one
-  // // (half of all points for a crystallographic spacegroup should be discarded)
-  // std::vector<bool> isok(special.size(), true);
-  // for (size_t i=0; i<special.size()-1; ++i) if (isok[i])
-  // for (size_t j=i+1; j<special.size(); ++j) if (isok[j])
-  // if (special.vector_approx(i,j,"*",-1.0)) isok[j]=false;
-  // // isok[i] == true → point i is the first half of a Friedel-pair or a loner
-  // special = special.extract(isok);
 
   // Grab the pointgroup symmetry operations
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   // Now restrict the symmetry operations to those with order > 1.
   PointSymmetry ps = fullps.higher(1);
-  // PointSymmetry ps = fullps.nfolds(1);
-  // ps is sorted in increasing rotation-order order, but we want to sort
-  // by increasing stationary-axis length (so that, e.g, [100] is dealt with
-  // before [111]).
   std::vector<size_t> perm(ps.size());
   std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
+    // ps is sorted in increasing rotation-order order, but we want to sort
   if (sort_by_length){
+      // by increasing stationary-axis length (so that, e.g, [100] is dealt with
+      // before [111]).
       std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
           LQVec<int> lq(this->outerlattice, 2u);
           lq.set(0u, ps.axis(a));
@@ -246,24 +233,18 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
           return lq.dot(0u,0u) < lq.dot(1u,1u);
       });
   } else {
-       std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
-         return ps.order(a) > ps.order(b);
-       });
+      // by decreasing isometry so that we deal with rotoinversions last
+      std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+        return ps.isometry(a) > ps.isometry(b);
+      });
   }
-  ps.permute(perm); // ps now sorted with shortest stationary axis first
+  ps.permute(perm); // ps now sorted
 
   ArrayVector<bool> keep(1u, 0u);
-  // if (fullps.has_space_inversion()){
-  //   // ps does not include 1 or -1, so all operations have stationary axes
-  //   // the stationary axis of each rotation is, of course, express in real space!
-  //   LDVec<int> all_axes(this->outerlattice.star(), ps.axes());
-  //   if (all_axes.is_unique().count_true() == 1u){
-  //     debug_update("Deal with -1 since there is only one stationary axis");
-  //     // use the stationary axis as the normal of a mirror plane
-  //     keep = dot(all_axes.extract(0).star(), special).is_approx(">=", 0.);
-  //     special = special.extract(keep);
-  //   }
-  // }
+
+  // Keep track of *which* normals go into determining the irreducible wedge:
+  LQVec<double> cutting_normals(this->outerlattice, ps.size());
+  size_t n_cut{0};
 
   std::vector<bool> sym_unused(ps.size(), true);
   // deal with any two-fold axes along êᵢ first:
@@ -301,15 +282,13 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // (expressed in units of the reciprocal lattice) and the second
       // reciprocal space vector.
       nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
-      // // The plane normal is the cross produce of the first reciprocal space
-      // // vector and the second reciprocal space vector;
-      // nrm.set(0, eis.cross(e1, e2));
       if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is_approx(">=", 0.);
         debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
         special = special.extract(keep);
         sym_unused[i] = false;
+        cutting_normals.set(n_cut++, nrm);
       }
     }
     // Stationary axis along real space basis vector
@@ -325,6 +304,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
       special = special.extract(keep);
       sym_unused[i] = false;
+      cutting_normals.set(n_cut++, nrm);
     }
   }
   debug_update_if(special_mirrors,"Deal with mirror planes");
@@ -340,6 +320,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >=0:\n", special.to_string(keep));
       special = special.extract(keep);
       sym_unused[i] = false;
+      cutting_normals.set(n_cut++, nrm);
     }
   }
   debug_update("Now figure out how all special points are related for each symmetry operation");
@@ -439,6 +420,8 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             debug_update("Keeping special points:\n",special.to_string(keep));
             special = special.extract(keep);
             sym_unused[i]=false;
+            for (size_t nc=0; nc<nrm.size(); ++nc)
+                cutting_normals.set(n_cut++, nrm.extract(nc));
           }
         }
       }
@@ -446,13 +429,18 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   }
 
   // debug_update("Remaining special points\n", special.to_string());
+  ArrayVector<double> cn = cutting_normals.first(n_cut).get_xyz(); // the cutting direction is opposite the normal
+  this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, cn, 0*cn);
+  // copy functionality of set_ir_vertices, which set the normals as well
+  if (this->check_ir_polyhedron())
+    this->set_ir_wedge_normals(this->get_ir_polyhedron_wedge_normals());
 
-  // append the Γ point onto the list of special points:
-  special.resize(special.size()+1u);
-  for (size_t i=0; i<3u; ++i) special.insert(0, special.size()-1, i);
-  // and then form the irreducible polyhedron by finding the convex hull
-  // of these points: (which sets the wedge normals too)
-  this->set_ir_vertices(special);
+//  // append the Γ point onto the list of special points:
+//  special.resize(special.size()+1u);
+//  for (size_t i=0; i<3u; ++i) special.insert(0, special.size()-1, i);
+//  // and then form the irreducible polyhedron by finding the convex hull
+//  // of these points: (which sets the wedge normals too)
+//  this->set_ir_vertices(special);
 
   /*If the full pointsymmetry has space inversion *and* there is only a single
     stationary rotation/rotoinversion axis the thus-far-found polyhedron has
@@ -504,33 +492,10 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             proceed = false;
           }
         }
-        // ArrayVector<double> xyz(3u, 3u);
-        // for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) xyz.insert(i==j?1.:0., i, j);
-        // for (size_t i=0; i<xyz.size(); ++i){
-        //   div = this->ir_polyhedron.divide(xyz.extract(i), gamma);
-        //   if (approx_scalar(div.get_volume(), goal_volume)){
-        //     // set the polyhedron
-        //     this->ir_polyhedron = div;
-        //     // set the wedge normals
-        //     LQVec<double> ir_n = this->get_ir_normals();
-        //     LQVec<double> ir_p = this->get_ir_points();
-        //     LQVec<double> bz_p = this->get_points();
-        //     ArrayVector<bool> not_bz(1u, 0u);
-        //     for (size_t i=0; i<bz_n.size(); ++i){
-        //       // check if the irBZ face point is on a first BZ zone face too
-        //       not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
-        //       ir_n = ir_n.extract(not_bz);
-        //       ir_p = ir_p.extract(not_bz);
-        //     }
-        //     // the remaining irBZ faces are the irreducible reciprocal space wedge
-        //     // which we store with the opposite sign in this->ir_wedge_normals
-        //     this->set_ir_wedge_normals(-ir_n);
-        //     break;
-        //   }
-        // }
       }
     }
   }
+
 }
 
 
