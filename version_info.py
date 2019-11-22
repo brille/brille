@@ -1,7 +1,7 @@
 import subprocess
-import time
 import sys
-import socket
+import platform
+from datetime import datetime
 
 def version_info():
 
@@ -16,11 +16,9 @@ def version_info():
         with open("VERSION") as f:
             return f.readline().strip()
 
-    build_datetime = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime())
+    build_datetime = datetime.now().isoformat(timespec='minutes')
     version_number = read_version()
-
-    hostname = socket.gethostname()
-
+    hostname = platform.node()
     return git_revision, git_branch, build_datetime, version_number, hostname
 
 def version_number():

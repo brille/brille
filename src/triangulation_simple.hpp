@@ -36,15 +36,15 @@ public:
     verbose_update("Creating `tetgenbehavior` object");
     tetgenbehavior tgb;
     tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
-    tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
-    tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
-    // tgb.mindihedral = 20.; // degrees, avoid very accute edges
-    if (max_volume > 0){
-      tgb.fixedvolume = 1;
-      tgb.maxvolume = max_volume;
-    } else{
-      tgb.varvolume = 1;
-    }
+    // tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
+    // tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
+    // // tgb.mindihedral = 20.; // degrees, avoid very accute edges
+    // if (max_volume > 0){
+    //   tgb.fixedvolume = 1;
+    //   tgb.maxvolume = max_volume;
+    // } else{
+    //   tgb.varvolume = 1;
+    // }
     #ifdef VERBOSE_MESHING
     tgb.verbose = 10000;
     #else
