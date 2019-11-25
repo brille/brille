@@ -46,6 +46,7 @@ class BrillouinZone {
   bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
   bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
+  bool no_ir_mirroring;
 public:
   /*!
   @param lat A Reciprocal lattice
@@ -64,6 +65,7 @@ public:
   {
     this->is_primitive = !(this->lattice.issame(this->outerlattice));
     this->has_inversion = this->time_reversal || lat.has_space_inversion();
+    this->no_ir_mirroring = true;
     double old_volume = -1.0, new_volume=0.0;
     int test_extent = extent-1;
     // initial test_extent based on spacegroup or pointgroup?
@@ -95,6 +97,17 @@ public:
         info_update("Failed to find an irreducible Brillouin zone.");
     }
   }
+  void check_if_mirroring_needed(void){
+    this->no_ir_mirroring = true;
+    if (!this->has_inversion){
+      PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
+      double ratio = this->polyhedron.get_volume() / this->ir_polyhedron.get_volume();
+      // if ratio == ps.size() no mirroring is required.
+      // if ratio == ps.size()/2, mirroring is required.
+      this->no_ir_mirroring = !approx_scalar(2.0*ratio, ps.size());
+    }
+  }
+
   bool check_ir_polyhedron(void);
   bool wedge_explicit(void);
   //! Returns the lattice passed in at construction

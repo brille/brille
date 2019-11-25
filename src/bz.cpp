@@ -99,26 +99,17 @@ bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
 }
 Polyhedron BrillouinZone::get_polyhedron(void) const {return this->polyhedron;}
 Polyhedron BrillouinZone::get_ir_polyhedron(const bool true_ir) const {
-  if (!true_ir) return this->ir_polyhedron;
-  // if the spacegroup has space inversion or time reversal symmetry,
-  // return the already-computed irreducible polyhedron unmodified
-  if (this->has_inversion) return this->ir_polyhedron;
-  /*Otherwise we need to make sure that we return the real irreducible Brillouin
-    zone. If we, e.g., have operations with isometry 1 and 2 then the found irBZ
-    is the correct irBZ since the 2 operation will fill the fisrt BZ; this would
-    also be true with (1,3,3) and [probably] other pointgroups.               */
-  PointSymmetry pg = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
-  double irv = this->ir_polyhedron.get_volume();
-  double bzv = this->polyhedron.get_volume() / static_cast<double>(pg.size());
-  // if the pointgroup operations can reproduce the full first BZ
-  if(approx_scalar(irv, bzv)) return this->ir_polyhedron;
-  // if the pointgroup can only reproduce half the first BZ, mirror the "irBZ"
-  if(approx_scalar(2.0*irv, bzv)) return this->ir_polyhedron + this->ir_polyhedron.mirror();
-  // otherwise, something has gone wrong. return the full first Brillouin zone
-  return this->ir_polyhedron;
-  // return this->polyhedron;
+  // If the ir polyhedron fills the first BZ using the symmetry operations
+  // of the pointgroup (plus time inversion, if included), then no ir_mirroring
+  // is to be performed. In this case or if the 'true_ir' was requested, return
+  // the computed ir_polyhedron
+  if (this->no_ir_mirroring || !true_ir) return this->ir_polyhedron;
+  // Otherwise, the ir_polyedron is only half of the true (non-convex)
+  // irreducible polyhedron, so add the lack of inversion symmetry explicitly.
+  return this->ir_polyhedron + this->ir_polyhedron.mirror();
 }
 bool BrillouinZone::check_ir_polyhedron(void){
+  this->check_if_mirroring_needed(); // move this to end of wedge_brute_force?
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
   double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
   Polyhedron irbz = this->get_ir_polyhedron(), rotated;
@@ -921,7 +912,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
     // accessor method mirrors the half-polyhedron in this case, so when
     // identifying whether a point is inside of the irreducible Brillouin zone
     // we must allow for the ≤0 case as well.
-    std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
+    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
     for (size_t i=0; i<p.size(); ++i)
       out.insert(dot(normals, p.get(i)).all_approx(cmp,0.), i);
   } else {
@@ -947,7 +938,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
   }
   if (normals.size()){
     verbose_update("Checking if points are within wedge\n",normals.to_string());
-    std::string cmp = (constructing||this->has_inversion ? "≥" : "≤|≥");
+    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
     for (size_t i=0; i<p.size(); ++i)
       out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);
     verbose_update("Comparison to normals\n",normals.to_string()," via ",cmp," yields\n",out);
@@ -1056,11 +1047,13 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
   LQVec<double> qj(Q.get_lattice(), 1u);
   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
-    multiply_matrix_vector(qj.data(0), psym.data(j), q.data(i));
+    // The point symmetry matrices relate *real space* vectors! We must use
+    // their transposes' to rotate reciprocal space vectors.
+    multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
     verbose_update("R_",j,"*q = ", qj.to_string(0));
     if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
-      q.set(i, qj); // keep Rⱼ⋅qᵢ as qᵢᵣ
-      R[i] = psym.get_inverse(j); // and Rⱼ⁻¹ ∈ G, such that Qᵢ = Rⱼ⁻¹⋅qᵢᵣ + τᵢ.
+      q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+      R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
       break;
     }
   }
