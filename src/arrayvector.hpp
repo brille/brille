@@ -207,8 +207,10 @@ public:
   size_t size() const {return N;};
   //! Returns the number of elements in each array
   size_t numel() const {return M;};
+  //! Returns the pointer to the ith array's jth element -- with bounds checking
+  T* checked_data(size_t i=0, size_t j=0) const;
   //! Returns the pointer to the ith array's jth element
-  T* data(const size_t i=0, const size_t j=0) const;
+  T* data(size_t i=0, size_t j=0) const;
   //! Returns the value of the ith array's jth element
   T getvalue(const size_t i=0, const size_t j=0) const;
   //! Return the ith single-array ArrayVector
@@ -506,9 +508,10 @@ public:
   void permute(const std::vector<size_t>& p);
   bool swap(const size_t i, const size_t j);
   bool swap(const size_t i, const size_t a, const size_t b);
+  std::vector<T> to_std() const;
 };
 
-
+#include "arrayvector_operators.tpp"
 #include "arrayvector.tpp"
 
 

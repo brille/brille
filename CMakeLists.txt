@@ -84,7 +84,7 @@ endif()
 
 set(CXX_TARGETS _brille catch2)
 foreach(CXX_TARGET ${CXX_TARGETS})
-  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 17)
+  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14)
 endforeach(CXX_TARGET)
 
 
@@ -95,6 +95,11 @@ if(OpenMP_CXX_FOUND)
 		foreach(OMP_TARGET ${OMP_TARGETS})
 			target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
 		endforeach(OMP_TARGET)
+    if (MSVC AND MSVC_VERSION GREATER 1919)
+      add_compile_options(/openmp:experimental) # this doesn't work
+    else()
+      message(STATUS "No Visual Studio OpenMP simd support in MSVC_VERSION ${MSVC_VERSION}")
+    endif()
 endif()
 
 # if(MSVC)
@@ -130,7 +135,7 @@ if (DOXYGEN_FOUND)
 	        VERBATIM )
 		endif (BUILD_DOC)
 else (DOXYGEN_FOUND)
-  message("Documentation generation requires Doxygen to be available")
+  message(STATUS "Documentation generation requires Doxygen to be available")
 endif (DOXYGEN_FOUND)
 
 add_subdirectory(lib)

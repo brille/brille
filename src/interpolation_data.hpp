@@ -308,13 +308,18 @@ bool InterpolationData<T>::rotate_in_place(
   T tmp_v[3], tmp_m[9];
   std::vector<std::array<int,9>> invR;
   if (no[3]){
+    long long rsize = unsigned_to_signed<long long, size_t>(r.size());
     invR.resize(r.size());
-    for (size_t i=0; i<r.size(); ++i) matrix_inverse(invR[i].data(), r[i].data());
+    #pragma omp parallel for default(none) shared(invR, r) firstprivate(rsize) schedule(dynamic)
+    for (long long si=0; si<rsize; ++si){
+      size_t i = signed_to_unsigned<size_t, long long>(si);
+      matrix_inverse(invR[i].data(), r[i].data());
+    }
   }
   element_t offset, nvec = no[1]+no[2], sp = this->branch_span();
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-#pragma omp parallel for shared(x) private(offset, tmp_v, tmp_m) firstprivate(nvec, no, sp)
+#pragma omp parallel for default(none) shared(x,r,invR) private(offset, tmp_v, tmp_m) firstprivate(nvec, no, sp, xsize) schedule(dynamic)
   for (long long si=0; si<xsize; ++si){
     size_t i = signed_to_unsigned<size_t, long long>(si);
     if (r[i][0] + r[i][4] + r[i][8] != 3)

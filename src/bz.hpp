@@ -101,10 +101,11 @@ public:
     this->no_ir_mirroring = true;
     if (!this->has_inversion){
       PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
-      double ratio = this->polyhedron.get_volume() / this->ir_polyhedron.get_volume();
-      // if ratio == ps.size() no mirroring is required.
-      // if ratio == ps.size()/2, mirroring is required.
-      this->no_ir_mirroring = !approx_scalar(2.0*ratio, ps.size());
+      double goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
+      double found = this->ir_polyhedron.get_volume();
+      // if found == goal no mirroring is required.
+      // if found == goal/2, mirroring is required.
+      this->no_ir_mirroring = approx_scalar(goal, found);
     }
   }
 
@@ -257,7 +258,7 @@ public:
     @param[out] q The reduced reciprocal lattice vectors
     @param[out] tau The reciprocal lattice zone centres
   */
-  bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const;
+  bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, int nthreads=0) const;
   /*! \brief Find q, τ, and R∈G such that Q = Rq + τ, where τ is a reciprocal
              lattice vector and R is a pointgroup symmetry operation of the
              conventional unit cell pointgroup, G.
@@ -266,7 +267,7 @@ public:
     @param [out] τ The conventional reciprocal lattice zone centres
     @param [out] R The conventional lattice pointgroup operations
   */
-  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const ;
+  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R, int nthreads=0) const ;
 private:
   void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);

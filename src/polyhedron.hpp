@@ -39,15 +39,15 @@ std::vector<T> bare_winding_angles(const ArrayVector<T>& vecs, const size_t i, c
   if (vecs.numel()!=3u)
     throw std::runtime_error("Finding a winding angle requires the cross product, which is only defined in 3D");
   // vecs should be normalized already
-  std::vector<T> angles(vecs.size());
+  std::vector<T> angles(vecs.size(), 0.);
   T dotij, y_len, angij;
   ArrayVector<T> x(3u,1u), y(3u,1u); // ensure all have memory allocated
   T crsij[3]; // to hold the cross product
-  for (size_t j=0; j<vecs.size(); ++j){
-    if (j == i){
-      angles[j] = 0.0;
-      continue;
-    }
+  for (size_t j=0; j<vecs.size(); ++j) if (i!=j) {
+    // if (j == i){
+    //   angles[j] = 0.0;
+    //   continue;
+    // }
     dotij = vecs.dot(i,j);
     vector_cross(crsij, vecs.data(i), vecs.data(j));
     // crsij = vecs.cross(i,j);

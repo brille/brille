@@ -361,7 +361,7 @@ public:
     std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-  #pragma omp parallel for shared( x, out) private(indices, weights)
+  #pragma omp parallel for default(none) shared( x, out) private(indices, weights) firstprivate(xsize) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long long>(si);
       if (!this->indices_weights(x.extract(i), indices, weights))

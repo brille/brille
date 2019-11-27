@@ -17,7 +17,7 @@
 
 // Templated implementation code for arrayvector.hpp
 
-template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) const {
+template<typename T> T* ArrayVector<T>::checked_data(const size_t i, const size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){
     std::string msg = __PRETTY_FUNCTION__;
@@ -27,11 +27,14 @@ template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) con
     msg += std::to_string(this->numel()) + " elements";
     throw std::out_of_range(msg);
   }
-  ptr = this->_data + (i*this->numel() + j);
+  ptr = this->data(i, j);
   if (!ptr){
     throw std::runtime_error("Attempting to access uninitialized data");
   }
   return ptr;
+}
+template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) const {
+  return this->_data + (i*this->numel() + j);
 }
 
 template<typename T> T ArrayVector<T>::getvalue(const size_t i, const size_t j) const {
@@ -836,6 +839,24 @@ A<S> cross(const A<T>& a, const A<R>& b) {
   return out;
 }
 
+// template<class T, class R, template<class> class A,
+//          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+//          class S = typename std::common_type<T,R>::type
+//          >
+// A<S> dot(const A<T>& a, const A<R>& b){
+//   AVSizeInfo si = a.consistency_check(b);
+//   if (si.scalara^si.scalarb)
+//     throw std::runtime_error("ArrayVector dot requires equal numel()");
+//   A<S> out(1u,si.n);
+//   S d;
+//   for (size_t i=0; i<si.n; ++i){
+//     d = S(0);
+//     for (size_t j=0; j<si.m; ++j)
+//       d+= a.getvalue((si.oneveca ? 0 : i), j) * b.getvalue((si.onevecb ? 0 : i), j);
+//     out.insert(d, i, 0);
+//   }
+//   return out;
+// }
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
@@ -844,14 +865,21 @@ A<S> dot(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
   if (si.scalara^si.scalarb)
     throw std::runtime_error("ArrayVector dot requires equal numel()");
-  A<S> out(1u,si.n);
-  S d;
-  for (size_t i=0; i<si.n; ++i){
-    d = S(0);
-    for (size_t j=0; j<si.m; ++j)
-      d+= a.getvalue((si.oneveca ? 0 : i), j) * b.getvalue((si.onevecb ? 0 : i), j);
-    out.insert(d, i, 0);
+  A<S> out(1u, si.n, S(0));
+  S* d = out.data();
+  if (si.oneveca && si.onevecb){
+    for (size_t j=0; j<si.m; ++j) d[0] += a.getvalue(0, j) * b.getvalue(0, j);
+    return out;
   }
+  if (si.oneveca){
+    for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += a.getvalue(0, j) * b.getvalue(i, j);
+    return out;
+  }
+  if (si.onevecb){
+    for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += a.getvalue(i, j) * b.getvalue(0, j);
+    return out;
+  }
+  for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += a.getvalue(i, j) * b.getvalue(i, j);
   return out;
 }
 
@@ -895,102 +923,6 @@ template<class T, template<class> class L,typename=typename std::enable_if<std::
 L<int> ceil(const L<T>& a){
   L<int> out(a);
   for (size_t i=0; i<a.size(); i++) for (size_t j=0; j<a.numel(); j++) out.insert( std::ceil(a.getvalue(i,j)), i,j);
-  return out;
-}
-
-
-
-// In Place arithmetic ArrayVector +-*/ ArrayVector
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator +=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) + av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator -=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) - av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator *=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) * av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator /=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) / av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-// In-place binary operators with scalars
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator +=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) + av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator -=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) - av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator *=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) * av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator /=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) / av, i,j );
-  return *this;
-}
-
-
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator+(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  #ifdef SUPER_VERBOSE
-  if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
-    printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
-    printf("OneVector   %3d %3d\n",si.oneveca?1:0,si.onevecb?1:0);
-    printf("ArrayScalar %3d %3d\n",si.scalara?1:0,si.scalarb?1:0);
-    printf("-----------------------\n");
-    printf("chosen      %3d %3d\n",si.aorb?1:0,si.aorb?0:1);
-    printf("size()      %3u %3u %3u\n",a.size(), b.size(), out.size());
-    printf("numel()     %3u %3u %3u\n",a.numel(), b.numel(), out.numel());
-  }
-  #endif
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator-(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator*(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++)
-    out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i, j);
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type,
-         typename=typename std::enable_if<std::is_floating_point<S>::value>::type >
-A<S> operator/(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
   return out;
 }
 
@@ -1376,5 +1308,14 @@ std::vector<size_t> find(const A<T>& a){
   std::vector<size_t> out;
   for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
   if (a.getvalue(i,j)) out.push_back(i+j); // either i or j is zero.
+  return out;
+}
+
+template<class T> std::vector<T> ArrayVector<T>::to_std() const {
+  if (this->size() != 1u && this->numel() != 1u)
+    throw std::logic_error("to_std only supports ArrayScalar or ScalarVector inputs");
+  std::vector<T> out;
+  for (size_t i=0; i<this->size(); ++i) for (size_t j=0; j<this->numel(); ++j)
+  out.push_back(this->getvalue(i,j));
   return out;
 }

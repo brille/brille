@@ -248,7 +248,7 @@ public:
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     size_t unfound=0;
     long xsize = unsigned_to_signed<long, size_t>(x.size());
-  #pragma omp parallel for shared(x, out, unfound)
+  #pragma omp parallel for default(none) shared(x, out) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
     for (long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long>(si);
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
@@ -256,7 +256,6 @@ public:
       if (iw.size()){
         data_.interpolate_at(iw, out, i);
       } else {
-        #pragma omp critical
         ++unfound;
       }
     }

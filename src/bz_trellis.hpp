@@ -58,7 +58,7 @@ public:
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
       for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
-    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rots)){
+    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rots, nthreads)){
       std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);

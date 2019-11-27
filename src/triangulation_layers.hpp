@@ -352,8 +352,7 @@ TetMap connect(const size_t high, const size_t low) const{
   const ArrayVector<size_t>& ltet = ll.get_vertices_per_tetrahedron();
   TetMap map(hl.number_of_tetrahedra());
   long mapsize = unsigned_to_signed<long, size_t>(map.size());
-// #pragma omp parallel for shared(hl, ll, cch, ccl, crh, crl, lvrt, ltet, map)
-#pragma omp parallel for shared(map)
+#pragma omp parallel for default(none) shared(map, cch, ccl, crh, crl, lvrt, ltet, hl) firstprivate(mapsize) schedule(dynamic)
   for (long i=0; i<mapsize; ++i){
     // initialize the map
     map[i] = TetSet();
