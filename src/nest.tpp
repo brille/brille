@@ -64,7 +64,7 @@ void Nest<T>::subdivide(
   for (size_t i=0; i<ntv.size(); ++i){
     const ArrayVector<double> vi{ntv.extract(i)};
     // If we're clever we can possibly simplify this
-    std::vector<size_t> idx = find(norm(vertices_.first(nVerts)-vi).is_approx("==",0.));
+    std::vector<size_t> idx = find(norm(vertices_.first(nVerts)-vi).is_approx(Comp::eq,0.));
     if (idx.size()>1)
       throw std::runtime_error("Multiple matching vertices?!");
     if (idx.size()==1){

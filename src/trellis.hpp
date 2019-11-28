@@ -118,8 +118,8 @@ public:
     double node_volume = abs(node_verts.extract(0)-node_verts.extract(7)).prod(1).getvalue(0,0);
     ArrayVector<double> w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
     // If any normalised weights are greater than 1+eps() the point isn't in this node
-    if (w.any_approx(">",1.)) return false;
-    ArrayVector<bool> needed = w.is_approx(">", 0.);
+    if (w.any_approx(Comp:gt,1.)) return false;
+    ArrayVector<bool> needed = w.is_approx(Comp::gt, 0.);
     indices.clear();
     weights.clear();
     for (int i=0; i<8; ++i) if (needed.getvalue(i)) {
@@ -361,13 +361,17 @@ public:
     std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-  #pragma omp parallel for default(none) shared( x, out) private(indices, weights) firstprivate(xsize) schedule(dynamic)
+    size_t n_unfound{0};
+  #pragma omp parallel for default(none) shared( x, out) private(indices, weights) firstprivate(xsize) reduction(+:n_unfound) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long long>(si);
-      if (!this->indices_weights(x.extract(i), indices, weights))
-        throw std::runtime_error("Point not found in PolyhedronTrellis");
-      data_.interpolate_at(indices, weights, out, i);
+      if (this->indices_weights(x.extract(i), indices, weights)){
+        data_.interpolate_at(indices, weights, out, i);
+      } else {
+        ++n_unfound;
+      }
     }
+    std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
     return out;
   }
   index_t node_count() {

@@ -757,50 +757,49 @@ public:
     double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
-#pragma omp parallel for default(none) shared(x,out,corner_count,mask) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs) schedule(dynamic)
+    size_t n_oob{0};
+#pragma omp parallel for default(none) shared(x,out,corner_count,mask) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs) reduction(+:n_oob) schedule(dynamic)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.data(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
-      if (flg > 7){
-        std::string msg_flg = "grid.h::parallel_linear_interpolate_at Unsure what to do with flg = " + std::to_string(flg);
-        throw std::runtime_error(msg_flg);
-      }
-      if (7 == flg)/*+++*/{
-        this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
-        weights[0] = 1.0; // and the weight to one
+      oob = 0;
+      if (flg <= 7){
+        if (7 == flg)/*+++*/{
+          this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
+          weights[0] = 1.0; // and the weight to one
+        } else {
+          if (0==flg)/*xxx*/{
+            dirs.resize(3);
+            dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
+          }
+          if (1==flg || 2==flg || 4==flg) dirs.resize(2);
+          if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+          if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+          if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+
+          if (3==flg || 5==flg || 6==flg) dirs.resize(1);
+          if (3==flg)/*++x*/ dirs[0] = 2u;
+          if (5==flg)/*+x+*/ dirs[0] = 1u;
+          if (6==flg)/*x++*/ dirs[0] = 0u;
+
+          oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
+          cnt = corner_count[dirs.size()];
+        }
+        if (!oob) {
+          unsafe_interpolate_to(this->data,this->elements,this->branches,cnt,corners,weights,out,i);
+        } else {
+          ++n_oob;
+        }
       } else {
-        if (0==flg)/*xxx*/{
-          dirs.resize(3);
-          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
-        }
-        if (1==flg || 2==flg || 4==flg) dirs.resize(2);
-        if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
-        if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
-        if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
-
-        if (3==flg || 5==flg || 6==flg) dirs.resize(1);
-        if (3==flg)/*++x*/ dirs[0] = 2u;
-        if (5==flg)/*+x+*/ dirs[0] = 1u;
-        if (6==flg)/*x++*/ dirs[0] = 0u;
-
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
-        cnt = corner_count[dirs.size()];
-        if (oob){
-          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
-          throw std::runtime_error(msg);
-        }
+        ++n_oob;
       }
-      // now do the actual interpolation:
-      // extract an ArrayVector(this->data.numel(),cnt) of the corner Arrays
-      // multiply all elements at each corner by the weight for that corner
-      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
-      // and set that ArrayVector as element i of the output ArrayVector
-      unsafe_interpolate_to(this->data,
-                            this->elements,
-                            this->branches,
-                            cnt,corners,weights,out,i);
+    }
+    if (n_oob > 0){
+      std::string msg = "parallel_linear_interpolate_at failed with ";
+      msg += std::to_string(n_oob) + " out of bounds points.";
+      throw std::runtime_error(msg);
     }
     return out;
   }

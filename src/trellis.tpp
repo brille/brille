@@ -138,12 +138,12 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       for (size_t j=0; j<triverts.size(); ++j){
         const ArrayVector<double> trij{triverts.extract(j)};
         debug_update("checking vertex ", trij.to_string(""));
-        auto cube_idx = find(norm(cube.get_vertices()-trij).is_approx("==",0.));
+        auto cube_idx = find(norm(cube.get_vertices()-trij).is_approx(Comp::eq,0.));
         if (cube_idx.size()>1) throw std::logic_error("Too many matching vertices");
         if (cube_idx.size()==1){
           // we could try to use the cube polyhedron vertices to map-back to the full trellis intersections
           // but that seems hard, so as a first attempt check this vertex against *all* kept intersections
-          auto kept_idx = find(norm(kept_intersections-trij).is_approx("==",0.));
+          auto kept_idx = find(norm(kept_intersections-trij).is_approx(Comp::eq,0.));
           // info_update("Polyhedron vertex in kept_intersections: idx = ",cube_idx);
           if (kept_idx.size()==1) local_map.push_back(kept_idx[0]);
           else {
@@ -152,7 +152,7 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
           }
           debug_update("Tetrahedron vertex ",trij.to_string("")," is kept-vertex ",kept_idx[0]);
         } else {
-          auto extra_idx = find(norm(extra_intersections.first(nExtra)-trij).is_approx("==",0.));
+          auto extra_idx = find(norm(extra_intersections.first(nExtra)-trij).is_approx(Comp::eq,0.));
           if (extra_idx.size()>1)
             throw std::logic_error("How does one point match multiple points when all points should be unique?");
           if (extra_idx.size()>0){

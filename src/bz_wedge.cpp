@@ -93,7 +93,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     }
     if (!handled[j]){
       if (!pbv /*basis vectors not preferred*/){
-        flag = norm(cross(x.get(i), z.get(j))).all_approx(">",1e-10);
+        flag = norm(cross(x.get(i), z.get(j))).all_approx(Comp:gt,1e-10);
         // if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ
         // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
         x.set(j, (pok||flag) ? x.get(i) : z.cross(i,j));
@@ -193,11 +193,11 @@ ArrayVector<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& poi
   ArrayVector<bool> keep(1u, points.size(), true);
   std::vector<size_t> nop(normals.size(), 0); // number of not-on-plane points
   for (size_t i=0; i<normals.size(); ++i)
-    nop[i] = dot(normals.extract(i), points).is_approx(">",0.).count_true();
+    nop[i] = dot(normals.extract(i), points).is_approx(Comp::gt,0.).count_true();
   // If there are no planes with 0 off-plane points, divide the space
   if (std::find(nop.begin(),nop.end(),0u)==nop.end())
     for (size_t i=0; i<points.size(); ++i)
-      keep.insert(dot(normals, points.extract(i)).all_approx(">=",0.), i);
+      keep.insert(dot(normals, points.extract(i)).all_approx(Comp:ge,0.), i);
   return keep;
 }
 
@@ -262,7 +262,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   if (special_2_folds) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==2){
     vec.set(0, ps.axis(i));
     // First check if this stationary axis is along a reciprocal space vector
-    is_nth_ei = norm(cross(eis, vec.star())).is_approx("==", 0.).first_true();
+    is_nth_ei = norm(cross(eis, vec.star())).is_approx(Comp::eq, 0.).first_true();
     if (is_nth_ei < 9 /* This is less than great practice */){
       debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
       size_t e1, e2;
@@ -282,9 +282,9 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // (expressed in units of the reciprocal lattice) and the second
       // reciprocal space vector.
       nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
-      if (norm(cross(eis, nrm)).is_approx("==", 0.).count_true() == 1){
+      if (norm(cross(eis, nrm)).is_approx(Comp::eq, 0.).count_true() == 1){
         // keep any special points beyond the bounding plane
-        keep = dot(nrm, special).is_approx(">=", 0.);
+        keep = dot(nrm, special).is_approx(Comp::ge, 0.);
         debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
         special = special.extract(keep);
         sym_unused[i] = false;
@@ -292,7 +292,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       }
     }
     // Stationary axis along real space basis vector
-    is_nth_ei = norm(cross(reis, vec)).is_approx("==", 0.).first_true();
+    is_nth_ei = norm(cross(reis, vec)).is_approx(Comp::eq, 0.).first_true();
     if (sym_unused[i] && is_nth_ei < 2){
       debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
       switch (is_nth_ei){
@@ -300,7 +300,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
       }
       // keep any special points beyond the bounding plane
-      keep = dot(nrm, special).is_approx(">=", 0.);
+      keep = dot(nrm, special).is_approx(Comp::ge, 0.);
       debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
       special = special.extract(keep);
       sym_unused[i] = false;
@@ -311,13 +311,13 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   if (special_mirrors) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==-2){
     vec.set(0, ps.axis(i)); // the mirror plane normal is in the direct lattice
     nrm.set(0, vec.star()); // and we want the normal in the reciprocal lattice
-    keep = dot(nrm, special).is_approx(">=", 0.);
+    keep = dot(nrm, special).is_approx(Comp::ge, 0.);
     // we need at least three points (plus Γ) to define a polyhedron
     // If we are not keeping three points, check if applying the mirror plane
     // pointing the other way works for us:
     if (keep.count_true() < 3){
       nrm = -1*nrm; // - change nrm since we save it for later
-      keep = dot(nrm, special).is_approx(">=", 0.);
+      keep = dot(nrm, special).is_approx(Comp::ge, 0.);
     }
     if (keep.count_true() > 2){
       debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >=0:\n", special.to_string(keep));
@@ -396,7 +396,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             // find both cross products, remembering that we want normals
             // pointing *into* the wedge.
             nrm.resize(2);
-            if ( dot(pt1, cross(vec.star(), pt0)).all_approx("<",0.) ){
+            if ( dot(pt1, cross(vec.star(), pt0)).all_approx(Comp:lt,0.) ){
               // the rotation is left handed, so swap the special points
               nrm.set(0, cross(vec.star(), pt1));
               nrm.set(1, cross(pt0, vec.star()));
@@ -411,7 +411,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             nrm = cross(vec.star(), special.extract(type_order[j]));
             // make sure we don't remove all points out of the plane containing
             // the rotation axis and the two special points
-            if (dot(nrm, special).is_approx(">",0.).count_true() == 0)
+            if (dot(nrm, special).is_approx(Comp::gt,0.).count_true() == 0)
               nrm *= -1; // switch the cross product
           }
           // check to make sure that using these normals do not remove all but a plane of points

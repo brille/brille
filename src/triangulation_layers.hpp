@@ -175,7 +175,7 @@ public:
   }
 protected:
   bool unsafe_might_contain(const size_t tet, const ArrayVector<double>& x) const {
-    return norm(x - circum_centres.extract(tet)).all_approx("<=", circum_radii[tet]);
+    return norm(x - circum_centres.extract(tet)).all_approx(Comp:le, circum_radii[tet]);
   }
   bool unsafe_contains(const size_t tet, const ArrayVector<double>& x) const {
     std::array<double,4> w{0.,0.,0.,0.};
@@ -320,7 +320,7 @@ private:
   //     for (double r: crl) sumrad.push_back(crh[i]+r);
   //     // if two circumsphere centers are closer than the sum of their radii
   //     // they are close enough to possibly overlap:
-  //     for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
+  //     for (size_t j: find(norm(ccl - cchi).is_approx(Comp::le, sumrad))){
   //       bool add = false;
   //       // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
   //       for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;
@@ -352,7 +352,7 @@ TetMap connect(const size_t high, const size_t low) const{
   const ArrayVector<size_t>& ltet = ll.get_vertices_per_tetrahedron();
   TetMap map(hl.number_of_tetrahedra());
   long mapsize = unsigned_to_signed<long, size_t>(map.size());
-#pragma omp parallel for default(none) shared(map, cch, ccl, crh, crl, lvrt, ltet, hl) firstprivate(mapsize) schedule(dynamic)
+#pragma omp parallel for default(none) shared(ll, map, cch, ccl, crh, crl, lvrt, ltet, hl) firstprivate(mapsize) schedule(dynamic)
   for (long i=0; i<mapsize; ++i){
     // initialize the map
     map[i] = TetSet();
@@ -363,7 +363,7 @@ TetMap connect(const size_t high, const size_t low) const{
     for (double r: crl) sumrad.push_back(crh[i]+r);
     // if two circumsphere centers are closer than the sum of their radii
     // they are close enough to possibly overlap:
-    for (size_t j: find(norm(ccl - cchi).is_approx("<=", sumrad))){
+    for (size_t j: find(norm(ccl - cchi).is_approx(Comp::le, sumrad))){
       bool add = false;
       // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
       for (size_t k=0; k<4u; ++k) if (!add && hl.contains(i, lvrt.extract(ltet.getvalue(j, k)))) add = true;

@@ -68,7 +68,7 @@ LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   ArrayVector<bool> not_bz(1u, 0u);
   for (size_t i=0; i<bz_n.size(); ++i){
     // check if the irBZ face point is on a first BZ zone face too
-    not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
+    not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx(Comp::ne, 0.);
     ir_n = ir_n.extract(not_bz);
     ir_p = ir_p.extract(not_bz);
   }
@@ -319,7 +319,7 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& no
     num=num+1;
     return true;
   }
-  if (norm(cross(normals.first(num), n)).any_approx("==",0.)){
+  if (norm(cross(normals.first(num), n)).any_approx(Comp:eq,0.)){
     debug_update(msg, "rejected; already present");
     return false;
   }
@@ -342,14 +342,14 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
   std::string msg = "Considering " + n0.to_string(0," and ") + n1.to_string(0,"... ");
   bool p0=false, p1=false;
   if (num>0){
-    p0 = norm(cross(normals.first(num), n0)).any_approx("==",0.);
-    p1 = norm(cross(normals.first(num), n1)).any_approx("==",0.);
+    p0 = norm(cross(normals.first(num), n0)).any_approx(Comp:eq,0.);
+    p1 = norm(cross(normals.first(num), n1)).any_approx(Comp:eq,0.);
   }
   if (p0 && p1){
     debug_update(msg, "rejected; already present");
     return false;
   }
-  if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx("==",1.)){
+  if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx(Comp:eq,1.)){
     normals.set(num,  n1.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
       debug_update(msg, "n1 accepted (n0 present)");
@@ -359,7 +359,7 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
     debug_update(msg, "n1 rejected (n0 present); addition causes null wedge");
     return false;
   }
-  if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx("==",1.)){
+  if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx(Comp:eq,1.)){
     normals.set(num,  n0.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
       debug_update(msg, "n0 accepted (n1 present)");
@@ -879,7 +879,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p
     normals = this->get_primitive_normals();
   }
   for (size_t i=0; i<p.size(); ++i)
-    out.insert( dot(normals, p.get(i)-points).all_approx("<=",0.), i );
+    out.insert( dot(normals, p.get(i)-points).all_approx(Comp:le,0.), i );
   return out;
 }
 
@@ -913,7 +913,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
     // accessor method mirrors the half-polyhedron in this case, so when
     // identifying whether a point is inside of the irreducible Brillouin zone
     // we must allow for the ≤0 case as well.
-    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
+    Comp cmp = constructing||this->no_ir_mirroring ? Comp::ge : Comp::le_ge;
     for (size_t i=0; i<p.size(); ++i)
       out.insert(dot(normals, p.get(i)).all_approx(cmp,0.), i);
   } else {
@@ -939,7 +939,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
   }
   if (normals.size()){
     verbose_update("Checking if points are within wedge\n",normals.to_string());
-    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
+    Comp cmp = constructing||this->no_ir_mirroring ? Comp::ge : Comp::le_ge;
     for (size_t i=0; i<p.size(); ++i)
       out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);
     verbose_update("Comparison to normals\n",normals.to_string()," via ",cmp," yields\n",out);

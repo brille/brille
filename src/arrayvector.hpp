@@ -28,6 +28,9 @@
 #include "utilities.hpp"
 // #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides debug_update()
 
+//! Enum for simplified ArrayVector comparsions
+enum class Comp {lt,gt,le,ge,eq,nle,nge,neq,le_ge,plus,minus,times,rdiv,ldiv};
+
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 
   This class holds N arrays, each with M elements in a N*M contiguous block
@@ -360,11 +363,11 @@ public:
   */
   bool all_approx(const T val, const size_t n=0) const;
   bool none_approx(const T val, const size_t n=0) const;
-  bool all_approx(const std::string& expr, const T val, const size_t n=0) const;
-  bool any_approx(const std::string& expr, const T val, const size_t n=0) const;
-  ArrayVector<bool> is_approx(const std::string& expr, const T val, const size_t n=0) const;
-  ArrayVector<bool> is_approx(const std::string& expr, const std::vector<T>& val) const;
-  bool vector_approx(const size_t i, const size_t j, const std::string& op="", const T val=0.) const;
+  bool all_approx(const Comp expr, const T val, const size_t n=0) const;
+  bool any_approx(const Comp expr, const T val, const size_t n=0) const;
+  ArrayVector<bool> is_approx(const Comp expr, const T val, const size_t n=0) const;
+  ArrayVector<bool> is_approx(const Comp expr, const std::vector<T>& val) const;
+  bool vector_approx(size_t i, size_t j, Comp op=Comp::eq, T val=0.) const;
   template<class R, size_t Nel> bool rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>&, const int order=1) const;
   //! Round all elements using std::round
   ArrayVector<int> round() const;
