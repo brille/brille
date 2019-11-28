@@ -319,7 +319,7 @@ bool InterpolationData<T>::rotate_in_place(
   element_t offset, nvec = no[1]+no[2], sp = this->branch_span();
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-#pragma omp parallel for default(none) shared(x,r,invR) private(offset, tmp_v, tmp_m) firstprivate(nvec, no, sp, xsize) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x,r,invR) private(offset, tmp_v, tmp_m) firstprivate(nvec, no, sp, xsize) schedule(static)
   for (long long si=0; si<xsize; ++si){
     size_t i = signed_to_unsigned<size_t, long long>(si);
     if (r[i][0] + r[i][4] + r[i][8] != 3)

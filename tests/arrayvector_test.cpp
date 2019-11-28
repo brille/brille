@@ -89,7 +89,7 @@ TEST_CASE("ArrayVector ArrayVector math operations","[arrayvector]"){
 
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> distribution(1.0,100.0);
-    double rval = distribution(generator);
+    // double rval = distribution(generator);
 
     ArrayVector<double> y(3,3);
     for (size_t i=0; i<y.size(); ++i)

@@ -118,7 +118,7 @@ public:
     double node_volume = abs(node_verts.extract(0)-node_verts.extract(7)).prod(1).getvalue(0,0);
     ArrayVector<double> w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
     // If any normalised weights are greater than 1+eps() the point isn't in this node
-    if (w.any_approx(Comp:gt,1.)) return false;
+    if (w.any_approx(Comp::gt,1.)) return false;
     ArrayVector<bool> needed = w.is_approx(Comp::gt, 0.);
     indices.clear();
     weights.clear();
@@ -355,14 +355,14 @@ public:
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     verbose_update("Parallel interpolation at ",x.size()," points with ",threads," threads");
     // shared between threads
-    ArrayVector<T> out(data_.numel(), x.size());
+    ArrayVector<T> out(data_.numel(), x.size(), T(0)); // initialise to zero so that we can use a reduction
     // private to each thread
     std::vector<index_t> indices;
     std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = unsigned_to_signed<long long, size_t>(x.size());
     size_t n_unfound{0};
-  #pragma omp parallel for default(none) shared( x, out) private(indices, weights) firstprivate(xsize) reduction(+:n_unfound) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(x,out,xsize) private(indices, weights) reduction(+:n_unfound) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long long>(si);
       if (this->indices_weights(x.extract(i), indices, weights)){

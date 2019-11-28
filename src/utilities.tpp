@@ -43,12 +43,10 @@ template<typename T, int N> bool equal_matrix(const T *A, const T *B, const T to
 template<typename T, int N> bool equal_vector(const T *A, const T *B, const T tol){ return equal_array<T,N,1>(A,B,tol); }
 
 
-template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int tol){
-  bool isfpT = std::is_floating_point<T>::value;
-  bool isfpR = std::is_floating_point<R>::value;
+template<typename T, typename R>
+std::tuple<bool,bool,T,R> determine_tols(const int tol){
   T Ttol = static_cast<T>(tol*TOL_MULT)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
   R Rtol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
-  bool useTtol{false}, convertible{true};
   /* isfpT | isfpR | which? | why?
      ------|-------|--------|-----
        0       0     either    both Ttol and Rtol are 0
@@ -56,43 +54,49 @@ template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const 
        0       1      Rtol     Ttol is 0, so use Rtol
        1       0      Ttol     Rtol is 0, so use Ttol
   */
-  if ( isfpT || isfpR ) if (isfpT && isfpR){
-    if (std::is_convertible<R,T>::value) useTtol=true;
-    else if (!std::is_convertible<T,R>::value) convertible=false;
-  } else if ( isfpT ) useTtol=true;
+  bool useTtol{false}, convertible{true};
+  if (std::is_floating_point<T>::value){
+    useTtol = true;
+    if(std::is_floating_point<R>::value && !std::is_convertible<T,R>::value)
+      convertible = false;
+  }
   return std::make_tuple(convertible, useTtol, Ttol, Rtol);
 }
 /* If both inputs provided to approx_scalar are unsigned then the calls to
    std::abs() {a, b, a-b, a+b} are all undefined
 */
-template<typename T, typename R> static enable_if_t<
-  ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
-  ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
-approx_scalar(const T a, const R b, const bool, const T, const R){
+/* \NOTE For future Greg:
+The following _approx* templates *CAN NOT BE PREDECLARED* in the hpp file.
+Doing so may not upset the compiler -- after all, it finds a suitable
+definition of _approx* for every call -- but will anger the linker since the
+actual definitions get overlooked entirely and the symbols never get built.
+
+Leave these templates alone if you can. If you can't try not to be clever.
+*/
+template<typename T, typename R>
+typename std::enable_if_t<std::is_integral<T>::value && std::is_integral<R>::value, bool>
+_approx_scalar(const T a, const R b, const bool, const T, const R){
   return a==b;
 }
-template<typename T, typename R> static enable_if_t<
-  ( std::is_integral<T>::value &&  std::is_unsigned<T>::value) &&
-  (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
-approx_scalar(const T a, const R b, const bool, const T, const R Rtol){
+template<typename T, typename R>
+typename std::enable_if_t<std::is_integral<T>::value && (!std::is_integral<R>::value&&std::is_floating_point<R>::value), bool>
+_approx_scalar(const T a, const R b, const bool, const T, const R Rtol){
   if ( a == T(0) && std::abs(b) <= Rtol )
     return true;
   else
     return std::abs(a-b) <= Rtol*std::abs(a+b);
 }
-template<typename T, typename R> static enable_if_t<
-  (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
-  ( std::is_integral<R>::value &&  std::is_unsigned<R>::value), bool>
-approx_scalar(const T a, const R b, const bool, const T Ttol, const R){
+template<typename T, typename R>
+typename std::enable_if_t<(!std::is_integral<T>::value&&std::is_floating_point<T>::value) && std::is_integral<R>::value, bool>
+_approx_scalar(const T a, const R b, const bool, const T Ttol, const R){
   if ( std::abs(a) <= Ttol && b == R(0) )
     return true;
   else
     return std::abs(a-b) <= Ttol*std::abs(a+b);
 }
-template<typename T, typename R> static enable_if_t<
-  (!std::is_integral<T>::value || !std::is_unsigned<T>::value) &&
-  (!std::is_integral<R>::value || !std::is_unsigned<R>::value), bool>
-approx_scalar(const T a, const R b, const bool useTtol, const T Ttol, const R Rtol){
+template<typename T, typename R>
+typename std::enable_if_t<(!std::is_integral<T>::value&&std::is_floating_point<T>::value) && (!std::is_integral<R>::value&&std::is_floating_point<R>::value), bool>
+_approx_scalar(const T a, const R b, const bool useTtol, const T Ttol, const R Rtol){
   // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
   if ( std::abs(a) <= Ttol && std::abs(b) <= Rtol )
     return std::abs(a-b) <= (useTtol ? Ttol :Rtol);
@@ -104,17 +108,10 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b, const 
   R Rtol;
   bool convertible, useTtol;
   std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
-  return convertible && approx_scalar(a,b,useTtol,Ttol,Rtol);
+  return convertible && _approx_scalar(a,b,useTtol,Ttol,Rtol);
 }
 
-template<typename T, typename R> bool approx_array(const int N, const int M, const T *a, const R *b, const int tol){
-  T Ttol;
-  R Rtol;
-  bool convertible, useTtol;
-  std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
-  return convertible && approx_array(N*M,a,b,useTtol,Ttol,Rtol);
-}
-template<typename T, typename R> bool approx_array(const int NM, const T* a, const R* b, const bool useTtol, const T Ttol, const R Rtol){
+template<typename T, typename R> bool _approx_array(const int NM, const T* a, const R* b, const bool useTtol, const T Ttol, const R Rtol){
   bool answer=true;
   // we need <= in case T and R are integer, otherwise this is *always* false since 0 !< 0
   if (useTtol){
@@ -135,6 +132,13 @@ template<typename T, typename R> bool approx_array(const int NM, const T* a, con
     }
   }
   return answer;
+}
+template<typename T, typename R> bool approx_array(const int N, const int M, const T *a, const R *b, const int tol){
+  T Ttol;
+  R Rtol;
+  bool convertible, useTtol;
+  std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
+  return convertible && _approx_array(N*M,a,b,useTtol,Ttol,Rtol);
 }
 template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
 template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}

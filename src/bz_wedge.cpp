@@ -93,7 +93,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
     }
     if (!handled[j]){
       if (!pbv /*basis vectors not preferred*/){
-        flag = norm(cross(x.get(i), z.get(j))).all_approx(Comp:gt,1e-10);
+        flag = norm(cross(x.get(i), z.get(j))).all_approx(Comp::gt,1e-10);
         // if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ
         // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
         x.set(j, (pok||flag) ? x.get(i) : z.cross(i,j));
@@ -197,7 +197,7 @@ ArrayVector<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& poi
   // If there are no planes with 0 off-plane points, divide the space
   if (std::find(nop.begin(),nop.end(),0u)==nop.end())
     for (size_t i=0; i<points.size(); ++i)
-      keep.insert(dot(normals, points.extract(i)).all_approx(Comp:ge,0.), i);
+      keep.insert(dot(normals, points.extract(i)).all_approx(Comp::ge,0.), i);
   return keep;
 }
 
@@ -396,7 +396,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             // find both cross products, remembering that we want normals
             // pointing *into* the wedge.
             nrm.resize(2);
-            if ( dot(pt1, cross(vec.star(), pt0)).all_approx(Comp:lt,0.) ){
+            if ( dot(pt1, cross(vec.star(), pt0)).all_approx(Comp::lt,0.) ){
               // the rotation is left handed, so swap the special points
               nrm.set(0, cross(vec.star(), pt1));
               nrm.set(1, cross(pt0, vec.star()));

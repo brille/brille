@@ -90,7 +90,7 @@ template<class T> int face_has_area(const ArrayVector<T>& points){
   if (points.size()<3) return -2; // can't be a face
   ArrayVector<T> p0 = points.extract(0);
   // ArrayVector<double> n = cross(points.extract(1)-p0, points.extract(2)-p0);
-  // if (!dot(n, points-p0).all_approx(Comp:eq,0.)) return -1; // non-coplanar
+  // if (!dot(n, points-p0).all_approx(Comp::eq,0.)) return -1; // non-coplanar
   T s=0;
   ArrayVector<T> a,b;
   for (size_t i=1; i<points.size()-1; ++i){
@@ -501,7 +501,7 @@ protected:
           // increment the counter only if the new normal is not ⃗0 and partitions space
           if (!approx_scalar(nijk.norm(0),0.) && dot(nijk, vertices - vi).all_approx(Comp::le_ge, 0.)){
             // verify that the normal points the right way:
-            if (dot(nijk, vertices - vi).all_approx(Comp:ge,0.))
+            if (dot(nijk, vertices - vi).all_approx(Comp::ge,0.))
               nijk = -1*nijk;
             // normalize the cross product to ensure we can determine uniqueness later
             n.set(count, nijk/nijk.norm(0));
@@ -704,7 +704,7 @@ protected:
         // and find their dot product, storing the result in the same buffer
         abc.cross(0, 1, abc.data(2));
         // check whether the cross product points the same way as the face normal
-        if (dot(normals.extract(n), abc.extract(2)).all_approx(Comp:gt, 0.)) {
+        if (dot(normals.extract(n), abc.extract(2)).all_approx(Comp::gt, 0.)) {
           // left-turn, keep this point
           ++i;
         } else {
@@ -742,7 +742,7 @@ public:
     if (x.numel() != 3u) throw std::runtime_error("x must contain 3-vectors");
     ArrayVector<bool> out(1u, x.size(), false);
     for (size_t i=0; i<x.size(); ++i)
-      out.insert(dot(this->normals, x.extract(i)-this->points).all_approx(Comp:le,0.), i);
+      out.insert(dot(this->normals, x.extract(i)-this->points).all_approx(Comp::le,0.), i);
     return out;
   }
   /* Since we have the machinery to bisect a Polyhedron by a series of planes,
@@ -769,7 +769,7 @@ public:
     ArrayVector<double> at(3u,1u,0.);
     for (size_t i=0; i<n.size(); ++i){
       ArrayVector<double> crit = dot(n.extract(i), vertices-p.extract(i));
-      if (crit.any_approx(Comp:gt,0.)){
+      if (crit.any_approx(Comp::gt,0.)){
         std::vector<size_t> del = find(crit.is_approx(Comp::gt,0.));
         std::vector<size_t> cut;
         for (auto x: del) for (auto f: faces_per_vertex[x])
@@ -803,14 +803,14 @@ public:
     /* if the dot product is zero it means that a point is on the surface of the
        other polyhedron, which is fine. So we're using strictly less than zero. */
     for (size_t i=0; i<vertices.size(); ++i)
-      if (dot(other.normals, vertices.extract(i)-other.points).any_approx(Comp:lt, 0.)){
+      if (dot(other.normals, vertices.extract(i)-other.points).any_approx(Comp::lt, 0.)){
         // for those of our vertices *in* the other polyhedron
         // ensure that they are not actually a shared vertex
         if (norm(other.vertices - vertices.extract(i)).none_approx(0.)) return true;
       }
     // check if any of the other vertices are inside of our polyhedron
     for (size_t i=0; i<other.vertices.size(); ++i)
-      if (dot(normals, other.vertices.extract(i)-points).any_approx(Comp:lt, 0.))
+      if (dot(normals, other.vertices.extract(i)-points).any_approx(Comp::lt, 0.))
         if (norm(this->vertices - other.vertices.extract(i)).none_approx(0.)) return true;
     // check for intersecting planes :(
     return this->intersects(other);
