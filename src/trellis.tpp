@@ -59,7 +59,7 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
   */
   index_t nNodes = this->node_count();
   // the order of the cube node intersections is paramount:
-  std::vector<std::array<index_t,3>> node_intersections{{0,0,0},{1,0,0},{1,1,0},{0,1,0},{1,0,1},{0,0,1},{0,1,1},{1,1,1}};
+  std::vector<std::array<index_t,3>> node_intersections{{{0,0,0}},{{1,0,0}},{{1,1,0}},{{0,1,0}},{{1,0,1}},{{0,0,1}},{{0,1,1}},{{1,1,1}}};
   std::vector<bool> node_is_cube(nNodes, true), node_is_outside(nNodes, false);
   for (index_t i=0; i<nNodes; ++i){
     std::array<index_t,3> node_ijk = this->idx2sub(i);

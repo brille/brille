@@ -251,7 +251,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   // The stationary vector of each rotation is a real space vector!
   LDVec<int> vec(this->outerlattice.star(), 1u);// must be int since ps.axis returns array<int,3>
   LQVec<double> nrm(this->outerlattice, 1u);
-  std::vector<std::array<double,3>> eiv{{1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,-1,0},{1,0,1},{0,1,1},{1,0,-1},{0,1,-1},{1,1,1}};
+  std::vector<std::array<double,3>> eiv{{{1,0,0}},{{0,1,0}},{{0,0,1}},{{1,1,0}},{{1,-1,0}},{{1,0,1}},{{0,1,1}},{{1,0,-1}},{{0,1,-1}},{{1,1,1}}};
   LQVec<double> eis(this->outerlattice, eiv.size());
   for (size_t i=0; i<eis.size(); ++i) eis.set(i, eiv[i]);
   LDVec<double> reis(this->outerlattice.star(), eiv.size());
@@ -514,7 +514,7 @@ void BrillouinZone::wedge_triclinic(void){
      x̂⋅(111) ≥ 0.
   */
   LQVec<double> nrm(this->outerlattice, 1u);
-  nrm.set(0, std::array<double,3>({1,1,1}));
+  nrm.set(0, std::array<double,3>({{1,1,1}}));
   this->set_ir_wedge_normals(nrm);
   this->irreducible_vertex_search();
 }

@@ -31,7 +31,7 @@ template<class T> class InterpolationData{
   ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
   element_t branches_;    //!< The number of branches contained per data array
 public:
-  InterpolationData(): data_({0,0}), shape_({0,0}), elements_({0,0,0,0}), branches_(0){};
+  InterpolationData(): data_({0,0}), shape_({0,0}), elements_({{0,0,0,0}}), branches_(0){};
   size_t size(void) const {return data_.size();}
   size_t numel(void) const {return data_.numel();}
   const ArrayVector<T>& data(void) const {return data_;}
@@ -49,7 +49,7 @@ public:
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
   //
   void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
-  void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({0,0,0,0})){
+  void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({{0,0,0,0}})){
     ShapeType ns{nd.size(), nd.numel()};
     return this->replace_data(nd, ns, ne);
   }

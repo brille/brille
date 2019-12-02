@@ -47,7 +47,7 @@ public:
       ):
         data(0,0),
         shape(1,0),
-        elements({0,0,0,0}),
+        elements({{0,0,0,0}}),
         branches(0) {
     // this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points, trellis_fraction);
     this->mesh = triangulate(verts, facets, max_volume, num_levels, max_points);
@@ -106,13 +106,13 @@ public:
   */
   int replace_data(const ArrayVector<T>& newdata,
                    const ArrayVector<size_t>& newshape,
-                   const std::array<unsigned,4>& new_elements={0,0,0,0});
+                   const std::array<unsigned,4>& new_elements={{0,0,0,0}});
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
   @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
   @note This version of the method assumes each array in `newdata` is a vector
   */
-  int replace_data(const ArrayVector<T>& newdata, const std::array<unsigned,4>& new_elements={0,0,0,0});
+  int replace_data(const ArrayVector<T>& newdata, const std::array<unsigned,4>& new_elements={{0,0,0,0}});
 
   //! A convenience function to find Q in Å⁻¹ before calling the other debye_waller_sum
   template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
@@ -163,7 +163,7 @@ public:
       str += " of ";
       std::array<std::string,4> types{"scalar","eigenvector","vector","matrix"};
       for (size_t i=0; i<4u; ++i) if (elements[i]) {
-        str += std::to_string( i==4u ? elements[i]*elements[i] : elements[i] );
+        str += std::to_string( i==3u ? elements[i]*elements[i] : elements[i] );
         str += " " + types[i];
         if (--neltypes>1) str += ", ";
         if (neltypes==1) str += " and ";

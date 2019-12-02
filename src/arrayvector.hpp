@@ -354,8 +354,8 @@ public:
   size_t last_true(const size_t n=0) const;
   //! Returns true if any elements evaluate to true.
   bool any_true(const size_t n=0) const;
-  //! Returns true if all elements are greater or equal to zero
-  bool all_positive(const size_t n=0) const;
+  // //! Returns true if all elements are greater or equal to zero
+  // bool all_positive(const size_t n=0) const;
   //! Returns true if all elements evaluate to false
   bool all_zero(const size_t n=0) const;
   /*! Returns true if all elements are approximately equal to the passed value

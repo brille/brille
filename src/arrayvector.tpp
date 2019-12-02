@@ -377,13 +377,13 @@ template<typename T> bool ArrayVector<T>::any_true(const size_t n) const {
       if (this->getvalue(i,j)) return true;
   return false;
 }
-template<typename T> bool ArrayVector<T>::all_positive(const size_t n) const {
-  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
-  for (size_t i=0; i<upto; i++)
-    for (size_t j=0; j<this->numel(); j++)
-      if (this->getvalue(i,j)<0) return false;
-  return true;
-}
+// template<typename T> bool ArrayVector<T>::all_positive(const size_t n) const {
+//   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+//   for (size_t i=0; i<upto; i++)
+//     for (size_t j=0; j<this->numel(); j++)
+//       if (this->getvalue(i,j)<0) return false;
+//   return true;
+// }
 template<typename T> bool ArrayVector<T>::all_zero(const size_t n) const {
   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
   for (size_t i=0; i<upto; i++)

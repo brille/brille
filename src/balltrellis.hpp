@@ -88,7 +88,7 @@ public:
     return s;
   }
   std::array<size_t,3> span() const {
-    std::array<size_t,3> s{1,0,0}, sz=this->size();
+    std::array<size_t,3> s{{1,0,0}}, sz=this->size();
     for (size_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
   }
@@ -136,7 +136,7 @@ public:
 
   // Find the appropriate node for an arbitrary point:
   std::array<size_t,3> node_subscript(const std::array<double,3>& p) const {
-    std::array<size_t,3> sub{0,0,0}, sz=this->size();
+    std::array<size_t,3> sub{{0,0,0}}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*xyz_[dim*3u + i];
@@ -145,7 +145,7 @@ public:
     return sub;
   }
   std::array<size_t,3> node_subscript(const ArrayVector<double>& p) const {
-    std::array<size_t,3> sub{0,0,0}, sz=this->size();
+    std::array<size_t,3> sub{{0,0,0}}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p.getvalue(0,i)*xyz_[dim*3u + i];
@@ -157,7 +157,7 @@ public:
   std::array<size_t,3> node_subscript(const TrellisLeaf& l) const {
     std::array<double,3> p = l.centre();
     double r = l.radius();
-    std::array<size_t,3> sub{0,0,0}, sz=this->size();
+    std::array<size_t,3> sub{{0,0,0}}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;
       for (size_t i=0; i<3u; ++i) p_dot_e += p[i]*xyz_[3u*dim + i];
@@ -263,7 +263,7 @@ private:
     return idx;
   }
   std::array<size_t,3> idx2sub(const size_t idx, const std::array<size_t,3>& sp) const {
-    std::array<size_t,3> sub{0,0,0};
+    std::array<size_t,3> sub{{0,0,0}};
     size_t rem{idx};
     for (size_t dim=3u; dim--;){
       sub[dim] = rem/sp[dim];

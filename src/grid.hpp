@@ -51,14 +51,11 @@ protected:
   size_t branches;             //!< The number of branches contained per data array
 public:
   // constructors
-  MapGrid3(const size_t *n=default_n): map(nullptr), data(0,0), shape(1,0),
-    elements({0,0,0,0}), branches(0)
+  MapGrid3(const size_t *n=default_n): map(nullptr), data(0,0), shape(1,0), branches(0)
     { this->set_size(n); }
-  MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr),
-    elements({0,0,0,0}), branches(0)
+  MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr), branches(0)
     { this->set_size(n); this->replace_data(av); }
-  MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr),
-    elements({0,0,0,0}), branches(0)
+  MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr), branches(0)
     { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); }
   // copy constructor
   MapGrid3(const MapGrid3<T>& other): map(nullptr) {
@@ -140,14 +137,14 @@ public:
   */
   int replace_data(const ArrayVector<T>& newdata,
                    const ArrayVector<size_t>& newshape,
-                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({0,0,0,0}));
+                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({{0,0,0,0}}));
   /*! Replace the data stored in the object
   @param newdata the new ArrayVector of data to be stored
   @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
   @note This version of the method assumes each array in `newdata` is a vector
   */
   int replace_data(const ArrayVector<T>& newdata,
-                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({0,0,0,0}));
+                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({{0,0,0,0}}));
   //! Calculate the linear index of a point given its three subscripted indices
   size_t sub2lin(const size_t i, const size_t j, const size_t k) const;
   /*! Calculate the linear index of a point given an array of its three subscripted indices
