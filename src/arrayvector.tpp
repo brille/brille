@@ -17,7 +17,7 @@
 
 // Templated implementation code for arrayvector.hpp
 
-template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) const {
+template<typename T> T* ArrayVector<T>::checked_data(const size_t i, const size_t j) const {
   T *ptr = nullptr;
   if (i>=this->size() || j>=this->numel()){
     std::string msg = __PRETTY_FUNCTION__;
@@ -27,11 +27,14 @@ template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) con
     msg += std::to_string(this->numel()) + " elements";
     throw std::out_of_range(msg);
   }
-  ptr = this->_data + (i*this->numel() + j);
+  ptr = this->data(i, j);
   if (!ptr){
     throw std::runtime_error("Attempting to access uninitialized data");
   }
   return ptr;
+}
+template<typename T> T* ArrayVector<T>::data(const size_t i, const size_t j) const {
+  return this->_data + (i*this->numel() + j);
 }
 
 template<typename T> T ArrayVector<T>::getvalue(const size_t i, const size_t j) const {
@@ -298,17 +301,16 @@ template<typename T> size_t ArrayVector<T>::refresh(size_t newnumel, size_t news
 }
 
 
-
-
-
-
 template<typename T> template<typename R> bool ArrayVector<T>::isapprox(const ArrayVector<R> &that) const {
   AVSizeInfo si = this->consistency_check(that);
   if (si.scalara^si.scalarb) return false; // only one is an "ArrayScalar"
-  for (size_t i=0; i<si.n; i++)
-    for (size_t j=0; j<si.m; j++)
-      if ( !approx_scalar(this->getvalue(si.oneveca?0:i,j), that.getvalue(si.onevecb?0:i,si.singular?0:j)) )
-        return false;
+  bool c, u;
+  T Tt;
+  R Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  for (size_t i=0; i<si.n; i++) for (size_t j=0; j<si.m; j++)
+    if ( !_approx_scalar(this->getvalue(si.oneveca?0:i,j), that.getvalue(si.onevecb?0:i,si.singular?0:j), u,Tt,Rt) )
+      return false;
   return true;
 }
 template<typename T> bool ArrayVector<T>::isapprox(const size_t i, const size_t j) const {
@@ -375,13 +377,13 @@ template<typename T> bool ArrayVector<T>::any_true(const size_t n) const {
       if (this->getvalue(i,j)) return true;
   return false;
 }
-template<typename T> bool ArrayVector<T>::all_positive(const size_t n) const {
-  size_t upto = (n>0 && n <= this->size()) ? n : this->size();
-  for (size_t i=0; i<upto; i++)
-    for (size_t j=0; j<this->numel(); j++)
-      if (this->getvalue(i,j)<0) return false;
-  return true;
-}
+// template<typename T> bool ArrayVector<T>::all_positive(const size_t n) const {
+//   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
+//   for (size_t i=0; i<upto; i++)
+//     for (size_t j=0; j<this->numel(); j++)
+//       if (this->getvalue(i,j)<0) return false;
+//   return true;
+// }
 template<typename T> bool ArrayVector<T>::all_zero(const size_t n) const {
   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
   for (size_t i=0; i<upto; i++)
@@ -390,282 +392,262 @@ template<typename T> bool ArrayVector<T>::all_zero(const size_t n) const {
   return true;
 }
 template<typename T> bool ArrayVector<T>::all_approx(const T val, const size_t n) const {
-  T p,m, tol=2*std::numeric_limits<T>::epsilon();
   size_t upto = (n>0 && n <= this->size()) ? n : this->size();
-  for (size_t i=0; i<upto; i++)
-    for (size_t j=0; j<this->numel(); j++){
-      m = std::abs(this->getvalue(i,j) - val);
-      p = std::abs(this->getvalue(i,j) + val);
-      if (m>p*tol && m>tol) return false;
-    }
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  for (size_t i=0; i<upto; i++) for (size_t j=0; j<this->numel(); j++)
+    if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt)) return false;
   return true;
 }
 template<typename T> bool ArrayVector<T>::none_approx(const T val, const size_t n) const{
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
   for (size_t i=0; i<upto; ++i)
   for (size_t j=0; j<this->numel(); ++j)
-  if (approx_scalar(this->getvalue(i,j), val)) return false;
+  if (_approx_scalar(this->getvalue(i,j), val,u,Tt,Rt)) return false;
   return true;
 }
-template<typename T> bool ArrayVector<T>::all_approx(const std::string& expr, const T val, const size_t n) const{
+template<typename T> bool ArrayVector<T>::all_approx(const Comp expr, const T val, const size_t n) const{
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
-  if (!expr.compare("lt") || !expr.compare("<")){
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  switch (expr){
+    case Comp::lt:{
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) > val) return false;
-    return true;
-  }
-  if (!expr.compare("gt") || !expr.compare(">")){
+    if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) || this->getvalue(i,j) > val) return false;
+    return true;}
+    case Comp::gt:{
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return false;
-    return true;
-  }
-  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) || this->getvalue(i,j) < val) return false;
+    return true;}
+    case Comp::le:{
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val) return false;
-    return true;
-  }
-  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) && this->getvalue(i,j) > val) return false;
+    return true;}
+    case Comp::ge:{
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val) return false;
-    return true;
-  }
-  if (!expr.compare("!le") || !expr.compare("!<=") || !expr.compare("!≤")){
+    if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) && this->getvalue(i,j) < val) return false;
+    return true;}
+    case Comp::nle:{
     size_t n_approx=0, n_more=0;
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val)) ++n_approx;
+    if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt)) ++n_approx;
     else if (this->getvalue(i,j) > val)  ++n_more;
-    return (n_more > 0 || n_approx==upto);
-  }
-  if (!expr.compare("!ge") || !expr.compare("!>=") || !expr.compare("!≥")){
+    return (n_more > 0 || n_approx==upto);}
+    case Comp::nge:{
     size_t n_approx=0, n_less=0;
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val)) ++n_approx;
+    if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt)) ++n_approx;
     else if (this->getvalue(i,j) < val)  ++n_less;
-    return (n_less > 0 || n_approx==upto);
-  }
-  if (!expr.compare("eq") || !expr.compare("==")){
+    return (n_less > 0 || n_approx==upto);}
+    case Comp::eq:{
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (!approx_scalar(this->getvalue(i,j), val)) return false;
+    if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt)) return false;
     return true;
-  }
-  if (!expr.compare("<=|>=") || !expr.compare("≤|≥") || !expr.compare(">=|<=") || !expr.compare("≥|≤")){
+    case Comp::le_ge:
     bool allle=true, allge=true, ijneq;
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j){
-      ijneq = !approx_scalar(this->getvalue(i,j), val);
+      ijneq = !_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt);
       if (allle && ijneq && this->getvalue(i,j) > val) allle = false;
       if (allge && ijneq && this->getvalue(i,j) < val) allge = false;
       if (!(allle||allge)) return false;
     }
-    return true;
+    return true;}
+    default:
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += ": Unknown comparator";
+    throw std::runtime_error(msg);
   }
-  std::string msg = __PRETTY_FUNCTION__;
-  msg += ": Unknown comparator " + expr;
-  throw std::runtime_error(msg);
 }
-template<typename T> bool ArrayVector<T>::any_approx(const std::string& expr, const T val, const size_t n) const{
+template<typename T> bool ArrayVector<T>::any_approx(const Comp expr, const T val, const size_t n) const{
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
-  if (!expr.compare("lt") || !expr.compare("<")){
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  switch(expr){
+    case Comp::lt:
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val) return true;
-    return false;
-  }
-  if (!expr.compare("gt") || !expr.compare(">")){
+    if (!_approx_scalar(this->getvalue(i,j), val, u, Tt, Rt) && this->getvalue(i,j) < val) return true;
+    break;
+    case Comp::gt:
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val) return true;
-    return false;
-  }
-  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
+    if (!_approx_scalar(this->getvalue(i,j), val, u, Tt, Rt) && this->getvalue(i,j) > val) return true;
+    break;
+    case Comp::le:
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return true;
-    return false;
-  }
-  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
+    if (_approx_scalar(this->getvalue(i,j), val, u, Tt, Rt) || this->getvalue(i,j) < val) return true;
+    break;
+    case Comp::ge:
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val) return true;
-    return false;
-  }
-  if (!expr.compare("eq") || !expr.compare("==")){
+    if (_approx_scalar(this->getvalue(i,j), val, u, Tt, Rt) || this->getvalue(i,j) < val) return true;
+    break;
+    case Comp::eq:
     for (size_t i=0; i<upto; ++i) for (size_t j=0; j<this->numel(); ++j)
-    if (approx_scalar(this->getvalue(i,j), val)) return true;
-    return false;
+    if (_approx_scalar(this->getvalue(i,j), val, u, Tt, Rt)) return true;
+    break;
+    default:
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += ": Unknown comparator";
+    throw std::runtime_error(msg);
   }
-  std::string msg = __PRETTY_FUNCTION__;
-  msg += ": Unknown comparator " + expr;
-  throw std::runtime_error(msg);
+  return false;
 }
-template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const T val, const size_t n) const{
+template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const Comp expr, const T val, const size_t n) const{
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
   ArrayVector<bool> out(1u, this->size());
   for (size_t i=0; i<this->size(); ++i) out.insert(false, i);
-  bool onearray;
-  if (!expr.compare("lt") || !expr.compare("<")){
-    for (size_t i=0; i<upto; ++i){
+  bool onearray, c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  switch (expr){
+    case Comp::lt: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) > val)
-      onearray = false;
+      if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) || this->getvalue(i,j) > val)
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("gt") || !expr.compare(">")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::gt: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), val) || this->getvalue(i,j) < val)
-      onearray = false;
+      if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) || this->getvalue(i,j) < val)
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::le: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) > val)
-      onearray = false;
+      if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) && this->getvalue(i,j) > val)
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::ge: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), val) && this->getvalue(i,j) < val)
-      onearray = false;
+      if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt) && this->getvalue(i,j) < val)
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("eq") || !expr.compare("==")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::eq: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), val))
-      onearray = false;
+      if (!_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt))
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("neq") || !expr.compare("!=")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::neq: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), val))
-      onearray = false;
+      if (_approx_scalar(this->getvalue(i,j), val, u,Tt,Rt))
+        onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
+    } break;
+    default:
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += ": Unknown comparator";
+    throw std::runtime_error(msg);
   }
-  std::string msg = __PRETTY_FUNCTION__;
-  msg += ": Unknown comparator " + expr;
-  throw std::runtime_error(msg);
+  return out;
 }
-template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const std::string& expr, const std::vector<T>& vals) const{
+template<typename T> ArrayVector<bool> ArrayVector<T>::is_approx(const Comp expr, const std::vector<T>& vals) const{
   size_t n = vals.size();
   size_t upto = (n>0 && n<=this->size()) ? n : this->size();
   ArrayVector<bool> out(1u, this->size());
   for (size_t i=0; i<this->size(); ++i) out.insert(false, i);
-  bool onearray;
-  if (!expr.compare("lt") || !expr.compare("<")){
-    for (size_t i=0; i<upto; ++i){
+  bool onearray, c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  switch(expr){
+    case Comp::lt: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), vals[i]) || this->getvalue(i,j) > vals[i])
+      if (_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt) || this->getvalue(i,j) > vals[i])
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("gt") || !expr.compare(">")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::gt: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), vals[i]) || this->getvalue(i,j) < vals[i])
+      if (_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt) || this->getvalue(i,j) < vals[i])
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("le") || !expr.compare("<=") || !expr.compare("≤")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::le: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), vals[i]) && this->getvalue(i,j) > vals[i])
+      if (!_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt) && this->getvalue(i,j) > vals[i])
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("ge") || !expr.compare(">=") || !expr.compare("≥")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::ge: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), vals[i]) && this->getvalue(i,j) < vals[i])
+      if (!_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt) && this->getvalue(i,j) < vals[i])
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("eq") || !expr.compare("==")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::eq: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (!approx_scalar(this->getvalue(i,j), vals[i]))
+      if (!_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt))
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
-  }
-  if (!expr.compare("neq") || !expr.compare("!=")){
-    for (size_t i=0; i<upto; ++i){
+    } break;
+    case Comp::neq: for (size_t i=0; i<upto; ++i){
       onearray = true;
       for (size_t j=0; j<this->numel(); ++j)
-      if (approx_scalar(this->getvalue(i,j), vals[i]))
+      if (_approx_scalar(this->getvalue(i,j), vals[i], u,Tt,Rt))
       onearray = false;
       out.insert(onearray, i);
-    }
-    return out;
+    } break;
+    default:
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += ": Unknown comparator";
+    throw std::runtime_error(msg);
   }
-  std::string msg = __PRETTY_FUNCTION__;
-  msg += ": Unknown comparator " + expr;
-  throw std::runtime_error(msg);
+  return out;
 }
 
-template<typename T> bool ArrayVector<T>::vector_approx(const size_t i, const size_t j, const std::string& op, const T val) const{
+template<typename T> bool ArrayVector<T>::vector_approx(const size_t i, const size_t j, const Comp op, const T val) const{
   if (i>=this->size() || j>=this->size())
     throw std::out_of_range("ArrayVector range indices out of range");
-  bool ok = true;
-  if (!op.compare("+")){
+  bool ok = true, c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
+  switch (op){
+    case Comp::plus:
     for (size_t k=0; k<this->numel(); ++k)
-    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)+val)) ok = false;
+    if(!_approx_scalar(this->getvalue(i,k),this->getvalue(j,k)+val,u,Tt,Rt)) ok = false;
     return ok;
-  }
-  if (!op.compare("-")){
+    case Comp::minus:
     for (size_t k=0; k<this->numel(); ++k)
-    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)-val)) ok = false;
+    if(!_approx_scalar(this->getvalue(i,k),this->getvalue(j,k)-val,u,Tt,Rt)) ok = false;
     return ok;
-  }
-  if (!op.compare("*")){
+    case Comp::times:
     for (size_t k=0; k<this->numel(); ++k)
-    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)*val)) ok = false;
+    if(!_approx_scalar(this->getvalue(i,k),this->getvalue(j,k)*val,u,Tt,Rt)) ok = false;
     return ok;
-  }
-  if (!op.compare("/")){
+    case Comp::rdiv:
     for (size_t k=0; k<this->numel(); ++k)
-    if(!approx_scalar(this->getvalue(i,k),this->getvalue(j,k)/val)) ok = false;
+    if(!_approx_scalar(this->getvalue(i,k),this->getvalue(j,k)/val,u,Tt,Rt)) ok = false;
     return ok;
-  }
-  if (!op.compare("\\")){
+    case Comp::ldiv:
     for (size_t k=0; k<this->numel(); ++k)
-    if(!approx_scalar(this->getvalue(i,k),val/this->getvalue(j,k))) ok = false;
+    if(!_approx_scalar(this->getvalue(i,k),val/this->getvalue(j,k),u,Tt,Rt)) ok = false;
     return ok;
+    case Comp::eq:
+    for (size_t k=0; k<this->numel(); ++k)
+    if (!_approx_scalar(this->getvalue(i,k), this->getvalue(j,k),u,Tt,Rt)) ok = false;
+    return ok;
+    default:
+    std::string msg = __PRETTY_FUNCTION__;
+    msg += ": Unknown operator";
+    throw std::runtime_error(msg);
   }
-  if (op.compare("")) std::cout<<"unknown operation " << op << std::endl;
-  for (size_t k=0; k<this->numel(); ++k)
-  if (!approx_scalar(this->getvalue(i,k), this->getvalue(j,k))) ok = false;
-  return ok;
 }
 template<typename T> template<class R, size_t Nel>
 bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::array<R,Nel>& mat, const int order) const{
@@ -678,14 +660,16 @@ bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::ar
     throw std::out_of_range("ArrayVector range indices out of range");
   std::vector<T> tmpA(n), tmpB(n);
   for (size_t k=0; k<n; ++k) tmpA[k] = this->getvalue(j,k);
-  bool same = true;
+  bool same = true, c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
   if (order<0){
     int o=0;
     do{
       same = true;
       // check against the current tmp vector whether this order rotations has
       // moved j to i -- if it has, same stays true and we can return true
-      for (size_t k=0; k<n; ++k) if (!approx_scalar(this->getvalue(i,k), tmpA[k])) same = false;
+      for (size_t k=0; k<n; ++k) if (!_approx_scalar(this->getvalue(i,k), tmpA[k],u,Tt,Rt)) same = false;
       if (same) return true;
       // otherwise we need to perform the next rotation
       mul_mat_vec(tmpB.data(), n, mat.data(), tmpA.data());
@@ -699,7 +683,7 @@ bool ArrayVector<T>::rotate_approx(const size_t i, const size_t j, const std::ar
       mul_mat_vec(tmpB.data(), n, mat.data(), tmpA.data());
       tmpA = tmpB;
     }
-    for (size_t k=0; k<n; ++k) if (!approx_scalar(this->getvalue(i,k), tmpA[k])) same = false;
+    for (size_t k=0; k<n; ++k) if (!_approx_scalar(this->getvalue(i,k), tmpA[k],u,Tt,Rt)) same = false;
     return same;
   }
 }
@@ -773,12 +757,14 @@ template<typename T> ArrayVector<T> ArrayVector<T>::prod( const int dim ) const 
   return out;
 }
 template<typename T> ArrayVector<bool> ArrayVector<T>::is_unique(void) const{
-  ArrayVector<bool> isu(1u,this->size());
   // assume all are unique to start
-  for (size_t i=0; i<this->size(); ++i) isu.insert(true,i);
+  ArrayVector<bool> isu(1u,this->size(),true);
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
   // and only check from the second array onwards against those of lower index
   for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
-  if (isu.getvalue(j) && approx_vector(this->numel(), this->data(i), this->data(j))){
+  if (isu.getvalue(j) && _approx_array(this->numel(), this->data(i), this->data(j), u, Tt, Rt)){
     isu.insert(false,i);
     break;
   }
@@ -788,9 +774,12 @@ template<typename T> ArrayVector<size_t> ArrayVector<T>::unique_idx(void) const{
   ArrayVector<size_t> isu(1u,this->size());
   // assume all are unique to start
   for (size_t i=0; i<this->size(); ++i) isu.insert(i,i);
+  bool c, u;
+  T Tt, Rt;
+  std::tie(c,u,Tt,Rt) = determine_tols<T,T>();
   // and only check from the second array onwards against those of lower index
   for (size_t i=1; i<this->size(); ++i) for (size_t j=0; j<i; ++j)
-  if (j==isu.getvalue(j) && approx_vector(this->numel(), this->data(i), this->data(j))){
+  if (j==isu.getvalue(j) && _approx_array(this->numel(), this->data(i), this->data(j), u, Tt, Rt)){
     isu.insert(j,i);
     break;
   }
@@ -836,6 +825,24 @@ A<S> cross(const A<T>& a, const A<R>& b) {
   return out;
 }
 
+// template<class T, class R, template<class> class A,
+//          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+//          class S = typename std::common_type<T,R>::type
+//          >
+// A<S> dot(const A<T>& a, const A<R>& b){
+//   AVSizeInfo si = a.consistency_check(b);
+//   if (si.scalara^si.scalarb)
+//     throw std::runtime_error("ArrayVector dot requires equal numel()");
+//   A<S> out(1u,si.n);
+//   S d;
+//   for (size_t i=0; i<si.n; ++i){
+//     d = S(0);
+//     for (size_t j=0; j<si.m; ++j)
+//       d+= a.getvalue((si.oneveca ? 0 : i), j) * b.getvalue((si.onevecb ? 0 : i), j);
+//     out.insert(d, i, 0);
+//   }
+//   return out;
+// }
 template<class T, class R, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
@@ -844,14 +851,23 @@ A<S> dot(const A<T>& a, const A<R>& b){
   AVSizeInfo si = a.consistency_check(b);
   if (si.scalara^si.scalarb)
     throw std::runtime_error("ArrayVector dot requires equal numel()");
-  A<S> out(1u,si.n);
-  S d;
-  for (size_t i=0; i<si.n; ++i){
-    d = S(0);
-    for (size_t j=0; j<si.m; ++j)
-      d+= a.getvalue((si.oneveca ? 0 : i), j) * b.getvalue((si.onevecb ? 0 : i), j);
-    out.insert(d, i, 0);
+  A<S> out(1u, si.n, S(0));
+  S* d = out.data();
+  if (si.oneveca && si.onevecb){
+    for (size_t j=0; j<si.m; ++j) d[0] += a.getvalue(0, j) * b.getvalue(0, j);
+    return out;
   }
+  if (si.oneveca){
+    for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += a.getvalue(0, j) * b.getvalue(i, j);
+    return out;
+  }
+  if (si.onevecb){
+    for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += a.getvalue(i, j) * b.getvalue(0, j);
+    return out;
+  }
+  T* ad = a.data();
+  R* bd = b.data();
+  for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) d[i] += ad[i*si.m+j]*bd[i*si.m+j];
   return out;
 }
 
@@ -895,102 +911,6 @@ template<class T, template<class> class L,typename=typename std::enable_if<std::
 L<int> ceil(const L<T>& a){
   L<int> out(a);
   for (size_t i=0; i<a.size(); i++) for (size_t j=0; j<a.numel(); j++) out.insert( std::ceil(a.getvalue(i,j)), i,j);
-  return out;
-}
-
-
-
-// In Place arithmetic ArrayVector +-*/ ArrayVector
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator +=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) + av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator -=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) - av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator *=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) * av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator /=(const ArrayVector<T> &av){
-  AVSizeInfo si = this->inplace_consistency_check(av);
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) this->insert( this->getvalue(i,j) / av.getvalue(si.onevecb?0:i,si.singular?0:j), i,j );
-  return *this;
-}
-// In-place binary operators with scalars
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator +=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) + av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator -=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) - av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator *=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) * av, i,j );
-  return *this;
-}
-template<typename T> ArrayVector<T>& ArrayVector<T>:: operator /=(const T& av){
-  for (size_t i=0; i<this->size(); i++) for(size_t j=0; j<this->numel(); j++) this->insert( this->getvalue(i,j) / av, i,j );
-  return *this;
-}
-
-
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator+(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  #ifdef SUPER_VERBOSE
-  if (si.oneveca || si.onevecb || si.scalara || si.scalarb){
-    printf("=======================\n            %3s %3s %3s\n","A","B","A+B");
-    printf("OneVector   %3d %3d\n",si.oneveca?1:0,si.onevecb?1:0);
-    printf("ArrayScalar %3d %3d\n",si.scalara?1:0,si.scalarb?1:0);
-    printf("-----------------------\n");
-    printf("chosen      %3d %3d\n",si.aorb?1:0,si.aorb?0:1);
-    printf("size()      %3u %3u %3u\n",a.size(), b.size(), out.size());
-    printf("numel()     %3u %3u %3u\n",a.numel(), b.numel(), out.numel());
-  }
-  #endif
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) + b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator-(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) - b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type >
-A<S> operator*(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++)
-    out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) * b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i, j);
-  return out;
-}
-template<class T, class R, template<class> class A,
-         typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type,
-         typename=typename std::enable_if<std::is_floating_point<S>::value>::type >
-A<S> operator/(const A<T>& a, const A<R>& b){
-  AVSizeInfo si = a.consistency_check(b);
-  A<S> out = si.aorb ? A<S>(a) : A<S>(b);
-  out.refresh(si.m,si.n); // in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar
-  for (size_t i=0; i<si.n; i++) for(size_t j=0; j<si.m; j++) out.insert( a.getvalue(si.oneveca?0:i,si.scalara?0:j) / b.getvalue(si.onevecb?0:i,si.scalarb?0:j), i,j );
   return out;
 }
 
@@ -1376,5 +1296,14 @@ std::vector<size_t> find(const A<T>& a){
   std::vector<size_t> out;
   for (size_t i=0; i<a.size(); ++i) for (size_t j=0; j<a.numel(); ++j)
   if (a.getvalue(i,j)) out.push_back(i+j); // either i or j is zero.
+  return out;
+}
+
+template<class T> std::vector<T> ArrayVector<T>::to_std() const {
+  if (this->size() != 1u && this->numel() != 1u)
+    throw std::logic_error("to_std only supports ArrayScalar or ScalarVector inputs");
+  std::vector<T> out;
+  for (size_t i=0; i<this->size(); ++i) for (size_t j=0; j<this->numel(); ++j)
+  out.push_back(this->getvalue(i,j));
   return out;
 }

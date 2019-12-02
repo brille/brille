@@ -5,7 +5,7 @@ if (MSVC)
     add_compile_options(/W4 /Zc__cplusplus)
 else()
     # lots of warnings -- add -Werror for  all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic)
+    add_compile_options(-Wall -Wextra -pedantic -Wmissing-braces)
 endif()
 
 set(CXX_TARGETS _brille catch2)

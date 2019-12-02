@@ -41,7 +41,7 @@ class NestLeaf{
   std::array<double,4> centre_radius;
   double volume_;
 public:
-  NestLeaf(): vi({0,0,0,0}), centre_radius({0,0,0,0}), volume_(0) {}
+  NestLeaf(): vi({{0,0,0,0}}), centre_radius({{0,0,0,0}}), volume_(0) {}
   // actually constructing the tetrahedra from, e.g., a Polyhedron object will
   // need to be done elsewhere
   explicit NestLeaf(
@@ -58,7 +58,7 @@ public:
   // }
   //
   std::array<double,4> weights(const ArrayVector<double>& v, const ArrayVector<double>& x) const {
-    std::array<double,4> w{-1,-1,-1,-1};
+    std::array<double,4> w{{-1,-1,-1,-1}};
     if (this->might_contain(x)){
       // double vol6 = this->volume(v)*6.0;
       double vol6 = volume_*6.0;
@@ -248,7 +248,7 @@ public:
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     size_t unfound=0;
     long xsize = unsigned_to_signed<long, size_t>(x.size());
-  #pragma omp parallel for shared(x, out, unfound)
+  #pragma omp parallel for default(none) shared(x, out) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
     for (long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long>(si);
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
@@ -256,7 +256,6 @@ public:
       if (iw.size()){
         data_.interpolate_at(iw, out, i);
       } else {
-        #pragma omp critical
         ++unfound;
       }
     }

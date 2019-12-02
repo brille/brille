@@ -92,9 +92,9 @@ public:
 class CubeNode: public NullNode {
   std::array<index_t, 8> vertex_indices;
 public:
-  CubeNode(): vertex_indices({0,0,0,0,0,0,0,0}) {}
+  CubeNode(): vertex_indices({{0,0,0,0,0,0,0,0}}) {}
   CubeNode(const std::array<index_t,8>& vi): vertex_indices(vi) {}
-  CubeNode(const std::vector<index_t>& vi): vertex_indices({0,0,0,0,0,0,0,0}) {
+  CubeNode(const std::vector<index_t>& vi): vertex_indices({{0,0,0,0,0,0,0,0}}) {
     if (vi.size() != 8) throw std::logic_error("CubeNode objects take 8 indices.");
     for (index_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
   }
@@ -118,8 +118,8 @@ public:
     double node_volume = abs(node_verts.extract(0)-node_verts.extract(7)).prod(1).getvalue(0,0);
     ArrayVector<double> w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
     // If any normalised weights are greater than 1+eps() the point isn't in this node
-    if (w.any_approx(">",1.)) return false;
-    ArrayVector<bool> needed = w.is_approx(">", 0.);
+    if (w.any_approx(Comp::gt,1.)) return false;
+    ArrayVector<bool> needed = w.is_approx(Comp::gt, 0.);
     indices.clear();
     weights.clear();
     for (int i=0; i<8; ++i) if (needed.getvalue(i)) {
@@ -161,7 +161,7 @@ public:
   ) const {
     indices.clear();
     weights.clear();
-    std::array<double,4> w{0,0,0,0};
+    std::array<double,4> w{{0,0,0,0}};
     for (size_t i=0; i<vi_t.size(); ++i)
     if (this->tetrahedra_contains(i, vertices, x, w)){
       for (int j=0; j<4; ++j) if (!approx_scalar(w[j],0.)){
@@ -355,19 +355,23 @@ public:
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     verbose_update("Parallel interpolation at ",x.size()," points with ",threads," threads");
     // shared between threads
-    ArrayVector<T> out(data_.numel(), x.size());
+    ArrayVector<T> out(data_.numel(), x.size(), T(0)); // initialise to zero so that we can use a reduction
     // private to each thread
     std::vector<index_t> indices;
     std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-  #pragma omp parallel for shared( x, out) private(indices, weights)
+    size_t n_unfound{0};
+  #pragma omp parallel for default(none) shared(x,out,xsize) private(indices, weights) reduction(+:n_unfound) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long long>(si);
-      if (!this->indices_weights(x.extract(i), indices, weights))
-        throw std::runtime_error("Point not found in PolyhedronTrellis");
-      data_.interpolate_at(indices, weights, out, i);
+      if (this->indices_weights(x.extract(i), indices, weights)){
+        data_.interpolate_at(indices, weights, out, i);
+      } else {
+        ++n_unfound;
+      }
     }
+    std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
     return out;
   }
   index_t node_count() {
@@ -381,7 +385,7 @@ public:
     return s;
   }
   std::array<index_t,3> span() const {
-    std::array<index_t,3> s{1,0,0}, sz=this->size();
+    std::array<index_t,3> s{{1,0,0}}, sz=this->size();
     for (index_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
   }
@@ -389,12 +393,12 @@ public:
   //
   // Find the appropriate node for an arbitrary point:
   std::array<index_t,3> node_subscript(const ArrayVector<double>& p) const {
-    std::array<index_t,3> sub{0,0,0};
+    std::array<index_t,3> sub{{0,0,0}};
     for (index_t dim=0; dim<3u; ++dim)
       sub[dim] = find_bin(boundaries_[dim], p.getvalue(0, dim));
     bool bad = nodes_.is_null(this->sub2idx(sub));
     if (bad){
-      std::array<int,3> close{0,0,0};
+      std::array<int,3> close{{0,0,0}};
       // determine if we are close to a boundary along any of the three binning
       // directions. if we are, on_boundary returns the direction in which we
       // can safely take a step without leaving the binned region
@@ -469,7 +473,7 @@ private:
     return idx;
   }
   std::array<index_t,3> idx2sub(const index_t idx, const std::array<index_t,3>& sp) const {
-    std::array<index_t,3> sub{0,0,0};
+    std::array<index_t,3> sub{{0,0,0}};
     index_t rem{idx};
     for (index_t dim=3u; dim--;){
       sub[dim] = rem/sp[dim];

@@ -176,7 +176,7 @@ TEST_CASE("vector cross products","[linalg]"){
 }
 TEST_CASE("vector dot products","[linalg]"){
   double v1[3] = {1,1,0}, v2[3] = {0,1,1}, v3[3] = {1,0,1};
-  double dot[3];
+  // double dot[3];
   SECTION("(110)⋅(011)"){ REQUIRE( vector_dot<double,3>(v1,v2) == Approx(1.0) );}
   SECTION("(011)⋅(101)"){ REQUIRE( vector_dot<double,3>(v2,v3) == Approx(1.0) );}
   SECTION("(101)⋅(110)"){ REQUIRE( vector_dot<double,3>(v3,v1) == Approx(1.0) );}

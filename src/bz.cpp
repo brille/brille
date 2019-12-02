@@ -16,6 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include "bz.hpp"
+#include <omp.h>
 
 template<typename... A>
 void BrillouinZone::set_polyhedron(const LQVec<double>& v, const LQVec<double>& p, A... args){
@@ -67,7 +68,7 @@ LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   ArrayVector<bool> not_bz(1u, 0u);
   for (size_t i=0; i<bz_n.size(); ++i){
     // check if the irBZ face point is on a first BZ zone face too
-    not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx("!=", 0.);
+    not_bz = dot(bz_n.extract(i), ir_p - bz_p.extract(i)).is_approx(Comp::neq, 0.);
     ir_n = ir_n.extract(not_bz);
     ir_p = ir_p.extract(not_bz);
   }
@@ -318,7 +319,7 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n, LQVec<double>& no
     num=num+1;
     return true;
   }
-  if (norm(cross(normals.first(num), n)).any_approx("==",0.)){
+  if (norm(cross(normals.first(num), n)).any_approx(Comp::eq,0.)){
     debug_update(msg, "rejected; already present");
     return false;
   }
@@ -341,14 +342,14 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
   std::string msg = "Considering " + n0.to_string(0," and ") + n1.to_string(0,"... ");
   bool p0=false, p1=false;
   if (num>0){
-    p0 = norm(cross(normals.first(num), n0)).any_approx("==",0.);
-    p1 = norm(cross(normals.first(num), n1)).any_approx("==",0.);
+    p0 = norm(cross(normals.first(num), n0)).any_approx(Comp::eq,0.);
+    p1 = norm(cross(normals.first(num), n1)).any_approx(Comp::eq,0.);
   }
   if (p0 && p1){
     debug_update(msg, "rejected; already present");
     return false;
   }
-  if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx("==",1.)){
+  if (num>0 && dot(normals.first(num)/norm(n0),n0/norm(n0)).any_approx(Comp::eq,1.)){
     normals.set(num,  n1.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
       debug_update(msg, "n1 accepted (n0 present)");
@@ -358,7 +359,7 @@ bool BrillouinZone::wedge_normal_check(const LQVec<double>& n0, const LQVec<doub
     debug_update(msg, "n1 rejected (n0 present); addition causes null wedge");
     return false;
   }
-  if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx("==",1.)){
+  if (num>0 && dot(normals.first(num)/norm(n1),n1/norm(n1)).any_approx(Comp::eq,1.)){
     normals.set(num,  n0.get(0));
     if (this->ir_wedge_is_ok(normals.first(num+1))){
       debug_update(msg, "n0 accepted (n1 present)");
@@ -878,7 +879,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p
     normals = this->get_primitive_normals();
   }
   for (size_t i=0; i<p.size(); ++i)
-    out.insert( dot(normals, p.get(i)-points).all_approx("<=",0.), i );
+    out.insert( dot(normals, p.get(i)-points).all_approx(Comp::le,0.), i );
   return out;
 }
 
@@ -912,7 +913,7 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec
     // accessor method mirrors the half-polyhedron in this case, so when
     // identifying whether a point is inside of the irreducible Brillouin zone
     // we must allow for the ≤0 case as well.
-    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
+    Comp cmp = constructing||this->no_ir_mirroring ? Comp::ge : Comp::le_ge;
     for (size_t i=0; i<p.size(); ++i)
       out.insert(dot(normals, p.get(i)).all_approx(cmp,0.), i);
   } else {
@@ -938,7 +939,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
   }
   if (normals.size()){
     verbose_update("Checking if points are within wedge\n",normals.to_string());
-    std::string cmp = (constructing||this->no_ir_mirroring ? "≥" : "≤|≥");
+    Comp cmp = constructing||this->no_ir_mirroring ? Comp::ge : Comp::le_ge;
     for (size_t i=0; i<p.size(); ++i)
       out[i] = dot(normals, p.get(i)).all_approx(cmp,0.);
     verbose_update("Comparison to normals\n",normals.to_string()," via ",cmp," yields\n",out);
@@ -946,7 +947,85 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
   return out;
 }
 
-bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const {
+// bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const {
+//   bool already_same = this->lattice.issame(Q.get_lattice());
+//   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
+//   LQVec<int> tauprim(this->lattice);
+//   PrimitiveTransform PT(this->outerlattice.get_hall());
+//   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
+//   if (!(already_same || transform_needed))
+//     throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
+//
+//   if (transform_needed)  Qprim = transform_to_primitive(this->outerlattice,Q);
+//   const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
+//   LQVec<double> & qsl = transform_needed ? qprim : q;
+//   LQVec<int> & tausl = transform_needed? tauprim : tau;
+//
+//   // Determine which points in Q are already inside the first BZ
+//   ArrayVector<bool> allinside = this->isinside(Qsl);
+//   // ensure that qsl and tausl can hold each qi and taui
+//   qsl.resize(Qsl.size());
+//   tausl.resize(Qsl.size());
+//
+//   LQVec<double> halftau = this->get_primitive_points();
+//   LQVec<double> facenrm = this->get_primitive_normals();
+//   LQVec<int> facehkl = (2.0*halftau).round(); // the BZ points are each τ/2
+//
+//   ArrayVector<double> facelen = norm(facehkl);
+//
+//   LQVec<double> qi;
+//   LQVec<int> taui;
+//   ArrayVector<double> q_dot_facenrm;
+//   ArrayVector<int> Nhkl;
+//   size_t maxat = 0;
+//   int maxnm = 0;
+//   size_t count =0;
+//   for (size_t i=0; i<Qsl.size(); i++){
+//     count = 0;
+//     qi = Qsl.get(i);
+//     taui = 0*tausl.get(i);
+//     while (!allinside.getvalue(i) && count++ < 50*facelen.size()){
+//       // std::cout << "Moving q = " << qi.to_string() << std::endl;
+//       q_dot_facenrm = dot( qi , facenrm );
+//       Nhkl = (q_dot_facenrm/facelen).round();
+//       // std::cout << "Nhkl = " << Nhkl.to_string() << std::endl;
+//       if ( Nhkl.all_zero() ) {allinside.insert(true,i); break;} // qi is *on* the Brilluoin Zone surface (or inside) so break.
+//       maxnm = 0;
+//       maxat = 0;
+//       for (size_t j=0; j<Nhkl.size(); ++j){
+//         if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
+//           maxnm = Nhkl.getvalue(j);
+//           maxat = j;
+//         }
+//       }
+//       // std::cout << "Of which, the maximum is vector " << std::to_string(maxat);
+//       // std::cout << " with value " << facehkl.to_string(maxat) << " " << std::to_string(maxnm);
+//       // std::cout << " of which will be removed." << std::endl;
+//
+//       qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
+//       taui += facehkl[maxat] * maxnm; // but add LQVec<int>
+//
+//       allinside.insert(this->isinside(qi).getvalue(0), i);
+//     }
+//     qsl.set(i, &qi);
+//     tausl.set(i, &taui);
+//   }
+//   if (!allinside.all_true()){
+//     std::string msg;
+//     for (size_t i=0; i<Qsl.size(); ++i)
+//       if (!allinside.getvalue(i))
+//         msg += "Q=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
+//             + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i) + "\n";
+//     throw std::runtime_error(msg);
+//   }
+//   if (transform_needed){ // then we need to transform back q and tau
+//     q   = transform_from_primitive(this->outerlattice,qsl);
+//     tau = transform_from_primitive(this->outerlattice,tausl);
+//   }
+//   return allinside.all_true(); // return false if any points are still outside of the first Brilluoin Zone
+// }
+bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
+  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
   LQVec<int> tauprim(this->lattice);
@@ -971,60 +1050,98 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   LQVec<int> facehkl = (2.0*halftau).round(); // the BZ points are each τ/2
 
   ArrayVector<double> facelen = norm(facehkl);
-
-  LQVec<double> qi;
-  LQVec<int> taui;
-  ArrayVector<double> q_dot_facenrm;
-  ArrayVector<int> Nhkl;
-  size_t maxat = 0;
-  int maxnm = 0;
-  size_t count =0;
-  for (size_t i=0; i<Qsl.size(); i++){
-    count = 0;
-    qi = Qsl.get(i);
-    taui = 0*tausl.get(i);
-    while (!allinside.getvalue(i) && count++ < 50*facelen.size()){
-      // std::cout << "Moving q = " << qi.to_string() << std::endl;
-      q_dot_facenrm = dot( qi , facenrm );
-      Nhkl = (q_dot_facenrm/facelen).round();
-      // std::cout << "Nhkl = " << Nhkl.to_string() << std::endl;
-      if ( Nhkl.all_zero() ) {allinside.insert(true,i); break;} // qi is *on* the Brilluoin Zone surface (or inside) so break.
-      maxnm = 0;
-      maxat = 0;
-      for (size_t j=0; j<Nhkl.size(); ++j){
-        if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
-          maxnm = Nhkl.getvalue(j);
-          maxat = j;
+  size_t n_outside{0};
+  long long snQ = unsigned_to_signed<long long, size_t>(Qsl.size());
+  #pragma omp parallel for default(none) shared(Qsl, tausl, qsl, allinside, facelen, facenrm, facehkl, snQ) reduction(+:n_outside) schedule(dynamic)
+  for (long long si=0; si<snQ; si++){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    LQVec<double> qi = Qsl.get(i);
+    LQVec<int>  taui = 0*tausl.get(i);
+    size_t maxat, count{0};
+    int maxnm;
+    bool inside = allinside.getvalue(i);
+    while (!inside && count++ < 50*facelen.size()){
+      ArrayVector<double> q_dot_facenrm = dot( qi , facenrm );
+      std::vector<int> Nhkl = (q_dot_facenrm/facelen).round().to_std();
+      if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a != 0;})){
+        maxnm = 0;
+        maxat = 0;
+        for (size_t j=0; j<Nhkl.size(); ++j){
+          if (Nhkl[j]>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
+            maxnm = Nhkl[j];
+            maxat = j;
+          }
         }
+        qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
+        taui += facehkl[maxat] * maxnm; // but add LQVec<int>
+        inside = this->isinside(qi).getvalue(0);
+      } else {
+        inside = true;  // qi is *on* the Brilluoin Zone surface (or inside) so break.
       }
-      // std::cout << "Of which, the maximum is vector " << std::to_string(maxat);
-      // std::cout << " with value " << facehkl.to_string(maxat) << " " << std::to_string(maxnm);
-      // std::cout << " of which will be removed." << std::endl;
-
-      qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
-      taui += facehkl[maxat] * maxnm; // but add LQVec<int>
-
-      allinside.insert(this->isinside(qi).getvalue(0), i);
     }
-    qsl.set(i, &qi);
-    tausl.set(i, &taui);
+    allinside.insert(inside, i);
+    qsl.set(i, qi);
+    tausl.set(i, taui);
+    if (!inside) ++n_outside;
   }
-  if (!allinside.all_true()){
+  if (n_outside > 0){
     std::string msg;
-    for (size_t i=0; i<Qsl.size(); ++i)
-      if (!allinside.getvalue(i))
-        msg += "Q=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
-            + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i) + "\n";
+    for (size_t i=0; i<Qsl.size(); ++i) if (!allinside.getvalue(i))
+      msg += "Q=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
+          + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i) + "\n";
     throw std::runtime_error(msg);
   }
   if (transform_needed){ // then we need to transform back q and tau
     q   = transform_from_primitive(this->outerlattice,qsl);
     tau = transform_from_primitive(this->outerlattice,tausl);
   }
-  return allinside.all_true(); // return false if any points are still outside of the first Brilluoin Zone
+  return 0==n_outside; // return false if any points are still outside of the first Brilluoin Zone
 }
 
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
+// bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
+//   /* The Pointgroup symmetry information comes from, effectively, spglib which
+//   has all rotation matrices defined in the conventional unit cell -- which is
+//   our `outerlattice`. Consequently we must work in the outerlattice here.  */
+//   if (!this->outerlattice.issame(Q.get_lattice()))
+//     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
+//   // get the PointSymmetry object, containing all operations
+//   PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+//   // ensure q, tau, and R can hold one for each Q.
+//   size_t nQ = Q.size();
+//   q.resize(nQ);
+//   tau.resize(nQ);
+//   R.resize(nQ);
+//   // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
+//   // such that Q = q₁ₛₜ + τ
+//   this->moveinto(Q, q, tau);
+//   // by chance some first Bz points are likely already in the IR-Bz:
+//   std::vector<bool> in_ir = this->isinside_wedge_std(q);
+//   // any q already in the irreducible zone need no rotation → identity
+//   for (size_t i=0; i<nQ; ++i) if ( in_ir[i] ) R[i] = {1,0,0, 0,1,0, 0,0,1};
+//   // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+//   LQVec<double> qj(Q.get_lattice(), 1u);
+//   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
+//     // The point symmetry matrices relate *real space* vectors! We must use
+//     // their transposes' to rotate reciprocal space vectors.
+//     multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
+//     verbose_update("R_",j,"*q = ", qj.to_string(0));
+//     if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
+//       q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+//       R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
+//       break;
+//     }
+//   }
+//   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+//     std::string msg = "Q = " + Q.to_string(i);
+//     msg += " is outside of the irreducible BrillouinZone ";
+//     msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
+//     throw std::runtime_error(msg);
+//     return false;
+//   }
+//   return true; // otherwise we hit the runtime error above
+// }
+bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R, const int threads) const {
+  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
   our `outerlattice`. Consequently we must work in the outerlattice here.  */
@@ -1042,22 +1159,38 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   this->moveinto(Q, q, tau);
   // by chance some first Bz points are likely already in the IR-Bz:
   std::vector<bool> in_ir = this->isinside_wedge_std(q);
-  // any q already in the irreducible zone need no rotation → identity
-  for (size_t i=0; i<nQ; ++i) if ( in_ir[i] ) R[i] = {1,0,0, 0,1,0, 0,0,1};
-  // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
   LQVec<double> qj(Q.get_lattice(), 1u);
-  for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
-    // The point symmetry matrices relate *real space* vectors! We must use
-    // their transposes' to rotate reciprocal space vectors.
-    multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
-    verbose_update("R_",j,"*q = ", qj.to_string(0));
-    if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
-      q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
-      R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
-      break;
+  auto lat = Q.get_lattice();
+  // OpenMP 2 (VS) doesn't like unsigned loop counters
+  size_t n_outside{0};
+  long long snQ = unsigned_to_signed<long long, size_t>(nQ);
+  #pragma omp parallel for default(none) shared(psym, R, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
+  for (long long si=0; si<snQ; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    // any q already in the irreducible zone need no rotation → identity
+    bool outside=!in_ir[i];
+    if (outside){
+      // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+      LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
+      for (size_t j=0; j<psym.size(); ++j) if (outside) {
+        // The point symmetry matrices relate *real space* vectors! We must use
+        // their transposes' to rotate reciprocal space vectors.
+        multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
+        if ( this->isinside_wedge_std(qj)[0] ){ /* store the result */
+          q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+          R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
+          outside = false;
+        }
+      }
+    } else {
+      R[i] = {1,0,0, 0,1,0, 0,0,1};
+    }
+    if (outside) {
+      ++n_outside;
+      in_ir[i] = false;
     }
   }
-  for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+  if (n_outside > 0) for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
     std::string msg = "Q = " + Q.to_string(i);
     msg += " is outside of the irreducible BrillouinZone ";
     msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);

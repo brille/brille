@@ -103,8 +103,8 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
     Q.insert(distribution(generator), i,j);
 
   ArrayVector<std::complex<double>> intres;
-  Stopwatch timer = Stopwatch<>();
-  for (int threads=1; threads<10; ++threads){
+  auto timer = Stopwatch<>();
+  for (int threads=1; threads<7; ++threads){
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
@@ -114,4 +114,43 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
     }
     info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
   }
+}
+
+TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profiling]"){
+  // The conventional cell for Nb
+  Direct d(3.2598, 3.2598, 3.2598, PI/2, PI/2, PI/2, 529);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  double max_volume = 0.0001;
+
+  // In order to have easily-interpretable results we need to ensure we only
+  // interpolate at points within the irreducible meshed volume.
+  // So let's stick to points that are random linear interpolations between
+  // neighbouring mesh vertices
+  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::uniform_real_distribution<double> distribution(-5.,5.);
+
+  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  ArrayVector<double> Qmap = bzt.get_hkl();
+
+  ArrayVector<std::complex<double>> data((1+3)*3, Qmap.size());
+  for (size_t i=0; i<data.size(); ++i) for (size_t j=0; j<data.numel(); ++j)
+    data.insert( std::complex<double>(distribution(generator), distribution(generator)), i, j);
+  std::vector<size_t> shape{data.size(), 3, 4};
+  std::array<unsigned long,4> elements{1,3,0,0};
+
+  bzt.replace_data(data, shape, elements);
+
+  size_t nQ = 100000;//10000;
+  LQVec<double> Q(r,nQ);
+  for (size_t i=0; i<nQ; ++i) for (size_t j=0; j<3; ++j)
+    Q.insert(distribution(generator), i,j);
+
+  ArrayVector<std::complex<double>> intres;
+  int threads = omp_get_max_threads();
+  auto timer = Stopwatch<>();
+  timer.tic();
+  intres = bzt.interpolate_at(Q, threads);
+  timer.toc();
+  info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
 }

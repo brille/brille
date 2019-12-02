@@ -40,6 +40,10 @@ const double PI = std::atan(1.0)*4;
 const double PICUBED = PI*PI*PI;
 const double PIOVERTWO = PI/2.0;
 
+template<typename T>
+using IsInteger = std::enable_if_t<std::is_integral<T>::value,T>;
+template<typename T>
+using IsNotInteger = std::enable_if_t<!std::is_integral<T>::value,T>;
 
 //! trace of a square matrix
 template<typename T, int N=3> T trace(const T *M);
@@ -54,10 +58,12 @@ template<typename T, int N, int M> bool equal_array(const T *A, const T *B, cons
 template<typename T, int N=3> bool equal_matrix(const T *A, const T *B, const T tol=0);
 template<typename T, int N=3> bool equal_vector(const T *A, const T *B, const T tol=0);
 
+template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
 template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol=1);
 template<typename T, typename R> bool approx_array(const int N, const int M,const T *A, const R *B, const int tol=1);
 template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol=1);
 template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol=1);
+
 
 template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B, const int tol=1);
 template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B, const int tol=1);
