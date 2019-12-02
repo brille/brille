@@ -97,8 +97,6 @@ if(OpenMP_CXX_FOUND)
 		endforeach(OMP_TARGET)
     if (MSVC AND MSVC_VERSION GREATER 1919)
       add_compile_options(/openmp:experimental) # this doesn't work
-    else()
-      message(STATUS "No Visual Studio OpenMP simd support in MSVC_VERSION ${MSVC_VERSION}")
     endif()
 endif()
 
