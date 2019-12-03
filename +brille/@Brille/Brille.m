@@ -64,10 +64,19 @@ classdef Brille < handle
             [args,kwds]=brille.parse_arguments(varargin,kdef,{'rlu'});
             g3type = 'py.brille._brille.BZGridQ';  % or py.brille._brille.BZGridQcomplex
             g4type = 'py.brille._brille.BZGridQE'; % or py.brille._brille.BZGridQEcomplex
+            m3type = 'py.brille._brille.BZMeshQ';
+            n3type = 'py.brille._brille.BZNestQ';
+            t3type = 'py.brille._brille.BZTrellisQ';
             if strncmp(class(ingrid),g4type,length(g4type))
                 obj.isQE=true;
-            elseif ~strncmp(class(ingrid),g3type,length(g3type))
-                error('A single %s or %s (or their complex variants) is required as input',g3type,g4type);
+            elseif strncmp(class(ingrid),g3type,length(g3type))
+                warning('The BZGridQ and BZGridQcomplex objects are inefficient. Consider using a BZTrellisQ* instead.');
+            elseif strncmp(class(ingrid),m3type,length(m3type))
+                warning('The BZMeshQ and BZMeshQcomplex objects are inefficient. Consider using a BZNestQ* instead.');
+            elseif strncmp(class(ingrid),n3type,length(n3type))
+                warning('The BZNestQ and BZNetstQcomplex objects are slow to locate points. Consider using a BZTrellisQ* instead.');
+            elseif ~strncmp(class(ingrid),t3type,length(t3type))
+                error('Expected input of a py.brille._brille.BZ{Grid,Mesh,Nest,Trellis}Q* object')
             end
             if islogical( kwds.parallel)
                 obj.parallel = kwds.parallel;
@@ -126,10 +135,10 @@ classdef Brille < handle
                 switch lower(kwds.model)
                     case 'spinw'
                         nfill = 2;
-                        if obj.nFillers==1
-                            obj.filler = [ obj.filler {@brille.modesort} ];
-                            obj.nFillers=2;
-                        end
+                        % if obj.nFillers==1
+                        %     obj.filler = [ obj.filler {@brille.modesort} ];
+                        %     obj.nFillers=2;
+                        % end
                         rlu = true;
                         interpret = { @obj.neutron_spinwave_intensity, @obj.convolve_modes };
                         nret = [2,1];

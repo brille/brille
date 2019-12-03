@@ -41,9 +41,9 @@ pyangs =brille.m2p( angs(1:3) );
 
 if kwds.direct && ~kwds.reciprocal
     dlat = py.brille.Direct(pylens, pyangs, kwds.spgr);
-    rlat = dlat.star();
+    rlat = dlat.star;
 elseif kwds.reciprocal && ~kwds.direct
     rlat = py.brille.Reciprocal(pylens, pyangs, kwds.spgr);
-    dlat = rlat.star();
+    dlat = rlat.star;
 end
 end
