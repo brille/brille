@@ -422,56 +422,62 @@ public:
     int oob;
     double weights[16];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
-
+    size_t n_oob{0};
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
-#pragma omp parallel for default(none) shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) reduction(+:n_oob) schedule(dynamic)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
       unsigned int flg = this->nearest_index(x.data(i), ijk );
       size_t cnt = 1u;
-      if (flg > 16){
-        std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
-        throw std::runtime_error(msg_flg);
-      }
-      if (15==flg)/*++++*/{
-        this->sub2map(ijk,corners[0]);
-        weights[0]=1.0;
-      } else {
-        if (0==flg)/*xxxx*/{
-          dirs.resize(4);
-          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+      oob = 0;
+      if (flg < 16){
+        if (15==flg)/*++++*/{
+          this->sub2map(ijk,corners[0]);
+          weights[0]=1.0;
+        } else {
+          if (0==flg)/*xxxx*/{
+            dirs.resize(4);
+            dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+          }
+          if ( 1==flg|| 2==flg|| 4==flg|| 8==flg) dirs.resize(3);
+          if ( 1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
+          if ( 2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
+          if ( 4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
+          if ( 8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
+
+          if ( 3==flg|| 5==flg|| 9==flg|| 6==flg|| 10==flg|| 12==flg) dirs.resize(2);
+          if ( 3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
+          if ( 5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
+          if ( 9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
+          if ( 6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
+          if (10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
+          if (12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
+
+          if ( 7==flg|| 11==flg || 13==flg || 14==flg) dirs.resize(1);
+          if ( 7==flg)/*+++x*/ dirs[0]=3u;
+          if (11==flg)/*++x+*/ dirs[0]=2u;
+          if (13==flg)/*+x++*/ dirs[0]=1u;
+          if (14==flg)/*x+++*/ dirs[0]=0u;
+
+          oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
+          cnt = corner_count[dirs.size()];
         }
-        if ( 1==flg|| 2==flg|| 4==flg|| 8==flg) dirs.resize(3);
-        if ( 1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
-        if ( 2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
-        if ( 4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
-        if ( 8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
-
-        if ( 3==flg|| 5==flg|| 9==flg|| 6==flg|| 10==flg|| 12==flg) dirs.resize(2);
-        if ( 3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
-        if ( 5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
-        if ( 9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
-        if ( 6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
-        if (10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
-        if (12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
-
-        if ( 7==flg|| 11==flg || 13==flg || 14==flg) dirs.resize(1);
-        if ( 7==flg)/*+++x*/ dirs[0]=3u;
-        if (11==flg)/*++x+*/ dirs[0]=2u;
-        if (13==flg)/*+x++*/ dirs[0]=1u;
-        if (14==flg)/*x+++*/ dirs[0]=0u;
-
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
-        cnt = corner_count[dirs.size()];
-        if (oob) {
-          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
-          throw std::runtime_error(msg);
+        if (!oob){
+          unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
+        } else {
+          ++n_oob;
         }
-      }
-      unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
+    } else {
+      ++n_oob;
     }
+  }
+  if (n_oob > 0){
+    std::string msg = "parallel_linear_interpolate_at failed with ";
+    msg += std::to_string(n_oob) + " out of bounds points.";
+    throw std::runtime_error(msg);
+  }
     return out;
   }
   /*! Get the size information about the first three components of the grid,
