@@ -48,12 +48,18 @@ if ~strcmp(obj.parameterHash, newHash)
         end
     end
     % and smash them together for input into the grid:
-    fillwith = cat(2, fillwith{:});
+    if equalmodes
+        fillwith = cat(3, fillwith{:});
+    else
+        fillwith = cat(2, fillwith{:});
+    end
     %
     assert( numel(fillwith) == num * sum(cellfun(@prod,obj.shape)) )
     %
+    % BAD HACK FOR NOW. CHANGE ME!
+    nel = brille.m2p( uint16([1,0,0,3]) );
     % and finally put them in:
-    obj.pygrid.fill( brille.m2p(fillwith) );
+    obj.pygrid.fill( brille.m2p(fillwith), nel);
 
     % we have successfully filled the grid(s), so store the hash.
     obj.parameterHash = newHash;

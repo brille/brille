@@ -38,7 +38,7 @@ num = numel(qh);
 numres = num * sum(cellfun(@prod,obj.shape));
 
 % Do the actual interpolation
-pyallres = obj.pygrid.interpolate_at(iat,true,obj.parallel);
+pyallres = obj.pygrid.ir_interpolate_at(iat,true,obj.parallel);
 allres = brille.p2m( pyallres );
 assert( numel(allres) == numres )
 % and then split-up the interpolated results into the expected outputs
@@ -51,7 +51,8 @@ if ismatrix(allres)
 elseif ndims(allres)==3
     offsets = cumsum( cat(2, 0, obj.span) );
     for i=1:obj.nFill
-        intres{i} = reshape( allres(:, (offsets(i)+1):offsets(i+1), :), cat(2,num,obj.shape{i}) );
+%         intres{i} = reshape( allres(:, (offsets(i)+1):offsets(i+1), :), cat(2,num,obj.shape{i}) );
+        intres{i} = reshape( allres(:, :, (offsets(i)+1):offsets(i+1)), cat(2,num,obj.shape{i}) );
     end
 end
 
