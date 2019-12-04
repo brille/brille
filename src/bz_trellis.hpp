@@ -47,8 +47,26 @@ public:
   //! get the indices forming the faces of the tetrahedra
   std::vector<std::array<index_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 
-
   template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
+    LQVec<R> q(x.get_lattice(), x.size());
+    LQVec<int> tau(x.get_lattice(), x.size());
+    if (no_move){
+      // Special mode for testing where no specified points are moved
+      // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
+      // POLYHEDRON otherwise the interpolation will fail or give garbage back.
+      q = x;
+    } else if (!brillouinzone.moveinto(x, q, tau, nthreads)){
+      std::string msg;
+      msg = "Moving all points into the first Brillouin zone failed.";
+      throw std::runtime_error(msg);
+    }
+    ArrayVector<T> result = (nthreads < 2)
+      ? this->PolyhedronTrellis<T>::interpolate_at(q.get_xyz())
+      : this->PolyhedronTrellis<T>::interpolate_at(q.get_xyz(), nthreads);
+    return result;
+  }
+
+  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     std::vector<std::array<int,9>> rots(x.size());

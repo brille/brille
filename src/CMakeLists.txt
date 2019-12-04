@@ -24,3 +24,9 @@ foreach(CXX_TARGET ${CXX_TARGETS})
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})
   target_include_directories(${CXX_TARGET} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 endforeach(CXX_TARGET)
+
+if (APPLE)
+  # force static linking for the python module's OpenMP to avoid issues
+  # trying to use the module via MATLAB's python interface
+  target_link_options(_brille PUBLIC -static-libgcc -static-libstdc++)
+endif()

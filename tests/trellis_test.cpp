@@ -37,7 +37,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis]"){
 
   ArrayVector<double> Qmap = bzt.get_hkl();
   std::vector<size_t> shape{Qmap.size(), 3};
-  std::array<unsigned long,4> elements{0,0,3,0};
+  std::array<unsigned long,3> elements{0,3,0};
   bzt.replace_data( bzt.get_xyz(), shape, elements);
 
   // In order to have easily-interpretable results we need to ensure we only
@@ -56,15 +56,11 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis]"){
   }
 
   ArrayVector<double> intres, antres=Q.get_xyz();
-  intres = bzt.interpolate_at(Q, 1 /*thread*/);
+  intres = bzt.ir_interpolate_at(Q, 1 /*thread*/);
 
   ArrayVector<double> diff = intres - antres;
-  // printf("\nInterpolation results:\n");
-  // intres.print();
-  // printf("\nExpected results:\n");
-  // antres.print();
-  // printf("\nRounded difference:\n");
-  // diff.round().print();
+  // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
+  // info_update("\nRounded difference:\n",diff.to_string());
 
   REQUIRE( diff.round().all_zero() ); // this is not a great test :(
   for (size_t i=0; i<diff.size(); ++i)
@@ -93,7 +89,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   for (size_t i=0; i<data.size(); ++i) for (size_t j=0; j<data.numel(); ++j)
     data.insert( std::complex<double>(distribution(generator), distribution(generator)), i, j);
   std::vector<size_t> shape{data.size(), 3, 4};
-  std::array<unsigned long,4> elements{1,3,0,0};
+  std::array<unsigned long,3> elements{1,3,0};
 
   bzt.replace_data(data, shape, elements);
 
@@ -137,7 +133,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   for (size_t i=0; i<data.size(); ++i) for (size_t j=0; j<data.numel(); ++j)
     data.insert( std::complex<double>(distribution(generator), distribution(generator)), i, j);
   std::vector<size_t> shape{data.size(), 3, 4};
-  std::array<unsigned long,4> elements{1,3,0,0};
+  std::array<unsigned long,3> elements{1,3,0};
 
   bzt.replace_data(data, shape, elements);
 

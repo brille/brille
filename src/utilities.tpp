@@ -657,11 +657,21 @@ template<class T> int make_eigenvectors_equivalent(const size_t n, const std::co
 }
 
 
-template<class T> T antiphase(const T z){
-  return std::signbit(z) ? T(-1) : T(1);
+template<class T> T antiphase(const T){
+  //return std::signbit(z) ? T(-1) : T(1);
+  return T(1);
 }
 template<class T> std::complex<T> antiphase(const std::complex<T> z){
   return std::polar(T(1),-std::arg(z));
+}
+
+template<typename T> T antiphase(const size_t, const T*, const T*){
+  return T(1);
+}
+template<typename T> std::complex<T> antiphase(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+  std::complex<T> h_dot{0,0};
+  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  return std::polar(T(1),-std::arg(h_dot));
 }
 
 template<class T, class R, class S = typename std::common_type<T,R>::type>

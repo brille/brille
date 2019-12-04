@@ -345,7 +345,13 @@ TetMap connect(const size_t high, const size_t low) const{
   stopwatch.tic();
   TetMap map(layers[high].number_of_tetrahedra());
   long mapsize = unsigned_to_signed<long, size_t>(map.size());
+#if defined(__GNUC__) && __GNUC__ < 9
+// this version is necessary with g++ <= 8.3.0
+#pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)
+#else
+// this version is necessary with g++ == 9.2.0
 #pragma omp parallel for default(none) shared(map, mapsize, high, low) schedule(dynamic)
+#endif
   for (long i=0; i<mapsize; ++i){
     // initialize the map
     map[i] = TetSet();

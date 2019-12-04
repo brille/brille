@@ -56,9 +56,9 @@ void declare_bznestq(py::module &m, const std::string &typestr){
     // copy-in the elements array
     bi = pyel.request();
     if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
-    std::array<element_t, 4> el{{0,0,0,0}};
+    std::array<element_t, 3> el{{0,0,0}};
     int* intel = (int*)bi.ptr;
-    for (ssize_t i=0; i<bi.shape[0] && i<4; ++i) el[i] = static_cast<element_t>(intel[i]);
+    for (ssize_t i=0; i<bi.shape[0] && i<3; ++i) el[i] = static_cast<element_t>(intel[i]);
     // copy-in the data ArrayVector
     bi = pydata.request();
     ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
