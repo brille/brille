@@ -150,3 +150,22 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   timer.toc();
   info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
 }
+
+TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling]"){
+  Direct d(3.,3.,3., PI/2, PI/2, PI/2, 1);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  double max_volume = 0.0001;
+  auto timer = Stopwatch<>();
+  timer.tic();
+  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  timer.toc();
+  info_update("Creation of Cubic BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
+
+  Direct quartz_d(4.85235, 4.85235, 5.350305, PI/2, PI/2, 2*PI/3, 443);
+  BrillouinZone quartz_bz(quartz_d.star());
+  timer.tic();
+  BrillouinZoneTrellis3<std::complex<double>> quartz_bzt(quartz_bz, max_volume);
+  timer.toc();
+  info_update("Creation of Quartz BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
+}

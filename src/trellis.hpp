@@ -454,8 +454,6 @@ public:
   const InterpolationData<T>& data(void) const {return data_;}
   // Replace the data stored in the object
   template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
-  // void replace_data(ArrayVector<T>& d, std::vector<long unsigned int> s, std::array<long unsigned int, 3> e) {data_.replace_data(d, s, e);};
-  // void replace_data(ArrayVector<T>& d, std::array<long unsigned int, 3> e) {data_.replace_data(d, e);};
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{

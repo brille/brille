@@ -19,7 +19,6 @@ template<typename T>
 PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume):
   polyhedron_(poly), vertices_({3,0})
 {
-  double node_length = std::cbrt(max_volume);
   // find the extents of the polyhedron
   std::array<std::array<double,2>,3> minmax;
   for (int i=0; i<3; ++i){
@@ -31,12 +30,20 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
     if (pv.getvalue(i,j) < minmax[j][0]) minmax[j][0] = pv.getvalue(i,j);
     if (pv.getvalue(i,j) > minmax[j][1]) minmax[j][1] = pv.getvalue(i,j);
   }
+  // try to make an integer number of nodes fit along each dimension
+  // If the Polyhedron does not have a face perpendicular to the given direction
+  // this will make no difference for build time.
+  double intended_length = std::cbrt(max_volume);
+  std::array<double,3> node_length;
+  for (int i=0; i<3; ++i){
+    double len = minmax[i][1] - minmax[i][0];
+    node_length[i] = len/std::ceil(len/intended_length);
+  }
   // construct the trellis boundaries:
-  // boundaries_ = std::array<std::vector<double>,3>({std::vector<double>(),std::vector<double>(),std::vector<double>()});
   for (int i=0; i<3; ++i){
     boundaries_[i].push_back(minmax[i][0]);
     while (boundaries_[i].back() < minmax[i][1])
-      boundaries_[i].push_back(boundaries_[i].back()+node_length);
+      boundaries_[i].push_back(boundaries_[i].back()+node_length[i]);
     debug_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
   }
   // find which trellis intersections are inside of the polyhedron
@@ -48,9 +55,10 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
   ArrayVector<double> all_intersections(va_int);
   ArrayVector<bool> are_inside = poly.contains(all_intersections);
   // these will be retained as node vertices
-  std::vector<size_t> map_idx, keep_idx = find(are_inside);
-  for (size_t i=0; i<all_intersections.size(); ++i)
-    map_idx.push_back(std::distance(keep_idx.begin(), std::find(keep_idx.begin(), keep_idx.end(), i)));
+  size_t kept_idx{0}, n_mapped = are_inside.count_true();
+  std::vector<size_t> map_idx(all_intersections.size(), n_mapped+1);
+  for (size_t i=0; i<all_intersections.size(); ++i) if (are_inside.getvalue(i))
+    map_idx[i] = kept_idx++;
 
   // find the nodes which are fully inside the polyhedron
   /* Each node with linear index idx has a subscripted index (i,j,k)
@@ -67,14 +75,14 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
     for (auto ni: node_intersections) if (node_is_cube[i]) {
       size_t intersection_idx = 0;
       for (int j=0; j<3; ++j) intersection_idx += (node_ijk[j]+ni[j])*intersections_span[j];
-      node_is_cube[i] = map_idx[intersection_idx] < keep_idx.size();
+      node_is_cube[i] = map_idx[intersection_idx] < n_mapped;
     }
     if (!node_is_cube[i]){
       bool any_mapped = false;
       for (auto ni: node_intersections) {
         size_t intersection_idx = 0;
         for (int j=0; j<3; ++j) intersection_idx += (node_ijk[j]+ni[j])*intersections_span[j];
-        any_mapped |= map_idx[intersection_idx] < keep_idx.size();
+        any_mapped |= map_idx[intersection_idx] < n_mapped;
       }
       node_is_outside[i] = !any_mapped;
     }
@@ -121,13 +129,13 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
         throw std::runtime_error("Cutting the node increased its volume?!");
       // cut the larger polyhedron by the smaller one:
       // Then triangulate it into tetrahedra
-      SimpleTet tri_cut(cbp);
+      SimpleTet tri_cut(cbp /*, max_volume*/);
       if (tri_cut.get_vertices().size()<4){
         //something went wrong.
         /* A (somehow) likely cuplrit is that a face is missing from the cut
         cube and therefor is not a piecewise linear complex. try to re-form
         the input polyhedron and then re-triangulate.*/
-        tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()));
+        tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()) /*, max_volume*/);
         if (tri_cut.get_vertices().size()<4)
           throw std::runtime_error("Error determining cut cube triangulation");
       }
