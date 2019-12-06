@@ -104,7 +104,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
-      intres = bzt.interpolate_at(Q, threads);
+      intres = bzt.ir_interpolate_at(Q, threads);
       timer.toc();
       again = timer.jitter()/timer.average() > 0.002;
     }
@@ -146,7 +146,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   int threads = omp_get_max_threads();
   auto timer = Stopwatch<>();
   timer.tic();
-  intres = bzt.interpolate_at(Q, threads);
+  intres = bzt.ir_interpolate_at(Q, threads);
   timer.toc();
   info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
 }
