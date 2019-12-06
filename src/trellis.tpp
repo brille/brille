@@ -105,7 +105,14 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       vert_idx[k] = map_idx[int_idx];
       if (map_idx[int_idx] < n_mapped) mapped_vert_idx.push_back(map_idx[int_idx]);
     }
-    if (node_is_cube[i]) {
+    bool contains_Gamma{true};
+    for (int j=0; j<3; ++j){
+      double tocheck = boundaries_[j][node_ijk[j]  ];
+      contains_Gamma &= tocheck < 0. || approx_scalar(tocheck, 0.);
+      tocheck = boundaries_[j][node_ijk[j]+1];
+      contains_Gamma &= tocheck > 0. || approx_scalar(tocheck, 0.);
+    }
+    if (node_is_cube[i] && !contains_Gamma) {
       nodes_.push_back(CubeNode(vert_idx));
     } else {
       // This node intersects the polyhedron. First, find the interior part
@@ -131,13 +138,15 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
         throw std::runtime_error("Cutting the node increased its volume?!");
       // cut the larger polyhedron by the smaller one:
       // Then triangulate it into tetrahedra
-      SimpleTet tri_cut(cbp /*, max_volume*/);
+      SimpleTet tri_cut(cbp, -1., contains_Gamma);
+      // SimpleTet tri_cut(cbp, max_volume, contains_Gamma);
       if (tri_cut.get_vertices().size()<4){
         //something went wrong.
         /* A (somehow) likely cuplrit is that a face is missing from the cut
         cube and therefor is not a piecewise linear complex. try to re-form
         the input polyhedron and then re-triangulate.*/
-        tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()) /*, max_volume*/);
+        tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()), -1, contains_Gamma);
+        // tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()), max_volume, contains_Gamma);
         if (tri_cut.get_vertices().size()<4)
           throw std::runtime_error("Error determining cut cube triangulation");
       }

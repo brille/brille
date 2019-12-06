@@ -169,3 +169,16 @@ TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling
   timer.toc();
   info_update("Creation of Quartz BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 }
+
+
+TEST_CASE("BrillouinZoneTrellis3 contains Gamma","[trellis][gamma]"){
+  Direct d(3.,3.,3., PI/2, PI/2, PI/2, 1);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  double max_volume = 0.001;
+  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+
+  LQVec<double> Gamma(r, 1u, 0.);
+  auto diff = find(norm(bzt.vertices() - Gamma).is_approx(Comp::eq,0.));
+  REQUIRE(diff.size() == 1u);
+}
