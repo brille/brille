@@ -98,10 +98,12 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
     } else {
     std::array<index_t,3> node_ijk = this->idx2sub(i);
     std::array<index_t,8> vert_idx; // the 8 vertex indices of the cube
+    std::vector<index_t> mapped_vert_idx;
     for (int k=0; k<8; ++k){
       size_t int_idx=0;
       for (int j=0; j<3; ++j) int_idx += (node_ijk[j]+node_intersections[k][j])*intersections_span[j];
       vert_idx[k] = map_idx[int_idx];
+      if (map_idx[int_idx] < n_mapped) mapped_vert_idx.push_back(map_idx[int_idx]);
     }
     if (node_is_cube[i]) {
       nodes_.push_back(CubeNode(vert_idx));
@@ -146,19 +148,10 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
       for (size_t j=0; j<triverts.size(); ++j){
         const ArrayVector<double> trij{triverts.extract(j)};
         debug_update("checking vertex ", trij.to_string(""));
-        auto cube_idx = find(norm(cube.get_vertices()-trij).is_approx(Comp::eq,0.));
+        auto cube_idx = find(norm(kept_intersections.extract(mapped_vert_idx)-trij).is_approx(Comp::eq,0.));
         if (cube_idx.size()>1) throw std::logic_error("Too many matching vertices");
         if (cube_idx.size()==1){
-          // we could try to use the cube polyhedron vertices to map-back to the full trellis intersections
-          // but that seems hard, so as a first attempt check this vertex against *all* kept intersections
-          auto kept_idx = find(norm(kept_intersections-trij).is_approx(Comp::eq,0.));
-          // info_update("Polyhedron vertex in kept_intersections: idx = ",cube_idx);
-          if (kept_idx.size()==1) local_map.push_back(kept_idx[0]);
-          else {
-            info_update("point ",trij.to_string("")," not found in:\n",kept_intersections.to_string());
-            throw std::logic_error("Problem finding index for triangulated vertex");
-          }
-          debug_update("Tetrahedron vertex ",trij.to_string("")," is kept-vertex ",kept_idx[0]);
+          local_map.push_back(mapped_vert_idx[cube_idx[0]]);
         } else {
           auto extra_idx = find(norm(extra_intersections.first(nExtra)-trij).is_approx(Comp::eq,0.));
           if (extra_idx.size()>1)
