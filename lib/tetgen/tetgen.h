@@ -2219,12 +2219,12 @@ public:
     if (badsubsegs) {
       delete badsubsegs;
     }
-    if (encseglist) {
-      delete encseglist;
-    }
-    if (encshlist) {
-      delete encshlist;
-    }
+    // if (encseglist) {
+    //   delete encseglist;
+    // }
+    // if (encshlist) {
+    //   delete encshlist;
+    // }
 
     if (flippool != NULL) {
       delete flippool;

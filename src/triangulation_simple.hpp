@@ -84,8 +84,6 @@ public:
     try {
       if (addGamma){
         tgb.insertaddpoints = 1;
-        info_update("Adding the Gamma point with tgb.plc=",tgb.plc," to");
-        info_update(verts.to_string());
         tetgenio addin;
         addin.numberofpoints = 1;
         addin.pointlist = new double[3];
@@ -116,8 +114,6 @@ public:
     vertices_per_tetrahedron.insert(static_cast<size_t>(tgo.tetrahedronlist[i*tgo.numberofcorners+j]),i,j);
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
-    if (addGamma)
-      info_update("results in triangulated vertices\n",vertex_positions.to_string());
   }
   double volume(const size_t tet) const {
     double v;

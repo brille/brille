@@ -178,7 +178,6 @@ TEST_CASE("BrillouinZoneTrellis3 contains Gamma","[trellis][gamma]"){
   double max_volume = 0.001;
   BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
 
-  LQVec<double> Gamma(r, 1u, 0.);
-  auto diff = find(norm(bzt.vertices() - Gamma).is_approx(Comp::eq,0.));
+  auto diff = find(norm(bzt.vertices()).is_approx(Comp::eq,0.));
   REQUIRE(diff.size() == 1u);
 }
