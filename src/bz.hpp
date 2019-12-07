@@ -246,6 +246,7 @@ public:
              associated Q point is inside of the Brillouin zone.
   */
   template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
+  template<typename T> std::vector<bool> isinside_std(const LQVec<T>& p) const ;
   /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
   @param p A reference to a LQVec list of Q points to be checked
   @returns An ArrayVector<bool> with each 1-element array indicating if the

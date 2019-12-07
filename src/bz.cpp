@@ -882,6 +882,24 @@ template<typename T> ArrayVector<bool> BrillouinZone::isinside(const LQVec<T>& p
     out.insert( dot(normals, p.get(i)-points).all_approx(Comp::le,0.), i );
   return out;
 }
+template<typename T> std::vector<bool> BrillouinZone::isinside_std(const LQVec<T>& p) const {
+  bool isouter = this->outerlattice.issame(p.get_lattice());
+  bool isinner = this->lattice.issame(p.get_lattice());
+  if (!(isouter||isinner))
+    throw std::runtime_error("Q points must be in the standard or primitive lattice");
+  std::vector<bool> out(p.size(), true);
+  LQVec<double> points, normals;
+  if (isouter){
+    points = this->get_points();
+    normals = this->get_normals();
+  } else {
+    points = this->get_primitive_points();
+    normals = this->get_primitive_normals();
+  }
+  for (size_t i=0; i<p.size(); ++i)
+    out[i] = dot(normals, p.get(i)-points).all_approx(Comp::le, 0.);
+  return out;
+}
 
 template<typename T> ArrayVector<bool> BrillouinZone::isinside_wedge(const LQVec<T> &p, const bool constructing) const {
   bool isouter = this->outerlattice.issame(p.get_lattice());
@@ -947,83 +965,6 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
   return out;
 }
 
-// bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau) const {
-//   bool already_same = this->lattice.issame(Q.get_lattice());
-//   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
-//   LQVec<int> tauprim(this->lattice);
-//   PrimitiveTransform PT(this->outerlattice.get_hall());
-//   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
-//   if (!(already_same || transform_needed))
-//     throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-//
-//   if (transform_needed)  Qprim = transform_to_primitive(this->outerlattice,Q);
-//   const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
-//   LQVec<double> & qsl = transform_needed ? qprim : q;
-//   LQVec<int> & tausl = transform_needed? tauprim : tau;
-//
-//   // Determine which points in Q are already inside the first BZ
-//   ArrayVector<bool> allinside = this->isinside(Qsl);
-//   // ensure that qsl and tausl can hold each qi and taui
-//   qsl.resize(Qsl.size());
-//   tausl.resize(Qsl.size());
-//
-//   LQVec<double> halftau = this->get_primitive_points();
-//   LQVec<double> facenrm = this->get_primitive_normals();
-//   LQVec<int> facehkl = (2.0*halftau).round(); // the BZ points are each τ/2
-//
-//   ArrayVector<double> facelen = norm(facehkl);
-//
-//   LQVec<double> qi;
-//   LQVec<int> taui;
-//   ArrayVector<double> q_dot_facenrm;
-//   ArrayVector<int> Nhkl;
-//   size_t maxat = 0;
-//   int maxnm = 0;
-//   size_t count =0;
-//   for (size_t i=0; i<Qsl.size(); i++){
-//     count = 0;
-//     qi = Qsl.get(i);
-//     taui = 0*tausl.get(i);
-//     while (!allinside.getvalue(i) && count++ < 50*facelen.size()){
-//       // std::cout << "Moving q = " << qi.to_string() << std::endl;
-//       q_dot_facenrm = dot( qi , facenrm );
-//       Nhkl = (q_dot_facenrm/facelen).round();
-//       // std::cout << "Nhkl = " << Nhkl.to_string() << std::endl;
-//       if ( Nhkl.all_zero() ) {allinside.insert(true,i); break;} // qi is *on* the Brilluoin Zone surface (or inside) so break.
-//       maxnm = 0;
-//       maxat = 0;
-//       for (size_t j=0; j<Nhkl.size(); ++j){
-//         if (Nhkl.getvalue(j)>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
-//           maxnm = Nhkl.getvalue(j);
-//           maxat = j;
-//         }
-//       }
-//       // std::cout << "Of which, the maximum is vector " << std::to_string(maxat);
-//       // std::cout << " with value " << facehkl.to_string(maxat) << " " << std::to_string(maxnm);
-//       // std::cout << " of which will be removed." << std::endl;
-//
-//       qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
-//       taui += facehkl[maxat] * maxnm; // but add LQVec<int>
-//
-//       allinside.insert(this->isinside(qi).getvalue(0), i);
-//     }
-//     qsl.set(i, &qi);
-//     tausl.set(i, &taui);
-//   }
-//   if (!allinside.all_true()){
-//     std::string msg;
-//     for (size_t i=0; i<Qsl.size(); ++i)
-//       if (!allinside.getvalue(i))
-//         msg += "Q=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
-//             + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i) + "\n";
-//     throw std::runtime_error(msg);
-//   }
-//   if (transform_needed){ // then we need to transform back q and tau
-//     q   = transform_from_primitive(this->outerlattice,qsl);
-//     tau = transform_from_primitive(this->outerlattice,tausl);
-//   }
-//   return allinside.all_true(); // return false if any points are still outside of the first Brilluoin Zone
-// }
 bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   bool already_same = this->lattice.issame(Q.get_lattice());
@@ -1032,165 +973,66 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   PrimitiveTransform PT(this->outerlattice.get_hall());
   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
   if (!(already_same || transform_needed))
-    throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
+    throw std::runtime_error("Q points provided to BrillouinZone::moveinto must be in the standard or primitive lattice used to define the BrillouinZone object");
 
   if (transform_needed)  Qprim = transform_to_primitive(this->outerlattice,Q);
   const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
   LQVec<double> & qsl = transform_needed ? qprim : q;
   LQVec<int> & tausl = transform_needed? tauprim : tau;
 
-  // Determine which points in Q are already inside the first BZ
-  ArrayVector<bool> allinside = this->isinside(Qsl);
+  // the face centre points and normals in the primitive lattice:
+  auto points = this->get_primitive_points();
+  auto normals = this->get_primitive_normals();
+  normals = normals/norm(normals); // ensure they're normalised
+  auto taus = (2.0*points).round();
+  auto taulen = norm(taus);
+  size_t max_count = taus.size();
   // ensure that qsl and tausl can hold each qi and taui
   qsl.resize(Qsl.size());
   tausl.resize(Qsl.size());
-  size_t n_outside{0};
   long long snQ = unsigned_to_signed<long long, size_t>(Qsl.size());
-  // #pragma omp parallel for default(none) shared(Qsl, tausl, qsl, allinside, facelen, facenrm, facehkl, snQ) reduction(+:n_outside), reduction(+:n_maxed) schedule(dynamic)
+#pragma omp parallel for default(none)\
+shared(Qsl, tausl, qsl, points, normals, taus, taulen, snQ, max_count)\
+schedule(dynamic)
   for (long long si=0; si<snQ; si++){
     size_t i = signed_to_unsigned<size_t, long long>(si);
     LQVec<int> taui = Qsl.get(i).round();
     LQVec<double> qi = Qsl.get(i) - taui;
-    bool inside = this->isinside(qi).getvalue(0);
-    allinside.insert(inside, i);
+    size_t count{0};
+    while (count++ < max_count && dot(normals, qi-points).any_approx(Comp::gt,0.)){
+      auto qi_dot_normals = dot(qi , normals);
+      auto Nhkl = (qi_dot_normals/taulen).round().to_std();
+      auto qidn = qi_dot_normals.to_std();
+      //info_update("Q =",Qsl.to_string(i)," tau =",taui.to_string(0)," qi =",qi.to_string(0)," Nhkl = ",Nhkl);
+      if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a != 0;})){
+        int maxnm{0};
+        size_t maxat{0};
+        for (size_t j=0; j<Nhkl.size(); ++j) if (Nhkl[j]>=maxnm && (maxnm==0 || qidn[j]>qidn[maxat]) ){
+          maxnm = Nhkl[j];
+          maxat = j;
+        }
+        qi -= taus[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
+        taui += taus[maxat] * maxnm; // but add LQVec<int>
+      }
+    }
     qsl.set(i, qi);
     tausl.set(i, taui);
-  }
-  if (n_outside > 0){
-    std::string msg;
-    for (size_t i=0; i<Qsl.size(); ++i) if (!allinside.getvalue(i))
-      msg += "\nQ=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
-          + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i);
-    throw std::runtime_error(msg);
   }
   if (transform_needed){ // then we need to transform back q and tau
     q   = transform_from_primitive(this->outerlattice,qsl);
     tau = transform_from_primitive(this->outerlattice,tausl);
   }
-  return 0==n_outside; // return false if any points are still outside of the first Brilluoin Zone
+  ArrayVector<bool> allinside = this->isinside(q);
+  if (!allinside.all_true()){
+    for (size_t i=0; i<Q.size(); ++i) if (!allinside.getvalue(i)){
+      info_update("Q  =",Q.to_string(i)  ," tau  =",tau.to_string(i)  ," q  =",q.to_string(i));
+      info_update("Qsl=",Qsl.to_string(i)," tausl=",tausl.to_string(i)," qsl=",qsl.to_string(i),"\n");
+    }
+    throw std::runtime_error("Not all points inside Brillouin zone");
+    // return false;
+  }
+  return true; // otherwise an error has been thrown
 }
-// bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
-//   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
-//   bool already_same = this->lattice.issame(Q.get_lattice());
-//   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
-//   LQVec<int> tauprim(this->lattice);
-//   PrimitiveTransform PT(this->outerlattice.get_hall());
-//   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
-//   if (!(already_same || transform_needed))
-//     throw std::runtime_error("Q points provided to BrillouinZone::isinside must be in the standard or primitive lattice used to define the BrillouinZone object");
-//
-//   if (transform_needed)  Qprim = transform_to_primitive(this->outerlattice,Q);
-//   const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
-//   LQVec<double> & qsl = transform_needed ? qprim : q;
-//   LQVec<int> & tausl = transform_needed? tauprim : tau;
-//
-//   // Determine which points in Q are already inside the first BZ
-//   ArrayVector<bool> allinside = this->isinside(Qsl);
-//   // ensure that qsl and tausl can hold each qi and taui
-//   qsl.resize(Qsl.size());
-//   tausl.resize(Qsl.size());
-//
-//   LQVec<double> halftau = this->get_primitive_points();
-//   LQVec<double> facenrm = this->get_primitive_normals();
-//   LQVec<int> facehkl = (2.0*halftau).round(); // the BZ points are each τ/2
-//   info_update("tau_i\n",facehkl.to_string());
-//
-//   ArrayVector<double> facelen = norm(facehkl);
-//   size_t n_outside{0}, n_maxed{0}, max_count{2*facelen.size()};
-//   long long snQ = unsigned_to_signed<long long, size_t>(Qsl.size());
-//   // #pragma omp parallel for default(none) shared(Qsl, tausl, qsl, allinside, facelen, facenrm, facehkl, snQ) reduction(+:n_outside), reduction(+:n_maxed) schedule(dynamic)
-//   for (long long si=0; si<snQ; si++){
-//     size_t i = signed_to_unsigned<size_t, long long>(si);
-//     LQVec<double> qi = Qsl.get(i);
-//     LQVec<int>  taui = 0*tausl.get(i);
-//     size_t maxat, count{0};
-//     int maxnm;
-//     bool inside = allinside.getvalue(i);
-//     while (!inside && count++ < max_count){
-//       ArrayVector<double> q_dot_facenrm = dot( qi , facenrm );
-//       std::vector<int> Nhkl = (q_dot_facenrm/facelen).round().to_std();
-//       info_update("Nhkl = ",Nhkl);
-//       if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a != 0;})){
-//         maxnm = 0;
-//         maxat = 0;
-//         for (size_t j=0; j<Nhkl.size(); ++j){
-//           if (Nhkl[j]>=maxnm && (maxnm==0 || q_dot_facenrm.getvalue(j)>q_dot_facenrm.getvalue(maxat)) ){
-//             maxnm = Nhkl[j];
-//             maxat = j;
-//           }
-//         }
-//         qi -= facehkl[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
-//         taui += facehkl[maxat] * maxnm; // but add LQVec<int>
-//         inside = this->isinside(qi).getvalue(0);
-//       } else {
-//         inside = true;  // qi is *on* the Brilluoin Zone surface (or inside) so break.
-//       }
-//     }
-//     if (count >= max_count) ++n_maxed;
-//     allinside.insert(inside, i);
-//     qsl.set(i, qi);
-//     tausl.set(i, taui);
-//     if (!inside) ++n_outside;
-//   }
-//   if (n_maxed > 0){
-//     info_update(n_maxed," point reached the maximum interations");
-//   }
-//   if (n_outside > 0){
-//     std::string msg;
-//     for (size_t i=0; i<Qsl.size(); ++i) if (!allinside.getvalue(i))
-//       msg += "\nQ=" + Qsl.to_string(i) + " is outside of the BrillouinZone "
-//           + " : tau = " + tausl.to_string(i) + " , q = " + qsl.to_string(i);
-//     throw std::runtime_error(msg);
-//   }
-//   if (transform_needed){ // then we need to transform back q and tau
-//     q   = transform_from_primitive(this->outerlattice,qsl);
-//     tau = transform_from_primitive(this->outerlattice,tausl);
-//   }
-//   return 0==n_outside; // return false if any points are still outside of the first Brilluoin Zone
-// }
-
-// bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R) const {
-//   /* The Pointgroup symmetry information comes from, effectively, spglib which
-//   has all rotation matrices defined in the conventional unit cell -- which is
-//   our `outerlattice`. Consequently we must work in the outerlattice here.  */
-//   if (!this->outerlattice.issame(Q.get_lattice()))
-//     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
-//   // get the PointSymmetry object, containing all operations
-//   PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
-//   // ensure q, tau, and R can hold one for each Q.
-//   size_t nQ = Q.size();
-//   q.resize(nQ);
-//   tau.resize(nQ);
-//   R.resize(nQ);
-//   // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
-//   // such that Q = q₁ₛₜ + τ
-//   this->moveinto(Q, q, tau);
-//   // by chance some first Bz points are likely already in the IR-Bz:
-//   std::vector<bool> in_ir = this->isinside_wedge_std(q);
-//   // any q already in the irreducible zone need no rotation → identity
-//   for (size_t i=0; i<nQ; ++i) if ( in_ir[i] ) R[i] = {1,0,0, 0,1,0, 0,0,1};
-//   // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
-//   LQVec<double> qj(Q.get_lattice(), 1u);
-//   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]) for (size_t j=0; j<psym.size(); ++j){
-//     // The point symmetry matrices relate *real space* vectors! We must use
-//     // their transposes' to rotate reciprocal space vectors.
-//     multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
-//     verbose_update("R_",j,"*q = ", qj.to_string(0));
-//     if ( (in_ir[i] = this->isinside_wedge_std(qj)[0]) ){ /* store the result */
-//       q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
-//       R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
-//       break;
-//     }
-//   }
-//   for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
-//     std::string msg = "Q = " + Q.to_string(i);
-//     msg += " is outside of the irreducible BrillouinZone ";
-//     msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
-//     throw std::runtime_error(msg);
-//     return false;
-//   }
-//   return true; // otherwise we hit the runtime error above
-// }
 bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R, const int threads) const {
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
