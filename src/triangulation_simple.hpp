@@ -29,7 +29,7 @@ class SimpleTet{
   ArrayVector<size_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
 public:
   SimpleTet(void): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){}
-  SimpleTet(const Polyhedron& poly, const double max_volume=-1): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
+  SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false): vertex_positions({3u,0u}), vertices_per_tetrahedron({4u,0u}){
     const ArrayVector<double>& verts{poly.get_vertices()};
     const std::vector<std::vector<int>>& vpf{poly.get_vertices_per_face()};
     // create the tetgenbehavior object which contains all options/switches for tetrahedralize
@@ -82,7 +82,18 @@ public:
     // so we can call tetrahedralize:
     verbose_update("Calling tetgen::tetrahedralize");
     try {
+      if (addGamma){
+        tgb.insertaddpoints = 1;
+        tetgenio addin;
+        addin.numberofpoints = 1;
+        addin.pointlist = new double[3];
+        addin.pointmarkerlist = new int[1];
+        for (int j=0; j<3; ++j) addin.pointlist[j] = 0.;
+        addin.pointmarkerlist[0] = verts.size();
+        tetrahedralize(&tgb, &tgi, &tgo, &addin);
+      } else {
         tetrahedralize(&tgb, &tgi, &tgo);
+      }
     } catch (const std::logic_error& e) {
       std::string msg = "tetgen threw a logic error with message\n" + std::string(e.what());
       throw std::runtime_error(msg);

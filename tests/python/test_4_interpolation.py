@@ -203,7 +203,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as vector Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(vecfun_ident(bzg.rlu),[0,0,3])
+        bzg.fill(vecfun_ident(bzg.rlu),[0,3])
         intres = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi).all())
 
@@ -212,7 +212,7 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = np.pi/3
-        bzg.fill(vecfun_rotx(bzg.rlu, ang),[0,0,3])
+        bzg.fill(vecfun_rotx(bzg.rlu, ang),[0,3])
         intres = bzg.interpolate_at(Qi)
         antres = vecfun_rotx(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -222,7 +222,7 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = 3*np.pi/5
-        bzg.fill(vecfun_rotz(bzg.rlu, ang),[0,0,3])
+        bzg.fill(vecfun_rotz(bzg.rlu, ang),[0,3])
         intres = bzg.interpolate_at(Qi)
         antres = vecfun_rotz(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
@@ -231,7 +231,7 @@ class Interpolate (unittest.TestCase):
         """Test with data as matrix Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(matfun_ident(bzg.rlu),[0,0,0,3])
+        bzg.fill(matfun_ident(bzg.rlu),[0,0,9])
         intres = bzg.interpolate_at(Qi)
         antres = matfun_ident(Qi)
         self.assertTrue(np.isclose(intres, antres).all())

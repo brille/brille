@@ -41,7 +41,7 @@ template<class T> void MapGrid3<T>::print_map(void) const {
 //
 template<class T> int MapGrid3<T>::set_map(void){
   for (size_t l=0; l<this->numel(); l++) this->map[l]= (slong)(l);
-  return this->numel()-1 < this->data.size() ? 0 : 1;
+  return this->numel()-1 < data_.size() ? 0 : 1;
 }
 template<class T> int MapGrid3<T>::set_map(const slong* inmap, const size_t* n, const size_t d){
   if ( d!=3u ) return -3;
@@ -90,57 +90,7 @@ template<class T> int MapGrid3<T>::check_map(const ArrayVector<T>& data2check) c
   return ( this->maximum_mapping() < data2check.size() ) ? 0 : 1;
 }
 template<class T> int MapGrid3<T>::check_map(void) const {
-  return this->check_map(this->data);
-}
-//
-template<class T> void MapGrid3<T>::check_elements(void){
-  size_t total_elements = 1u;
-  // scalar + eigenvector + vector + matrix*matrix elements
-  size_t known_elements = static_cast<size_t>(this->elements[0])
-                        + static_cast<size_t>(this->elements[1])
-                        + static_cast<size_t>(this->elements[2])
-                        + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
-  // no matter what, shape[0] should be the number of gridded points
-  if (shape.size()>2){
-    // if the number of dimensions of the shape array is greater than two,
-    // the second element is the number of modes per point                    */
-    this->branches = shape.getvalue(1u);
-    for (size_t i=2u; i<this->shape.size(); ++i) total_elements *= shape.getvalue(i);
-  } else {
-    // shape is [n_points, n_elements] or [n_points,], so there is only one mode
-    this->branches = 1u;
-    total_elements = shape.size() > 1 ? shape.getvalue(1u) : 1u;
-  }
-  if (0 == known_elements)
-    this->elements[0] = total_elements;
-  if (known_elements && known_elements != total_elements){
-    std::string msg ="Inconsistent element counts: "
-                    + std::to_string(known_elements) + " = "
-                    + std::to_string(this->elements[0]) + "+"
-                    + std::to_string(this->elements[1]) + "+"
-                    + std::to_string(this->elements[2]) + "+"
-                    + std::to_string(this->elements[3]) + "² ≠ "
-                    + std::to_string(total_elements);
-    throw std::runtime_error(msg);
-  }
-}
-template<class T>
-int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
-                              const ArrayVector<size_t>& newshape,
-                              const std::array<unsigned, 4>& new_elements){
-  this->data =  newdata;
-  this->shape = newshape;
-  this->elements = new_elements;
-  this->check_elements();
-  return this->check_map();
-}
-template<class T>
-int MapGrid3<T>::replace_data(const ArrayVector<T>& newdata,
-                              const std::array<unsigned, 4>& new_elements){
-  ArrayVector<size_t> shape(1,2);
-  shape.insert(newdata.size(),0);
-  shape.insert(newdata.numel(),1);
-  return this->replace_data(newdata, shape, new_elements);
+  return this->check_map(data_.data());
 }
 //
 template<class T> size_t MapGrid3<T>::sub2lin(const size_t i, const size_t j, const size_t k) const {
@@ -247,15 +197,6 @@ template<class T> size_t MapGrid3<T>::resize(const size_t *n){
   return this->numel();
 }
 //
-template<class T> size_t MapGrid3<T>::data_ndim(void) const {
-  return this->shape.size();
-}
-template<class T> size_t MapGrid3<T>::num_data(void) const {
-  return this->data.size();
-}
-template<class T> ArrayVector<size_t> MapGrid3<T>::data_shape(void) const {
-  return this->shape;
-}
 template<class T> ArrayVector<size_t> MapGrid3<T>::get_N(void) const {
   ArrayVector<size_t> out(1u,3u, this->N);
   return out;

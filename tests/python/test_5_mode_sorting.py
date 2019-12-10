@@ -105,7 +105,7 @@ class ModeSorting(unittest.TestCase):
                             [1, 1, 0], [-1, 0, -1], [1, 1, 1]])
         rand_vecs = np.array([permutation(vectors) for _ in range(n_q)])
         # rand_vecs is (n_q, 6, 3), which is what we want
-        bz_grid.fill(rand_vecs, [0,0,3])
+        bz_grid.fill(rand_vecs, [0,3])
         perm = bz_grid.centre_sort_perm()
         sort_vecs = np.array([x[y, :] for (x, y) in zip(rand_vecs, perm)])
         all_close = np.isclose(np.diff(sort_vecs, axis=0), 0).all()

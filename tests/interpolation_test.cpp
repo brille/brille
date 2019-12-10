@@ -28,9 +28,8 @@ ArrayVector<double> f_of_Q(const ArrayVector<double>& Q){
 }
 ArrayVector<double> f_of_Q_mats(const ArrayVector<double>& Q){
   size_t i,j,n = 36u;
-  ArrayVector<double> out( n, Q.size() );
+  ArrayVector<double> out( n, Q.size(), 0.);
   for (i=0; i<Q.size(); ++i){
-    for (j=0; j<n; ++j) out.insert(0.0, i,j);
     // mode 0
     for (j=0; j<3u; ++j) out.insert( Q.getvalue(i,j), i, j*4u); // first matrix
     // mode 1
@@ -109,13 +108,10 @@ TEST_CASE("BrillouinZoneGrid3 Sorting","[munkres]"){
   size_t halfN[3] = {10,10,10};
   BrillouinZoneGrid3<double> bzg(bz,halfN);
 
-  ArrayVector<size_t> newshape(1u,4u); // (nQ, 3,3, nModes)
   ArrayVector<double> Qmap = bzg.get_mapped_xyz();
-  newshape.insert( Qmap.size(), 0u );
-  newshape.insert( 3u, 1u );
-  newshape.insert( 3u, 2u );
-  newshape.insert( 4u, 3u );
-  bzg.replace_data( f_of_Q_mats( Qmap ), newshape ); // maybe mapped_hkl instead?
+  std::vector<size_t> newshape({Qmap.size(), 4u, 3u, 3u}); // (nQ, 3,3, nModes)
+  std::array<size_t,3> elements({0u,0u,9u});
+  bzg.replace_data( f_of_Q_mats( Qmap ), newshape, elements ); // maybe mapped_hkl instead?
 
   ArrayVector<size_t> sortperm = bzg.centre_sort_perm();
 }

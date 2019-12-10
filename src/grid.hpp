@@ -26,7 +26,7 @@ typedef long slong; // ssize_t is only defined for gcc?
 #include <omp.h>
 // #include <complex>
 // #include <memory>
-
+#include "interpolation_data.hpp"
 #include "utilities.hpp"
 #include "permutation.hpp"
 
@@ -45,26 +45,20 @@ protected:
   size_t N[3];                 //!< The number of points along each axis of the grid
   size_t span[3];              //!< The span along each axis, allowing conversion from subscripted to linear indexing
   slong *map;                  //!< The mapping grid
-  ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
-  ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
-  std::array<unsigned, 4> elements; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
-  size_t branches;             //!< The number of branches contained per data array
+  InterpolationData<T> data_;
 public:
   // constructors
-  MapGrid3(const size_t *n=default_n): map(nullptr), data(0,0), shape(1,0), branches(0)
+  MapGrid3(const size_t *n=default_n): map(nullptr)
     { this->set_size(n); }
-  MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr), branches(0)
+  MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); }
-  MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr), branches(0)
+  MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); }
   // copy constructor
   MapGrid3(const MapGrid3<T>& other): map(nullptr) {
     this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
     for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
-    this->elements = other.elements;
-    this->branches = other.branches;
-    this->data = other.data;
-    this->shape= other.shape;
+    this->data_ = other.data();
   }
   // destructor
   ~MapGrid3(){
@@ -76,10 +70,7 @@ public:
     if (this != &other){
       this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
       for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
-      this->elements = other.elements;
-      this->branches = other.branches;
-      this->data = other.data;
-      this->shape= other.shape;
+      this->data_ = other.data();
     }
     return *this;
   }
@@ -121,30 +112,8 @@ public:
   int check_map(const ArrayVector<T>& data2check) const;
   //! Determine if `map` is consistent with `data`
   int check_map(void) const;
-  //! Verify that the provided element counts are consistent with the data shape
-  void check_elements(void);
-  /*! Replace the data stored in the object
-  @param newdata the new ArrayVector of data to be stored
-  @param newshape the shape information of each array in `newdata`
-  @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
-  @note `newshape` provides information about the N dimensions and extent of
-        each array in `newdata`, the array of four unsigned integers provide
-        information on how many scalar, eigenvector, vector, and matrix elements
-        (in that order) are contained within the N-1 dimensions of each array.
-        `new_elements[0]`+`new_elements[1]`+`new_elements[2]`+
-        `new_elements[3]`×`new_elements[3]` must be equal to the
-        product of newshape[1:N-1].
-  */
-  int replace_data(const ArrayVector<T>& newdata,
-                   const ArrayVector<size_t>& newshape,
-                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({{0,0,0,0}}));
-  /*! Replace the data stored in the object
-  @param newdata the new ArrayVector of data to be stored
-  @param new_elements The number of scalar, eigenvector elements, vector elements, and matrix elements contained each newdata array
-  @note This version of the method assumes each array in `newdata` is a vector
-  */
-  int replace_data(const ArrayVector<T>& newdata,
-                   const std::array<unsigned,4>& new_elements = std::array<unsigned,4>({{0,0,0,0}}));
+  //! Replace the data stored in the object
+  template<typename... A> int replace_data(A... args) { this->data_.replace_data(args...); return this->check_map();}
   //! Calculate the linear index of a point given its three subscripted indices
   size_t sub2lin(const size_t i, const size_t j, const size_t k) const;
   /*! Calculate the linear index of a point given an array of its three subscripted indices
@@ -211,12 +180,8 @@ public:
   size_t resize(const size_t n0, const size_t n1, const size_t n2);
   //! Change the size of the mapping grid given an array of the new sizes
   size_t resize(const size_t *n);
-  //! Return the number of dimensions of each array in the `data` ArrayVector
-  size_t data_ndim(void) const;
-  //! Return the number of arrays in the `data` ArrayVector
-  size_t num_data(void) const;
-  //! Return the `shape` ArrayVector containing information about the arrays in the `data` ArrayVector
-  ArrayVector<size_t> data_shape(void) const;
+  // Get a constant reference to the stored data
+  const InterpolationData<T>& data(void) const {return data_;}
   //! Return the three sizes of the mapping grid as an ArrayVector
   ArrayVector<size_t> get_N(void) const;
   /*! Determine the neighbouring grid points of a given grid linear index
@@ -268,11 +233,10 @@ public:
   @param vcf which vector cost function to use.
   */
   template<typename R>
-  bool sort_difference(const R, const R, const R, const R,
+  bool sort_difference(const R, const R, const R,
                        const size_t, const size_t,
                        ArrayVector<size_t>&,
-                       const size_t, const size_t,
-                       const int ecf, const int vcf) const;
+                       const size_t, const size_t, const int vcf) const;
   /*!
   \brief Use the sorted elements at two neighbouring grid points to determine
          the sorting permutation of the elements at a third neighbouring grid
@@ -316,25 +280,21 @@ public:
   @param vcf which vector cost function to use.
   */
   template<typename R>
-  bool sort_derivative(const R, const R, const R, const R,
+  bool sort_derivative(const R, const R, const R,
                        const size_t, const size_t,
                        ArrayVector<size_t>&,
-                       const size_t, const size_t, const size_t,
-                       const int ecf, const int vcf) const;
+                       const size_t, const size_t, const size_t, const int vcf) const;
   template<typename R>
   size_t sort_recursion(const size_t centre,
-                        const R wS, const R wE, const R wV, const R wM,
-                        const int ecf, const int vcf,
+                        const R wS, const R wV, const R wM, const int vcf,
                         const size_t span, const size_t nobj,
                         ArrayVector<size_t>& perm,
                         std::vector<bool>& sorted,
                         std::vector<bool>& locked) const;
   template<typename R=double>
   ArrayVector<size_t> centre_sort_perm(const R scalar_weight=R(1),
-                                       const R eigenv_weight=R(1),
                                        const R vector_weight=R(1),
                                        const R matrix_weight=R(1),
-                                       const int ecf=0,
                                        const int vcf=0) const;
   //
   std::tuple<std::vector<size_t>,std::vector<size_t>,std::vector<size_t>>
@@ -344,61 +304,42 @@ public:
   classify_sorted_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
   //
   template<class R>
-  bool multi_sort_derivative(const R scales[4], const int funcs[2],
+  bool multi_sort_derivative(const R scales[3], const int func,
     const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     const size_t cidx, const std::vector<size_t> nidx,
     const std::vector<size_t> nnidx, const size_t no_pairs) const;
   //
   template<class R>
-  bool multi_sort_derivative_all(const R scales[4], const int funcs[2],
+  bool multi_sort_derivative_all(const R scales[3], const int func,
     const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     const size_t cidx, const std::vector<size_t> nidx,
     const std::vector<size_t> nnidx/*, const size_t no_pairs*/) const;
   //
   template<class R>
-  bool multi_sort_difference(const R weights[4], const int funcs[2],
+  bool multi_sort_difference(const R weights[3], const int func,
     const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     const size_t cidx, const std::vector<size_t> nidx) const;
   //
   template<class R> size_t multi_sort_recursion(const size_t centre,
-    const R weights[4], const int funcs[2], const size_t spobj[2],
+    const R weights[3], const int func, const size_t spobj[2],
     ArrayVector<size_t>& perm, std::vector<bool>& sorted,
     std::vector<bool>& locked, std::vector<size_t>& visited) const;
   //
-  template<class R> size_t multi_sort(const size_t centre, const R weights[4],
-    const int funcs[2], const size_t spobj[2], ArrayVector<size_t>& perm,
+  template<class R> size_t multi_sort(const size_t centre, const R weights[3],
+    const int func, const size_t spobj[2], ArrayVector<size_t>& perm,
     std::vector<bool>& sorted, std::vector<bool>& locked,
     std::vector<size_t>& visited) const;
   //
   template<typename R=double>
   ArrayVector<size_t> multi_sort_perm(
     const R scalar_weight=R(1),
-    const R eigenv_weight=R(1),
     const R vector_weight=R(1),
     const R matrix_weight=R(1),
-    const int ecf=0, const int vcf=0) const ;
-  /*! \brief Sum over the data array
-
-  Either add together the elements of the array stored at each mapped point
-  or add together all of the arrays.
-  @param axis The axis along which to perform the summation -- 1 adds arrays,
-              0 (or not 1, really) adds elements of each array.
-  @returns An ArrayVector with `numel()==1` for `axis=0` or `size()==1` for
-           `axis=1`
-  */
-  ArrayVector<T> sum_data(const int axis) const{
-    return this->data.sum(axis);
-  }
-  template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
-  ArrayVector<S> debye_waller_sum(const LQVec<R>& Q, const R beta) const;
-  template<class R, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
-  ArrayVector<S> debye_waller_sum(const ArrayVector<R>& Q, const R t_K) const;
-  template<class R, template<class> class A, class S = typename std::common_type<typename CostTraits<T>::type,R>::type>
-  ArrayVector<S> debye_waller(const A<R>& Q, const std::vector<R>& M, const R t_K) const;
-  /*! \brief Return a constant reference to the data ArrayVector
-  */
-  const ArrayVector<T>& get_data() const {
-    return this->data;
+    const int vcf=0) const ;
+  // Calculate the Debye-Waller factor for the provided Q points and ion masses
+  template<template<class> class A>
+  ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
+    return data_.debye_waller(Q,M,t_K);
   }
 protected:
   void set_size(const size_t *n);
@@ -624,7 +565,7 @@ public:
   //! Perform sanity checks before attempting to interpolate
   template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x) const {
     unsigned int mask=0u;
-    if (this->data.size()==0)
+    if (this->data_.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
@@ -671,13 +612,16 @@ public:
   */
   template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x) const {
     unsigned int mask = this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[8], ijk[3], cnt;
+    ArrayVector<T> out(this->data_.numel(), x.size());
+    std::vector<size_t> corners;
+    std::vector<double> weights;
+    size_t ijk[3], cnt;
     unsigned int flg;
     int oob=0;
-    double weights[8];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
     for (size_t i=0; i<x.size(); i++){
+      corners.resize(8u);
+      weights.resize(8u);
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.data(i), ijk, mask);
       // flg = this->floor_index(x.data(i), ijk, mask );
@@ -707,8 +651,7 @@ public:
         if (5==flg)/*+x+*/ dirs[0] = 1u;
         if (6==flg)/*x++*/ dirs[0] = 0u;
 
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
-        // oob = floor_corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),3u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob){
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
@@ -716,14 +659,13 @@ public:
         }
       }
       // now do the actual interpolation:
-      // extract an ArrayVector(this->data.numel(),cnt) of the corner Arrays
+      // extract an ArrayVector(data_.numel(),cnt) of the corner Arrays
       // multiply all elements at each corner by the weight for that corner
-      // sum over the corners, returning an ArrayVector(this->data.numel(),1u)
+      // sum over the corners, returning an ArrayVector(data_.numel(),1u)
       // and set that ArrayVector as element i of the output ArrayVector
-      unsafe_interpolate_to(this->data,
-                            this->elements,
-                            this->branches,
-                            cnt,corners,weights,out,i);
+      corners.resize(cnt);
+      weights.resize(cnt);
+      this->data_.interpolate_at(corners, weights, out, i);
     }
     return out;
   }
@@ -744,20 +686,22 @@ public:
   */
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x, const int threads) const {
     unsigned int mask = this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data.numel(), x.size());
+    ArrayVector<T> out(this->data_.numel(), x.size());
 
     (threads>0) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
-
-    size_t corners[8], ijk[3], cnt=0u;
+    std::vector<size_t> corners(8,0);
+    std::vector<double> weights(8,0.);
+    size_t ijk[3], cnt=0u;
     unsigned int flg=0;
     int oob=0;
-    double weights[8];
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
     size_t n_oob{0};
 #pragma omp parallel for default(none) shared(x,out,corner_count,mask) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs) reduction(+:n_oob) schedule(dynamic)
     for (slong si=0; si<xsize; si++){
       size_t i = signed_to_unsigned<size_t,slong>(si);
+      corners.resize(8u);
+      weights.resize(8u);
       // find the closest grid subscripted indices to x[i]
       flg = this->nearest_index(x.data(i), ijk, mask );
       cnt = 1u; // will be modified if more than one-point interpolation
@@ -781,11 +725,13 @@ public:
           if (5==flg)/*+x+*/ dirs[0] = 1u;
           if (6==flg)/*x++*/ dirs[0] = 0u;
 
-          oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,3u,dirs);
+          oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),3u,dirs);
           cnt = corner_count[dirs.size()];
         }
         if (!oob) {
-          unsafe_interpolate_to(this->data,this->elements,this->branches,cnt,corners,weights,out,i);
+          corners.resize(cnt);
+          weights.resize(cnt);
+          this->data_.interpolate_at(corners, weights, out, i);
         } else {
           ++n_oob;
         }
@@ -830,6 +776,5 @@ template<class T> struct GridDiffTraits<std::complex<T>>{
 
 #include "grid.tpp"
 #include "grid_sorting.tpp"
-#include "grid_sums.tpp"
 
 #endif

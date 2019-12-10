@@ -30,8 +30,10 @@ template<typename T> static std::vector<T> unique(const std::vector<T>& x){
         out.push_back(v);
     return out;
 }
-template<typename T> static size_t count_unique(const std::vector<T>& x){
-    return unique(x).size();
+template<typename T> static bool is_dangling(const std::vector<size_t>& adjacents, const std::vector<T>& face){
+  bool not_dangling{true};
+  for (auto & x: face) not_dangling &= adjacents[x] > 2u;
+  return !not_dangling;
 }
 
 template <typename T>
@@ -950,13 +952,11 @@ public:
         }
         // remove any faces without three vertices
         keep.resize(pp.size());\
-        for (size_t j=0; j<pp.size(); ++j) keep.insert(count_unique(vpf[j])>2, j);
+        for (size_t j=0; j<pp.size(); ++j) keep.insert(unique(vpf[j]).size()>2, j);
         pp = pp.extract(keep);
         pn = pn.extract(keep);
         // and remove their empty vertex lists
-        for (auto i = vpf.begin(); i != vpf.end(); ){
-            if (count_unique(*i)<3) vpf.erase(i); else ++i;
-        }
+        vpf.erase(std::remove_if(vpf.begin(), vpf.end(), [](std::vector<int> i){return unique(i).size()<3;}), vpf.end());
         // remove any faces that are not connected on all sides
         bool check_again{true};
         while (check_again){
@@ -968,14 +968,18 @@ public:
                         adjacent_face_no[j]++;
             }
             // for each face now check if all vertices are adjacent to 3+ faces
+            // storing the result for reducing pp & pn
             keep.resize(pp.size());
             size_t face_idx{0};
-            for (auto i = vpf.begin(); i != vpf.end(); ){
-                bool ok{true};
-                for (auto & x: *i) ok &= adjacent_face_no[x] > 2u;
-                if (ok) ++i; else vpf.erase(i);
-                keep.insert(ok, face_idx++);
-            }
+            for (auto & face: vpf)
+              keep.insert(!is_dangling(adjacent_face_no, face), face_idx++);
+            // and going through a second time to erase extraneous faces:
+            vpf.erase(
+              std::remove_if(vpf.begin(), vpf.end(),
+                [adjacent_face_no](std::vector<int>& face){
+                  return is_dangling(adjacent_face_no, face);
+                }
+              ), vpf.end());
             check_again = keep.count_true() < pp.size();
             if (check_again){
                 pp = pp.extract(keep);

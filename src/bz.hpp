@@ -76,7 +76,7 @@ public:
     }
     // fallback in case voro_search fails for some reason?!?
     if (approx_scalar(new_volume, 0.)){
-      debug_update("voro_search failed to produce a non-null first Brillouin zone.");
+      info_update("voro_search failed to produce a non-null first Brillouin zone.");
       this->vertex_search(extent);
     } else {
       verbose_update("New polyhedron volume ", this->polyhedron.get_volume());
@@ -246,6 +246,7 @@ public:
              associated Q point is inside of the Brillouin zone.
   */
   template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
+  template<typename T> std::vector<bool> isinside_std(const LQVec<T>& p) const ;
   /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
   @param p A reference to a LQVec list of Q points to be checked
   @returns An ArrayVector<bool> with each 1-element array indicating if the

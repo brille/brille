@@ -62,21 +62,6 @@ utilized.
 This class holds P and P⁻¹ for a given centering type.
 */
 class PrimitiveTransform{
-protected:
-  constexpr static const std::array<double,9> P_P{  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
-  constexpr static const std::array<double,9> P_I{-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
-  constexpr static const std::array<double,9> P_F{  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
-  constexpr static const std::array<double,9> P_A{  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
-  constexpr static const std::array<double,9> P_B{ 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
-  constexpr static const std::array<double,9> P_C{ 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
-  constexpr static const std::array<double,9> P_R{2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
-  constexpr static const std::array<int,9> invP_P{ 1, 0, 0,  0, 1, 0,  0, 0, 1};
-  constexpr static const std::array<int,9> invP_I{ 0, 1, 1,  1, 0, 1,  1, 1, 0};
-  constexpr static const std::array<int,9> invP_F{-1, 1, 1,  1,-1, 1,  1, 1,-1};
-  constexpr static const std::array<int,9> invP_A{ 1, 0, 0,  0, 1, 1,  0,-1, 1};
-  constexpr static const std::array<int,9> invP_B{ 1, 0, 1,  0, 1, 0, -1, 0, 1};
-  constexpr static const std::array<int,9> invP_C{ 1,-1, 0,  1, 1, 0,  0, 0, 1};
-  constexpr static const std::array<int,9> invP_R{ 1, 0, 1, -1, 1, 1,  0,-1, 1};
 private:
   Bravais bravais;    //!< The Bravais enum value
 public:
@@ -89,25 +74,25 @@ public:
   std::array<double,9> get_P(void) const {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
-      case Bravais::I: return PrimitiveTransform::P_I;
-      case Bravais::F: return PrimitiveTransform::P_F;
-      case Bravais::A: return PrimitiveTransform::P_A;
-      case Bravais::B: return PrimitiveTransform::P_B;
-      case Bravais::C: return PrimitiveTransform::P_C;
-      case Bravais::R: return PrimitiveTransform::P_R;
-      default: return PrimitiveTransform::P_P;
+      case Bravais::I: return {-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
+      case Bravais::F: return {  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
+      case Bravais::A: return {  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
+      case Bravais::B: return { 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
+      case Bravais::C: return { 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
+      case Bravais::R: return {2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
+      default: return {  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
     }
   }
   std::array<int,9> get_invP(void) const {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
-      case Bravais::I: return PrimitiveTransform::invP_I;
-      case Bravais::F: return PrimitiveTransform::invP_F;
-      case Bravais::A: return PrimitiveTransform::invP_A;
-      case Bravais::B: return PrimitiveTransform::invP_B;
-      case Bravais::C: return PrimitiveTransform::invP_C;
-      case Bravais::R: return PrimitiveTransform::invP_R;
-      default: return PrimitiveTransform::invP_P;
+      case Bravais::I: return { 0, 1, 1,  1, 0, 1,  1, 1, 0};
+      case Bravais::F: return {-1, 1, 1,  1,-1, 1,  1, 1,-1};
+      case Bravais::A: return { 1, 0, 0,  0, 1, 1,  0,-1, 1};
+      case Bravais::B: return { 1, 0, 1,  0, 1, 0, -1, 0, 1};
+      case Bravais::C: return { 1,-1, 0,  1, 1, 0,  0, 0, 1};
+      case Bravais::R: return { 1, 0, 1, -1, 1, 1,  0,-1, 1};
+      default: return { 1, 0, 0,  0, 1, 0,  0, 0, 1};
     }
   }
   std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }

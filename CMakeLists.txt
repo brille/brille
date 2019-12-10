@@ -27,13 +27,6 @@ else()
 endif()
 
 set(CMAKE_MACOSX_RPATH 1)
-if (MSVC)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Zi")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /O2")
-else()
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
-endif()
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
@@ -48,11 +41,6 @@ find_package(PythonInterp)
 find_package(pybind11 REQUIRED)
 pybind11_add_module(_brille ${PROJECT_SOURCE_DIR}/src/_brille.cpp "")
 
-if(MSVC)
-	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-		target_link_options(_brille PUBLIC /DEBUG)
-	endif()
-endif()
 add_custom_target(write_version_info
                   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

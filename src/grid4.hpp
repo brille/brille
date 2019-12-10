@@ -19,6 +19,7 @@
 
 typedef long slong; // ssize_t is only defined for gcc?
 
+#include "interpolation_data.hpp"
 #include "interpolation.hpp"
 #include "neighbours.hpp"
 
@@ -37,11 +38,10 @@ protected:
   size_t N[4];                 //!< The number of points along each axis of the grid
   size_t span[4];              //!< The span along each axis, allowing conversion from subscripted to linear indexing
   slong *map;                  //!< The mapping grid
-  ArrayVector<T> data;         //!< The stored ArrayVector indexed by `map`
-  ArrayVector<size_t> shape;   //!< A second ArrayVector to indicate a possible higher-dimensional shape of each `data` array
+  InterpolationData<T> data_;
 public:
   // constructors
-  MapGrid4(const size_t *n=default_n4): map(nullptr), data(0,0), shape(1,0)
+  MapGrid4(const size_t *n=default_n4): map(nullptr)
     { this->set_size(n); }
   MapGrid4(const size_t *n, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); }
@@ -51,8 +51,7 @@ public:
   MapGrid4(const MapGrid4<T>& other): map(nullptr) {
     this->resize(other.size(0),other.size(1),other.size(2),other.size(3)); // sets N, calculates span, frees/allocates map memory if necessary
     for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
-    this->data = other.data;
-    this->shape= other.shape;
+    this->data_ = other.data_;
   }
   // destructor
   ~MapGrid4(){
@@ -64,8 +63,7 @@ public:
     if (this != &other){
       this->resize(other.size(0),other.size(1),other.size(2),other.size(3)); // sets N, calculates span, frees/allocates map memory if necessary
       for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
-      this->data = other.data;
-      this->shape= other.shape;
+      this->data_ = other.data_;
     }
     return *this;
   }
@@ -107,16 +105,10 @@ public:
   int check_map(const ArrayVector<T>& data2check) const;
   //! Determine if `map` is consistent with `data`
   int check_map(void) const;
-  /*! Replace the data stored in the object
-  @param newdata the new ArrayVector of data to be stored
-  @param newshape the shape information of each array in `newdata`
-  */
-  int replace_data(const ArrayVector<T>& newdata, const ArrayVector<size_t>& newshape);
-  /*! Replace the data stored in the object
-  @param newdata the new ArrayVector of data to be stored
-  @note This version of the method assumes each array in `newdata` is a vector
-  */
-  int replace_data(const ArrayVector<T>& newdata);
+  // Get a constant reference to the stored data
+  const InterpolationData<T>& data(void) const {return data_;}
+  // Replace the data stored in the object
+  template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
   //
   //! Calculate the linear index of a point given its four subscripted indices
   size_t sub2lin(const size_t i, const size_t j, const size_t k, const size_t l) const;
@@ -141,26 +133,8 @@ public:
   size_t resize(const size_t n0, const size_t n1, const size_t n2, const size_t n3);
   //! Change the size of the mapping grid given an array of the new sizes
   size_t resize(const size_t *n);
-  //! Return the number of dimensions of each array in the `data` ArrayVector
-  size_t data_ndim(void) const;
-  //! Return the number of arrays in the `data` ArrayVector
-  size_t num_data(void) const;
-  //! Return the `shape` ArrayVector containing information about the arrays in the `data` ArrayVector
-  ArrayVector<size_t> data_shape(void) const;
   //! Return the three sizes of the mapping grid as an ArrayVector
   ArrayVector<size_t> get_N(void) const;
-  /*! \brief Sum over the data array
-
-  Either add together the elements of the array stored at each mapped point
-  or add together all of the arrays.
-  @param axis The axis along which to perform the summation -- 1 adds arrays,
-              0 (or not 1, really) adds elements of each array.
-  @returns An ArrayVector with `numel()==1` for `axis=0` or `size()==1` for
-           `axis=1`
-  */
-  ArrayVector<T> sum_data(const int axis) const{
-    return this->data.sum(axis);
-  }
 protected:
   void set_size(const size_t *n);
   void calc_span();
@@ -330,7 +304,7 @@ public:
   template<typename R> int check_before_interpolating(const ArrayVector<R>& x){
     if (this->size(0)<2||this->size(1)<2||this->size(2)<2||this->size(3)<2)
       throw std::runtime_error("Interpolation is only possible on grids with at least two elements in each dimension");
-    if (this->data.size()==0)
+    if (this->data_.size()==0)
       throw std::runtime_error("The grid must be filled before interpolating!");
     if (x.numel()!=3u)
       throw std::runtime_error("InterpolateGrid4 requires x values which are three-vectors.");
@@ -349,13 +323,16 @@ public:
   */
   template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
     this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[16], ijk[4];
+    ArrayVector<T> out(this->data_.numel(), x.size());
+    std::vector<size_t> corners;
+    std::vector<double> weights;
+    size_t ijk[4];
     int oob;
-    double weights[16];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
     //TODO: switch this to an omp for loop
     for (size_t i=0; i<x.size(); i++){
+      corners.resize(16);
+      weights.resize(16);
       // find the closest grid subscripted indices to x[i]
       unsigned int flg = this->nearest_index(x.data(i), ijk );
       size_t cnt = 1u;
@@ -393,14 +370,16 @@ public:
 
         // determine the linear indices for the (up to) 16 grid points
         // surrounding x[i] plus their linear-interpolation weights.
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
+        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),4u,dirs);
         cnt = corner_count[dirs.size()];
         if (oob) {
           std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
           throw std::runtime_error(msg);
         }
       }
-      unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
+      corners.resize(cnt);
+      weights.resize(cnt);
+      this->data_.interpolate_at(corners,weights,out,i);
     }
     return out;
   }
@@ -417,61 +396,72 @@ public:
   */
   template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
     this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data.numel(), x.size());
-    size_t corners[16], ijk[4];
+    ArrayVector<T> out(this->data_.numel(), x.size());
+    std::vector<size_t> corners;
+    std::vector<double> weights;
+    size_t ijk[4];
     int oob;
-    double weights[16];
     std::vector<size_t> dirs, corner_count={1u,2u,4u,8u,16u};
-
+    size_t n_oob{0};
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
-#pragma omp parallel for default(none) shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) reduction(+:n_oob) schedule(dynamic)
     for (slong si=0; si<xsize; si++){
+      corners.resize(16);
+      weights.resize(16);
       size_t i = signed_to_unsigned<size_t,slong>(si);
       // find the closest grid subscripted indices to x[i]
       unsigned int flg = this->nearest_index(x.data(i), ijk );
       size_t cnt = 1u;
-      if (flg > 16){
-        std::string msg_flg = "Unsure what to do with flg = " + std::to_string(flg);
-        throw std::runtime_error(msg_flg);
-      }
-      if (15==flg)/*++++*/{
-        this->sub2map(ijk,corners[0]);
-        weights[0]=1.0;
-      } else {
-        if (0==flg)/*xxxx*/{
-          dirs.resize(4);
-          dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+      oob = 0;
+      if (flg < 16){
+        if (15==flg)/*++++*/{
+          this->sub2map(ijk,corners[0]);
+          weights[0]=1.0;
+        } else {
+          if (0==flg)/*xxxx*/{
+            dirs.resize(4);
+            dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; dirs[3]=3u;
+          }
+          if ( 1==flg|| 2==flg|| 4==flg|| 8==flg) dirs.resize(3);
+          if ( 1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
+          if ( 2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
+          if ( 4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
+          if ( 8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
+
+          if ( 3==flg|| 5==flg|| 9==flg|| 6==flg|| 10==flg|| 12==flg) dirs.resize(2);
+          if ( 3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
+          if ( 5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
+          if ( 9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
+          if ( 6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
+          if (10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
+          if (12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
+
+          if ( 7==flg|| 11==flg || 13==flg || 14==flg) dirs.resize(1);
+          if ( 7==flg)/*+++x*/ dirs[0]=3u;
+          if (11==flg)/*++x+*/ dirs[0]=2u;
+          if (13==flg)/*+x++*/ dirs[0]=1u;
+          if (14==flg)/*x+++*/ dirs[0]=0u;
+
+          oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),4u,dirs);
+          cnt = corner_count[dirs.size()];
         }
-        if ( 1==flg|| 2==flg|| 4==flg|| 8==flg) dirs.resize(3);
-        if ( 1==flg)/*+xxx*/{ dirs[0]=1u; dirs[1]=2u; dirs[2]=3u; }
-        if ( 2==flg)/*x+xx*/{ dirs[0]=0u; dirs[1]=2u; dirs[2]=3u; }
-        if ( 4==flg)/*xx+x*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=3u; }
-        if ( 8==flg)/*xxx+*/{ dirs[0]=0u; dirs[1]=1u; dirs[2]=2u; }
-
-        if ( 3==flg|| 5==flg|| 9==flg|| 6==flg|| 10==flg|| 12==flg) dirs.resize(2);
-        if ( 3==flg)/*++xx*/{ dirs[0]=2u; dirs[1]=3u; }
-        if ( 5==flg)/*+x+x*/{ dirs[0]=1u; dirs[1]=3u; }
-        if ( 9==flg)/*+xx+*/{ dirs[0]=1u; dirs[1]=2u; }
-        if ( 6==flg)/*x++x*/{ dirs[0]=0u; dirs[1]=3u; }
-        if (10==flg)/*x+x+*/{ dirs[0]=0u; dirs[1]=2u; }
-        if (12==flg)/*xx++*/{ dirs[0]=0u; dirs[1]=1u; }
-
-        if ( 7==flg|| 11==flg || 13==flg || 14==flg) dirs.resize(1);
-        if ( 7==flg)/*+++x*/ dirs[0]=3u;
-        if (11==flg)/*++x+*/ dirs[0]=2u;
-        if (13==flg)/*+x++*/ dirs[0]=1u;
-        if (14==flg)/*x+++*/ dirs[0]=0u;
-
-        oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners,weights,4u,dirs);
-        cnt = corner_count[dirs.size()];
-        if (oob) {
-          std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
-          throw std::runtime_error(msg);
+        if (!oob){
+          corners.resize(cnt);
+          weights.resize(cnt);
+          this->data_.interpolate_at(corners,weights,out,i);
+        } else {
+          ++n_oob;
         }
-      }
-      unsafe_accumulate_to(this->data,cnt,corners,weights,out,i);
+    } else {
+      ++n_oob;
     }
+  }
+  if (n_oob > 0){
+    std::string msg = "parallel_linear_interpolate_at failed with ";
+    msg += std::to_string(n_oob) + " out of bounds points.";
+    throw std::runtime_error(msg);
+  }
     return out;
   }
   /*! Get the size information about the first three components of the grid,

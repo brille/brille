@@ -44,3 +44,18 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   for (size_t j=0; j<Q.numel(); ++j)
   REQUIRE( Q.getvalue(i,j) == Approx( q.getvalue(i,j) + tau.getvalue(i,j) ) );
 }
+
+TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
+  Direct d(3.,3.,9.,PI/2,PI/2,2*PI/3,1);
+  Reciprocal r(d.star());
+  BrillouinZone bz(r);
+  std::vector<std::array<double,3>> rawQ;
+  for (int i=0; i<21; i++){
+    double x = static_cast<double>(i)/20.0;
+    rawQ.push_back({x,x,x});
+  }
+  LQVec<double> Q(r,rawQ);
+  LQVec<double> q(r,Q.size());
+  LQVec<int> tau(r,Q.size());
+  REQUIRE(bz.moveinto(Q,q,tau));
+}
