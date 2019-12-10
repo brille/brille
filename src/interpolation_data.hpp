@@ -56,10 +56,32 @@ public:
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
+  element_t branch_span() const { return this->branch_span(elements_);}
+  std::string to_string() const {
+    std::string str= "( ";
+    for (auto s: shape_) str += std::to_string(s) + " ";
+    str += ") data";
+    if (branches_){
+      str += " with " + std::to_string(branches_) + " mode";
+      if (branches_>1) str += "s";
+    }
+    unsigned neltypes = std::count_if(elements_.begin(), elements_.end(), [](element_t a){return a>0;});
+    if (neltypes){
+      str += " of ";
+      std::array<std::string,3> types{"scalar", "vector", "matrix"};
+      for (size_t i=0; i<3u; ++i) if (elements_[i]) {
+        str += std::to_string(elements_[i]) + " " + types[i];
+        if (--neltypes>1) str += ", ";
+        if (1==neltypes) str += " and ";
+      }
+      str += " element";
+      if (this->branch_span()>1) str += "s";
+    }
+    return str;
+  }
 private:
   ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
-  element_t branch_span(void) const { return this->branch_span(elements_);}
   element_t branch_span(const ElementsType& e) const { return e[0]+e[1]+e[2]; }
   ElementsType count_scalars_vectors_matrices(void) const {
     ElementsType no{elements_[0], elements_[1]/3u, elements_[2]/9u};

@@ -76,7 +76,7 @@ public:
     }
     // fallback in case voro_search fails for some reason?!?
     if (approx_scalar(new_volume, 0.)){
-      debug_update("voro_search failed to produce a non-null first Brillouin zone.");
+      info_update("voro_search failed to produce a non-null first Brillouin zone.");
       this->vertex_search(extent);
     } else {
       verbose_update("New polyhedron volume ", this->polyhedron.get_volume());

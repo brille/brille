@@ -68,12 +68,11 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       // copy-in the elements array
       bi = pyel.request();
       if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
-      std::array<unsigned, 4> el{{0,0,0,0}};
+      std::array<size_t, 3> el{{0,0,0}};
       int* intel = (int*)bi.ptr;
-      for (ssize_t i=0; i<bi.shape[0] && i<4; ++i) el[i] = static_cast<unsigned>(intel[i]);
+      for (ssize_t i=0; i<bi.shape[0] && i<3; ++i) el[i] = static_cast<size_t>(intel[i]);
       // copy-in the data ArrayVector
       bi = pydata.request();
-      ssize_t ndim = bi.ndim;
       ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
       if (cobj.check_map(data) /*non-zero indicates too-many data*/){
         std::string msg = "Provided " + std::to_string(data.size())
@@ -81,13 +80,14 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
                         + std::to_string(cobj.maximum_mapping()) + "!";
         throw std::runtime_error(msg);
       }
-      ArrayVector<size_t> shape(1, ndim);
-      for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], static_cast<size_t>(i));
+      std::vector<size_t> shape;
+      for (auto s: bi.shape) shape.push_back(static_cast<size_t>(s));
       cobj.replace_data(data, shape, el);
     }, py::arg("data"), py::arg("elements"))
     .def_property_readonly("data",
       /*get data*/ [](Class& cobj){
-        return av2np_shape(cobj.get_data(), cobj.data_shape(), false);
+        auto & id = cobj.data(); // the InterpolationData object
+        return av2np_shape(id.data(), id.shape(), false);
       }
       // ,
       // /*set data*/[](Class& cobj, py::array_t<T,py::array::c_style> pydata){
@@ -109,25 +109,21 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       // }
     )
     .def("multi_sort_perm",
-      [](Class& cobj, const double wS, const double wE, const double wV,
-                      const double wM, const int ewf, const int vwf){
-      return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
+      [](Class& cobj, const double wS, const double wV,
+                      const double wM, const int vwf){
+      return av2np(cobj.multi_sort_perm(wS,wV,wM,vwf));
     }, py::arg("scalar_cost_weight")=1,
-       py::arg("eigenvector_cost_weight")=1,
        py::arg("vector_cost_weight")=1,
        py::arg("matrix_cost_weight")=1,
-       py::arg("eigenvector_weight_function")=0,
        py::arg("vector_weight_function")=0
     )
     .def("centre_sort_perm",
-      [](Class& cobj, const double wS, const double wE, const double wV,
-                      const double wM, const int ewf, const int vwf){
-      return av2np(cobj.centre_sort_perm(wS,wE,wV,wM,ewf,vwf));
+      [](Class& cobj, const double wS, const double wV,
+                      const double wM, const int vwf){
+      return av2np(cobj.centre_sort_perm(wS,wV,wM,vwf));
     }, py::arg("scalar_cost_weight")=1,
-       py::arg("eigenvector_cost_weight")=1,
        py::arg("vector_cost_weight")=1,
        py::arg("matrix_cost_weight")=1,
-       py::arg("eigenvector_weight_function")=0,
        py::arg("vector_weight_function")=0
     )
     .def_property("map",
@@ -152,7 +148,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
         for (size_t i=0; i<3; ++i) if (bi.strides[i]<0 || static_cast<size_t>(bi.strides[i])!=cobj.stride(i))
           throw std::runtime_error("The new map strides must match the old map");
-        if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
+        if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.data().size() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
@@ -186,10 +182,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
-      if (cobj.data_ndim() > 1){
-        ArrayVector<size_t> data_shape = cobj.data_shape();
+      if (cobj.data().shape().size() > 1){
+        auto data_shape = cobj.data().shape();
         // the shape of each element is data_shape[1,...,data_ndim-1]
-        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back(data_shape[i]);
       }
       // size_t total_elements = 1;
       // for (ssize_t osi : outshape) total_elements *= osi;
@@ -231,10 +227,10 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
-      if (cobj.data_ndim() > 1){
-        ArrayVector<size_t> data_shape = cobj.data_shape();
+      if (cobj.data().shape().size() > 1){
+        auto data_shape = cobj.data().shape();
         // the shape of each element is data_shape[1,...,data_ndim-1]
-        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back(data_shape[i]);
       }
       // size_t total_elements = 1;
       // for (ssize_t osi : outshape) total_elements *= osi;
@@ -257,9 +253,9 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       return liout;
     },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
     //
-    .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
-      return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
-    },py::arg("axis"),py::arg("squeeze")=true)
+    // .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
+    //   return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
+    // },py::arg("axis"),py::arg("squeeze")=true)
     .def("nearest_map_index",[](Class& cobj, py::array_t<double> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
@@ -366,10 +362,9 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
     .def_property_readonly("invA",       [](const Class& cobj){ return av2np(cobj.get_mapped_xyzw());} )
     .def("fill",[](Class& cobj, py::array_t<T> pydata){
       py::buffer_info bi = pydata.request();
-      ssize_t ndim = bi.ndim;
       ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
-      ArrayVector<size_t> shape(1,ndim);
-      for (ssize_t i=0; i<ndim; ++i) shape.insert(bi.shape[i], (size_t)i );
+      std::vector<size_t> shape;
+      for (auto s: bi.shape) shape.push_back(static_cast<size_t>(s));
       int mapExceedsNewData = cobj.check_map(data);
       if (mapExceedsNewData){
         std::string msg = "Provided " + std::to_string(data.size())
@@ -377,7 +372,8 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
                         + std::to_string(cobj.maximum_mapping()) + "!";
         throw std::runtime_error(msg);
       }
-      cobj.replace_data(data,shape); // no error, so this will work for sure
+      std::array<size_t, 3> el{{0,0,0}};
+      cobj.replace_data(data,shape,el); // no error, so this will work for sure
       // return mapExceedsNewData; // let the calling function deal with this?
     })
     .def_property("map",
@@ -402,7 +398,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           throw std::runtime_error("The new map shape must match the old map"); // or we could resize it, but that is more difficult
         for (size_t i=0; i<4; ++i) if (bi.strides[i]<0 || static_cast<size_t>(bi.strides[i])!=cobj.stride(i))
           throw std::runtime_error("The new map strides must match the old map");
-        if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.num_data() )
+        if (cobj.maximum_mapping( (slong*)bi.ptr ) > cobj.data().size() )
           throw std::runtime_error("The largest integer in the new mapping exceeds the number of data elements.");
         cobj.unsafe_set_map( (slong*)bi.ptr ); //no error, so this works.
     })
@@ -436,10 +432,10 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       // and then make sure we return an numpy array of appropriate size:
       std::vector<ssize_t> outshape;
       for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
-      if (cobj.data_ndim() > 1){
-        ArrayVector<size_t> data_shape = cobj.data_shape();
+      if (cobj.data().shape().size() > 1){
+        auto data_shape = cobj.data().shape();
         // the shape of each element is data_shape[1,...,data_ndim-1]
-        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back( data_shape.getvalue(i) );
+        for (size_t i=1; i<data_shape.size(); ++i) outshape.push_back(data_shape[i]);
       }
       // size_t total_elements = 1;
       // for (ssize_t osi : outshape) total_elements *= osi;
@@ -461,9 +457,10 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
     },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
-    .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
-      return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
-    },py::arg("axis"),py::arg("squeeze")=true);
+    // .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
+    //   return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
+    // },py::arg("axis"),py::arg("squeeze")=true)
+    ;
 }
 
 #endif

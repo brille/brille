@@ -110,7 +110,7 @@ class BrEu:
         # We need to help the interpolation method by telling it how many
         # scalar, eigen-vector, vector, and matrix elements there are in
         # each [anything]
-        elements = (1, 3*n_io, 0, 0) # scalar, eigenvector, vector, matrix
+        elements = (1, 3*n_io, 0) # scalar, (eigen)vector, matrix
         self.grid.fill(frqs_vecs, elements)
         # self.sort_branches()
         self.parallel = parallel
@@ -139,12 +139,11 @@ class BrEu:
         # perm = self.grid.centre_sort_perm(
         perm = self.grid.multi_sort_perm(
             scalar_cost_weight=energy_weight,
-            eigenvector_cost_weight=eigenvector_weight,
-            vector_cost_weight=0,
+            vector_cost_weight=eigenvector_weight,
             matrix_cost_weight=0,
-            eigenvector_weight_function=weight_function)
+            vector_weight_function=weight_function)
         frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
-        elements = (1, 3*self.data.n_ions, 0, 0)
+        elements = (1, 3*self.data.n_ions, 0)
         self.grid.fill(frqs_vecs, elements)
         return frqs_vecs
 

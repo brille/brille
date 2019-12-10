@@ -1125,21 +1125,22 @@ void interpolate_to(const A<T>& av,
   }
   unsafe_interpolate_to(av,Nel,nB,n,i,w,out,j);
 }
-template<class T, class R, template<class> class A,
+template<class T, class R, class I, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
          >
 void unsafe_interpolate_to(const A<T>& source,
-                           const std::array<unsigned,4>& Nel,
+                           const std::array<I,3>& Nel,
                            const size_t Nobj,
                            const size_t Narr,
                            const size_t *Isrc,
                            const R *weights,   /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!! THIS IS WHY THERE ARE TWO VERSION OF unsafe_interpolate_to!!!!!!!!!!!!!!*/
                            A<S>& sink,
                            const size_t Jsnk) {
+  info_update("The function unsafe_interpolate_to should not be used any longer. Please move to the new InterpolationData class");
   S *sink_j = sink.data(Jsnk);
   T *source_0 = source.data(Isrc[0]);
-  size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2])+static_cast<size_t>(Nel[3])*static_cast<size_t>(Nel[3]);
+  size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2]);
   T e_i_theta;
   for (size_t x=0; x<Narr; ++x){
     T *source_i = source.data(Isrc[x]);
@@ -1163,30 +1164,31 @@ void unsafe_interpolate_to(const A<T>& source,
     }
   }
   // make sure each eigenvector is normalized
-  if (Nel[1]){
-    for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
-      offset = Iobj*span + Nel[0];
-      auto normI = std::sqrt(inner_product(Nel[1], sink_j+offset, sink_j+offset));
-      for (size_t Jeig=0; Jeig<Nel[1]; ++Jeig) sink_j[offset+Jeig] /= normI;
-    }
-  }
+  // if (Nel[1]){
+  //   for (size_t Iobj=0; Iobj<Nobj; ++Iobj){
+  //     offset = Iobj*span + Nel[0];
+  //     auto normI = std::sqrt(inner_product(Nel[1], sink_j+offset, sink_j+offset));
+  //     for (size_t Jeig=0; Jeig<Nel[1]; ++Jeig) sink_j[offset+Jeig] /= normI;
+  //   }
+  // }
 }
 
-template<class T, class R, template<class> class A,
+template<class T, class R, class I, template<class> class A,
          typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
          class S = typename std::common_type<T,R>::type
          >
 void new_unsafe_interpolate_to(const A<T>& source,
-                           const std::array<unsigned, 4>& nEl,
+                           const std::array<I, 4>& nEl,
                            const size_t nObj,
                            const std::vector<size_t>& iSrc,
                            const std::vector<R>& weights,
                            A<S>& sink,
                            const size_t iSnk)
 {
+  info_update("The function unsafe_interpolate_to should not be used any longer. Please move to the new InterpolationData class");
   S *sink_i = sink.data(iSnk);
   T *source_0 = source.data(iSrc[0]);
-  size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2])+static_cast<size_t>(nEl[3])*static_cast<size_t>(nEl[3]);
+  size_t offset, span = static_cast<size_t>(nEl[0])+static_cast<size_t>(nEl[1])+static_cast<size_t>(nEl[2]);
   T e_i_theta;
   for (size_t x=0; x<iSrc.size(); ++x){
     T *source_i = source.data(iSrc[x]);
@@ -1210,13 +1212,13 @@ void new_unsafe_interpolate_to(const A<T>& source,
     }
   }
   // ensure the eigenvectors are still normalized
-  if (nEl[1]){
-    for (size_t iObj=0; iObj<nObj; ++iObj){
-      offset = iObj*span + nEl[0];
-      auto normI = std::sqrt(inner_product(nEl[1], sink_i+offset, sink_i+offset));
-      for (size_t iEv=0; iEv<nEl[1]; ++iEv) sink_i[offset+iEv]/=normI;
-    }
-  }
+  // if (nEl[1]){
+  //   for (size_t iObj=0; iObj<nObj; ++iObj){
+  //     offset = iObj*span + nEl[0];
+  //     auto normI = std::sqrt(inner_product(nEl[1], sink_i+offset, sink_i+offset));
+  //     for (size_t iEv=0; iEv<nEl[1]; ++iEv) sink_i[offset+iEv]/=normI;
+  //   }
+  // }
 }
 
 template<class T> void ArrayVector<T>::permute(const std::vector<size_t>& p){

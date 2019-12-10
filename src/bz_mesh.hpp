@@ -69,7 +69,7 @@ public:
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
       for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
-    } else if (!bz.ir_moveinto(x, ir_q, tau, rots)){
+    } else if (!bz.ir_moveinto(x, ir_q, tau, rots, nthreads)){
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
@@ -77,59 +77,11 @@ public:
       ? this->Mesh3<T>::interpolate_at(ir_q.get_xyz())
       : this->Mesh3<T>::parallel_interpolate_at(ir_q.get_xyz(), nthreads);
 
-    // any eigenvector, vector, and matrix (treated as rank-2 tensor) output of
-    // the interpolation needs to be rotated.
-    if (this->elements[1] || this->elements[2] || this->elements[3]){
-      if (this->elements[1] % 3){
-        msg = "Eigenvectors should consist of 3 elements (per ion) for each branch: ";
-        msg += std::to_string(this->elements[1]) + "%3 != 0";
-        throw std::runtime_error(msg);
-      }
-      if (this->elements[2] %3){
-        msg = "Vectors should consist of 3N elements for each branch: ";
-        msg += std::to_string(this->elements[2]) + "%3 != 0";
-        throw std::runtime_error(msg);
-      }
-      if (this->elements[3] != 0u && this->elements[3] != 3u){
-        msg = "Matrices should be 3x3 for each branch:";
-        std::string m = std::to_string(this->elements[3]);
-        msg += m + "x" + m + " != 3x3";
-        throw std::runtime_error(msg);
-      }
-      size_t ne = this->elements[1]/3u;
-      size_t nv = this->elements[2]/3u;
-      size_t nm = this->elements[3]/3u;
-      size_t sp = this->elements[0] + ne*3u + nv*3u + nm*9u;
-      T tmp_v[3];
-      T tmp_m[9];
-      std::vector<std::array<int,9>> invR;
-      if (nm){ // only allocate and calculate invR if we need it
-        invR.resize(rots.size());
-        for (size_t i=0; i<rots.size(); ++i)
-          matrix_inverse(invR[i].data(), rots[i].data());
-      }
-
-      size_t offset;
-      for (size_t i=0; i<ir_result.size(); ++i){
-        for (size_t b=0; b<this->branches; ++b){
-          // we can skip the scalar elements, as they do not rotate.
-          offset = b*sp + this->elements[0];
-          // eigenvectors and regular vectors rotate the same way
-          for (size_t v=0; v<(ne+nv); ++v){
-            mul_mat_vec(tmp_v, 3u, rots[i].data(), ir_result.data(i, offset+v*3u));
-            for (size_t j=0; j<3u; ++j) ir_result.insert(tmp_v[j], i, offset+v*3u+j);
-          }
-          offset += (ne+nv)*3u;
-          for (size_t m=0; m<nm; ++m){
-            // we want R*M*R⁻¹.
-            // first calculate M*R⁻¹, storing in tmp_m
-            mul_mat_mat(tmp_m, 3u, ir_result.data(i, offset+m*9u), invR[i].data());
-            // next calculate R*tmp_m, storing back in the ir_result array
-            mul_mat_mat(ir_result.data(i, offset+m*9u), 3u, rots[i].data(), tmp_m);
-          }
-        }
-      }
-    }
+    if (nthreads < 2)
+      this->data().rotate_in_place(ir_result, rots);
+    else
+      this->data().rotate_in_place(ir_result, rots, nthreads);
+      
     return ir_result;
   }
 };

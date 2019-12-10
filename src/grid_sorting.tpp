@@ -229,7 +229,6 @@ template<class T> std::vector<size_t> MapGrid3<T>::find_sorted_neighbours(
 
 template<class T> template<class R>
 bool MapGrid3<T>::sort_difference(const R scaleS,
-                                  const R scaleE,
                                   const R scaleV,
                                   const R scaleM,
                                   const size_t spn,
@@ -237,18 +236,16 @@ bool MapGrid3<T>::sort_difference(const R scaleS,
                                   ArrayVector<size_t>& perm,
                                   const size_t cidx,
                                   const size_t nidx,
-                                  const int ecf,
                                   const int vcf) const {
-return jv_permutation(this->data.data(cidx,0),
-                           this->data.data(nidx,0),
-                           this->elements,
-                           scaleS, scaleE, scaleV, scaleM,
-                           spn, nobj, perm, cidx, nidx, ecf, vcf);
+return jv_permutation(data_.data().data(cidx,0),
+                      data_.data().data(nidx,0),
+                      data_.elements(),
+                      scaleS, scaleV, scaleM,
+                      spn, nobj, perm, cidx, nidx, vcf);
 }
 
 template<class T> template<class R>
 bool MapGrid3<T>::sort_derivative(const R scaleS,
-                                  const R scaleE,
                                   const R scaleV,
                                   const R scaleM,
                                   const size_t spn,
@@ -257,9 +254,8 @@ bool MapGrid3<T>::sort_derivative(const R scaleS,
                                   const size_t cidx,
                                   const size_t nidx,
                                   const size_t nnidx,
-                                  const int ecf,
                                   const int vcf) const {
-ArrayVector<T> sorted(this->data.numel(),2u); // sorted neighbours
+ArrayVector<T> sorted(data_.data().numel(),2u); // sorted neighbours
 // Copy the data at each point, ensuring that the global permutation for
 // nidx and nnidx are respected
 size_t nn_i=0;
@@ -278,62 +274,55 @@ for (size_t i=0; i<nobj; ++i){
     throw std::runtime_error(msg);
   }
   for (size_t j=0; j<spn; ++j){
-    sorted.insert(this->data.getvalue(nidx,    i*spn+j), 0u, i*spn+j);
-    sorted.insert(this->data.getvalue(nnidx,nn_i*spn+j), 1u, i*spn+j);
+    sorted.insert(data_.data().getvalue(nidx,    i*spn+j), 0u, i*spn+j);
+    sorted.insert(data_.data().getvalue(nnidx,nn_i*spn+j), 1u, i*spn+j);
   }
 }
 // std::cout << sorted.to_string();
 // calculate the predicted value of each element of the data.
 // making the prediction is a special case of linear interpolation:
-ArrayVector<T> predic(this->data.numel(),1u); // and prediction
+ArrayVector<T> predic(data_.data().numel(),1u); // and prediction
 size_t cnt = 2u;
 size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
 size_t out_i = 0u;
 unsafe_interpolate_to(sorted,
-                      this->elements,
-                      this->branches,
+                      data_.elements(),
+                      data_.branches(),
                       cnt,corners,weights,predic,out_i);
 bool rslt;
 // std::cout << predic.to_string();
-// std::cout << this->data.to_string(cidx) << std::endl;
+// std::cout << data_.data().to_string(cidx) << std::endl;
 // find the assignment of each *predicted* object value to those at cidx:
-rslt = jv_permutation(this->data.data(cidx,0),
-                           predic.data(out_i,0),
-                           this->elements,
-                           scaleS, scaleE, scaleV, scaleM,
-                           spn, nobj, perm, cidx, nidx, ecf, vcf);
+rslt = jv_permutation(data_.data().data(cidx,0),
+                      predic.data(out_i,0),
+                      data_.elements(),
+                      scaleS, scaleV, scaleM,
+                      spn, nobj, perm, cidx, nidx, vcf);
 // std::cout << ((rslt)?"permutation determined":"permutation failed") << std::endl;
 return rslt;
 }
 
 template<class T> template<typename R>
 ArrayVector<size_t> MapGrid3<T>::centre_sort_perm(const R scalar_weight,
-                                                  const R eigenv_weight,
                                                   const R vector_weight,
                                                   const R matrix_weight,
-                                                  const int ecf,
                                                   const int vcf
 ) const {
 //
 // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
-size_t nobj = this->branches;
-size_t spn = static_cast<size_t>(this->elements[0])
-            + static_cast<size_t>(this->elements[1])
-            + static_cast<size_t>(this->elements[2])
-            + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
+size_t nobj = data_.branches();
+size_t spn = static_cast<size_t>(data_.branch_span());
 // within each index of the data ArrayVector there are spn*nobj entries.
 
 // We will return the permutations of 0:nobj-1 which sort the objects globally
-ArrayVector<size_t> perm( nobj, this->data.size() );
+ArrayVector<size_t> perm( nobj, data_.size() );
 // We need to keep track of which objects have been sorted thus far
-std::vector<bool> sorted(this->data.size());
-for (size_t i=0; i<this->data.size(); ++i) sorted[i] = false;
+std::vector<bool> sorted(data_.size(), false);
 
-typename CostTraits<T>::type wS, wE, wV, wM;
+typename CostTraits<T>::type wS, wV, wM;
 wS = typename CostTraits<T>::type(scalar_weight);
-wE = typename CostTraits<T>::type(eigenv_weight);
 wV = typename CostTraits<T>::type(vector_weight);
 wM = typename CostTraits<T>::type(matrix_weight);
 
@@ -358,22 +347,22 @@ for (size_t j=0; j<nobj; ++j) perm.insert(j, mapidx, j);
 std::vector<size_t> unsorted_neighbours = this->find_unsorted_neighbours(sorted, mapidx);
 size_t num_sorted = 0; // Γ already sorted, but this is effectively an index
 for (size_t n_mapidx: unsorted_neighbours){
-  sorted[n_mapidx] = this->sort_difference(wS,wE,wV,wM,spn,nobj,perm,n_mapidx,mapidx,ecf,vcf);
+  sorted[n_mapidx] = this->sort_difference(wS,wV,wM,spn,nobj,perm,n_mapidx,mapidx,vcf);
   if (!sorted[n_mapidx]) throw std::runtime_error("Failed to sort Γ neighbour.");
   ++num_sorted;
 }
 // with the immediate neighbours sorted, start a recursive search (from each to
 // be extra sure that we reach everywhere in the Brillouin zone.
-std::vector<bool> locked(this->data.size());
-for (size_t i=0; i<this->data.size(); ++i) locked[i] = false;
+std::vector<bool> locked(data_.size());
+for (size_t i=0; i<data_.size(); ++i) locked[i] = false;
 for (size_t n_mapidx: unsorted_neighbours){
-  num_sorted += this->sort_recursion(n_mapidx,wS,wE,wV,wM,ecf,vcf,spn,nobj,perm,sorted,locked);
+  num_sorted += this->sort_recursion(n_mapidx,wS,wV,wM,vcf,spn,nobj,perm,sorted,locked);
 }
-if (num_sorted < this->data.size())
+if (num_sorted < data_.size())
   throw std::runtime_error("Recursive sorting failed to find all grid points.");
-if (num_sorted > this->data.size())
+if (num_sorted > data_.size())
   std::cout << "Sorted " << std::to_string(num_sorted) << " grid points but only "
-            << std::to_string(this->data.size()) << " points are mapped."
+            << std::to_string(data_.size()) << " points are mapped."
             << std::endl;
   // throw std::runtime_error("Recursive sorting visited some grid points more than once.");
 return perm;
@@ -381,8 +370,8 @@ return perm;
 
 template<class T> template<class R>
 size_t MapGrid3<T>::sort_recursion(const size_t centre,
-                                   const R wS, const R wE, const R wV, const R wM,
-                                   const int ecf, const int vcf,
+                                   const R wS, const R wV, const R wM,
+                                   const int vcf,
                                    const size_t spn, const size_t nobj,
                                    ArrayVector<size_t>& perm,
                                    std::vector<bool>& sorted,
@@ -403,17 +392,14 @@ for (size_t nmap: unsorted_neighbours){
     throw std::runtime_error("No sorted neighbours.");
   if (sorted_neighbours.size()>2)
     throw std::runtime_error("Too many sorted neighbours.");
-  bool success = this->sort_difference(wS, wE, wV, wM, spn, nobj, perm, nmap,
-                                       sorted_neighbours[0],
-                                       ecf, vcf);
+  bool success = this->sort_difference(wS, wV, wM, spn, nobj, perm, nmap,
+                                       sorted_neighbours[0], vcf);
   // if (sorted_neighbours.size()==1)
-  //   success = this->sort_difference(wS, wE, wV, wM, spn, nobj, perm, nmap,
-  //                                   sorted_neighbours[0],
-  //                                   ecf, vcf);
+  //   success = this->sort_difference(wS, wV, wM, spn, nobj, perm, nmap,
+  //                                   sorted_neighbours[0],  vcf);
   // if (sorted_neighbours.size()==2)
-  //   success = this->sort_derivative(wS, wE, wV, wM, spn, nobj, perm, nmap,
-  //                                   sorted_neighbours[0], sorted_neighbours[1],
-  //                                   ecf, vcf);
+  //   success = this->sort_derivative(wS, wV, wM, spn, nobj, perm, nmap,
+  //                                   sorted_neighbours[0], sorted_neighbours[1], vcf);
 
   // if (!success) throw std::runtime_error("Failed to find permutation.");
   // Don't throw here, maybe we can sort from a different direction?
@@ -423,7 +409,7 @@ for (size_t nmap: unsorted_neighbours){
 }
 // All neighbours of map_idx sorted, so now sort all of their neighbours in turn
 for (size_t un: unsorted_neighbours)
-  num_sorted += this->sort_recursion(un, wS, wE, wV, wM, ecf, vcf, spn, nobj, perm, sorted, locked);
+  num_sorted += this->sort_recursion(un, wS, wV, wM, vcf, spn, nobj, perm, sorted, locked);
 
 return num_sorted;
 }
@@ -432,45 +418,35 @@ return num_sorted;
 
 template<class T> template<typename R>
 ArrayVector<size_t> MapGrid3<T>::multi_sort_perm(
-  const R scalar_weight, const R eigenv_weight, const R vector_weight,
-  const R matrix_weight, const int ecf, const int vcf
+  const R scalar_weight, const R vector_weight,
+  const R matrix_weight, const int vcf
 ) const {
 //
-typename CostTraits<T>::type weights[4];
+typename CostTraits<T>::type weights[3];
 weights[0] = typename CostTraits<T>::type(scalar_weight);
-weights[1] = typename CostTraits<T>::type(eigenv_weight);
-weights[2] = typename CostTraits<T>::type(vector_weight);
-weights[3] = typename CostTraits<T>::type(matrix_weight);
+weights[1] = typename CostTraits<T>::type(vector_weight);
+weights[2] = typename CostTraits<T>::type(matrix_weight);
 //
-int funcs[2]{ecf,vcf};
+int func{vcf};
 // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
 // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
-size_t nobj = this->branches;
-size_t spn = static_cast<size_t>(this->elements[0])
-            + static_cast<size_t>(this->elements[1])
-            + static_cast<size_t>(this->elements[2])
-            + static_cast<size_t>(this->elements[3])*static_cast<size_t>(this->elements[3]);
+size_t nobj = static_cast<size_t>(data_.branches());
+size_t spn = static_cast<size_t>(data_.branch_span());
 size_t spobj[2]{spn,nobj};
 // within each index of the data ArrayVector there are spn*nobj entries.
 
 // We will return the permutations of 0:nobj-1 which sort the objects globally
-ArrayVector<size_t> perm( nobj, this->data.size() );
+ArrayVector<size_t> perm( nobj, data_.size() );
 // We need to keep track of which objects have been sorted thus far
-std::vector<bool> sorted(this->data.size());
-std::vector<bool> locked(this->data.size());
-std::vector<size_t> visited(this->data.size());
-for (size_t i=0; i<this->data.size(); ++i){
-  sorted[i] = false;
-  locked[i] = false;
-  visited[i] = 0;
-}
-
+std::vector<bool> sorted(data_.size(), false);
+std::vector<bool> locked(data_.size(), false);
+std::vector<size_t> visited(data_.size(), 0);
 
 size_t mapidx;
 size_t subidx[3];
 // Start from the Γ point. It should always be a valid mapped point.
 // The grid centre along each direction is the ((2N+1)/2 + 1)ᵗʰ entry, but we count from 0 so (2N+1)/2
-for (int i=0; i<3; ++i) subidx[i] = this->size(i) >> 1;
+for (int i=0; i<3; ++i) subidx[i] = this->size(i) >> 1u;
 if (this->sub2map(subidx, mapidx))
   throw std::runtime_error("Γ is not a mapped point.");
 // The first point gets an arbitrary assignment
@@ -479,17 +455,17 @@ sorted[mapidx] = true;
 ++visited[mapidx];
 size_t num_sorted = 1;
 // kick off the recursive sorting from here:
-// num_sorted += this->multi_sort_recursion(mapidx, weights, funcs, spobj, perm, sorted, locked, visited);
-num_sorted += this->multi_sort(mapidx, weights, funcs, spobj, perm, sorted, locked, visited);
-if (num_sorted < this->data.size()){
+// num_sorted += this->multi_sort_recursion(mapidx, weights, func, spobj, perm, sorted, locked, visited);
+num_sorted += this->multi_sort(mapidx, weights, func, spobj, perm, sorted, locked, visited);
+if (num_sorted < data_.size()){
   std::string msg = "Sorting found only "
                   + std::to_string(num_sorted) + " of "
-                  + std::to_string(this->data.size()) + " grid points.";
+                  + std::to_string(data_.size()) + " grid points.";
   throw std::runtime_error(msg);
 }
-if (num_sorted > this->data.size())
+if (num_sorted > data_.size())
   std::cout << "Sorted " << std::to_string(num_sorted) << " grid points but only "
-            << std::to_string(this->data.size()) << " points are mapped."
+            << std::to_string(data_.size()) << " points are mapped."
             << std::endl;
 bool all_sorted = true;
 size_t count_sorted=0, count_unsorted=0;
@@ -506,8 +482,8 @@ if (!all_sorted){
 //   std::cout << "Not all grid points sorted " << std::to_string(ntimes) << "." <<std::endl;
 //   for (size_t i=0; i<sorted.size(); ++i)
 //     if (!sorted[i])
-//       // num_sorted += this->multi_sort_recursion(i,weights,funcs,spobj,perm,sorted,locked, visited);
-//       num_sorted += this->multi_sort(i,weights,funcs,spobj,perm,sorted,locked,visited);
+//       // num_sorted += this->multi_sort_recursion(i,weights,func,spobj,perm,sorted,locked, visited);
+//       num_sorted += this->multi_sort(i,weights,func,spobj,perm,sorted,locked,visited);
 //   //
 //   all_sorted = true;
 //   for (size_t i=0; i<sorted.size(); ++i) all_sorted &= sorted[i];
@@ -544,7 +520,7 @@ For example, a first-in last-out stack would have the effect of sorting from the
 centre to a boundary first rather than all of the centre then outwards in shells.
 */
 template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
-  const size_t centre, const R weights[4], const int funcs[2], const size_t spobj[2],
+  const size_t centre, const R weights[3], const int func, const size_t spobj[2],
   ArrayVector<size_t>& perm, std::vector<bool>& sorted, std::vector<bool>& locked,
   std::vector<size_t>& visited
 ) const {
@@ -573,10 +549,10 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
             for (size_t i=0; i<n_idx.size(); ++i)
               if(nn_idx[i]!=n_idx[i]) ++num_derivative;
           if (num_derivative){ // use derivative based sorting whenever possible
-            success = this->multi_sort_derivative_all(weights, funcs, spobj, perm, sorted, current, n_idx, nn_idx/*, num_derivative*/);
+            success = this->multi_sort_derivative_all(weights, func, spobj, perm, sorted, current, n_idx, nn_idx/*, num_derivative*/);
           }
           else{
-            success = this->multi_sort_difference(weights, funcs, spobj, perm, sorted, current, n_idx);
+            success = this->multi_sort_difference(weights, func, spobj, perm, sorted, current, n_idx);
           }
           sorted[current] = success;
           if (success) ++num_sorted;
@@ -608,7 +584,7 @@ template<class T> template<class R> size_t MapGrid3<T>::multi_sort(
 
 template<class T> template<class R>
 bool MapGrid3<T>::multi_sort_difference(
-  const R weights[4], const int funcs[2], const size_t spobj[2],
+  const R weights[3], const int func, const size_t spobj[2],
   ArrayVector<size_t>& perm, std::vector<bool>& sorted,
   const size_t cidx, const std::vector<size_t> nidx
 ) const {
@@ -617,25 +593,19 @@ bool MapGrid3<T>::multi_sort_difference(
   for (size_t i=0; i<nidx.size(); ++i){
     for (size_t j=0; j<perm.numel(); ++j)
       tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
-    jv_permutation(this->data.data(cidx,0),
-                   this->data.data(nidx[i],0),
-                   this->elements,
-                   weights[0], weights[1], weights[2], weights[3],
-                   spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
-                 );
+    jv_permutation(data_.data().data(cidx,0),
+                   data_.data().data(nidx[i],0),
+                   data_.elements(),
+                   weights[0], weights[1], weights[2],
+                   spobj[0], spobj[1], tperm, i, nidx.size(), func);
   }
   // now tperm has the permutations calculated for the centre position based
   // on each sorted neighbour in turn stored from 0 to nidx.size()-1.
   /* In a perfect world all permutations would agree with each other, but this
   seems unlikely for all cases. So we need to check. */
-  std::vector<bool> uncounted;
-  std::vector<size_t> frequency, equiv_to;
+  std::vector<bool> uncounted(nidx.size(), true);
+  std::vector<size_t> frequency(nidx.size(), 0u), equiv_to(nidx.size(),0u);
   bool all_agree;
-  for (size_t i=0; i<nidx.size(); ++i){
-    uncounted.push_back(true);
-    frequency.push_back(0u);
-    equiv_to.push_back(0u);
-  }
   for (size_t i=0; i<nidx.size()-1; ++i){
     if (uncounted[i]){
       equiv_to[i] = i;
@@ -681,12 +651,12 @@ bool MapGrid3<T>::multi_sort_difference(
 
 template<class T> template<class R>
 bool MapGrid3<T>::multi_sort_derivative(
-  const R scales[4], const int funcs[2], const size_t spobj[2],
+  const R scales[3], const int func, const size_t spobj[2],
   ArrayVector<size_t>& perm, std::vector<bool>& ,//sorted,
   const size_t cidx, const std::vector<size_t> nidx,
   const std::vector<size_t> nnidx, const size_t no_pairs
 ) const {
-ArrayVector<T> sdat(this->data.numel(),2*no_pairs); // sorted n and nn
+ArrayVector<T> sdat(data_.data().numel(),2*no_pairs); // sorted n and nn
 // Copy the data at each point, ensuring that the global permutation for
 // nidx and nnidx are respected
 size_t nn_i, cnt=0;
@@ -713,8 +683,8 @@ for (size_t p=0; p<nidx.size(); ++p){
           throw std::runtime_error(msg);
         }
         for (size_t j=0; j<spn; ++j){
-          sdat.insert(this->data.getvalue( nidx[p],   i*spn+j), 2*cnt+0u, i*spn+j);
-          sdat.insert(this->data.getvalue(nnidx[p],nn_i*spn+j), 2*cnt+1u, i*spn+j);
+          sdat.insert(data_.data().getvalue( nidx[p],   i*spn+j), 2*cnt+0u, i*spn+j);
+          sdat.insert(data_.data().getvalue(nnidx[p],nn_i*spn+j), 2*cnt+1u, i*spn+j);
         }
       }
     }
@@ -728,14 +698,14 @@ if (n2p_idx.size()!=no_pairs){
   msg += " derivative pairs found!";
   throw std::runtime_error(msg);
 }
-ArrayVector<T> predic(this->data.numel(),no_pairs);
+ArrayVector<T> predic(data_.data().numel(),no_pairs);
 cnt = 2u;
 size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
 for (size_t i=0; i<no_pairs; ++i){
   corners[0] = 2*i;
   corners[1] = 2*i+1;
-  unsafe_interpolate_to(sdat, this->elements, this->branches, cnt, corners,
+  unsafe_interpolate_to(sdat, data_.elements(), data_.branches(), cnt, corners,
   weights, predic, i);
 }
 // The derivative-based permutations have been performed, now determine the
@@ -744,12 +714,11 @@ ArrayVector<size_t> tperm(perm.numel(), no_pairs+1);
 for (size_t i=0; i<no_pairs; ++i){
   for (size_t j=0; j<perm.numel(); ++j)
     tperm.insert(perm.getvalue(nidx[n2p_idx[i]],j),no_pairs,j);
-  jv_permutation(this->data.data(cidx,0),
+  jv_permutation(data_.data().data(cidx,0),
                  predic.data(i,0),
-                 this->elements,
-                 scales[0], scales[1], scales[2], scales[3],
-                 spobj[0], spobj[1], tperm, i, no_pairs, funcs[0], funcs[1]
-               );
+                 data_.elements(),
+                 scales[0], scales[1], scales[2],
+                 spobj[0], spobj[1], tperm, i, no_pairs, func);
 }
 // now tperm has the permutations calculated for the centre position based
 // on each sorted neighbour in turn stored from 0 to nidx.size()-1.
@@ -801,14 +770,14 @@ return true;
 
 template<class T> template<class R>
 bool MapGrid3<T>::multi_sort_derivative_all(
-  const R scales[4], const int funcs[2], const size_t spobj[2],
+  const R scales[3], const int func, const size_t spobj[2],
   ArrayVector<size_t>& perm, std::vector<bool>& sorted,
   const size_t cidx, const std::vector<size_t> nidx,
   const std::vector<size_t> nnidx //, const size_t no_pairs
 ) const {
 // int out_count=0;
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
-ArrayVector<T> sdat(this->data.numel(),2*nidx.size()); // sorted n and nn
+ArrayVector<T> sdat(data_.data().numel(),2*nidx.size()); // sorted n and nn
 // Copy the data at each point, ensuring that the global permutation for
 // nidx and nnidx are respected
 size_t nn_i, cnt=0;
@@ -831,13 +800,13 @@ for (size_t p=0; p<nidx.size(); ++p){
       throw std::runtime_error(msg);
     }
     for (size_t j=0; j<spn; ++j){
-      sdat.insert(this->data.getvalue( nidx[p],   i*spn+j), 2*cnt+0u, i*spn+j);
-      sdat.insert(this->data.getvalue(nnidx[p],nn_i*spn+j), 2*cnt+1u, i*spn+j);
+      sdat.insert(data_.data().getvalue( nidx[p],   i*spn+j), 2*cnt+0u, i*spn+j);
+      sdat.insert(data_.data().getvalue(nnidx[p],nn_i*spn+j), 2*cnt+1u, i*spn+j);
     }
   }
 }
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
-ArrayVector<T> predic(this->data.numel(),nidx.size());
+ArrayVector<T> predic(data_.data().numel(),nidx.size());
 cnt = 2u;
 size_t corners[2]{0u,1u};
 T weights[2]{2,-1};
@@ -845,7 +814,7 @@ T weights[2]{2,-1};
 for (size_t i=0; i<nidx.size(); ++i){
   corners[0] = 2*i;
   corners[1] = 2*i+1;
-  unsafe_interpolate_to(sdat, this->elements, this->branches, cnt, corners,
+  unsafe_interpolate_to(sdat, data_.elements(), data_.branches(), cnt, corners,
   weights, predic, i);
 }
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
@@ -855,12 +824,11 @@ ArrayVector<size_t> tperm(perm.numel(), nidx.size()+1);
 for (size_t i=0; i<nidx.size(); ++i){
   for (size_t j=0; j<perm.numel(); ++j)
     tperm.insert(perm.getvalue(nidx[i],j),nidx.size(),j);
-  jv_permutation(this->data.data(cidx,0),
+  jv_permutation(data_.data().data(cidx,0),
                  predic.data(i,0),
-                 this->elements,
-                 scales[0], scales[1], scales[2], scales[3],
-                 spobj[0], spobj[1], tperm, i, nidx.size(), funcs[0], funcs[1]
-               );
+                 data_.elements(),
+                 scales[0], scales[1], scales[2],
+                 spobj[0], spobj[1], tperm, i, nidx.size(), func);
 }
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
 // now tperm has the permutations calculated for the centre position based

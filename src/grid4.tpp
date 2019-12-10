@@ -44,7 +44,7 @@ template<class T> void MapGrid4<T>::print_map(void) const {
 //
 template<class T> int MapGrid4<T>::set_map(void){
   for (size_t l=0; l<this->numel(); l++) this->map[l]= (slong)(l);
-  return this->numel()-1 < this->data.size() ? 0 : 1;
+  return this->numel()-1 < data_.size() ? 0 : 1;
 }
 template<class T> int MapGrid4<T>::set_map(const slong* inmap, const size_t* n, const size_t d){
   if ( d!=4u ) return -3;
@@ -89,19 +89,7 @@ template<class T> int MapGrid4<T>::check_map(const ArrayVector<T>& data2check) c
   return ( this->maximum_mapping() < data2check.size() ) ? 0 : 1;
 }
 template<class T> int MapGrid4<T>::check_map(void) const {
-  return this->check_map(this->data);
-}
-//
-template<class T> int MapGrid4<T>::replace_data(const ArrayVector<T>& newdata, const ArrayVector<size_t>& newshape){
-  this->data =  newdata;
-  this->shape = newshape;
-  return this->check_map();
-}
-template<class T> int MapGrid4<T>::replace_data(const ArrayVector<T>& newdata){
-  ArrayVector<size_t> shape(1,2);
-  shape.insert(0,newdata.size());
-  shape.insert(1,newdata.numel());
-  return this->replace_data(newdata, shape);
+  return this->check_map(this->data_.data());
 }
 //
 template<class T> size_t MapGrid4<T>::sub2lin(const size_t i0, const size_t i1, const size_t i2, const size_t i3) const {
@@ -191,15 +179,6 @@ template<class T> size_t MapGrid4<T>::resize(const size_t *n){
   return this->numel();
 }
 //
-template<class T> size_t MapGrid4<T>::data_ndim(void) const {
-  return this->shape.size();
-}
-template<class T> size_t MapGrid4<T>::num_data(void) const {
-  return this->data.size();
-}
-template<class T> ArrayVector<size_t> MapGrid4<T>::data_shape(void) const {
-  return this->shape;
-}
 template<class T> ArrayVector<size_t> MapGrid4<T>::get_N(void) const {
   ArrayVector<size_t> out(1u,4u, this->N);
   return out;
