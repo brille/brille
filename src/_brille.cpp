@@ -230,6 +230,34 @@ PYBIND11_MODULE(_brille,m){
         for (size_t k=0; k<3u; ++k) rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
       }
       return py::make_tuple(qout, tout, rout);
+    }, py::arg("Q"))
+    .def("ir_moveinto_wedge",[](BrillouinZone &b, py::array_t<double> Q){
+      py::buffer_info bi = Q.request();
+      ssize_t ndim = bi.ndim;
+      if (bi.shape[ndim-1] != 3)
+        throw std::runtime_error("One or more 3-dimensional Q points are required.");
+      ssize_t npts = 1;
+      if (ndim > 1) for (ssize_t i=0; i<ndim-1; ++i) npts *= bi.shape[i];
+      LQVec<double> Qv(b.get_lattice(), (double*) bi.ptr, bi.shape, bi.strides);
+      // prepare intermediate outputs
+      LQVec<double> qv(b.get_lattice(), npts);
+      std::vector<std::array<int,9>> rots(npts);
+      if (!b.ir_moveinto_wedge(Qv, qv, rots))
+        throw std::runtime_error("Moving points into irreducible zone failed.");
+      // prepare Python outputs
+      auto qout = py::array_t<double, py::array::c_style>(bi.shape);
+      // The rotations array has an extra dimension compared to q and tau
+      bi.shape.push_back(3);
+      auto rout = py::array_t<int,    py::array::c_style>(bi.shape);
+      // grab pointers to the underlying data blocks
+      double *qptr = (double *) qout.request().ptr;
+      int *rptr = (int *) rout.request().ptr;
+      for (ssize_t i=0; i<npts; ++i)
+      for (size_t j=0; j<3u; ++j){
+        qptr[3u*i+j] = qv.getvalue(i,j);
+        for (size_t k=0; k<3u; ++k) rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
+      }
+      return py::make_tuple(qout, rout);
     }, py::arg("Q"));
 
     declare_bzgridq<double>(m,"");

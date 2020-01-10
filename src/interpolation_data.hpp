@@ -48,6 +48,16 @@ public:
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&) const;
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
   //
+  template<typename I> void replace_data(const ArrayVector<T>& nd, const ShapeType& s, const std::array<I,3>& ne){
+    ElementsType neet;
+    for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
+    return this->replace_data(nd, s, ne);
+  }
+  template<typename I> void replace_data(const ArrayVector<T>& nd, const std::array<I,3>& ne){
+    ElementsType neet;
+    for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
+    return this->replace_data(nd, ne);
+  }
   void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
   void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({{0,0,0}})){
     ShapeType ns{nd.size(), nd.numel()};
@@ -118,7 +128,7 @@ void InterpolationData<T>::interpolate_at(
       }
       // handle any remaining matrix elements
       if (elements_[2]){
-        element_t o3 = b*span + elements_[0] + elements_[2];
+        element_t o3 = b*span + elements_[0] + elements_[1];
         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+o3);
         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += weights[x]*(mtth*ptrX[o3+r]);
       }
@@ -161,7 +171,7 @@ void InterpolationData<T>::interpolate_at(
       }
       // handle any remaining matrix elements
       if (elements_[2]){
-        element_t o3 = b*span + elements_[0] + elements_[2];
+        element_t o3 = b*span + elements_[0] + elements_[1];
         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+o3);
         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += iw.second*(mtth*ptrX[o3+r]);
       }

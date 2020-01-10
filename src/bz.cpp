@@ -72,6 +72,24 @@ LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
     ir_n = ir_n.extract(not_bz);
     ir_p = ir_p.extract(not_bz);
   }
+  // It is possible that, lacking inversion symmetry, we have found an
+  // irreducible polyhedron which is comprised of two convex polyhedra that
+  // are mutualy inverse. In such a case for every normal in ir_n there is also
+  // its opposite also in ir_n, and so ir_n defines a wedge and an anti-wedge in
+  // which no finite point can be inside
+  if (ir_n.size()%2 == 0 /* [lacks inversion] or this->no_ir_mirroring? */){
+    std::vector<bool> no_inverse(ir_n.size(), true);
+    ArrayVector<bool> keep(1u, ir_n.size(), true);
+    for (size_t i=0; i<ir_n.size()-1; ++i) if (no_inverse[i])
+    for (size_t j=i+1; j<ir_n.size(); ++j) if (no_inverse[j])
+    if ((ir_n.extract(i)+ir_n.extract(j)).all_approx(Comp::eq, 0.)) {
+      no_inverse[i] = no_inverse[j] = false;
+      keep.insert(false, j);
+      break;
+    }
+    if (std::count_if(no_inverse.begin(), no_inverse.end(), [](bool t){return t;})==0)
+      ir_n = ir_n.extract(keep);
+  }
   // the remaining irBZ faces are the irreducible reciprocal space wedge
   // which we store with the opposite sign in this->ir_wedge_normals
   return -ir_n;
@@ -1092,6 +1110,63 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   }
   return true; // otherwise we hit the runtime error above
 }
+bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<std::array<int,9>>& R, const int threads) const {
+  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
+  /* The Pointgroup symmetry information comes from, effectively, spglib which
+  has all rotation matrices defined in the conventional unit cell -- which is
+  our `outerlattice`. Consequently we must work in the outerlattice here.  */
+  if (!this->outerlattice.issame(Q.get_lattice()))
+    throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
+  // get the PointSymmetry object, containing all operations
+  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+  // ensure q and R can hold one for each Q.
+  size_t nQ = Q.size();
+  q.resize(nQ);
+  R.resize(nQ);
+  // by chance some first Bz points are likely already in the IR-wedge:
+  std::vector<bool> in_ir = this->isinside_wedge_std(Q);
+  LQVec<double> qj(Q.get_lattice(), 1u);
+  auto lat = Q.get_lattice();
+  // OpenMP 2 (VS) doesn't like unsigned loop counters
+  size_t n_outside{0};
+  long long snQ = unsigned_to_signed<long long, size_t>(nQ);
+  #pragma omp parallel for default(none) shared(psym, R, q, Q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
+  for (long long si=0; si<snQ; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    // any q already in the irreducible zone need no rotation → identity
+    bool outside=!in_ir[i];
+    if (outside){
+      // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+      LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
+      for (size_t j=0; j<psym.size(); ++j) if (outside) {
+        // The point symmetry matrices relate *real space* vectors! We must use
+        // their transposes' to rotate reciprocal space vectors.
+        multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), Q.data(i));
+        if ( this->isinside_wedge_std(qj)[0] ){ /* store the result */
+          q.set(i, qj); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
+          R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
+          outside = false;
+        }
+      }
+    } else {
+      q.set(i, Q.extract(i));
+      R[i] = {1,0,0, 0,1,0, 0,0,1};
+    }
+    if (outside) {
+      ++n_outside;
+      in_ir[i] = false;
+    }
+  }
+  if (n_outside > 0) for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+    std::string msg = "Q = " + Q.to_string(i);
+    msg += " is outside of the irreducible reciprocal space wedge ";
+    msg += " , irQ = " + q.to_string(i);
+    throw std::runtime_error(msg);
+    return false;
+  }
+  return true; // otherwise we hit the runtime error above
+}
+
 
 bool three_plane_intersection(const LQVec<double>& n,                // plane normals
                               const LQVec<double>& p,                // a point on each plane
