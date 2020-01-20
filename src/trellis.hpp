@@ -144,8 +144,8 @@ public:
     const std::vector<double>& volt
   ): vi_t(vit), ci_t(cit), vol_t(volt) {}
   // count-up the number fo unique vertices in the tetrahedra-triangulated polyhedron
-  index_t tetrahedra_count() const {return vi_t.size();}
-  index_t vertex_count() const { return this->vertices().size();}
+  index_t tetrahedra_count() const {return static_cast<index_t>(vi_t.size());}
+  index_t vertex_count() const { return static_cast<index_t>(this->vertices().size());}
   std::vector<index_t> vertices(void) const {
     std::vector<index_t> out;
     for (auto tet: vi_t) for (auto idx: tet)
@@ -295,7 +295,7 @@ public:
     for (index_t i=0; i<3u; ++i) count *= boundaries_[i].size();
     return count;
   }
-  index_t vertex_count() const { return vertices_.size(); }
+  index_t vertex_count() const { return static_cast<index_t>(vertices_.size()); }
   const ArrayVector<double>& vertices(void) const { return vertices_; }
   const ArrayVector<double>& vertices(const ArrayVector<double>& v){
     if (v.numel()==3) vertices_ = v;
@@ -403,7 +403,7 @@ public:
       // directions. if we are, on_boundary returns the direction in which we
       // can safely take a step without leaving the binned region
       for (int i=0; i<3; ++i) close[i] = on_boundary(boundaries_[i], p.getvalue(0,i), sub[i]);
-      int num_close = std::count_if(close.begin(), close.end(), [](int a){return a!=0;});
+      auto num_close = std::count_if(close.begin(), close.end(), [](int a){return a!=0;});
       // check one
       std::array<index_t,3> newsub{sub};
       if (num_close > 0) for (int i=0; i<3 && bad; ++i) if (close[i]) {

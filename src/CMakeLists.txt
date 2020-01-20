@@ -11,12 +11,15 @@ endif()
 set(CXX_TARGETS _brille catch2)
 
 set(CXX_SOURCES
+  bravais.cpp
   bz.cpp
   bz_wedge.cpp
   debug.cpp
+  hall_symbol.cpp
   lattice.cpp
   neighbours.cpp
   pointgroup.cpp
+  pointsymmetry.cpp
   spg_database.cpp
   symmetry.cpp
 )

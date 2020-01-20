@@ -61,7 +61,10 @@ protected:
   double len[3]; //!< basis vector lengths
   double ang[3]; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
   double volume; //!< volume of the unit cell formed by the basis vectors
-  int hall;      //!< Hall number of the non-Primitive lattice (`hall>1`)
+  Spacegroup spg; //!< Spacegroup information
+  Symmetry spgsym; //!< Spacegroup symmetry operators
+  Pointgroup ptg; //!< Pointgroup information
+  PointSymmetry ptgsym; //!< Pointgroup symmetry operators
 protected:
   double unitvolume() const;
   Lattice inner_star() const;
@@ -90,7 +93,7 @@ protected:
   void set_len_scalars(const double, const double, const double);
   void set_ang_scalars(const double, const double, const double);
   void check_hall_number(const int h);
-  void check_IT_name(const std::string& itname);
+  void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
   //! Construct the Lattice from a matrix of the basis vectors
   Lattice(const double *, const int h=1);
@@ -133,28 +136,28 @@ public:
   //! Construct the Lattice from the three scalar lengths and three scalar angles
   Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const std::string&);
+  Lattice(const double *, const std::string&, const std::string& choice="");
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const double *, const std::string&, const AngleUnit au=AngleUnit::not_provided);
+  Lattice(const double *, const double *, const std::string&, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided);
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * latmat, std::vector<I>& strides, const std::string& itname){
+  Lattice(const double * latmat, std::vector<I>& strides, const std::string& itname, const std::string& choice=""){
     double l[3]={0,0,0}, a[3]={0,0,0};
     latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
     this->set_len_pointer(l,1);
     this->set_ang_pointer(a,1, AngleUnit::radian);
     this->volume=this->calculatevolume();
-    this->check_IT_name(itname);
+    this->check_IT_name(itname, choice);
   }
   //! Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
-  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string& itname, const AngleUnit au=AngleUnit::not_provided){
+  Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string& itname, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided){
     this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
     this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
     this->volume=this->calculatevolume();
-    this->check_IT_name(itname);
+    this->check_IT_name(itname, choice);
   }
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double, const double, const double, const double, const double, const double, const std::string&);
+  Lattice(const double, const double, const double, const double, const double, const double, const std::string&, const std::string& choice="");
   virtual ~Lattice() = default;
   //! copy constructor
   Lattice(const Lattice& other){
@@ -163,7 +166,10 @@ public:
       this->ang[i] = other.ang[i];
     }
     this->volume = other.volume;
-    this->hall = other.hall;
+    this->spg = other.spg;
+    this->ptg = other.ptg;
+    this->spgsym = other.spgsym;
+    this->ptgsym = other.ptgsym;
   }
   //! assignment operator
   // required for gcc 9+
@@ -173,7 +179,10 @@ public:
       this->ang[i] = other.ang[i];
     }
     this->volume = other.volume;
-    this->hall = other.hall;
+    this->spg = other.spg;
+    this->ptg = other.ptg;
+    this->spgsym = other.spgsym;
+    this->ptgsym = other.ptgsym;
     return *this;
   }
   //! Return the first basis vector length
@@ -236,22 +245,32 @@ public:
   //! Return a string representation of the basis vector lengths and angles
   virtual std::string string_repr();
   //! Return the Hall number of the Lattice
-  int get_hall() const {return hall;}
+  int get_hall() const {return spg.get_hall_number();}
   //! Set the symmetry of the Lattice by changing the Hall number
-  int set_hall(const int h) { check_hall_number(h); return hall; }
+  int set_hall(const int h) { check_hall_number(h); return get_hall(); }
   //! Return the Spacegroup object of the Lattice
-  Spacegroup get_spacegroup_object() const { return Spacegroup(hall); }
+  Spacegroup get_spacegroup_object() const { return spg; }
   //! Return the Pointgroup object of the Lattice
-  Pointgroup get_pointgroup_object() const { return Spacegroup(hall).get_pointgroup(); }
+  Pointgroup get_pointgroup_object() const { return ptg; }
   //! Return the Spacegroup symmetry operation object of the Lattice
-  Symmetry get_spacegroup_symmetry() const { return make_spacegroup_symmetry_object(hall); }
+  Symmetry get_spacegroup_symmetry() const { return spgsym; }
   //! Return the Pointgroup Symmetry operation object of the Lattice
-  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const { return make_pointgroup_symmetry_object(hall, time_reversal); }
-  //! Check whether the pointgroup has the space-inversion operator, ̄1.
-  bool has_space_inversion() const {
-    PointSymmetry ps = make_pointgroup_symmetry_object(hall, 0); // don't add time-reversal symmetry.
-    return ps.has_space_inversion();
+  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {
+    if (time_reversal && !ptgsym.has_space_inversion()){
+      // time_reversal == space_inversion. requested but not present
+      // get the generators of the pointgroup
+      PointSymmetry gens = ptgsym.generators();
+      // add time-reversal/space-inversion
+      std::array<int,9> trsi{{-1,0,0, 0,-1,0, 0,0,-1}};
+      gens.add(trsi);
+      // generate the new pointgroup
+      return gens.generate();
+    } else {
+      return ptgsym;
+    }
   }
+  //! Check whether the pointgroup has the space-inversion operator, ̄1.
+  bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
 };
 
 /*! \brief A space-spanning Lattice that exists in real space

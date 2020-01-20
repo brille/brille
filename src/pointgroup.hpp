@@ -60,6 +60,7 @@
 // #include <vector>
 // #include <array>
 #include "symmetry.hpp"
+#include "pointsymmetry.hpp"
 
 enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};
 std::string my_to_string(const Holohedry& h);

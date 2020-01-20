@@ -60,41 +60,9 @@
 // #include<iostream>
 // #include<string>
 #include<cstring>
+#include "bravais.hpp"
 // #include "symmetry.hpp"
 #include "pointgroup.hpp"
-
-/*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
-
-When the unit cell does not reflec the symmetry of the lattice, it is usual to
-refer to a 'conventional' crystallographic basis, (aₛ bₛ cₛ), instead of a
-primitive basis, (aₚ bₚ cₚ).
-Such a conventional basis has "extra" lattice points added at the centre of the
-unit cell, the centre of a face, or the centre of three faces.
-The "extra" nodes in the conventional basis are displaced from the origin of the
-unit cell by 'centring vectors'. As with any space-spanning basis, any
-whole-number linear combination of the conventional basis vectors is a lattice
-point but in addition there exist linear combinations xaₛ+ybₛ+zcₛ with at least
-two fractional coefficients (x,y,z) that are lattice points as well.
-
-Each conventional basis is ascribed a Bravais letter, which forms part of the
-Hermann-Mauguin symbol of a space group.
-A subset of the 10 possible Bravais letters is used herein:
-
-| Bravais letter | Centring | Centring vectors |
-| --- | --- | --- |
-| P | primitve | 0 |
-| A | A-face centred | ½bₛ+½cₛ |
-| B | B-face centred | ½cₛ+½aₛ |
-| C | C-face centred | ½aₛ+½bₛ |
-| I | body centred (*Innenzentriert*) | ½aₛ+½bₛ+½cₛ |
-| F | all-face centred | ½bₛ+½cₛ, ½cₛ+½aₛ, ½aₛ+½bₛ |
-| R | rhombohedrally centred (hexagonal axes) | ⅔aₛ+⅓bₛ+⅓cₛ, ⅓aₛ+⅓bₛ+⅔c |
-
-For further details, see http://reference.iucr.org/dictionary/Centred_lattice
-*/
-enum class Bravais {_, P, A, B, C, I, F, R};
-
-std::string bravais_string(const Bravais b);
 
 class Spacegroup{
 public:
@@ -114,9 +82,9 @@ public:
              const std::string& its, const std::string& itf,
              const std::string& ith, const std::string& ch,
              const Bravais br, const int pno, const int hno):
-    number(no), bravais(br), pointgroup_number(pno), hall_number(hno) {
-      deal_with_strings(sf, hs, its, itf, ith, ch);
-  }
+    number(no), schoenflies(sf), hall_symbol(hs), international(its),
+    international_full(itf), international_short(ith), choice(ch), bravais(br),
+    pointgroup_number(pno), hall_number(hno) {};
   Spacegroup(int _hall_number) { set_from_hall_number(_hall_number); }
   //
   int get_hall_number(void) const { return this->hall_number; }
@@ -128,6 +96,16 @@ public:
   std::string get_international_table_full(void) const {return this->international_full; }
   std::string get_international_table_short(void) const {return this->international_short; }
   std::string get_choice(void) const {return this->choice; }
+  int set_hall_number(const int nh) { this->hall_number = nh; return this->hall_number; }
+  int set_international_table_number(const int itn) { this->number=itn; return this->number; }
+  int set_pointgroup_number(const int pgn) { this->pointgroup_number=pgn; return this->pointgroup_number; }
+  std::string set_schoenflies_symbol(const std::string& ns) { this->schoenflies=ns; return this->schoenflies; }
+  std::string set_hall_symbol(const std::string& ns) { this->hall_symbol=ns; return this->hall_symbol; }
+  std::string set_international_table_symbol(const std::string& ns) {this->international=ns; return this->international; }
+  std::string set_international_table_full(const std::string& ns) {this->international_full=ns; return this->international_full; }
+  std::string set_international_table_short(const std::string& ns) {this->international_short=ns; return this->international_short; }
+  std::string set_choice(const std::string& ns) {this->choice=ns; return this->choice; }
+  Bravais set_bravais_type(const Bravais b) {this->bravais = b; return this->bravais; }
   std::string string_repr(void) const {
     std::string repr;
     repr += " IT(" + std::to_string(this->number) + "): "
@@ -141,19 +119,19 @@ public:
     return left + repr + right;
   }
   Pointgroup get_pointgroup(void) const {return Pointgroup(this->pointgroup_number);}
+  Symmetry get_spacegroup_symmetry() const;
+  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const;
 private:
-  void deal_with_strings(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
-  void set_hall_number(void);
+  // void set_hall_number(void);
   void set_from_hall_number(const int);
 };
 
 bool hall_number_ok(const int hall_number);
-Symmetry make_spacegroup_symmetry_object(const int hall_number);
-PointSymmetry make_pointgroup_symmetry_object(const int hall_number, const int time_reversal=0);
+// PointSymmetry make_pointgroup_symmetry_object(const int hall_number, const int time_reversal=0);
 
-int international_number_to_hall_number(const int number);
-int international_string_to_hall_number(const std::string& itname);
+int international_number_to_hall_number(const int number, const std::string& choice="");
+int international_string_to_hall_number(const std::string& itname, const std::string& choice="");
 int hall_symbol_to_hall_number(const std::string& hsymbol);
-int string_to_hall_number(const std::string&);
+int string_to_hall_number(const std::string&, const std::string& choice="");
 
 #endif

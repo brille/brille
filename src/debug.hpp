@@ -230,6 +230,7 @@ private:
 
 static DebugPrinter _debug_printer("");
 #define info_update(...) _debug_printer.println("", __VA_ARGS__)
+#define info_update_if(tf, ...) if (tf) _debug_printer.println("", __VA_ARGS__)
 // #define info_update(...)
 
 #if defined(VERBOSE_DEBUG) || defined(DEBUG)
@@ -270,7 +271,7 @@ public:
     }
     double elapsed() const {
       auto delta = std::chrono::duration_cast<TimeT>(_end - _start);
-      return delta.count();
+      return static_cast<double>(delta.count());
     }
     double average() const {
       return elapsed()/static_cast<double>(presses);
@@ -283,7 +284,7 @@ public:
       auto delta = std::chrono::duration_cast<TimeT>(new_split - _split);
       _split = new_split;
       ++presses;
-      return delta.count();
+      return static_cast<double>(delta.count());
     }
 };
 

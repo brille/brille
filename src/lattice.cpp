@@ -16,6 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include "lattice.hpp"
+#include "hall_symbol.hpp"
 
 Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0};
@@ -37,25 +38,25 @@ Lattice::Lattice(const double la, const double lb, const double lc, const double
   this->volume = this->calculatevolume();
   this->check_hall_number(h);
 }
-Lattice::Lattice(const double* latmat, const std::string& itname){
+Lattice::Lattice(const double* latmat, const std::string& itname, const std::string& choice){
   double l[3]={0,0,0}, a[3]={0,0,0};
   latmat_to_lenang(latmat,3,1,l,a);
   this->set_len_pointer(l,1);
   this->set_ang_pointer(a,1, AngleUnit::radian);
   this->volume=this->calculatevolume();
-  this->check_IT_name(itname);
+  this->check_IT_name(itname, choice);
 }
-Lattice::Lattice(const double *lengths, const double *angles, const std::string& itname, const AngleUnit au){
+Lattice::Lattice(const double *lengths, const double *angles, const std::string& itname, const std::string& choice, const AngleUnit au){
   this->set_len_pointer(lengths,1);
   this->set_ang_pointer(angles,1, au);
   this->volume=this->calculatevolume();
-  this->check_IT_name(itname);
+  this->check_IT_name(itname, choice);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname){
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname, const std::string& choice){
   this->set_len_scalars(la,lb,lc);
   this->set_ang_scalars(al,bl,cl);
   this->volume = this->calculatevolume();
-  this->check_IT_name(itname);
+  this->check_IT_name(itname, choice);
 }
 void Lattice::set_len_scalars(const double a, const double b, const double c){
   this->len[0] = a;
@@ -68,10 +69,36 @@ void Lattice::set_ang_scalars(const double a, const double b, const double g){
   this->ang[2] = g;
 }
 void Lattice::check_hall_number(const int h){
-  this->hall = hall_number_ok(h) ? h : 0;
+  this->spg = Spacegroup(h); // if h is invalid the next three lines might fail`
+  this->ptg = this->spg.get_pointgroup();
+  this->spgsym = this->spg.get_spacegroup_symmetry();
+  this->ptgsym = this->spg.get_pointgroup_symmetry();
 }
-void Lattice::check_IT_name(const std::string& itname){
-  this->hall = string_to_hall_number(itname);
+void Lattice::check_IT_name(const std::string& itname, const std::string& choice){
+  int hall_number = string_to_hall_number(itname, choice);
+  if (hall_number > 0 && hall_number < 531){
+    this->check_hall_number(hall_number);
+  } else {
+    // maybe itname is actually a non-standard Hall symbol?
+    // possibly leave Spacegroup and Pointgroup (partially) unset
+    HallSymbol hs(itname);
+    if (hs.validate()){
+      Symmetry generators = hs.get_generators();
+      this->spgsym = generators.generate();
+      this->spg.set_hall_symbol(hs.to_ascii()); // use a standardized form
+      this->spg.set_bravais_type(hs.getl());
+    } else {
+      // last-ditch effort: maybe x,y,z notation Seitz matrices were passed?
+      std::istringstream stream(itname);
+      std::vector<Motion<int,double>> motions;
+      for (std::string m; std::getline(stream, m, ';'); ) motions.push_back(Motion<int,double>(m));
+      Symmetry mgens(motions);
+      Motion<int,double> mone; // initalised to {𝟙|0}
+      if (!mgens.has(mone)) mgens.add(mone); // make sure {𝟙|0}≡E is present
+      this->spgsym = mgens.generate();
+    }
+    this->ptgsym = PointSymmetry(get_unique_rotations(this->spgsym.getallr(),0));
+  }
 }
 double Lattice::unitvolume() const{
   // The volume of a parallelpiped with unit length sides and our body angles
@@ -132,7 +159,7 @@ Lattice Lattice::inner_star() const {
   sbb = acos( (cosc*cosa-cosb)/(sinc*sina) );
   scc = acos( (cosa*cosb-cosc)/(sina*sinb) );
 
-  return Lattice(sas, sbs, scs, saa, sbb, scc, this->hall);
+  return Lattice(sas, sbs, scs, saa, sbb, scc, this->get_hall());
 }
 void Lattice::get_metric_tensor(double * mt) const {
   const double *a = this->ang;
@@ -374,7 +401,7 @@ void Reciprocal::print(){
 
 
 Direct Direct::primitive(void) const{
-  PrimitiveTransform P(this->hall);
+  PrimitiveTransform P(this->spg);
   if (P.does_anything()){
     double plm[9], lm[9];
     this->get_lattice_matrix(lm); // now returns *row* vectors!

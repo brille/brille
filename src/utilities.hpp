@@ -28,6 +28,11 @@
 #include <numeric>
 #include "debug.hpp"
 
+// 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
+// but setting it any lower (9000 tried) causes other test lattices, namely,
+// (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
+const int TOL_MULT=10000;
+
 // We include numeric for std::gcd in C++17 (are we using it for anything else?)
 /* Pre-C++17 gcd was not part of the standard but may be present in an
 // experimental header -- which of course doesn't exist for MSVC
@@ -58,7 +63,70 @@ template<typename T, int N, int M> bool equal_array(const T *A, const T *B, cons
 template<typename T, int N=3> bool equal_matrix(const T *A, const T *B, const T tol=0);
 template<typename T, int N=3> bool equal_vector(const T *A, const T *B, const T tol=0);
 
-template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
+/*
+    This terrible class-based function specialization is all to get MSVC to stop complaining about a constant conditional expression.
+    The four void classes tacked onto the end of the template are all to allow for specializations where either or both of T and R
+    are floating point or integer numbers. If enable_if_t provides a type which is notvoid, then the specializations are:
+
+       | T | R | TFloat  |  TInt   | RFloat  |  Rint   |
+       |---|---|---------|---------|---------|---------|
+       | 1.| 1.| notvoid |  void   | notvoid |  void   |
+       | 1 | 1.|  void   | notvoid | notvoid |  void   |
+       | 1.| 1 | notvoid |  void   |  void   | notvoid |
+       | 1 | 1 |  void   | notvoid |  void   | notvoid |
+
+*/
+/*isfpT | isfpR | which? | why?
+  ------|-------|--------|-----
+    0       0     either    both Ttol and Rtol are 0
+    1       1      Ttol     R is convertible to T
+    0       1      Rtol     Ttol is 0, so use Rtol
+    1       0      Ttol     Rtol is 0, so use Ttol
+*/
+template<class T, class R, class TFloat = void, class TInt = void, class RFloat = void, class RInt = void>
+class determine_tols_impl {
+public:
+    static std::tuple<bool, bool, T, R> determine_tols(const int i);
+};
+template<class T, class R>
+class determine_tols_impl<T,R,std::enable_if_t<std::is_floating_point<T>::value>, void, std::enable_if_t<std::is_floating_point<R>::value>, void> {
+public:
+    static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
+        T Ttol = static_cast<T>(tol)* static_cast<T>(TOL_MULT)* std::numeric_limits<T>::epsilon();
+        R Rtol = static_cast<R>(tol)* static_cast<R>(TOL_MULT)* std::numeric_limits<R>::epsilon();
+        return std::make_tuple(std::is_convertible<T, R>::value, true, Ttol, Rtol);
+    }
+};
+template<class T, class R>
+class determine_tols_impl <T,R,std::enable_if_t<std::is_floating_point<T>::value>, void, void, std::enable_if_t<std::is_integral<R>::value>> {
+public:
+    static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
+        T Ttol = static_cast<T>(tol)* static_cast<T>(TOL_MULT)* std::numeric_limits<T>::epsilon();
+        return std::make_tuple(true, true, Ttol, R(0));
+    }
+};
+template<class T, class R>
+class determine_tols_impl<T,R, void, std::enable_if_t<std::is_integral<T>::value>, std::enable_if_t<std::is_floating_point<R>::value>, void> {
+public:
+    static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
+        R Rtol = static_cast<R>(tol)* static_cast<R>(TOL_MULT)* std::numeric_limits<R>::epsilon();
+        return std::make_tuple(true, false, T(0), Rtol); // R can't generally be converted to integer T, but this was the behaviour before
+    }
+};
+template<class T, class R>
+class determine_tols_impl<T,R, void, std::enable_if_t<std::is_integral<T>::value>, void, std::enable_if_t<std::is_integral<R>::value>> {
+public:
+    static std::tuple<bool, bool, T, R> determine_tols(const int) {
+        return std::make_tuple(true, false, T(0), R(0));
+    }
+};
+
+template<class T, class R> std::tuple<bool, bool, T, R> determine_tols(const int i=1) {
+    return determine_tols_impl<T, R>::determine_tols(i);
+}
+
+
+//template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
 template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol=1);
 template<typename T, typename R> bool approx_array(const int N, const int M,const T *A, const R *B, const int tol=1);
 template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol=1);
@@ -125,7 +193,25 @@ template<typename R, int N=3> void matrix_transpose(R *B);
 template<typename R, int N=3> void matrix_metric(R *M, const R *L);
 
 template<typename R, int N=3> R vector_norm_squared(const R * v);
-template<typename T, typename R, typename S, int N=3> void vector_cross(T *c, const R *a, const S *b);
+
+template<typename T, typename R, typename S, int N> class vector_cross_impl {
+public:
+    static void vector_cross(T* c, const R* a, const S* b) {
+        throw std::runtime_error("The cross product is only defined for 3-vectors");
+    }
+};
+template<typename T, typename R, typename S> class vector_cross_impl<T,R,S,3>{
+public:
+    static void vector_cross(T * c, const R * a, const S * b) {
+        c[0] = static_cast<T>(a[1])* static_cast<T>(b[2]) - static_cast<T>(a[2])* static_cast<T>(b[1]);
+        c[1] = static_cast<T>(a[2])* static_cast<T>(b[0]) - static_cast<T>(a[0])* static_cast<T>(b[2]);
+        c[2] = static_cast<T>(a[0])* static_cast<T>(b[1]) - static_cast<T>(a[1])* static_cast<T>(b[0]);
+    }
+};
+template<typename T, typename R, typename S, int N = 3>
+void vector_cross(T* c, const R* a, const S* b) {
+    vector_cross_impl<T, R, S, N>::vector_cross(c, a, b);
+}
 template<typename R, int N=3> R vector_dot(const R *a, const R *b);
 
 template<typename T> T mod1(const T a);

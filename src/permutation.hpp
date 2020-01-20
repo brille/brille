@@ -83,7 +83,7 @@ two matrices.
 
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
-@param Nel The number of scalars, eigenvector elements, vector elements, and matrix elements per object
+@param Nel The number of scalars, vector elements, and matrix elements per object
 @param Wscl The cost weight for scalar elements
 @param Wvec The cost weight for vectors
 @param Wmat The cost weight for matrices
@@ -166,7 +166,10 @@ for (size_t i=0; i<Nobj; ++i){
       n_j += Nel[1];
     }
     if (Nel[2]){
-      m_cost = frobenius_distance(Nel[2], c_i, n_j);
+      I nel2 = std::sqrt(Nel[2]);
+      if (nel2*nel2 != Nel[2])
+        throw std::runtime_error("Non-square matrix in munkres_permutation");
+      m_cost = frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
@@ -301,7 +304,10 @@ for (size_t i=0; i<Nobj; ++i){
       n_j += Nel[1];
     }
     if (Nel[2]){
-      m_cost = frobenius_distance(Nel[2], c_i, n_j);
+      I nel2 = std::sqrt(Nel[2]);
+      if (nel2*nel2 != Nel[2])
+        throw std::runtime_error("Non-square matrix in jv_permutation");
+      m_cost = frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);
@@ -439,7 +445,10 @@ for (size_t i=0; i<Nobj; ++i){
       n_j += Nel[1];
     }
     if (Nel[2]){
-      m_cost = frobenius_distance(Nel[2], c_i, n_j);
+      I nel2 = std::sqrt(Nel[2]);
+      if (nel2*nel2 != Nel[2])
+        throw std::runtime_error("Non-square matrix in sm_permutation");
+      m_cost = frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     cost[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;

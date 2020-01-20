@@ -10,7 +10,7 @@
 #include "transform.hpp"
 
 TEST_CASE("primitive transforms","[transform]"){
-  Bravais c;
+  Bravais c{Bravais::_};
   SECTION("Body centring"){         c = Bravais::I; }
   SECTION("All-face centring"){     c = Bravais::F; }
   SECTION("A-face centring"){       c = Bravais::A; }

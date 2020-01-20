@@ -30,23 +30,206 @@ template<class T> using Vector = std::array<T,3>;
 template<class T> using Matrices = std::vector<Matrix<T>>;
 template<class T> using Vectors = std::vector<Vector<T>>;
 
-// class Motion{
-//   Matrix<int> W;
-//   Vector<double> w;
-// public:
-//   Motion(): W({1,0,0, 0,1,0, 0,0,1}), w({0.,0.,0.}) {}
-//   Motion(const Matrix<int>& X): W(X), w({0.,0.,0.}) {}
-//   Motion(const Vector<double>& x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {}
-//   Motion(const Matrix<int>& X, const Vector<double>& x): W(X), w(x) {}
-//   Motion operator*(const Motion& m) const;
-//   template<class T, typename S/*=promotion stuff*/>
-//   Vector<S> operator*(const Vector<T>& x) const;
-//   Matrix<int> rotation(void) const;
-//   Vector<double> translation(void) const;
-//   const Matrix<int>& rotation(void) const;
-//   const Vector<double>& translation(void) const;
+template<class R, class T> class Motion{
+  Matrix<R> W;
+  Vector<T> w;
+public:
+  Motion(): W({1,0,0, 0,1,0, 0,0,1}), w({0,0,0}) {}
+  Motion(const Matrix<R>& X): W(X), w({0,0,0}) {}
+  Motion(const Vector<T>& x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {}
+  Motion(const Matrix<R>& X, const Vector<T>& x): W(X), w(x) {}
+  Motion(const std::string& x, bool change_of_basis=false) {this->from_ascii(x,change_of_basis);}
+  Motion<R,T> operator*(const Motion<R,T>& m) const {
+    // {W0, w0} * {W1, w1} == {W0*W1, (W0*w1 + w0)%1}
+    Matrix<R> outW;
+    Vector<T> outw;
+    // output rotation-part is W0*W1
+    multiply_matrix_matrix(outW.data(), this->W.data(), m.getr().data());
+    // ouput translation-part is W0*w1
+    multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
+    // *plus* w0
+    for (int i=0; i<3; ++i) outw[i] += this->w[i];
+    // we want the output translation elements to be ∈ [0,1)
+    for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
+    return Motion(outW, outw);
+  }
+  // template<class T, typename S/*=promotion stuff*/>
+  // Vector<S> operator*(const Vector<T>& x) const;
+  Matrix<R> getr(void) const {return W;}
+  Vector<T> gett(void) const {return w;}
+  bool operator==(const Motion<R,T>& m) const {
+    Vector<T> z{{0,0,0}}, d{m.gett()};
+    Matrix<R> mW{m.getr()};
+    // construct the difference vector
+    for (int i=0; i<3; ++i) d[i] = d[i]-w[i];
+    // limit its elements to the range [0,1) and transform such that 0 and 1 are near zero
+    for (int i=0; i<3; ++i) d[i] = T(0.5) - std::abs(d[i] - std::floor(d[i]) - T(0.5));
+    // so if the difference vector is ~ ⃗0 or ~ ⃗1 and the matrix parts match
+    // then the Motions are equivalent
+    return approx_vector(d.data(), z.data()) && approx_matrix(W.data(), mW.data());
+  }
+  // Some compiler documentation (GCC,+?) claims that operator!= will be
+  // automatically constructed if operator== is defined. This is apparently not
+  // true for MSVC. This statement might need to be precompiler filtered if GCC
+  // complains about it.
+  bool operator!=(const Motion<R,T>& m) const { return !this->operator==(m); }
+  bool has_identity_rotation() const {
+    Matrix<R> i{{1,0,0, 0,1,0, 0,0,1}};
+    return approx_matrix(W.data(), i.data());
+  }
+  bool has_identity_translation() const {
+    Vector<T> i{{0,0,0}};
+    return approx_vector(w.data(), i.data());
+  }
+  size_t from_ascii(const std::string& x, const bool cob=false);
+};
+
+template<class R, class T>
+size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
+  // if R==T and the string has no commas, it represents a special version of a
+  // change of basis matrix where W≡𝟙 and 12×w is specified as space-separated integers
+  bool special = cob && std::is_same<R,T>::value && s.find(',')==std::string::npos;
+  this->W ={0,0,0, 0,0,0, 0,0,0};
+  if (special) this->W[0] = this->W[4] = this->W[8] = R(1); // set to 𝟙
+  this->w = {0,0,0};
+  // a valid encoded Motion will be of the form
+  // ∑ₙiₙαₙ + f where each iₙ is an integer, αₙ∈{x,y,z}
+  // and f one of 0, ±1/12, ±1/6, ±1/4, ±1/3, ±1/2
+  // but we should support any rational or floating point value for f
+  int n{0};
+  R i{1};
+  T f{0}; // always floating point
+  char c{' '};
+  size_t ret{0}; // number of characters read
+  std::stringstream stream(s);
+  std::string nosearch = special ? "-+ " : ";,xyz-+";
+  std::string digits = "0123456789";
+  while (stream.good()){
+    c = stream.get();
+    debug_update_if(special, "next character ", c);
+    ++ret; // we've read another character
+    switch (c){
+      case ';': // end of one motion
+      case ' ': // end of motion component in the special case, otherwise nothing
+        if (special) this->w[n++] = static_cast<T>(i)/T(12);
+        debug_update_if(special, "set w[",n-1,"] to ", this->w[n-1]);
+        break;
+      case ',': // end of motion component
+        i=1;
+        this->w[n++] = f;
+        f=0;
+        break;
+      case 'x':
+        this->W[n*3] = i;
+        i=1;
+        break;
+      case 'y':
+        this->W[n*3+1] = i;
+        i=1;
+        break;
+      case 'z':
+        this->W[n*3+2] = i;
+        i=1;
+        break;
+      default: // not ;,xyz
+        debug_update_if(special, "which is not one of ';,xyz ' so search until one of '",nosearch,"' is found next");
+        std::stringstream tmp;
+        tmp << c; // if a number, tmp might be the sign.
+        bool haspoint{false}, hasslash{false}, hasdigit{digits.find(c)!=std::string::npos};
+        while (nosearch.find(stream.peek())==std::string::npos && stream.good()){
+          hasdigit |= digits.find(stream.peek())!=std::string::npos;
+          hasslash |= '/'==stream.peek();
+          haspoint |= '.'==stream.peek();
+          tmp << char(stream.get()); // without char() the output of stream.get() is interpreted as an integer (under MSVC, at least)
+        }
+        if (!stream.good()) stream.putback(special ? ' ' : ';');
+        debug_update_if(special, "Finished searching. Result ",tmp.str()," which");
+        debug_update_if(special, " ", (haspoint ? "has" : "does not have"), " a decimal point");
+        debug_update_if(special, " ", (hasslash ? "has" : "does not have"), " a slash");
+        debug_update_if(special, " ", (hasdigit ? "has" : "does not have"), " a digit");
+        if (haspoint && hasslash) throw std::logic_error("Number has both point and slash?!");
+        if (!(haspoint^hasslash)){ // TT (error) or FF (integer)
+          if (!hasdigit) tmp << '1'; // in case tmp == "+" or "-"
+          tmp >> i;
+        }
+        if (haspoint) tmp >> f; // floating point
+        if (hasslash){ // rational
+          std::vector<std::string> numden;
+          for (std::string a; std::getline(tmp, a, '/');) numden.push_back(a);
+          if (numden.size() != 2u) throw std::runtime_error("String representation of fractional number does not have two parts.");
+          int pre{std::stoi(numden[0])}, post{std::stoi(numden[1])};
+          f = static_cast<T>(pre)/static_cast<T>(post);
+        }
+    }
+  }
+  return ret;
+}
+// template<class T>
+// size_t Motion<T,T>::from_ascii(const std::string& s){
+//   // this overload is for reading a general transformation 4x4 matrix, i.e., Motion<T,T>
+//   this->W = {0,0,0, 0,0,0, 0,0,0}
+//   this->w = {0,0,0};
+//   int n{0}, i{1};
+//   T f{0}; // always floating point
+//   char c{' '};
+//   size_t ret{0}; // number of characters read
+//   std::istringstream stream(s);
+//   } else {
+//     this->W = {{1,0,0, 0,1,0, 0,0,1}};
+//     while (stream.good()) {
+//       c = stream.get();
+//       ++ret;
+//       switch (c){
+//         case ' ': // end of a translation component
+//         this->w[n++] = f;
+//         f = 0;
+//         break;
+//         default:
+//         std::stringstream tmp;
+//         tmp << c;
+//         bool haspoint{false}, hasslash{false};
+//         while (std::strchr(";,xyz-+",stream.peek())==nullptr){
+//           hasslash |= '/'==stream.peek();
+//           haspoint |= '.'==stream.peek();
+//           tmp << stream.get();
+//         }
+//         if (haspoint && hasslash) throw std::logic_error("Number has both point and slash?!");
+//         if (!(haspoint^hasslash)){ // TT (error) or FF (integer)
+//           tmp >> i;
+//           f = static_cast<T>(pre)/T(12); // the normal case
+//         }
+//         if (haspoint) tmp >> f; // floating point
+//         if (hasslash){ // rational
+//           std::vector<std::string> numden;
+//           for (std::string a; std::getline(tmp, a, '/');) numden.push_back(a);
+//           if (numden.size() != 2u) throw std::runtime_error("String representation of fractional number does not have two parts.");
+//           int pre{std::stoi(numden[0])}, post{std::stoi(numden[1])};
+//           f = static_cast<T>(pre)/static_cast<T>(post);
+//         }
+//       }
+//     }
+//   }
+//   return ret;
 // }
-// using Motions = std::vector<Motion>;
+
+/*
+  The following is probably a very bad idea, but will work so long as it is only
+  ever used when the rotation part of b is directly convertable to R, as is
+  the case when it is 𝟙.
+  For 'safety' this will enforced at runtime.
+*/
+template<class R, class T> Motion<R,T> operator*(const Motion<R,T>& a, const Motion<T,T>& b){
+  if (!b.has_identity_rotation())
+    throw std::runtime_error("Differing type Motion multiplication requires the identity rotation");
+  Motion<R,T> newb(b.gett());
+  return a*newb;
+}
+template<class R, class T> Motion<R,T> operator*(const Motion<T,T>& a, const Motion<R,T>& b){
+  if (!a.has_identity_rotation())
+    throw std::runtime_error("Differing type Motion multiplication requires the identity rotation");
+  Motion<R,T> newa(a.gett());
+  return newa*b;
+}
 
 /*****************************************************************************\
 | Symmetry class                                                              |
@@ -67,82 +250,36 @@ template<class T> using Vectors = std::vector<Vector<T>>;
 |   size                   return the number of motions the object can store. |
 \*****************************************************************************/
 class Symmetry{
-  Matrices<int> R;
-  Vectors<double> T;
 public:
-  Symmetry(size_t n=0): R(n), T(n) { R.resize(n); T.resize(n); }
-  const Matrices<int>&   getallr(void)               const { return this->R;  }
-  const Vectors<double>& getallt(void)               const { return this->T;  }
-  size_t                 size(void)                  const { return R.size(); }
+  using Motions = std::vector<Motion<int,double>>;
+private:
+  Motions M;
+public:
+  Symmetry(size_t n=0) { M.resize(n); }
+  Symmetry(const Motions& m): M(m) {};
+  const Motions&         getallm() const {return this->M;}
+  Matrices<int>          getallr() const;
+  Vectors<double>        getallt() const;
+  size_t                 size()    const { return M.size(); }
   size_t                 resize(const size_t i)                                ;
   size_t                 add(const int *r, const double *t)                    ;
   size_t                 add(const Matrix<int>&, const Vector<double>&)        ;
-  bool                   set(const size_t i, const int *r, const double *t)    ;
-  bool                   get(const size_t i, int *r, double *t)           const;
-  int *                  rdata(const size_t i)                                 ;
-  double *               tdata(const size_t i)                                 ;
-  const int *            rdata(const size_t i)                            const;
-  const double *         tdata(const size_t i)                            const;
+  size_t                 add(const Motion<int,double>&)                        ;
+  size_t                 add(const std::string&)                               ;
+  bool                   from_ascii(const std::string& s)                      ;
+  size_t                 erase(const size_t i)                                 ;
+  Motion<int,double>     pop(const size_t i)                                   ;
+  bool                   has(const Motion<int,double>&)                   const;
   Matrix<int>            getr(const size_t i)                             const;
   Vector<double>         gett(const size_t i)                             const;
-  // const Matrix<int>&     getr(const size_t i)                             const;
-  // const Vector<double>&  gett(const size_t i)                             const;
+  Motion<int,double>     getm(const size_t i)                             const;
+  int order(const size_t i) const;
+  std::vector<int> orders(void) const;
+  Symmetry generate(void) const;
+  Symmetry generators(void) const;
+  bool operator==(const Symmetry& other) const;
+  bool operator!=(const Symmetry& other) const { return !this->operator==(other);}
 };
-
-
-/*****************************************************************************\
-| PointSymmetry class                                                         |
-|-----------------------------------------------------------------------------|
-|   Holds N 3x3 rotation matrices R which comprise a point group symmetry.    |
-|-----------------------------------------------------------------------------|
-| Member functions:                                                           |
-|   set      copy a given matrix into R at index i.                           |
-|   get      copy the rotation at index i into the provided matrix.           |
-|   resize   grow or shrink the number of rotations that the object can hold  |
-|            -- this causes a memory copy if the old and new sizes are finite.|
-|   size     return the number of rotations the object can/does store.        |
-\*****************************************************************************/
-class PointSymmetry{
-  Matrices<int> R;
-public:
-  PointSymmetry(size_t n=0): R(n) { R.resize(n);}
-  PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); }
-  const Matrices<int>& getall(void)                  const { return this->R;  }
-  size_t               size(void)                    const { return R.size(); }
-  size_t               resize(const size_t newsize)                            ;
-  size_t               add(const int *r)                                       ;
-  size_t               add(const Matrix<int>&)                                 ;
-  bool                 get(const size_t i, int *r)                        const;
-  bool                 set(const size_t i, const int *r)                       ;
-  int *                data(const size_t i)                                    ;
-  const int *          data(const size_t i)                               const;
-  Matrix<int>          pop(const size_t i=0)                                   ;
-  size_t               erase(const size_t i)                                   ;
-  bool                 has(const Matrix<int>&)                            const;
-  Matrix<int>          get(const size_t i)                                const;
-  Matrix<int>          get_proper(const size_t i)                         const;
-  Matrix<int>          get_inverse(const size_t i)                        const;
-  // const Matrix<int>&   get(const size_t i)                                const;
-  void                 sort(const int ad=0)                                    ;
-  void                 permute(const std::vector<size_t>&)                     ;
-  int                  order(const size_t i)                              const;
-  std::vector<int>     orders(void)                                       const;
-  int                  isometry(const size_t i)                           const;
-  std::vector<int>     isometries(void)                                   const;
-  Vector<int>          axis(const size_t i)                               const;
-  Vectors<int>         axes(void)                                         const;
-  bool                 has_space_inversion(void)                          const;
-  void                 print(const size_t i)                              const;
-  void                 print(void)                                        const;
-  PointSymmetry        generate(void)                                     const;
-  PointSymmetry        generators(void)                                   const;
-  PointSymmetry        nfolds(const int min_order=0)                      const;
-  Vector<int>          perpendicular_axis(const size_t i)                 const;
-  Vectors<int>         perpendicular_axes(void)                           const;
-  PointSymmetry        higher(const int min_order=0)                      const;
-};
-
-
 
 
 #endif

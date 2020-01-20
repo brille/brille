@@ -26,6 +26,9 @@
 #include "_trellis.hpp"
 #include "_nest.hpp"
 #include <pybind11/stl.h>
+#include <pybind11/operators.h>
+
+#include "hall_symbol.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
@@ -318,7 +321,7 @@ PYBIND11_MODULE(_brille,m){
     pg.def("__repr__",&Pointgroup::to_string);
 
     py::class_<Symmetry> sym(m, "Symmetry");
-    sym.def(py::init([](int hall){return make_spacegroup_symmetry_object(hall);}),py::arg("Hall number"));
+    sym.def(py::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),py::arg("Hall number"));
     sym.def_property_readonly("size",&Symmetry::size);
     sym.def_property_readonly("W",[](Symmetry& ps){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
@@ -328,13 +331,12 @@ PYBIND11_MODULE(_brille,m){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
       return sva2np(sz, ps.getallt());
     });
+    sym.def("generate",&Symmetry::generate);
+    sym.def("generators",&Symmetry::generators);
+    sym.def(py::self == py::self);
 
     py::class_<PointSymmetry> psym(m, "PointSymmetry");
-    psym.def(py::init(
-      [](int hall, int time_reversal){
-        return make_pointgroup_symmetry_object(hall, time_reversal);
-      }
-    ),py::arg("Hall_number"),py::arg("time_reversal")=0);
+    psym.def(py::init( [](int hall, int time_reversal){return Spacegroup(hall).get_pointgroup_symmetry(time_reversal);}),py::arg("Hall_number"),py::arg("time_reversal")=0);
     psym.def_property_readonly("size",&PointSymmetry::size);
     psym.def_property_readonly("W",[](PointSymmetry& ps){
       std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
@@ -357,4 +359,14 @@ PYBIND11_MODULE(_brille,m){
     psym.def("nfolds",&PointSymmetry::nfolds);
 
     declare_polyhedron<Polyhedron>(m, "");
+
+
+    py::class_<HallSymbol> hsbl(m, "HallSymbol");
+    hsbl.def(py::init([](std::string symbol){
+      HallSymbol out;
+      out.from_ascii(symbol);
+      return out;
+    }),py::arg("Hall_symbol"));
+    hsbl.def("__repr__",&HallSymbol::to_ascii);
+    hsbl.def_property_readonly("generators",&HallSymbol::get_generators);
 }

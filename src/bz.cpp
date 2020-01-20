@@ -1070,7 +1070,7 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   this->moveinto(Q, q, tau);
   // by chance some first Bz points are likely already in the IR-Bz:
   std::vector<bool> in_ir = this->isinside_wedge_std(q);
-  LQVec<double> qj(Q.get_lattice(), 1u);
+  //LQVec<double> qj(Q.get_lattice(), 1u);
   auto lat = Q.get_lattice();
   // OpenMP 2 (VS) doesn't like unsigned loop counters
   size_t n_outside{0};
@@ -1125,7 +1125,7 @@ bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, 
   R.resize(nQ);
   // by chance some first Bz points are likely already in the IR-wedge:
   std::vector<bool> in_ir = this->isinside_wedge_std(Q);
-  LQVec<double> qj(Q.get_lattice(), 1u);
+  //LQVec<double> qj(Q.get_lattice(), 1u);
   auto lat = Q.get_lattice();
   // OpenMP 2 (VS) doesn't like unsigned loop counters
   size_t n_outside{0};

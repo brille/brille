@@ -83,7 +83,7 @@ MapGrid3<T>::classify_neighbours(const std::vector<bool>& sorted, const size_t c
 template<class T>
 std::tuple<std::vector<size_t>,std::vector<size_t>>
 MapGrid3<T>::classify_sorted_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const {
-  size_t centre_lin_idx, n_map_idx, nn_map_idx;
+  size_t centre_lin_idx, n_map_idx, nn_map_idx{0};
   size_t csub[3], nsub[3], nnsub[3];
   if (this->map2lin(centre_map_idx,centre_lin_idx))
     throw std::runtime_error("Mapping index has no corresponding linear index.");
@@ -780,7 +780,7 @@ bool MapGrid3<T>::multi_sort_derivative_all(
 ArrayVector<T> sdat(data_.data().numel(),2*nidx.size()); // sorted n and nn
 // Copy the data at each point, ensuring that the global permutation for
 // nidx and nnidx are respected
-size_t nn_i, cnt=0;
+size_t nn_i{0}, cnt=0;
 bool nn_i_found;
 size_t nobj = spobj[1], spn = spobj[0];
 // std::cout<< "multi_sort_derivative " << std::to_string(++out_count) << std::endl;
