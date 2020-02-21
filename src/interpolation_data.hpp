@@ -47,21 +47,63 @@ public:
   //
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&) const;
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
-  //
+  // Replace the data within this object.
+  // A general template to convert array data type of the elements
   template<typename I> void replace_data(const ArrayVector<T>& nd, const ShapeType& s, const std::array<I,3>& ne){
     ElementsType neet;
     for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
-    return this->replace_data(nd, s, ne);
+    return this->replace_data(nd, s, neet);
   }
+  // A specialized template with correct element array data type
+  template <> void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const std::array<element_t,3>& ne){
+    data_ = nd;
+    shape_ = ns;
+    elements_ = ne;
+    if (ne[1]%3)
+      throw std::logic_error("Vectors must have 3N elements per branch");
+    if (ne[2]%9)
+      throw std::logic_error("Matrices must have 9N elements per branch");
+    // check the input for correctness
+    element_t total_elements = 1u;
+    // scalar + eigenvector + vector + matrix*matrix elements
+    element_t known_elements = this->branch_span(ne);
+    // no matter what, shape[0] should be the number of gridded points
+    if (ns.size()>2){
+      // if the number of dimensions of the shape array is greater than two,
+      // the second element is the number of modes per point                    */
+      branches_ = ns[1];
+      for (size_t i=2u; i<ns.size(); ++i) total_elements *= ns[i];
+    } else {
+      // shape is [n_points, n_elements] or [n_points,], so there is only one mode
+      branches_ = 1u;
+      total_elements = ns.size() > 1 ? ns[1] : 1u;
+    }
+    if (0 == known_elements) elements_[0] = total_elements;
+    if (known_elements && known_elements != total_elements){
+      std::string msg;
+      msg = "Inconsistent elements: " + std::to_string(known_elements) + " = ";
+      msg += std::to_string(elements_[0]) + "+" + std::to_string(elements_[1]) + "+";
+      msg += std::to_string(elements_[2]) + " ≠ ";
+      msg += std::to_string(total_elements);
+      throw std::runtime_error(msg);
+    }
+  }
+  // Replace the data in this object without specifying the data shape
+  // A general template to convert array data type of the elements
   template<typename I> void replace_data(const ArrayVector<T>& nd, const std::array<I,3>& ne){
     ElementsType neet;
     for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
-    return this->replace_data(nd, ne);
+    return this->replace_data(nd, neet);
   }
-  void replace_data(const ArrayVector<T>&, const ShapeType&, const ElementsType&);
-  void replace_data(const ArrayVector<T>& nd, const ElementsType& ne=ElementsType({{0,0,0}})){
+  // A specialized template with the correct element data type
+  template <> void replace_data(const ArrayVector<T>& nd, const std::array<element_t,3>& ne){
     ShapeType ns{nd.size(), nd.numel()};
     return this->replace_data(nd, ns, ne);
+  }
+  // Replace the data in this object without specifying the data shape or its elements
+  // this variant is necessary since the template specialization above can not have a default value for the elements
+  void replace_data(const ArrayVector<T>& nd){
+    return this->replace_data(nd, ElementsType({{0,0,0}}));
   }
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
@@ -185,44 +227,7 @@ void InterpolationData<T>::interpolate_at(
   // }
 }
 
-template<typename T>
-void InterpolationData<T>::replace_data(
-  const ArrayVector<T>& nd,
-  const ShapeType& ns,
-  const ElementsType& ne
-){
-  data_ = nd;
-  shape_ = ns;
-  elements_ = ne;
-  if (ne[1]%3)
-    throw std::logic_error("Vectors must have 3N elements per branch");
-  if (ne[2]%9)
-    throw std::logic_error("Matrices must have 9N elements per branch");
-  // check the input for correctness
-  element_t total_elements = 1u;
-  // scalar + eigenvector + vector + matrix*matrix elements
-  element_t known_elements = this->branch_span(ne);
-  // no matter what, shape[0] should be the number of gridded points
-  if (ns.size()>2){
-    // if the number of dimensions of the shape array is greater than two,
-    // the second element is the number of modes per point                    */
-    branches_ = ns[1];
-    for (size_t i=2u; i<ns.size(); ++i) total_elements *= ns[i];
-  } else {
-    // shape is [n_points, n_elements] or [n_points,], so there is only one mode
-    branches_ = 1u;
-    total_elements = ns.size() > 1 ? ns[1] : 1u;
-  }
-  if (0 == known_elements) elements_[0] = total_elements;
-  if (known_elements && known_elements != total_elements){
-    std::string msg;
-    msg = "Inconsistent elements: " + std::to_string(known_elements) + " = ";
-    msg += std::to_string(elements_[0]) + "+" + std::to_string(elements_[1]) + "+";
-    msg += std::to_string(elements_[2]) + " ≠ ";
-    msg += std::to_string(total_elements);
-    throw std::runtime_error(msg);
-  }
-}
+
 
 
 template<typename T>
