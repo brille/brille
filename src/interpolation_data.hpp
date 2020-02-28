@@ -142,7 +142,7 @@ void InterpolationData<T>::interpolate_at(
     throw std::logic_error("Interpolation requires input data!");
   T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
   element_t span = this->branch_span();
-  // info_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
+  verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
   for (size_t x=0; x<indices.size(); ++x){
     T *ptrX = data_.data(indices[x]);
     // loop over the branches:
@@ -166,7 +166,7 @@ void InterpolationData<T>::interpolate_at(
       }
     }
   }
-  // info_update("Yields\n",out.extract(to).to_string());
+  verbose_update("Yields\n",out.extract(to).to_string());
 
   // // ensure that any eigenvectors are still normalised
   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){

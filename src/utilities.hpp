@@ -28,6 +28,7 @@
 #include <numeric>
 #include "debug.hpp"
 
+// A mulitplier for the approximate-comparison tolerance
 // 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
 // but setting it any lower (9000 tried) causes other test lattices, namely,
 // (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
@@ -83,7 +84,7 @@ template<typename T, int N=3> bool equal_vector(const T *A, const T *B, const T 
     0       1      Rtol     Ttol is 0, so use Rtol
     1       0      Ttol     Rtol is 0, so use Ttol
 */
-template<class T, class R, class TFloat = void, class TInt = void, class RFloat = void, class RInt = void>
+/*template<class T, class R, class TFloat = void, class TInt = void, class RFloat = void, class RInt = void>
 class determine_tols_impl {
 public:
     static std::tuple<bool, bool, T, R> determine_tols(const int i);
@@ -124,9 +125,9 @@ public:
 template<class T, class R> std::tuple<bool, bool, T, R> determine_tols(const int i=1) {
     return determine_tols_impl<T, R>::determine_tols(i);
 }
+*/
 
-
-//template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
+template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
 template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol=1);
 template<typename T, typename R> bool approx_array(const int N, const int M,const T *A, const R *B, const int tol=1);
 template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol=1);

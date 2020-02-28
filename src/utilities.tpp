@@ -49,19 +49,22 @@ template<typename T, int N> bool equal_vector(const T *A, const T *B, const T to
      0       1      Rtol     Ttol is 0, so use Rtol
      1       0      Ttol     Rtol is 0, so use Ttol
 */
-/*template<typename T, typename R>
-std::tuple<bool,bool,T,R> determine_tols(const int tol){
-  T Ttol = static_cast<T>(tol*TOL_MULT)*std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = static_cast<R>(tol*TOL_MULT)*std::numeric_limits<R>::epsilon(); // zero for integer-type R
-  bool useTtol{false}, convertible{true};
-  if (std::is_floating_point<T>::value){
-    useTtol = true;
-    if(std::is_floating_point<R>::value && !std::is_convertible<T,R>::value)
-      convertible = false;
-  }
-  return std::make_tuple(convertible, useTtol, Ttol, Rtol);
-}
+
+/*! \brief Returns tuple of tolerance information for approximate comparisons for two datatypes, T and R
+
+The tuple contains four elements, the first is true if either T or R is an integer or if R can be converted to T.
+The second is true if T is a floating point datatype.
+The third is proportional to epsilon of the datatype T.
+The fourth is proportional to epsilon of the datatype R.
 */
+template<typename T, typename R>
+std::tuple<bool,bool,T,R> determine_tols(const int tol){
+  T Ttol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
+  R Rtol = std::numeric_limits<R>::epsilon(); // zero for integer-type R
+  return std::make_tuple(Ttol * Rtol == 0 || std::is_convertible<T, R>::value, Ttol>0, Ttol*static_cast<T>(tol)*static_cast<T>(TOL_MULT), Rtol*static_cast<R>(tol)*static_cast<R>(TOL_MULT));
+  
+}
+
 
 /* If both inputs provided to approx_scalar are unsigned then the calls to
    std::abs() {a, b, a-b, a+b} are all undefined

@@ -756,6 +756,56 @@ template<typename T> ArrayVector<T> ArrayVector<T>::prod( const int dim ) const 
   }
   return out;
 }
+template<typename T> ArrayVector<T> ArrayVector<T>::min( const int dim ) const {
+  T tmp;
+  ArrayVector<T> out;
+  switch (dim){
+    case 1:
+      out.refresh(1u,this->size());
+      for (size_t i=0; i<this->size(); i++){
+        tmp = (std::numeric_limits<T>::max)();
+        for (size_t j=0; j<this->numel(); j++)
+        if (this->getvalue(i,j) < tmp) tmp = this->getvalue(i,j);
+        out.insert(tmp, i,0);
+      }
+      break;
+    default:
+      out.refresh(this->numel(),1u);
+      for (size_t j=0; j<this->numel(); j++){
+        tmp = (std::numeric_limits<T>::max)();
+        for (size_t i=0; i<this->size(); i++)
+        if (this->getvalue(i,j) < tmp) tmp = this->getvalue(i,j);
+        out.insert(tmp, 0,j);
+      }
+      break;
+  }
+  return out;
+}
+template<typename T> ArrayVector<T> ArrayVector<T>::max( const int dim ) const {
+  T tmp;
+  ArrayVector<T> out;
+  switch (dim){
+    case 1:
+      out.refresh(1u,this->size());
+      for (size_t i=0; i<this->size(); i++){
+        tmp = std::numeric_limits<T>::lowest();
+        for (size_t j=0; j<this->numel(); j++)
+        if (this->getvalue(i,j) > tmp) tmp = this->getvalue(i,j);
+        out.insert(tmp, i,0);
+      }
+      break;
+    default:
+      out.refresh(this->numel(),1u);
+      for (size_t j=0; j<this->numel(); j++){
+        tmp = std::numeric_limits<T>::lowest();
+        for (size_t i=0; i<this->size(); i++)
+        if (this->getvalue(i,j) > tmp) tmp = this->getvalue(i,j);
+        out.insert(tmp, 0,j);
+      }
+      break;
+  }
+  return out;
+}
 template<typename T> ArrayVector<bool> ArrayVector<T>::is_unique(void) const{
   // assume all are unique to start
   ArrayVector<bool> isu(1u,this->size(),true);

@@ -18,6 +18,8 @@
 #ifndef _POLYHEDRON_H_
 #define _POLYHEDRON_H_
 
+#include <random>
+#include <chrono>
 #include <vector>
 #include "arrayvector.hpp"
 #include "latvec.hpp"
@@ -1021,6 +1023,25 @@ public:
       }
     }
     return pout;
+  }
+  ArrayVector<double> rand_rejection(const size_t n, const size_t seed=0) const {
+    // initialize the random number generator with an optional non-zero seed:
+    std::default_random_engine generator(seed>0 ? seed : std::chrono::system_clock::now().time_since_epoch().count());
+    // construct the uniform distribution spanning [0,1]
+    std::uniform_real_distribution<double> distribution(0.,1.);
+    // find the minimum bounding corner and the vector to the maximum bounding corner
+    ArrayVector<double> vmin = vertices.min(),  vdif = vertices.max() - vmin;
+    // initialize the output points array
+    ArrayVector<double> p(3, n);
+    ArrayVector<double> r(3,1);
+    // generate random points until we have `n` which are inside the polyhedron
+    for (size_t i=0; i<n; ){
+      // generate a vector between [0,0,0] and [1,1,1]
+      for (size_t j=0; j<3u; ++j) r.insert(distribution(generator), 0,j);
+      p.set(i, vmin + r*vdif);
+      if (this->contains(p.extract(i)).getvalue(0)) ++i;
+    }
+    return p;
   }
 };
 

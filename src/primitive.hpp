@@ -66,10 +66,10 @@ private:
   Bravais bravais;    //!< The Bravais enum value
 public:
   PrimitiveTransform(const Bravais c): bravais{c} {}
-  PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
-  PrimitiveTransform(const int hall){
+  [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
+  [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const int hall){
     Spacegroup s(hall);
-    bravais = s.bravais;
+    this->bravais = s.bravais;
   }
   std::array<double,9> get_P(void) const {
     switch (bravais){

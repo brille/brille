@@ -401,7 +401,7 @@ void Reciprocal::print(){
 
 
 Direct Direct::primitive(void) const{
-  PrimitiveTransform P(this->spg);
+  PrimitiveTransform P(this->spg.get_bravais_type());
   if (P.does_anything()){
     double plm[9], lm[9];
     this->get_lattice_matrix(lm); // now returns *row* vectors!

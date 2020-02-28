@@ -37,7 +37,7 @@ LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_hall());
+  PrimitiveTransform PT(lat.get_spacegroup_object().get_bravais_type());
   if (PT.does_nothing()) return a;
   std::array<Ptype,9> P = PT.get_Pt(); // the transpose of the P matrix
   LQVec<S> out(lat.primitive(), a.size());
@@ -57,7 +57,7 @@ LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_hall());
+  PrimitiveTransform PT(lat.get_spacegroup_object().get_bravais_type());
   if (PT.does_nothing()) return a;
   std::array<invPtype,9> P = PT.get_invPt(); // the inverse of the transpose of P (or the transpose of the inverse of P)
   LQVec<S> out(lat, a.size());
@@ -79,7 +79,7 @@ LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_hall());
+  PrimitiveTransform PT(lat.get_spacegroup_object().get_bravais_type());
   if (PT.does_nothing()) return a;
   std::array<invPtype,9> P = PT.get_invP(); // xₚ = P⁻¹ xₛ
   LDVec<S> out(lat.primitive(), a.size());
@@ -99,7 +99,7 @@ LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_hall());
+  PrimitiveTransform PT(lat.get_spacegroup_object().get_bravais_type());
   if (PT.does_nothing()) return a;
   std::array<Ptype,9> P = PT.get_P(); // xₛ = P xₚ
   LDVec<S> out(lat, a.size());

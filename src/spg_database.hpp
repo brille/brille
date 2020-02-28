@@ -96,6 +96,7 @@ public:
   std::string get_international_table_full(void) const {return this->international_full; }
   std::string get_international_table_short(void) const {return this->international_short; }
   std::string get_choice(void) const {return this->choice; }
+  Bravais get_bravais_type() const { return this->bravais; }
   int set_hall_number(const int nh) { this->hall_number = nh; return this->hall_number; }
   int set_international_table_number(const int itn) { this->number=itn; return this->number; }
   int set_pointgroup_number(const int pgn) { this->pointgroup_number=pgn; return this->pointgroup_number; }
