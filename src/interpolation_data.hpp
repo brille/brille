@@ -47,18 +47,13 @@ public:
   //
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&) const;
   bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
+
   // Replace the data within this object.
-  // A general template to convert array data type of the elements
-  template<typename I> void replace_data(const ArrayVector<T>& nd, const ShapeType& s, const std::array<I,3>& ne){
-    ElementsType neet;
-    for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
-    return this->replace_data(nd, s, neet);
-  }
-  // A specialized template with correct element array data type
-  template <> void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const std::array<element_t,3>& ne){
+  template<typename I> void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const std::array<I,3>& ne){
     data_ = nd;
     shape_ = ns;
-    elements_ = ne;
+    // convert the elements datatype as necessary
+    for (size_t i=0; i<3u; ++i) elements_[i] = static_cast<element_t>(ne[i]);
     if (ne[1]%3)
       throw std::logic_error("Vectors must have 3N elements per branch");
     if (ne[2]%9)
@@ -89,14 +84,7 @@ public:
     }
   }
   // Replace the data in this object without specifying the data shape
-  // A general template to convert array data type of the elements
   template<typename I> void replace_data(const ArrayVector<T>& nd, const std::array<I,3>& ne){
-    ElementsType neet;
-    for (size_t i=0; i<3u; ++i) neet[i] = static_cast<element_t>(ne[i]);
-    return this->replace_data(nd, neet);
-  }
-  // A specialized template with the correct element data type
-  template <> void replace_data(const ArrayVector<T>& nd, const std::array<element_t,3>& ne){
     ShapeType ns{nd.size(), nd.numel()};
     return this->replace_data(nd, ns, ne);
   }
@@ -117,7 +105,7 @@ public:
       str += " with " + std::to_string(branches_) + " mode";
       if (branches_>1) str += "s";
     }
-    unsigned neltypes = std::count_if(elements_.begin(), elements_.end(), [](element_t a){return a>0;});
+    auto neltypes = std::count_if(elements_.begin(), elements_.end(), [](element_t a){return a>0;});
     if (neltypes){
       str += " of ";
       std::array<std::string,3> types{"scalar", "vector", "matrix"};
@@ -134,7 +122,9 @@ public:
 private:
   ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
-  element_t branch_span(const ElementsType& e) const { return e[0]+e[1]+e[2]; }
+  template<typename I> element_t branch_span(const std::array<I,3>& e) const {
+    return static_cast<element_t>(e[0])+static_cast<element_t>(e[1])+static_cast<element_t>(e[2]);
+  }
   ElementsType count_scalars_vectors_matrices(void) const {
     ElementsType no{elements_[0], elements_[1]/3u, elements_[2]/9u};
     return no;
@@ -152,7 +142,7 @@ void InterpolationData<T>::interpolate_at(
     throw std::logic_error("Interpolation requires input data!");
   T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
   element_t span = this->branch_span();
-  // info_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
+  verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
   for (size_t x=0; x<indices.size(); ++x){
     T *ptrX = data_.data(indices[x]);
     // loop over the branches:
@@ -176,7 +166,7 @@ void InterpolationData<T>::interpolate_at(
       }
     }
   }
-  // info_update("Yields\n",out.extract(to).to_string());
+  verbose_update("Yields\n",out.extract(to).to_string());
 
   // // ensure that any eigenvectors are still normalised
   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){

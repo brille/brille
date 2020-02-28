@@ -62,3 +62,22 @@ TEST_CASE("Polyhedron bisect","[polyhedron]"){
     REQUIRE(cut.get_volume() == Approx(poly.get_volume()));
     REQUIRE(cut.get_vertices().size() == 6u);
 }
+
+TEST_CASE("Polyhedron random point distribution","[polyhedron]"){
+  std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
+  ArrayVector<double> verts(va_verts);
+  Polyhedron poly(verts);
+
+  size_t seed=10, npoints=1000;
+  ArrayVector<double> r0 = poly.rand_rejection(npoints, seed);
+  // check that the generated points are inside the polyhedron
+  REQUIRE(poly.contains(r0).count_true() == npoints);
+  // that using the same seed reproduces the results
+  ArrayVector<double> r1 = poly.rand_rejection(npoints, seed);
+  REQUIRE((r1-r0).all_approx(0.));
+
+  // and that specifying a clock-based seed does not give the same results
+  r0 = poly.rand_rejection(npoints); // no seed specified == 0
+  r1 = poly.rand_rejection(npoints);
+  REQUIRE(!(r1-r0).all_approx(0.));
+}

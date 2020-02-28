@@ -384,7 +384,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
 
   // AUGMENT SOLUTION for each free row.
   for (idx f = 0; f < numfree; f++) {
-    idx endofpath;
+    idx endofpath{0};
     idx freerow = free[f];       // start row of augmenting path.
     if (verbose) {
       printf("lapjv: AUGMENT SOLUTION row %d [%d / %d]\n",

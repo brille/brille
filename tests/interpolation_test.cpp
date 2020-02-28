@@ -109,8 +109,8 @@ TEST_CASE("BrillouinZoneGrid3 Sorting","[munkres]"){
   BrillouinZoneGrid3<double> bzg(bz,halfN);
 
   ArrayVector<double> Qmap = bzg.get_mapped_xyz();
-  std::vector<size_t> newshape({Qmap.size(), 4u, 3u, 3u}); // (nQ, 3,3, nModes)
-  std::array<size_t,3> elements({0u,0u,9u});
+  std::vector<size_t> newshape{ {Qmap.size(), 4u, 3u, 3u} }; // (nQ, 3,3, nModes)
+  std::array<size_t, 3> elements{ {0u,0u,9u} };
   bzg.replace_data( f_of_Q_mats( Qmap ), newshape, elements ); // maybe mapped_hkl instead?
 
   ArrayVector<size_t> sortperm = bzg.centre_sort_perm();

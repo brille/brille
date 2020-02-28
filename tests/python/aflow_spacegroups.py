@@ -90,7 +90,7 @@ def test_aflow_crystaldatabase():
         print("\nException raised for",errored,"out of",tested,"lattices")
         for file,  arg in zip(errored_afl,  errored_arg):
             print(file,arg)
-    print("\nHall groups passed")
+    print("\nHall groups passed (total =",hall_groups_passed.sum(),"of",tested,"tested)")
     encoded_hgp = [n2chr(x) for x in hall_groups_passed]
     for x in [encoded_hgp[i*53:(i+1)*53] for i in range(10)]:
         print(''.join(x))

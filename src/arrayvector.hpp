@@ -382,6 +382,8 @@ public:
   */
   ArrayVector<T> sum( const int dim=0 ) const;
   ArrayVector<T> prod( const int dim=0 ) const;
+  ArrayVector<T> min(const int dim=0) const;
+  ArrayVector<T> max(const int dim=0) const;
   ArrayVector<bool> is_unique(void) const;
   ArrayVector<size_t> unique_idx(void) const;
   ArrayVector<T> unique(void) const;

@@ -60,6 +60,7 @@
 #include <stdlib.h>
 #include "pointgroup.hpp"
 #include "symmetry.hpp"
+#include "pointsymmetry.hpp"
 #include "utilities.hpp"
 #include "spg_database.hpp"
 
@@ -598,7 +599,7 @@ static void set_transformation_matrix(int *tmat, const int *axes){
 
 std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
 {
-	const int N = rotations.size();
+	const size_t N = rotations.size();
 	std::vector<std::array<int,9>> rot_tmp;
 	rot_tmp.reserve(2*N);
 	std::vector<int> unique_rot;
@@ -609,7 +610,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 	// so that we can add their inverses if time reversal symmetry is allowed
 	if (is_time_reversal){
 		rot_tmp.resize(2*N);
-		for (int i=0; i<N; ++i)
+		for (size_t i=0; i<N; ++i)
 			multiply_matrix_matrix(rot_tmp[i+N].data(), inversion, rot_tmp[i].data());
 	}
 	// check for uniqueness of the rotations
@@ -650,7 +651,7 @@ static int _internal_pointgroup_rotations(int *rotations, const int max_size, co
 }
 
 int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
-	Symmetry sym = make_spacegroup_symmetry_object(hall_number);
+	Symmetry sym = Spacegroup(hall_number).get_spacegroup_symmetry();
 	int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallr(), is_time_reversal);
 	return num_unique;
 }
