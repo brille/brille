@@ -8,7 +8,12 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Wmissing-braces)
 endif()
 
-set(CXX_TARGETS _brille catch2)
+# if(CMAKE_CXX_CPPCHECK)
+#   list(APPEND CMAKE_CXX_CPPCHECK
+#     "--suppress=compareBoolExpressionWithInt:${CMAKE_CURRENT_LIST_DIR}/arrayvector.hpp:349"
+#   )
+# endif()
+
 
 set(CXX_SOURCES
   bravais.cpp
@@ -23,13 +28,20 @@ set(CXX_SOURCES
   spg_database.cpp
   symmetry.cpp
 )
-foreach(CXX_TARGET ${CXX_TARGETS})
+
+foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})
   target_include_directories(${CXX_TARGET} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-endforeach(CXX_TARGET)
+  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14)
+endforeach()
+
 
 if (APPLE)
   # force static linking for the python module's OpenMP to avoid issues
   # trying to use the module via MATLAB's python interface
   target_link_options(_brille PUBLIC -static-libgcc -static-libstdc++)
+endif()
+
+if(BRILLE_BUILD_TESTING)
+  add_subdirectory(tests)
 endif()

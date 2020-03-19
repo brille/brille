@@ -2,7 +2,25 @@ cmake_minimum_required(VERSION 3.13) # tested working 3.13.0, 3.13.4, 3.14.5
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
 project(brille)
+set(BRILLE_PYTHON_MODULE _brille)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Make the availability of testing optional
+option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
+# Allow system pybind11 to be required
+option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
+
+# Define the minimum version of pybind11 needed
+set(MINIMUM_PYBIND11_VERSION 2.2.0)
+
+# The following was included in the example project at
+# github.com/scikit-build/scikit-build-sample-projects/projects/hello-pybind11
+# "To use cmake modules/functions or FindXXX files:"
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(GNUInstallDirs)
+#set(brille_export_file "${PROJECT_BINARY_DIR}/brilleTargets.cmake")
+
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
@@ -13,8 +31,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #             "--force"
 #             "--inline-suppr"
 #             # "--template=gcc" # uncomment to get suppression error ids in brackets
-#             "--suppress=*:${CMAKE_SOURCE_DIR}/lib/*"
-#             "--suppress=compareBoolExpressionWithInt:${CMAKE_SOURCE_DIR}/src/arrayvector.hpp:349"
 #     )
 # endif()
 
@@ -30,62 +46,96 @@ set(CMAKE_MACOSX_RPATH 1)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(Python_ADDITIONAL_VERSIONS "3")
-find_package(PythonInterp)
+# Use CMake v3.12+ FindPython3 to find the system-compatible interpreter *and* libraries at once
+# This solves a potential issue on convoluted Windows build systems which have multiple
+# python interpreters, some of which do not have build-system compatibility (I'm looking at you, msys2 python)
+# In such a case FindPythonInterp might point to the wrong python interpreter and then further configuration
+# steps will fail to find any (or any compatible) libraries which match the interpreter.
+find_package(Python3 COMPONENTS Interpreter Development)
+# Since FindPython3 and FindPythonInterp set different variables, fake the FindPythonInterp result
+# to prevent it running if called by, e.g., FindPybind11
+if(Python3_FOUND)
+  set(PYTHONINTERP_FOUND ON)
+  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+  set(PYTHON_VERSION_STRING "${Python3_VERSION}")
+  set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
+  set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
+  set(PYTHON_VERSION_PATCH ${Python3_VERSION_PATCH})
+endif()
 
-# Python c++ bindings
-find_package(pybind11 REQUIRED)
-pybind11_add_module(_brille ${PROJECT_SOURCE_DIR}/src/_brille.cpp "")
+# Find or fetch pybind11 to handle CPython bindings
+if(REQUIRE_SYSTEM_PYBIND11)
+  find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} REQUIRED)
+else()
+  find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} QUIET)
+endif()
+if(NOT pybind11_FOUND)
+  message(STATUS "Fetching pybind11 from github.com/pybind")
+  include(FetchContent)
+  FetchContent_Declare(
+    pybind11
+	GIT_REPOSITORY https://github.com/pybind/pybind11
+	GIT_TAG v${MINIMUM_PYBIND11_VERSION}
+  )
+  FetchContent_GetProperties(pybind11)
+  if(NOT pybind11_POPULATED)
+    FetchContent_Populate(pybind11)
+    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
+  endif()
+  set(pybind11_INCLUDE_DIR "${pybind11_SOURCE_DIR}") # only for status update below
+endif()
 
-add_custom_target(write_version_info
-                  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-add_dependencies(_brille write_version_info)
-execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_BINARY_DIR})
+# Read the version of brille
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from version_info import version_number; version_number()"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE BRILLE_VERSION)
-message(STATUS "Building version ${BRILLE_VERSION}")
+# So that we can print it to the console along with the specified build type
+message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
+# Plus information about which pybind11 we're using
+message(STATUS "Using pybind11 ${pybind11_VERSION} at ${pybind11_INCLUDE_DIR} compared to minimum v${MINIMUM_PYBIND11_VERSION}")
 
+# We will always build the python module
+list(APPEND CXX_TARGETS _brille)
 
+if(BRILLE_BUILD_TESTING)
+  # Include the C++ test target
+  list(APPEND CXX_TARGETS catch2)
 
-# Testing via `make check`
-enable_testing()
-# to see output from failed tests, run via, e.g., CTEST_OUTPUT_ON_FAILURE=1 make check
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-set(CMAKE_CTEST_COMMAND ctest -V)
-# Catch2 based tests
-add_executable(catch2 EXCLUDE_FROM_ALL "")
-add_dependencies(check catch2)
-add_test(NAME catch2 COMMAND catch2)
-# Python unittest based tests
-if (${PYTHONINTERP_FOUND})
-	add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR}/tests)
-	add_dependencies(check _brille)
+  enable_testing()
+  # create a custom target to run all tests
+  set(CMAKE_CTEST_COMMAND ctest -V)
+  add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 endif()
 
-set(CXX_TARGETS _brille catch2)
-foreach(CXX_TARGET ${CXX_TARGETS})
-  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14)
-endforeach(CXX_TARGET)
+# Target for python module
+pybind11_add_module(${BRILLE_PYTHON_MODULE} MODULE wrap/_brille.cpp "")
+add_subdirectory(wrap)
 
+if(BRILLE_BUILD_TESTING)
+  # target for Catch2 based tests
+  add_executable(catch2 EXCLUDE_FROM_ALL "")
+  add_dependencies(check catch2)
+  add_test(NAME catch2 COMMAND catch2)
+endif()
+add_subdirectory(lib)
+
+# (eventually) target for C++ shared library
+# [goes here]
+add_subdirectory(src)  # important
 
 # OpenMP support:
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
-		set(OMP_TARGETS _brille catch2)
-		foreach(OMP_TARGET ${OMP_TARGETS})
-			target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
-		endforeach(OMP_TARGET)
-    if (MSVC AND MSVC_VERSION GREATER 1919)
-      add_compile_options(/openmp:experimental) # this doesn't work
-    endif()
+  foreach(OMP_TARGET IN LISTS CXX_TARGETS)
+    target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
+  endforeach(OMP_TARGET)
+  if (MSVC AND MSVC_VERSION GREATER 1919)
+    add_compile_options(/openmp:experimental) # this doesn't work
+  endif()
 endif()
 
 # if(MSVC)
@@ -100,30 +150,27 @@ endif()
 # first we can indicate the documentation build as an option (default OFF)
 option(BUILD_DOC "Build documentation" OFF)
 # check if Doxygen is installed
-find_package(Doxygen)
+find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND)
-    # set input and output files
-    set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-    # request to configure the file
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-		if (BUILD_DOC)
-			add_custom_target( docs ALL
-	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-	        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	        COMMENT "Generating documentation with Doxygen"
-	        VERBATIM )
-		else (BUILD_DOC)
-	    add_custom_target( docs
-	        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-	        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	        COMMENT "Generating documentation with Doxygen"
-	        VERBATIM )
-		endif (BUILD_DOC)
+  # set input and output files
+  set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
+  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+  # request to configure the file
+  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+  if(BUILD_DOC)
+    add_custom_target( docs ALL
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating documentation with Doxygen"
+    VERBATIM )
+  else()
+    add_custom_target( docs
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generate documentation using target 'docs'"
+    VERBATIM )
+  endif()
 else (DOXYGEN_FOUND)
-  message(STATUS "Documentation generation requires Doxygen to be available")
+  message(STATUS "Install Doxygen to build documentation")
 endif (DOXYGEN_FOUND)
 
-add_subdirectory(lib)
-add_subdirectory(src)
-add_subdirectory(tests)
