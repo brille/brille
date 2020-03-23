@@ -14,14 +14,6 @@ mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
 # Define the minimum version of pybind11 needed
 set(MINIMUM_PYBIND11_VERSION 2.2.0)
 
-# The following was included in the example project at
-# github.com/scikit-build/scikit-build-sample-projects/projects/hello-pybind11
-# "To use cmake modules/functions or FindXXX files:"
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(GNUInstallDirs)
-#set(brille_export_file "${PROJECT_BINARY_DIR}/brilleTargets.cmake")
-
-
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
 #     list(
@@ -74,19 +66,18 @@ else()
   find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} QUIET)
 endif()
 if(NOT pybind11_FOUND)
-  message(STATUS "Fetching pybind11 from github.com/pybind")
+  message(STATUS "Fetching pybind11 v${MINIMUM_PYBIND11_VERSION} from github.com/pybind")
   include(FetchContent)
-  FetchContent_Declare(
-    pybind11
-	GIT_REPOSITORY https://github.com/pybind/pybind11
-	GIT_TAG v${MINIMUM_PYBIND11_VERSION}
-  )
+  FetchContent_Declare(pybind11 GIT_REPOSITORY https://github.com/pybind/pybind11 GIT_TAG v${MINIMUM_PYBIND11_VERSION})
   FetchContent_GetProperties(pybind11)
   if(NOT pybind11_POPULATED)
     FetchContent_Populate(pybind11)
     add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
   endif()
-  set(pybind11_INCLUDE_DIR "${pybind11_SOURCE_DIR}") # only for status update below
+  set(pybind11_FOUND ON)
+endif()
+if(NOT pybind11_FOUND)
+  message(FATAL_ERROR "The python module can not be built without pybind11 v${MINIMUM_PYBIND11_VERSION} (or compatible)")
 endif()
 
 # Read the version of brille
@@ -95,8 +86,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from version_info import versio
         OUTPUT_VARIABLE BRILLE_VERSION)
 # So that we can print it to the console along with the specified build type
 message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
-# Plus information about which pybind11 we're using
-message(STATUS "Using pybind11 ${pybind11_VERSION} at ${pybind11_INCLUDE_DIR} compared to minimum v${MINIMUM_PYBIND11_VERSION}")
+
 
 # We will always build the python module
 list(APPEND CXX_TARGETS _brille)
@@ -117,7 +107,8 @@ add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)
   # target for Catch2 based tests
-  add_executable(catch2 EXCLUDE_FROM_ALL "")
+  #add_executable(catch2 EXCLUDE_FROM_ALL "")
+  add_executable(catch2)
   add_dependencies(check catch2)
   add_test(NAME catch2 COMMAND catch2)
 endif()
