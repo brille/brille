@@ -81,7 +81,7 @@ jobs:
           )
         endif()
         
-    -name: Install OpenMP
+    - name: Install OpenMP
       if: startsWith(matrix.config.name, 'macOS')
       run: |
         brew install libomp
