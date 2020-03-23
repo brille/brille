@@ -2,12 +2,27 @@ import os
 import re
 import sys
 import subprocess
+import pkgutil
 from sysconfig import get_platform
 from subprocess import CalledProcessError, check_output, check_call
 from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from version_info import version_info
+
+# We can use cmake provided from pip which (normally) gets installed at /bin
+# Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
+# (as a symlink at least) which is *not* on the path.
+# If cmake is a known module, import it and use it tell us its binary directory
+if pkgutil.find_loader('cmake') is not None:
+    import cmake
+    CMAKE_BIN = cmake.CMAKE_BIN_DIR + os.path.sep + 'cmake'
+else:
+    CMAKE_BIN = 'cmake'
+
+def get_cmake():
+    return CMAKE_BIN
+
 
 def is_vsc():
     platform = get_platform()
@@ -28,7 +43,7 @@ class CMakeExtension(Extension):
 class CMakeBuild(build_ext):
     def run(self):
         try:
-            out = check_output(['cmake', '--version'])
+            out = check_output([get_cmake(), '--version'])
         except OSError:
             raise RuntimeError("CMake must be installed to build" +
                                " the following extensions: " +
@@ -82,10 +97,10 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         check_call(
-            ['cmake', ext.sourcedir] + cmake_args,
+            [get_cmake(), ext.sourcedir] + cmake_args,
             cwd=self.build_temp, env=env)
         check_call(
-            ['cmake', '--build', '.', '--target', "_brille"] + build_args,
+            [get_cmake(), '--build', '.', '--target', "_brille"] + build_args,
             cwd=self.build_temp)
 
 
