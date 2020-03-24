@@ -38,7 +38,12 @@ jobs:
 
     steps:        
     - uses: actions/checkout@v1
-
+    
+    - name: Install gitpython
+      run: |
+        python3 -m pip install --user --upgrade pip
+        python3 -m pip install --user gitpython
+        
     - name: Download Ninja and CMake
       id: cmake_and_ninja
       shell: cmake -P {0}
@@ -80,6 +85,7 @@ jobs:
             COMMAND chmod +x ${cmake_dir}/cmake
           )
         endif()
+
         
     - name: Install OpenMP
       if: startsWith(matrix.config.name, 'macOS')
