@@ -1,0 +1,29 @@
+# Adapted from https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
+name: Python package build # and publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build manylinux wheels
+      uses: RalfG/python-wheels-manylinux-build@v0.2.2-manylinux2010_x86_64
+      with:
+        python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38'
+        build-requirements: 'cmake'
+        system-packages: ''
+        package-path: ''
+        pip-wheel-args: '--no-deps'
+    
+#    - name: Publish wheels to PyPI
+#      env:
+#        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+#        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+#      run: |
+#        twine upload wheelhouse/*-manylinux*.whl
