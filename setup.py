@@ -8,7 +8,6 @@ from subprocess import CalledProcessError, check_output, check_call
 from distutils.version import LooseVersion
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from version_info import version_info
 
 # We can use cmake provided from pip which (normally) gets installed at /bin
 # Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
@@ -107,9 +106,12 @@ class CMakeBuild(build_ext):
 with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
+with open("VERSION", "r") as fh:
+	VERSION_NUMBER = fh.readline().strip()
+
 KEYWORDARGS = dict(
     name='brille',
-    version=version_info()[3],
+    version=VERSION_NUMBER,
     author='Greg Tucker',
     author_email='greg.tucker@stfc.ac.uk',
     description='Irreducible Brillouin zone symmetry and interpolation.',
@@ -117,6 +119,7 @@ KEYWORDARGS = dict(
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension('brille._brille')],
     packages=find_packages(),
+    extras_require = {'interactive':['matplotlib>=2.2.0',],},
     cmdclass=dict(build_ext=CMakeBuild),
     url="https://github.com/g5t/brille",
     zip_safe=False,

@@ -1,17 +1,25 @@
 import subprocess
 import sys
 import platform
+import git
 from datetime import datetime
 
-def version_info():
-
+def is_git_repo():
     try:
-        git_revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode("utf-8") .split("\n")[0]
-        git_branch = subprocess.check_output(["git", "rev-parse","--abbrev-ref", "HEAD"]).decode("utf-8").split("\n")[0]
-    except (subprocess.CalledProcessError, OSError):
-        git_revision = ""
-        git_branch = "non-git"
+        _ = git.Repo().git_dir
+        return True
+    except git.exc.InvalidGitRepositoryError:
+        return False
 
+def version_info():
+    if is_git_repo():
+        repo = git.Repo()
+        git_branch = repo.active_branch.name
+        git_revision = repo.head.commit.hexsha
+    else:
+        git_branch = "non-git"
+        git_revision = ""
+    	
     def read_version():
         with open("VERSION") as f:
             return f.readline().strip()
