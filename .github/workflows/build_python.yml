@@ -21,9 +21,9 @@ jobs:
         package-path: ''
         pip-wheel-args: '--no-deps'
     
-#    - name: Publish wheels to PyPI
-#      env:
-#        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-#        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-#      run: |
-#        twine upload wheelhouse/*-manylinux*.whl
+    - name: Publish wheels to PyPI
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        twine upload wheelhouse/*-manylinux*.whl
