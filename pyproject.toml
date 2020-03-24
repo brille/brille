@@ -3,6 +3,5 @@
 requires =[
 	"setuptools",
 	"wheel",
-	"gitpython",
 	"cmake>=3.13.0"
 ]
