@@ -197,7 +197,7 @@ template<typename R, int N=3> R vector_norm_squared(const R * v);
 
 template<typename T, typename R, typename S, int N> class vector_cross_impl {
 public:
-    static void vector_cross(T* c, const R* a, const S* b) {
+    static void vector_cross(T*, const R*, const S*) {
         throw std::runtime_error("The cross product is only defined for 3-vectors");
     }
 };
