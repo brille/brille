@@ -1,5 +1,4 @@
-// #include "catch.hpp"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 #include "hall_symbol.hpp"
 #include "spg_database.hpp"

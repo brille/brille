@@ -10,9 +10,15 @@ option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
 # Allow system pybind11 to be required
 option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
+# Allow system catch2 to be required
+option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
 
-# Define the minimum version of pybind11 needed
+# Define the minimum version of libraries needed
 set(MINIMUM_PYBIND11_VERSION 2.2.0)
+set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
+set(MINIMUM_CATCH2_VERSION 2.11.3)
+set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
@@ -59,25 +65,48 @@ if(Python3_FOUND)
   set(PYTHON_VERSION_PATCH ${Python3_VERSION_PATCH})
 endif()
 
-# Find or fetch pybind11 to handle CPython bindings
+# Attempt to find catch2 to handle C++ testing
+if(BRILLE_BUILD_TESTING)
+  if(REQUIRE_SYSTEM_CATCH2)
+    find_package(Catch2 ${MINIMUM_CATCH2_VERSION} REQUIRED)
+  else()
+    find_package(Catch2 ${MINIMUM_CATCH2_VERSION} QUIET)
+  endif()
+endif()
+# Attempt to find pybind11 to handle CPython bindings
 if(REQUIRE_SYSTEM_PYBIND11)
   find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} REQUIRED)
 else()
   find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} QUIET)
 endif()
-if(NOT pybind11_FOUND)
-  message(STATUS "Fetching pybind11 v${MINIMUM_PYBIND11_VERSION} from github.com/pybind")
+
+# Load the FetchContent module only if necessary
+if(NOT pybind11_FOUND OR (BRILLE_BUILD_TESTING AND NOT Catch2_FOUND))
   include(FetchContent)
-  FetchContent_Declare(pybind11 GIT_REPOSITORY https://github.com/pybind/pybind11 GIT_TAG v${MINIMUM_PYBIND11_VERSION})
+endif()
+
+# Fetch Catch2 if necessary
+if(BRILLE_BUILD_TESTING and NOT Catch2_FOUND)
+  message(STATUS "Fetching catch2 v${MINIMUM_CATCH2_VERSION} from ${FETCH_CATCH2_REPO}")
+  FetchContent_Declare(catch2 GIT_REPOSITORY ${FETCH_CATCH2_REPO} GIT_TAG v${MINIMUM_CATCH2_VERSION})
+  FetchContent_GetProperties(catch2)
+  if(NOT catch2_POPULATED)
+    FetchContent_Populate(Catch2)
+    add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
+    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+  endif()
+  set(Catch2_FOUND ON)
+endif()
+# Fetch pybind11 if necessary
+if(NOT pybind11_FOUND)
+  message(STATUS "Fetching pybind11 v${MINIMUM_PYBIND11_VERSION} from ${FETCH_PYBIND11_REPO}")
+  FetchContent_Declare(pybind11 GIT_REPOSITORY ${FETCH_PYBIND11_REPO} GIT_TAG v${MINIMUM_PYBIND11_VERSION})
   FetchContent_GetProperties(pybind11)
   if(NOT pybind11_POPULATED)
     FetchContent_Populate(pybind11)
     add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
   endif()
   set(pybind11_FOUND ON)
-endif()
-if(NOT pybind11_FOUND)
-  message(FATAL_ERROR "The python module can not be built without pybind11 v${MINIMUM_PYBIND11_VERSION} (or compatible)")
 endif()
 
 # Read the version of brille
@@ -92,13 +121,8 @@ message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 list(APPEND CXX_TARGETS _brille)
 
 if(BRILLE_BUILD_TESTING)
-  # Include the C++ test target
-  list(APPEND CXX_TARGETS catch2)
-
-  enable_testing()
-  # create a custom target to run all tests
-  set(CMAKE_CTEST_COMMAND ctest -V)
-  add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+  list(APPEND CXX_TARGETS test_brille) # Include the C++ test target
+  enable_testing() # allows registration of Python tests in wrap/
 endif()
 
 # Target for python module
@@ -107,10 +131,11 @@ add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)
   # target for Catch2 based tests
-  #add_executable(catch2 EXCLUDE_FROM_ALL "")
-  add_executable(catch2)
-  add_dependencies(check catch2)
-  add_test(NAME catch2 COMMAND catch2)
+  add_executable(test_brille)
+  target_link_libraries(test_brille PUBLIC Catch2::Catch2)
+  include(CTest)
+  include(Catch)
+  catch_discover_tests(test_brille)
 endif()
 add_subdirectory(lib)
 
@@ -119,7 +144,7 @@ add_subdirectory(lib)
 add_subdirectory(src)  # important
 
 # OpenMP support:
-find_package(OpenMP)
+find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
 if(OpenMP_CXX_FOUND)
   foreach(OMP_TARGET IN LISTS CXX_TARGETS)
     target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
@@ -164,4 +189,3 @@ if (DOXYGEN_FOUND)
 else (DOXYGEN_FOUND)
   message(STATUS "Install Doxygen to build documentation")
 endif (DOXYGEN_FOUND)
-
