@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        #- {
-        #    name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
-        #    os: windows-latest,
-        #    build_type: "Release", cc: "cl", cxx: "cl",
-        #    environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        #  }
+        - {
+           name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
+           os: windows-latest,
+           build_type: "Release", cc: "cl", cxx: "cl",
+           environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+         }
         #- {
         #    name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
         #    os: windows-latest,
@@ -30,29 +30,29 @@ jobs:
             os: ubuntu-latest,
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
-        #- {
-        #    name: "macOS Latest Clang", artifact: "macOS.tar.xz",
-        #    os: macos-latest,
-        #    build_type: "Release", cc: "clang", cxx: "clang++"
-        #  }
+        - {
+           name: "macOS Latest Clang", artifact: "macOS.tar.xz",
+           os: macos-latest,
+           build_type: "Release", cc: "clang", cxx: "clang++"
+         }
 
-    steps:        
+    steps:
     - uses: actions/checkout@v1
-    
+
     - name: Install gitpython
       run: |
         python3 -m pip install --user --upgrade pip
         python3 -m pip install --user gitpython
-        
+
     - name: Download Ninja and CMake
       id: cmake_and_ninja
       shell: cmake -P {0}
       run: |
         set(ninja_version "1.10.0")
         set(cmake_version "3.16.2")
-        
+
         message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
-        
+
         if ("${{ runner.os }}" STREQUAL "Windows")
           set(ninja_suffix "win.zip")
           set(cmake_suffix "win64-x64.zip")
@@ -66,19 +66,19 @@ jobs:
           set(cmake_suffix "Darwin-x86_64.tar.gz")
           set(cmake_dir "cmake-${cmake_version}-Darwin-x86_64/CMake.app/Contents/bin")
         endif()
-        
+
         set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
         file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ninja.zip)
-        
+
         set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
         file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./cmake.zip)
-        
+
         # Save the path for other steps
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${cmake_dir}" cmake_dir)
         message("::set-output name=cmake_dir::${cmake_dir}")
-        
+
         if (NOT "${{ runner.os }}" STREQUAL "Windows")
           execute_process(
             COMMAND chmod +x ninja
@@ -86,18 +86,18 @@ jobs:
           )
         endif()
 
-        
+
     - name: Install OpenMP
       if: startsWith(matrix.config.name, 'macOS')
       run: |
         brew install libomp
-    
+
     - name: Configure
       shell: cmake -P {0}
       run: |
         set(ENV{CC} ${{ matrix.config.cc }})
         set(ENV{CXX} ${{ matrix.config.cxx }})
-        
+
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
           execute_process(
             COMMAND "${{ matrix.config.environment_script }}" && set
@@ -110,9 +110,9 @@ jobs:
             endif()
           endforeach()
         endif()
-        
+
         file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/ninja" ninja_program)
-        
+
         execute_process(
           COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
             -S .
@@ -125,12 +125,12 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Bad exit status")
         endif()
-      
+
     - name: Build
       shell: cmake -P {0}
       run: |
         set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
-        
+
         if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
           file(STRINGS environment_script_output.txt output_lines)
           foreach(line IN LISTS output_lines)
@@ -139,7 +139,7 @@ jobs:
             endif()
           endforeach()
         endif()
-        
+
         execute_process(
           COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake --build build
           RESULT_VARIABLE result
