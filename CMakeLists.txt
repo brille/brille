@@ -72,6 +72,9 @@ if(BRILLE_BUILD_TESTING)
   else()
     find_package(Catch2 ${MINIMUM_CATCH2_VERSION} QUIET)
   endif()
+else()
+  # Since no testing is to be built, fake that we've found Catch2.
+  set(Catch2_FOUND ON)
 endif()
 # Attempt to find pybind11 to handle CPython bindings
 if(REQUIRE_SYSTEM_PYBIND11)
@@ -81,12 +84,12 @@ else()
 endif()
 
 # Load the FetchContent module only if necessary
-if(NOT pybind11_FOUND OR (BRILLE_BUILD_TESTING AND NOT Catch2_FOUND))
+if(NOT (Catch2_FOUND AND pybind11_FOUND))
   include(FetchContent)
 endif()
 
 # Fetch Catch2 if necessary
-if(BRILLE_BUILD_TESTING and NOT Catch2_FOUND)
+if(NOT Catch2_FOUND)
   message(STATUS "Fetching catch2 v${MINIMUM_CATCH2_VERSION} from ${FETCH_CATCH2_REPO}")
   FetchContent_Declare(catch2 GIT_REPOSITORY ${FETCH_CATCH2_REPO} GIT_TAG v${MINIMUM_CATCH2_VERSION})
   FetchContent_GetProperties(catch2)
