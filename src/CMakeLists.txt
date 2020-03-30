@@ -35,12 +35,16 @@ foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14)
 endforeach()
 
-
-if (APPLE)
-  # force static linking for the python module's OpenMP to avoid issues
-  # trying to use the module via MATLAB's python interface
-  target_link_options(_brille PUBLIC -static-libgcc -static-libstdc++)
-endif()
+# # This method of forcing static linking doesn't work since MacOS uses clang.
+# # Furthermore this probably can't work since python modules are required(?)
+# # to be dynamically linked -- though they *can* link to static libraries.
+# # So the way forward might be to statically link the C++ brille library
+# # and then have the Python module use that.
+# if (APPLE)
+#   # force static linking for the python module's OpenMP to avoid issues
+#   # trying to use the module via MATLAB's python interface
+#   target_link_options(_brille PUBLIC -static-libgcc -static-libstdc++)
+# endif()
 
 if(BRILLE_BUILD_TESTING)
   add_subdirectory(tests)

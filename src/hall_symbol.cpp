@@ -248,7 +248,7 @@ Vector<double> SeitzSymbol::gett(const SeitzSymbol& pre) const {
 }
 
 Vector<double> SeitzSymbol::inner_gett(const int an, const char ax, const char pax) const {
-  Vector<double> a, t{{0,0,0}};
+  Vector<double> a{{0,0,0}}, t{{0,0,0}};
   if (std::any_of(T.begin(), T.end(), [](const char c){return std::strchr("12345",c);})){
     switch (ax) {
       case 'x': a = {1,0,0}; break;

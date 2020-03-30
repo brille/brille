@@ -1,4 +1,4 @@
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include "utilities.hpp"
 
 // Put in TEST_CASEs for all functions defined in linear_algebra, starting from the top

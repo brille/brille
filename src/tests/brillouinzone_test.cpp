@@ -1,6 +1,6 @@
 #include <random>
 #include <chrono>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include "bz.hpp"
 
 TEST_CASE("BrillouinZone instantiation","[brillouinzone]"){
