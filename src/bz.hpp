@@ -103,6 +103,40 @@ public:
       PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
       double goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
       double found = this->ir_polyhedron.get_volume();
+      if (approx_scalar(goal, 2.0*found)){
+        /*The current Polyhedron at this->ir_polyhedron has half the anticipated
+        volume. We can 'fix' this the easy way by mirroring the Polyhedron and
+        gluing it onto the current version; the resultant polyhedron will come
+        to a point at (0,0,0) and will not be convex. Instead, try to be clever
+        and look for a convex combination of the found polyhedron and its
+        mirror with one of the pointgroup operations applied:*/
+        std::vector<Polyhedron> all_unions;
+        Polyhedron mirrored = this->ir_polyhedron.mirror();
+        for (auto & r: ps.getall())
+          all_unions.push_back(this->ir_polyhedron + mirrored.rotate(r));
+        // The combination of a polyhedron and its rotated inverse which has
+        // the least number of vertices is (hopefully) convex.
+        auto min_vert_union = std::min_element(
+          all_unions.begin(),all_unions.end(),
+          [](const Polyhedron & a, const Polyhedron & b){
+            return a.num_vertices() < b.num_vertices();
+          }
+        );
+        // Polyhedron::operator+() needs to be fixed. As of now it does not look
+        // for extraneous faces (like internal faces which are coplanar and
+        // pointing in opposite directions) or coplanar external faces which
+        // share an edge. Until this is fixed cross our fingers and hope that we
+        // created a convex polyhedron such that the convex hull of its points
+        // gives the same polyhedron back:
+        Polyhedron mvu_convex_hull(min_vert_union->get_vertices());
+        if (approx_scalar(goal, mvu_convex_hull.get_volume())){
+          // we found a polyhedron with the right volume which is convex!
+          // so we can keep this as *the* ir_polyhedron
+          this->ir_polyhedron = mvu_convex_hull;
+          // and we need to update the found volume for the check below
+          found = goal;
+        }
+      }
       // if found == goal no mirroring is required.
       // if found == goal/2, mirroring is required.
       this->no_ir_mirroring = approx_scalar(goal, found);

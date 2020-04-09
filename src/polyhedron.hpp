@@ -199,12 +199,14 @@ public:
   //! Create a convex-hull Polyhedron from a set of points
   Polyhedron(const ArrayVector<double>& v): vertices(v){
     this->keep_unique_vertices();
-    this->find_convex_hull();
-    this->find_all_faces_per_vertex();
-    this->polygon_vertices_per_face();
-    this->purge_central_polygon_vertices();
-    this->sort_polygons();
-    this->purge_extra_vertices();
+    if (vertices.size() > 3){
+      this->find_convex_hull();
+      this->find_all_faces_per_vertex();
+      this->polygon_vertices_per_face();
+      this->purge_central_polygon_vertices();
+      this->sort_polygons();
+      this->purge_extra_vertices();
+    }
   }
   //! Build a Polyhedron from vertices and vectors pointing to face centres
   Polyhedron(const ArrayVector<double>& v, const ArrayVector<double>& p):
@@ -332,6 +334,8 @@ public:
     for (size_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(tvn+j);
     return Polyhedron(v,p,n, fpv, vpf);
   }
+  size_t num_vertices() const { return vertices.size(); }
+  size_t num_faces() const { return normals.size(); }
   ArrayVector<double> get_vertices(void) const { return vertices; }
   ArrayVector<double> get_points(void) const { return points; }
   ArrayVector<double> get_normals(void) const { return normals; }
