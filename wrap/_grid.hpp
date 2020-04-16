@@ -14,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef __GRID_H
+#define __GRID_H
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -24,14 +26,13 @@
 #include "bz_grid.hpp"
 #include "utilities.hpp"
 
-#ifndef __GRID_H
-#define __GRID_H
 
 namespace py = pybind11;
 typedef long slong; // ssize_t is only defined for gcc?
 
 template<class T>
 void declare_bzgridq(py::module &m, const std::string &typestr) {
+    using namespace pybind11::literals;
     using Class = BrillouinZoneGrid3<T>;
     std::string pyclass_name = std::string("BZGridQ") + typestr;
     py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
@@ -43,7 +44,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       if (bi.strides[0]!=sizeof(size_t)) throw std::runtime_error("halfN must be contiguous");
       Class cobj( b, (size_t*)bi.ptr );
       return cobj;
-    }),py::arg("brillouinzone"),py::arg("halfN"))
+    }),"brillouinzone"_a,"halfN"_a)
     // Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
     .def(py::init([](BrillouinZone &b, py::array_t<double> pyD, const bool& isrlu){
       py::buffer_info bi = pyD.request();
@@ -51,11 +52,11 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
       if (bi.strides[0]!=sizeof(double)) throw std::runtime_error("stepsize must be contiguous");
       return Class( b, (double*)bi.ptr, isrlu ? 1 : 0 );
-    }),py::arg("brillouinzone"),py::arg("step"),py::arg("rlu")=true)
+    }),"brillouinzone"_a,"step"_a,"rlu"_a=true)
     // // Initializer (BrillouinZone, tetrahedron volume, flag_for_whether_volume_is_in_rlu_or_inverse_angstrom)
     // .def(py::init([](BrillouinZone &b, const double& vol, const bool& isrlu){
     //   return Class( b, vol, isrlu ? 1 : 0 );
-    // }),py::arg("brillouinzone"),py::arg("volume"),py::arg("rlu")=true)
+    // }),"brillouinzone"_a,"volume"_a,"rlu"_a=true)
     .def_property_readonly("N",[](const Class& cobj){ return av2np_squeeze(cobj.get_N());})
     .def_property_readonly("halfN",[](const Class& cobj){ return av2np_squeeze((cobj.get_N()-1)/2);})
     .def_property_readonly("BrillouinZone",[](const Class& cobj){ return cobj.get_brillouinzone();} )
@@ -83,7 +84,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       std::vector<size_t> shape;
       for (auto s: bi.shape) shape.push_back(static_cast<size_t>(s));
       cobj.replace_data(data, shape, el);
-    }, py::arg("data"), py::arg("elements"))
+    }, "data"_a, "elements"_a)
     .def_property_readonly("data",
       /*get data*/ [](Class& cobj){
         auto & id = cobj.data(); // the InterpolationData object
@@ -112,19 +113,19 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       [](Class& cobj, const double wS, const double wV,
                       const double wM, const int vwf){
       return av2np(cobj.multi_sort_perm(wS,wV,wM,vwf));
-    }, py::arg("scalar_cost_weight")=1,
-       py::arg("vector_cost_weight")=1,
-       py::arg("matrix_cost_weight")=1,
-       py::arg("vector_weight_function")=0
+    }, "scalar_cost_weight"_a=1,
+       "vector_cost_weight"_a=1,
+       "matrix_cost_weight"_a=1,
+       "vector_weight_function"_a=0
     )
     .def("centre_sort_perm",
       [](Class& cobj, const double wS, const double wV,
                       const double wM, const int vwf){
       return av2np(cobj.centre_sort_perm(wS,wV,wM,vwf));
-    }, py::arg("scalar_cost_weight")=1,
-       py::arg("vector_cost_weight")=1,
-       py::arg("matrix_cost_weight")=1,
-       py::arg("vector_weight_function")=0
+    }, "scalar_cost_weight"_a=1,
+       "vector_cost_weight"_a=1,
+       "matrix_cost_weight"_a=1,
+       "vector_weight_function"_a=0
     )
     .def_property("map",
       /*get map*/ [](Class& cobj){
@@ -206,7 +207,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("Q"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
+    },"Q"_a,"moveinto"_a=true,"useparallel"_a=false,"threads"_a=-1)
     //
     .def("ir_interpolate_at",[](Class& cobj,
                              py::array_t<double> pyX,
@@ -251,11 +252,11 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
+    },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
     //
     // .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
     //   return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
-    // },py::arg("axis"),py::arg("squeeze")=true)
+    // },"axis"_a,"squeeze"_a=true)
     .def("nearest_map_index",[](Class& cobj, py::array_t<double> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
@@ -275,7 +276,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       unsigned int flg = cobj.nearest_index(x_invA.data(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
-    },py::arg("x"),py::arg("isrlu")=true)
+    },"x"_a,"isrlu"_a=true)
     .def("floor_map_index",[](Class& cobj, py::array_t<double> pyX, const bool isrlu){
       py::buffer_info xinfo = pyX.request();
       if (xinfo.ndim!=1)
@@ -295,7 +296,7 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       unsigned int flg = cobj.floor_index(x_invA.data(0,0), subidx);
       py::tuple ret = py::make_tuple(flg, cobj.sub2map(subidx));
       return ret;
-    },py::arg("x"),py::arg("isrlu")=true)
+    },"x"_a,"isrlu"_a=true)
     .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
       // handle Q
       py::buffer_info bi = pyQ.request();
@@ -315,11 +316,12 @@ void declare_bzgridq(py::module &m, const std::string &typestr) {
       double * mass_ptr = (double*) mi.ptr;
       for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
       return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
-    }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"));
+    }, "Q"_a, "masses"_a, "Temperature_in_K"_a);
 }
 
 template<class T>
 void declare_bzgridqe(py::module &m, const std::string &typestr) {
+    using namespace pybind11::literals;
     using Class = BrillouinZoneGrid4<T>;
     std::string pyclass_name = std::string("BZGridQE") + typestr;
     py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
@@ -335,7 +337,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       if (bi.strides[0]!=sizeof(size_t)) throw std::runtime_error("halfN must be contiguous");
       Class cobj( b, (double*)b0.ptr, (size_t*)bi.ptr );
       return cobj;
-    }),py::arg("brillouinzone"),py::arg("spec"),py::arg("halfN"))
+    }),"brillouinzone"_a,"spec"_a,"halfN"_a)
     // Initializer (BrillouinZone, step_size vector, flag_for_whether_step_size_is_in_rlu_or_inverse_angstrom)
     .def(py::init([](BrillouinZone &b, py::array_t<double> pySpec, py::array_t<double> pyD, const bool& isrlu){
       py::buffer_info b0 = pySpec.request();
@@ -347,7 +349,7 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
       if (bi.shape[0] < 3) throw std::runtime_error("stepsize must have three elements");
       if (bi.strides[0]!=sizeof(double)) throw std::runtime_error("stepsize must be contiguous");
       return Class( b, (double*)b0.ptr, (double*)bi.ptr, isrlu ? 1 : 0 );
-    }),py::arg("brillouinzone"),py::arg("spec"),py::arg("step"),py::arg("rlu")=true)
+    }),"brillouinzone"_a,"spec"_a,"step"_a,"rlu"_a=true)
     .def_property_readonly("N",    [](const Class& cobj){return av2np_squeeze(cobj.get_N());} )
     .def_property_readonly("halfN",[](const Class& cobj){return av2np_squeeze(cobj.get_halfN());} )
     .def_property_readonly("spec", [](const Class& cobj){return av2np_squeeze(cobj.get_spec());} )
@@ -456,10 +458,10 @@ void declare_bzgridqe(py::module &m, const std::string &typestr) {
         for (size_t j=0; j< lires.numel(); j++)
           rptr[i*lires.numel()+j] = lires.getvalue(i,j);
       return liout;
-    },py::arg("QE"),py::arg("moveinto")=true,py::arg("useparallel")=false,py::arg("threads")=-1)
+    },"QE"_a,"moveinto"_a=true,"useparallel"_a=false,"threads"_a=-1)
     // .def("sum_data",[](Class& cobj, const int axis, const bool squeeze){
     //   return av2np_shape( cobj.sum_data(axis), cobj.data_shape(), squeeze);
-    // },py::arg("axis"),py::arg("squeeze")=true)
+    // },"axis"_a,"squeeze"_a=true)
     ;
 }
 

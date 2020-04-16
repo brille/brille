@@ -14,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef __MESH_H
+#define __MESH_H
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -24,24 +26,18 @@
 #include "bz_mesh.hpp"
 #include "utilities.hpp"
 
-#ifndef __MESH_H
-#define __MESH_H
 
 namespace py = pybind11;
 typedef long slong; // ssize_t is only defined for gcc?
 
 template<class T>
 void declare_bzmeshq(py::module &m, const std::string &typestr){
+  using namespace pybind11::literals;
   using Class = BrillouinZoneMesh3<T>;
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
-  .def(py::init<BrillouinZone,double,int,int>(),
-       py::arg("brillouinzone"),
-       py::arg("max_size")=-1.,
-       py::arg("num_levels")=3,
-       py::arg("max_points")=-1
-      )
+  .def(py::init<BrillouinZone,double,int,int>(), "brillouinzone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1)
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
   .def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_mesh_hkl());})
   .def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_mesh_xyz());})
@@ -67,7 +63,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     std::vector<size_t> shape;
     for (auto s: bi.shape) shape.push_back(static_cast<size_t>(s));
     cobj.replace_data(data, shape, el);
-  }, py::arg("data"), py::arg("elements"))
+  }, "data"_a, "elements"_a)
   .def_property_readonly("data", /*get data*/ [](Class& cobj){
     auto & id = cobj.data(); // the InterpolationData object
     return av2np_shape(id.data(), id.shape(), false);})
@@ -75,10 +71,10 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     [](Class& cobj, const double wS, const double wV,
                     const double wM, const int vwf){
     return av2np(cobj.multi_sort_perm(wS,wV,wM,vwf));
-  }, py::arg("scalar_cost_weight")=1,
-     py::arg("vector_cost_weight")=1,
-     py::arg("matrix_cost_weight")=1,
-     py::arg("vector_weight_function")=0
+  }, "scalar_cost_weight"_a=1,
+     "vector_cost_weight"_a=1,
+     "matrix_cost_weight"_a=1,
+     "vector_weight_function"_a=0
   )
   .def("ir_interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
@@ -123,7 +119,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       for (size_t j=0; j< lires.numel(); j++)
         rptr[i*lires.numel()+j] = lires.getvalue(i,j);
     return liout;
-  },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
+  },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
     // handle Q
     py::buffer_info bi = pyQ.request();
@@ -143,7 +139,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     double * mass_ptr = (double*) mi.ptr;
     for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
     return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
-  }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"))
+  }, "Q"_a, "masses"_a, "Temperature_in_K"_a)
   .def("__repr__",&Class::to_string);
 }
+
 #endif

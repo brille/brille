@@ -14,6 +14,8 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef __LATTICE_H
+#define __LATTICE_H
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -24,8 +26,6 @@
 #include "lattice.hpp"
 #include "utilities.hpp"
 
-#ifndef __BINDING_H
-#define __BINDING_H
 
 namespace py = pybind11;
 typedef long slong; // ssize_t is only defined for gcc?

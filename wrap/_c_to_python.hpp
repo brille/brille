@@ -16,6 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
 #include <thread>
@@ -173,15 +174,6 @@ py::array_t<T> av2np_shape(const ArrayVector<T>& av,
     for (size_t j=0; j<av.numel(); j++)
       ptr[i*av.numel()+j] = av.getvalue(i,j);
   return out;
-}
-
-std::string long_version(){
-  using namespace brille::version;
-  std::string v = version_number;
-  if (!std::string(git_revision).empty()){
-    v += "-" + std::string(git_branch) + "." + std::string(git_revision).substr(0,7);
-  }
-  return v;
 }
 
 #endif

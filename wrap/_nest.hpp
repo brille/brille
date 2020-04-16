@@ -34,12 +34,13 @@ typedef unsigned long element_t;
 
 template<class T>
 void declare_bznestq(py::module &m, const std::string &typestr){
+  using namespace pybind11::literals;
   using Class = BrillouinZoneNest3<T>;
   std::string pyclass_name = std::string("BZNestQ")+typestr;
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
   // Initializer (BrillouinZone, maximum node volume fraction)
-  .def(py::init<BrillouinZone,double,size_t>(), py::arg("brillouinzone"), py::arg("max_volume"), py::arg("max_branchings")=5)
-  .def(py::init<BrillouinZone,size_t,size_t>(), py::arg("brillouinzone"), py::arg("number_density"), py::arg("max_branchings")=5)
+  .def(py::init<BrillouinZone,double,size_t>(), "brillouinzone"_a, "max_volume"_a, "max_branchings"_a=5)
+  .def(py::init<BrillouinZone,size_t,size_t>(), "brillouinzone"_a, "number_density"_a, "max_branchings"_a=5)
 
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
 
@@ -72,7 +73,7 @@ void declare_bznestq(py::module &m, const std::string &typestr){
     std::vector<size_t> shape;
     for (ssize_t bisi: bi.shape) shape.push_back(signed_to_unsigned<size_t>(bisi));
     cobj.replace_data(data, shape, el);
-  }, py::arg("data"), py::arg("elements"))
+  }, "data"_a, "elements"_a)
 
   .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
 
@@ -115,7 +116,7 @@ void declare_bznestq(py::module &m, const std::string &typestr){
       for (size_t j=0; j< lires.numel(); j++)
         rptr[i*lires.numel()+j] = lires.getvalue(i,j);
     return liout;
-  },py::arg("Q"),py::arg("useparallel")=false,py::arg("threads")=-1,py::arg("do_not_move_points")=false)
+  },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
 
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
     // handle Q
@@ -136,7 +137,7 @@ void declare_bznestq(py::module &m, const std::string &typestr){
     double * mass_ptr = (double*) mi.ptr;
     for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
     return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
-  }, py::arg("Q"), py::arg("masses"), py::arg("Temperature_in_K"))
+  }, "Q"_a, "masses"_a, "Temperature_in_K"_a)
 
   // .def("__repr__",&Class::to_string)
   //
@@ -144,13 +145,14 @@ void declare_bznestq(py::module &m, const std::string &typestr){
   //   [](Class& cobj, const double wS, const double wE, const double wV,
   //                   const double wM, const int ewf, const int vwf){
   //   return av2np(cobj.multi_sort_perm(wS,wE,wV,wM,ewf,vwf));
-  // }, py::arg("scalar_cost_weight")=1,
-  //    py::arg("eigenvector_cost_weight")=1,
-  //    py::arg("vector_cost_weight")=1,
-  //    py::arg("matrix_cost_weight")=1,
-  //    py::arg("eigenvector_weight_function")=0,
-  //    py::arg("vector_weight_function")=0
+  // }, "scalar_cost_weight"_a=1,
+  //    "eigenvector_cost_weight"_a=1,
+  //    "vector_cost_weight"_a=1,
+  //    "matrix_cost_weight"_a=1,
+  //    "eigenvector_weight_function"_a=0,
+  //    "vector_weight_function"_a=0
   // )
   ;
 }
+
 #endif

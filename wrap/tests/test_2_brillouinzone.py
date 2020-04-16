@@ -182,7 +182,7 @@ class BrillouinZone (unittest.TestCase):
         X, Y, Z=np.meshgrid(x, x, 0)
         Q = np.stack( (X.flatten(), Y.flatten(), Z.flatten()), axis=-1)
         Qin = bz.isinside(Q)
-        B = r.get_B_matrix()
+        B = r.B
         X = np.stack( [ np.matmul(B, v) for v in Q[Qin,:] ] )
         # plot_2d_points(X)
 
