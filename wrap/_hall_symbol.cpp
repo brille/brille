@@ -19,7 +19,22 @@
 
 void wrap_hallsymbol(pybind11::module &m){
   using namespace pybind11::literals;
-  pybind11::class_<HallSymbol> cls(m, "HallSymbol");
+  pybind11::class_<HallSymbol> cls(m, "HallSymbol", R"pbdoc(
+    A crystallographic spacegroup's symmetries encoded in Hall's notation
+
+    Hall proposed a compact unambiguous notation for the representation of the
+    generators of a spacegroup. Within his notation each motion is comprised of
+    a character with one or more subscripts and superscripts which describe its
+    order, unique axis, and translation. The notation specifies that, depending
+    on the position of a motion and details of any preceeding motion, some or
+    all of the sub- and superscripts can be omitted. The :class:`HallSymbol` has
+    been written to handle the logic necessary to decode a Hall symbol into its
+    equivalent motions.
+    An added compilcation arises when the Hall symbol is encoded as an ASCII
+    string. Namely, there are no sub- or superscript glyphs and some scheme must
+    be enacted to represent them.
+
+  )pbdoc");
 
   cls.def(pybind11::init([](std::string symbol){
     HallSymbol out;

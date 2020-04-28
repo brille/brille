@@ -1,0 +1,29 @@
+PROJECT_NAME = brille
+INPUT = ../src/
+RECURSIVE = NO
+
+GENERATE_HTML = NO
+GENERATE_LATEX = NO
+GENERATE_XML = YES
+XML_OUTPUT = .build/doxygenxml
+XML_PROGRAMLISTING = YES
+
+MACRO_EXPANSION = YES
+EXPAND_ONLY_PREDEF = YES
+
+ALIASES = "rst=\verbatim embed:rst"
+ALIASES += "endrst=\endverbatim"
+
+QUIET = YES
+WARNINGS = YES
+WARN_IF_UNDOCUMENTED = YES
+WARN_IF_DOC_ERROR = YES
+
+FILE_PATTERNS = *.c \
+                *.h \
+                *.cpp \
+                *.hpp \
+                *.tpp \
+
+# Is this only valid for HTML output?
+# USE_MATHJAX = YES

@@ -47,7 +47,21 @@ void wrap_version(pybind11::module & m){
 }
 
 PYBIND11_MODULE(_brille, m){
-  m.doc() = "brille for dealing with symmetry of the first irreducible Brillouin Zone";
+  m.doc() = R"pbdoc(
+    pybind11 module ``_brille``
+    ---------------------------
+    This module provides the interface to the C++ library.
+
+    All of the symbols defined within ``_brille`` are imported by ``brille`` to
+    make using them that much easier. If in doubt, the interfaced classes can be
+    accessed via their submodule syntax ``brille._brille``.
+
+    .. currentmodule:: brille._brille
+
+    .. autosummary::
+      :toctree: _generate
+
+  )pbdoc";
   wrap_version(m);
   wrap_lattice(m);
   wrap_brillouinzone(m);

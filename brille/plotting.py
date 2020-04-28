@@ -15,7 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with brille. If not, see <https://www.gnu.org/licenses/>.
 
-"""Provides functionality for drawing first Brillouin zones in 3D."""
+"""
+Plotting utilities for ``brille``
+---------------------------------
+
+.. currentmodule:: brille.plotting
+
+.. autosummary::
+    :toctree: _generate
+"""
+
 import collections
 import numpy as np
 import matplotlib.pyplot as pp
@@ -33,6 +42,37 @@ def _check_axes(axs=None):
     return axs
 
 def plot(*args, **kwds):
+    """A gateway plotting function which infers intention from its input.
+
+    There are a number of plotting routines within this module that have names
+    associated with their intended input and functionality. Their signatures
+    are sufficiently distinct that the intended plotting function can be
+    determined by examining the calling signature alone.
+    This function takes any input and calls one of :py:func:`plot_bz`,
+    :py:func:`plot_polyhedron`, :py:func:`plot_points`,
+    :py:func:`plot_points_with_lines`, or :py:func:`plot_tetrahedra`, depending
+    on the input provided.
+
+    Parameters
+    ----------
+    *args
+        Variable length argument list, used exclusively for determining the
+        implied plotting specialisation.
+    **kwargs
+        Arbitrary keyword arguments, passed unmodified to the implied
+        specialisation.
+
+    Returns
+    -------
+    variable
+        The return type depends on which specialisation is called.
+
+    Raises
+    ------
+    Exception
+        If the specialisation can not be inferred from ``*args`` then an
+        exception is raised.
+    """
     bz_types = (brille.BrillouinZone,
                 brille.BZGridQcomplex, brille.BZGridQ,
                 brille.BZMeshQcomplex, brille.BZMeshQ,
@@ -56,7 +96,22 @@ def plot(*args, **kwds):
 
 # pylint: disable=c0103
 def plot_points(x, axs=None, title=None, show=True):
-    """Plot the N points contained in the (N,3) ndarray x."""
+    """Plot points.
+
+    Parameters
+    ----------
+    x : :py:class:`numpy.ndarray`
+        A :math:`N \\times 3` two dimensional array of :math:`N` points to plot.
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The axes in which to add the plotted points. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+    title : str, optional
+        An optional title for the plotting axes `axs`
+    show : bool, optional
+        Whether to call `matplotlib.pyplot.show()` after adding the points to
+        `axs`; this is mostly useful in non-interactive environments.
+    """
     axs = _check_axes(axs)
     axs.scatter(x[:, 0], x[:, 1], x[:, 2], s=10)
     if title is not None:
@@ -65,10 +120,28 @@ def plot_points(x, axs=None, title=None, show=True):
         pp.show()
 
 def plot_points_with_lines(x, y, axs=None, title=None, show=True):
-    """Plot the N points contained in the (N,3) ndarray x with lines y.
+    """Plot points with lines.
 
-    The M line segments defined by the (M+1,3) ndarray y are drawn before the
-    points in x.
+    Parameters
+    ----------
+    x : :py:class:`numpy.ndarray`
+        A :math:`N \\times 3` two dimension array of :math:`N` points to plot.
+    y : :py:class:`numpy.ndarray`
+        A :math:`(M+1) \\times 3` two dimensional array of the endpoints of :math:`M` connected
+        line segments to plot.
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The axes in which to add the plotted points. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+    title : str, optional
+        An optional title for the plotting axes `axs`
+    show : bool, optional
+        Whether to call `matplotlib.pyplot.show()` after adding the points to
+        `axs`; this is mostly useful in non-interactive environments.
+
+    Note
+    ----
+    The :math:`M` line segments defined by `y` are drawn before the points in `x`.
     """
     axs = _check_axes(axs)
     axs.plot(y[:, 0], y[:, 1], y[:, 2])
@@ -82,20 +155,81 @@ def plot_points_with_lines(x, y, axs=None, title=None, show=True):
 def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
             face_vectors=False, show=True,
             color='b', edgecolor='k', linewidth=1, alpha=0.2):
-    """Plot a BrillouinZone or BZGridQ[complex] object.
+    """Plot a :py:class:`BrillouinZone` or related object.
 
-    Draw the faces of a first Brillouin zone with color, edgecolor, linewidth,
-    and alpha specified. The plotting units are selectable via the keyword
-    `units` with valid values 'rlu', 'invA', or 'primitive' and are relative
-    lattice units of the reciprocal space spanning lattice, inverse ångstrom,
-    or relative lattice units of the primitive reciprocal space spanning
-    lattice, respectively. The face vectors defining the Brillouin zone can be
-    drawn as well if the keyword `face_vectors` is set to True.
+    Draw the faces of a first Brillouin zone and/or irreducible Brillouin zone
+    polyhedron, plus additional structures.
 
-    If a (N,3) numpy.ndarray is provided via the keyword `Q` it will be treated
-    as points in the specified units of reciprocal space.
-    If a BZGridQ or BZGridQcomplex object is provided and `Q` is omitted or
-    None, then the mapped grid points in 'rlu' or 'invA' will be set to `Q`.
+    Parameters
+    ----------
+    bz : :py:class:`BrillouinZone`, \
+         :py:class:`BZGridQcomplex`, :py:class:`BZGridQ`, \
+         :py:class:`BZMeshQcomplex`, :py:class:`BZMeshQ`, \
+         :py:class:`BZNestQcomplex`, :py:class:`BZNestQ`, \
+         :py:class:`BZTrellisQcomplex`, :py:class:`BZTrellisQ`
+        The object containing information about a first Brillouin zone and/or
+        an irreducible Brillouin zone.
+
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The axes in which to add the plotted points. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+
+    origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
+        The origin of the plotting coordinate system, all drawn information is
+        relative to this vector. Any 3-element object convertible to a
+        :py:class:`numpy.ndarray` is valid input. Invalid input is replaced by
+        the zero-vector.
+
+    Q : :py:class:`numpy.ndarray`, optional
+        A :math:`N \\times 3` array of points to draw after the first/irreducible
+        Brillouin zone polyhedron. If `bz` is not a :py:class:`BrillouinZone`
+        and input `Q` is ``None``, `Q` will be replaced by the contents of
+        `bz.rlu` or `bz.invA`, depending on the value of `units`; otherwise
+        the units of `Q` are assumed to be the same as `units`.
+
+    units : str, optional
+        The units in which to plot the first/irreducible Brillouin zone.
+
+        +-----------------+---------------------------------------------------+
+        | valid units     | corresponding to                                  |
+        +=================+===================================================+
+        | ``'invA'``      | inverse ångstrom                                  |
+        +-----------------+---------------------------------------------------+
+        | ``'rlu'``       | reciprocal lattice units of the conventional cell |
+        +-----------------+---------------------------------------------------+
+        | ``'primitive'`` | reciprocal lattice units of the primitive cell    |
+        +-----------------+---------------------------------------------------+
+
+    irreducible : bool, optional
+        Whether to plot the irreducible Brillouin zone polyhedron when it is
+        present. When ``True``, the first Brillouin zone edges are plotted
+        as well.
+
+    face_vectors : bool, optional
+        Whether to plot vectors from the origin through each first Brillouin
+        zone face centre.
+
+    show : bool, optional
+        Whether to call `matplotlib.pyplot.show()` after adding the points to
+        `axs`; this is mostly useful in non-interactive environments.
+
+    color : optional
+        The face color of the drawn polyhedra.
+
+    edgecolor : optional
+        The edge color of the drawn polyhedra.
+
+    linewidth : float, optional
+        The edge line width of drawn polyhedra.
+
+    alpha : float, optional
+        The face alpha of drawn polyhedra.
+
+    Returns
+    -------
+    :py:class:`matplotlib:axes:Axes`
+        The value of `axs` after plotting.
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
@@ -224,7 +358,55 @@ def __cube(p_0, p_1):
     return patches
 
 def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
-    """Plot a polyhedron"""
+    """Plot a single polyhedron.
+
+    Parameters
+    ----------
+    poly : :py:class:`brille._brille.Polyhedron`
+        Any object with both a ``vertices`` and ``vertices_per_face`` field
+        could work with thie plotting function, however it is anticipated that a
+        :py:class:`brille._brille.Polyhedron` will be provided.
+
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The 3D axes in which to add the polyhedron facets. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+
+    setlims : bool, optional
+        Whether to change the limits of `axs` to match the limits of the extent
+        of `poly.vertices`.
+
+    show : bool, optional
+        Whether to call `matplotlib.pyplot.show()` after adding the points to
+        `axs`; this is mostly useful in non-interactive environments.
+
+    origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
+        The origin of the plotting coordinate system, all drawn information is
+        relative to this vector. Any 3-element object convertible to a
+        :py:class:`numpy.ndarray` is valid input. Invalid input is replaced by
+        the zero-vector.
+
+    color : optional
+        The face color of the drawn polygons.
+
+    edgecolor : optional
+        The edge color of the drawn polygons.
+
+    linestyle : str, optional
+        The edge line style of dranw polygons.
+
+    linewidth : float, optional
+        The edge line width of drawn polygons.
+
+    alpha : float, optional
+        The face alpha of drawn polygons.
+
+    Returns
+    -------
+    :py:class:`matplotlib:axes:Axes`
+        The value of `axs` after plotting.
+    """
+
     # pylint: disable=no-member
     axs = _check_axes(axs)
     # the 1st Brillouin zone has on-face points equal to half the normals
@@ -241,6 +423,48 @@ def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
     return axs
 
 def plot_tetrahedron(verts, axs=None, show=True, **kwds):
+    """Plot a single tetrahedron.
+
+    Parameters
+    ----------
+    verts : :py:class:`numpy.ndarray`
+        A :math:`4 \\times 3` array of the four vertices of the tetrahedron.
+
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The 3D axes in which to add the polyhedron facets. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+
+    show : bool, optional
+        Whether to call `matplotlib.pyplot.show()` after adding the points to
+        `axs`; this is mostly useful in non-interactive environments.
+
+    origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
+        The origin of the plotting coordinate system, all drawn information is
+        relative to this vector. Any 3-element object convertible to a
+        :py:class:`numpy.ndarray` is valid input. Invalid input is replaced by
+        the zero-vector.
+
+    color : optional
+        The face color of the drawn polygons.
+
+    edgecolor : optional
+        The edge color of the drawn polygons.
+
+    linestyle : str, optional
+        The edge line style of dranw polygons.
+
+    linewidth : float, optional
+        The edge line width of drawn polygons.
+
+    alpha : float, optional
+        The face alpha of drawn polygons.
+
+    Returns
+    -------
+    :py:class:`matplotlib:axes:Axes`
+        The value of `axs` after plotting.
+    """
     if not (verts.ndim == 2 and verts.shape[0]==4 and verts.shape[1]==3):
         raise RuntimeError('Input are not the vertices of a tetrahedron')
     vpf = np.array([[0,1,2],[0,3,1],[3,2,1],[0,2,3]])
@@ -253,6 +477,35 @@ def plot_tetrahedron(verts, axs=None, show=True, **kwds):
     return axs
 
 def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
+    """Plot a number of tetrahedra.
+
+    Parameters
+    ----------
+    allverts : :py:class:`numpy.ndarray`
+        A :math:`(N \\ge 4) \\times 3` array of the vertices of all tetrahedra
+
+    tetidx: :py:class:`numpy.ndarray`
+        A :math:`M \\times 4` array of the indices of `allverts` which make up each of
+        the :math:`M` tetrahedra to be plotted.
+        The values of `tetidx` should obey the inequalities ``min(tetidx) ≥ 0``
+        and ``max(tetidx) < N``.
+
+    axs : :py:class:`matplotlib.axes.Axes`, optional
+        The 3D axes in which to add the polyhedron facets. If ``None`` then
+        :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+        axes.
+
+    color : {arraylike, str, iterable}, optional
+        The specified `color` will be used to produce a list of :math:`M` colors to
+        use in plotting the :math:`M` tetrahedra.
+        If `color` has three elements or is a `str` it is assumed to represent
+        a single RGB value.
+        In all cases the single or multiple colors provided in `color` are tiled
+        into a list with at least :math:`M` elements before being truncated.
+        If no `color` is provided, a list of all named colors known to
+        :py:mod:`matplotlib.colors` is tiled.
+
+    """
     if not (allverts.ndim == 2 and allverts.shape[1] == 3):
         raise RuntimeError('Vertices are not the correct shape')
     if isinstance(tetidx, list):
