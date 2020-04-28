@@ -20,6 +20,7 @@
 #ifndef _PERMUTATION_H
 #define _PERMUTATION_H
 
+#include <cstdint>
 #include "munkres.hpp"
 #include "lapjv.hpp"
 #include "smp.hpp"
@@ -45,6 +46,62 @@ template<class T> struct CostTraits<std::complex<T>>{
   constexpr static T max = (std::numeric_limits<T>::max)();
 };
 #endif
+
+/*! \brief A type to hold sorting status information for an object
+
+Every vertex/node/etc. in a grid-like object will have sorting information
+associated with it. Notably, whether or not it is considered sorted, if it is
+allowed to be further modified, and how many times its sorting permutation has
+been changed.
+The first two are flags and the last a positive integer, so this information
+could all be stored in a single unsigned N-bit integer with the visit count
+occupying only N-2 bits. This is probably overkill
+*/
+class SortingStatus{
+  std::uint_fast32_t status;
+public:
+  explicit SortingStatus(): status{0u} {};
+  SortingStatus(bool s, bool f, unsigned int v): status{0} {
+    this->sorted(s);
+    this->locked(f);
+    this->visits(v);
+  }
+  bool sorted() const { return (status>>31u) & 1u; }
+  bool locked() const { return (status>>30u) & 1u; }
+  std::uint_fast32_t visits() const { return ((1u<<30u)-1u) & status; }
+  bool sorted(bool s) {
+    if (this->sorted() != s) {
+      std::uint_fast32_t rem = (1u<<31u)-1u & this->status;
+      this->status = rem + (s ? 1u<<31u : 0u);
+    }
+    return this->sorted();
+  }
+  bool locked(bool l){
+    if (this->locked() != l){
+      std::uint_fast32_t rem = this->status + (this->sorted() ? (1u<<31u) : 0u);
+      this->status = rem + (l ? 1u<<30u : 0u);
+    }
+    return this->locked();
+  }
+  template<typename T>
+  std::uint_fast32_t visits(T v) {
+    if (v <= (1u<<30u)-1u){
+      this->status = (this->sorted() ? (1u<31u) : 0u) + (this->locked() ? (1u<30u) : 0u);
+      this->status += v;
+    }
+    else
+      throw std::overflow_error("SortingStatus can not hold more than 2^30-1 visits.");
+    return this->visits();
+  }
+  std::uint_fast32_t addvisit() {
+    if (this->visits() < (1u<<30u)-1u)
+      ++status;
+    else
+      throw std::overflow_error("SortingStatus can not hold more than 2^30-1 visits.");
+    return this->visits();
+  }
+
+};
 
 
 /*! \brief Use Munkres' Assignment algorithm to determine a permutation
@@ -310,12 +367,49 @@ for (size_t i=0; i<Nobj; ++i){
       m_cost = frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
-    cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);
+    // cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);
+    cost[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
   }
 }
+// // protect against equally-good solutions in the same row:
+// for (size_t i=0; i<Nobj; ++i){
+//   R rowmin{cost[i*Nobj]};
+//   for (size_t j=1; j<Nobj; ++j) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
+//   int equal_to_min{0};
+//   for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
+//   if (equal_to_min > 1){
+//     info_update(equal_to_min," columns have the same lowest cost in row ",i);
+//     for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))
+//     cost[i*Nobj+j] += static_cast<R>(--equal_to_min*100)*std::numeric_limits<R>::epsilon();
+//   }
+// }
+// // and same column
+// for (size_t j=0; j<Nobj; ++j){
+//   R rowmin{cost[j]};
+//   for (size_t i=1; i<Nobj; ++i) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
+//   int equal_to_min{0};
+//   for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
+//   if (equal_to_min > 1){
+//     info_update(equal_to_min," rows have the same lowest cost in column ",j);
+//     for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))
+//     cost[i*Nobj+j] += static_cast<R>(--equal_to_min*100)*std::numeric_limits<R>::epsilon();
+//   }
+// }
+// /* Normalising the cost matrix before running Jonker-Volgenant *might* help
+//    with the infinite loop situation
+// */
+// R maxcost{cost[0]}, mincost{cost[0]};
+// for (size_t i=1; i<Nobj*Nobj; ++i){
+//   if (maxcost < cost[i]) maxcost = cost[i];
+//   if (mincost > cost[i]) mincost = cost[i];
+// }
+// info_update("JV costs range is (",mincost,",",maxcost,")");
+// for (size_t i=1; i<Nobj*Nobj; ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);
+
 // use the Jonker-Volgenant algorithm to determine the optimal assignment
 /*
 There might be a hidden problem here.
+As discussed in the README at https://github.com/hrldcpr/pyLAPJV
 
 Supposedly, if two costs are equally smallest (in a row) to machine precision
 then the Jonker-Volgenant algorithm enters an infinite loop.

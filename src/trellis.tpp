@@ -206,3 +206,173 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
   // Combine the retained trellis vertices and the extra triangulated vertices
   vertices_ = cat(kept_intersections, extra_intersections.first(nExtra));
 }
+
+/*! \brief Consensus sorting of objects on a relational mesh
+
+Starting from a provided mesh-vertex index which has an arbitrary sorting
+permutation for the objects it contains, find all neighbouring vertices and add
+them to a unique-element first-in first-out queue.
+
+Dequeue a vertex and find all of its unsorted neighbouring vertices and add them
+to the queue. Find all sorted vertices neighbouring the dequeued vertex and use
+them to perform a consensus-based sorting of the objects at the dequeued vertex.
+If no consensus exists accept the most-popular sorting and requeue all
+neighbours offering an alternative permutation.
+Move on to the next queued vertex.
+
+In order to shortcut deadlocked situtations where no global consensus can be
+achieved, keep track of how many times a vertex has been visited and lock its
+sorting permutation after some threshhold to escape the infinite loop.
+
+The unique-element queue has an overhead of either
+  1) O(queue.size()) comparisons, or
+  2) all_vertices.size() bytes of memory and an O(1) check
+per to-be-added vertex. It's not clear which approach is more appropriate.
+In either case, this over head is likely much smaller than the memory use of a
+freely-growing queue since there is no bound on the number of shared
+neighbouring vertices for two connected vertices in a relational mesh.
+*/
+template<class T> template<typename R>
+size_t PolyhedronTrellis<T>::consensus_sort_nodes(
+  const index_t first_idx, const R weights[3], const int func, const size_t spobj[2],
+  ArrayVector<size_t>& perm,
+  std::vector<bool>& node_done,
+  std::vector<bool>& node_lock,
+  std::vector<size_t>& node_visits,
+  std::vector<bool>& vertex_done,
+  std::vector<bool>& vertex_lock,
+  std::vector<size_t>& vertex_visits
+) const {
+  std::vector<size_t> neighbours;
+  std::vector<bool> queued(nodes_.size(), false);
+  std::queue<index_t> queue;
+  queue.push(first_idx);
+  const size_t max_visits{10};
+  size_t num_sorted=0, count=0u, refresh=1u;
+  bool more_to_do=true;
+  int blanks = 0;
+  std::string prompt = "Nodes queued: ";
+  std::cout << prompt;
+  while (more_to_do){
+    index_t idx = queue.front();
+    queue.pop();
+    queued[idx] = false;
+    if (!node_lock[idx]){
+      node_lock[idx] = ++node_visits[idx] > max_visits;
+      if (!node_done[idx]){
+        node_done[idx] = this->consensus_sort_node(weights, func, spobj, perm, vertex_done, vertex_lock, vertex_visits, idx);
+        if (node_done[idx]) ++num_sorted;
+      }
+      // enqueue the neighbouring nodes no matter what
+      for (index_t n_idx: this->which_node_neighbours(node_done, false, idx))
+        if (!queued[n_idx]) {
+          queue.push(n_idx);
+          queued[n_idx] = true;
+        }
+      // and then re-add this node if it wasn't finished
+      if (!node_done[idx]) {
+        queue.push(idx);
+        queued[idx] = true;
+      }
+    }
+    more_to_do = !queue.empty();
+    if (++count >= refresh){
+      for (int i=0; i<blanks; ++i) std::cout << "\b";
+      int new_blanks = 1+static_cast<int>(std::floor(std::log10(queue.size())));
+      if (new_blanks < blanks){
+        for (int i=0; i<blanks; ++i) std::cout << " ";
+        for (int i=0; i<blanks; ++i) std::cout << "\b";
+      }
+      std::cout << queue.size();
+      blanks = new_blanks;
+      count = 0u;
+      refresh = queue.size() >> 4;
+      if (refresh < 1u) refresh = 1u;
+      more_to_do = queue.size() > 0;
+    }
+  }
+  std::cout << "\r";
+  blanks += prompt.size();
+  for (int i=0; i<blanks; ++i) std::cout << " ";
+  std::cout << "\r";
+  return num_sorted;
+}
+
+
+template<class T> template<typename R>
+bool PolyhedronTrellis<T>::consensus_sort_node(
+  const R w[3], const int func, const size_t spobj[2],
+  ArrayVector<size_t>& p,
+  std::vector<bool>& done,
+  std::vector<bool>& lock,
+  std::vector<size_t>& visits,
+  const index_t node
+) const {
+  const size_t max_visits{10}; // this is bad.
+  std::vector<index_t> verts = nodes_.vertices(node);
+  for (index_t & i: verts)
+  if (!lock[i]){
+    if (!done[i]){
+      std::vector<index_t> are_done;
+      std::copy_if(verts.begin(), verts.end(), std::back_inserter(are_done), [&](index_t i){return done[i];});
+      done[i] = this->consensus_sort_difference(w, func, spobj, p, done, i, are_done);
+    }
+    lock[i] = ++visits[i] > max_visits;
+  }
+  size_t count_done = std::count_if(verts.begin(), verts.end(), [&](index_t i){return done[i];});
+  return count_done == verts.size();
+}
+
+template<class T> template<typename R>
+bool PolyhedronTrellis<T>::consensus_sort_difference(
+  const R w[3], const int func, const size_t spobj[2],
+  ArrayVector<size_t>& p, std::vector<bool>& done, const index_t idx,
+  const std::vector<index_t>& presorted
+) const {
+  if (!presorted.size()) return false;
+  // Find the *closest* point(s) which are sorted
+  ArrayVector<double> vectors = vertices_.extract(presorted) - vertices_.extract(idx);
+  std::vector<double> lengths;
+  for (size_t i=0; i<vectors.size(); ++i) lengths.push_back(vectors.norm(i));
+  double min_length = *(std::min_element(lengths.begin(), lengths.end()));
+  std::vector<index_t> nearest;
+  for(size_t i=0; i<lengths.size(); ++i)
+    if (approx_scalar(lengths[i], min_length))
+      nearest.push_back(presorted[i]);
+
+
+  size_t nn = nearest.size();
+  // For each sorted neighbour, find the sorting permutation which sorts the
+  // data at idx the same as the data at the neighbour.
+  // Store the results into a temporary permutation array, abusing the last
+  // element to hold each neighbour's permutation in turn.
+  ArrayVector<size_t> t(p.numel(), nn+1);
+  for (size_t i=0; i<nn; ++i){
+    for (size_t j=0; j<p.numel(); ++j) t.insert(p.getvalue(nearest[i], j), nn, j);
+    jv_permutation(data_.data().data(idx, 0),
+                   data_.data().data(nearest[i], 0),
+                   data_.elements(), w[0], w[1], w[2], spobj[0], spobj[1],
+                   t, i, nn, func);
+  }
+  // The first presorted.size() elements of tperm now contain the permutation
+  // for idx determined by the equal-index neighbour.
+  std::vector<bool> uncounted(nn, true);
+  std::vector<size_t> freq(nn, 1u), equiv_to(nn, 0u);
+  for (size_t i=0; i<nn; ++i) equiv_to[i] = i;
+  //bool all_agreee;
+  for (size_t i=0; i<nn-1; ++i) if (uncounted[i])
+  for (size_t j=i+1; j<nn; ++j) if (uncounted[j] && t.vector_approx(i, j)) {
+    uncounted[j] = false;
+    ++freq[i];
+    freq[j] = 0;
+    equiv_to[j] = i;
+  }
+  size_t hfidx = std::distance(freq.begin(), std::max_element(freq.begin(), freq.end()));
+  // Pick the highest-frequency permutation as the right one
+  for (size_t j=0; j<p.numel(); ++j) p.insert(t.getvalue(hfidx, j), idx, j);
+  // If the highest frequency is nearest.size() then all permutations agree.
+  // Otherwise we need to indicate that the disagreeing nearest are not done.
+  if (freq[hfidx] < nn)
+  for (size_t i=0; i<nn; ++i) if (equiv_to[i] != hfidx) done[nearest[i]] = false;
+  return true;
+}

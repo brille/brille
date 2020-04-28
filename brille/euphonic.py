@@ -112,7 +112,7 @@ class BrEu:
         # each [anything]
         elements = (1, 3*n_io, 0) # scalar, (eigen)vector, matrix
         self.grid.fill(frqs_vecs, elements)
-        # self.sort_branches()
+        self.sort_branches()
         self.parallel = parallel
 
     def sort_branches(self, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
@@ -456,7 +456,7 @@ def gaussian(x_0, x_i, y_i, fwhm):
         fwhm = fwhm[0]
     sigma = fwhm/np.sqrt(np.log(256))
     z_0 = (x_0-x_i)/sigma
-    y_0 = norm.pdf(z_0) * y_i
+    y_0 = norm.pdf(z_0.T).T * y_i
     return y_0
 
 
@@ -466,7 +466,7 @@ def lorentzian(x_0, x_i, y_i, fwhm):
         fwhm = fwhm[0]
     gamma = fwhm/2
     z_0 = (x_0-x_i)/gamma
-    y_0 = cauchy.pdf(z_0) * y_i
+    y_0 = cauchy.pdf(z_0.T).T * y_i
     return y_0
 
 
