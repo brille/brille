@@ -24,6 +24,7 @@
 #include "arrayvector.hpp"
 #include "latvec.hpp"
 #include "debug.hpp"
+#include "utilities.hpp"
 
 template<typename T> static std::vector<T> unique(const std::vector<T>& x){
     std::vector<T> out;
@@ -318,16 +319,18 @@ public:
     size_t d = this->vertices.numel();
     if (other.vertices.numel() != d) throw std::runtime_error("Only equal dimensionality polyhedra can be combined.");
     // combine all vertices, points, and normals; adjusting the fpv and vpf indexing
-    size_t tvn = this->vertices.size(), ovn = other.vertices.size();
-    size_t tfn = this->points.size(), ofn = other.points.size();
+    int tvn = static_cast<int>(this->vertices.size());
+    int tfn = static_cast<int>(this->points.size());
+    size_t ovn = other.vertices.size();
+    size_t ofn = other.points.size();
     ArrayVector<double> v(d, tvn+ovn);
     ArrayVector<double> p(d, tfn+ofn), n(d, tfn+ofn);
-    for (size_t i=0; i<tvn; ++i) v.set(i,     this->vertices.extract(i));
-    for (size_t i=0; i<ovn; ++i) v.set(tvn+i, other.vertices.extract(i));
-    for (size_t i=0; i<tfn; ++i) p.set(i,     this->points.extract(i));
-    for (size_t i=0; i<ofn; ++i) p.set(tfn+i, other.points.extract(i));
-    for (size_t i=0; i<tfn; ++i) n.set(i,     this->normals.extract(i));
-    for (size_t i=0; i<ofn; ++i) n.set(tfn+i, other.normals.extract(i));
+    for (size_t i=0; i<signed_to_unsigned<size_t>(tvn); ++i) v.set(i,     this->vertices.extract(i));
+    for (size_t i=0; i<ovn; ++i)                             v.set(tvn+i, other.vertices.extract(i));
+    for (size_t i=0; i<signed_to_unsigned<size_t>(tfn); ++i) p.set(i,     this->points.extract(i));
+    for (size_t i=0; i<ofn; ++i)                             p.set(tfn+i, other.points.extract(i));
+    for (size_t i=0; i<signed_to_unsigned<size_t>(tfn); ++i) n.set(i,     this->normals.extract(i));
+    for (size_t i=0; i<ofn; ++i)                             n.set(tfn+i, other.normals.extract(i));
     std::vector<std::vector<int>> fpv(this->faces_per_vertex), vpf(this->vertices_per_face);
     fpv.resize(tvn+ovn); vpf.resize(tfn+ofn);
     for (size_t i=0; i<ovn; ++i) for (auto j: other.faces_per_vertex[i]) fpv[tvn+i].push_back(tfn+j);
@@ -444,7 +447,7 @@ protected:
     std::vector<bool> flg;
     for (size_t i=0; i<vertices.size(); ++i) flg.push_back(true);
     int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
-    size_t n = vertices.numel();
+    int n = static_cast<int>(vertices.numel());
     for (size_t i=1; i<vertices.size(); ++i) for (size_t j=0; j<i; ++j)
       if (flg[i]&&flg[j]) flg[i]=!approx_vector(n, vertices.data(i), vertices.data(j), t);
     this->vertices = this->vertices.extract(flg);
@@ -452,7 +455,7 @@ protected:
     void special_keep_unique_vertices(){
         std::vector<bool> flg(vertices.size(), true);
         int t = 3; // a tolerance multiplier tuning parameter, 3 seems to work OK.
-        size_t n = vertices.numel();
+        int n = static_cast<int>(vertices.numel());
         for (size_t i=1; i<vertices.size(); ++i)
             for (size_t j=0; j<i; ++j)
                 if (flg[i] && flg[j])
@@ -550,7 +553,7 @@ protected:
         // if (std::find(vpf[facet].begin(), vpf[facet].end(), static_cast<int>(i))==vpf[facet].end()) vpf[facet].push_back(i);
         flag = true;
         for (auto vertex: vpf[facet]) if (static_cast<size_t>(vertex)==i) flag = false;
-        if (flag) vpf[facet].push_back(i);
+        if (flag) vpf[facet].push_back(static_cast<int>(i));
       }
     }
     verbose_update("Found vertices per face array\n", vpf);
@@ -568,7 +571,7 @@ protected:
     for (size_t i=0; i<max; ++i) map.push_back(is_polygon[i] ? count++ : max);
     std::vector<std::vector<int>> reduced_fpv(faces_per_vertex.size());
     for (size_t i=0; i<faces_per_vertex.size(); ++i)
-    for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(map[facet]);
+    for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(static_cast<int>(map[facet]));
     this->faces_per_vertex = reduced_fpv;
     verbose_update("Faces per vertex reduced to\n", faces_per_vertex);
 
@@ -685,7 +688,7 @@ protected:
           throw std::runtime_error("Error finding minimum winding angle polygon vertex");
         }
         perm[i] = min_idx;
-        used.push_back(min_idx);
+        used.push_back(static_cast<int>(min_idx));
       }
       verbose_update("Producing sorting permutation",perm);
       for (size_t i=0; i<facet.size(); ++i) sorted_vpp[j].push_back(facet[perm[i]]); // this could be part of the preceeding loop.
@@ -869,7 +872,7 @@ public:
         // compile the list of to-be-deleted vertices
         del_vertices.clear();
         for (size_t j=0; j<keep.size(); ++j) if(!keep.getvalue(j))
-          del_vertices.push_back(j);
+          del_vertices.push_back(static_cast<int>(j));
         verbose_update("Vertices beyond the cut ", del_vertices);
         // and the list of facets which need to be cut or removed
         cut.clear();
@@ -877,7 +880,7 @@ public:
             bool tocut = false;
             for (auto x: del_vertices)
                 if (std::find(vpf[f].begin(), vpf[f].end(), x) != vpf[f].end()) tocut = true;
-            if (tocut) cut.push_back(f);
+            if (tocut) cut.push_back(static_cast<int>(f));
         }
         verbose_update("Facets ",cut," are cut by the plane");
         // find the new intersection points of two neighbouring facets and the cutting plane
@@ -1028,7 +1031,7 @@ public:
     }
     return pout;
   }
-  ArrayVector<double> rand_rejection(const size_t n, const size_t seed=0) const {
+  ArrayVector<double> rand_rejection(const size_t n, const unsigned int seed=0) const {
     // initialize the random number generator with an optional non-zero seed:
     std::default_random_engine generator(seed>0 ? seed : std::chrono::system_clock::now().time_since_epoch().count());
     // construct the uniform distribution spanning [0,1]

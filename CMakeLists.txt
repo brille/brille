@@ -121,7 +121,7 @@ message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
 
 # We will always build the python module
-list(APPEND CXX_TARGETS _brille)
+list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
 
 if(BRILLE_BUILD_TESTING)
   list(APPEND CXX_TARGETS test_brille) # Include the C++ test target
@@ -129,7 +129,7 @@ if(BRILLE_BUILD_TESTING)
 endif()
 
 # Target for python module
-pybind11_add_module(${BRILLE_PYTHON_MODULE} MODULE wrap/_brille.cpp "")
+pybind11_add_module(${BRILLE_PYTHON_MODULE} MODULE)
 add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)

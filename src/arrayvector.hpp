@@ -25,6 +25,7 @@
 // #include <vector>
 #include <algorithm>
 // #include <numeric>
+#include <complex> // for +=  support in unsafe_interpolate_to
 #include "utilities.hpp"
 // #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides debug_update()
 
@@ -168,6 +169,14 @@ public:
     if (M && N){
       _data = new T[M*N]();
       for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) _data[i*M+j] = static_cast<T>(va[i][j]);
+    }
+  }
+  //! Constructor from std::array<T,N>
+  template<class R, size_t Nel> ArrayVector(const std::array<R,Nel>& va):
+  M(Nel), N(1u), _data(nullptr){
+    if (M && N){
+      _data = new T[M*N]();
+      for (size_t j=0; j<M; ++j) _data[0*M+j] = static_cast<T>(va[j]);
     }
   }
   //! Type converting copy constructor
@@ -402,6 +411,41 @@ public:
     }
     si.n = si.oneveca ? b.size() : a.size();
     si.m = si.scalara? b.numel() : a.numel();
+    if (si.oneveca^si.onevecb){
+      si.aorb = !si.oneveca; // hopefully they're both scalars (or non scalars and the same)
+    } else {
+      si.aorb = !si.scalara; // in reality we need to make sure out gets *resized* to (m,n) no matter what
+    }
+    return si;
+  }
+  //! Ensure that a std::array object is consistent for binary operations
+  template<typename R, size_t Nel, typename=typename std::enable_if<std::is_convertible<T,R>::value||std::is_convertible<R,T>::value>::type>
+  AVSizeInfo consistency_check(const std::array<R,Nel>&) const {
+    const ArrayVector<T>& a = *this;
+    AVSizeInfo si;
+    si.oneveca = a.size() ==1u;
+    si.scalara = a.numel()==1u;
+    if (Nel!=1u && (a.numel()!=Nel && a.size()!=Nel)){
+      std::string err_msg = "std::array has size " + std::to_string(Nel);
+      err_msg += " but needs to have " + std::to_string(a.size()) + " or ";
+      err_msg += std::to_string(a.numel()) + " for binary operation with this";
+      err_msg += " ArrayVector";
+      throw std::runtime_error(err_msg);
+    }
+    si.onevecb = 1u==Nel || a.size()  != Nel; // if a.size() ==Nel then b is a single vector (and Nel==a.numel() or 1)
+    si.scalarb = 1u==Nel || a.numel() != Nel; // if a.numel()==Nel then b is a scalar array (and Nel==a.size() or 1)
+    // a std::array is either a scalar array or single vector. it is *never* multidimensional
+    // if it happens that *this is square, the orientation of the std::array is arbitrary
+    // typically it is a single vector, so default to that interpretation
+    if (a.size() == a.numel() && a.size() == Nel) si.onevecb = true;
+    size_t bsize =si.scalarb ? 1u : Nel;
+    size_t bnumel=si.onevecb ? 1u : Nel;
+    si.singular = si.scalarb && Nel!=a.numel(); // if both have numel==1 don't set the singular flag
+    if (!(si.scalara^si.scalarb) && a.numel()!=Nel){
+      throw std::runtime_error("binary operation(a,b) requires a.numel()==b.numel() or b.numel()==1");
+    }
+    si.n = si.oneveca ? bsize : a.size();
+    si.m = si.scalara? bnumel : a.numel();
     if (si.oneveca^si.onevecb){
       si.aorb = !si.oneveca; // hopefully they're both scalars (or non scalars and the same)
     } else {

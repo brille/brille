@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-
+#include <tuple>
 #include "bz_nest.hpp"
 
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
@@ -10,15 +10,15 @@ TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   double max_volume = 0.01;
   size_t number_rho = 100;
   size_t max_branchings = 5;
-  BrillouinZoneNest3<double> bzn0(bz, number_rho, max_branchings);
-  BrillouinZoneNest3<double> bzn1(bz, max_volume, max_branchings);
+  BrillouinZoneNest3<double,double> bzn0(bz, number_rho, max_branchings);
+  BrillouinZoneNest3<double,double> bzn1(bz, max_volume, max_branchings);
 }
 TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
   Direct d(10.75, 10.75, 10.75, PI/2, PI/2, PI/2, 525);
   BrillouinZone bz(d.star());
   size_t number_rho = 1000;
   size_t max_branchings = 5;
-  BrillouinZoneNest3<double> bzn(bz, number_rho, max_branchings);
+  BrillouinZoneNest3<double,double> bzn(bz, number_rho, max_branchings);
 
   SECTION("get_xyz"){auto verts = bzn.get_xyz(); REQUIRE(verts.size() > 0u);}
   SECTION("get_hkl"){auto verts = bzn.get_hkl(); REQUIRE(verts.size() > 0u);}
@@ -33,10 +33,13 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   BrillouinZone bz(r);
   double max_volume = 0.01;
   size_t max_branchings = 5;
-  BrillouinZoneNest3<double> bzn(bz, max_volume, max_branchings);
+  BrillouinZoneNest3<double,double> bzn(bz, max_volume, max_branchings);
 
   ArrayVector<double> Qmap = bzn.get_hkl();
-  bzn.replace_data( bzn.get_xyz() );
+  std::vector<size_t> shape{Qmap.size(), 1, 3};
+  std::array<size_t,3> elements{0,3,0};
+  RotatesLike rt = RotatesLike::Reciprocal;
+  bzn.replace_value_data( bzn.get_xyz(), shape, elements, rt );
 
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
@@ -53,7 +56,8 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
     Q.set(i, rli*Qmap.extract(i%nQmap) + (1-rli)*Qmap.extract((i+1)%nQmap) );
   }
 
-  ArrayVector<double> intres = bzn.interpolate_at(Q,1);
+  ArrayVector<double> intres, dummy;
+  std::tie(intres, dummy) = bzn.ir_interpolate_at(Q,1);
   ArrayVector<double> antres = Q.get_xyz();
 
   ArrayVector<double> diff = intres - antres;

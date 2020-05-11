@@ -13,11 +13,11 @@ bool HallSymbol::from_ascii(const std::string& s){
   SeitzSymbol ssym;
   std::istringstream stream(s);
   while (stream.good()){
-    c = stream.get();
+    c = char(stream.get());
     // if c is one of the Lattice symbols:
     if (std::strchr("PABCIRF",c)){
       this->setl(c, isneg);
-      if (' '==stream.peek()) c = stream.get();
+      if (' '==stream.peek()) c = char(stream.get());
       isneg = false;
     }
     // the subscripts a, b, c, n, u, v, w, d, 1, 2, 3, 4, 5 are all translation
@@ -35,9 +35,9 @@ bool HallSymbol::from_ascii(const std::string& s){
     // add the axis to the Seitz symbol and reset the superscript flag
     if (hassubsup){
       // superscript follows -- advance to the next character
-      if ('^'==c) { issup = true; c = stream.get(); }
+      if ('^'==c) { issup = true; c = char(stream.get()); }
       // subscript follows -- advance to the next character
-      if ('_'==c) { issub = true; c = stream.get(); }
+      if ('_'==c) { issub = true; c = char(stream.get()); }
       if (issub && std::strchr("abcnuvwd12345",c)) {
         ssym.add_tran(c);
         issub = false;

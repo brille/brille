@@ -23,12 +23,12 @@ typedef long slong;
 #include "bz.hpp"
 #include "trellis.hpp"
 
-template<class T> class BrillouinZoneTrellis3: public PolyhedronTrellis<T>{
+template<class T, class R> class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
   BrillouinZone brillouinzone;
 public:
   template<typename... A>
   BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
-    PolyhedronTrellis<T>(bz.get_ir_polyhedron(), args...),
+    PolyhedronTrellis<T,R>(bz.get_ir_polyhedron(), args...),
     brillouinzone(bz) {}
   //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
@@ -47,50 +47,59 @@ public:
   //! get the indices forming the faces of the tetrahedra
   std::vector<std::array<index_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 
-  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
-    LQVec<R> q(x.get_lattice(), x.size());
+  template<typename S>
+  std::tuple<ArrayVector<T>,ArrayVector<R>>
+  interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const{
+    LQVec<S> q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       q = x;
-    } else if (!brillouinzone.moveinto(x, q, tau, nthreads)){
+    } else if (!brillouinzone.moveinto(x, q, tau, nth)){
       std::string msg;
       msg = "Moving all points into the first Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> result = (nthreads < 2)
-      ? this->PolyhedronTrellis<T>::interpolate_at(q.get_xyz())
-      : this->PolyhedronTrellis<T>::interpolate_at(q.get_xyz(), nthreads);
-    return result;
+    if (nth < 2)
+      return this->PolyhedronTrellis<T,R>::interpolate_at(q.get_xyz());
+    return this->PolyhedronTrellis<T,R>::interpolate_at(q.get_xyz(), nth);
   }
 
-  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
-    LQVec<R> ir_q(x.get_lattice(), x.size());
+  template<typename S>
+  std::tuple<ArrayVector<T>,ArrayVector<R>>
+  ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const{
+    verbose_update("BZTrellisQ::ir_interpoalte_at called with ",nth," threads");
+    LQVec<S> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
-    std::vector<std::array<int,9>> rots(x.size());
+    std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
-      for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
-    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rots, nthreads)){
+    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nth)){
       std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> ir_result = (nthreads < 2)
-      ? this->PolyhedronTrellis<T>::interpolate_at(ir_q.get_xyz())
-      : this->PolyhedronTrellis<T>::interpolate_at(ir_q.get_xyz(), nthreads);
-
-    if (nthreads < 2)
-      this->data().rotate_in_place(ir_result, rots);
-    else
-      this->data().rotate_in_place(ir_result, rots, nthreads);
-
-    return ir_result;
+    ArrayVector<T> vals;
+    ArrayVector<R> vecs;
+    std::tie(vals, vecs) = (nth>1)
+        ? this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz(), nth)
+        : this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz());
+    // we always need the pointgroup operations to 'rotate'
+    PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
+    // and might need the Phonon Gamma table
+    GammaTable pgt;
+    if (RotatesLike::Gamma == this->data().vectors().rotateslike())
+      pgt = brillouinzone.get_phonon_gamma_table();
+    // actually perform the rotation to Q
+    this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nth);
+    this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nth);
+    // we're done so bundle the output
+    return std::make_tuple(vals, vecs);
   }
 };
 

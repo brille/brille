@@ -99,6 +99,9 @@ public:
   // extract overloads preserving lattice information
   //! Return the ith single-array LDVec
   LDVec<T> extract(const size_t i=0) const ;
+  /*! \brief Extract the first `num` vectors from an LDVec
+    @param num the number of vectors to return
+    @returns a LDVec containing the `num` vectors */
   LDVec<T> first(const size_t num) const;
   /*! Return a collection of arrays from the LDVec
     @param n the number of arrays to return
@@ -236,6 +239,9 @@ public:
   // extract overloads preserving lattice information
   //! Return the ith single-array LQVec
   LQVec<T> extract(const size_t i=0) const ;
+  /*! \brief Extract the first `num` vectors from an LQVec
+    @param num the number of vectors to return
+    @returns a LQec containing the `num` vectors */
   LQVec<T> first(const size_t num) const;
   /*! Return a collection of arrays from the LQVec
     @param n the number of arrays to return

@@ -23,7 +23,7 @@ typedef long slong;
 #include "bz.hpp"
 #include "mesh.hpp"
 
-template<class T> class BrillouinZoneMesh3: public Mesh3<T>{
+template<class T, class S> class BrillouinZoneMesh3: public Mesh3<T,S>{
 protected:
   BrillouinZone brillouinzone;
 public:
@@ -41,7 +41,7 @@ public:
   // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
   template<typename... A>
   BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
-    Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
+    Mesh3<T,S>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
     brillouinzone(bz) {}
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
@@ -56,33 +56,37 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   }
-  template<typename R> ArrayVector<T> interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
+
+  template<typename R>
+  std::tuple<ArrayVector<T>,ArrayVector<S>>
+  ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
     LQVec<R> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
-    std::vector<std::array<int,9>> rots(x.size());
-    BrillouinZone bz = this->get_brillouinzone();
-
-    std::string msg;
+    std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);
     if (no_move){
-      // Special mode for testing where no specified points are moved
-      // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
-      // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
-      for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
-    } else if (!bz.ir_moveinto(x, ir_q, tau, rots, nthreads)){
+    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nthreads)){
+      std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> ir_result = (nthreads < 2)
-      ? this->Mesh3<T>::interpolate_at(ir_q.get_xyz())
-      : this->Mesh3<T>::parallel_interpolate_at(ir_q.get_xyz(), nthreads);
-
-    if (nthreads < 2)
-      this->data().rotate_in_place(ir_result, rots);
-    else
-      this->data().rotate_in_place(ir_result, rots, nthreads);
-      
-    return ir_result;
+    // perform the interpolation within the irreducible Brillouin zone
+    ArrayVector<T> vals;
+    ArrayVector<S> vecs;
+    std::tie(vals,vecs) = (nthreads > 1)
+        ? this->Mesh3<T,S>::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
+        : this->Mesh3<T,S>::interpolate_at(ir_q.get_xyz());
+    // we always need the pointgroup operations to 'rotate'
+    PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
+    // and might need the Phonon Gamma table
+    GammaTable pgt;
+    if (RotatesLike::Gamma == this->data().vectors().rotateslike())
+      pgt = brillouinzone.get_phonon_gamma_table();
+    // actually perform the rotation to Q
+    this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nthreads);
+    this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nthreads);
+    // we're done so bundle the output
+    return std::make_tuple(vals, vecs);
   }
 };
 

@@ -92,23 +92,19 @@ template<typename T> ArrayVector<T> LQVec<T>::get_hkl() const {
   return ArrayVector<T>(this->numel(),this->size(),this->_data); // strip off the Lattice information
 }
 template<typename T> ArrayVector<double> LQVec<T>::get_xyz() const {
-  double *toxyz = nullptr;
-  toxyz = new double[9]();
+  double toxyz[9];
   Reciprocal lat = this->get_lattice();
   lat.get_xyz_transform(toxyz);
   ArrayVector<double> xyz(this->numel(),this->size());
   for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(xyz.data(i), toxyz, this->data(i));
-  delete[] toxyz;
   return xyz;
 }
 template<typename T> LDVec<double> LQVec<T>::star() const {
-  double *cvmt = nullptr;
-  cvmt = new double[9]();
-    (this->lattice).get_covariant_metric_tensor(cvmt);
-    LDVec<double> slv( (this->lattice).star(), this->size() );
+  double cvmt[9];
+  (this->lattice).get_covariant_metric_tensor(cvmt);
+  LDVec<double> slv( (this->lattice).star(), this->size() );
   for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(slv.data(i), cvmt, this->data(i));
-    slv /= 2.0*PI; // ai= gij/2/pi * ai_star
-  delete[] cvmt;
+  slv /= 2.0*PI; // ai= gij/2/pi * ai_star
   return slv;
 }
 // template<typename T> template<typename R> LQVec<double> LQVec<T>::cross(const LQVec<R> * vec) const {
@@ -124,16 +120,13 @@ template<typename T> LQVec<double> LQVec<T>::cross(const size_t i, const size_t 
   bool bothok = (i<this->size() && j<this->size() && 3u==this->numel());
   LQVec<double> out(this->get_lattice(), bothok? 1u : 0u);
   if (bothok){
-    double *rlucross = nullptr;
-    rlucross = new double[3]();
+    double rlucross[3];
     vector_cross<double,T,T,3>(rlucross, this->data(i), this->data(j));
 
     Reciprocal rlat = this->get_lattice();
     LDVec<double> ldv( rlat.star(), 1u, rlucross);
     ldv *= rlat.get_volume()/2.0/PI;
     out =  ldv.star();
-
-    delete[] rlucross;
   }
   return out;
 }

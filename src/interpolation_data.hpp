@@ -17,21 +17,43 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <cassert>
+#include <omp.h>
 #include "arrayvector.hpp"
+#include "latvec.hpp"
+#include "phonon.hpp"
 
 #ifndef _INTERPOLATION_DATA_H_
 #define _INTERPOLATION_DATA_H_
 
-template<class T> class InterpolationData{
-  typedef unsigned long element_t;
-  typedef std::vector<size_t> ShapeType;
-  typedef std::array<element_t,3> ElementsType;
-  ArrayVector<T> data_;   //!< The stored ArrayVector indexed like the holding-PolyhedronTrellis' vertices
-  ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data` array
-  ElementsType elements_; //!< The number of scalars, normalised eigenvector elements, vector elements, and matrix elements per data array
+typedef unsigned long element_t;
+typedef std::vector<size_t> ShapeType;
+typedef std::array<element_t,3> ElementsType;
+
+template<class T> struct is_complex {enum{value = false};};
+template<class T> struct is_complex<std::complex<T>> {enum {value=true};};
+template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
+
+enum class RotatesLike {
+  Real, Reciprocal, Axial, Gamma
+};
+
+template<class T> class InnerInterpolationData{
+  ArrayVector<T> data_;   //!< The stored eigenvalue-like ArrayVector indexed like the holding-Object's vertices
+  ShapeType shape_;       //!< A std::vector to indicate a possible higher-dimensional shape of each `data_` array
+  ElementsType elements_; //!< The number of scalars, vector elements, and matrix elements per `data_` array
   element_t branches_;    //!< The number of branches contained per data array
+  RotatesLike rotlike_;   //!< How the elements of `data_` rotate
 public:
-  InterpolationData(): data_({0,0}), shape_({0,0}), elements_({{0,0,0}}), branches_(0){};
+  InnerInterpolationData(): data_({0,0}), shape_({0,0}), elements_({{0,0,0}}), branches_(0), rotlike_{RotatesLike::Real} {};
+  //
+  void setup_fake(const size_t sz, const element_t br){
+    data_.refresh(br, sz);
+    shape_ = {sz, static_cast<size_t>(br)};
+    elements_ = {1u,0u,0u};
+    branches_ = br;
+  }
+  //
   size_t size(void) const {return data_.size();}
   size_t numel(void) const {return data_.numel();}
   const ArrayVector<T>& data(void) const {return data_;}
@@ -45,13 +67,39 @@ public:
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
   void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&,const size_t) const;
   //
-  bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&) const;
-  bool rotate_in_place(ArrayVector<T>&, const std::vector<std::array<int,9>>&, const int) const;
-
+  template<class R, class RotT>
+  bool rotate_in_place(ArrayVector<T>& x,
+                       const LQVec<R>& q,
+                       const RotT& rt,
+                       const PointSymmetry& ps,
+                       const std::vector<size_t>& r,
+                       const std::vector<size_t>& invr,
+                       const int nth) const {
+    switch (rotlike_){
+      case RotatesLike::Real: return this->rip_real(x, ps, r, invr, nth);
+      case RotatesLike::Axial: return this->rip_axial(x, ps, r, invr, nth);
+      case RotatesLike::Reciprocal: return this->rip_recip(x, ps, r, invr, nth);
+      case RotatesLike::Gamma: return this->rip_gamma(x, q, rt, ps, r, invr, nth);
+      default:
+        throw std::runtime_error("Impossible RotatesLike value!");
+    }
+  }
+  //
+  RotatesLike rotateslike() const { return rotlike_; }
+  RotatesLike rotateslike(const RotatesLike a) {
+    rotlike_ = a;
+    return rotlike_;
+  }
   // Replace the data within this object.
-  template<typename I> void replace_data(const ArrayVector<T>& nd, const ShapeType& ns, const std::array<I,3>& ne){
+  template<typename I> void replace_data(
+      const ArrayVector<T>& nd,
+      const ShapeType& ns,
+      const std::array<I,3>& ne,
+      const RotatesLike rl = RotatesLike::Real
+    ){
     data_ = nd;
     shape_ = ns;
+    rotlike_ = rl;
     // convert the elements datatype as necessary
     for (size_t i=0; i<3u; ++i) elements_[i] = static_cast<element_t>(ne[i]);
     if (ne[1]%3)
@@ -66,12 +114,12 @@ public:
     if (ns.size()>2){
       // if the number of dimensions of the shape array is greater than two,
       // the second element is the number of modes per point                    */
-      branches_ = ns[1];
-      for (size_t i=2u; i<ns.size(); ++i) total_elements *= ns[i];
+      branches_ = static_cast<element_t>(ns[1]);
+      for (size_t i=2u; i<ns.size(); ++i) total_elements *= static_cast<element_t>(ns[i]);
     } else {
       // shape is [n_points, n_elements] or [n_points,], so there is only one mode
       branches_ = 1u;
-      total_elements = ns.size() > 1 ? ns[1] : 1u;
+      total_elements = static_cast<element_t>( ns.size() > 1 ? ns[1] : 1u );
     }
     if (0 == known_elements) elements_[0] = total_elements;
     if (known_elements && known_elements != total_elements){
@@ -93,10 +141,8 @@ public:
   void replace_data(const ArrayVector<T>& nd){
     return this->replace_data(nd, ElementsType({{0,0,0}}));
   }
-  // Calculate the Debye-Waller factor for the provided Q points and ion masses
-  template<template<class> class A>
-  ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
   element_t branch_span() const { return this->branch_span(elements_);}
+  //
   std::string to_string() const {
     std::string str= "( ";
     for (auto s: shape_) str += std::to_string(s) + " ";
@@ -120,8 +166,6 @@ public:
     return str;
   }
 private:
-  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const;
-  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
   template<typename I> element_t branch_span(const std::array<I,3>& e) const {
     return static_cast<element_t>(e[0])+static_cast<element_t>(e[1])+static_cast<element_t>(e[2]);
   }
@@ -129,10 +173,26 @@ private:
     ElementsType no{elements_[0], elements_[1]/3u, elements_[2]/9u};
     return no;
   }
+  bool rip_real(ArrayVector<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_recip(ArrayVector<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_axial(ArrayVector<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R>
+  bool rip_gamma_complex(ArrayVector<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class S=T>
+  enable_if_t<is_complex<S>::value, bool>
+  rip_gamma(ArrayVector<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+    return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
+  }
+  template<class R, class S=T>
+  enable_if_t<!is_complex<S>::value, bool>
+  rip_gamma(ArrayVector<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+    throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
+  }
 };
 
+
 template<typename T> template<typename I, typename>
-void InterpolationData<T>::interpolate_at(
+void InnerInterpolationData<T>::interpolate_at(
   const std::vector<I>& indices,
   const std::vector<double>& weights,
   ArrayVector<T>& out,
@@ -177,7 +237,7 @@ void InterpolationData<T>::interpolate_at(
 }
 
 template<typename T> template<typename I, typename>
-void InterpolationData<T>::interpolate_at(
+void InnerInterpolationData<T>::interpolate_at(
   const std::vector<std::pair<I,double>>& indices_weights,
   ArrayVector<T>& out,
   const size_t to
@@ -217,48 +277,325 @@ void InterpolationData<T>::interpolate_at(
   // }
 }
 
-
-
-
 template<typename T>
-ArrayVector<double> InterpolationData<T>::debye_waller_sum(
-  const LQVec<double>& Q,
-  const double t_K
-) const{
-  return this->debye_waller_sum(Q.get_xyz(), t_K);
+bool InnerInterpolationData<T>::rip_recip(
+  ArrayVector<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+) const {
+  omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
+  ElementsType no = this->count_scalars_vectors_matrices();
+  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
+    return false;
+  T tmp_v[3], tmp_m[9];
+  element_t offset, sp = this->branch_span();
+  std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(offset, tmp_v, tmp_m) firstprivate(ident,no, sp, xsize) schedule(static)
+  for (long long si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    if (!approx_matrix(3, ident.data(), ptsym.get(r[i]).data()))
+    for (element_t b=0; b<branches_; ++b){
+      // scalar elements do not need to be rotated, so skip them
+      offset = b*sp + no[0];
+      // we chose R such that Q = Rᵀq + τ.
+      for (element_t v=0; v<no[1]; ++v){
+        mul_mat_vec(tmp_v, 3u, transpose(ptsym.get(r[i])).data(), x.data(i, offset+v*3u));
+        for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
+      }
+      offset += no[1]*3u;
+      for (element_t m=0; m<no[2]; ++m){
+        // Calculate R*M*R⁻¹ in two steps
+        // first calculate M*R⁻¹, storing in tmp_m
+        mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), transpose(ptsym.get(invR[i])).data());
+        // next calculate R*tmp_m, storing back in the x array
+        mul_mat_mat(x.data(i, offset+m*9u), 3u, transpose(ptsym.get(r[i])).data(), tmp_m);
+      }
+    }
+  }
+  return true;
 }
 
 template<typename T>
-ArrayVector<double> InterpolationData<T>::debye_waller_sum(
-  const ArrayVector<double>& Q,
-  const double t_K
+bool InnerInterpolationData<T>::rip_real(
+  ArrayVector<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
+  omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
+  ElementsType no = this->count_scalars_vectors_matrices();
+  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
+    return false;
+  T tmp_v[3], tmp_m[9];
+  element_t offset, sp = this->branch_span();
+  std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(offset, tmp_v, tmp_m) firstprivate(ident, no, sp, xsize) schedule(static)
+  for (long long si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    if (!approx_matrix(3, ident.data(), ptsym.get(r[i]).data()))
+    for (element_t b=0; b<branches_; ++b){
+      // scalar elements do not need to be rotated, so skip them
+      offset = b*sp + no[0];
+      // rotate real vectors: since Q = Rᵀq + τ → Rv
+      for (element_t v=0; v<no[1]; ++v){
+        mul_mat_vec(tmp_v, 3u, ptsym.get(r[i]).data(), x.data(i, offset+v*3u));
+        for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
+      }
+      offset += no[1]*3u;
+      for (element_t m=0; m<no[2]; ++m){
+        // Calculate R⁻¹*M*R in two steps
+        // first calculate M*R, storing in tmp_m
+        mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), ptsym.get(invR[i]).data());
+        // next calculate R⁻¹*tmp_m, storing back in the x array
+        mul_mat_mat(x.data(i, offset+m*9u), 3u, ptsym.get(r[i]).data(), tmp_m);
+      }
+    }
+  }
+  return true;
+}
+
+template<typename T>
+bool InnerInterpolationData<T>::rip_axial(
+  ArrayVector<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+) const {
+  omp_set_num_threads((nthreads > 0) ? nthreads : omp_get_max_threads());
+  ElementsType no = this->count_scalars_vectors_matrices();
+  if (!std::any_of(no.begin() + 1, no.end(), [](element_t n) {return n > 0; }))
+      return false;
+  T tmp_v[3], tmp_m[9];
+  std::vector<T> detR;
+  if (no[1])
+      std::transform(r.begin(), r.end(), std::back_inserter(detR),
+          [ptsym](const size_t z) { return static_cast<T>(matrix_determinant(ptsym.get(z).data())); });
+  element_t offset, sp = this->branch_span();
+  std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR,detR) private(offset, tmp_v, tmp_m) firstprivate(ident, no, sp, xsize) schedule(static)
+  for (long long si = 0; si < xsize; ++si) {
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    if (!approx_matrix(3, ident.data(), ptsym.get(r[i]).data()))
+    for (element_t b = 0; b < branches_; ++b) {
+        // scalar elements do not need to be rotated, so skip them
+        offset = b * sp + no[0];
+        // rotate real vectors: since Q = Rᵀq + τ → R⁻¹*v
+        for (element_t v = 0; v < no[1]; ++v) {
+            mul_mat_vec(tmp_v, 3u, ptsym.get(invR[i]).data(), x.data(i, offset + v * 3u));
+            for (int j = 0; j < 3; ++j) x.insert(detR[i]*tmp_v[j], i, offset + v * 3u + j);
+        }
+        offset += no[1] * 3u;
+        for (element_t m = 0; m < no[2]; ++m) {
+            // Calculate R⁻¹*M*R in two steps
+            // first calculate M*R, storing in tmp_m
+            mul_mat_mat(tmp_m, 3u, x.data(i, offset + m * 9u), ptsym.get(r[i]).data());
+            // next calculate R⁻¹*tmp_m, storing back in the x array
+            mul_mat_mat(x.data(i, offset + m * 9u), 3u, ptsym.get(invR[i]).data(), tmp_m);
+        }
+    }
+  }
+  return true;
+}
+
+template<class T, class R, class S = typename std::common_type<T,R>::type>
+static std::complex<S> e_iqd(const LQVec<T>& q, const size_t i, const ArrayVector<R>& d, const size_t j){
+  const double pi = 3.14159265358979323846;
+  S dotqd{0};
+  for (size_t k=0; k<3u; ++k) dotqd += q.getvalue(i,k) * d.getvalue(j,k);
+  std::complex<S> i_2pi_x(0, 2*pi*dotqd);
+  return std::exp(i_2pi_x);
+}
+
+template<typename T> template<typename R>
+bool InnerInterpolationData<T>::rip_gamma_complex(
+  ArrayVector<T>& x, const LQVec<R>& q, const GammaTable& pgt,
+  const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
+  const int nthreads
+) const {
+  // construct a lambda to calculate the phase for qᵢ, and [R⁻¹xₖ - xᵥ]
+  auto e_iqd_gt = [q,pgt](size_t i, element_t k, size_t r){
+    return e_iqd(q, i, pgt.vectors(), pgt.vector_index(k,r));
+  };
+  /* For speed purposes the GammaTable vectors do not contain lattice information
+  when accessed by .vector, as below. There is another accessor .ldvector which
+  adds the lattice, but this significantly slows down the dot product due to
+  equivalent/inverse lattice checks reconstructing the Direct/Reciprocal objects
+  multiple times *for every q point*(!).
+  To avoid that check we should do it once, now. Then the dot product of
+  q = (h,k,l) and d = (a,b,c) is q⋅d = 2π (h*a + k*b + l*c).
+  */
+  if (! pgt.lattice().isstar(q.get_lattice()))
+    throw std::runtime_error("The q points and GammaTable must be in mutually reciprocal lattices");
+  verbose_update("InnerInterpolationData::rip_gamma_complex called with ",threads," threads");
+  omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
+  ElementsType no = this->count_scalars_vectors_matrices();
+  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
+    return false;
+  // for Γ transformations of tensors, there *must* be N×N in total:
+  size_t Nmat = static_cast<size_t>(std::sqrt(no[2]));
+  if (no[2] != Nmat*Nmat){
+    std::cout << "Atomic displacement Gamma transformation requires NxN 3x3 tensors!" << std::endl;
+    return false;
+  }
+  element_t sp = this->branch_span();
+  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
+#pragma omp parallel for default(none) \
+                         shared(x, q, pgt, ptsym, ridx, invRidx, e_iqd_gt) \
+                         firstprivate(no, Nmat, sp, xsize) \
+                         schedule(static)
+  for (long long si=0; si<xsize; ++si){
+    size_t i = signed_to_unsigned<size_t, long long>(si);
+    element_t offset{0};
+    for (element_t b=0; b<branches_; ++b){
+      // scalar elements do not need to be rotated, so skip them
+      offset = b*sp + no[0];
+      // the *full 3N* eigenvector for mode j transforms as
+      //  ϵʲ(Rq)  =  Γ(q;R) eʲ(q)
+      // where Γ(q;R) is a 3N×3N matrix with elements given by
+      // the submatrices Γₖᵥᵅᵝ(q;R) = Rᵅᵝ δ(v,F₀⁻¹(k,R)) exp{i q⋅[R⁻¹xₖ - xᵥ]}
+      // -- I *think* that for a given k and R ∑ᵥ δ(v,F₀⁻¹(k,R)) ≡ 1
+      //    that is, all equivalent-atom mappings are singular. THIS SHOULD BE VERIFIED!
+      // The GammaTable contains predetermined F₀(k,R) and R⁻¹xₖ - xᵥ
+      // to make this calculation more straightforward.
+      //
+      // Rotate, permute, and apply the phase factor simultaneously into a temporary array
+      if (no[1]>0){
+        T tmp_v[3];
+        std::vector<T> tmpvecs(no[1]*3u);
+        for (element_t k=0; k<no[1]; ++k){
+          // is q already expressed in the right lattice? hopefully!
+          // if the vector rotates by Γ is *must* be complex, so T is a complex type
+          // use its constructor to make i q⋅[R⁻¹xₖ - xᵥ] and calculate the (k,R) phase
+          T phase = e_iqd_gt(i, k, invRidx[i]);
+          mul_mat_vec(tmp_v, 3u, ptsym.get(invRidx[i]).data(), x.data(i, offset+k*3u));
+          auto v0idx = 3u*pgt.F0(k, ridx[i]);
+          for (int j=0; j<3; ++j) tmpvecs[v0idx+j] = phase*tmp_v[j];
+        }
+        for (element_t j=0; j<no[1]*3u; ++j) x.insert(tmpvecs[j], i, offset+j);
+        offset += no[1]*3u;
+      }
+
+      if (no[2]>0){
+        T tmp_m[9], tmp_m2[9];
+        std::vector<T> tmpmats(no[2]*9u);
+        for (element_t n=0; n<Nmat; ++n){
+          T rph = e_iqd_gt(i, n, ridx[i]);
+          element_t v = static_cast<element_t>(pgt.F0(n, ridx[i]));
+          for (element_t m=0; m<Nmat; ++n){
+            T invRph = e_iqd_gt(i, m, invRidx[i]);
+            element_t k = static_cast<element_t>(pgt.F0(m, invRidx[i]));
+            // Calculate R⁻¹*M*R in two steps
+            // first calculate M*R, storing in tmp_m
+            mul_mat_mat(tmp_m, 3u, x.data(i, offset+(n*3u+m)*9u), ptsym.get(ridx[i]).data());
+            // next calculate R⁻¹*tmp_m, storing in the temporary all matrix array
+            mul_mat_mat(tmp_m2, 3u, ptsym.get(invRidx[i]).data(), tmp_m);
+            // include the R R⁻¹ phase factor
+            for (int j=0; j<9; ++j) tmpmats[(v*3u+k)*9u+j] = rph*invRph*tmp_m2[j];
+          }
+        }
+        for (element_t j=0; j<no[2]*9u; ++j) x.insert(tmpmats[j], i, offset+j);
+      }
+    }
+  }
+  return true;
+}
+
+
+template<class T, class R> class InterpolationData{
+  InnerInterpolationData<T> values_;
+  InnerInterpolationData<R> vectors_;
+public:
+  InterpolationData(): values_(), vectors_() {};
+  //
+  void validate_values() {
+    if (values_.size()!=vectors_.size() || values_.branches()!=vectors_.branches())
+      values_.setup_fake(vectors_.size(), vectors_.branches());
+  }
+  void validate_vectors() {
+    if (values_.size()!=vectors_.size() || values_.branches()!=vectors_.branches())
+      vectors_.setup_fake(values_.size(), values_.branches());
+  }
+  //
+  size_t size() const {
+    assert(values_.size() == vectors_.size());
+    return values_.size();
+  }
+  const InnerInterpolationData<T>& values() const {return this->values_;}
+  const InnerInterpolationData<R>& vectors() const {return this->vectors_;}
+  element_t branches() const {
+    assert(values_.branches() == vectors_.branches());
+    return values_.branches();
+  }
+  void rotateslike(const RotatesLike values, const RotatesLike vectors) {
+    values_.rotateslike(values);
+    vectors_.rotateslike(vectors);
+  }
+  RotatesLike values_rotate_like(const RotatesLike a){ return values_.rotateslike(a); }
+  RotatesLike vectors_rotate_like(const RotatesLike a){ return vectors_.rotateslike(a); }
+  //
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  void interpolate_at(const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, ArrayVector<R>&, const size_t) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&, ArrayVector<R>&, const size_t) const;
+  //
+//  bool rotate_in_place(ArrayVector<T>& vals, ArrayVector<R>& vecs, const std::vector<std::array<int,9>>& r) const {
+//    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
+//  }
+//  bool rotate_in_place(ArrayVector<T>& vals, ArrayVector<R>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
+//    return values_.rotate_in_place(vals, r, n) && vectors_.rotate_in_place(vecs, r, n);
+//  }
+  //
+  // Replace the data within this object.
+  template<typename... A> void replace_value_data(A... args) {
+    values_.replace_data(args...);
+    this->validate_vectors();
+  }
+  template<typename... A> void replace_vector_data(A... args) {
+    vectors_.replace_data(args...);
+    this->validate_values();
+  }
+  // create a string representation of the values and vectors
+  std::string to_string() const {
+    std::string str = "value " + values_.to_string() + " vector " + vectors_.to_string();
+    return str;
+  }
+  // Calculate the Debye-Waller factor for the provided Q points and ion masses
+  template<template<class> class A>
+  ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
+private:
+  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
+  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const{ return this->debye_waller_sum(Q.get_xyz(), beta); }
+};
+
+
+template<typename T, class R>
+ArrayVector<double>
+InterpolationData<T,R>::debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const {
   const double hbar = 6.582119569E-13; // meV⋅s
   const double kB   = 8.617333252E-2; // meV⋅K⁻¹
   size_t nQ = Q.size();
-  size_t nIons = elements_[1] / 3u; // already checked to be correct
+  ElementsType vector_elements = vectors_.elements();
+  size_t nIons = vector_elements[1] / 3u; // already checked to be correct
   ArrayVector<double> WdQ(nIons,nQ); // Wᵈ(Q) has nIons entries per Q point
   double coth_en, Q_dot_e_2;
-  size_t span = 1u + nIons*3u + elements_[2];
-  size_t nq = shape_[0];
-
+  size_t values_span = values_.branch_span();
+  size_t vector_span = vectors_.branch_span();
+  size_t vector_nq = vectors_.size();
+  element_t nbr = vectors_.branches();
   const double beta = kB*t_K; // meV
-  const double pref{hbar*hbar/static_cast<double>(2*nq)}; // meV²⋅s²
-
-  double qj_sum;
+  const double pref{hbar*hbar/static_cast<double>(2*vector_nq)}; // meV²⋅s²
   // for each input Q point
   for (size_t Qidx=0; Qidx<nQ; ++Qidx){
     // and each ion
     for (size_t d=0; d<nIons; ++d){
-      qj_sum = double(0);
+      double qj_sum{0};
       // sum over all reduced q in the first Brillouin zone
-      for (size_t q=0; q<nq; ++q){
+      for (size_t q=0; q<vector_nq; ++q){
         // and over all 3*nIon branches at each q
-        for (size_t j=0; j<branches_; ++j){
+        for (size_t j=0; j<nbr; ++j){
           // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
-          coth_en = coth_over_en(data_.getvalue(q,j*span), beta);
+          coth_en = coth_over_en(values_.data().getvalue(q,j*values_span), beta);
           // and find |Q⋅ϵₛ|². Note: vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = vector_product(3u, Q.data(Qidx), data_.data(q,j*span+1u+3u*d));
+          Q_dot_e_2 = vector_product(3u, Q.data(Qidx), vectors_.data().data(q,j*vector_span+1u+3u*d));
           // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
           qj_sum += Q_dot_e_2 * coth_en;
         }
@@ -271,15 +608,12 @@ ArrayVector<double> InterpolationData<T>::debye_waller_sum(
   return WdQ;
 }
 
-template<typename T>
-template<template<class> class A>
-ArrayVector<double> InterpolationData<T>::debye_waller(
-  const A<double>& Q,
-  const std::vector<double>& M,
-  const double t_K
-) const {
-  size_t nIons = elements_[1] / 3u;
-  if (0 == nIons || elements_[1]*3u != nIons)
+template<typename T, class R> template<template<class> class A>
+ArrayVector<double>
+InterpolationData<T,R>::debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const {
+  ElementsType vector_elements = vectors_.elements();
+  size_t nIons = vector_elements[1] / 3u;
+  if (0 == nIons || vector_elements[1] != nIons*3u)
     throw std::runtime_error("Debye-Waller factor requires 3-vector eigenvector(s).");
   if (M.size() != nIons)
     throw std::runtime_error("Debye-Waller factor requires an equal number of ions and masses.");
@@ -296,86 +630,29 @@ ArrayVector<double> InterpolationData<T>::debye_waller(
   return factor;
 }
 
-template<typename T>
-bool InterpolationData<T>::rotate_in_place(
-  ArrayVector<T>& x, const std::vector<std::array<int,9>>& r
+template<class T, class R> template<typename I, typename>
+void
+InterpolationData<T,R>::interpolate_at(
+  const std::vector<I>& indices,
+  const std::vector<double>& weights,
+  ArrayVector<T>& values_out,
+  ArrayVector<R>& vectors_out,
+  const size_t to
 ) const {
-  ElementsType no = this->count_scalars_vectors_matrices();
-  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
-    return false;
-  T tmp_v[3], tmp_m[9];
-  std::vector<std::array<int,9>> invR;
-  if (no[2]){
-    invR.resize(r.size());
-    for (size_t i=0; i<r.size(); ++i) matrix_inverse(invR[i].data(), r[i].data());
-  }
-  element_t offset, sp = this->branch_span();
-  for (size_t i=0; i<x.size(); ++i)
-  if (r[i][0] + r[i][4] + r[i][8] != 3)
-  for (element_t b=0; b<branches_; ++b){
-    // scalar elements do not need to be rotated, so skip them
-    offset = b*sp + no[0];
-    // rotate vectors
-    for (element_t v=0; v<no[1]; ++v){
-      mul_mat_vec(tmp_v, 3u, r[i].data(), x.data(i, offset+v*3u));
-      for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
-    }
-    offset += no[1]*3u;
-    for (element_t m=0; m<no[2]; ++m){
-      // Calculate R*M*R⁻¹ in two steps
-      // first calculate M*R⁻¹, storing in tmp_m
-      mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), invR[i].data());
-      // next calculate R*tmp_m, storing back in the x array
-      mul_mat_mat(x.data(i, offset+m*9u), 3u, r[i].data(), tmp_m);
-    }
-  }
-  return true;
+  values_.interpolate_at(indices, weights, values_out, to);
+  vectors_.interpolate_at(indices, weights, vectors_out, to);
 }
 
-template<typename T>
-bool InterpolationData<T>::rotate_in_place(
-  ArrayVector<T>& x, const std::vector<std::array<int,9>>& r, const int nthreads
+template<class T, class R> template<typename I, typename>
+void
+InterpolationData<T,R>::interpolate_at(
+  const std::vector<std::pair<I,double>>& indices_weights,
+  ArrayVector<T>& values_out,
+  ArrayVector<R>& vectors_out,
+  const size_t to
 ) const {
-  omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
-  ElementsType no = this->count_scalars_vectors_matrices();
-  if (!std::any_of(no.begin()+1, no.end(), [](element_t n){return n>0;}))
-    return false;
-  T tmp_v[3], tmp_m[9];
-  std::vector<std::array<int,9>> invR;
-  if (no[2]){
-    long long rsize = unsigned_to_signed<long long, size_t>(r.size());
-    invR.resize(r.size());
-    #pragma omp parallel for default(none) shared(invR, r) firstprivate(rsize) schedule(dynamic)
-    for (long long si=0; si<rsize; ++si){
-      size_t i = signed_to_unsigned<size_t, long long>(si);
-      matrix_inverse(invR[i].data(), r[i].data());
-    }
-  }
-  element_t offset, sp = this->branch_span();
-  // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-  long long xsize = unsigned_to_signed<long long, size_t>(x.size());
-#pragma omp parallel for default(none) shared(x,r,invR) private(offset, tmp_v, tmp_m) firstprivate(no, sp, xsize) schedule(static)
-  for (long long si=0; si<xsize; ++si){
-    size_t i = signed_to_unsigned<size_t, long long>(si);
-    if (r[i][0] + r[i][4] + r[i][8] != 3)
-    for (element_t b=0; b<branches_; ++b){
-      // scalar elements do not need to be rotated, so skip them
-      offset = b*sp + no[0];
-      // eigenvectors and regular vectors rotate the same way
-      for (element_t v=0; v<no[1]; ++v){
-        mul_mat_vec(tmp_v, 3u, r[i].data(), x.data(i, offset+v*3u));
-        for (int j=0; j<3; ++j) x.insert(tmp_v[j], i, offset+v*3u+j);
-      }
-      offset += no[1]*3u;
-      for (element_t m=0; m<no[2]; ++m){
-        // Calculate R*M*R⁻¹ in two steps
-        // first calculate M*R⁻¹, storing in tmp_m
-        mul_mat_mat(tmp_m, 3u, x.data(i, offset+m*9u), invR[i].data());
-        // next calculate R*tmp_m, storing back in the x array
-        mul_mat_mat(x.data(i, offset+m*9u), 3u, r[i].data(), tmp_m);
-      }
-    }
-  }
-  return true;
+  values_.interpolate_at(indices_weights, values_out, to);
+  vectors_.interpolate_at(indices_weights, vectors_out, to);
 }
- #endif
+
+#endif

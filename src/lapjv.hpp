@@ -283,6 +283,12 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
     matches[i] = 0;
   }
 
+  // Following https://github.com/Fil/lap-jv/blob/master/lap.js
+  // add an epsilon to comparisons to break infinite loops
+  cost total_cost{0};
+  for (idx tc=0; tc<dim*dim; ++tc) total_cost += assign_cost[tc];
+  cost cost_epsilon = total_cost / static_cast<cost>(10000*dim);
+
   // COLUMN REDUCTION
   for (idx j = dim - 1; j >= 0; j--) {   // reverse order gives better results.
     // find minimum cost over rows.
@@ -320,7 +326,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
       cost min = (std::numeric_limits<cost>::max)();
       for (idx j = 0; j < dim; j++) {
         if (j != j1) {
-          if (local_cost[j] - v[j] < min) {
+          if (local_cost[j] - v[j] < min + cost_epsilon) {
             min = local_cost[j] - v[j];
           }
         }
@@ -348,7 +354,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
       std::tie(umin, usubmin, j1, j2) = find_umins(dim, i, assign_cost, v);
 
       idx i0 = colsol[j1];
-      cost vj1_new = v[j1] - (usubmin - umin);
+      cost vj1_new = v[j1] - (usubmin + cost_epsilon - umin);
       bool vj1_lowers = vj1_new < v[j1];  // the trick to eliminate the epsilon bug
       if (vj1_lowers) {
         // change the reduction of the minimum column to increase the minimum

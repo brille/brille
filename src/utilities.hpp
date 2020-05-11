@@ -129,21 +129,21 @@ template<class T, class R> std::tuple<bool, bool, T, R> determine_tols(const int
 
 template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
 template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol=1);
-template<typename T, typename R> bool approx_array(const int N, const int M,const T *A, const R *B, const int tol=1);
-template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol=1);
-template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol=1);
+template<typename T, typename R> bool approx_array(const size_t N, const size_t M,const T *A, const R *B, const int tol=1);
+template<typename T, typename R> bool approx_matrix(const size_t N, const T *A, const R *B, const int tol=1);
+template<typename T, typename R> bool approx_vector(const size_t N, const T *A, const R *B, const int tol=1);
 
 
-template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B, const int tol=1);
-template<typename T, typename R, int N=3> bool approx_matrix(const T *A, const R *B, const int tol=1);
-template<typename T, typename R, int N=3> bool approx_vector(const T *A, const R *B, const int tol=1);
+template<typename T, typename R, size_t N, size_t M> bool approx_array(const T *A, const R *B, const int tol=1);
+template<typename T, typename R, size_t N=3> bool approx_matrix(const T *A, const R *B, const int tol=1);
+template<typename T, typename R, size_t N=3> bool approx_vector(const T *A, const R *B, const int tol=1);
 
 
 //! array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
-template<typename T, typename R, typename S, int N, int I, int M> void multiply_arrays(T *C, const R *A, const S *B);
-template<typename T, typename R, typename S, int N=3> void multiply_matrix_matrix(T *C, const R *A, const S *B);
-template<typename T, typename R, typename S, int N=3> void multiply_matrix_vector(T *C, const R *A, const S *b);
-template<typename T, typename R, typename S, int N=3> void multiply_vector_matrix(T *C, const R *a, const S *B);
+template<typename T, typename R, typename S, size_t N, size_t I, size_t M> void multiply_arrays(T *C, const R *A, const S *B);
+template<typename T, typename R, typename S, size_t N=3> void multiply_matrix_matrix(T *C, const R *A, const S *B);
+template<typename T, typename R, typename S, size_t N=3> void multiply_matrix_vector(T *C, const R *A, const S *b);
+template<typename T, typename R, typename S, size_t N=3> void multiply_vector_matrix(T *C, const R *a, const S *B);
 
 // array multiplication with specializations for complex array type(s)
 template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B);

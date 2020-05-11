@@ -623,7 +623,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 			if (i_is_not_unique) break;
 		}
 		// if i is unique, add it to the vector of unique rotation indices
-		if (!i_is_not_unique) unique_rot.push_back(i);
+		if (!i_is_not_unique) unique_rot.push_back(static_cast<int>(i));
   }
 
 	// copy from our temporary vector just the unique arrays for output

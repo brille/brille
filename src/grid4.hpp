@@ -33,12 +33,12 @@ const size_t default_n4[4] = { 0,0,0,0 };
 The MapGrid4 holds a mapping grid where each entry is either a valid index into
 a held ArrayVector or is `-1` to indicate that the grid point does not map.
 */
-template<class T> class MapGrid4{
+template<class T,class S> class MapGrid4{
 protected:
   size_t N[4];                 //!< The number of points along each axis of the grid
   size_t span[4];              //!< The span along each axis, allowing conversion from subscripted to linear indexing
   slong *map;                  //!< The mapping grid
-  InterpolationData<T> data_;
+  InterpolationData<T,S> data_;
 public:
   // constructors
   MapGrid4(const size_t *n=default_n4): map(nullptr)
@@ -48,7 +48,7 @@ public:
   MapGrid4(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr)
     { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,4u); }
   // copy constructor
-  MapGrid4(const MapGrid4<T>& other): map(nullptr) {
+  MapGrid4(const MapGrid4<T,S>& other): map(nullptr) {
     this->resize(other.size(0),other.size(1),other.size(2),other.size(3)); // sets N, calculates span, frees/allocates map memory if necessary
     for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
     this->data_ = other.data_;
@@ -59,7 +59,7 @@ public:
   } // everything else is handled by itself
   // Copy constructor:
   // Assignment operator:
-  MapGrid4<T>& operator=(const MapGrid4<T> &other){
+  MapGrid4<T,S>& operator=(const MapGrid4<T,S> &other){
     if (this != &other){
       this->resize(other.size(0),other.size(1),other.size(2),other.size(3)); // sets N, calculates span, frees/allocates map memory if necessary
       for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
@@ -106,9 +106,10 @@ public:
   //! Determine if `map` is consistent with `data`
   int check_map(void) const;
   // Get a constant reference to the stored data
-  const InterpolationData<T>& data(void) const {return data_;}
+  const InterpolationData<T,S>& data(void) const {return data_;}
   // Replace the data stored in the object
-  template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
+  template<typename... A> void replace_value_data(A... args) { data_.values().replace_data(args...); }
+  template<typename... A> void replace_vector_data(A... args) { data_.vectors().replace_data(args...); }
   //
   //! Calculate the linear index of a point given its four subscripted indices
   size_t sub2lin(const size_t i, const size_t j, const size_t k, const size_t l) const;
@@ -152,13 +153,13 @@ const double default_step4[4] = {1.,1.,1.,1.};
 
 /*! \brief Extends the MapGrid4 class to have positions of each grid point enabling interpolation between mapped points
 */
-template<class T> class InterpolateGrid4: public MapGrid4<T>{
+template<class T,class S> class InterpolateGrid4: public MapGrid4<T,S>{
   double zero[4]; //!< the 4-vector position of `map[0]`
   double step[4]; //!< the step size along each direction of the grid
 public:
-  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n) { this->set_zero(z); this->set_step(s); }
-  InterpolateGrid4(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,av){ this->set_zero(z); this->set_step(s); }
-  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T>(n,inmap,av){ this->set_zero(z); this->set_step(s); }
+  InterpolateGrid4(const size_t *n=default_n, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T,S>(n) { this->set_zero(z); this->set_step(s); }
+  InterpolateGrid4(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T,S>(n,av){ this->set_zero(z); this->set_step(s); }
+  InterpolateGrid4(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero4, const double *s=default_step4): MapGrid4<T,S>(n,inmap,av){ this->set_zero(z); this->set_step(s); }
 
 
   void set_zero(const double *newzero){ for(int i=0;i<4;i++) this->zero[i] = newzero[i]; }
@@ -321,9 +322,12 @@ public:
         is used, for one exact match trilinear interpolation is used, and for
         no exact matches the method uses quadralinear interpolation.
   */
-  template<typename R> ArrayVector<T> linear_interpolate_at(const ArrayVector<R>& x){
+  template<typename R>
+  std::tuple<ArrayVector<T>,ArrayVector<S>>
+  linear_interpolate_at(const ArrayVector<R>& x){
     this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data_.numel(), x.size());
+    ArrayVector<T> vals(this->data_.values().numel(), x.size());
+    ArrayVector<S> vecs(this->data_.vectors().numel(), x.size());
     std::vector<size_t> corners;
     std::vector<double> weights;
     size_t ijk[4];
@@ -379,9 +383,10 @@ public:
       }
       corners.resize(cnt);
       weights.resize(cnt);
-      this->data_.interpolate_at(corners,weights,out,i);
+      this->data_.values().interpolate_at(corners,weights,vals,i);
+      this->data_.vectors().interpolate_at(corners, weights, vecs, i);
     }
-    return out;
+    return std::make_tuple(vals, vecs);
   }
   /*! Perform linear interpolation in parallel at the specified points expressed in an orthonormal frame
   @param x The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid
@@ -394,9 +399,12 @@ public:
         is used, for one exact match trilinear interpolation is used, and for
         no exact matches the method uses quadralinear interpolation.
   */
-  template<typename R> ArrayVector<T> parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
+  template<typename R>
+  std::tuple<ArrayVector<T>,ArrayVector<S>>
+  parallel_linear_interpolate_at(const ArrayVector<R>& x,const int threads){
     this->check_before_interpolating(x);
-    ArrayVector<T> out(this->data_.numel(), x.size());
+    ArrayVector<T> vals(this->data_.values().numel(), x.size());
+    ArrayVector<S> vecs(this->data_.vectors().numel(), x.size());
     std::vector<size_t> corners;
     std::vector<double> weights;
     size_t ijk[4];
@@ -405,7 +413,7 @@ public:
     size_t n_oob{0};
     (threads > 0 ) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
     slong xsize = unsigned_to_signed<slong,size_t>(x.size());
-#pragma omp parallel for default(none) shared(x,out,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) reduction(+:n_oob) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x,vals,vecs,corner_count) firstprivate(corners,ijk,weights,xsize) private(oob,dirs) reduction(+:n_oob) schedule(dynamic)
     for (slong si=0; si<xsize; si++){
       corners.resize(16);
       weights.resize(16);
@@ -449,7 +457,8 @@ public:
         if (!oob){
           corners.resize(cnt);
           weights.resize(cnt);
-          this->data_.interpolate_at(corners,weights,out,i);
+          this->data_.values().interpolate_at(corners,weights,vals,i);
+          this->data_.vectors().interpolate_at(corners, weights, vecs, i);
         } else {
           ++n_oob;
         }
@@ -462,7 +471,7 @@ public:
     msg += std::to_string(n_oob) + " out of bounds points.";
     throw std::runtime_error(msg);
   }
-    return out;
+    return std::make_tuple(vals,vecs);
   }
   /*! Get the size information about the first three components of the grid,
       suitable for use in creating an idential object.

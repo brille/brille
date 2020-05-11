@@ -1176,19 +1176,19 @@ void interpolate_to(const A<T>& av,
   unsafe_interpolate_to(av,Nel,nB,n,i,w,out,j);
 }
 template<class T, class R, class I, template<class> class A,
-         typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
-         class S = typename std::common_type<T,R>::type
-         >
+    typename=typename std::enable_if< std::is_base_of<ArrayVector<T>,A<T>>::value && !std::is_base_of<LatVec,A<T>>::value>::type,
+    class S = typename std::common_type<T,R>::type
+>
 void unsafe_interpolate_to(const A<T>& source,
                            const std::array<I,3>& Nel,
                            const size_t Nobj,
                            const size_t Narr,
                            const size_t *Isrc,
                            const R *weights,   /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!!!!! THIS IS WHY THERE ARE TWO VERSION OF unsafe_interpolate_to!!!!!!!!!!!!!!*/
-                           A<S>& sink,
+                           A<T>& sink,
                            const size_t Jsnk) {
   info_update("The function unsafe_interpolate_to should not be used any longer. Please move to the new InterpolationData class");
-  S *sink_j = sink.data(Jsnk);
+  T *sink_j = sink.data(Jsnk);
   T *source_0 = source.data(Isrc[0]);
   size_t offset, span = static_cast<size_t>(Nel[0])+static_cast<size_t>(Nel[1])+static_cast<size_t>(Nel[2]);
   T e_i_theta;
@@ -1206,7 +1206,7 @@ void unsafe_interpolate_to(const A<T>& source,
         e_i_theta = antiphase(hermitian_product(Nel[1], source_0+offset, source_i+offset));
         // remove the arbitrary phase as we add the weighted value
         for(size_t Jeig=0; Jeig<Nel[1]; ++Jeig)
-          sink_j[offset+Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
+          sink_j[offset + Jeig] += weights[x]*(e_i_theta*source_i[offset+Jeig]);
       }
       // Vector and Matrix parts of each object are treated as scalars:
       for (size_t Ivecmat = Nel[0]+Nel[1]; Ivecmat<span; ++Ivecmat)
