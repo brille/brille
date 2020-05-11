@@ -44,7 +44,7 @@ size_t PointSymmetry::add(const std::string& s){
   std::istringstream stream(s);
   size_t ret{0};
   while (stream.good()){
-    c = stream.get();
+    c = char(stream.get());
     switch (c){
       case ';': // end of one motion
         ret = this->add(newR);
@@ -124,6 +124,23 @@ Matrix<int> PointSymmetry::get_inverse(const size_t i) const {
     if (approx_matrix(3, identity.data(), result.data())) return this->R[j];
   }
   throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
+}
+size_t PointSymmetry::get_inverse_index(const size_t i) const {
+  if (i>=this->size()) return i;
+  Matrix<int> identity{1,0,0, 0,1,0, 0,0,1}, result;
+  // We *could* calculate R⁻¹ but might run into rounding/type issues.
+  // We know that there must be an element of R for which RᵢRⱼ=E,
+  // the identity element. Let's look for Rⱼ instead.
+  for (size_t j=0; j<this->size(); ++j){
+    multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
+    if (approx_matrix(3, identity.data(), result.data())) return j;
+  }
+  throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
+}
+size_t PointSymmetry::find_index(const Matrix<int>& a) const {
+  auto iseq = [ap=a.data()](const Matrix<int>& r){ return approx_matrix(3,ap,r.data());};
+  auto itr = std::find_if(this->R.begin(), this->R.end(), iseq);
+  return std::distance(this->R.begin(), itr);
 }
 // const Matrix<int>& PointSymmetry::get(const size_t i) const {
 //   if (i>=this->size())

@@ -32,9 +32,11 @@ Lattice::Lattice(const double* lengths, const double* angles, const int h, const
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const int h){
-  this->set_len_scalars(la,lb,lc);
-  this->set_ang_scalars(al,bl,cl);
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const int h):
+  len{{la,lb,lc}}, ang{{al,bl,cl}} {
+  // this->set_len_scalars(la,lb,lc);
+  // this->set_ang_scalars(al,bl,cl, AngleUnit::not_provided);
+  this->check_ang(AngleUnit::not_provided);
   this->volume = this->calculatevolume();
   this->check_hall_number(h);
 }
@@ -52,21 +54,41 @@ Lattice::Lattice(const double *lengths, const double *angles, const std::string&
   this->volume=this->calculatevolume();
   this->check_IT_name(itname, choice);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname, const std::string& choice){
-  this->set_len_scalars(la,lb,lc);
-  this->set_ang_scalars(al,bl,cl);
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname, const std::string& choice):
+len({{la,lb,lc}}), ang({{al,bl,cl}}) {
+  // this->set_len_scalars(la,lb,lc);
+  // this->set_ang_scalars(al,bl,cl, AngleUnit::not_provided);
+  this->check_ang(AngleUnit::not_provided);
   this->volume = this->calculatevolume();
   this->check_IT_name(itname, choice);
 }
-void Lattice::set_len_scalars(const double a, const double b, const double c){
-  this->len[0] = a;
-  this->len[1] = b;
-  this->len[2] = c;
-}
-void Lattice::set_ang_scalars(const double a, const double b, const double g){
-  this->ang[0] = a;
-  this->ang[1] = b;
-  this->ang[2] = g;
+// void Lattice::set_len_scalars(const double a, const double b, const double c){
+//   this->len[0] = a;
+//   this->len[1] = b;
+//   this->len[2] = c;
+// }
+// void Lattice::set_ang_scalars(const double a, const double b, const double g, const AngleUnit angle_unit){
+//   this->ang[0] = a;
+//   this->ang[1] = b;
+//   this->ang[2] = g;
+//   this->check_ang(angle_unit);
+// }
+void Lattice::check_ang(const AngleUnit angle_unit){
+  AngleUnit au = angle_unit;
+  if (au == AngleUnit::not_provided){
+    double minang = (std::numeric_limits<double>::max)();
+    double maxang = (std::numeric_limits<double>::lowest)();
+    for (int i=0; i<3; ++i){
+      if (this->ang[i] < minang) minang = this->ang[i];
+      if (this->ang[i] > maxang) maxang = this->ang[i];
+    }
+    if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
+    au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+  }
+  if (au != AngleUnit::radian){
+    double conversion = PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+    for (int i=0;i<3;i++) this->ang[i] *= conversion;
+  }
 }
 void Lattice::check_hall_number(const int h){
   this->spg = Spacegroup(h); // if h is invalid the next three lines might fail`
@@ -114,8 +136,8 @@ double Lattice::unitvolume() const{
 double Lattice::calculatevolume(){
   // we could replace this by l[0]*l[1]*l[2]*this->unitvolume()
   double tmp=1;
-  double *a = this->ang;
-  double *l = this->len;
+  double *a = this->ang.data();
+  double *l = this->len.data();
   tmp *= sin(( a[0] +a[1] +a[2])/2.0);
   tmp *= sin((-a[0] +a[1] +a[2])/2.0);
   tmp *= sin(( a[0] -a[1] +a[2])/2.0);
@@ -139,8 +161,8 @@ double Lattice::calculatevolume(){
   return tmp;
 }
 Lattice Lattice::inner_star() const {
-  const double *a = this->ang;
-  const double *l = this->len;
+  const double *a = this->ang.data();
+  const double *l = this->len.data();
 
   double sas, sbs, scs;
   sas = 2*PI*l[1]*l[2]*sin(a[0])/this->volume;
@@ -159,11 +181,13 @@ Lattice Lattice::inner_star() const {
   sbb = acos( (cosc*cosa-cosb)/(sinc*sina) );
   scc = acos( (cosa*cosb-cosc)/(sina*sinb) );
 
-  return Lattice(sas, sbs, scs, saa, sbb, scc, this->get_hall());
+  Lattice out(sas, sbs, scs, saa, sbb, scc, this->get_hall());
+  out.set_basis(this->get_basis());
+  return out;
 }
 void Lattice::get_metric_tensor(double * mt) const {
-  const double *a = this->ang;
-  const double *l = this->len;
+  const double *a = this->ang.data();
+  const double *l = this->len.data();
 
   double cosa, cosb, cosc;
   cosa = cos(a[0]);
@@ -194,7 +218,7 @@ void Lattice::get_contravariant_metric_tensor(double *mt) const {
 }
 
 bool Lattice::issame(const Lattice& lat) const{
-  return approx_vector(3, this->ang, lat.ang) && approx_vector(3, this->len, lat.len);
+  return approx_vector(3, this->ang.data(), lat.ang.data()) && approx_vector(3, this->len.data(), lat.len.data());
 }
 
 bool Lattice::isapprox(const Lattice& lat) const {
@@ -208,7 +232,7 @@ int Lattice::ispermutation(const Lattice& lat) const {
       a[i] = this->ang[(i+j)%3];
       l[i] = this->len[(i+j)%3];
     }
-    if (approx_vector(3, a, lat.ang) && approx_vector(3, l, lat.len))
+    if (approx_vector(3, a, lat.ang.data()) && approx_vector(3, l, lat.len.data()))
       return j+1;
   }
   for (j=0; j<3; ++j){
@@ -216,7 +240,7 @@ int Lattice::ispermutation(const Lattice& lat) const {
       a[i] = this->ang[ap[(i+j)%3]];
       l[i] = this->len[ap[(i+j)%3]];
     }
-    if (approx_vector(3, a, lat.ang) && approx_vector(3, l, lat.len))
+    if (approx_vector(3, a, lat.ang.data()) && approx_vector(3, l, lat.len.data()))
       return -j-1;
   }
   return 0;

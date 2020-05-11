@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+#include <tuple>
 #include <omp.h>
 #include <complex>
 #include "debug.hpp"
@@ -11,13 +12,13 @@ TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
   BrillouinZone bz(r);
   double max_volume = 0.01;
   // BrillouinZoneTrellis3<double> bzt0(bz); !! No default maximum volume
-  BrillouinZoneTrellis3<double> bzt1(bz, max_volume);
+  BrillouinZoneTrellis3<double,double> bzt1(bz, max_volume);
 }
 TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis]"){
   Direct d(10.75, 10.75, 10.75, PI/2, PI/2, PI/2, 525);
   BrillouinZone bz(d.star());
   double max_volume = 0.002;
-  BrillouinZoneTrellis3<double> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,double> bzt(bz, max_volume);
 
   SECTION("get_xyz"){auto verts = bzt.get_xyz(); REQUIRE(verts.size() > 0u);}
   SECTION("get_hkl"){auto verts = bzt.get_hkl(); REQUIRE(verts.size() > 0u);}
@@ -33,12 +34,13 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.0001;
-  BrillouinZoneTrellis3<double> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,double> bzt(bz, max_volume);
 
   ArrayVector<double> Qmap = bzt.get_hkl();
   std::vector<size_t> shape{Qmap.size(), 3};
   std::array<unsigned long,3> elements{0,3,0};
-  bzt.replace_data( bzt.get_xyz(), shape, elements);
+  RotatesLike rl = RotatesLike::Reciprocal;
+  bzt.replace_value_data( bzt.get_xyz(), shape, elements, rl);
 
   size_t nQ = 10;
   // In order to have easily-interpretable results we need to ensure we only
@@ -60,8 +62,8 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // the components of Q to try and find an equivalent q and tau.
 
 
-  ArrayVector<double> intres, antres=Q.get_xyz();
-  intres = bzt.ir_interpolate_at(Q, 1 /*thread*/);
+  ArrayVector<double> intres, dummy, antres=Q.get_xyz();
+  std::tie(intres, dummy) = bzt.ir_interpolate_at(Q, 1 /*thread*/);
 
   ArrayVector<double> diff = intres - antres;
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
@@ -93,29 +95,37 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
-  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
   ArrayVector<double> Qmap = bzt.get_hkl();
 
-  ArrayVector<std::complex<double>> data((1+3)*3, Qmap.size());
-  for (size_t i=0; i<data.size(); ++i) for (size_t j=0; j<data.numel(); ++j)
-    data.insert( std::complex<double>(distribution(generator), distribution(generator)), i, j);
-  std::vector<size_t> shape{data.size(), 3, 4};
-  std::array<unsigned long,3> elements{1,3,0};
+  size_t n_modes{3u};
+  ArrayVector<double> eigenvalues(1*n_modes, Qmap.size());
+  ArrayVector<std::complex<double>> eigenvectors(3*n_modes, Qmap.size());
+  for (size_t i=0; i<Qmap.size(); ++i) for (size_t b=0; b<n_modes; ++b){
+    eigenvalues.insert( distribution(generator), i, b);
+    for (size_t j=0; j<3u; ++j)
+      eigenvectors.insert( std::complex<double>(distribution(generator), distribution(generator)), i, b*3u+j);
+  }
+  std::vector<size_t> vals_sh{Qmap.size(), n_modes, 1}, vecs_sh{Qmap.size(), n_modes, 3};
+  std::array<unsigned long,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
+  RotatesLike vecs_rt{RotatesLike::Reciprocal};
 
-  bzt.replace_data(data, shape, elements);
+  bzt.replace_value_data(eigenvalues, vals_sh, vals_el); // scalars do not rotate, so any RotatesLike value is fine
+  bzt.replace_vector_data(eigenvectors, vecs_sh, vecs_el, vecs_rt);
 
   size_t nQ = 10000;//10000;
   LQVec<double> Q(r,nQ);
   for (size_t i=0; i<nQ; ++i) for (size_t j=0; j<3; ++j)
     Q.insert(distribution(generator), i,j);
 
-  ArrayVector<std::complex<double>> intres;
+  ArrayVector<double> intvals;
+  ArrayVector<std::complex<double>> intvecs;
   auto timer = Stopwatch<>();
   for (int threads=1; threads<7; ++threads){
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
-      intres = bzt.ir_interpolate_at(Q, threads);
+      std::tie(intvals, intvecs) = bzt.ir_interpolate_at(Q, threads);
       timer.toc();
       again = timer.jitter()/timer.average() > 0.002;
     }
@@ -137,27 +147,35 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
-  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
   ArrayVector<double> Qmap = bzt.get_hkl();
 
-  ArrayVector<std::complex<double>> data((1+3)*3, Qmap.size());
-  for (size_t i=0; i<data.size(); ++i) for (size_t j=0; j<data.numel(); ++j)
-    data.insert( std::complex<double>(distribution(generator), distribution(generator)), i, j);
-  std::vector<size_t> shape{data.size(), 3, 4};
-  std::array<unsigned long,3> elements{1,3,0};
+  size_t n_modes{3u};
+  ArrayVector<double> eigenvalues(1*n_modes, Qmap.size());
+  ArrayVector<std::complex<double>> eigenvectors(3*n_modes, Qmap.size());
+  for (size_t i=0; i<Qmap.size(); ++i) for (size_t b=0; b<n_modes; ++b){
+    eigenvalues.insert( distribution(generator), i, b);
+    for (size_t j=0; j<3u; ++j)
+      eigenvectors.insert( std::complex<double>(distribution(generator), distribution(generator)), i, b*3u+j);
+  }
+  std::vector<size_t> vals_sh{Qmap.size(), n_modes, 1}, vecs_sh{Qmap.size(), n_modes, 3};
+  std::array<unsigned long,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
+  RotatesLike vecs_rt{RotatesLike::Reciprocal};
 
-  bzt.replace_data(data, shape, elements);
+  bzt.replace_value_data(eigenvalues, vals_sh, vals_el); // scalars do not rotate, so any RotatesLike value is fine
+  bzt.replace_vector_data(eigenvectors, vecs_sh, vecs_el, vecs_rt);
 
   size_t nQ = 100000;//10000;
   LQVec<double> Q(r,nQ);
   for (size_t i=0; i<nQ; ++i) for (size_t j=0; j<3; ++j)
     Q.insert(distribution(generator), i,j);
 
-  ArrayVector<std::complex<double>> intres;
+  ArrayVector<double> vals_intres;
+  ArrayVector<std::complex<double>> vecs_intres;
   int threads = omp_get_max_threads();
   auto timer = Stopwatch<>();
   timer.tic();
-  intres = bzt.ir_interpolate_at(Q, threads);
+  std::tie(vals_intres, vecs_intres) = bzt.ir_interpolate_at(Q, threads);
   timer.toc();
   info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
 }
@@ -169,14 +187,14 @@ TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling
   double max_volume = 0.0001;
   auto timer = Stopwatch<>();
   timer.tic();
-  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
   timer.toc();
   info_update("Creation of Cubic BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 
   Direct quartz_d(4.85235, 4.85235, 5.350305, PI/2, PI/2, 2*PI/3, 443);
   BrillouinZone quartz_bz(quartz_d.star());
   timer.tic();
-  BrillouinZoneTrellis3<std::complex<double>> quartz_bzt(quartz_bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>> quartz_bzt(quartz_bz, max_volume);
   timer.toc();
   info_update("Creation of Quartz BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 }
@@ -187,7 +205,7 @@ TEST_CASE("BrillouinZoneTrellis3 contains Gamma","[trellis][gamma]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.001;
-  BrillouinZoneTrellis3<std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
 
   auto diff = find(norm(bzt.vertices()).is_approx(Comp::eq,0.));
   REQUIRE(diff.size() == 1u);

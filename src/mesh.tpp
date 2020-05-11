@@ -16,7 +16,9 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 // Perform sanity checks before attempting to interpolate
-template<typename T> template<typename R> unsigned int Mesh3<T>::check_before_interpolating(const ArrayVector<R>& x) const{
+template<class T, class S> template<typename R>
+unsigned int
+Mesh3<T,S>::check_before_interpolating(const ArrayVector<R>& x) const{
   unsigned int mask = 0u;
   if (data_.size()==0)
     throw std::runtime_error("The mesh must be filled before interpolating!");
@@ -25,9 +27,12 @@ template<typename T> template<typename R> unsigned int Mesh3<T>::check_before_in
   return mask;
 }
 //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
-template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_at(const ArrayVector<R>& x) const{
+template<class T, class S> template<typename R>
+std::tuple<ArrayVector<T>,ArrayVector<S>>
+Mesh3<T,S>::interpolate_at(const ArrayVector<R>& x) const{
   this->check_before_interpolating(x);
-  ArrayVector<T> out(data_.numel(), x.size());
+  ArrayVector<T> vals(data_.values().numel(), x.size());
+  ArrayVector<S> vecs(data_.vectors().numel(), x.size());
   std::vector<size_t> vertices;
   std::vector<double> weights;
   size_t found_tet, max_valid_tet = this->mesh.number_of_tetrahedra()-1;
@@ -38,38 +43,43 @@ template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::interpolate_a
     if (found_tet > max_valid_tet)
       throw std::runtime_error("Point not found in tetrahedral mesh");
     verbose_update("Interpolate between vertices ", vertices," with weights ",weights);
-    data_.interpolate_at(vertices, weights, out, i);
+    data_.interpolate_at(vertices, weights, vals, vecs, i);
   }
-  return out;
+  return std::make_tuple(vals, vecs);
 }
-template<typename T> template<typename R> ArrayVector<T> Mesh3<T>::parallel_interpolate_at(const ArrayVector<R>& x, const int threads) const{
+template<class T, class S> template<typename R>
+std::tuple<ArrayVector<T>,ArrayVector<S>>
+Mesh3<T,S>::parallel_interpolate_at(const ArrayVector<R>& x, const int threads) const{
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   this->check_before_interpolating(x);
   // shared between threads
-  ArrayVector<T> out(data_.numel(), x.size());
+  ArrayVector<T> vals(data_.values().numel(), x.size());
+  ArrayVector<S> vecs(data_.vectors().numel(), x.size());
   // private to each thread
   std::vector<size_t> indexes;
   std::vector<double> weights;
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long xsize = unsigned_to_signed<long, size_t>(x.size());
-#pragma omp parallel for default(none) shared(x, out, xsize) private(indexes, weights) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x, vals, vecs, xsize) private(indexes, weights) schedule(dynamic)
   for (long si=0; si<xsize; ++si){
     size_t i = signed_to_unsigned<size_t, long>(si);
     this->mesh.locate(x.extract(i), indexes, weights);
-    data_.interpolate_at(indexes, weights, out, i);
+    data_.interpolate_at(indexes, weights, vals, vecs, i);
   }
-  return out;
+  return std::make_tuple(vals, vecs);
 }
 
-template<class T> template<typename R>
-std::vector<size_t> Mesh3<T>::which_neighbours(const std::vector<R>& t, const R value, const size_t v) const{
+template<class T, class S> template<typename R>
+std::vector<size_t>
+Mesh3<T,S>::which_neighbours(const std::vector<R>& t, const R value, const size_t v) const{
   std::vector<size_t> out;
   for (size_t n: this->mesh.neighbours(v)) if (t[n] == value) out.push_back(n);
   return out;
 }
 
-template<class T> template<typename R>
-ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
+template<class T, class S> template<typename R>
+ArrayVector<size_t>
+Mesh3<T,S>::multi_sort_perm(
   const R scalar_weight, const R vector_weight, const R matrix_weight, const int vf
 ) const {
   typename CostTraits<T>::type weights[3];
@@ -79,8 +89,9 @@ ArrayVector<size_t> Mesh3<T>::multi_sort_perm(
   // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
   // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
   size_t nobj = static_cast<size_t>(data_.branches());
-  size_t span = static_cast<size_t>(data_.branch_span());
-  size_t spobj[2]{span, nobj};
+  size_t valspan = static_cast<size_t>(data_.values().branch_span());
+  size_t vecspan = static_cast<size_t>(data_.values().branch_span());
+  size_t spobj[3]{valspan, vecspan, nobj};
   // within each index of the data ArrayVector there are span*nobj entries.
 
   // We will return the permutations of 0:nobj-1 which sort the objects globally
@@ -148,9 +159,10 @@ In either case, this over head is likely much smaller than the memory use of a
 freely-growing queue since there is no bound on the number of shared
 neighbouring vertices for two connected vertices in a relational mesh.
 */
-template<class T> template<typename R>
-size_t Mesh3<T>::consensus_sort_from(
-  const size_t s, const R weights[3], const int func, const size_t spobj[2],
+template<class T, class S> template<typename R>
+size_t
+Mesh3<T,S>::consensus_sort_from(
+  const size_t s, const R weights[3], const int func, const size_t spobj[3],
   ArrayVector<size_t>& perm, std::vector<bool>& done, std::vector<bool>& lock,
   std::vector<size_t>& visits
 ) const {
@@ -193,9 +205,10 @@ size_t Mesh3<T>::consensus_sort_from(
   return num_sorted;
 }
 
-template<class T> template<typename R>
-bool Mesh3<T>::consensus_sort_difference(
-  const R w[3], const int func, const size_t spobj[2],
+template<class T, class S> template<typename R>
+bool
+Mesh3<T,S>::consensus_sort_difference(
+  const R w[3], const int func, const size_t spobj[3],
   ArrayVector<size_t>& p, std::vector<bool>& done, const size_t idx,
   const std::vector<size_t> neighbours
 ) const {
@@ -209,10 +222,12 @@ bool Mesh3<T>::consensus_sort_difference(
   ArrayVector<size_t> t(p.numel(), nn+1);
   for (size_t i=0; i<nn; ++i){
     for (size_t j=0; j<p.numel(); ++j) t.insert(p.getvalue(neighbours[i], j), nn, j);
-    jv_permutation(data_.data().data(idx, 0),
-                   data_.data().data(neighbours[i], 0),
-                   data_.elements(), w[0], w[1], w[2], spobj[0], spobj[1],
-                   t, i, nn, func);
+    jv_permutation(
+      data_.values().data().data(idx, 0),           data_.vectors().data().data(idx, 0),
+      data_.values().data().data(neighbours[i], 0), data_.vectors().data().data(neighbours[i], 0),
+      data_.values().elements(), data_.vectors().elements(), w[0], w[1], w[2], spobj[0], spobj[1], spobj[2],
+      t, i, nn, func
+    );
   }
   // The first neighbours.size() elements of tperm now contain the permutation
   // for idx determined by the equal-index neighbour.

@@ -24,7 +24,7 @@ TEST_CASE("BrillouinZoneMesh3 instantiation","[mesh]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_size = 0.01;
-  BrillouinZoneMesh3<double> bzm0(bz);
+  BrillouinZoneMesh3<double,double> bzm0(bz);
   // The following line causes a segmentation fault on a Hyper-V
   // Windows10 dev VM for unknown reason. As BrillouinZoneMesh3 is not
   // used at present, perhaps we can get away with commenting it out for now.

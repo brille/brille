@@ -2,6 +2,7 @@
 #include <chrono>
 #include <catch2/catch.hpp>
 
+#include <tuple>
 #include "grid.hpp"
 #include "bz_grid.hpp"
 #include "interpolation.hpp"
@@ -63,10 +64,10 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
   BrillouinZone bz(r);
   size_t halfN[3] = {10,10,10};
-  BrillouinZoneGrid3<double> bzg(bz,halfN);
+  BrillouinZoneGrid3<double,double> bzg(bz,halfN);
 
   ArrayVector<double> Qmap = bzg.get_mapped_xyz();
-  bzg.replace_data( f_of_Q(Qmap) );
+  bzg.replace_value_data( f_of_Q(Qmap) );
 
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-0.5,0.5);
@@ -77,7 +78,8 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   LQVec<double> Q(r,nQ,rawQ);
   delete[] rawQ;
 
-  ArrayVector<double> intres = bzg.linear_interpolate_at(Q);
+  ArrayVector<double> intres, dummy;
+  std::tie(intres, dummy) = bzg.linear_interpolate_at(Q);
   ArrayVector<double> antres = f_of_Q( Q.get_xyz() );
 
   ArrayVector<double> diff = intres - antres;
@@ -94,7 +96,7 @@ TEST_CASE("BrillouinZoneGrid3 Interpolation","[interpolation]"){
   REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
 
 
-  intres = bzg.parallel_linear_interpolate_at(Q,0);
+  std::tie(intres, dummy) = bzg.parallel_linear_interpolate_at(Q,0);
   diff = intres - antres;
   REQUIRE( diff.round().all_zero() ); // this is not a great test :(
   for (size_t i=0; i<diff.size(); ++i)
@@ -106,17 +108,18 @@ TEST_CASE("BrillouinZoneGrid3 Sorting","[munkres]"){
   Reciprocal r(1.,1.,1., PI/2, PI/2, PI/2);
   BrillouinZone bz(r);
   size_t halfN[3] = {10,10,10};
-  BrillouinZoneGrid3<double> bzg(bz,halfN);
+  BrillouinZoneGrid3<double,double> bzg(bz,halfN);
 
   ArrayVector<double> Qmap = bzg.get_mapped_xyz();
   std::vector<size_t> newshape{ {Qmap.size(), 4u, 3u, 3u} }; // (nQ, 3,3, nModes)
-  std::array<size_t, 3> elements{ {0u,0u,9u} };
-  bzg.replace_data( f_of_Q_mats( Qmap ), newshape, elements ); // maybe mapped_hkl instead?
+  std::array<size_t, 3> elements{ {0u,0u,9u} }; //
+  RotatesLike rl = RotatesLike::Reciprocal;
+  bzg.replace_vector_data( f_of_Q_mats( Qmap ), newshape, elements , rl); // maybe mapped_hkl instead?
 
   // This test causes a segmentation fault on some Windows 10 (virtual)
   // machines. Since BrillouinZoneGrid3 is not used at present maybe we can get
   // away with only commenting this out :/
-  
+
   // ArrayVector<size_t> sortperm = bzg.centre_sort_perm();
 }
 
@@ -141,20 +144,21 @@ TEST_CASE("primitive BrillouinZoneGrid3 Interpolation","[interpolation]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   size_t halfN[3] = {30,30,30};
-  BrillouinZoneGrid3<std::complex<double>> bzg(bz,halfN);
+  BrillouinZoneGrid3<std::complex<double>, double> bzg(bz,halfN);
 
-  bzg.replace_data( fe_dispersion(bzg.get_mapped_xyz()) );
+  bzg.replace_value_data( complex_fe_dispersion(bzg.get_mapped_xyz()) );
 
   LQVec<double> Q=LQVec<double>(r,bzg.get_mapped_hkl());
 
   ArrayVector<std::complex<double>> intres;
+  ArrayVector<double> dummy;
   SECTION("Single-thread interpolation"){
-    intres = bzg.linear_interpolate_at(Q);
+    std::tie(intres, dummy) = bzg.linear_interpolate_at(Q);
   }
   SECTION("Multi-thread interpolation"){
-    intres = bzg.parallel_linear_interpolate_at(Q,10);
+    std::tie(intres, dummy) = bzg.parallel_linear_interpolate_at(Q,10);
   }
-  ArrayVector<std::complex<double>> fedisp = fe_dispersion(Q.get_xyz());
+  ArrayVector<std::complex<double>> fedisp = complex_fe_dispersion(Q.get_xyz());
   ArrayVector<std::complex<double>> diff = intres - fedisp;
   ArrayVector<std::complex<double>> sum = intres+fedisp;
   for (size_t i=0; i<diff.size(); ++i)
@@ -173,11 +177,11 @@ TEST_CASE("primitive BrillouinZoneGrid3 Interpolation, random","[.][random]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   size_t halfN[3] = {30,30,30};
-  BrillouinZoneGrid3<double> bzg(bz,halfN);
+  BrillouinZoneGrid3<double,double> bzg(bz,halfN);
 
-  bzg.replace_data( fe_dispersion(bzg.get_mapped_xyz()) );
+  bzg.replace_value_data( fe_dispersion(bzg.get_mapped_xyz()) );
 
-  ArrayVector<double> intres;
+  ArrayVector<double> intres, dummy;
 
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(-5,5);
@@ -194,10 +198,10 @@ TEST_CASE("primitive BrillouinZoneGrid3 Interpolation, random","[.][random]"){
   // printf("q = \n"); q.get_xyz().print();
 
   SECTION("Single-thread interpolation"){
-    intres = bzg.linear_interpolate_at(q.get_xyz());
+    std::tie(intres,dummy) = bzg.linear_interpolate_at(q.get_xyz());
   }
   SECTION("Multi-thread interpolation"){
-    intres = bzg.parallel_linear_interpolate_at(q.get_xyz(),1);
+    std::tie(intres,dummy) = bzg.parallel_linear_interpolate_at(q.get_xyz(),1);
   }
 
   ArrayVector<double> fedisp = fe_dispersion(q.get_xyz());

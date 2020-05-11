@@ -125,26 +125,33 @@ void wrap_brillouinzone(py::module & m){
     // prepare intermediate outputs
     LQVec<double> qv(b.get_lattice(), npts);
     LQVec<int>  tauv(b.get_lattice(), npts);
-    std::vector<std::array<int,9>> rots(npts);
-    if (!b.ir_moveinto(Qv, qv, tauv, rots))
+    std::vector<size_t> rotidx(npts), invrotidx(npts);
+    if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx))
       throw std::runtime_error("Moving points into irreducible zone failed.");
+    // get the pointgroup symmetry operations indexed by rotidx and invrotidx
+    PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // prepare Python outputs
     auto qout = py::array_t<double, py::array::c_style>(bi.shape);
     auto tout = py::array_t<int,    py::array::c_style>(bi.shape);
     // The rotations array has an extra dimension compared to q and tau
     bi.shape.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(bi.shape);
+    auto invrout = py::array_t<int, py::array::c_style>(bi.shape);
     // grab pointers to the underlying data blocks
     double *qptr = (double *) qout.request().ptr;
     int *tptr = (int *) tout.request().ptr;
     int *rptr = (int *) rout.request().ptr;
+    int *iptr = (int *) invrout.request().ptr;
     for (ssize_t i=0; i<npts; ++i)
     for (size_t j=0; j<3u; ++j){
       qptr[3u*i+j] = qv.getvalue(i,j);
       tptr[3u*i+j] = tauv.getvalue(i,j);
-      for (size_t k=0; k<3u; ++k) rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
+      for (size_t k=0; k<3u; ++k) {
+        rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
+        iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
+      }
     }
-    return py::make_tuple(qout, tout, rout);
+    return py::make_tuple(qout, tout, rout, invrout);
   }, "Q"_a);
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q){

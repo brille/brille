@@ -33,7 +33,7 @@ typedef long slong; // ssize_t is only defined for gcc?
   By adding a BrillouinZone object to an InterpolationGrid3 object, it is
   possible to interpolate at arbitrary points within the first Brillouin zone.
 */
-template<class T> class BrillouinZoneGrid3: public InterpolateGrid3<T>{
+template<class T, class R> class BrillouinZoneGrid3: public InterpolateGrid3<T,R>{
 protected:
   BrillouinZone brillouinzone;
 public:
@@ -106,36 +106,36 @@ public:
     for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
     return hkl;
   }
-  template<typename R> ArrayVector<T> ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const{
-    LQVec<R> ir_q(x.get_lattice(), x.size());
+  template<typename S>
+  std::tuple<ArrayVector<T>,ArrayVector<R>>
+  ir_interpolate_at(const LQVec<S>& x, const int nthreads, const bool no_move=false) const{
+    LQVec<S> ir_q(x.get_lattice(), x.size());
     LQVec<int> tau(x.get_lattice(), x.size());
-    std::vector<std::array<int,9>> rots(x.size());
-    BrillouinZone bz = this->get_brillouinzone();
-
-    std::string msg;
+    std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);
     if (no_move){
-      // a special mode for testing wehere no specified points are moved
-      // it is imperitive that the provided x points remain *inside* the mapped
-      // grid points, which is beyond the scope of this method to check.
       ir_q = x;
-      for (size_t i=0; i<x.size(); ++i) rots[i] = {1,0,0, 0,1,0, 0,0,1};
-    } else if (!bz.ir_moveinto(x, ir_q, tau, rots, nthreads)){
+    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nthreads)){
+      std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    ArrayVector<T> ir_result;
-    if (nthreads > 1){ // change this to != 1?
-      ir_result = this->InterpolateGrid3<T>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads);
-    } else {
-      ir_result = this->InterpolateGrid3<T>::linear_interpolate_at(ir_q.get_xyz());
-    }
-
-    if (nthreads < 2)
-      this->data().rotate_in_place(ir_result, rots);
-    else
-      this->data().rotate_in_place(ir_result, rots, nthreads);
-
-    return ir_result;
+    // perform the interpolation within the irreducible Brillouin zone
+    ArrayVector<T> vals;
+    ArrayVector<R> vecs;
+    std::tie(vals,vecs) =
+      (nthreads > 1) ? this->InterpolateGrid3<T,R>::parallel_linear_interpolate_at(ir_q.get_xyz(), nthreads)
+                     : this->InterpolateGrid3<T,R>::linear_interpolate_at(ir_q.get_xyz());
+    // we always need the pointgroup operations to 'rotate'
+    PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
+    // and might need the Phonon Gamma table
+    GammaTable pgt;
+    if (RotatesLike::Gamma == this->data().vectors().rotateslike())
+      pgt = brillouinzone.get_phonon_gamma_table();
+    // actually perform the rotation to Q
+    this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nthreads);
+    this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nthreads);
+    // we're done so bundle the output
+    return std::make_tuple(vals, vecs);
   }
 protected:
   /*! Determines and sets the properties of the underlying grid from three step sizes
@@ -241,7 +241,7 @@ protected:
   By adding a BrillouinZone object to an InterpolationGrid4 object, it is
   possible to interpolate at arbitrary points within the first Brillouin zone.
 */
-template<class T> class BrillouinZoneGrid4: public InterpolateGrid4<T>{
+template<class T,class S> class BrillouinZoneGrid4: public InterpolateGrid4<T,S>{
 protected:
   BrillouinZone brillouinzone;
 public:

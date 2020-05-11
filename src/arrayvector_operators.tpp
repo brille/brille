@@ -592,6 +592,48 @@ A<S> operator X (const A<T>& a, const A<R>& b){\
   return out;\
 }
 
+#define BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(X) template<class T, class R, template<class> class A,typename=typename std::enable_if<std::is_base_of<ArrayVector<T>,A<T>>::value>::type, class S = typename std::common_type<T,R>::type, size_t Nel>\
+A<S> operator X (const A<T>& a, const std::array<R,Nel>& b){\
+  AVSizeInfo si = a.consistency_check(b);\
+  A<S> out = A<S>(a);\
+  out.refresh(si.m,si.n); /*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/\
+  unsigned scalarflg = static_cast<unsigned>(si.scalara) + (static_cast<unsigned>(si.scalarb)<<1u);\
+  unsigned onevecflg = static_cast<unsigned>(si.oneveca) + (static_cast<unsigned>(si.onevecb)<<1u);\
+  std::string interpret_error_msg = "I do not know how to interpret this std::array as an ArrayVector for binary operations";\
+  switch (scalarflg){\
+    case 3u: /*a and b are scalars*/\
+    switch (onevecflg){\
+      case 3u: out.insert(a.getvalue(0,0) X b[0], 0,0); break;\
+      case 2u: for (size_t i=0; i<si.n; ++i) out.insert(a.getvalue(i,0) X b[0], i,0); break;\
+      case 1u: for (size_t i=0; i<si.n; ++i) out.insert(a.getvalue(0,0) X b[i], i,0); break;\
+      default: for (size_t i=0; i<si.n; ++i) out.insert(a.getvalue(i,0) X b[i], i,0);\
+    }\
+    break;\
+    case 2u: /*b is a scalar*/\
+    switch (onevecflg){\
+      case 3u:                               for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(0,j) X b[0], 0,j); break;\
+      case 2u: for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(i,j) X b[0], i,j); break;\
+      case 1u: for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(0,j) X b[i], i,j); break;\
+      default: for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(i,j) X b[i], i,j);\
+    }\
+    break;\
+    case 1u: /*a is a scalar*/\
+    switch (onevecflg){\
+      case 3u:                               for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(0,0) X b[j], 0,j); break;\
+      case 2u: for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(i,0) X b[j], i,j); break;\
+      default: throw std::runtime_error(interpret_error_msg);\
+    }\
+    break;\
+    default: /*neither a nor b are scalars*/\
+    switch (onevecflg){\
+      case 3u:                               for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(0,j) X b[j], 0,j); break;\
+      case 2u: for (size_t i=0; i<si.n; ++i) for (size_t j=0; j<si.m; ++j) out.insert(a.getvalue(i,j) X b[j], i,j); break;\
+      default: throw std::runtime_error(interpret_error_msg);\
+    }\
+  }\
+  return out;\
+}
+
 INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(+=,+)
 INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(-=,-)
 INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(*=,*)
@@ -606,3 +648,8 @@ BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(+)
 BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(-)
 BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(*)
 BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(/)
+
+BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(+)
+BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(-)
+BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(*)
+BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(/)

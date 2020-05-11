@@ -17,6 +17,7 @@
 #include <pybind11/pybind11.h>
 #include "_trellis.hpp"
 void wrap_trellis(pybind11::module & m){
-  declare_bztrellisq<double>(m,"");
-  declare_bztrellisq<std::complex<double>>(m,"complex");
+  declare_bztrellisq<double,double>(m,"dd");
+  declare_bztrellisq<double,std::complex<double>>(m,"dc");
+  declare_bztrellisq<std::complex<double>,std::complex<double>>(m,"cc");
 }

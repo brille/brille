@@ -23,6 +23,7 @@
 #include <thread>
 
 #include "_c_to_python.hpp"
+#include "_interpolation_data.hpp"
 #include "trellis.hpp"
 #include "bz_trellis.hpp"
 #include "utilities.hpp"
@@ -33,10 +34,10 @@ namespace py = pybind11;
 typedef long slong; // ssize_t is only defined for gcc?
 typedef unsigned long element_t;
 
-template<class T>
+template<class T,class R>
 void declare_bztrellisq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
-  using Class = BrillouinZoneTrellis3<T>;
+  using Class = BrillouinZoneTrellis3<T,R>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
   // Initializer (BrillouinZone, maximum node volume fraction)
@@ -54,30 +55,34 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
 
   .def_property_readonly("tetrahedra",[](const Class& cobj){return cobj.get_vertices_per_tetrahedron();})
 
-  .def("fill",[](Class& cobj, py::array_t<T> pydata, py::array_t<int, py::array::c_style> pyel){
-    py::buffer_info bi;
-    // copy-in the elements array
-    bi = pyel.request();
-    if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
-    std::array<element_t, 3> el{{0,0,0}};
-    int* intel = (int*)bi.ptr;
-    for (ssize_t i=0; i<bi.shape[0] && i<3; ++i) el[i] = static_cast<element_t>(intel[i]);
-    // copy-in the data ArrayVector
-    bi = pydata.request();
-    ArrayVector<T> data((T*)bi.ptr, bi.shape, bi.strides);
-    //
-    if (cobj.vertex_count() != data.size()){
-      std::string msg = "Provided " + std::to_string(data.size())
-                      + " data inputs but expected "
-                      + std::to_string(cobj.vertex_count()) + "!";
-      throw std::runtime_error(msg);
-    }
-    std::vector<size_t> shape;
-    for (ssize_t bisi: bi.shape) shape.push_back(signed_to_unsigned<size_t>(bisi));
-    cobj.replace_data(data, shape, el);
-  }, "data"_a, "elements"_a)
+  .def("fill",[](Class& cobj,
+    // py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
+    // py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl
+    py::array_t<T> pyvals, py::array_t<int> pyvalel,
+    py::array_t<R> pyvecs, py::array_t<int> pyvecel
+  ){
+    ArrayVector<T> vals;
+    ArrayVector<R> vecs;
+    std::vector<size_t> val_sh, vec_sh;
+    std::array<element_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    RotatesLike val_rl, vec_rl;
+    size_t count = cobj.vertex_count();
+    std::tie(vals,val_sh,val_el,val_rl)=fill_check(pyvals,pyvalel,count);
+    std::tie(vecs,vec_sh,vec_el,vec_rl)=fill_check(pyvecs,pyvecel,count);
 
-  .def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
+    cobj.replace_value_data(vals, val_sh, val_el, val_rl);
+    cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
+  }, "values_data"_a, "values_elements"_a, "vectors_data"_a, "vectors_elements"_a)
+
+  //.def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
+  .def_property_readonly("values",[](Class& cobj){
+    const auto & v{cobj.data().values()};
+    return av2np_shape(v.data(), v.shape(), false);
+  })
+  .def_property_readonly("vectors",[](Class& cobj){
+    const auto & v{cobj.data().vectors()};
+    return av2np_shape(v.data(), v.shape(), false);
+  })
 
   .def("interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
@@ -86,38 +91,23 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     py::buffer_info bi = pyX.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
+    // store shape of X before three-vector dimension for shaping output
+    std::vector<ssize_t> preshape;
+    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
+    // copy the Python X array
     BrillouinZone b = cobj.get_brillouinzone();
     Reciprocal lat = b.get_lattice();
     LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
-
     // perform the interpolation and rotate and vectors/tensors afterwards
-    int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
-    ArrayVector<T> lires = cobj.interpolate_at(qv, nthreads, no_move);
-    // and then make sure we return an numpy array of appropriate size:
-    std::vector<ssize_t> outshape;
-    for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
-    if (cobj.data().shape().size() > 1){
-      const std::vector<size_t>& ds{cobj.data().shape()};
-      // the shape of each element is data_shape[1,...,data_ndim-1]
-      for (size_t i=1; i<ds.size(); ++i) outshape.push_back(unsigned_to_signed<ssize_t>(ds[i]));
-    }
-    size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
-    if (total_elements != lires.numel()*lires.size() ){
-      std::cout << "outshape: (";
-      for (ssize_t osi : outshape) std::cout << osi << "," ;
-      std::cout << "\b)" << std::endl;
-      std::string msg = "Why do we expect " + std::to_string(total_elements)
-                      + " but only get back " + std::to_string(lires.numel()*lires.size())
-                      + " (" + std::to_string(lires.numel())
-                      + " × " + std::to_string(lires.size()) + ")";
-      throw std::runtime_error(msg);
-    }
-    auto liout = py::array_t<T,py::array::c_style>(outshape);
-    T *rptr = (T*) liout.request().ptr;
-    for (size_t i =0; i< lires.size(); i++)
-      for (size_t j=0; j< lires.numel(); j++)
-        rptr[i*lires.numel()+j] = lires.getvalue(i,j);
-    return liout;
+    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
+    ArrayVector<T> valres;
+    ArrayVector<R> vecres;
+    std::tie(valres, vecres) = cobj.interpolate_at(qv, nthreads, no_move);
+    // copy the results to Python arrays and return
+    auto valout = iid2np(valres, cobj.data().values(),  preshape);
+    auto vecout = iid2np(vecres, cobj.data().vectors(), preshape);
+    return std::make_tuple(valout, vecout);
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
 
   .def("ir_interpolate_at",[](Class& cobj,
@@ -127,38 +117,23 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     py::buffer_info bi = pyX.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
+    // store shape of X before three-vector dimension for shaping output
+    std::vector<ssize_t> preshape;
+    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
+    // copy the Python X array
     BrillouinZone b = cobj.get_brillouinzone();
     Reciprocal lat = b.get_lattice();
     LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
-
     // perform the interpolation and rotate and vectors/tensors afterwards
-    int nthreads = (useparallel) ? ((threads < 1) ? static_cast<int>(std::thread::hardware_concurrency()) : threads) : 1;
-    ArrayVector<T> lires = cobj.ir_interpolate_at(qv, nthreads, no_move);
-    // and then make sure we return an numpy array of appropriate size:
-    std::vector<ssize_t> outshape;
-    for (ssize_t i=0; i < bi.ndim-1; ++i) outshape.push_back(bi.shape[i]);
-    if (cobj.data().shape().size() > 1){
-      const std::vector<size_t>& ds{cobj.data().shape()};
-      // the shape of each element is data_shape[1,...,data_ndim-1]
-      for (size_t i=1; i<ds.size(); ++i) outshape.push_back(unsigned_to_signed<ssize_t>(ds[i]));
-    }
-    size_t total_elements = signed_to_unsigned<size_t>(std::accumulate(outshape.begin(), outshape.end(), 1, std::multiplies<ssize_t>()));
-    if (total_elements != lires.numel()*lires.size() ){
-      std::cout << "outshape: (";
-      for (ssize_t osi : outshape) std::cout << osi << "," ;
-      std::cout << "\b)" << std::endl;
-      std::string msg = "Why do we expect " + std::to_string(total_elements)
-                      + " but only get back " + std::to_string(lires.numel()*lires.size())
-                      + " (" + std::to_string(lires.numel())
-                      + " × " + std::to_string(lires.size()) + ")";
-      throw std::runtime_error(msg);
-    }
-    auto liout = py::array_t<T,py::array::c_style>(outshape);
-    T *rptr = (T*) liout.request().ptr;
-    for (size_t i =0; i< lires.size(); i++)
-      for (size_t j=0; j< lires.numel(); j++)
-        rptr[i*lires.numel()+j] = lires.getvalue(i,j);
-    return liout;
+    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
+    ArrayVector<T> valres;
+    ArrayVector<R> vecres;
+    std::tie(valres, vecres) = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    // copy results to Python arrays and return
+    auto valout = iid2np(valres, cobj.data().values(),  preshape);
+    auto vecout = iid2np(vecres, cobj.data().vectors(), preshape);
+    return std::make_tuple(valout, vecout);
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
 
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){

@@ -74,10 +74,10 @@ def plot(*args, **kwds):
         exception is raised.
     """
     bz_types = (brille.BrillouinZone,
-                brille.BZGridQcomplex, brille.BZGridQ,
-                brille.BZMeshQcomplex, brille.BZMeshQ,
-                brille.BZNestQcomplex, brille.BZNestQ,
-                brille.BZTrellisQcomplex, brille.BZTrellisQ)
+                brille.BZGridQdc   , brille.BZGridQcc   , brille.BZGridQdd,
+                brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
+                brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
+                brille.BZTrellisQdc, brille.BZTrellisQcc, brille.BZTrellisQdd)
     if len(args) is 1:
         if isinstance(args[0], bz_types):
             return plot_bz(*args, **kwds)
@@ -163,10 +163,10 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     Parameters
     ----------
     bz : :py:class:`BrillouinZone`, \
-         :py:class:`BZGridQcomplex`, :py:class:`BZGridQ`, \
-         :py:class:`BZMeshQcomplex`, :py:class:`BZMeshQ`, \
-         :py:class:`BZNestQcomplex`, :py:class:`BZNestQ`, \
-         :py:class:`BZTrellisQcomplex`, :py:class:`BZTrellisQ`
+         :py:class:`BZGridQdc`, :py:class:`BZGridQcc`, :py:class:`BZGridQdd`, \
+         :py:class:`BZMeshQdc`, :py:class:`BZMeshQcc`, :py:class:`BZMeshQdd`, \
+         :py:class:`BZNestQdc`, :py:class:`BZNestQcc`, :py:class:`BZNestQdd`, \
+         :py:class:`BZTrellisQdc`, :py:class:`BZTrellisQcc`, :py:class:`BZTrellisQ`
         The object containing information about a first Brillouin zone and/or
         an irreducible Brillouin zone.
 
@@ -233,10 +233,11 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
-    types_with_points = (brille.BZGridQcomplex, brille.BZGridQ,
-                         brille.BZMeshQcomplex, brille.BZMeshQ,
-                         brille.BZNestQcomplex, brille.BZNestQ,
-                         brille.BZTrellisQcomplex, brille.BZTrellisQ)
+    types_with_points = (brille.BZGridQdc, brille.BZGridQcc, brille.BZGridQdd,
+                         brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
+                         brille.BZNestQdc, brille.BZNestQcc, brille.BZNestQdd,
+                         brille.BZTrellisQdc, brille.BZTrellisQcc,
+                         brille.BZTrellisQdd)
     if isinstance(bz, types_with_points):
         if Q is None:
             if units == 'rlu':

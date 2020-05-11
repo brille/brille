@@ -29,7 +29,8 @@ from scipy.stats import norm, cauchy
 from euphonic.data.interpolation import InterpolationData
 from euphonic import ureg    # avoid creating a second Pint UnitRegistry
 
-import brille as sbz
+import brille as br
+from brille.spglib import BrSpgl
 from brille.evn import degenerate_check
 
 
@@ -71,7 +72,7 @@ class BrEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 hall_number=None, parallel=False, **kwds):
+                 hall=None, parallel=False, **kwds):
         """Initialize a new BrEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -80,9 +81,7 @@ class BrEu:
             scattering_lengths = {k: 1 for k in np.unique(SPData.ion_type)}
         self.data = SPData
         self.scattering_lengths = scattering_lengths
-        self.hall_number = hall_number
-        self.data_cell_is_primitive = cell_is_primitive
-        self.__check_if_cell_is_primitive()
+        self.brspgl = BrSpgl(SPData.cell_vec.to('angstrom').magnitude, SPData.ion_r, SPData.ion_type, hall=hall)
         # Construct the BZGrid, by default using the conventional unit cell
         grid_q = self.__define_grid_or_mesh(**kwds)
         # Calculate ωᵢ(Q) and ⃗ϵᵢⱼ(Q), and fill the BZGrid:
@@ -96,26 +95,49 @@ class BrEu:
         # since Euphonic no longer attempts to handle varying units
         # internally
         self.data.calculate_fine_phonons(grid_q, **cfp_dict)
-        freq = self.data._freqs   # can this be replaced by _reduced_freqs?
-        vecs = self.data.eigenvecs# can this be replaced by _reduced_eigenvecs?
-        n_pt = grid_q.shape[0]
-        n_br = self.data.n_branches
-        n_io = self.data.n_ions
+        freq = self.data._freqs    # (n_pt, n_br) # can this be replaced by _reduced_freqs?
+        vecs = self.data.eigenvecs # (n_pt, n_br, n_io, 3) # can this be replaced by _reduced_eigenvecs?
         vecs = degenerate_check(grid_q, freq, vecs)
-        frqs_vecs = np.concatenate(
-            (freq.reshape(n_pt, n_br, 1),
-             vecs.reshape(n_pt, n_br, 3*n_io)), axis=2)
-        # fill requires input shaped (n_pt, n_br, [anything])
-        # or (n_pt, [anything]) if n_br==1. So frqs_vecs is fine as is.
-        # We need to help the interpolation method by telling it how many
-        # scalar, eigen-vector, vector, and matrix elements there are in
-        # each [anything]
-        elements = (1, 3*n_io, 0) # scalar, (eigen)vector, matrix
-        self.grid.fill(frqs_vecs, elements)
-        self.sort_branches()
+        self.sort_branches(freq, vecs)
         self.parallel = parallel
 
-    def sort_branches(self, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
+    def _fill_grid(self, freq, vecs):
+        n_pt = self.grid.invA.shape[0]
+        n_br = self.data.n_branches
+        n_io = self.data.n_ions
+        if freq.shape == (n_pt, n_br):
+            freq = freq.reshape(n_pt, n_br, 1)
+        if freq.shape != (n_pt, n_br, 1):
+            raise Exception('freqiencies have wrong shape')
+        if vecs.shape != (n_pt, n_br, n_io, 3):
+            raise Exception('eigenvectors have wrong shape')
+        # We must provide extra content information to enable efficient
+        # interpolation and possible rotations. All arrays provided to fill
+        # must be 3+ dimensional -- the first dimension is over the points of
+        # the grid, the second dimension is over the phonon branches, and any
+        # additional dimensions are collapsed from highest to lowest dimension
+        # (indexed as row-ordered linear indexing)
+        # So, the vectors in (n_pt, n_br, n_io, 3) end up as
+        # (n_pt, n_br, 3*n_io) with each three-vector's elements contiguous in
+        # memory. The extra information provided details *what* the last
+        # collapsed dimension contains, as a tuple, list, or 1-D array
+        #   ( the number of scalar elements,
+        #     the total number of vectors elements [must be divisible by 3],
+        #     the total number of matrix elements [must be divisible by 9],
+        #     how the vectors/matrices behave under rotation [0, 1, or 2] )
+        # The last dimension elements must be ordered as scalars, then vectors
+        # then matrices. The three rotation behaviour values are 0 ≡ Realspace
+        # vectors, 1 ≡ Reciprocal space vectors, 2 ≡ (Realspace) Axial vectors.
+        # Any missing entries from the tuple/list/array are treated as zeros.
+        #
+        # For the case of phonon eigenvalues and eigenvectors: there is one
+        # eigenvalue per branch (scalars do not change under rotation), and
+        # each branch eigenvector is comprised of n_ions displacement 3-vectors
+        # which transform via the phonon Γ function,
+        # so [1,0,0,0] ≡ (1,) and [0,n_ions*3,0,3] ≡ (0,3*n_io,0,3)
+        self.grid.fill(freq, (1,), self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), (0,3*n_io,0,3))
+
+    def sort_branches(self, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
         """Sort the phonon branches stored at all mapped grip points.
 
         By comparing the difference in phonon branch energy and the angle
@@ -133,6 +155,7 @@ class BrEu:
 
         The weights are both one by default but can be modified as necessary.
         """
+        self._fill_grid(frqs, vecs)
         # The input to sort_perm indicates what weight should be given to
         # each part of the resultant cost matrix. In this case, each phonon
         # branch consists of one energy, n_ions three-vectors, and no matrix;
@@ -142,65 +165,19 @@ class BrEu:
             vector_cost_weight=eigenvector_weight,
             matrix_cost_weight=0,
             vector_weight_function=weight_function)
-        frqs_vecs = np.array([x[y, :] for (x, y) in zip(self.grid.data, perm)])
-        elements = (1, 3*self.data.n_ions, 0)
-        self.grid.fill(frqs_vecs, elements)
-        return frqs_vecs
-
-    def __check_if_cell_is_primitive(self):
-        # CASTEP can calculate in a standard, non-standard, primitive, or
-        # non-primitive cell. Try to be clever about how its stored cell
-        # relates to the one a calling function will use.
-        _, ion_indexes = np.unique(self.data.ion_type, return_inverse=True)
-        lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
-        cell = (lattice_vectors, self.data.ion_r, ion_indexes)
-        # spglib can come to our rescue here a bit
-        prim_lv, _, _ = spglib.find_primitive(cell)
-        # if (prim_lv == lattice_vectors).all():
-        # pylint: disable=no-member
-        if sbz.Direct(lattice_vectors).isapprox(sbz.Direct(prim_lv)):
-            # check for approximate equivalence of lattice parameters instead
-            # of equivalent lattice vectors as spglib may introduce a rotation
-            if self.data_cell_is_primitive is None:
-                self.data_cell_is_primitive = True
-            if not self.data_cell_is_primitive:
-                msg = "Cell vectors and positions seem to represent a "
-                msg += "primitive lattice but a set flag indicates otherwise."
-                raise Exception(msg)
-        else:
-            # eventually we could try to get *really* clever and look for
-            # rotation/transformation matrices which brille doesn't know about
-            if self.data_cell_is_primitive is None:
-                self.data_cell_is_primitive = False
-            if self.data_cell_is_primitive:
-                msg = "Cell vectors and positions seem not to represent a "
-                msg += "primitive lattice but a set flag indicates otherwise."
-                raise Exception(msg)
-        # while we're here with cell defined, check for its Hall number:
-        if self.hall_number is None:
-            symmetry_data = spglib.get_symmetry_dataset(cell)
-            self.hall_number = symmetry_data['hall_number']
-
-    # pylint: disable=no-member
-    def __get_primitive_transform(self):
-        return sbz.PrimitiveTransform(self.hall_number)
+        # use the permutations to sort the eigenvalues and vectors
+        frqs = np.array([x[y] for (x, y) in zip(frqs, perm)])
+        vecs = np.array([x[y,:,:] for (x,y) in zip(vecs, perm)])
+        # # The gridded frequencies are (n_pt, n_br, 1)
+        # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
+        # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
+        # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
+        self._fill_grid(frqs, vecs)
+        return frqs, vecs
 
     # pylint: disable=c0103,w0613,no-member
     def __define_grid_or_mesh(self, mesh=False, trellis=False, nest=False, **kwds):
-        prim_tran = self.__get_primitive_transform()
-        lattice_vectors = (self.data.cell_vec.to('angstrom')).magnitude
-        # And we can check whether there's anything to do using brille
-        if prim_tran.does_anything and self.data_cell_is_primitive:
-            # this multiplication is backwards compared to, e.g.,
-            # https://atztogo.github.io/spglib/definition.html#space-group-operation-and-change-of-basis
-            # where the lattice_vectors form the columns of a matrix and here
-            # they form the rows
-            lattice_vectors = np.matmul(prim_tran.invPt, lattice_vectors)
-            # try to avoid rounding-error problems by truncating at 10 decimals
-            lattice_vectors = np.round(lattice_vectors, 10)
-        #
-        dlat = sbz.Direct(lattice_vectors, self.hall_number)
-        brillouin_zone = sbz.BrillouinZone(dlat.star)
+        brillouin_zone = self.brspgl.get_conventional_BrillouinZone()
         if mesh:
             self.__make_mesh(brillouin_zone, **kwds)
         elif trellis:
@@ -211,10 +188,7 @@ class BrEu:
             self.__make_grid(brillouin_zone, **kwds)
         # We need to make sure that we pass gridded Q points in the primitive
         # lattice, since that is what Euphonic expects:
-        grid_q = self.grid.rlu
-        if prim_tran.does_anything and self.data_cell_is_primitive:
-            grid_q = np.array([np.matmul(prim_tran.P, x) for x in grid_q])
-        return grid_q
+        return self.brspgl.conventional_to_input_Q(self.grid.rlu)
 
     def __make_grid(self, bz, halfN=None, step=None, units='rlu', **kwds):
         if halfN is not None:
@@ -226,45 +200,49 @@ class BrEu:
             if not isinstance(halfN, np.ndarray):
                 raise Exception("'halfN' must be a tuple, list, or ndarray")
             halfN = halfN.astype('uint64')
-            self.grid = sbz.BZGridQcomplex(bz, halfN)
+            self.grid = br.BZGridQdc(bz, halfN)
         elif step is not None:
             if isinstance(step, ureg.Quantity):
                 step = (step.to('angstrom')).magnitude
                 isrlu = False
             else:
                 isrlu = units.lower() == 'rlu'
-            self.grid = sbz.BZGridQcomplex(bz, step, isrlu)
+            self.grid = br.BZGridQdc(bz, step, isrlu)
         else:
             raise Exception("keyword 'halfN' or 'step' required")
 
     def __make_mesh(self, bz, max_size=-1, max_points=-1, num_levels=3, **kwds):
-        self.grid = sbz.BZMeshQcomplex(bz, max_size, num_levels, max_points)
+        self.grid = br.BZMeshQdc(bz, max_size, num_levels, max_points)
 
     def __make_trellis(self, bz, max_volume=None, number_density=None, **kwds):
         if max_volume is not None:
-            self.grid = sbz.BZTrellisQcomplex(bz, max_volume)
+            self.grid = br.BZTrellisQdc(bz, max_volume)
         elif number_density is not None:
-            self.grid = sbz.BZTrellisQcomplex(bz, number_density)
+            self.grid = br.BZTrellisQdc(bz, number_density)
         else:
             raise Exception("keyword 'max_volume' or 'number_density' required")
 
     def __make_nest(self, bz, max_branchings=5, max_volume=None, number_density=None, **kwds):
         if max_volume is not None:
-            self.grid = sbz.BZNestQcomplex(bz, max_volume, max_branchings)
+            self.grid = br.BZNestQdc(bz, max_volume, max_branchings)
         elif number_density is not None:
-            self.grid = sbz.BZNestQcomplex(bz, number_density, max_branchings)
+            self.grid = br.BZNestQdc(bz, number_density, max_branchings)
         else:
             raise Exception("keyword 'max_volume' or 'number_density' required")
 
-    def s_q(self, q_hkl, **kwargs):
+    def s_q(self, q_hkl, interpolate=True,  T=5.0, scale=1.0, dw_data=None, **kwargs):
         """Calculate Sᵢ(Q) where Q = (q_h,q_k,q_l)."""
-        self.w_q(q_hkl, **kwargs)
+        self.w_q(q_hkl, interpolate=interpolate, **kwargs)
         # Finally calculate Sᵢ(Q)
-        # using InterpolationData.calculate_structure_factor
-        # which only allows a limited number of keyword arguments
-        sf_keywords = ('T', 'scale', 'dw_seed', 'dw_grid', 'calc_bose')
-        sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
-        return self.data.calculate_structure_factor(self.scattering_lengths, **sf_dict)
+        if interpolate:
+            sf = self._calculate_structure_factor(T=T, scale=scale, dw_data=dw_data)
+        else:
+            # using InterpolationData.calculate_structure_factor
+            # which only allows a limited number of keyword arguments
+            sf_keywords = ('calc_bose',)
+            sf_dict = {k: kwargs[k] for k in sf_keywords if k in kwargs}
+            sf = self.data.calculate_structure_factor(self.scattering_lengths, **sf_dict)
+        return sf
 
     def dw(self, q_hkl, T=0):
         """Calculates the Debye-Waller factor using the Brillouin zone grid."""
@@ -273,39 +251,98 @@ class BrEu:
                                           T)
         return DWfactor
 
+    def _calculate_structure_factor(self, T=5.0, scale=1.0, dw_data=None):
+            """
+            Calculate the one phonon inelastic scattering at each q-point
+            See M. Dove Structure and Dynamics Pg. 226
+
+            Parameters
+            ----------
+            scattering_lengths : dictionary
+                Dictionary of spin and isotope averaged coherent scattering legnths
+                for each element in the structure in fm e.g.
+                {'O': 5.803, 'Zn': 5.680}
+            T : float, optional, default 5.0
+                The temperature in Kelvin to use when calculating the Bose and
+                Debye-Waller factors
+            scale : float, optional, default 1.0
+                Apply a multiplicative factor to the final structure factor.
+            calc_bose : boolean, optional, default True
+                Whether to calculate and apply the Bose factor
+            dw_data : InterpolationData or PhononData object
+                A PhononData or InterpolationData object with
+                frequencies/eigenvectors calculated on a q-grid over which the
+                Debye-Waller factor will be calculated
+
+            Returns
+            -------
+            sf : (n_qpts, n_branches) float ndarray
+                The structure factor for each q-point and phonon branch
+            """
+            sl = [self.scattering_lengths[x] for x in self.ion_type]
+
+            freqs = self.data._freqs # abuse Euphonic to get the right units
+            ion_mass = self.data._ion_mass # ditto
+            sl = (sl*ureg('fm').to('bohr')).magnitude
+
+            # Calculate normalisation factor
+            norm_factor = sl/np.sqrt(ion_mass)
+
+            # Calculate the exponential factor for all ions and q-points
+            # ion_r in fractional coords, so Qdotr = 2pi*qh*rx + 2pi*qk*ry...
+            exp_factor = np.exp(1J*2*math.pi*np.einsum('ij,kj->ik',
+                                                       self.data.qpts, self.data.ion_r))
+
+            # brille prefers eigenvectors in units of the lattice, so we don't need
+            # to modify the units of Q
+
+            # Calculate dot product of Q and eigenvectors for all branches, ions
+            # and q-points
+            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.eigenvecs), self.data.qpts)
+
+            # Calculate Debye-Waller factors
+            if dw_data:
+                if dw_data.n_ions != self.n_ions:
+                    raise Exception((
+                        'The Data object used as dw_data is not compatible with the'
+                        ' object that calculate_structure_factor has been called on'
+                        ' (they have a different number of ions). Is dw_data '
+                        'correct?'))
+                dw = dw_data._dw_coeff(T)
+                dw_factor = np.exp(-np.einsum('jkl,ik,il->ij', dw, self.data.qpts, self.data.qpts)/2)
+                exp_factor *= dw_factor
+
+            # Multiply Q.eigenvector, exp factor and normalisation factor
+            term = np.einsum('ijk,ik,k->ij', eigenv_dot_q, exp_factor, norm_factor)
+
+            # Take mod squared and divide by frequency to get intensity
+            sf = np.absolute(term*np.conj(term))/np.absolute(freqs)
+
+            sf = np.real(sf*scale)
+
+            return sf
+
     def w_q(self, q_pt, moveinto=True, interpolate=True, threads=-1, **kwargs):
         """Calculate ωᵢ(Q) where Q = (q_h,q_k,q_l)."""
-        prim_tran = self.__get_primitive_transform()
         if interpolate:
-            # Interpolate the previously-stored eigen values for each Q
-            # each grid point has a (n_br, 1+3*n_io) array and interpolate_at
-            # returns an (n_pt, n_br, 1+3*n_io) array.
-            # frqs_vecs = self.grid.interpolate_at(q_pt, moveinto, self.parallel)
-            frqs_vecs = self.grid.ir_interpolate_at(q_pt, self.parallel, threads, not moveinto)
-            # Separate the frequencies and eigenvectors
-            # pylint: disable=w0632
-            frqs, vecs = np.split(frqs_vecs, (1,), axis=2)
-            # And reshape to what Euphonic expects
+            # Interpolate the previously-stored eigen values/vectors for each Q
+            # each grid point has a (n_br, 1) values array and a (n_br, n_io, 3)
+            # eigenvectors array and interpolate_at returns a tuple with the
+            # first entry a (n_pt, n_br, 1) values array and the second a
+            # (n_pt, n_br, n_io, 3) eigenvectors array
+            frqs, vecs = self.grid.ir_interpolate_at(q_pt, self.parallel, threads, not moveinto)
             n_pt = q_pt.shape[0]
-            n_br = self.data.n_branches
-            n_io = self.data.n_ions
-            frqs = np.ascontiguousarray(frqs.reshape(n_pt, n_br))
-            vecs = np.ascontiguousarray(vecs.reshape(n_pt, n_br, n_io, 3))
             # Store all information in the Euphonic Data object
             self.data.n_qpts = n_pt
-            if prim_tran.does_anything and self.data_cell_is_primitive:
-                q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
-            self.data.qpts = q_pt
-            self.data._reduced_freqs = frqs
-            self.data._reduced_eigenvecs = vecs
+            self.data.qpts = q_pt # no lattice conversion since we use internal Structure Factor calculation
+            self.data._reduced_freqs = np.squeeze(frqs) # Euphonic expects this to be (n_pt, n_br)
+            self.data._reduced_eigenvecs = vecs # already (n_pt, n_br, n_io, 3)
             self.data._qpts_i = np.arange(n_pt, dtype=np.int32)
         else:
-            if prim_tran.does_anything and self.data_cell_is_primitive:
-                q_pt = np.array([np.matmul(prim_tran.P, x) for x in q_pt])
-            cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
-                            'eta_scale', 'splitting')
+            cfp_keywords = ('asr', 'precondition', 'dipole', 'eta_scale'
+                            'splitting', 'reduce_qpts', 'use_c', 'n_threads')
             cfp_dict = {k: kwargs[k] for k in cfp_keywords if k in kwargs}
-            self.data.calculate_fine_phonons(q_pt, **cfp_dict)
+            self.data.calculate_fine_phonons(self.brspgl.conventional_to_input_Q(q_pt), **cfp_dict)
         return self.data.freqs # now a property, handles unit conversion
 
     def __call__(self, *args, **kwargs):
@@ -456,7 +493,7 @@ def gaussian(x_0, x_i, y_i, fwhm):
         fwhm = fwhm[0]
     sigma = fwhm/np.sqrt(np.log(256))
     z_0 = (x_0-x_i)/sigma
-    y_0 = norm.pdf(z_0.T).T * y_i
+    y_0 = norm.pdf(z_0) * y_i
     return y_0
 
 
@@ -466,7 +503,7 @@ def lorentzian(x_0, x_i, y_i, fwhm):
         fwhm = fwhm[0]
     gamma = fwhm/2
     z_0 = (x_0-x_i)/gamma
-    y_0 = cauchy.pdf(z_0.T).T * y_i
+    y_0 = cauchy.pdf(z_0) * y_i
     return y_0
 
 

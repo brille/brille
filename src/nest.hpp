@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <array>
+#include <tuple>
 #include <utility>
 #include <algorithm>
 #include <omp.h>
@@ -177,11 +178,11 @@ protected:
     return empty;
   }
 };
-template<typename T>
+template<class T, class S>
 class Nest{
   NestNode root_;
   ArrayVector<double> vertices_;
-  InterpolationData<T> data_;
+  InterpolationData<T,S> data_;
   // std::vector<size_t> map_; // vertices holds *all* vertices but data_ only holds information for terminal vertices!
 public:
   std::string tree_string(void) const {
@@ -210,6 +211,7 @@ public:
   const ArrayVector<double>& all_vertices(void) const {return vertices_;}
   // ArrayVector<double> vertices(void) const{ return vertices_.extract(this->vertex_is_leaf()); }
   ArrayVector<double> vertices(void) const{ return vertices_; }
+  size_t vertex_count() const { return vertices_.size(); }
   std::vector<std::array<size_t,4>> tetrahedra(void) const {
     std::vector<std::array<size_t,4>> all_tet = root_.tetrahedra();
     // we need to adjust indexing to be into vertices instead of all_vertices
@@ -230,31 +232,35 @@ public:
       throw std::runtime_error("Nest requires x values which are three-vectors.");
     return mask;
   }
-  ArrayVector<T> interpolate_at(const ArrayVector<double>& x) const {
+  std::tuple<ArrayVector<T>, ArrayVector<S>>
+  interpolate_at(const ArrayVector<double>& x) const {
     this->check_before_interpolating(x);
-    ArrayVector<T> out(data_.numel(), x.size());
+    ArrayVector<T> vals(data_.values().numel(), x.size());
+    ArrayVector<S> vecs(data_.vectors().numel(), x.size());
     for (size_t i=0; i<x.size(); ++i){
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
       auto iw = root_.indices_weights(vertices_, x.extract(i));
-      data_.interpolate_at(iw, out, i);
+      data_.interpolate_at(iw, vals, vecs, i);
     }
-    return out;
+    return std::make_tuple(vals, vecs);
   }
-  ArrayVector<T> interpolate_at(const ArrayVector<double>& x, const int threads) const {
+  std::tuple<ArrayVector<T>, ArrayVector<S>>
+  interpolate_at(const ArrayVector<double>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // shared between threads
-    ArrayVector<T> out(data_.numel(), x.size());
+    ArrayVector<T> vals(data_.values().numel(), x.size());
+    ArrayVector<S> vecs(data_.vectors().numel(), x.size());
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     size_t unfound=0;
     long xsize = unsigned_to_signed<long, size_t>(x.size());
-  #pragma omp parallel for default(none) shared(x, out) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(x, vals, vecs) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
     for (long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long>(si);
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
       auto iw = root_.indices_weights(vertices_, x.extract(i));
       if (iw.size()){
-        data_.interpolate_at(iw, out, i);
+        data_.interpolate_at(iw, vals, vecs, i);
       } else {
         ++unfound;
       }
@@ -263,10 +269,11 @@ public:
       std::string msg = std::to_string(unfound) + " points not found in Nest";
       throw std::runtime_error(msg);
     }
-    return out;
+    return std::make_tuple(vals, vecs);
   }
-  const InterpolationData<T>& data(void) const {return data_;}
-  template<typename... A> void replace_data(A... args){ data_.replace_data(args...);}
+  const InterpolationData<T,S>& data(void) const {return data_;}  
+  template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
+  template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
     return data_.debye_waller(Q,M,t_K);

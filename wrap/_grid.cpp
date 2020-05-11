@@ -18,8 +18,9 @@
 #include "_grid.hpp"
 
 void wrap_grid(pybind11::module & m){
-  declare_bzgridq<double>(m,"");
-  declare_bzgridqe<double>(m,"");
-  declare_bzgridq<std::complex<double>>(m,"complex");
-  declare_bzgridqe<std::complex<double>>(m,"complex");
+  declare_bzgridq<double,double>(m,"dd");
+  declare_bzgridq<double,std::complex<double>>(m,"dc");
+  declare_bzgridq<std::complex<double>,std::complex<double>>(m,"cc");
+  // declare_bzgridqe<double,double>(m,"dd");
+  // declare_bzgridqe<double,std::complex<double>>(m,"dc");
 }

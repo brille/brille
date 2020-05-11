@@ -19,9 +19,10 @@
 #define _LATTICE_CLASS_H_
 
 #include <assert.h>
-// #include <vector>
+#include <vector>
 // #include "utilities.hpp"
 #include "primitive.hpp"
+#include "basis.hpp"
 
 
 // forward declare the two types of lattices so that they can be mutually-referential
@@ -58,13 +59,14 @@ and an optional Hall number if a non-Primitive lattice is desired.
 */
 class Lattice{
 protected:
-  double len[3]; //!< basis vector lengths
-  double ang[3]; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
+  std::array<double,3> len; //!< basis vector lengths
+  std::array<double,3> ang; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
   double volume; //!< volume of the unit cell formed by the basis vectors
   Spacegroup spg; //!< Spacegroup information
   Symmetry spgsym; //!< Spacegroup symmetry operators
   Pointgroup ptg; //!< Pointgroup information
   PointSymmetry ptgsym; //!< Pointgroup symmetry operators
+  Basis basis; //!< The positions of all atoms within the unit cell
 protected:
   double unitvolume() const;
   Lattice inner_star() const;
@@ -90,8 +92,9 @@ protected:
     double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
     for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
   }
-  void set_len_scalars(const double, const double, const double);
-  void set_ang_scalars(const double, const double, const double);
+  // void set_len_scalars(const double, const double, const double);
+  // void set_ang_scalars(const double, const double, const double, const AngleUnit);
+  void check_ang(const AngleUnit);
   void check_hall_number(const int h);
   void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
@@ -170,6 +173,7 @@ public:
     this->ptg = other.ptg;
     this->spgsym = other.spgsym;
     this->ptgsym = other.ptgsym;
+    this->basis = other.basis;
   }
   //! assignment operator
   // required for gcc 9+
@@ -183,6 +187,7 @@ public:
     this->ptg = other.ptg;
     this->spgsym = other.spgsym;
     this->ptgsym = other.ptgsym;
+    this->basis = other.basis;
     return *this;
   }
   //! Return the first basis vector length
@@ -253,7 +258,15 @@ public:
   //! Return the Pointgroup object of the Lattice
   Pointgroup get_pointgroup_object() const { return ptg; }
   //! Return the Spacegroup symmetry operation object of the Lattice
-  Symmetry get_spacegroup_symmetry() const { return spgsym; }
+  Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
+    if (time_reversal && !spgsym.has_space_inversion()){
+      Symmetry gens = spgsym.generators();
+      Motion<int,double> space_inversion({{-1,0,0, 0,-1,0, 0,0,-1}},{{0.,0.,0.}});
+      gens.add(space_inversion);
+      return gens.generate();
+    }
+    return spgsym;
+  }
   //! Return the Pointgroup Symmetry operation object of the Lattice
   PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {
     if (time_reversal && !ptgsym.has_space_inversion()){
@@ -271,6 +284,16 @@ public:
   }
   //! Check whether the pointgroup has the space-inversion operator, ̄1.
   bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
+  Basis get_basis() const {return basis; }
+  //template <class R, class II>
+  Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<unsigned long>& typ) {
+    this->basis = Basis(pos, typ);
+    return this->get_basis();
+  }
+  Basis set_basis(const Basis& b) {
+    this->basis = b;
+    return this->get_basis();
+  }
 };
 
 /*! \brief A space-spanning Lattice that exists in real space

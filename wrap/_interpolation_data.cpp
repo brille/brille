@@ -15,10 +15,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
-#include "_nest.hpp"
+#include "_interpolation_data.hpp"
 
-void wrap_nest(pybind11::module & m){
-  declare_bznestq<double,double>(m,"dd");
-  declare_bznestq<double,std::complex<double>>(m,"dc");
-  declare_bznestq<std::complex<double>,std::complex<double>>(m,"cc");
+namespace py = pybind11;
+
+void wrap_interpolationdata(py::module &m){
+  using namespace pybind11::literals;
+  py::enum_<RotatesLike> enm(m,"RotatesLike");
+  enm.value("Real", RotatesLike::Real);
+  enm.value("Reciprocal", RotatesLike::Reciprocal");
+  enm.value("Axial", RotatesLike::Axial);
+  enm.value("Gamma", RotatesLike::Gamma);
 }

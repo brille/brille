@@ -460,7 +460,7 @@ void BrillouinZone::irreducible_vertex_search(){
   LQVec<double> vertices03(bznormals.get_lattice(), n03);
   ArrayVector<int> i03(3, n03);
 
-  size_t c21=0, c12=0, c03=0;
+  int c21=0, c12=0, c03=0;
   if (n21){ // protect against Nbz=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit
     for (size_t i=0  ; i<(Nbz-1); ++i)
     for (size_t j=i+1; j< Nbz   ; ++j)
@@ -497,9 +497,9 @@ void BrillouinZone::irreducible_vertex_search(){
   verbose_update("Intersections found");
   // make sure we shrink all sets of vertices to just those found!
   // plus remove any intersection points outside of the first Brillouin zone
-  this->shrink_and_prune_outside(c21, vertices21, i21);
-  this->shrink_and_prune_outside(c12, vertices12, i12);
-  this->shrink_and_prune_outside(c03, vertices03, i03);
+  this->shrink_and_prune_outside(static_cast<size_t>(c21), vertices21, i21);
+  this->shrink_and_prune_outside(static_cast<size_t>(c12), vertices12, i12);
+  this->shrink_and_prune_outside(static_cast<size_t>(c03), vertices03, i03);
   verbose_update("Intersections pruned");
   // Now we have four lists of vertices, plus lists of the normal vectors
   // and on-plane points, which define the three planes that intersect at each
@@ -984,6 +984,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge_std(const L
 }
 
 bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
+  verbose_update("BrillouinZone::moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
@@ -1016,20 +1017,23 @@ schedule(dynamic)
     size_t i = signed_to_unsigned<size_t, long long>(si);
     LQVec<int> taui = Qsl.get(i).round();
     LQVec<double> qi = Qsl.get(i) - taui;
+    LQVec<int> last_shift = taui;
     size_t count{0};
     while (count++ < max_count && dot(normals, qi-points).any_approx(Comp::gt,0.)){
       auto qi_dot_normals = dot(qi , normals);
       auto Nhkl = (qi_dot_normals/taulen).round().to_std();
       auto qidn = qi_dot_normals.to_std();
-      if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a != 0;})){
+      if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a > 0;})){
         int maxnm{0};
         size_t maxat{0};
-        for (size_t j=0; j<Nhkl.size(); ++j) if (Nhkl[j]>=maxnm && (maxnm==0 || qidn[j]>qidn[maxat]) ){
-          maxnm = Nhkl[j];
-          maxat = j;
+        for (size_t j=0; j<Nhkl.size(); ++j)
+                                                         // protect against oscillating by ±τ
+        if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus[j]+last_shift).all_approx(Comp::gt, 0.) && qidn[j]>qidn[maxat]))){
+          maxnm = Nhkl[maxat=j];
         }
         qi -= taus[maxat] * (double)(maxnm); // ensure we subtract LQVec<double>
         taui += taus[maxat] * maxnm; // but add LQVec<int>
+        last_shift = taus[maxat] * maxnm;
       }
     }
     qsl.set(i, qi);
@@ -1050,7 +1054,11 @@ schedule(dynamic)
   }
   return true; // otherwise an error has been thrown
 }
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R, const int threads) const {
+bool BrillouinZone::ir_moveinto(
+  const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau,
+  std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads
+) const {
+  verbose_update("BrillouinZone::ir_moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
@@ -1058,15 +1066,16 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   if (!this->outerlattice.issame(Q.get_lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // get the PointSymmetry object, containing all operations
-  PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
-  // ensure q, tau, and R can hold one for each Q.
+  PointSymmetry psym = this->get_pointgroup_symmetry();
+  // ensure q, tau, and Rm can hold one for each Q.
   size_t nQ = Q.size();
   q.resize(nQ);
   tau.resize(nQ);
-  R.resize(nQ);
+  Ridx.resize(nQ);
+  invRidx.resize(nQ);
   // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
   // such that Q = q₁ₛₜ + τ
-  this->moveinto(Q, q, tau);
+  this->moveinto(Q, q, tau, threads);
   // by chance some first Bz points are likely already in the IR-Bz:
   std::vector<bool> in_ir = this->isinside_wedge_std(q);
   //LQVec<double> qj(Q.get_lattice(), 1u);
@@ -1074,10 +1083,10 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   // OpenMP 2 (VS) doesn't like unsigned loop counters
   size_t n_outside{0};
   long long snQ = unsigned_to_signed<long long, size_t>(nQ);
-  #pragma omp parallel for default(none) shared(psym, R, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(psym, Ridx, invRidx, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
   for (long long si=0; si<snQ; ++si){
     size_t i = signed_to_unsigned<size_t, long long>(si);
-    // any q already in the irreducible zone need no rotation → identity
+    // any q already in the irreducible zone need no rotation → identity, but we need to find the index of E
     bool outside=!in_ir[i];
     if (outside){
       // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
@@ -1087,13 +1096,15 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
         // their transposes' to rotate reciprocal space vectors.
         multiply_matrix_vector(qj.data(0), transpose(psym.get(j)).data(), q.data(i));
         if ( this->isinside_wedge_std(qj)[0] ){ /* store the result */
+          // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
           q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
-          R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
+          invRidx[i] = j; // Rⱼ *is* the inverse of what we want for ouput
+          Ridx[i] = psym.get_inverse_index(j); // find the index of Rⱼ⁻¹
           outside = false;
         }
       }
     } else {
-      R[i] = {1,0,0, 0,1,0, 0,0,1};
+      invRidx[i] = Ridx[i] = psym.find_index({1,0,0, 0,1,0, 0,0,1});
     }
     if (outside) {
       ++n_outside;

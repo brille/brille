@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-template<typename T>
-PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume):
+template<class T, class R>
+PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume):
   polyhedron_(poly), vertices_({3,0})
 {
   // find the extents of the polyhedron
@@ -102,8 +102,8 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
     for (int k=0; k<8; ++k){
       size_t int_idx=0;
       for (int j=0; j<3; ++j) int_idx += (node_ijk[j]+node_intersections[k][j])*intersections_span[j];
-      vert_idx[k] = map_idx[int_idx];
-      if (map_idx[int_idx] < n_mapped) mapped_vert_idx.push_back(map_idx[int_idx]);
+      vert_idx[k] = static_cast<index_t>(map_idx[int_idx]);
+      if (map_idx[int_idx] < n_mapped) mapped_vert_idx.push_back(static_cast<index_t>(map_idx[int_idx]));
     }
     bool contains_Gamma{true};
     for (int j=0; j<3; ++j){
@@ -167,7 +167,7 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
             throw std::logic_error("How does one point match multiple points when all points should be unique?");
           if (extra_idx.size()>0){
             // info_update("Polyhedron vertex in extra_intersections: idx = ",cube_idx);
-            local_map.push_back(kept_intersections.size() + extra_idx[0]);
+            local_map.push_back(static_cast<index_t>(kept_intersections.size() + extra_idx[0]));
           } else {
             // info_update("Polyhedron vertex not in kept or extra intersections, so add it.");
             // make sure we have room to store this new intersection
@@ -176,7 +176,7 @@ PolyhedronTrellis<T>::PolyhedronTrellis(const Polyhedron& poly, const double max
             // store the extra vertex
             extra_intersections.set(nExtra, trij);
             // and its mapping information
-            local_map.push_back(kept_intersections.size() + nExtra);
+            local_map.push_back(static_cast<index_t>(kept_intersections.size()) + nExtra);
             ++nExtra;
           }
         }
@@ -232,9 +232,9 @@ In either case, this over head is likely much smaller than the memory use of a
 freely-growing queue since there is no bound on the number of shared
 neighbouring vertices for two connected vertices in a relational mesh.
 */
-template<class T> template<typename R>
-size_t PolyhedronTrellis<T>::consensus_sort_nodes(
-  const index_t first_idx, const R weights[3], const int func, const size_t spobj[2],
+template<class T,class S> template<typename R>
+size_t PolyhedronTrellis<T,S>::consensus_sort_nodes(
+  const index_t first_idx, const R weights[3], const int func, const size_t spobj[3],
   ArrayVector<size_t>& perm,
   std::vector<bool>& node_done,
   std::vector<bool>& node_lock,
@@ -250,7 +250,7 @@ size_t PolyhedronTrellis<T>::consensus_sort_nodes(
   const size_t max_visits{10};
   size_t num_sorted=0, count=0u, refresh=1u;
   bool more_to_do=true;
-  int blanks = 0;
+  size_t blanks = 0;
   std::string prompt = "Nodes queued: ";
   std::cout << prompt;
   while (more_to_do){
@@ -277,11 +277,12 @@ size_t PolyhedronTrellis<T>::consensus_sort_nodes(
     }
     more_to_do = !queue.empty();
     if (++count >= refresh){
-      for (int i=0; i<blanks; ++i) std::cout << "\b";
-      int new_blanks = 1+static_cast<int>(std::floor(std::log10(queue.size())));
+      for (size_t i=0; i<blanks; ++i) std::cout << "\b";
+      size_t new_blanks{1};
+      if (queue.size()>0) new_blanks += static_cast<size_t>(std::floor(std::log10(queue.size())));
       if (new_blanks < blanks){
-        for (int i=0; i<blanks; ++i) std::cout << " ";
-        for (int i=0; i<blanks; ++i) std::cout << "\b";
+        for (size_t i=0; i<blanks; ++i) std::cout << " ";
+        for (size_t i=0; i<blanks; ++i) std::cout << "\b";
       }
       std::cout << queue.size();
       blanks = new_blanks;
@@ -293,15 +294,15 @@ size_t PolyhedronTrellis<T>::consensus_sort_nodes(
   }
   std::cout << "\r";
   blanks += prompt.size();
-  for (int i=0; i<blanks; ++i) std::cout << " ";
+  for (size_t i=0; i<blanks; ++i) std::cout << " ";
   std::cout << "\r";
   return num_sorted;
 }
 
 
-template<class T> template<typename R>
-bool PolyhedronTrellis<T>::consensus_sort_node(
-  const R w[3], const int func, const size_t spobj[2],
+template<class T,class S> template<typename R>
+bool PolyhedronTrellis<T,S>::consensus_sort_node(
+  const R w[3], const int func, const size_t spobj[3],
   ArrayVector<size_t>& p,
   std::vector<bool>& done,
   std::vector<bool>& lock,
@@ -323,9 +324,9 @@ bool PolyhedronTrellis<T>::consensus_sort_node(
   return count_done == verts.size();
 }
 
-template<class T> template<typename R>
-bool PolyhedronTrellis<T>::consensus_sort_difference(
-  const R w[3], const int func, const size_t spobj[2],
+template<class T,class S> template<typename R>
+bool PolyhedronTrellis<T,S>::consensus_sort_difference(
+  const R w[3], const int func, const size_t spobj[3],
   ArrayVector<size_t>& p, std::vector<bool>& done, const index_t idx,
   const std::vector<index_t>& presorted
 ) const {
@@ -349,9 +350,9 @@ bool PolyhedronTrellis<T>::consensus_sort_difference(
   ArrayVector<size_t> t(p.numel(), nn+1);
   for (size_t i=0; i<nn; ++i){
     for (size_t j=0; j<p.numel(); ++j) t.insert(p.getvalue(nearest[i], j), nn, j);
-    jv_permutation(data_.data().data(idx, 0),
-                   data_.data().data(nearest[i], 0),
-                   data_.elements(), w[0], w[1], w[2], spobj[0], spobj[1],
+    jv_permutation(data_.values().data().data(idx, 0),        data_.vectors().data().data(idx, 0),
+                   data_.values().data().data(nearest[i], 0), data_.vectors().data().data(nearest[i], 0),
+                   data_.values().elements(), data_.vectors().elements(), w[0], w[1], w[2], spobj[0], spobj[1], spobj[2],
                    t, i, nn, func);
   }
   // The first presorted.size() elements of tperm now contain the permutation

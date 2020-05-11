@@ -4,7 +4,7 @@
 #include "bz.hpp"
 
 TEST_CASE("BrillouinZone instantiation","[brillouinzone]"){
-  Direct d(3.,3.,3.,PI/2,PI/2,PI/2*3);
+  Direct d(3.,3.,3.,90.,90.,120.);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
 }
@@ -20,7 +20,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   SECTION("Face-centred"){
     spgr = "Fd-3c"; // the previous choice, Fmm2 is orthorhombic. Trying to use it with a=b=c prevents the BrillouinZone algorithm from working
   }
-  Direct d(2.87,2.87,2.87,PI/2,PI/2,PI/2,spgr);
+  Direct d(2.87,2.87,2.87,90.,90.,90.,spgr);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
 
@@ -46,7 +46,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
 }
 
 TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
-  Direct d(3.,3.,9.,PI/2,PI/2,2*PI/3,1);
+  Direct d(3.,3.,9.,90.,90.,120.,1);
   Reciprocal r(d.star());
   BrillouinZone bz(r);
   std::vector<std::array<double,3>> rawQ;

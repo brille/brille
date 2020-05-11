@@ -26,6 +26,7 @@
 // #include <vector>
 #include "polyhedron.hpp"
 // #include "debug.hpp"
+#include "phonon.hpp"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -294,16 +295,30 @@ public:
     @param[out] tau The reciprocal lattice zone centres
   */
   bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, int nthreads=0) const;
-  /*! \brief Find q, τ, and R∈G such that Q = Rq + τ, where τ is a reciprocal
+  /*! \brief Find q, τ, and R∈G such that Q = Rᵀq + τ, where τ is a reciprocal
              lattice vector and R is a pointgroup symmetry operation of the
              conventional unit cell pointgroup, G.
     @param [in] Q a refernce to a LQVec list of Q points
     @param [out] q The irreducible reduced reciprocal lattice vectors
     @param [out] τ The conventional reciprocal lattice zone centres
-    @param [out] R The conventional lattice pointgroup operations
+    @param [out] R The pointgroup operation index for R
+    @param [out] invR The pointgroup operation index for R⁻¹
+    @param [in] nthreads An optional number of OpenMP threads to use
+    @note R and invR index the PointSymmetry object accessible via BrillouinZone::get_pointgroup_symmetry();
   */
-  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<std::array<int,9>>& R, int nthreads=0) const ;
+  bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<size_t>& Rm, std::vector<size_t>& invRm, int nthreads=0) const ;
   bool ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<std::array<int,9>>& R, int threads=0) const;
+  //! \brief Get the PointSymmetry object used by this BrillouinZone object internally
+  PointSymmetry get_pointgroup_symmetry() const{
+    return this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+  }
+  //! \brief Get the GammaTable object associated with this BrillouinZone PointSymmetry and Basis
+  GammaTable get_phonon_gamma_table() const{
+    // The Gamma table needs a Direct lattice.
+    // Somehow an implicit Reciprocal->Direct cast is possible, apparently.
+    // Should this be outerlattice.star() or lattice.star()? 
+    return GammaTable(this->outerlattice.star(), this->time_reversal);
+  }
 private:
   void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);

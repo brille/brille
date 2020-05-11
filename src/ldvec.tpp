@@ -92,39 +92,32 @@ template<typename T> ArrayVector<T> LDVec<T>::get_hkl() const {
   return ArrayVector<T>(this->numel(),this->size(),this->_data); // strip off the Lattice information
 }
 template<typename T> ArrayVector<double> LDVec<T>::get_xyz() const {
-  double *toxyz = nullptr;
-  toxyz = new double[9]();
+  double toxyz[9];
   Reciprocal lat = this->get_lattice();
   lat.get_xyz_transform(toxyz);
   ArrayVector<double> xyz(this->numel(),this->size());
   for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(xyz.data(i), toxyz, this->data(i));
-  delete[] toxyz;
   return xyz;
 }
 template<typename T> LQVec<double> LDVec<T>::star() const {
-  double *cvmt = nullptr;
-  cvmt = new double[9]();
+  double cvmt[9];
   (this->lattice).get_covariant_metric_tensor(cvmt);
   LQVec<double> slv( (this->lattice).star(), this->size() );
   for (size_t i=0; i<this->size(); i++) multiply_matrix_vector(slv.data(i), cvmt, this->data(i));
   slv /= 2.0*PI; // ai= gij/2/pi * ai_star
-  delete[] cvmt;
   return slv;
 }
 template<typename T> LDVec<double> LDVec<T>::cross(const size_t i, const size_t j) const {
   bool bothok = (i<this->size() && j<this->size() && 3u==this->numel());
   LDVec<double> out(this->get_lattice(), bothok? 1u : 0u);
   if (bothok){
-    double *rlucross = nullptr;
-    rlucross = new double[3]();
+    double rlucross[9];
     vector_cross<double,T,T,3>(rlucross, this->data(i), this->data(j));
 
     Direct dlat = this->get_lattice();
     LQVec<double> lqv( dlat.star(), 1u, rlucross);
     lqv *= dlat.get_volume()/2.0/PI;
     out =  lqv.star();
-
-    delete[] rlucross;
   }
   return out;
 }

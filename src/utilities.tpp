@@ -62,7 +62,7 @@ std::tuple<bool,bool,T,R> determine_tols(const int tol){
   T Ttol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
   R Rtol = std::numeric_limits<R>::epsilon(); // zero for integer-type R
   return std::make_tuple(Ttol * Rtol == 0 || std::is_convertible<T, R>::value, Ttol>0, Ttol*static_cast<T>(tol)*static_cast<T>(TOL_MULT), Rtol*static_cast<R>(tol)*static_cast<R>(TOL_MULT));
-  
+
 }
 
 
@@ -115,11 +115,11 @@ template<typename T, typename R> bool approx_scalar(const T a, const R b, const 
   return convertible && _approx_scalar(a,b,useTtol,Ttol,Rtol);
 }
 
-template<typename T, typename R> bool _approx_array(const int NM, const T* a, const R* b, const bool useTtol, const T Ttol, const R Rtol){
+template<typename T, typename R> bool _approx_array(const size_t NM, const T* a, const R* b, const bool useTtol, const T Ttol, const R Rtol){
   bool answer=true;
   // we need <= in case T and R are integer, otherwise this is *always* false since 0 !< 0
   if (useTtol){
-    for (int i=0; i<NM; ++i){
+    for (size_t i=0; i<NM; ++i){
       // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
       if ( std::abs(a[i]) <= Ttol && std::abs(b[i]) <= Rtol )
       answer &= std::abs(a[i]-b[i]) <= Ttol;
@@ -127,7 +127,7 @@ template<typename T, typename R> bool _approx_array(const int NM, const T* a, co
       answer &= std::abs(a[i]-b[i]) <= Ttol*std::abs(a[i]+b[i]);
     }
   } else {
-    for (int i=0; i<NM; ++i){
+    for (size_t i=0; i<NM; ++i){
       // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
       if ( std::abs(a[i]) <= Ttol && std::abs(b[i]) <= Rtol )
       answer &= std::abs(a[i]-b[i]) <= Rtol;
@@ -137,29 +137,29 @@ template<typename T, typename R> bool _approx_array(const int NM, const T* a, co
   }
   return answer;
 }
-template<typename T, typename R> bool approx_array(const int N, const int M, const T *a, const R *b, const int tol){
+template<typename T, typename R> bool approx_array(const size_t N, const size_t M, const T *a, const R *b, const int tol){
   T Ttol;
   R Rtol;
   bool convertible, useTtol;
   std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
   return convertible && _approx_array(N*M,a,b,useTtol,Ttol,Rtol);
 }
-template<typename T, typename R> bool approx_matrix(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
-template<typename T, typename R> bool approx_vector(const int N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
+template<typename T, typename R> bool approx_matrix(const size_t N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
+template<typename T, typename R> bool approx_vector(const size_t N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
 
-template<typename T, typename R, int N, int M> bool approx_array(const T *A, const R *B, const int tol){return approx_array<T,R>(N,M,A,B,tol);}
-template<typename T, typename R, int N> bool approx_matrix(const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
-template<typename T, typename R, int N> bool approx_vector(const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
+template<typename T, typename R, size_t N, size_t M> bool approx_array(const T *A, const R *B, const int tol){return approx_array<T,R>(N,M,A,B,tol);}
+template<typename T, typename R, size_t N> bool approx_matrix(const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
+template<typename T, typename R, size_t N> bool approx_vector(const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
 
 
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
-template<typename T, typename R, typename S, int N, int I, int M> void multiply_arrays(T *C, const R *A, const S *B){
-  for (int i=0;i<N*M;i++) C[i]=T(0);
-  for (int i=0;i<N;i++) for (int j=0;j<M;j++) for (int k=0;k<I;k++) C[i*M+j] += T(A[i*I+k]*B[k*M+j]);
+template<typename T, typename R, typename S, size_t N, size_t I, size_t M> void multiply_arrays(T *C, const R *A, const S *B){
+  for (size_t i=0;i<N*M;i++) C[i]=T(0);
+  for (size_t i=0;i<N;i++) for (size_t j=0;j<M;j++) for (size_t k=0;k<I;k++) C[i*M+j] += T(A[i*I+k]*B[k*M+j]);
 }
-template<typename T, typename R, typename S, int N> void multiply_matrix_matrix(T *C, const R *A, const S *B){ multiply_arrays<T,R,S,N,N,N>(C,A,B); }
-template<typename T, typename R, typename S, int N> void multiply_matrix_vector(T *C, const R *A, const S *b){ multiply_arrays<T,R,S,N,N,1>(C,A,b); }
-template<typename T, typename R, typename S, int N> void multiply_vector_matrix(T *C, const R *a, const S *B){ multiply_arrays<T,R,S,1,N,N>(C,a,B); }
+template<typename T, typename R, typename S, size_t N> void multiply_matrix_matrix(T *C, const R *A, const S *B){ multiply_arrays<T,R,S,N,N,N>(C,A,B); }
+template<typename T, typename R, typename S, size_t N> void multiply_matrix_vector(T *C, const R *A, const S *b){ multiply_arrays<T,R,S,N,N,1>(C,A,b); }
+template<typename T, typename R, typename S, size_t N> void multiply_vector_matrix(T *C, const R *a, const S *B){ multiply_arrays<T,R,S,1,N,N>(C,a,B); }
 
 
 // array multiplication specialization for non-complex * complex arrays.
@@ -672,10 +672,19 @@ template<class T> std::complex<T> antiphase(const std::complex<T> z){
 template<typename T> T antiphase(const size_t, const T*, const T*){
   return T(1);
 }
+// template<typename T> std::complex<T> antiphase(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+//   std::complex<T> h_dot{0,0};
+//   for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+//   return std::polar(T(1),-std::arg(h_dot));
+// }
 template<typename T> std::complex<T> antiphase(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
-  std::complex<T> h_dot{0,0};
-  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
-  return std::polar(T(1),-std::arg(h_dot));
+  T real_dot{0}, imag_dot{0};
+  for (size_t i=0; i<n; ++i){
+    T areal{a[i].real()}, aimag{a[i].imag()}, breal{b[i].real()}, bimag{b[i].imag()};
+    real_dot += areal * breal + aimag * bimag;
+    imag_dot += areal * bimag - aimag * breal;
+  }
+  return std::polar(T(1), T(-1)*std::atan2(imag_dot, real_dot));
 }
 
 template<class T, class R, class S = typename std::common_type<T,R>::type>

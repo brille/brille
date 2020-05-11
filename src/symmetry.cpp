@@ -170,3 +170,14 @@ bool Symmetry::operator==(const Symmetry& other) const {
   // if both conditions hold then they are equivalent
   return true;
 }
+
+bool Symmetry::has_space_inversion() const {
+  Motion<int,double> space_inversion({{-1,0,0, 0,-1,0, 0,0,-1}},{{0.,0.,0.}});
+  for (auto op: this->M) if (op == space_inversion) return true;
+  return false;
+}
+
+size_t Symmetry::find_matrix_index(const Matrix<int>& m) const {
+  auto itr = std::find_if(this->M.begin(), this->M.end(), [m](const Motion<int,double>& Mot){return Mot.equal_matrix(m);});
+  return std::distance(this->M.begin(), itr);
+}

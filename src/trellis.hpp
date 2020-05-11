@@ -18,6 +18,7 @@
 #include <vector>
 #include <array>
 #include <queue>
+#include <tuple>
 #include <algorithm>
 #include <omp.h>
 #include "arrayvector.hpp"
@@ -164,7 +165,7 @@ public:
     indices.clear();
     weights.clear();
     std::array<double,4> w{{0,0,0,0}};
-    for (size_t i=0; i<vi_t.size(); ++i)
+    for (index_t i=0; i<vi_t.size(); ++i)
     if (this->tetrahedra_contains(i, vertices, x, w)){
       for (int j=0; j<4; ++j) if (!approx_scalar(w[j],0.)){
         indices.push_back(vi_t[i][j]);
@@ -222,13 +223,13 @@ public:
     return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,index_t> n){return NodeType::null == n.first;});
   }
   void push_back(const CubeNode& n){
-    nodes_.emplace_back(NodeType::cube, cube_nodes_.size());
+    nodes_.emplace_back(NodeType::cube, static_cast<index_t>(cube_nodes_.size()));
     cube_nodes_.push_back(n);
   }
   void push_back(const PolyNode& n){
     if (n.vertex_count() < 1)
       throw std::runtime_error("empty polynodes are not allowed!");
-    nodes_.emplace_back(NodeType::poly, poly_nodes_.size());
+    nodes_.emplace_back(NodeType::poly, static_cast<index_t>(poly_nodes_.size()));
     poly_nodes_.push_back(n);
   }
   void push_back(const NullNode&){
@@ -285,9 +286,9 @@ public:
   }
 };
 
-template<typename T> class PolyhedronTrellis{
+template<typename T, typename R> class PolyhedronTrellis{
   Polyhedron polyhedron_;                        //!< the Polyhedron bounding the Trellis
-  InterpolationData<T> data_;                    //!< [optional] data stored at each Trellis vertex
+  InterpolationData<T,R> data_;                  //!< [optional] data stored at each Trellis vertex
   ArrayVector<double> vertices_;                 //!< The Trellis intersections inside the bounding Polyhedron
   NodeContainer nodes_;
   std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the Trellis intersections, which bound the Trellis nodes
@@ -338,7 +339,7 @@ public:
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
     return nodes_.indices_weights(this->node_index(x), vertices_, x, indices, weights);
   }
-  template<class R> unsigned check_before_interpolating(const ArrayVector<R>& x) const{
+  template<class S> unsigned check_before_interpolating(const ArrayVector<S>& x) const{
     unsigned int mask = 0u;
     if (this->data_.size()==0)
       throw std::runtime_error("The trellis must be filled before interpolating!");
@@ -346,10 +347,12 @@ public:
       throw std::runtime_error("PolyhedronTrellis requires x values which are three-vectors.");
     return mask;
   }
-  ArrayVector<T> interpolate_at(const ArrayVector<double>& x) const {
+  std::tuple<ArrayVector<T>, ArrayVector<R>>
+  interpolate_at(const ArrayVector<double>& x) const {
     verbose_update("Single thread interpolation at ",x.size()," points");
     this->check_before_interpolating(x);
-    ArrayVector<T> out(data_.numel(), x.size());
+    ArrayVector<T> vals_out(data_.values().numel(), x.size());
+    ArrayVector<R> vecs_out(data_.vectors().numel(), x.size());
     std::vector<index_t> indices;
     std::vector<double> weights;
     for (size_t i=0; i<x.size(); ++i){
@@ -357,42 +360,44 @@ public:
       if (!this->indices_weights(x.extract(i), indices, weights))
         throw std::runtime_error("Point not found in PolyhedronTrellis");
       verbose_update("Interpolate between vertices ", indices," with weights ",weights);
-      data_.interpolate_at(indices, weights, out, i);
+      data_.interpolate_at(indices, weights, vals_out, vecs_out, i);
     }
-    return out;
+    return std::make_tuple(vals_out, vecs_out);
   }
-  ArrayVector<T> interpolate_at(const ArrayVector<double>& x, const int threads) const {
+  std::tuple<ArrayVector<T>, ArrayVector<R>>
+  interpolate_at(const ArrayVector<double>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     verbose_update("Parallel interpolation at ",x.size()," points with ",threads," threads");
     // shared between threads
-    ArrayVector<T> out(data_.numel(), x.size(), T(0)); // initialise to zero so that we can use a reduction
+    ArrayVector<T> vals_out(data_.values().numel(), x.size());
+    ArrayVector<R> vecs_out(data_.vectors().numel(), x.size());
     // private to each thread
     std::vector<index_t> indices;
     std::vector<double> weights;
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = unsigned_to_signed<long long, size_t>(x.size());
     size_t n_unfound{0};
-  #pragma omp parallel for default(none) shared(x,out,xsize) private(indices, weights) reduction(+:n_unfound) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(x,vals_out,vecs_out,xsize) private(indices, weights) reduction(+:n_unfound) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       size_t i = signed_to_unsigned<size_t, long long>(si);
       if (this->indices_weights(x.extract(i), indices, weights)){
-        data_.interpolate_at(indices, weights, out, i);
+        data_.interpolate_at(indices, weights, vals_out, vecs_out, i);
       } else {
         ++n_unfound;
       }
     }
     std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
-    return out;
+    return std::make_tuple(vals_out, vecs_out);
   }
   index_t node_count() {
     index_t count = 1u;
-    for (index_t i=0; i<3u; ++i) count *= boundaries_[i].size()-1;
+    for (index_t i=0; i<3u; ++i) count *= static_cast<index_t>(boundaries_[i].size()-1);
     return count;
   }
   std::array<index_t,3> size() const {
     std::array<index_t,3> s;
-    for (index_t i=0; i<3u; ++i) s[i] = boundaries_[i].size()-1;
+    for (index_t i=0; i<3u; ++i) s[i] = static_cast<index_t>(boundaries_[i].size()-1);
     return s;
   }
   std::array<index_t,3> span() const {
@@ -406,7 +411,7 @@ public:
   std::array<index_t,3> node_subscript(const ArrayVector<double>& p) const {
     std::array<index_t,3> sub{{0,0,0}};
     for (index_t dim=0; dim<3u; ++dim)
-      sub[dim] = find_bin(boundaries_[dim], p.getvalue(0, dim));
+      sub[dim] = static_cast<index_t>(find_bin(boundaries_[dim], p.getvalue(0, dim)));
     // it's possible that a subscript could go beyond the last bin in any direction!
     bool bad = !subscript_ok_and_not_null(sub);
     if (bad){
@@ -444,7 +449,7 @@ public:
     return sub;
   }
   // find the node linear index for a point
-  template <class R> index_t node_index(const R& p) const { return this->sub2idx(this->node_subscript(p)); }
+  template <class S> index_t node_index(const S& p) const { return this->sub2idx(this->node_subscript(p)); }
 
   // return a list of non-null neighbouring nodes
   std::vector<index_t> node_neighbours(const index_t idx) const {
@@ -480,19 +485,20 @@ public:
     return str;
   }
   //! Get a constant reference to the stored data
-  const InterpolationData<T>& data(void) const {return data_;}
+  const InterpolationData<T,R>& data(void) const {return data_;}
   //! Replace the data stored in the object
-  template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
+  template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
+  template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
   //! Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
     return data_.debye_waller(Q,M,t_K);
   }
   //! Sort the values stored in the PolyhedronTrellis by already-sorted neighbour consensus
-  template<typename R=double>
+  template<typename S=double>
   ArrayVector<size_t> multi_sort_perm(
-    const R scalar_weight=R(1), const R vector_weight=R(1),
-    const R matrix_weight=R(1), const int vf=0
+    const S scalar_weight=R(1), const S vector_weight=R(1),
+    const S matrix_weight=R(1), const int vf=0
   ) const {
     typename CostTraits<T>::type weights[3];
     weights[0] = typename CostTraits<T>::type(scalar_weight);
@@ -501,8 +507,9 @@ public:
     // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
     // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
     size_t nobj = static_cast<size_t>(data_.branches());
-    size_t span = static_cast<size_t>(data_.branch_span());
-    size_t spobj[2]{span, nobj};
+    size_t val_span = static_cast<size_t>(data_.values().branch_span());
+    size_t vec_span = static_cast<size_t>(data_.vectors().branch_span());
+    size_t spobj[3]{val_span, vec_span, nobj};
     // within each index of the data ArrayVector there are span*nobj entries.
 
     // We will return the permutations of 0:nobj-1 which sort the objects globally
@@ -528,10 +535,10 @@ public:
     size_t min_vG_dist_idx = std::distance(vG_dist.begin(), std::min_element(vG_dist.begin(), vG_dist.end()));
     index_t idx = node_verts[min_vG_dist_idx];
     // and arbitrarily say this vertex *is* sorted
-    for (size_t j=0; j<nobj; ++j) perm.insert(j, idx, j);
     vertex_sorted[idx] = true;
     ++vertex_visited[idx];
-    size_t num_sorted = this->consensus_sort_nodes(
+    //size_t num_sorted =
+    this->consensus_sort_nodes(
       node_lin, weights, vf, spobj, perm,
       node_sorted, node_locked, node_visited,
       vertex_sorted, vertex_locked, vertex_visited
@@ -590,27 +597,27 @@ private:
     }
     return sub;
   }
-  // template<typename R> void add_node(const R& node) {nodes_.push_back(node);}
+  // template<typename S> void add_node(const S& node) {nodes_.push_back(node);}
 
-  template<typename R>
+  template<typename S>
   std::vector<index_t> which_vertices_of_node(
-    const std::vector<R>& t, const R value, const index_t idx
+    const std::vector<S>& t, const S value, const index_t idx
   ) const {
     std::vector<index_t> out;
     for (index_t n: nodes_.vertices(idx)) if (value == t[n]) out.push_back(n);
-    return n;
+    return out;
   }
 
-  template<typename R>
+  template<typename S>
   std::vector<index_t> which_node_neighbours(
-    const std::vector<R>& t, const R value, const index_t idx
+    const std::vector<S>& t, const S value, const index_t idx
   ) const {
     std::vector<index_t> out;
     for (index_t n: this->node_neighbours(idx)) if (value == t[n]) out.push_back(n);
     return out;
   }
-  template<typename R=double> size_t consensus_sort_nodes(
-   const index_t first_idx, const R weights[3], const int func, const size_t spobj[2],
+  template<typename S=double> size_t consensus_sort_nodes(
+   const index_t first_idx, const S weights[3], const int func, const size_t spobj[3],
    ArrayVector<size_t>& perm,
    std::vector<bool>& node_done,
    std::vector<bool>& node_lock,
@@ -619,16 +626,16 @@ private:
    std::vector<bool>& vertex_lock,
    std::vector<size_t>& vertex_visits
  ) const;
- template<typename R=double> bool consensus_sort_node(
-   const R w[3], const int func, const size_t spobj[2],
+ template<typename S=double> bool consensus_sort_node(
+   const S w[3], const int func, const size_t spobj[3],
    ArrayVector<size_t>& p,
    std::vector<bool>& done,
    std::vector<bool>& lock,
    std::vector<size_t>& visits,
    const index_t node
  ) const;
- template<typename R=double> bool consensus_sort_difference(
-   const R w[3], const int func, const size_t spobj[2],
+ template<typename S=double> bool consensus_sort_difference(
+   const S w[3], const int func, const size_t spobj[3],
    ArrayVector<size_t>& p, std::vector<bool>& done, const index_t idx,
    const std::vector<index_t>& presorted
  ) const;

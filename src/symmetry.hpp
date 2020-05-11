@@ -53,6 +53,39 @@ public:
     for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
     return Motion(outW, outw);
   }
+  Motion<R,T> inverse() const {
+    Matrix<R> outW;
+    Vector<T> outw;
+    // output rotation part is W⁻¹
+    matrix_inverse(outW.data(), this->W.data());
+    // output translation part is -W⁻¹*w
+    multiply_matrix_vector(outw.data(), outW.data(), this->w.data());
+    for (int i=0; i<3; ++i) outw[i] *= -1;
+    // we want the output translation elements to be ∈ [0,1)
+    for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
+    return Motion(outW, outw);
+  }
+  template<class S>
+  Vector<S> move_point(const Vector<S>& point) const {
+    Vector<S> outp;
+    // (W,w) * ⃗p  = W * ⃗p + w
+    multiply_matrix_vector(outp.data(), this->W.data(), point.data());
+    for (int i=0; i<3; ++i) outp[i] += this->w[i];
+    return outp;
+  }
+  template<class S>
+  Vector<S> move_vector(const Vector<S>& v) const {
+    Vector<S> outv;
+    multiply_matrix_vector(outv.data(), this->W.data(), v.data());
+    return outv;
+  }
+  template<class S>
+  Vector<S> move_axial(const Vector<S>& a) const {
+    Vector<S> outa = this->move_vector(a);
+    R det = matrix_determinant(this->W.data());
+    if (1 != det) for (int i=0; i<3; ++i) outa[i] *= det;
+    return outa;
+  }
   // template<class T, typename S/*=promotion stuff*/>
   // Vector<S> operator*(const Vector<T>& x) const;
   Matrix<R> getr(void) const {return W;}
@@ -67,6 +100,10 @@ public:
     // so if the difference vector is ~ ⃗0 or ~ ⃗1 and the matrix parts match
     // then the Motions are equivalent
     return approx_vector(d.data(), z.data()) && approx_matrix(W.data(), mW.data());
+  }
+  template<class S>
+  bool equal_matrix(const Matrix<S>& m) const {
+    return approx_matrix(W.data(), m.data());
   }
   // Some compiler documentation (GCC,+?) claims that operator!= will be
   // automatically constructed if operator== is defined. This is apparently not
@@ -105,7 +142,7 @@ size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
   std::string nosearch = special ? "-+ " : ";,xyz-+";
   std::string digits = "0123456789";
   while (stream.good()){
-    c = stream.get();
+    c = char(stream.get());
     debug_update_if(special, "next character ", c);
     ++ret; // we've read another character
     switch (c){
@@ -136,8 +173,8 @@ size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
         std::stringstream tmp;
         tmp << c; // if a number, tmp might be the sign.
         bool haspoint{false}, hasslash{false}, hasdigit{digits.find(c)!=std::string::npos};
-        while (nosearch.find(stream.peek())==std::string::npos && stream.good()){
-          hasdigit |= digits.find(stream.peek())!=std::string::npos;
+        while (nosearch.find(char(stream.peek()))==std::string::npos && stream.good()){
+          hasdigit |= digits.find(char(stream.peek()))!=std::string::npos;
           hasslash |= '/'==stream.peek();
           haspoint |= '.'==stream.peek();
           tmp << char(stream.get()); // without char() the output of stream.get() is interpreted as an integer (under MSVC, at least)
@@ -279,6 +316,8 @@ public:
   Symmetry generators(void) const;
   bool operator==(const Symmetry& other) const;
   bool operator!=(const Symmetry& other) const { return !this->operator==(other);}
+  bool has_space_inversion() const;
+  size_t  find_matrix_index(const Matrix<int>&) const;
 };
 
 

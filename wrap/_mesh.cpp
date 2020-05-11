@@ -18,6 +18,7 @@
 #include "_mesh.hpp"
 
 void wrap_mesh(pybind11::module & m){
-  declare_bzmeshq<double>(m,"");
-  declare_bzmeshq<std::complex<double>>(m,"complex");
+  declare_bzmeshq<double,double>(m,"dd");
+  declare_bzmeshq<double,std::complex<double>>(m,"dc");
+  declare_bzmeshq<std::complex<double>,std::complex<double>>(m,"cc");
 }
