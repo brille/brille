@@ -420,7 +420,7 @@ public:
   }
   //! Ensure that a std::array object is consistent for binary operations
   template<typename R, size_t Nel, typename=typename std::enable_if<std::is_convertible<T,R>::value||std::is_convertible<R,T>::value>::type>
-  AVSizeInfo consistency_check(const std::array<R,Nel>& b) const {
+  AVSizeInfo consistency_check(const std::array<R,Nel>&) const {
     const ArrayVector<T>& a = *this;
     AVSizeInfo si;
     si.oneveca = a.size() ==1u;

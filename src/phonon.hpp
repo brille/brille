@@ -116,7 +116,6 @@ public:
         throw std::runtime_error("All atoms in the basis *must* be mapped to an equivalent atom for *all* symmetry operations");
       }
       // calculate (R⁻¹ ⃗rₗ - ⃗rₖ)
-      auto invmot = motion.inverse();
       std::array<double,3> vec = motion.inverse().move_point(bs.position(l));
       auto rk = bs.position(k);
       for (int i=0; i<3; ++i) vec[i] -= rk[i];
@@ -146,7 +145,7 @@ public:
   }
   template<class Ik, class Ir>
   LDVec<double> ldvector(Ik k, Ir r) const {
-    return LDVec(lattice_, this->vector(k,r));
+    return LDVec<double>(lattice_, this->vector(k,r));
   }
   const Direct& lattice() const {return lattice_;}
 private:
