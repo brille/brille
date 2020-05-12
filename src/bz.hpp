@@ -312,12 +312,9 @@ public:
   PointSymmetry get_pointgroup_symmetry() const{
     return this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   }
-  //! \brief Get the GammaTable object associated with this BrillouinZone PointSymmetry and Basis
-  GammaTable get_phonon_gamma_table() const{
-    // The Gamma table needs a Direct lattice.
-    // Somehow an implicit Reciprocal->Direct cast is possible, apparently.
-    // Should this be outerlattice.star() or lattice.star()? 
-    return GammaTable(this->outerlattice.star(), this->time_reversal);
+  //! \brief Accessor for whether the BrillouinZone was constructed with additional time reversal symmetry
+  int add_time_reversal() const {
+    return this->time_reversal ? 1 : 0;
   }
 private:
   void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;

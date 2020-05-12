@@ -72,7 +72,7 @@ class BrEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 hall=None, parallel=False, **kwds):
+                 sort=True, hall=None, parallel=False, **kwds):
         """Initialize a new BrEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -98,7 +98,7 @@ class BrEu:
         freq = self.data._freqs    # (n_pt, n_br) # can this be replaced by _reduced_freqs?
         vecs = self.data.eigenvecs # (n_pt, n_br, n_io, 3) # can this be replaced by _reduced_eigenvecs?
         vecs = degenerate_check(grid_q, freq, vecs)
-        self.sort_branches(freq, vecs)
+        self.sort_branches(sort, freq, vecs)
         self.parallel = parallel
 
     def _fill_grid(self, freq, vecs):
@@ -137,7 +137,7 @@ class BrEu:
         # so [1,0,0,0] ≡ (1,) and [0,n_ions*3,0,3] ≡ (0,3*n_io,0,3)
         self.grid.fill(freq, (1,), self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), (0,3*n_io,0,3))
 
-    def sort_branches(self, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
+    def sort_branches(self, sort, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
         """Sort the phonon branches stored at all mapped grip points.
 
         By comparing the difference in phonon branch energy and the angle
@@ -156,23 +156,24 @@ class BrEu:
         The weights are both one by default but can be modified as necessary.
         """
         self._fill_grid(frqs, vecs)
-        # The input to sort_perm indicates what weight should be given to
-        # each part of the resultant cost matrix. In this case, each phonon
-        # branch consists of one energy, n_ions three-vectors, and no matrix;
-        # perm = self.grid.centre_sort_perm(
-        perm = self.grid.multi_sort_perm(
-            scalar_cost_weight=energy_weight,
-            vector_cost_weight=eigenvector_weight,
-            matrix_cost_weight=0,
-            vector_weight_function=weight_function)
-        # use the permutations to sort the eigenvalues and vectors
-        frqs = np.array([x[y] for (x, y) in zip(frqs, perm)])
-        vecs = np.array([x[y,:,:] for (x,y) in zip(vecs, perm)])
-        # # The gridded frequencies are (n_pt, n_br, 1)
-        # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
-        # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
-        # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
-        self._fill_grid(frqs, vecs)
+        if sort:
+            # The input to sort_perm indicates what weight should be given to
+            # each part of the resultant cost matrix. In this case, each phonon
+            # branch consists of one energy, n_ions three-vectors, and no matrix;
+            # perm = self.grid.centre_sort_perm(
+            perm = self.grid.multi_sort_perm(
+                scalar_cost_weight=energy_weight,
+                vector_cost_weight=eigenvector_weight,
+                matrix_cost_weight=0,
+                vector_weight_function=weight_function)
+            # use the permutations to sort the eigenvalues and vectors
+            frqs = np.array([x[y] for (x, y) in zip(frqs, perm)])
+            vecs = np.array([x[y,:,:] for (x,y) in zip(vecs, perm)])
+            # # The gridded frequencies are (n_pt, n_br, 1)
+            # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
+            # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
+            # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
+            self._fill_grid(frqs, vecs)
         return frqs, vecs
 
     # pylint: disable=c0103,w0613,no-member

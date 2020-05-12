@@ -162,34 +162,6 @@ public:
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double, const double, const double, const double, const double, const double, const std::string&, const std::string& choice="");
   virtual ~Lattice() = default;
-  //! copy constructor
-  Lattice(const Lattice& other){
-    for (int i=0; i<3; ++i){
-      this->len[i] = other.len[i];
-      this->ang[i] = other.ang[i];
-    }
-    this->volume = other.volume;
-    this->spg = other.spg;
-    this->ptg = other.ptg;
-    this->spgsym = other.spgsym;
-    this->ptgsym = other.ptgsym;
-    this->basis = other.basis;
-  }
-  //! assignment operator
-  // required for gcc 9+
-  Lattice& operator=(const Lattice& other){
-    for (int i=0; i<3; ++i){
-      this->len[i] = other.len[i];
-      this->ang[i] = other.ang[i];
-    }
-    this->volume = other.volume;
-    this->spg = other.spg;
-    this->ptg = other.ptg;
-    this->spgsym = other.spgsym;
-    this->ptgsym = other.ptgsym;
-    this->basis = other.basis;
-    return *this;
-  }
   //! Return the first basis vector length
   double get_a     () const {return len[0];}
   //! Return the second basis vector length
