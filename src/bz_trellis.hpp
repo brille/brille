@@ -22,6 +22,7 @@ typedef long slong;
 
 #include "bz.hpp"
 #include "trellis.hpp"
+#include "phonon.hpp"
 
 template<class T, class R> class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
   BrillouinZone brillouinzone;
@@ -92,9 +93,10 @@ public:
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
-    GammaTable pgt;
-    if (RotatesLike::Gamma == this->data().vectors().rotateslike())
-      pgt = brillouinzone.get_phonon_gamma_table();
+    GammaTable pgt{GammaTable()};
+    if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
+      pgt.construct(brillouinzone.get_lattice().star(), brillouinzone.add_time_reversal());
+    }
     // actually perform the rotation to Q
     this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nth);
     this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nth);
@@ -103,4 +105,4 @@ public:
   }
 };
 
-#endif // _BZ_MESH_
+#endif // _BZ_TRELLIS_

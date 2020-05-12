@@ -467,7 +467,7 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
           // use its constructor to make i q⋅[R⁻¹xₖ - xᵥ] and calculate the (k,R) phase
           T phase = e_iqd_gt(i, k, invRidx[i]);
           mul_mat_vec(tmp_v, 3u, ptsym.get(invRidx[i]).data(), x.data(i, offset+k*3u));
-          auto v0idx = 3u*pgt.F0(k, ridx[i]);
+          auto v0idx = 3u*pgt.F0(k, invRidx[i]);
           for (int j=0; j<3; ++j) tmpvecs[v0idx+j] = phase*tmp_v[j];
         }
         for (element_t j=0; j<no[1]*3u; ++j) x.insert(tmpvecs[j], i, offset+j);
@@ -480,7 +480,8 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
         for (element_t n=0; n<Nmat; ++n){
           T rph = e_iqd_gt(i, n, ridx[i]);
           element_t v = static_cast<element_t>(pgt.F0(n, ridx[i]));
-          for (element_t m=0; m<Nmat; ++n){
+          for (element_t m=0; m<Nmat; ++m){
+
             T invRph = e_iqd_gt(i, m, invRidx[i]);
             element_t k = static_cast<element_t>(pgt.F0(m, invRidx[i]));
             // Calculate R⁻¹*M*R in two steps

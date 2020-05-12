@@ -72,7 +72,7 @@ class BrEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 hall=None, parallel=False, **kwds):
+                 sort=True, hall=None, parallel=False, **kwds):
         """Initialize a new BrEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -89,6 +89,9 @@ class BrEu:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
         cfp_dict = {k: kwds[k] for k in cfp_keywords if k in kwds}
+        if parallel:
+            cfp_dict['use_c'] = True
+            cfp_dict['n_threads'] = half_cpu_count()
         # calculate_fine_phonos returns the frequencies and eigenvectors
         # equivalent to the properties .freqs and .eigenvecs
         # but we need to make sure we grab _freqs (or _reduced_freqs)
@@ -98,7 +101,7 @@ class BrEu:
         freq = self.data._freqs    # (n_pt, n_br) # can this be replaced by _reduced_freqs?
         vecs = self.data.eigenvecs # (n_pt, n_br, n_io, 3) # can this be replaced by _reduced_eigenvecs?
         vecs = degenerate_check(grid_q, freq, vecs)
-        self.sort_branches(freq, vecs)
+        self.sort_branches(sort, freq, vecs)
         self.parallel = parallel
 
     def _fill_grid(self, freq, vecs):
@@ -137,7 +140,8 @@ class BrEu:
         # so [1,0,0,0] ≡ (1,) and [0,n_ions*3,0,3] ≡ (0,3*n_io,0,3)
         self.grid.fill(freq, (1,), self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), (0,3*n_io,0,3))
 
-    def sort_branches(self, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
+
+    def sort_branches(self, sort, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
         """Sort the phonon branches stored at all mapped grip points.
 
         By comparing the difference in phonon branch energy and the angle
@@ -156,23 +160,24 @@ class BrEu:
         The weights are both one by default but can be modified as necessary.
         """
         self._fill_grid(frqs, vecs)
-        # The input to sort_perm indicates what weight should be given to
-        # each part of the resultant cost matrix. In this case, each phonon
-        # branch consists of one energy, n_ions three-vectors, and no matrix;
-        # perm = self.grid.centre_sort_perm(
-        perm = self.grid.multi_sort_perm(
-            scalar_cost_weight=energy_weight,
-            vector_cost_weight=eigenvector_weight,
-            matrix_cost_weight=0,
-            vector_weight_function=weight_function)
-        # use the permutations to sort the eigenvalues and vectors
-        frqs = np.array([x[y] for (x, y) in zip(frqs, perm)])
-        vecs = np.array([x[y,:,:] for (x,y) in zip(vecs, perm)])
-        # # The gridded frequencies are (n_pt, n_br, 1)
-        # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
-        # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
-        # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
-        self._fill_grid(frqs, vecs)
+        if sort:
+            # The input to sort_perm indicates what weight should be given to
+            # each part of the resultant cost matrix. In this case, each phonon
+            # branch consists of one energy, n_ions three-vectors, and no matrix;
+            # perm = self.grid.centre_sort_perm(
+            perm = self.grid.multi_sort_perm(
+                scalar_cost_weight=energy_weight,
+                vector_cost_weight=eigenvector_weight,
+                matrix_cost_weight=0,
+                vector_weight_function=weight_function)
+            # use the permutations to sort the eigenvalues and vectors
+            frqs = np.array([x[y] for (x, y) in zip(frqs, perm)])
+            vecs = np.array([x[y,:,:] for (x,y) in zip(vecs, perm)])
+            # # The gridded frequencies are (n_pt, n_br, 1)
+            # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
+            # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
+            # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
+            self._fill_grid(frqs, vecs)
         return frqs, vecs
 
     # pylint: disable=c0103,w0613,no-member
@@ -279,7 +284,8 @@ class BrEu:
             sf : (n_qpts, n_branches) float ndarray
                 The structure factor for each q-point and phonon branch
             """
-            sl = [self.scattering_lengths[x] for x in self.ion_type]
+            sl = [self.scattering_lengths[x] for x in self.data.ion_type]
+
 
             freqs = self.data._freqs # abuse Euphonic to get the right units
             ion_mass = self.data._ion_mass # ditto
@@ -290,7 +296,8 @@ class BrEu:
 
             # Calculate the exponential factor for all ions and q-points
             # ion_r in fractional coords, so Qdotr = 2pi*qh*rx + 2pi*qk*ry...
-            exp_factor = np.exp(1J*2*math.pi*np.einsum('ij,kj->ik',
+            exp_factor = np.exp(1J*2*np.pi*np.einsum('ij,kj->ik',
+
                                                        self.data.qpts, self.data.ion_r))
 
             # brille prefers eigenvectors in units of the lattice, so we don't need
@@ -298,11 +305,12 @@ class BrEu:
 
             # Calculate dot product of Q and eigenvectors for all branches, ions
             # and q-points
-            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.eigenvecs), self.data.qpts)
+            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.data.eigenvecs), self.data.qpts)
 
             # Calculate Debye-Waller factors
             if dw_data:
-                if dw_data.n_ions != self.n_ions:
+                if dw_data.n_ions != self.data.n_ions:
+
                     raise Exception((
                         'The Data object used as dw_data is not compatible with the'
                         ' object that calculate_structure_factor has been called on'
@@ -581,3 +589,10 @@ def sho(x_0, x_i, y_i, fwhm, t_k):
         raise RuntimeError('Unexpected imaginary components.')
     y_0[flag] = np.real(part1)/np.real(part2)
     return y_0.reshape(outshape)
+
+def half_cpu_count():
+    import os
+    count = os.cpu_count()
+    if 'sched_get_affinity' in dir(os):
+        count = len(os.sched_getaffinity(0))
+    return count//2

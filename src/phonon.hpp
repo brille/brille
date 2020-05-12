@@ -82,8 +82,15 @@ class GammaTable: public RotateTable {
   Direct lattice_;
   ArrayVector<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
-  explicit GammaTable(): n_atoms(0), n_sym_ops(0) {};
-  GammaTable(const Direct& dlat, const int time_reversal=0): lattice_(dlat) {
+  explicit GammaTable(): n_atoms(0), n_sym_ops(0) {
+    l_mapping.resize(0);
+    v_mapping.resize(0);
+  }
+  GammaTable(const Direct& dlat, const int time_reversal=0){
+    this->construct(dlat, time_reversal);
+  }
+  bool construct(const Direct& dlat, const int time_reversal=0){
+    lattice_ = dlat;
     PointSymmetry ps = dlat.get_pointgroup_symmetry(time_reversal);
     Symmetry spgsym = dlat.get_spacegroup_symmetry(time_reversal);
     Basis bs = dlat.get_basis();
@@ -129,6 +136,7 @@ public:
       v_mapping[key] = v;
     }
     vectors_.resize(count); // not really necessary memory copy?
+    return true;
   }
   template<class Ik, class Ir>
   size_t F0(Ik k, Ir r) const {
