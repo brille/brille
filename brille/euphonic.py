@@ -89,6 +89,9 @@ class BrEu:
         cfp_keywords = ('asr', 'precondition', 'set_attrs', 'dipole',
                         'eta_scale', 'splitting')
         cfp_dict = {k: kwds[k] for k in cfp_keywords if k in kwds}
+        if parallel:
+            cfp_dict['use_c'] = True
+            cfp_dict['n_threads'] = half_cpu_count()
         # calculate_fine_phonos returns the frequencies and eigenvectors
         # equivalent to the properties .freqs and .eigenvecs
         # but we need to make sure we grab _freqs (or _reduced_freqs)
@@ -280,7 +283,7 @@ class BrEu:
             sf : (n_qpts, n_branches) float ndarray
                 The structure factor for each q-point and phonon branch
             """
-            sl = [self.scattering_lengths[x] for x in self.ion_type]
+            sl = [self.scattering_lengths[x] for x in self.data.ion_type]
 
             freqs = self.data._freqs # abuse Euphonic to get the right units
             ion_mass = self.data._ion_mass # ditto
@@ -291,7 +294,7 @@ class BrEu:
 
             # Calculate the exponential factor for all ions and q-points
             # ion_r in fractional coords, so Qdotr = 2pi*qh*rx + 2pi*qk*ry...
-            exp_factor = np.exp(1J*2*math.pi*np.einsum('ij,kj->ik',
+            exp_factor = np.exp(1J*2*np.pi*np.einsum('ij,kj->ik',
                                                        self.data.qpts, self.data.ion_r))
 
             # brille prefers eigenvectors in units of the lattice, so we don't need
@@ -299,11 +302,11 @@ class BrEu:
 
             # Calculate dot product of Q and eigenvectors for all branches, ions
             # and q-points
-            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.eigenvecs), self.data.qpts)
+            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.data.eigenvecs), self.data.qpts)
 
             # Calculate Debye-Waller factors
             if dw_data:
-                if dw_data.n_ions != self.n_ions:
+                if dw_data.n_ions != self.data.n_ions:
                     raise Exception((
                         'The Data object used as dw_data is not compatible with the'
                         ' object that calculate_structure_factor has been called on'
@@ -582,3 +585,10 @@ def sho(x_0, x_i, y_i, fwhm, t_k):
         raise RuntimeError('Unexpected imaginary components.')
     y_0[flag] = np.real(part1)/np.real(part2)
     return y_0.reshape(outshape)
+
+def half_cpu_count():
+    import os
+    count = os.cpu_count()
+    if 'sched_get_affinity' in dir(os):
+        count = len(os.sched_getaffinity(0))
+    return count//2
