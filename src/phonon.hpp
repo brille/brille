@@ -126,7 +126,6 @@ public:
       std::array<double,3> vec = motion.inverse().move_point(bs.position(l));
       auto rk = bs.position(k);
       for (int i=0; i<3; ++i) vec[i] -= rk[i];
-
       // check if this vector is in vectors_
       // look for an equal vector within the first count vectors_ -- return its index, or count if none match
       size_t v = norm(vectors_.first(count) - vec).is_approx(Comp::eq, 0.).first_true();

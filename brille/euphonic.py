@@ -140,6 +140,7 @@ class BrEu:
         # so [1,0,0,0] ≡ (1,) and [0,n_ions*3,0,3] ≡ (0,3*n_io,0,3)
         self.grid.fill(freq, (1,), self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), (0,3*n_io,0,3))
 
+
     def sort_branches(self, sort, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
         """Sort the phonon branches stored at all mapped grip points.
 
@@ -285,6 +286,7 @@ class BrEu:
             """
             sl = [self.scattering_lengths[x] for x in self.data.ion_type]
 
+
             freqs = self.data._freqs # abuse Euphonic to get the right units
             ion_mass = self.data._ion_mass # ditto
             sl = (sl*ureg('fm').to('bohr')).magnitude
@@ -295,6 +297,7 @@ class BrEu:
             # Calculate the exponential factor for all ions and q-points
             # ion_r in fractional coords, so Qdotr = 2pi*qh*rx + 2pi*qk*ry...
             exp_factor = np.exp(1J*2*np.pi*np.einsum('ij,kj->ik',
+
                                                        self.data.qpts, self.data.ion_r))
 
             # brille prefers eigenvectors in units of the lattice, so we don't need
@@ -307,6 +310,7 @@ class BrEu:
             # Calculate Debye-Waller factors
             if dw_data:
                 if dw_data.n_ions != self.data.n_ions:
+
                     raise Exception((
                         'The Data object used as dw_data is not compatible with the'
                         ' object that calculate_structure_factor has been called on'

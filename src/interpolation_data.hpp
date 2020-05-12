@@ -481,6 +481,7 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
           T rph = e_iqd_gt(i, n, ridx[i]);
           element_t v = static_cast<element_t>(pgt.F0(n, ridx[i]));
           for (element_t m=0; m<Nmat; ++m){
+
             T invRph = e_iqd_gt(i, m, invRidx[i]);
             element_t k = static_cast<element_t>(pgt.F0(m, invRidx[i]));
             // Calculate R⁻¹*M*R in two steps
