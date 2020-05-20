@@ -305,7 +305,7 @@ class BrEu:
 
             # Calculate dot product of Q and eigenvectors for all branches, ions
             # and q-points
-            eigenv_dot_q = np.einsum('ijkl,il->ijk', np.conj(self.data.eigenvecs), self.data.qpts)
+            eigenv_dot_q = 2*np.pi*np.einsum('ijkl,il->ijk', np.conj(self.data.eigenvecs), self.data.qpts)
 
             # Calculate Debye-Waller factors
             if dw_data:
