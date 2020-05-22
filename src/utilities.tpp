@@ -477,14 +477,18 @@ template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B){
   return vector_angle(n,A,B);
 }
 template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
-  std::complex<T> AA=hermitian_product(n,A,A);
-  std::complex<T> BB=hermitian_product(n,B,B);
-  std::complex<T> AB=hermitian_product(n,A,B);
-
+  // std::complex<T> AA=hermitian_product(n,A,A);
+  // std::complex<T> BB=hermitian_product(n,B,B);
+  // std::complex<T> AB=hermitian_product(n,A,B);
+  //
+  // T nAB, nA, nB, c_t;
+  // nAB = std::sqrt(std::real(AB*std::conj(AB)));
+  // nA = std::sqrt(std::real(AA));
+  // nB = std::sqrt(std::real(BB));
   T nAB, nA, nB, c_t;
-  nAB = std::sqrt(std::real(AB*std::conj(AB)));
-  nA = std::sqrt(std::real(AA));
-  nB = std::sqrt(std::real(BB));
+  nAB = std::sqrt(vector_product(n,A,B));
+  nA  = std::sqrt(std::real(hermitian_product(n,A,A)));
+  nB  = std::sqrt(std::real(hermitian_product(n,B,B)));
   if (nA && nB){
     c_t = nAB/(nA*nB);
   } else {

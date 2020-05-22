@@ -18,10 +18,12 @@
 #include <array>
 #include <utility>
 #include <cassert>
+#include <functional>
 #include <omp.h>
 #include "arrayvector.hpp"
 #include "latvec.hpp"
 #include "phonon.hpp"
+#include "permutation.hpp"
 
 #ifndef _INTERPOLATION_DATA_H_
 #define _INTERPOLATION_DATA_H_
@@ -29,6 +31,10 @@
 typedef unsigned long element_t;
 typedef std::vector<size_t> ShapeType;
 typedef std::array<element_t,3> ElementsType;
+typedef std::array<double,3> ElementsCost;
+
+//template<class T> using CostFunction = std::function<typename CostTraits<T>::type(element_t, T*, T*)>;
+template<class T> using CostFunction = std::function<double(element_t, T*, T*)>;
 
 template<class T> struct is_complex {enum{value = false};};
 template<class T> struct is_complex<std::complex<T>> {enum {value=true};};
@@ -44,14 +50,64 @@ template<class T> class InnerInterpolationData{
   ElementsType elements_; //!< The number of scalars, vector elements, and matrix elements per `data_` array
   element_t branches_;    //!< The number of branches contained per data array
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
+  ElementsCost costs_;    //!< The cost assigned to each type for equivalent mode assignment
+  CostFunction<T> scalar_cost_function;
+  CostFunction<T> vector_cost_function;
 public:
-  InnerInterpolationData(): data_({0,0}), shape_({0,0}), elements_({{0,0,0}}), branches_(0), rotlike_{RotatesLike::Real} {};
+  explicit InnerInterpolationData(size_t scf_type=0, size_t vcf_type=0):
+  data_({0,0}), shape_({0,0}), elements_({{0,0,0}}), branches_(0),
+  rotlike_{RotatesLike::Real}, costs_({{1,1,1}}) {
+    this->set_cost_info(scf_type, vcf_type);
+  };
+  InnerInterpolationData(CostFunction<T> scf, CostFunction<T> vcf):
+    data_({0,0}), shape_({0,0}), elements_({{0,0,0}}), branches_(0),
+    rotlike_{RotatesLike::Real}, costs_({{1,1,1}}), scalar_cost_function(scf), vector_cost_function(vcf){};
   //
   void setup_fake(const size_t sz, const element_t br){
     data_.refresh(br, sz);
     shape_ = {sz, static_cast<size_t>(br)};
     elements_ = {1u,0u,0u};
     branches_ = br;
+  }
+  //
+  void set_cost_info(const int scf, const int vcf){
+    switch (scf){
+      default:
+      this->scalar_cost_function = [](element_t n, T* i, T* j){
+        double s{0};
+        for (element_t z=0; z<n; ++z) s += magnitude(i[z]-j[z]);
+        return s;
+      };
+    }
+    switch (vcf){
+      case 1:
+      info_update("selecting vector_distance");
+      this->vector_cost_function = [](element_t n, T* i, T* j){return vector_distance(n, i, j);};
+      break;
+      case 2:
+      info_update("selecting 1-vector_product");
+      this->vector_cost_function = [](element_t n, T* i, T* j){return 1-vector_product(n, i, j);};
+      break;
+      case 3:
+      info_update("selecting vector_angle");
+      this->vector_cost_function = [](element_t n, T* i, T* j){return vector_angle(n, i, j);};
+      break;
+      case 4:
+      info_update("selecting hermitian_angle");
+      this->vector_cost_function = [](element_t n, T* i, T* j){ return hermitian_angle(n,i,j);};
+      break;
+      default:
+      info_update("selecting sin**2(hermitian_angle)");
+      // this->vector_cost_function = [](element_t n, T* i, T* j){return std::abs(std::sin(hermitian_angle(n, i, j)));};
+      this->vector_cost_function = [](element_t n, T* i, T* j){
+        auto sin_theta_H = std::sin(hermitian_angle(n, i, j));
+        return sin_theta_H*sin_theta_H;
+      };
+    }
+  }
+  void set_cost_info(const int scf, const int vcf, const ElementsCost& elcost){
+    costs_ = elcost;
+    this->set_cost_info(scf, vcf);
   }
   //
   size_t size(void) const {return data_.size();}
@@ -62,10 +118,10 @@ public:
   element_t branches(void) const {return branches_;}
   //
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  void interpolate_at(const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, const size_t) const;
+  void interpolate_at(const std::vector<std::vector<int>>&, const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, const size_t, const bool) const;
   //
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&,const size_t) const;
+  void interpolate_at(const std::vector<std::vector<int>>&, const std::vector<std::pair<I,double>>&, ArrayVector<T>&, const size_t, const bool) const;
   //
   template<class R, class RotT>
   bool rotate_in_place(ArrayVector<T>& x,
@@ -165,6 +221,37 @@ public:
     }
     return str;
   }
+  template<typename I, typename S>
+  void add_cost(const I i0, const I i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
+    // can this be extended to account for the arbitrary phase too?
+    S s_cost{0}, v_cost{0}, m_cost{0};
+    T *d0_i, *d1_j;
+    element_t nel2 = std::sqrt(elements_[2]);
+    element_t span = this->branch_span();
+    if (arbitrary_phase_allowed){ // if the vector_cost_function uses the Hermitian angle, e^iθ *never* matters.
+      auto phased = std::unique_ptr<T[]>(new T[span]);
+      for (size_t i=0; i<branches_; ++i) for (size_t j=0; j<branches_; ++j){
+        d0_i = data_.data(i0,i*span);
+        d1_j = data_.data(i1,j*span);
+        T eith = antiphase(span, d0_i, d1_j);
+        for (size_t s=0; s<span; ++s) phased[s] = eith*d1_j[s];
+        if (elements_[0]) s_cost = this->scalar_cost_function(elements_[0], d0_i, phased.get());
+        if (elements_[1]) v_cost = this->vector_cost_function(elements_[1], d0_i+elements_[0], phased.get()+elements_[0]);
+        if (elements_[2]) m_cost = frobenius_distance(nel2, d0_i+elements_[0]+elements_[1], phased.get()+elements_[0]+elements_[1]);
+        cost[i*branches_+j] += costs_[0]*s_cost + costs_[1]*v_cost + costs_[2]*m_cost;
+      }
+    } else {
+      for (size_t i=0; i<branches_; ++i) for (size_t j=0; j<branches_; ++j){
+        d0_i = data_.data(i0,i*span);
+        d1_j = data_.data(i1,j*span);
+        if (elements_[0]) s_cost = this->scalar_cost_function(elements_[0], d0_i, d1_j);
+        if (elements_[1]) v_cost = this->vector_cost_function(elements_[1], d0_i+elements_[0], d1_j+elements_[0]);
+        if (elements_[2]) m_cost = frobenius_distance(nel2, d0_i+elements_[0]+elements_[1], d1_j+elements_[0]+elements_[1]);
+        cost[i*branches_+j] += costs_[0]*s_cost + costs_[1]*v_cost + costs_[2]*m_cost;
+      }
+    }
+    // info_update_if(arbitrary_phase_allowed, i0,'-',i1,'\n',cost);
+  }
 private:
   template<typename I> element_t branch_span(const std::array<I,3>& e) const {
     return static_cast<element_t>(e[0])+static_cast<element_t>(e[1])+static_cast<element_t>(e[2]);
@@ -191,91 +278,185 @@ private:
 };
 
 
+// template<typename T> template<typename I, typename>
+// void InnerInterpolationData<T>::interpolate_at(
+//   const std::vector<std::vector<int>>& permutations,
+//   const std::vector<I>& indices,
+//   const std::vector<double>& weights,
+//   ArrayVector<T>& out,
+//   const size_t to
+// ) const {
+//   if (indices.size()==0 || weights.size()==0)
+//     throw std::logic_error("Interpolation requires input data!");
+//   T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
+//   element_t span = this->branch_span();
+//   verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
+//   for (size_t x=0; x<indices.size(); ++x){
+//     T *ptrX = data_.data(indices[x]);
+//     // loop over the branches:
+//     for (element_t b=0; b < branches_; ++b){
+//       // grab the permuted branch index for this vertex:
+//       element_t pb = static_cast<element_t>(permutations[x][b]);
+//       // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
+//       T scth = antiphase(elements_[0], ptr0, ptrX);
+//       for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += weights[x]*(scth*ptrX[pb*span+s]);
+//       // handle any vectors
+//       if (elements_[1]){
+//         element_t o1 = b*span + elements_[0];
+//         element_t p1 = pb*span + elements_[0];
+//         // find the arbitrary phase eⁱᶿ between different point eigenvectors
+//         T eith = antiphase(elements_[1], ptr0+o1, ptrX+p1);
+//         // remove the arbitrary phase while adding the weighted value
+//         for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += weights[x]*(eith*ptrX[p1+e]);
+//       }
+//       // handle any remaining matrix elements
+//       if (elements_[2]){
+//         element_t o3 = b*span + elements_[0] + elements_[1];
+//         element_t p3 = bp*span + elements_[0] + elements_[1];
+//         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+p3);
+//         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += weights[x]*(mtth*ptrX[p3+r]);
+//       }
+//     }
+//   }
+//   verbose_update("Yields\n",out.extract(to).to_string());
+//
+//   // // ensure that any eigenvectors are still normalised
+//   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
+//   //   element_t o2 = b*span + elements_[0];
+//   //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
+//   //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
+//   // }
+// }
+
 template<typename T> template<typename I, typename>
 void InnerInterpolationData<T>::interpolate_at(
+  const std::vector<std::vector<int>>& permutations,
   const std::vector<I>& indices,
   const std::vector<double>& weights,
   ArrayVector<T>& out,
-  const size_t to
+  const size_t to,
+  const bool arbitrary_phase_allowed
 ) const {
   if (indices.size()==0 || weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
   T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
   element_t span = this->branch_span();
   verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
-  for (size_t x=0; x<indices.size(); ++x){
-    T *ptrX = data_.data(indices[x]);
-    // loop over the branches:
-    for (element_t b=0; b < branches_; ++b){
-      // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
-      T scth = antiphase(elements_[0], ptr0, ptrX);
-      for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += weights[x]*(scth*ptrX[b*span+s]);
-      // handle any vectors
-      if (elements_[1]){
-        element_t o1 = b*span + elements_[0];
-        // find the arbitrary phase eⁱᶿ between different point eigenvectors
-        T eith = antiphase(elements_[1], ptr0+o1, ptrX+o1);
-        // remove the arbitrary phase while adding the weighted value
-        for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += weights[x]*(eith*ptrX[o1+e]);
+  if (arbitrary_phase_allowed){
+    // we *must* copy the whole permuted array before weighting to find the arbitrary phase
+    auto permuted = std::make_unique<T[]>(branches_*span);
+    for (size_t x=0; x<indices.size(); ++x){
+      T *ptrX = data_.data(indices[x]);
+      // // copy the permuted branches
+      // for (element_t b=0; b < branches_; ++b){
+      //   element_t p = static_cast<element_t>(permutations[x][b]);
+      //   for (size_t s=0; s<span; ++s) permuted[b*span+s] = ptrX[p*span+s];
+      // }
+      // // find the *single* arbitrary phase which applies to all branches
+      // T eith = antiphase(branches_*span, permuted.get(), ptr0);
+      // // now we can add this to the output applying the weight and phase
+      // for (element_t a=0; a<branches_*span; ++a) out_to[a] += weights[x]*eith*permuted[a];
+      // find the per-branch arbitrary phase and add each branch to the output
+      for (element_t b=0; b < branches_; ++b){
+        element_t p = static_cast<element_t>(permutations[x][b]);
+        T eith = antiphase(span, ptr0+b*span, ptrX+p*span);
+        for (size_t s=0; s<span; ++s) out_to[b*span+s] += weights[x]*eith*ptrX[p*span + s];
       }
-      // handle any remaining matrix elements
-      if (elements_[2]){
-        element_t o3 = b*span + elements_[0] + elements_[1];
-        T mtth = antiphase(elements_[2], ptr0+o3, ptrX+o3);
-        for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += weights[x]*(mtth*ptrX[o3+r]);
+    }
+  } else {
+    for (size_t x=0; x<indices.size(); ++x){
+      T *ptrX = data_.data(indices[x]);
+      for (element_t b=0; b < branches_; ++b){
+        element_t p = static_cast<element_t>(permutations[x][b]);
+        for (size_t s=0; s<span; ++s) out_to[b*span+s] += weights[x]*ptrX[p*span+s];
       }
     }
   }
-  verbose_update("Yields\n",out.extract(to).to_string());
-
-  // // ensure that any eigenvectors are still normalised
-  // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
-  //   element_t o2 = b*span + elements_[0];
-  //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
-  //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
-  // }
 }
 
 template<typename T> template<typename I, typename>
 void InnerInterpolationData<T>::interpolate_at(
+  const std::vector<std::vector<int>>& permutations,
   const std::vector<std::pair<I,double>>& indices_weights,
   ArrayVector<T>& out,
-  const size_t to
+  const size_t to,
+  const bool arbitrary_phase_allowed
 ) const {
   if (indices_weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
   T *out_to = out.data(to), *ptr0 = data_.data(indices_weights[0].first);
   element_t span = this->branch_span();
-  for (auto iw: indices_weights){
-    T *ptrX = data_.data(iw.first);
-    // loop over the branches:
-    for (element_t b=0; b < branches_; ++b){
-      // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
-      T scth = antiphase(elements_[0], ptr0, ptrX);
-      for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += iw.second*(scth*ptrX[b*span+s]);
-      // handle any vectors
-      if (elements_[1]){
-        element_t o1 = b*span + elements_[0];
-        // find the arbitrary phase eⁱᶿ between different point eigenvectors
-        T eith = antiphase(elements_[1], ptr0+o1, ptrX+o1);
-        // remove the arbitrary phase while adding the weighted value
-        for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += iw.second*(eith*ptrX[o1+e]);
+  std::vector<int> dummy;
+  if (arbitrary_phase_allowed){
+    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy), [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
+      auto permuted = std::unique_ptr<T[]>(new T[branches_*span]);
+      T *ptrX = data_.data(iw.first);
+      for (element_t b=0; b<branches_; ++b){
+        element_t p = static_cast<element_t>(perm[b]);
+        for (size_t s=0; s<span; ++s) permuted[b*span+s] = ptrX[p*span*s];
       }
-      // handle any remaining matrix elements
-      if (elements_[2]){
-        element_t o3 = b*span + elements_[0] + elements_[1];
-        T mtth = antiphase(elements_[2], ptr0+o3, ptrX+o3);
-        for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += iw.second*(mtth*ptrX[o3+r]);
+      T eith = antiphase(branches_*span, ptr0, permuted.get());
+      for (element_t a=0; a<branches_*span; ++a) out_to[a] += iw.second*eith*ptrX[a];
+      return 1;
+    });
+  } else {
+    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy), [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
+      T *ptrX = data_.data(iw.first);
+      for (element_t b=0; b<branches_; ++b){
+        element_t p = static_cast<element_t>(perm[b]);
+        for (size_t s=0; s<span; ++s) out_to[b*span+s] = iw.second*ptrX[p*span*s];
       }
-    }
+      return 1;
+    });
   }
-  // // ensure that any eigenvectors are still normalised
-  // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
-  //   element_t o2 = b*span + elements_[0];
-  //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
-  //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
-  // }
 }
+
+//
+// template<typename T> template<typename I, typename>
+// void InnerInterpolationData<T>::interpolate_at(
+//   const std::vector<std::vector<int>>& permutations,
+//   const std::vector<std::pair<I,double>>& indices_weights,
+//   ArrayVector<T>& out,
+//   const size_t to
+// ) const {
+//   if (indices_weights.size()==0)
+//     throw std::logic_error("Interpolation requires input data!");
+//   T *out_to = out.data(to), *ptr0 = data_.data(indices_weights[0].first);
+//   element_t span = this->branch_span();
+//   for (auto iw: indices_weights){
+//     T *ptrX = data_.data(iw.first);
+//     // loop over the branches:
+//     for (element_t b=0; b < branches_; ++b){
+//       // grab the permuted branch index for this vertex:
+//       element_t pb = static_cast<element_t>(permutations[x][b]);
+//       // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
+//       T scth = antiphase(elements_[0], ptr0, ptrX);
+//       for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += iw.second*(scth*ptrX[pb*span+s]);
+//       // handle any vectors
+//       if (elements_[1]){
+//         element_t o1 = b*span + elements_[0];
+//         element_t p1 = pb*span + elements_[0];
+//         // find the arbitrary phase eⁱᶿ between different point eigenvectors
+//         T eith = antiphase(elements_[1], ptr0+o1, ptrX+p1);
+//         // remove the arbitrary phase while adding the weighted value
+//         for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += iw.second*(eith*ptrX[p1+e]);
+//       }
+//       // handle any remaining matrix elements
+//       if (elements_[2]){
+//         element_t o3 = b*span + elements_[0] + elements_[1];
+//         element_t p3 = pb*span + elements_[0] + elements_[1];
+//         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+p3);
+//         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += iw.second*(mtth*ptrX[p3+r]);
+//       }
+//     }
+//   }
+//   // // ensure that any eigenvectors are still normalised
+//   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
+//   //   element_t o2 = b*span + elements_[0];
+//   //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
+//   //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
+//   // }
+// }
 
 template<typename T>
 bool InnerInterpolationData<T>::rip_recip(
@@ -538,6 +719,11 @@ public:
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
   void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&, ArrayVector<R>&, const size_t) const;
   //
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  std::vector<std::vector<int>> get_permutations(const std::vector<I>&) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  std::vector<std::vector<int>> get_permutations(const std::vector<std::pair<I,double>>&) const;
+  //
 //  bool rotate_in_place(ArrayVector<T>& vals, ArrayVector<R>& vecs, const std::vector<std::array<int,9>>& r) const {
 //    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
 //  }
@@ -554,6 +740,13 @@ public:
     vectors_.replace_data(args...);
     this->validate_values();
   }
+  //
+  void set_value_cost_info(const int csf, const int cvf, const ElementsCost& elcost){
+    values_.set_cost_info(csf, cvf, elcost);
+  }
+  void set_vector_cost_info(const int csf, const int cvf, const ElementsCost& elcost){
+    vectors_.set_cost_info(csf, cvf, elcost);
+  }
   // create a string representation of the values and vectors
   std::string to_string() const {
     std::string str = "value " + values_.to_string() + " vector " + vectors_.to_string();
@@ -565,6 +758,9 @@ public:
 private:
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
   ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const{ return this->debye_waller_sum(Q.get_xyz(), beta); }
+  //
+  template<typename I, typename S=typename CostTraits<T>::type, typename=std::enable_if_t<std::is_integral<I>::value> >
+  std::vector<S> cost_matrix(const I i0, const I i1) const;
 };
 
 
@@ -640,8 +836,9 @@ InterpolationData<T,R>::interpolate_at(
   ArrayVector<R>& vectors_out,
   const size_t to
 ) const {
-  values_.interpolate_at(indices, weights, values_out, to);
-  vectors_.interpolate_at(indices, weights, vectors_out, to);
+  std::vector<std::vector<int>> permutations = this->get_permutations(indices);
+  values_.interpolate_at(permutations, indices, weights, values_out, to, false);
+  vectors_.interpolate_at(permutations, indices, weights, vectors_out, to, true);
 }
 
 template<class T, class R> template<typename I, typename>
@@ -652,8 +849,41 @@ InterpolationData<T,R>::interpolate_at(
   ArrayVector<R>& vectors_out,
   const size_t to
 ) const {
-  values_.interpolate_at(indices_weights, values_out, to);
-  vectors_.interpolate_at(indices_weights, vectors_out, to);
+  std::vector<std::vector<int>> permutations = this->get_permutations(indices_weights);
+  values_.interpolate_at(permutations, indices_weights, values_out, to, false);
+  vectors_.interpolate_at(permutations, indices_weights, vectors_out, to, true);
 }
 
+template<class T, class R> template<typename I, typename>
+std::vector<std::vector<int>>
+InterpolationData<T,R>::get_permutations(const std::vector<I>& indices) const{
+  std::vector<std::vector<int>> permutations;
+  const I pvt{indices[0]};
+  for (const I idx: indices)
+    permutations.push_back(jv_permutation(this->cost_matrix(pvt, idx)));
+  return permutations;
+}
+template<class T, class R> template<typename I, typename>
+std::vector<std::vector<int>>
+InterpolationData<T,R>::get_permutations(const std::vector<std::pair<I,double>>& iw) const{
+  std::vector<std::vector<int>> permutations;
+  const I pvt{iw[0].first};
+  for (const auto pidx: iw)
+    permutations.push_back(jv_permutation(this->cost_matrix(pvt, pidx.first)));
+  return permutations;
+}
+
+template<class T, class R> template<typename I, typename S, typename>
+std::vector<S>
+InterpolationData<T,R>::cost_matrix(const I i0, const I i1) const {
+  element_t Nbr{this->branches()};
+  std::vector<S> cost(Nbr*Nbr, S(0));
+  if (i0==i1){
+    for (element_t j=0; j<Nbr*Nbr; j+=Nbr+1) cost[j] = S(-1);
+  } else {
+    values_.add_cost(i0, i1, cost, false);
+    vectors_.add_cost(i0, i1, cost, true);
+  }
+  return cost;
+}
 #endif

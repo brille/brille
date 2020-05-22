@@ -553,6 +553,65 @@ delete[] colsol;
 return true;
 }
 
+/*! \brief Use Junker-Volgenant algorithm to determine a permutation from a cost matrix
+
+@param cost A square matrix held in a std::vector of the costs for each assignment
+@returns The permutation as a std::vector<size_t>
+*/
+template<class T>
+std::vector<int> jv_permutation(const std::vector<T>& cost){
+  size_t Nobj = std::sqrt(cost.size());
+  assert( cost.size() == Nobj*Nobj);
+  std::vector<T> usol(Nobj,T(0)), vsol(Nobj,T(0));
+  std::vector<int> rowsol(Nobj,0), colsol(Nobj,0);
+
+  // // protect against equally-good solutions in the same row:
+  // for (size_t i=0; i<Nobj; ++i){
+  //   T rowmin{cost[i*Nobj]};
+  //   for (size_t j=1; j<Nobj; ++j) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
+  //   int equal_to_min{0};
+  //   for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
+  //   if (equal_to_min > 1){
+  //     info_update(equal_to_min," columns have the same lowest cost in row ",i);
+  //     for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))
+  //     cost[i*Nobj+j] += static_cast<T>(--equal_to_min*100)*std::numeric_limits<T>::epsilon();
+  //   }
+  // }
+  // // and same column
+  // for (size_t j=0; j<Nobj; ++j){
+  //   T rowmin{cost[j]};
+  //   for (size_t i=1; i<Nobj; ++i) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
+  //   int equal_to_min{0};
+  //   for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
+  //   if (equal_to_min > 1){
+  //     info_update(equal_to_min," rows have the same lowest cost in column ",j);
+  //     for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))
+  //     cost[i*Nobj+j] += static_cast<T>(--equal_to_min*100)*std::numeric_limits<T>::epsilon();
+  //   }
+  // }
+  // /* Normalising the cost matrix before running Jonker-Volgenant *might* help
+  //   with the infinite loop situation */
+  // T maxcost{cost[0]}, mincost{cost[0]};
+  // for (auto i: cost){
+  //   if (maxcost < i) maxcost = i;
+  //   if (mincost > i) mincost = i;
+  // }
+  // info_update("JV costs range is (",mincost,",",maxcost,")");
+  // for (size_t i=1; i<cost.size(); ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);
+
+  // use the Jonker-Volgenant algorithm to determine the optimal assignment
+  /*
+  There might be a hidden problem here.
+  As discussed in the README at https://github.com/hrldcpr/pyLAPJV
+
+  Supposedly, if two costs are equally smallest (in a row) to machine precision
+  then the Jonker-Volgenant algorithm enters an infinite loop.
+  The version in lapjv.h has a check to avoid this but it might still be a
+  problem. */
+  lapjv((int)Nobj, cost.data(), false, rowsol.data(), colsol.data(), usol.data(), vsol.data());
+  return rowsol; // or should this be colsol?
+}
+
 /*! \brief Use a Stable Matching algorithm to determine a permutation
 
 For two arrays of data, located in memory at `centre` and `neighbour`, and each

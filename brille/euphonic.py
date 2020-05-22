@@ -72,7 +72,7 @@ class BrEu:
     # pylint: disable=r0913,r0914
     def __init__(self, SPData,
                  scattering_lengths=None, cell_is_primitive=None,
-                 sort=True, hall=None, parallel=False, **kwds):
+                 sort=True, vf=0, hall=None, parallel=False, **kwds):
         """Initialize a new BrEu object from an existing Euphonic object."""
         if not isinstance(SPData, InterpolationData):
             msg = "Unexpected data type {}, expect failures."
@@ -98,13 +98,14 @@ class BrEu:
         # since Euphonic no longer attempts to handle varying units
         # internally
         self.data.calculate_fine_phonons(grid_q, **cfp_dict)
+        # freq = self.data.freqs.to('millielectron_volt').magnitude
         freq = self.data._freqs    # (n_pt, n_br) # can this be replaced by _reduced_freqs?
         vecs = self.data.eigenvecs # (n_pt, n_br, n_io, 3) # can this be replaced by _reduced_eigenvecs?
         vecs = degenerate_check(grid_q, freq, vecs)
-        self.sort_branches(sort, freq, vecs)
+        self.sort_branches(sort, freq, vecs, weight_function=vf)
         self.parallel = parallel
 
-    def _fill_grid(self, freq, vecs):
+    def _fill_grid(self, freq, vecs, vf=0):
         n_pt = self.grid.invA.shape[0]
         n_br = self.data.n_branches
         n_io = self.data.n_ions
@@ -138,7 +139,11 @@ class BrEu:
         # each branch eigenvector is comprised of n_ions displacement 3-vectors
         # which transform via the phonon Γ function,
         # so [1,0,0,0] ≡ (1,) and [0,n_ions*3,0,3] ≡ (0,3*n_io,0,3)
-        self.grid.fill(freq, (1,), self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), (0,3*n_io,0,3))
+        freq_el = (1,)
+        freq_wght = (13605.693, 0., 0.) # Rydberg/meV
+        vecs_el = (0, 3*n_io, 0, 3, 0, vf) # n_scalar, n_vector, n_matrix, rotates_like (phonon eigenvectors), scalar cost function, vector cost function
+        vecs_wght = (0., 1., 0.)
+        self.grid.fill(freq, freq_el, freq_wght, self.brspgl.orthogonal_to_conventional_eigenvectors(vecs), vecs_el, vecs_wght)
 
 
     def sort_branches(self, sort, frqs, vecs, energy_weight=1.0, eigenvector_weight=1.0, weight_function=0):
@@ -159,7 +164,7 @@ class BrEu:
 
         The weights are both one by default but can be modified as necessary.
         """
-        self._fill_grid(frqs, vecs)
+        self._fill_grid(frqs, vecs, vf=weight_function)
         if sort:
             # The input to sort_perm indicates what weight should be given to
             # each part of the resultant cost matrix. In this case, each phonon
@@ -177,7 +182,7 @@ class BrEu:
             # frqs = np.array([x[y,:] for (x, y) in zip(self.grid.values, perm)])
             # # The gridded eigenvectors are (n_pt, n_br, n_io, 3)
             # vecs = np.array([x[y,:,:] for (x, y) in zip(self.grid.vectors, perm)])
-            self._fill_grid(frqs, vecs)
+            self._fill_grid(frqs, vecs, vf=weight_function)
         return frqs, vecs
 
     # pylint: disable=c0103,w0613,no-member

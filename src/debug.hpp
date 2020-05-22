@@ -48,11 +48,13 @@ template<typename T> static enable_if_t< std::is_integral<T>::value && std::is_u
 template<typename T> static enable_if_t<!std::is_integral<T>::value ||   std::is_signed<T>::value, T> local_abs(T x) { return std::abs(x); }
 
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const T x, const size_t w=0){
+const std::string my_to_string(const T x, const size_t width=0){
   std::ostringstream streamobj;
+  size_t w{width};
   if (!std::is_integral<T>::value){
     streamobj << std::fixed;
     streamobj << std::setprecision(4);
+    if (w>4) w -= 5u; // account for the decimal mark and four places
   }
   // char may or may not be signed, depending on the system
   if (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
@@ -65,12 +67,14 @@ const std::string my_to_string(const T x, const size_t w=0){
   return streamobj.str();
 }
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const std::complex<T> x, const size_t w=0){
+const std::string my_to_string(const std::complex<T> x, const size_t width=0){
   T r = std::real(x), i=std::imag(x);
   std::ostringstream streamobj;
+  size_t w{width};
   if (!std::is_integral<T>::value){
     streamobj << std::fixed;
     streamobj << std::setprecision(4);
+    if (w>9) w -= 10u; // account for the decimal mark and four places
   }
   if (!std::is_integral<T>::value || std::is_signed<T>::value){
     if (w>3) streamobj << std::setw(w-3); // -3 for -±i
@@ -138,13 +142,25 @@ private:
   template<typename T, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<T>& x, L... args){
     size_t l = max_element_length(x);
+    size_t n = std::sqrt(x.size());
     int w = terminal_width();
     if (l) w /= static_cast<int>(l)+1;
     int count = 0;
     std::string s;
-    for (auto y: x){
-      s += " " + my_to_string(y, l);
-      if (!(++count % w)) s += "\n";
+    if (x.size() == n*n){
+      for (auto y: x){
+        s += " " + my_to_string(y, l);
+        ++count;
+        if (!(count % w)||!(count % n)){
+          s += "\n";
+          count = 0;
+        }
+      }
+    } else {
+      for (auto y: x){
+        s += " " + my_to_string(y, l);
+        if (!(++count % w)) s += "\n";
+      }
     }
     this->inner_print(s, args...);
   }
