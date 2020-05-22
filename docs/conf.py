@@ -36,13 +36,31 @@ extensions = [
     'breathe',
     'sphinxcontrib.katex',
     'sphinxcontrib.tikz',
+    'exhale',
 ]
 
 tikz_proc_suite = 'GhostScript'
 
-breathe_projects = {'brille' : '.build/doxygenxml/'}
+breathe_projects = {'brille' : '_build/doxygenxml/'}
 breathe_default_project = 'brille'
 breathe_domain_by_extension = {'h': 'cpp', 'h': 'hpp', 'h': 'tpp'}
+
+# setup the exhale extension
+exhale_args = {
+    # required arguments first:
+    "containmentFolder": "./api",
+    "rootFileName": "library_root.rst",
+    "rootFileTitle": "C++ Library API",
+    "doxygenStripFromPath": "..",
+    # Suggested optional arguments
+    "createTreeView": True,
+    # TIP: if using the sphinx-bootstrap-theme, you also need
+    # "treeViewIsBootstrap": True,
+    "exhaleExecutesDoxygen": True,
+    #"exhaleSilentDoxygen": True,
+    "exhaleUseDoxyfile": True,
+    # "exhaleDoxygenStdin": "INPUT = ../wrap/", # "INPUT = ../src/",
+}
 
 autosummary_generate = True
 
@@ -83,7 +101,7 @@ html_static_path = ['_static']
 
 # again, following from github.com/pybind/pybind11/blob/stable/docs/conf.py:
 def generate_doxygen_xml(app):
-    build_dir = os.path.join(app.confdir, '.build')
+    build_dir = os.path.join(app.confdir, '_build')
     if not os.path.exists(build_dir):
         os.mkdir(build_dir)
 

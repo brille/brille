@@ -29,8 +29,25 @@
 #include "utilities.hpp"
 // #include "debug.h" // ensurses __PRETTY_FUNCTION__ is defined for MSVC, provides debug_update()
 
-//! Enum for simplified ArrayVector comparsions
-enum class Comp {lt,gt,le,ge,eq,nle,nge,neq,le_ge,plus,minus,times,rdiv,ldiv};
+/* @enum Comp
+   @brief for simplified comparisons of ArrayVector
+*/
+enum class Comp {
+  lt,    //< <
+  gt,    //< >
+  le,    //< ≤
+  ge,    //< ≥
+  eq,    //< ==
+  nle,   //< ⩽̸
+  nge,   //< ⩾̸
+  neq,   //< ≠
+  le_ge, //< ⪓
+  plus,  //< +
+  minus, //< -
+  times, //< ×
+  rdiv,  //< /
+  ldiv   //< \
+};
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
 
@@ -75,12 +92,17 @@ public:
   /*! Standard ArrayVector constructor
       @param m the number of elements within each array
       @param n the number of arrays in the ArrayVector
-      @param d [optional] a pointer to a n*m block of _data which is copied into the ArrayVector
+      @param d [optional] a pointer to a n*m block of data which is copied into the ArrayVector
   */
   ArrayVector(size_t m=0, size_t n=0, const T* d=nullptr) : M(m), N(n), _data(nullptr){
       if (m && n) _data = new T[m*n]();
       if (d && m && n) for(size_t i=0; i<m*n; i++) _data[i] = d[i];
   };
+  /*! Single-value initializer ArrayVector constructor
+      @param m the number of elements within each array
+      @param n the number of arrays in the ArrayVector
+      @param init the value which every element of every array is initialized to
+  */
   ArrayVector(size_t m, size_t n, const T init): M(m), N(n), _data(nullptr){
     if (m&&n){
       _data =new T[m*n]();
@@ -89,16 +111,16 @@ public:
   }
   /*! ArrayVector contstructor taking shape and stride information for the case
       of a non-contiguous and/or non-row-ordered array at the provided pointer.
-      @param d a pointer to the n*m block of _data, to be copied
+      @param d a pointer to the n*m block of data, to be copied
       @param shape a vector of sizes along each dimension of the input array
       @param strides a vector of strides along each dimension of the input array
       @note The strides vector must indicate the number of bytes necessary to
             move from one point to the next along a given dimension of the input
-            _data array. The ArrayVector is strictly two dimensional and
+            data array. The ArrayVector is strictly two dimensional and
             therefore a convention must be adopted for converting the
-            D-dimensional input array [D=s.size()].
+            D-dimensional input array [D=shape.size()].
             This constructor will attempt to combine the 2ⁿᵈ through Dᵗʰ
-            dimensions such that (n,m) = (s[0],s[1]*…*s[D-1])
+            dimensions such that (n,m) = (shape[0],shape[1]*…*shape[D-1])
   */
   template<class Integer, typename=typename std::enable_if<std::is_integral<Integer>::value>::type>
   ArrayVector(const T* d, const std::vector<Integer>& shape, const std::vector<Integer>& strides): _data(nullptr){
@@ -152,7 +174,8 @@ public:
   }
   /*! Copy constructor
       @param vec another ArrayVector which is copied into the new object
-      @note this is used by objects which wrap the ArrayVector, e.g., the lattice vectors
+      @note this is used by objects which wrap the ArrayVector,
+            e.g., the lattice vectors LQVec and LDVec
   */
   ArrayVector(const ArrayVector<T>& vec): M(vec.numel()), N(vec.size()), _data(nullptr){
     size_t m = vec.numel();
@@ -163,7 +186,7 @@ public:
       if (d) for(size_t i=0; i<m*n; i++) _data[i] = d[i];
     }
   }
-  //! Constructor from std::vector<std::array<T,N>>
+  //! Constructor from a standard vector of standard arrays
   template<class R, size_t Nel> ArrayVector(const std::vector<std::array<R,Nel>>& va):
   M(Nel), N(va.size()), _data(nullptr){
     if (M && N){
@@ -171,7 +194,7 @@ public:
       for (size_t i=0; i<N; ++i) for (size_t j=0; j<M; ++j) _data[i*M+j] = static_cast<T>(va[i][j]);
     }
   }
-  //! Constructor from std::array<T,N>
+  //! Construct a single-array ArrayVector from a standard array
   template<class R, size_t Nel> ArrayVector(const std::array<R,Nel>& va):
   M(Nel), N(1u), _data(nullptr){
     if (M && N){
@@ -205,6 +228,7 @@ public:
     }
     return *this;
   }
+  //! Accessor for single-arrays -- preforms a memory copy
   ArrayVector<T> operator[](const size_t i) const{
     bool isok = i < this->size();
     ArrayVector<T> out(this->numel(), isok ? 1u: 0u);
@@ -213,17 +237,17 @@ public:
     }
     return out;
   }
-  // Destructor
+  //! Custom deconstructor to deallocate heap memory
   ~ArrayVector() { if (M && N) delete[] _data; };
-  //! Returns the number of arrays
+  //! Return the number of arrays
   size_t size() const {return N;};
-  //! Returns the number of elements in each array
+  //! Return the number of elements in each array
   size_t numel() const {return M;};
   //! Returns the pointer to the ith array's jth element -- with bounds checking
   T* checked_data(size_t i=0, size_t j=0) const;
-  //! Returns the pointer to the ith array's jth element
+  //! Return the pointer to the ith array's jth element
   T* data(size_t i=0, size_t j=0) const;
-  //! Returns the value of the ith array's jth element
+  //! Return the value of the ith array's jth element
   T getvalue(const size_t i=0, const size_t j=0) const;
   //! Return the ith single-array ArrayVector
   ArrayVector<T> extract(const size_t i=0) const ;

@@ -21,6 +21,9 @@
 #include "symmetry.hpp"
 #include "spg_database.hpp"
 
+/*!
+The symmetry operations of a spacegroup
+*/
 void wrap_symmetry(pybind11::module & m){
   using namespace pybind11::literals;
   pybind11::class_<Symmetry> cls(m, "Symmetry");

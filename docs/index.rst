@@ -31,7 +31,7 @@ You can use ``brille`` to:
 
   brille
   plotting
-  libbrille
+  api/library_root
 
 Indices and tables
 ==================
