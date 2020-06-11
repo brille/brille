@@ -46,7 +46,7 @@ enum class Comp {
   minus, //< -
   times, //< ×
   rdiv,  //< /
-  ldiv   //< \
+  ldiv   //< \.
 };
 
 /*!  \brief A class to hold a vector of arrays in contiguous memory
