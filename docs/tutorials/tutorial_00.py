@@ -1,11 +1,17 @@
 import os
 import tempfile
 import requests
-import numpy as np, matplotlib.pyplot as pp
+import numpy as np, matplotlib as mpl, matplotlib.pyplot as pp
 import brille as b, brille.plotting as bp
 from pathlib import Path
 from euphonic.data.interpolation import InterpolationData
 from brille.euphonic import BrEu
+
+images_dir = os.path.join(os.path.dirname(__file__), 'images')
+def dirsavefig(dirname, filename, transparent=True, **kwds):
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    pp.savefig(os.path.join(dirname, filename), transparent=transparent, **kwds)
 
 def fetch_InterpolationData_object(material):
     base_url = "https://raw.githubusercontent.com/g5t/brille/master/docs/tutorials"
@@ -47,7 +53,7 @@ nacl = BrEu(get_InterpolationData_object('NaCl'), trellis=True, max_volume=1e-5,
 nacl.parallel = True
 
 # Define a path through reciprocal space from (000) to (123)
-xi = np.linspace(0,1, 100)
+xi = np.linspace(0, 1, 100)
 qhkl = np.vstack((xi, 2*xi, 3*xi)).T
 # Interpolate the mode energies at qhkl
 w_q = nacl.w_q(qhkl).magnitude
@@ -58,18 +64,18 @@ fig = pp.figure(figsize=pp.figaspect(2))
 ax = fig.add_axes([0,0,1,1], projection='3d')
 ax.view_init(5,300)
 for g in [(0,0,0), (1,1,1), (0,2,2), (1,1,3)]:
-    bp.plot(bz, units='rlu', irreducible=False, origin=g, edgecolor='gray', alpha=0, axs=ax)
-bp.plot(qhkl, axs=ax)
+    bp.plot(bz, units='rlu', irreducible=False, origin=g, edgecolor='gray', alpha=0, axs=ax, show=mpl.is_interactive())
+bp.plot(qhkl, axs=ax, show=mpl.is_interactive())
 pp.setp(ax,'xlim',[-1,2],'ylim',[-1,2],'zlim',[-1,4])
 pp.setp(ax,'xlabel','h','ylabel','k','zlabel','l')
 bbox = fig.bbox_inches.from_bounds(0.2,0.8,4.4,5.7)
-pp.savefig('nacl_123_path.png', bbox_inches=bbox, transparent=True)
+dirsavefig(images_dir, 'nacl_123_path.png', bbox_inches=bbox)
 
 # plot the Brillouin zone, path, irreducible path, and dispersion
 irqhkl, G, rot, invrot = nacl.grid.BrillouinZone.ir_moveinto(qhkl)
 fig = pp.figure(figsize=pp.figaspect(0.5))
 ax0 = fig.add_subplot(1, 2, 1, projection='3d')
-bp.plot(bz, units='rlu', axs=ax0, Q=irqhkl)
+bp.plot(bz, units='rlu', axs=ax0, Q=irqhkl, show=mpl.is_interactive())
 pp.setp(ax0,'xlabel','h','ylabel','k','zlabel','l')
 
 ax1 = fig.add_subplot(1, 2, 2)
@@ -79,13 +85,13 @@ ax1.set_xlabel(r'$\xi$ in $\mathbf{Q}=(\xi\,2\xi\,3\xi)$')
 ax1.set_ylabel(r'$\omega_i(\mathbf{Q})$ / meV')
 
 fig.subplots_adjust(left=0,right=0.99,bottom=0.1,top=1)
-pp.savefig('nacl_123_disp.png', transparent=True)
+dirsavefig(images_dir, 'nacl_123_disp.png')
 
 # determine and plot the inelastic neutron scattering intesity along the path
 mu, nu = np.mgrid[0:1:50j, 0.5:30:60j]
-Qx = mu.reshape(mu.size,1)
+ξ = mu.reshape(mu.size,1)
 En = nu.reshape(nu.size,1)
-Qhkl = np.concatenate((Qx, 2*Qx, 3*Qx), axis=1)
+Qhkl = np.concatenate((ξ, 2*ξ, 3*ξ), axis=1)
 
 SQE = nacl(Qhkl, En, resfun='sho', param=1., T=1.).reshape(mu.shape)
 
@@ -97,4 +103,4 @@ ax2.pcolormesh(mu, nu, SQE, shading='flat')
 ax2.set_xlabel(r'$\xi$ in $\mathbf{Q}=(\xi\,2\xi\,3\xi)$')
 ax2.set_ylabel(r'$E$/meV')
 
-pp.savefig('nacl_123_sqw.png', transparent=True)
+dirsavefig(images_dir, 'nacl_123_sqw.png')
