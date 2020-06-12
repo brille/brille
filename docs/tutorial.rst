@@ -8,4 +8,4 @@ User Guide
   :maxdepth: 1
   :caption: Examples
 
-  tutorial_00
+  tutorials/tutorial_00

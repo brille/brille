@@ -23,6 +23,7 @@ You can use ``brille`` to:
 
   install_guide
   motivation
+  memory_usage
   tutorial
 
 .. toctree::
@@ -31,7 +32,7 @@ You can use ``brille`` to:
 
   brille
   plotting
-  libbrille
+  api/library_root
 
 Indices and tables
 ==================

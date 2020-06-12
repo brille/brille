@@ -21,7 +21,7 @@ from euphonic.data.interpolation import InterpolationData
 from brille.euphonic import BrEu
 
 def fetch_InterpolationData_object(material):
-    base_url = "https://raw.githubusercontent.com/g5t/brille/master/docs"
+    base_url = "https://raw.githubusercontent.com/g5t/brille/master/docs/tutorials"
     file_to_fetch = material + ".castep_bin"
     with tempfile.TemporaryDirectory() as tmp_dir:
         r = requests.get(base_url + "/" + file_to_fetch)
@@ -32,12 +32,21 @@ def fetch_InterpolationData_object(material):
         idata = InterpolationData.from_castep(path=tmp_dir, seedname=material)
     return idata
 
+def get_InterpolationData_object(material):
+	validation_dir = os.path.dirname(os.path.abspath(__file__))
+    tutorial_dir = str(Path(validation_dir, '..', 'docs', 'tutorials'))
+	try:
+		return InterpolationData.from_castep(path=tutorial_dir, seedname=material)
+	except FileNotFoundError:
+		print('{} not found in {}. Fetching remote content.'.format(material, tutorial_dir))
+	return fetch_InterpolationData_object(material)
+
 class PhononEigenvectorRotationValidator(unittest.TestCase):
     """A TestCase object class to validate phonon eigenvector rotation by brille"""
 
     def test_NaCl(self):
         # fetch and load the NaCl.castep_bin file from the brille repository
-        idata = fetch_InterpolationData_object('NaCl')
+        idata = get_InterpolationData_object('NaCl')
         # Do not sort the modes on neighbouring trellis vertices to make comparison with Euphonic easier
         breu = BrEu(idata, sort=False, trellis=True, max_volume=0.1, parallel=False)
         # pick a trellis Q vertex inside the irreducible polyhedron, away from the boundaries:

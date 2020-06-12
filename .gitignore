@@ -32,6 +32,7 @@ nosetests.xml
 .buildinfo
 .doctrees
 *.db
+api/
 
 # Various build directories
 *build

@@ -49,7 +49,7 @@ void wrap_version(pybind11::module & m){
 
 PYBIND11_MODULE(_brille, m){
   m.doc() = R"pbdoc(
-    pybind11 module ``_brille``
+    pybind11 module ``brille._brille``
     ---------------------------
     This module provides the interface to the C++ library.
 
