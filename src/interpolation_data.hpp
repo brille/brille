@@ -81,23 +81,23 @@ public:
     }
     switch (vcf){
       case 1:
-      info_update("selecting vector_distance");
+      debug_update("selecting vector_distance");
       this->vector_cost_function = [](element_t n, T* i, T* j){return vector_distance(n, i, j);};
       break;
       case 2:
-      info_update("selecting 1-vector_product");
+      debug_update("selecting 1-vector_product");
       this->vector_cost_function = [](element_t n, T* i, T* j){return 1-vector_product(n, i, j);};
       break;
       case 3:
-      info_update("selecting vector_angle");
+      debug_update("selecting vector_angle");
       this->vector_cost_function = [](element_t n, T* i, T* j){return vector_angle(n, i, j);};
       break;
       case 4:
-      info_update("selecting hermitian_angle");
+      debug_update("selecting hermitian_angle");
       this->vector_cost_function = [](element_t n, T* i, T* j){ return hermitian_angle(n,i,j);};
       break;
       default:
-      info_update("selecting sin**2(hermitian_angle)");
+      debug_update("selecting sin**2(hermitian_angle)");
       // this->vector_cost_function = [](element_t n, T* i, T* j){return std::abs(std::sin(hermitian_angle(n, i, j)));};
       this->vector_cost_function = [](element_t n, T* i, T* j){
         auto sin_theta_H = std::sin(hermitian_angle(n, i, j));
@@ -343,20 +343,8 @@ void InnerInterpolationData<T>::interpolate_at(
   element_t span = this->branch_span();
   verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
   if (arbitrary_phase_allowed){
-    // we *must* copy the whole permuted array before weighting to find the arbitrary phase
-    auto permuted = std::make_unique<T[]>(branches_*span);
     for (size_t x=0; x<indices.size(); ++x){
       T *ptrX = data_.data(indices[x]);
-      // // copy the permuted branches
-      // for (element_t b=0; b < branches_; ++b){
-      //   element_t p = static_cast<element_t>(permutations[x][b]);
-      //   for (size_t s=0; s<span; ++s) permuted[b*span+s] = ptrX[p*span+s];
-      // }
-      // // find the *single* arbitrary phase which applies to all branches
-      // T eith = antiphase(branches_*span, permuted.get(), ptr0);
-      // // now we can add this to the output applying the weight and phase
-      // for (element_t a=0; a<branches_*span; ++a) out_to[a] += weights[x]*eith*permuted[a];
-      // find the per-branch arbitrary phase and add each branch to the output
       for (element_t b=0; b < branches_; ++b){
         element_t p = static_cast<element_t>(permutations[x][b]);
         T eith = antiphase(span, ptr0+b*span, ptrX+p*span);
@@ -388,23 +376,23 @@ void InnerInterpolationData<T>::interpolate_at(
   element_t span = this->branch_span();
   std::vector<int> dummy;
   if (arbitrary_phase_allowed){
-    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy), [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
-      auto permuted = std::unique_ptr<T[]>(new T[branches_*span]);
+    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy),
+    [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
       T *ptrX = data_.data(iw.first);
       for (element_t b=0; b<branches_; ++b){
         element_t p = static_cast<element_t>(perm[b]);
-        for (size_t s=0; s<span; ++s) permuted[b*span+s] = ptrX[p*span*s];
+        T eith = antiphase(span, ptr0+b*span, ptrX+p*span);
+        for (size_t s=0; s<span; ++s) out_to[b*span+s] += iw.second*eith*ptrX[p*span+s];
       }
-      T eith = antiphase(branches_*span, ptr0, permuted.get());
-      for (element_t a=0; a<branches_*span; ++a) out_to[a] += iw.second*eith*ptrX[a];
       return 1;
     });
   } else {
-    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy), [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
+    std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy),
+    [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
       T *ptrX = data_.data(iw.first);
       for (element_t b=0; b<branches_; ++b){
         element_t p = static_cast<element_t>(perm[b]);
-        for (size_t s=0; s<span; ++s) out_to[b*span+s] = iw.second*ptrX[p*span*s];
+        for (size_t s=0; s<span; ++s) out_to[b*span+s] += iw.second*ptrX[p*span+s];
       }
       return 1;
     });
