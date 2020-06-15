@@ -17,6 +17,8 @@
 #ifndef __TRELLIS_H
 #define __TRELLIS_H
 
+#include <iostream>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
@@ -68,11 +70,46 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     RotatesLike val_rl, vec_rl;
     size_t count = cobj.vertex_count();
     std::tie(vals,val_sh,val_el,val_rl)=fill_check(pyvals,pyvalel,count);
+    // std::cout << "min " << vals.min(1).min(0).to_string() << " max " << vals.max(1).max(0).to_string() << std::endl;
+    // std::cout << "vals range over (" << minval << ",", << maxval << ")" << std::endl;
     std::tie(vecs,vec_sh,vec_el,vec_rl)=fill_check(pyvecs,pyvecel,count);
 
     cobj.replace_value_data(vals, val_sh, val_el, val_rl);
     cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
   }, "values_data"_a, "values_elements"_a, "vectors_data"_a, "vectors_elements"_a)
+
+  //.def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
+  .def_property_readonly("values",[](Class& cobj){
+    const auto & v{cobj.data().values()};
+    return av2np_shape(v.data(), v.shape(), false);
+  })
+  .def_property_readonly("vectors",[](Class& cobj){
+    const auto & v{cobj.data().vectors()};
+    return av2np_shape(v.data(), v.shape(), false);
+  })
+
+  .def("fill",[](Class& cobj,
+    // py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
+    // py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl
+    py::array_t<T> pyvals, py::array_t<int> pyvalel, py::array_t<double> pyvalwght,
+    py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght
+  ){
+    ArrayVector<T> vals;
+    ArrayVector<R> vecs;
+    std::vector<size_t> val_sh, vec_sh;
+    std::array<element_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
+    RotatesLike val_rl, vec_rl;
+    int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
+    size_t count = cobj.vertex_count();
+    std::tie(vals,val_sh,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
+    std::tie(vecs,vec_sh,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
+
+    cobj.replace_value_data(vals, val_sh, val_el, val_rl);
+    cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
+    cobj.set_value_cost_info(val_sf, val_vf, val_wght);
+    cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
+  }, "values_data"_a, "values_elements"_a, "values_weights"_a,"vectors_data"_a, "vectors_elements"_a, "vectors_weights"_a)
 
   //.def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
   .def_property_readonly("values",[](Class& cobj){
