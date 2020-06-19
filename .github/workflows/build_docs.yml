@@ -1,0 +1,33 @@
+name: Sphinx
+
+on:
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build documentation with Sphinx in a Docker container
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: repository
+
+    - name: Checkout gh-pages
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        path: pages
+
+    - name: Sphinx Docker build
+      uses: ./repository/.github/actions/build_sphinx
+      with:
+        source_dir: repository
+        pages_dir: pages
+        is_release: ${{ contains(github.event_name, 'release') }}
+        create_readme: true
+

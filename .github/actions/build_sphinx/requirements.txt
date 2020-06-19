@@ -1,0 +1,7 @@
+sphinx_rtd_theme
+breathe
+exhale
+sphinxcontrib-katex
+sphinxcontrib-tikz
+numpy
+matplotlib

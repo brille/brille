@@ -1,5 +1,5 @@
 # Adapted from https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
-name: Python package build # and publish
+name: Python package build and publish
 
 on:
   release:
