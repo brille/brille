@@ -1,0 +1,16 @@
+.. _exhale_class_class_tet_tri_layer:
+
+Class TetTriLayer
+=================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: TetTriLayer
+   :members:
+   :protected-members:
+   :undoc-members:

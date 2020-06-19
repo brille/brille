@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Struct AVSizeInfo &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Struct CostTraits" href="struct_cost_traits.html" />
+    <link rel="prev" title="C++ Library API" href="library_root.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Struct AVSizeInfo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/struct_a_v_size_info.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="struct-avsizeinfo">
+<span id="exhale-struct-struct-a-v-size-info"></span><h1>Struct AVSizeInfo<a class="headerlink" href="#struct-avsizeinfo" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a></p></li>
+</ul>
+<div class="section" id="struct-documentation">
+<h2>Struct Documentation<a class="headerlink" href="#struct-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp struct">
+<dt id="_CPPv410AVSizeInfo">
+<span id="_CPPv310AVSizeInfo"></span><span id="_CPPv210AVSizeInfo"></span><span id="AVSizeInfo"></span><span class="target" id="struct_a_v_size_info"></span><em class="property">struct </em><code class="sig-name descname">AVSizeInfo</code><a class="headerlink" href="#_CPPv410AVSizeInfo" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A struct to hold information about two ArrayVectors. </p>
+<p>Binary operations between two ArrayVectors require that they have compatible dimensions. This struct is the return type of the function(s) which determine <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> compatibility and contains information about their sizes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo1nE">
+<span id="_CPPv3N10AVSizeInfo1nE"></span><span id="_CPPv2N10AVSizeInfo1nE"></span><span id="AVSizeInfo::n__s"></span><span class="target" id="struct_a_v_size_info_1a5e4be2ceb68e3881a2d888c880916cea"></span>size_t <code class="sig-name descname">n</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo1nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>the common number of arrays </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo1mE">
+<span id="_CPPv3N10AVSizeInfo1mE"></span><span id="_CPPv2N10AVSizeInfo1mE"></span><span id="AVSizeInfo::m__s"></span><span class="target" id="struct_a_v_size_info_1ab5564687bad7a7540c4b64f4dd189286"></span>size_t <code class="sig-name descname">m</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo1mE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>the common number of elements per array </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo7onevecaE">
+<span id="_CPPv3N10AVSizeInfo7onevecaE"></span><span id="_CPPv2N10AVSizeInfo7onevecaE"></span><span id="AVSizeInfo::oneveca__b"></span><span class="target" id="struct_a_v_size_info_1abae99307acf08e32270f4686ca0c0b6c"></span>bool <code class="sig-name descname">oneveca</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo7onevecaE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>is “a” a “SingleVector” </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo7onevecbE">
+<span id="_CPPv3N10AVSizeInfo7onevecbE"></span><span id="_CPPv2N10AVSizeInfo7onevecbE"></span><span id="AVSizeInfo::onevecb__b"></span><span class="target" id="struct_a_v_size_info_1a25db74d28863bce56b129648e383cf7b"></span>bool <code class="sig-name descname">onevecb</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo7onevecbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>is “b” a “SingleVector” </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo7scalaraE">
+<span id="_CPPv3N10AVSizeInfo7scalaraE"></span><span id="_CPPv2N10AVSizeInfo7scalaraE"></span><span id="AVSizeInfo::scalara__b"></span><span class="target" id="struct_a_v_size_info_1aeb176bfc5342f4bb50b725b0b890ec49"></span>bool <code class="sig-name descname">scalara</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo7scalaraE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>is “a” an “ArrayScalar” </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo7scalarbE">
+<span id="_CPPv3N10AVSizeInfo7scalarbE"></span><span id="_CPPv2N10AVSizeInfo7scalarbE"></span><span id="AVSizeInfo::scalarb__b"></span><span class="target" id="struct_a_v_size_info_1a4aa8eec25a15cf329cd26e97edb6b4cc"></span>bool <code class="sig-name descname">scalarb</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo7scalarbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>is “b” an “ArrayScalar” </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo8singularE">
+<span id="_CPPv3N10AVSizeInfo8singularE"></span><span id="_CPPv2N10AVSizeInfo8singularE"></span><span id="AVSizeInfo::singular__b"></span><span class="target" id="struct_a_v_size_info_1a9435f8b0acb5b34efe678a120db18c52"></span>bool <code class="sig-name descname">singular</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo8singularE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>is only “b” an “ArrayScalar” </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N10AVSizeInfo4aorbE">
+<span id="_CPPv3N10AVSizeInfo4aorbE"></span><span id="_CPPv2N10AVSizeInfo4aorbE"></span><span id="AVSizeInfo::aorb__b"></span><span class="target" id="struct_a_v_size_info_1a70f1b2325deda2877689cd3248db61f1"></span>bool <code class="sig-name descname">aorb</code><a class="headerlink" href="#_CPPv4N10AVSizeInfo4aorbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>does “a” hold more Vector(/Scalar) elements </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="struct_cost_traits.html" class="btn btn-neutral float-right" title="Template Struct CostTraits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="library_root.html" class="btn btn-neutral float-left" title="C++ Library API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

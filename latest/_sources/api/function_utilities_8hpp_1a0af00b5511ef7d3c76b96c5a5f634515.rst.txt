@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a0af00b5511ef7d3c76b96c5a5f634515:
+
+Template Function mul_arrays(T \*, const size_t, const size_t, const size_t, const R \*, const S \*)
+====================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: mul_arrays(T *, const size_t, const size_t, const size_t, const R *, const S *)

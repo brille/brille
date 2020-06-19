@@ -1,0 +1,67 @@
+
+.. _file_src_balltrellis.hpp:
+
+File balltrellis.hpp
+====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\balltrellis.hpp``)
+------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_balltrellis.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``array`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_balltrellis.cpp`
+
+- :ref:`file_src_triangulation.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_trellis`
+
+- :ref:`exhale_class_class_trellis_leaf`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_balltrellis_8hpp_1a8422f8db814524f649a7ab610a7f4106`
+

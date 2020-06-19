@@ -1,0 +1,16 @@
+.. _exhale_class_classvector__cross__impl_3_01T_00_01R_00_01S_00_013_01_4:
+
+Template Class vector_cross_impl< T, R, S, 3 >
+==============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: vector_cross_impl< T, R, S, 3 >
+   :members:
+   :protected-members:
+   :undoc-members:

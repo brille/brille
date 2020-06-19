@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1:
+
+Template Function add_matrix
+============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: add_matrix(T *, const R *, const S *)

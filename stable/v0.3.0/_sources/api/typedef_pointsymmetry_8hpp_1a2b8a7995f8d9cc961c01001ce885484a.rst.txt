@@ -1,0 +1,13 @@
+.. _exhale_typedef_pointsymmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a:
+
+Typedef Vector
+==============
+
+- Defined in :ref:`file_src_pointsymmetry.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: Vector

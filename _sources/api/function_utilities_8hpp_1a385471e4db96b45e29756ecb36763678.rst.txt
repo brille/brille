@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a385471e4db96b45e29756ecb36763678:
+
+Template Function copy_matrix
+=============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: copy_matrix(T *, const T *)

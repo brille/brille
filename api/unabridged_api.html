@@ -1,0 +1,3102 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Full API &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Full API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/unabridged_api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="full-api">
+<h1>Full API<a class="headerlink" href="#full-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="classes-and-structs">
+<h2>Classes and Structs<a class="headerlink" href="#classes-and-structs" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_a_v_size_info.html">Struct AVSizeInfo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_a_v_size_info.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_cost_traits.html">Template Struct CostTraits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_cost_traits.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_cost_traits_3_01std_1_1complex_3_01_t_01_4_01_4.html">Template Struct CostTraits&lt; std::complex&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_cost_traits_3_01std_1_1complex_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_grid_diff_traits.html">Template Struct GridDiffTraits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_grid_diff_traits.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_grid_diff_traits_3_01std_1_1complex_3_01_t_01_4_01_4.html">Template Struct GridDiffTraits&lt; std::complex&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_grid_diff_traits_3_01std_1_1complex_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structis__complex.html">Template Struct is_complex</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structis__complex.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structis__complex_3_01std_1_1complex_3_01_t_01_4_01_4.html">Template Struct is_complex&lt; std::complex&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structis__complex_3_01std_1_1complex_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structis__container.html">Template Struct is_container</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structis__container.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structis__container_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4.html">Template Struct is_container&lt; std::array&lt; T, N &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structis__container_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structis__container_3_01std_1_1vector_3_01_t_01_4_01_4.html">Template Struct is_container&lt; std::vector&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structis__container_3_01std_1_1vector_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lattice_traits.html">Template Struct LatticeTraits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lattice_traits.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lattice_traits_3_01_direct_01_4.html">Template Struct LatticeTraits&lt; Direct &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lattice_traits_3_01_direct_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lattice_traits_3_01_l_d_vec_3_01_t_01_4_01_4.html">Template Struct LatticeTraits&lt; LDVec&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lattice_traits_3_01_l_d_vec_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lattice_traits_3_01_l_q_vec_3_01_t_01_4_01_4.html">Template Struct LatticeTraits&lt; LQVec&lt; T &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lattice_traits_3_01_l_q_vec_3_01_t_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lattice_traits_3_01_reciprocal_01_4.html">Template Struct LatticeTraits&lt; Reciprocal &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lattice_traits_3_01_reciprocal_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lat_vec_traits.html">Template Struct LatVecTraits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lat_vec_traits.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lat_vec_traits_3_01_direct_00_01_s_01_4.html">Template Struct LatVecTraits&lt; Direct, S &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lat_vec_traits_3_01_direct_00_01_s_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lat_vec_traits_3_01_l_d_vec_3_01_r_01_4_00_01_s_01_4.html">Template Struct LatVecTraits&lt; LDVec&lt; R &gt;, S &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lat_vec_traits_3_01_l_d_vec_3_01_r_01_4_00_01_s_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lat_vec_traits_3_01_l_q_vec_3_01_r_01_4_00_01_s_01_4.html">Template Struct LatVecTraits&lt; LQVec&lt; R &gt;, S &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lat_vec_traits_3_01_l_q_vec_3_01_r_01_4_00_01_s_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_lat_vec_traits_3_01_reciprocal_00_01_s_01_4.html">Template Struct LatVecTraits&lt; Reciprocal, S &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_lat_vec_traits_3_01_reciprocal_00_01_s_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_pointgroup_type.html">Struct PointgroupType</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_pointgroup_type.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="struct_primitive_traits.html">Struct PrimitiveTraits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="struct_primitive_traits.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_array_vector.html">Template Class ArrayVector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_array_vector.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_basis.html">Class Basis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_basis.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone.html">Class BrillouinZone</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone_grid3.html">Template Class BrillouinZoneGrid3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_grid3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_brillouin_zone_grid3.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_grid3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone_grid4.html">Template Class BrillouinZoneGrid4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_grid4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_brillouin_zone_grid4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_grid4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone_mesh3.html">Template Class BrillouinZoneMesh3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_mesh3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_brillouin_zone_mesh3.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_mesh3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone_nest3.html">Template Class BrillouinZoneNest3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_nest3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_brillouin_zone_nest3.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_nest3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_brillouin_zone_trellis3.html">Template Class BrillouinZoneTrellis3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_trellis3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_brillouin_zone_trellis3.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_brillouin_zone_trellis3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_cube_node.html">Class CubeNode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_cube_node.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_cube_node.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_cube_node.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_debug_printer.html">Class DebugPrinter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_debug_printer.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_direct.html">Class Direct</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_direct.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_direct.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_direct.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_gamma_table.html">Class GammaTable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_gamma_table.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_gamma_table.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_gamma_table.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_hall_symbol.html">Class HallSymbol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_hall_symbol.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_inner_interpolation_data.html">Template Class InnerInterpolationData</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_inner_interpolation_data.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_interpolate_grid3.html">Template Class InterpolateGrid3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_interpolate_grid3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_interpolate_grid3.html#base-type">Base Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="class_interpolate_grid3.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_interpolate_grid3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_interpolate_grid4.html">Template Class InterpolateGrid4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_interpolate_grid4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_interpolate_grid4.html#base-type">Base Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="class_interpolate_grid4.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_interpolate_grid4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_interpolation_data.html">Template Class InterpolationData</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_interpolation_data.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_lattice.html">Class Lattice</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_lattice.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_lattice.html#derived-types">Derived Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_lattice.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_lat_vec.html">Class LatVec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_lat_vec.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_l_d_vec.html">Template Class LDVec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_l_d_vec.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_l_q_vec.html">Template Class LQVec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_l_q_vec.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_map_grid3.html">Template Class MapGrid3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_map_grid3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_map_grid3.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_map_grid3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_map_grid4.html">Template Class MapGrid4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_map_grid4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_map_grid4.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_map_grid4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_mesh3.html">Template Class Mesh3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_mesh3.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_mesh3.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_mesh3.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_motion.html">Template Class Motion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_motion.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_munkres.html">Template Class Munkres</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_munkres.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_nest.html">Template Class Nest</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_nest.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_nest.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_nest.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_nest_leaf.html">Class NestLeaf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_nest_leaf.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_nest_node.html">Class NestNode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_nest_node.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_node_container.html">Class NodeContainer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_node_container.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_null_node.html">Class NullNode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_null_node.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_null_node.html#derived-types">Derived Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_null_node.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_pointgroup.html">Class Pointgroup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_pointgroup.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_point_symmetry.html">Class PointSymmetry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_point_symmetry.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_polyhedron.html">Class Polyhedron</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_polyhedron.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_polyhedron_trellis.html">Template Class PolyhedronTrellis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_polyhedron_trellis.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_polyhedron_trellis.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_polyhedron_trellis.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_poly_node.html">Class PolyNode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_poly_node.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_poly_node.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_poly_node.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_primitive_transform.html">Class PrimitiveTransform</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_primitive_transform.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_reciprocal.html">Class Reciprocal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_reciprocal.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_reciprocal.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_reciprocal.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_rotate_table.html">Class RotateTable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_rotate_table.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_rotate_table.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="class_rotate_table.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_seitz_symbol.html">Class SeitzSymbol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_seitz_symbol.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_simple_tet.html">Class SimpleTet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_simple_tet.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_sorting_status.html">Class SortingStatus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_sorting_status.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_spacegroup.html">Class Spacegroup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_spacegroup.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_stopwatch.html">Template Class Stopwatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_stopwatch.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_symmetry.html">Class Symmetry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_symmetry.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_tet_tri.html">Class TetTri</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_tet_tri.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_tet_tri_layer.html">Class TetTriLayer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_tet_tri_layer.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_trellis.html">Class Trellis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_trellis.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_trellis_leaf.html">Class TrellisLeaf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class_trellis_leaf.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classvector__cross__impl.html">Template Class vector_cross_impl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classvector__cross__impl.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classvector__cross__impl_3_01_t_00_01_r_00_01_s_00_013_01_4.html">Template Class vector_cross_impl&lt; T, R, S, 3 &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classvector__cross__impl_3_01_t_00_01_r_00_01_s_00_013_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_lattice_8hpp_1a70ab36d1d4920fdd314279845af152c5.html">Enum AngleUnit</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_lattice_8hpp_1a70ab36d1d4920fdd314279845af152c5.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html">Enum Bravais</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_arrayvector_8hpp_1a585fdeb97b639ef3445d0950886ab0b2.html">Enum Comp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_arrayvector_8hpp_1a585fdeb97b639ef3445d0950886ab0b2.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_pointgroup_8hpp_1afb7670c9af88ff4483b56dfa699d310f.html">Enum Holohedry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_pointgroup_8hpp_1afb7670c9af88ff4483b56dfa699d310f.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c.html">Enum Laue</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43.html">Enum marker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16.html">Enum NodeType</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html">Enum RotatesLike</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#enum-documentation">Enum Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d.html">Function _internal_pointgroup_rotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a38d8df4dc4890071492f6706fe75ffca.html">Template Function add_arrays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a38d8df4dc4890071492f6706fe75ffca.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1.html">Template Function add_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a01b33e09a492522b50fb5f2cc61883b5.html">Template Function approx_array(const size_t, const size_t, const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a01b33e09a492522b50fb5f2cc61883b5.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c.html">Template Function approx_array(const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1af390113c9ec83aa21c368ae4fa9e0f7b.html">Template Function approx_matrix(const size_t, const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1af390113c9ec83aa21c368ae4fa9e0f7b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98.html">Template Function approx_matrix(const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a5ba982f43dc1b75d303d96d712d7a7ae.html">Template Function approx_scalar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a5ba982f43dc1b75d303d96d712d7a7ae.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a1c1f0b0f19b87ec97bcadb4eb1c31269.html">Template Function approx_vector(const size_t, const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a1c1f0b0f19b87ec97bcadb4eb1c31269.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e.html">Template Function approx_vector(const T *, const R *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88.html">Template Function array_cofactor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a7aea49c6acc728108c6bf5f1acd0864f.html">Template Function array_transpose</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a7aea49c6acc728108c6bf5f1acd0864f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1af37d16dd40b9231c5cd5fca595923dc9.html">Template Function bare_winding_angles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1af37d16dd40b9231c5cd5fca595923dc9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1aea8b2af848fed519acfe1b5312c12419.html">Function between_origin_and_plane(const LQVec&lt;double&gt; *, const LQVec&lt;double&gt; *, const ArrayVector&lt;int&gt; *, const int, LQVec&lt;double&gt; *, const int, const double)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1aea8b2af848fed519acfe1b5312c12419.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1aa333ffe2bd7ee0510c69e2ba2598cc7a.html">Function between_origin_and_plane(const LQVec&lt;double&gt; *, const LQVec&lt;double&gt; *, const ArrayVector&lt;int&gt; *, const int, LQVec&lt;double&gt; *, const int, const double)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1aa333ffe2bd7ee0510c69e2ba2598cc7a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.html">Template Function binomial_coefficient</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87.html">Function bravais_letter(const Bravais)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bravais_8hpp_1a96a2f0327107e0e0be0be9a97e91cd87.html">Function bravais_letter(const Bravais)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bravais_8hpp_1a96a2f0327107e0e0be0be9a97e91cd87.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bravais_8cpp_1a45870576401424f3a427f4987448c1cd.html">Function bravais_string(const Bravais)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bravais_8cpp_1a45870576401424f3a427f4987448c1cd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd.html">Function bravais_string(const Bravais)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a3b0d8402b4100ea06bb6e237058c57e4.html">Template Function cast_array</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a3b0d8402b4100ea06bb6e237058c57e4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a1c2d6ea127045d599247d7a47560b92a.html">Template Function cast_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a1c2d6ea127045d599247d7a47560b92a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a930fd65ee7f8f883029bc0c41e6f21e4.html">Template Function cast_vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a930fd65ee7f8f883029bc0c41e6f21e4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49.html">Function construct_trellis(const std::vector&lt;TrellisLeaf&gt;&amp;, const double)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_balltrellis_8hpp_1a8422f8db814524f649a7ab610a7f4106.html">Function construct_trellis(const std::vector&lt;TrellisLeaf&gt;&amp;, const double)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_balltrellis_8hpp_1a8422f8db814524f649a7ab610a7f4106.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a626b2c0c4b6b81ff706f550fa2125e36.html">Template Function copy_array</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a626b2c0c4b6b81ff706f550fa2125e36.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a385471e4db96b45e29756ecb36763678.html">Template Function copy_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a385471e4db96b45e29756ecb36763678.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a5044d8e34a95237e2f0587f79191a8c3.html">Template Function copy_vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a5044d8e34a95237e2f0587f79191a8c3.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation_8hpp_1a92089ed2ce03a4a6e736cb23e62f2efd.html">Template Function corners_and_weights</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation_8hpp_1a92089ed2ce03a4a6e736cb23e62f2efd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1afeb3bcc8c2e9355d72b32d2aef1cf992.html">Template Function determine_tols</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1afeb3bcc8c2e9355d72b32d2aef1cf992.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation__data_8hpp_1a9818966d59dc284343051cb0c7625368.html">Template Function e_iqd</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation__data_8hpp_1a9818966d59dc284343051cb0c7625368.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a270e4c80b3272ec8fbeb62638702e1e5.html">Template Function encode_array_signs(const size_t, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a270e4c80b3272ec8fbeb62638702e1e5.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aba491962e87602eb27885086eaaf6585.html">Template Function encode_array_signs(const size_t, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aba491962e87602eb27885086eaaf6585.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1abd44d720f83e832c853ecf6d7e132b26.html">Template Function equal_array</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1abd44d720f83e832c853ecf6d7e132b26.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a27ee7d469953ceda53e91124843622e1.html">Template Function equal_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a27ee7d469953ceda53e91124843622e1.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a12fb226fb8b6e64c4ad53f3f4fa48cc1.html">Template Function equal_vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a12fb226fb8b6e64c4ad53f3f4fa48cc1.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a0f4867ebcf85b802e1e80d978ec4c12c.html">Template Function euclidean_angle</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a0f4867ebcf85b802e1e80d978ec4c12c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a05687f604a2ac37273f06fc7aba2e6e6.html">Template Function face_has_area</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a05687f604a2ac37273f06fc7aba2e6e6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6.html">Template Function find_bin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_triangulation_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.html">Template Function find_first(const std::array&lt;T, N&gt;&amp;, const T)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_triangulation_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_triangulation__layers_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.html">Template Function find_first(const std::array&lt;T, N&gt;&amp;, const T)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_triangulation__layers_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_lapjv_8hpp_1adf434d39d7f2346bf8991fa85db6c74b.html">Template Function find_umins_plain</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_lapjv_8hpp_1adf434d39d7f2346bf8991fa85db6c74b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation_8hpp_1a3d8d482ea9789e4a0ab2b1dcc7f205af.html">Template Function floor_corners_and_weights</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation_8hpp_1a3d8d482ea9789e4a0ab2b1dcc7f205af.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1afaac905d0e1eadfe3062063f9949042c.html">Template Function frobenius_distance(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1afaac905d0e1eadfe3062063f9949042c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a9992eda059d95f2acb20df022c7202dc.html">Template Function frobenius_distance(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a9992eda059d95f2acb20df022c7202dc.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1ae2daa86c31cef3276236932f5b0ee4ae.html">Function get_axes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1ae2daa86c31cef3276236932f5b0ee4ae.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e.html">Function get_orthogonal_axis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856.html">Function get_pointgroup_class_table</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a20629ee7a060d8188bc8bb50d45bcb35.html">Function get_pointgroup_number</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a20629ee7a060d8188bc8bb50d45bcb35.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a3e2feb5bef72434f5f9698b960a4b3a2.html">Function get_pointgroup_number_by_rotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a3e2feb5bef72434f5f9698b960a4b3a2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a157a71d24fc4b00411e095f89924d453.html">Function get_pointgroup_rotations_hall_number(int *, const int, const int, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a157a71d24fc4b00411e095f89924d453.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453.html">Function get_pointgroup_rotations_hall_number(int *, const int, const int, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a87d769efbc4d11ac95675e7d6d33add1.html">Function get_proper_rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a87d769efbc4d11ac95675e7d6d33add1.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a21d3bdcefe1c40f935b36cbd024ae453.html">Function get_rotation_axis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a21d3bdcefe1c40f935b36cbd024ae453.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a664059afdee3524f413d782609bacb9a.html">Function get_unique_rotations(const std::vector&lt;std::array&lt;int, 9&gt;&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a664059afdee3524f413d782609bacb9a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa.html">Function get_unique_rotations(const std::vector&lt;std::array&lt;int, 9&gt;&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8cpp_1a57c0a95c3f9fe439fb08700967a9adac.html">Function hall_number_ok(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8cpp_1a57c0a95c3f9fe439fb08700967a9adac.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8hpp_1a1d331ed75ad8d0c0f29ae2d0010b0674.html">Function hall_number_ok(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8hpp_1a1d331ed75ad8d0c0f29ae2d0010b0674.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8cpp_1af16de9b2344523308d97d5d728b5bdd2.html">Function hall_symbol_to_hall_number(const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8cpp_1af16de9b2344523308d97d5d728b5bdd2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8hpp_1af16de9b2344523308d97d5d728b5bdd2.html">Function hall_symbol_to_hall_number(const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8hpp_1af16de9b2344523308d97d5d728b5bdd2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a0bd6f217926b11b58e0f66e06b780f42.html">Template Function hermitian_angle(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a0bd6f217926b11b58e0f66e06b780f42.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a8e98824e9f3bfbdbae3cdb0d538f5842.html">Template Function hermitian_angle(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a8e98824e9f3bfbdbae3cdb0d538f5842.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a3eaf60733e193da30316760d07ab1172.html">Template Function hermitian_product(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a3eaf60733e193da30316760d07ab1172.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a2bc80b953ce9d6483134394bcafa276e.html">Template Function hermitian_product(const size_t, const T *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a2bc80b953ce9d6483134394bcafa276e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a718e66d69f9b7b954b46576aa1306956.html">Template Function hermitian_product(const size_t, const std::complex&lt;T&gt; *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a718e66d69f9b7b954b46576aa1306956.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1acd900ea9cf980512e9ca9739fddfa1b7.html">Template Function hermitian_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1acd900ea9cf980512e9ca9739fddfa1b7.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1a0dc390c6c52ed9e87fa1be6ab6a78add.html">Template Function hkl_to_xyz</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1a0dc390c6c52ed9e87fa1be6ab6a78add.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a72b3d7d0bcedc4e7ed0b50bf2f443f18.html">Template Function inner_product(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a72b3d7d0bcedc4e7ed0b50bf2f443f18.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1af728b6801993da6c0bd9ad2c9527dce6.html">Template Function inner_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1af728b6801993da6c0bd9ad2c9527dce6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8cpp_1a74bfdd4a4b4cea202d2806e92404af48.html">Function international_number_to_hall_number(const int, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8cpp_1a74bfdd4a4b4cea202d2806e92404af48.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8hpp_1abd66fc0768afd1ad4aca5fc81fbda335.html">Function international_number_to_hall_number(const int, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8hpp_1abd66fc0768afd1ad4aca5fc81fbda335.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8cpp_1ab67fd08cabd0407087e47b6c5eb9fa9b.html">Function international_string_to_hall_number(const std::string&amp;, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8cpp_1ab67fd08cabd0407087e47b6c5eb9fa9b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8hpp_1adbc01f31d611bda498d39caa97735215.html">Function international_string_to_hall_number(const std::string&amp;, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8hpp_1adbc01f31d611bda498d39caa97735215.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1adf94fc99f077a349f5f996b2ece44182.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1adf94fc99f077a349f5f996b2ece44182.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1a420a3ad8100b7cc7423656c6dcde433e.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1a420a3ad8100b7cc7423656c6dcde433e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1a944bff6029393cd34068ab139d528f10.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1a944bff6029393cd34068ab139d528f10.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1adf94fc99f077a349f5f996b2ece44182.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1adf94fc99f077a349f5f996b2ece44182.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1a420a3ad8100b7cc7423656c6dcde433e.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1a420a3ad8100b7cc7423656c6dcde433e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1a944bff6029393cd34068ab139d528f10.html">Function intersect_at(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1a944bff6029393cd34068ab139d528f10.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5.html">Template Function intersection(const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, ArrayVector&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1ada80908509b8e04589003873062d1775.html">Template Function intersection(const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, const ArrayVector&lt;T&gt;&amp;, ArrayVector&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1ada80908509b8e04589003873062d1775.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480.html">Template Function is_dangling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a7d83385a889cabeabd6ceda857bff4ae.html">Template Function is_int_matrix(const T *, const R)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a7d83385a889cabeabd6ceda857bff4ae.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a903f99669ce9c1a8f8f754271418956d.html">Template Function is_int_matrix(const int *, const)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a903f99669ce9c1a8f8f754271418956d.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10.html">Function isometry_type</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a2ddf892e62fccffedeca040c8ecdb4f9.html">Function isometry_value(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a2ddf892e62fccffedeca040c8ecdb4f9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9.html">Function isometry_value(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40.html">Template Function jv_permutation(const T *, const T *, const std::array&lt;I, 3&gt;&amp;, const R, const R, const R, const size_t, const size_t, ArrayVector&lt;size_t&gt;&amp;, const size_t, const size_t, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a.html">Template Function jv_permutation(const S *, const T *, const S *, const T *, const std::array&lt;I, 3&gt;&amp;, const std::array&lt;I, 3&gt;&amp;, const R, const R, const R, const size_t, const size_t, const size_t, ArrayVector&lt;size_t&gt;&amp;, const size_t, const size_t, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea.html">Template Function jv_permutation(const std::vector&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz__wedge_8cpp_1a264c92206205a7888358f8bb37871c30.html">Function keep_if</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz__wedge_8cpp_1a264c92206205a7888358f8bb37871c30.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_lapjv_8hpp_1a89e676b04b27f8030467b182d15be6dd.html">Template Function lapjv</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_lapjv_8hpp_1a89e676b04b27f8030467b182d15be6dd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_lattice_8hpp_1a4925107d36c2f138b7fd8a6136c3d4f4.html">Template Function latmat_to_lenang</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_lattice_8hpp_1a4925107d36c2f138b7fd8a6136c3d4f4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_lattice_8cpp_1a7399108074c65f99895d90bf149c2031.html">Function lattice2string</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_lattice_8cpp_1a7399108074c65f99895d90bf149c2031.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a9efb4e6014d8d854ad3288b9009a2753.html">Function laue2m</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a9efb4e6014d8d854ad3288b9009a2753.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1ac266489cc0bcb36b85a351cb4bfacb8f.html">Function laue_one_axis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1ac266489cc0bcb36b85a351cb4bfacb8f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1.html">Function lauennn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37.html">Template Function local_abs(T)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a8e5fb81891b64bdb89ec8a782ce2e2ec.html">Template Function local_abs(T)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a8e5fb81891b64bdb89ec8a782ce2e2ec.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1abba058b53ce339f9355d762d33e59891.html">Template Function magnitude(const T)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1abba058b53ce339f9355d762d33e59891.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a7d4721723ac79587cc96052d3b09d746.html">Template Function magnitude(const std::complex&lt;T&gt;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a7d4721723ac79587cc96052d3b09d746.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a82f8eecb96feebcd85d2b850992ee87f.html">Template Function make_eigenvectors_equivalent(const size_t, const T *, T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a82f8eecb96feebcd85d2b850992ee87f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1abdb7e185f0ba77090b64eb689192bffd.html">Template Function make_eigenvectors_equivalent(const size_t, const std::complex&lt;T&gt; *, std::complex&lt;T&gt;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1abdb7e185f0ba77090b64eb689192bffd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8cpp_1a8a8cd05bcb1a02b9164c9893c3a7a41d.html">Function make_relative_neighbour_indices(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8cpp_1a8a8cd05bcb1a02b9164c9893c3a7a41d.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8hpp_1ab298014048257572d2c49e5652d269f0.html">Function make_relative_neighbour_indices(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8hpp_1ab298014048257572d2c49e5652d269f0.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8cpp_1a622e11c4a40f9b3620d5241dda6573ee.html">Function make_relative_neighbour_indices4(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8cpp_1a622e11c4a40f9b3620d5241dda6573ee.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8hpp_1a552fa4fc3144e4876b2a16e91a5e43f9.html">Function make_relative_neighbour_indices4(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8hpp_1a552fa4fc3144e4876b2a16e91a5e43f9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8cpp_1a471cfdc60cc703d871d6e4ec66f7dcb7.html">Function make_relative_neighbour_indices_prime(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8cpp_1a471cfdc60cc703d871d6e4ec66f7dcb7.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_neighbours_8hpp_1a5dbe7c6ad269fccab97a6f0a062121e7.html">Function make_relative_neighbour_indices_prime(const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_neighbours_8hpp_1a5dbe7c6ad269fccab97a6f0a062121e7.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a39efa1d8d0a3ce413a1868424ede4ee5.html">Template Function matrix_adjoint</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a39efa1d8d0a3ce413a1868424ede4ee5.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aa644790fa8e82080a77697dc327b3828.html">Template Function matrix_cofactor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aa644790fa8e82080a77697dc327b3828.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ad9f36c81408bef0c594d6456ad1d763f.html">Template Function matrix_determinant</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ad9f36c81408bef0c594d6456ad1d763f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ad72ce226051c13b5ee954580a544c6b6.html">Template Function matrix_determinant_and_inverse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ad72ce226051c13b5ee954580a544c6b6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aa881c9eae1d686ad0aa20789acbf9d13.html">Template Function matrix_inverse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aa881c9eae1d686ad0aa20789acbf9d13.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a1aff8c6fa2839438aab09eb845a17047.html">Template Function matrix_metric</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a1aff8c6fa2839438aab09eb845a17047.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a6c919bdb1fa6539a2846a7348ada52d6.html">Template Function matrix_transpose(R *, const R *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a6c919bdb1fa6539a2846a7348ada52d6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a3c2386f0db28cfe4df1f469500c0d140.html">Template Function matrix_transpose(R *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a3c2386f0db28cfe4df1f469500c0d140.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1abcffcdb2c2f41452f025c969f7aa6b21.html">Template Function max_element_length(const T&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1abcffcdb2c2f41452f025c969f7aa6b21.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919.html">Template Function max_element_length(const T&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ac287a909838769a27a85b0d701a6c835.html">Template Function mod1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ac287a909838769a27a85b0d701a6c835.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a0af00b5511ef7d3c76b96c5a5f634515.html">Template Function mul_arrays(T *, const size_t, const size_t, const size_t, const R *, const S *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a0af00b5511ef7d3c76b96c5a5f634515.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a80d206f558a63c5e02d32f669d2102a9.html">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const R *, const std::complex&lt;S&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a80d206f558a63c5e02d32f669d2102a9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a530b531c3559671f976d7f825f9212eb.html">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const std::complex&lt;R&gt; *, const S *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a530b531c3559671f976d7f825f9212eb.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a658efa877e860b6a67b6577a2c36db8f.html">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const std::complex&lt;R&gt; *, const std::complex&lt;S&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a658efa877e860b6a67b6577a2c36db8f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a28883f647a45a06ece631cc7ebcd549a.html">Template Function mul_mat_mat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a28883f647a45a06ece631cc7ebcd549a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a69e8d2c0f9fd7e5d756805065ccd365c.html">Template Function mul_mat_vec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a69e8d2c0f9fd7e5d756805065ccd365c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a42c5779b3528610fd342c65a1d226b53.html">Template Function mul_vec_mat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a42c5779b3528610fd342c65a1d226b53.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a3d0d8611e902749598f741a7bb274a14.html">Template Function multiply_arrays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a3d0d8611e902749598f741a7bb274a14.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ac88363aa628809922f56bf1f2e5bb864.html">Template Function multiply_matrix_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ac88363aa628809922f56bf1f2e5bb864.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ad4626d72b8bb0685181be89fed4bd317.html">Template Function multiply_matrix_vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ad4626d72b8bb0685181be89fed4bd317.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a406286295a5ab203d72d658e83cf40b0.html">Template Function multiply_vector_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a406286295a5ab203d72d658e83cf40b0.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc.html">Template Function munkres_permutation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ab10cb6b56841a94538c59ab10126fdbd.html">Template Function my_cast</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ab10cb6b56841a94538c59ab10126fdbd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079.html">Template Function my_to_string(const T, const size_t)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e.html">Template Function my_to_string(const std::complex&lt;T&gt;, const size_t)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679.html">Template Function my_to_string(const std::vector&lt;C&lt;T&gt;&gt;&amp;, const)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a139c8c143451283a24423405a1efa5be.html">Template Function my_to_string(const T&amp;, const size_t)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a139c8c143451283a24423405a1efa5be.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.html">Function my_to_string(const Holohedry&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7.html">Function my_to_string(const Laue&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.html">Function my_to_string(const Holohedry&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7.html">Function my_to_string(const Laue&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_nest_8hpp_1a7e4706e6b32b7e80b3b5e389ee8154fe.html">Template Function none_negative</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_nest_8hpp_1a7e4706e6b32b7e80b3b5e389ee8154fe.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0.html">Function ok_size</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35.html">Template Function on_boundary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a60e61f41d54c247fffbb4d13c753cdfa.html">Template Function one_intersection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a60e61f41d54c247fffbb4d13c753cdfa.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_symmetry_8hpp_1add015147308ba4f3406ca16ce401eacf.html">Template Function operator*(const Motion&lt;R, T&gt;&amp;, const Motion&lt;T, T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_symmetry_8hpp_1add015147308ba4f3406ca16ce401eacf.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_symmetry_8hpp_1adf95dda986b700406e0368dc60e8d6ef.html">Template Function operator*(const Motion&lt;T, T&gt;&amp;, const Motion&lt;R, T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_symmetry_8hpp_1adf95dda986b700406e0368dc60e8d6ef.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75.html">Function orthogonal_to_axis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a6581a2a2cbf1232f7466e4bf79161294.html">Template Function point_inside_plane</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a6581a2a2cbf1232f7466e4bf79161294.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766.html">Template Function polyhedron_box</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a11fc284d8c077ba887d54c1164f8098c.html">Function ptg_get_pointsymmetry(const int *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a11fc284d8c077ba887d54c1164f8098c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c.html">Function ptg_get_pointsymmetry(const int *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1ad08abd9f7f45c68ee852504b9afeafa2.html">Function ptg_get_transformation_matrix(int *, const int *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1ad08abd9f7f45c68ee852504b9afeafa2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1ad08abd9f7f45c68ee852504b9afeafa2.html">Function ptg_get_transformation_matrix(int *, const int *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1ad08abd9f7f45c68ee852504b9afeafa2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49.html">Template Function reverse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4.html">Template Function reverse_each</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a725220077e7877c4550ca9aa6285840e.html">Function rotation_axis_and_perpendicular_vectors(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a725220077e7877c4550ca9aa6285840e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a725220077e7877c4550ca9aa6285840e.html">Function rotation_axis_and_perpendicular_vectors(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a725220077e7877c4550ca9aa6285840e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.html">Function rotation_order(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8hpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.html">Function rotation_order(const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8hpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b.html">Function set_transformation_matrix(int *, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa.html">Function set_transformation_matrix(int *, const int *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a97879d84ce99aba94ea7e144922799e9.html">Template Function signed_to_unsigned</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a97879d84ce99aba94ea7e144922799e9.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.html">Template Function similar_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13.html">Template Function sm_permutation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24.html">Template Function smp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_smp_8hpp_1a80a5a10b7764a237af1bba812a308f66.html">Template Function smp_pmat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_smp_8hpp_1a80a5a10b7764a237af1bba812a308f66.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_smp_8hpp_1aaac9c4d7bd60bad9e4a5a04990e6ddff.html">Template Function smp_pvec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_smp_8hpp_1aaac9c4d7bd60bad9e4a5a04990e6ddff.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aac7d4c3a45b061478ac489225f0b220e.html">Template Function squared_distance(const T&amp;, const T&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aac7d4c3a45b061478ac489225f0b220e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a99264bff91e8e12d43703fbb0f927ca3.html">Template Function squared_distance(const std::complex&lt;T&gt;&amp;, const std::complex&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a99264bff91e8e12d43703fbb0f927ca3.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8cpp_1a8ff7d53a99bc05c46e0e1b26d30e6b20.html">Function string_to_hall_number(const std::string&amp;, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8cpp_1a8ff7d53a99bc05c46e0e1b26d30e6b20.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_spg__database_8hpp_1aa8907e6195a903a1331d3b23c9bb9211.html">Function string_to_hall_number(const std::string&amp;, const std::string&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_spg__database_8hpp_1aa8907e6195a903a1331d3b23c9bb9211.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a360821e49d763aa3c30252c21bbbb9d4.html">Template Function subtract_arrays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a360821e49d763aa3c30252c21bbbb9d4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a301522e0e862d48199f3b3bb04aba563.html">Template Function subtract_matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a301522e0e862d48199f3b3bb04aba563.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49.html">Function terminal_height(void)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49.html">Function terminal_height(void)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8cpp_1a27fe47130ea545d2352dfb27d897668b.html">Function terminal_width(void)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8cpp_1a27fe47130ea545d2352dfb27d897668b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b.html">Function terminal_width(void)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation_8hpp_1a896ff0d71810a332a78b8088e407b375.html">Template Function tetrahedron_volume</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation_8hpp_1a896ff0d71810a332a78b8088e407b375.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation_8hpp_1ab6003e574f7c91bdda9fe94275967254.html">Template Function tetrahedron_weights</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation_8hpp_1ab6003e574f7c91bdda9fe94275967254.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8cpp_1a4b192cdeefa32dc3520cd71e4a577942.html">Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8cpp_1a4b192cdeefa32dc3520cd71e4a577942.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c.html">Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aad3deea458a64955982b85edbbcbbf80.html">Template Function trace</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aad3deea458a64955982b85edbbcbbf80.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1acbf833bb0d55190130dc71aad295c619.html">Template Function transform_from_primitive(const Reciprocal&amp;, const LQVec&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1acbf833bb0d55190130dc71aad295c619.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1a14c2b3d7c03bcb543c24e0531b709f6a.html">Template Function transform_from_primitive(const Direct&amp;, const LDVec&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1a14c2b3d7c03bcb543c24e0531b709f6a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1ab34393ec4728941dd5897362d37c427d.html">Template Function transform_to_primitive(const Reciprocal&amp;, const LQVec&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1ab34393ec4728941dd5897362d37c427d.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1ad8cbc7f1ec780313668f25a0c7a9aab8.html">Template Function transform_to_primitive(const Direct&amp;, const LDVec&lt;T&gt;&amp;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1ad8cbc7f1ec780313668f25a0c7a9aab8.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6.html">Template Function transpose</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_interpolation_8hpp_1a0e897dfb2d951678e5f39fd1e2b8c1f5.html">Template Function triangle_area</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_interpolation_8hpp_1a0e897dfb2d951678e5f39fd1e2b8c1f5.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006.html">Template Function triangle_area_squared</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_triangulation_8hpp_1acf0bed752834c46ee78545a77943c17f.html">Template Function triangulate(const ArrayVector&lt;T&gt;&amp;, const std::vector&lt;std::vector&lt;int&gt;&gt;&amp;, const double, const double, const double, const double, const int, const double)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_triangulation_8hpp_1acf0bed752834c46ee78545a77943c17f.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_triangulation__layers_8hpp_1a8dc7c36309a283c7d12c6396d6d4e27e.html">Template Function triangulate(const ArrayVector&lt;T&gt;&amp;, const std::vector&lt;std::vector&lt;int&gt;&gt;&amp;, const double, const int, const int)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_triangulation__layers_8hpp_1a8dc7c36309a283c7d12c6396d6d4e27e.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_triangulation__layers_8hpp_1a021b328065e9a5cb4cda58b02177224d.html">Template Function triangulate_one_layer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_triangulation__layers_8hpp_1a021b328065e9a5cb4cda58b02177224d.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c.html">Template Function unique</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aa34458d2135d27eaa9d6d77d1da004b4.html">Template Function unsigned_to_signed</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aa34458d2135d27eaa9d6d77d1da004b4.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a122b8387068ad87a8f3dd2d4c92cc765.html">Template Function vector_angle(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a122b8387068ad87a8f3dd2d4c92cc765.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1ad1c57de58f1467ed1562974f54bc0d2a.html">Template Function vector_angle(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1ad1c57de58f1467ed1562974f54bc0d2a.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a9b4d63f4de2652b90011a8de66bf03ae.html">Template Function vector_cross</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a9b4d63f4de2652b90011a8de66bf03ae.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a1eedbf1ae0a103e09d1d28b0a36ed422.html">Template Function vector_distance(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a1eedbf1ae0a103e09d1d28b0a36ed422.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a7e21ee24d04f29f003f4c24f1422c605.html">Template Function vector_distance(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a7e21ee24d04f29f003f4c24f1422c605.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a57d4522fa58f7ecd3cf04d0a79cf53db.html">Template Function vector_dot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a57d4522fa58f7ecd3cf04d0a79cf53db.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a817741e64f73a8841240a91dffdc1d85.html">Template Function vector_norm_squared</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a817741e64f73a8841240a91dffdc1d85.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a8d7f7193cdd77d5b706844454e946d38.html">Template Function vector_product(const size_t, const T *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a8d7f7193cdd77d5b706844454e946d38.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1aeded5b24796c93e1b4daa5aa39e26dfd.html">Template Function vector_product(const size_t, const T *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1aeded5b24796c93e1b4daa5aa39e26dfd.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a10230aa3fcd48acb6a6257aa00fe360b.html">Template Function vector_product(const size_t, const std::complex&lt;T&gt; *, const T *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a10230aa3fcd48acb6a6257aa00fe360b.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_utilities_8hpp_1a80507ae9b38cb01dc2a90ccb9c993d28.html">Template Function vector_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_utilities_8hpp_1a80507ae9b38cb01dc2a90ccb9c993d28.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_transform_8hpp_1ae795781ac9098d7093925b9cfdd75fdf.html">Template Function xyz_to_hkl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_transform_8hpp_1ae795781ac9098d7093925b9cfdd75fdf.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55.html">Variable _debug_printer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_spg__database_8cpp_1a578037fa51efca00d3055071a91f456a.html">Variable ALL_SPACEGROUPS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_spg__database_8cpp_1a578037fa51efca00d3055071a91f456a.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid_8hpp_1a04ab2fc397bc6ff666f3bfb1208a4a73.html">Variable default_n</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid_8hpp_1a04ab2fc397bc6ff666f3bfb1208a4a73.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid4_8hpp_1a1a0680d2eb5d1a7c9ab72fa7d17e43a6.html">Variable default_n4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid4_8hpp_1a1a0680d2eb5d1a7c9ab72fa7d17e43a6.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid_8hpp_1ab090ba1f97fdf6b1bb27874bc3d23e76.html">Variable default_step</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid_8hpp_1ab090ba1f97fdf6b1bb27874bc3d23e76.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid4_8hpp_1af0c92c30025e1bad4452ef3633e96016.html">Variable default_step4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid4_8hpp_1af0c92c30025e1bad4452ef3633e96016.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid_8hpp_1a6332f850c22f5566732caa3b54cf3c44.html">Variable default_zero</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid_8hpp_1a6332f850c22f5566732caa3b54cf3c44.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_grid4_8hpp_1a48834a1e3f1102d9d91235f0266571e7.html">Variable default_zero4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_grid4_8hpp_1a48834a1e3f1102d9d91235f0266571e7.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a.html">Variable identity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_pointgroup_8cpp_1a8e05c5c58b7447fc592389d86b14d037.html">Variable inversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_pointgroup_8cpp_1a8e05c5c58b7447fc592389d86b14d037.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_utilities_8hpp_1a952eac791b596a61bba0a133a3bb439f.html">Variable PI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_utilities_8hpp_1a952eac791b596a61bba0a133a3bb439f.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_utilities_8hpp_1a11800301331418e03f6ccd288d68e959.html">Variable PICUBED</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_utilities_8hpp_1a11800301331418e03f6ccd288d68e959.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html">Variable PIOVERTWO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d.html">Variable pointgroup_data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_pointgroup_8cpp_1acc89e2b03f55ac3cfc5c6eaca4d83e03.html">Variable rot_axes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_pointgroup_8cpp_1acc89e2b03f55ac3cfc5c6eaca4d83e03.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_utilities_8hpp_1adbdcb5208ca656bd4ac203c9cabf2ac3.html">Variable TOL_MULT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_utilities_8hpp_1adbdcb5208ca656bd4ac203c9cabf2ac3.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1abedbae75207c3ed5a9d1d073fdef8a08.html">Define _MY_PRETTY_FUNC_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1abedbae75207c3ed5a9d1d073fdef8a08.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_lapjv_8hpp_1ac620672df61cb1f3f6bf8901869b6be2.html">Define always_inline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_lapjv_8hpp_1ac620672df61cb1f3f6bf8901869b6be2.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1ac72ed6ed9aa2135cd2cdf31117063ed9.html">Define debug_exec</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1ac72ed6ed9aa2135cd2cdf31117063ed9.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438.html">Define debug_update</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1acb19c496d0cfaaf9613f43d6e12ce690.html">Define debug_update_if</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1acb19c496d0cfaaf9613f43d6e12ce690.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0.html">Define find_umins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec.html">Define info_update</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917.html">Define info_update_if</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1.html">Define NUM_ROT_AXES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8.html">Define restrict</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25.html">Define verbose_update</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_debug_8hpp_1aa6ef311a30404b1b6353981d9dc58428.html">Define verbose_update_if</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_debug_8hpp_1aa6ef311a30404b1b6353981d9dc58428.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f.html">Define ZERO_PREC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f.html#define-documentation">Define Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="typedefs">
+<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a.html">Typedef CostFunction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.html">Typedef element_t</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1abfffab46700de65d0a9721ccccd48255.html">Typedef ElementsCost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1abfffab46700de65d0a9721ccccd48255.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb.html">Typedef ElementsType</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_debug_8hpp_1aa3198ffc0e17fcb31cd7053642959228.html">Typedef enable_if_t</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_debug_8hpp_1aa3198ffc0e17fcb31cd7053642959228.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1aa3198ffc0e17fcb31cd7053642959228.html">Typedef enable_if_t</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1aa3198ffc0e17fcb31cd7053642959228.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html">Typedef index_t</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_transform_8hpp_1afbc51959885d33b5db8306d0aba9f96c.html">Typedef invPtype</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_transform_8hpp_1afbc51959885d33b5db8306d0aba9f96c.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_utilities_8hpp_1aceb39604fd38574cd57c210f88029430.html">Typedef IsInteger</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_utilities_8hpp_1aceb39604fd38574cd57c210f88029430.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_utilities_8hpp_1a7d703b6a4cf28c8dd3e8d2e6fe46ff2d.html">Typedef IsNotInteger</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_utilities_8hpp_1a7d703b6a4cf28c8dd3e8d2e6fe46ff2d.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_hall__symbol_8hpp_1afcd610157c7da68729320cef638a084b.html">Typedef Matrices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_hall__symbol_8hpp_1afcd610157c7da68729320cef638a084b.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1afcd610157c7da68729320cef638a084b.html">Typedef Matrices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1afcd610157c7da68729320cef638a084b.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_symmetry_8hpp_1afcd610157c7da68729320cef638a084b.html">Typedef Matrices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_symmetry_8hpp_1afcd610157c7da68729320cef638a084b.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html">Typedef Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html">Typedef Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_symmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html">Typedef Matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_symmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_transform_8hpp_1ac39cc28ca385d0a8a410b3dcb7d23585.html">Typedef Ptype</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_transform_8hpp_1ac39cc28ca385d0a8a410b3dcb7d23585.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5.html">Typedef ShapeType</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_bz__mesh_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_bz__mesh_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_bz__nest_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_bz__nest_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_bz__trellis_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_bz__trellis_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_grid4_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html">Typedef slong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_grid4_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html">Typedef Vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html">Typedef Vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_symmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html">Typedef Vector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_symmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_hall__symbol_8hpp_1af38183e237898f6af653810bc4c95c79.html">Typedef Vectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_hall__symbol_8hpp_1af38183e237898f6af653810bc4c95c79.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1af38183e237898f6af653810bc4c95c79.html">Typedef Vectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_pointsymmetry_8hpp_1af38183e237898f6af653810bc4c95c79.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_symmetry_8hpp_1af38183e237898f6af653810bc4c95c79.html">Typedef Vectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_symmetry_8hpp_1af38183e237898f6af653810bc4c95c79.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

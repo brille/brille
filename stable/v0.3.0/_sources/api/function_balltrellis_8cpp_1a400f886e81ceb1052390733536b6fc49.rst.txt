@@ -1,0 +1,13 @@
+.. _exhale_function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49:
+
+Function construct_trellis(const std::vector<TrellisLeaf>&, const double)
+=========================================================================
+
+- Defined in :ref:`file_src_balltrellis.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: construct_trellis(const std::vector<TrellisLeaf>&, const double)

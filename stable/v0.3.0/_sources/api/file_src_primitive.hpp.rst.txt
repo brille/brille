@@ -1,0 +1,59 @@
+
+.. _file_src_primitive.hpp:
+
+File primitive.hpp
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\primitive.hpp``)
+----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_primitive.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``spg_database.hpp`` (:ref:`file_src_spg_database.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_lattice.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_struct_primitive_traits`
+
+- :ref:`exhale_class_class_primitive_transform`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6`
+

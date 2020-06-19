@@ -1,0 +1,25 @@
+.. _exhale_class_class_brillouin_zone_mesh3:
+
+Template Class BrillouinZoneMesh3
+=================================
+
+- Defined in :ref:`file_src_bz_mesh.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Mesh3< T, S >`` (:ref:`exhale_class_class_mesh3`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: BrillouinZoneMesh3
+   :members:
+   :protected-members:
+   :undoc-members:

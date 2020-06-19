@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="_static/katex_autorenderer.js"></script>
+        <script src="_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Memory Use" href="memory_usage.html" />
+    <link rel="prev" title="Installation Guide" href="install_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#background">Background</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lattices">Lattices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#direct-lattices">Direct lattices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reciprocal-lattices">Reciprocal lattices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#physical-properties">Physical Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#brillouin-zone">Brillouin zone</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#irreducible-first-brillouin-zone">Irreducible first Brillouin zone</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inelastic-neutron-scattering">Inelastic Neutron Scattering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-brillouin-zone-interpolation">Irreducible Brillouin zone interpolation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cartesian-grid">Cartesian grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#n-simplex-grid"><span class="math">\(n\)</span>-simplex grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hybrid-grid">Hybrid grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/motivation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="lattices">
+<h3>Lattices<a class="headerlink" href="#lattices" title="Permalink to this headline">¶</a></h3>
+<p>An infinite set of points which are indistinguishable for a specific set of
+rigid translations form a lattice.</p>
+<p>The easiest conceived lattice is one formed by the combinations of the whole
+numbers on a set of Cartesian axes. In two dimensions, this is equivalent to
+the intersections of lines on a piece of graphing paper.
+If the vector pointing from any one such intersection point to its neighbour
+along the <span class="math">\(x\)</span> axis is <span class="math">\(\mathbf{a}=[1\,0]\)</span>, and along the <span class="math">\(y\)</span>
+axis is <span class="math">\(\mathbf{b}=[0\,1]\)</span>, then the allowed translations which result
+in an indistinguishable lattice are
+<span class="math">\(\mathbf{r} = i\mathbf{a} + j\mathbf{b}\)</span>
+where both <span class="math">\(i\)</span> and <span class="math">\(j\)</span> are integers.</p>
+<p>Although only translational invariance is necessary for a lattice, this
+specific lattice has a number of additional invariant operations in the form of
+rotations and rotoinversions that form a group,</p>
+<div class="math">
+\[\def \mat#1#2#3#4{\begin{pmatrix} #1 & #2\\#3 & #4\end{pmatrix}}
+\mathbb{G} = \mat{1}{0}{0}{1}, \mat{0}{-1}{1}{0}, \mat{0}{1}{1}{0}, \ldots\]</div>
+<p>where for every element, <span class="math">\(G\in\mathbb{G}\)</span>, there exists a an equivalent
+product of elements of <span class="math">\(\mathbb{G}\)</span>. This allows a reduced representation
+of <span class="math">\(\mathbb{G}\)</span> by a minimal set of its elements, called its generators,
+which can be combined to produce all other elements.</p>
+<p>Lattices like the one described above, where the repeated unit is point-like,
+are called <em>Bravais</em> lattices and, in three dimensions, there are <span class="math">\(14\)</span>
+unique Bravais lattices.</p>
+<p>If the repeated unit is considered independent of the lattice, it is possible
+to conceive of shapes which have their own rotation and rotoinversion
+symmetries. There are <span class="math">\(32\)</span> unique sets of rotational symmetries in three
+dimensions each of which forms a <em>Point group</em>.</p>
+<p>Combining the symmetries of a Point group and a Bravais lattice gives rise to
+a set of symmetry operations with is comprised of rotations, rotoinversions,
+translations, screw axes, and glide planes which form a <em>Space group</em>, of
+which there are <span class="math">\(230\)</span> distinct combinations in three dimensions.</p>
+<p>All crystalline materials have a structure characterised by one of the
+Space groups.</p>
+<div class="section" id="direct-lattices">
+<h4>Direct lattices<a class="headerlink" href="#direct-lattices" title="Permalink to this headline">¶</a></h4>
+<p>While the specific example of a Lattice given above was described in terms of
+a physical lattice, Lattices are not limited to any one space.
+To remove any ambiguity, throughout brille Lattices which describe the positions
+of atoms in real space and their properties are referred to as
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Direct</span></code> lattices.</p>
+</div>
+<div class="section" id="reciprocal-lattices">
+<h4>Reciprocal lattices<a class="headerlink" href="#reciprocal-lattices" title="Permalink to this headline">¶</a></h4>
+<p>For every Lattice there exists a dual lattice which is, effectively, its
+inverse. While a Direct lattice describes atom positions, its dual lattice
+describes the relative orientations of <em>planes</em> of atoms.
+Constructing such a dual lattice is straightforward following references easily
+found elsewhere, but importantly where a lattice can be described by the lengths
+of its basis vectors, the basis vectors of its dual lattice have units of
+inverse, or reciprocal, length.
+For this reason the dual lattice of a Direct lattice is referred to here as a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Reciprocal</span></code> lattice.</p>
+</div>
+<div class="section" id="physical-properties">
+<h4>Physical Properties<a class="headerlink" href="#physical-properties" title="Permalink to this headline">¶</a></h4>
+<p>The physical properties of any crystalline material have the same symmetry
+as its Space group.
+The goal of <a class="reference internal" href="brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> is to simplify leveraging the Space group symmetry
+information in other software projects dealing with the physical properties
+of crystalline materials.</p>
+</div>
+</div>
+<div class="section" id="brillouin-zone">
+<h3>Brillouin zone<a class="headerlink" href="#brillouin-zone" title="Permalink to this headline">¶</a></h3>
+<p>The region of space around each lattice point which is closer to that point than
+to any other is its Wigner-Seitz cell.
+As we can see for the case of a Lattice with hexagonal symmetry,
+the Wigner-Seitz cells of all lattice points tile the space of the Lattice.</p>
+<div class="figure">
+<p><img src="_images/tikz-2fbbce129853b0dee70e39cfa188ea207cde0eb1.png" alt="\begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+latpt/.style = {color=gray!50!white, fill},]
+\coordinate (astar) at (1,0);
+\coordinate (bstar) at (0.5,0.8660254037844386);
+\clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+%
+\coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+\coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+\coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+\coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+\coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+\coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+%
+\foreach \h in {-1,...,6}{
+\foreach \k in {-1,...,3}{
+  \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+  \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+    -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+}}
+%
+\end{tikzpicture}" /></p>
+</div><p>If we consider that the Lattice is a Reciprocal lattice, with basis vectors
+<span class="math">\(\mathbf{a}^*\)</span> and <span class="math">\(\mathbf{b}^*\)</span>, then we can construct the
+Wigner-Seitz cell for any lattice point
+<span class="math">\(\boldsymbol{\tau} = h\mathbf{a}^* + k\mathbf{b}^*\)</span>
+by finding the intersections of all planes, each described by
+the point <span class="math">\(\boldsymbol{\tau}+\frac{i}{2}\mathbf{a}^*+\frac{j}{2}\mathbf{b}^*\)</span>
+and normal vector <span class="math">\(i\mathbf{a}^*+j\mathbf{b}^*\)</span> with <span class="math">\(i,j\)</span> integers;
+the Wigner-Seitz cell is bounded by all such planes <em>without</em> any planes closer
+to <span class="math">\(\boldsymbol{\tau}\)</span>.</p>
+<p>This is also the definition of the first Brillouin zone, where higher-order
+Brillouin zones are the regions between planes successively further from
+<span class="math">\(\mathbf{G}\)</span>.</p>
+<div class="figure">
+<p><img src="_images/tikz-247ba9b756e85d6b760777da2a77f8662279db16.png" alt="\begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+latpt/.style = {color=gray!50!white, fill},]
+\coordinate (astar) at (1,0);
+\coordinate (bstar) at (0.5,0.8660254037844386);
+\clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+%
+\coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+\coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+\coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+\coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+\coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+\coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+%
+\foreach \h in {-1,...,6}{
+\foreach \k in {-1,...,3}{
+  \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+  \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+    -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+}}
+%
+\draw[&lt;-&gt;,very thick, gray] (bstar) -- (0,0) node[near start,above left]{$b^*$}  -- (astar) node[near end,above]{$a^*$};
+%
+\coordinate (G) at ($(astar)+(bstar)$);
+\draw[-&gt;, very thick, dashed] (0,0) -- (G) node[midway,above left] {$\tau$};
+\draw[color=yellow!75!black, line width=1mm] (G) +(C1) -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+\end{tikzpicture}" /></p>
+</div><p>Since the properties of the lattice follow the periodicity of the lattice, any
+measurable quantity must repeat from one first Brillouin zone to the next.
+This allows for descriptions of the physical properties which depend on, e.g.,
+a reduced momentum transfer <span class="math">\(\mathbf{q} = \mathbf{Q}-\mathbf{G}\)</span></p>
+<div class="figure">
+<p><img src="_images/tikz-7fc0caa18c27495bbef4eb1844e983b7429d01e3.png" alt="\begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+latpt/.style = {color=gray!50!white, fill},]
+\coordinate (astar) at (1,0);
+\coordinate (bstar) at (0.5,0.8660254037844386);
+\clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+%
+\coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+\coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+\coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+\coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+\coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+\coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+%
+\foreach \h in {-1,...,6}{
+\foreach \k in {-1,...,3}{
+  \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+  \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+    -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+}}
+%
+\draw[&lt;-&gt;,very thick, gray] (bstar) -- (0,0) node[near start,above left]{$b^*$}  -- (astar) node[near end,above]{$a^*$};
+%
+\coordinate (G) at ($(astar)+(bstar)$);
+\draw[-&gt;, very thick, dashed] (0,0) -- (G) node[midway,above left] {$\tau$};
+\draw[color=yellow!75!black, line width=1mm] (G) +(C1) -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+\coordinate (q) at ($0.1*(astar)-0.3*(bstar)$);
+\coordinate (Q) at ($(G)+(q)$);
+\draw[-&gt;,very thick,color=black] (0,0) -- (Q) node[midway,below right] {$Q$};
+\draw[-&gt;,very thick,color=black] (G) -- (Q) node[midway,below right] {$q$};
+\end{tikzpicture}" /></p>
+</div><div class="section" id="irreducible-first-brillouin-zone">
+<h4>Irreducible first Brillouin zone<a class="headerlink" href="#irreducible-first-brillouin-zone" title="Permalink to this headline">¶</a></h4>
+<p>The first Brillouin zone may contain redundant information depending on
+the Point group symmetry of the Space group.
+If the two-dimensional hexagonal lattice above possesses a six-fold rotation
+axis perpendicular to the plane, so the information within each first Brillouin
+zone is repeated six times, so the zone can be <em>reduced</em>.
+The definition of an irreducible zone is not unique, but one choice for
+this Reciprocal lattice is shown below</p>
+<div class="figure">
+<p><img src="_images/tikz-78755b65a392af273e4bbed4bd4e6e2351529cc2.png" alt="\begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+latpt/.style = {color=gray!50!white, fill},]
+\coordinate (astar) at (1,0);
+\coordinate (bstar) at (0.5,0.8660254037844386);
+\clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+%
+\coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+\coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+\coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+\coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+\coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+\coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+%
+\foreach \h in {-1,...,6}{
+\foreach \k in {-1,...,3}{
+  \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+  \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+    -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+}}
+%
+\draw[&lt;-&gt;,very thick, gray] (bstar) -- (0,0) node[near start,above left]{$b^*$}  -- (astar) node[near end,above]{$a^*$};
+%
+\coordinate (G) at ($(astar)+(bstar)$);
+\draw[-&gt;, very thick, dashed] (0,0) -- (G) node[midway,above left] {$\tau$};
+\draw[color=yellow!75!black,line width=1mm] (G) -- +(C4) -- +(C5) -- cycle;
+%\draw[color=yellow!75!black,dashed]         (G) -- +(C1) -- +(C2) -- cycle;
+%\draw[color=yellow!75!black,dashed]         (G) -- +(C2) -- +(C3) -- cycle;
+%\draw[color=yellow!75!black,dashed]         (G) -- +(C3) -- +(C4) -- cycle;
+%\draw[color=yellow!75!black,dashed]         (G) -- +(C5) -- +(C6) -- cycle;
+%\draw[color=yellow!75!black,dashed]         (G) -- +(C6) -- +(C1) -- cycle;
+\coordinate (q) at ($0.1*(astar)-0.3*(bstar)$);
+\coordinate (Q) at ($(G)+(q)$);
+\draw[-&gt;,very thick,color=black] (0,0) -- (Q) node[midway,below right] {$Q$};
+\draw[-&gt;,very thick,color=black] (G) -- (Q) node[midway,below right] {$q$};
+\end{tikzpicture}" /></p>
+</div><p>The properties at an arbitrary momentum transfer <span class="math">\(\mathbf{Q}\)</span> can be
+related to those within the irreducible first Brillouin zone by</p>
+<div class="math">
+\[\mathbf{Q} = G \mathbf{q}_\text{ir} + \boldsymbol{\tau}\]</div>
+<p>where <span class="math">\(G\)</span> is one of the Point group operators,
+<span class="math">\(\mathbf{q}_\text{ir}\)</span> is a vector within the irreducible first
+Brillouin zone, and <span class="math">\(\boldsymbol{\tau}\)</span> is a Reciprocal lattice point.</p>
+<p>Since the irreducible first Brillouin zone contains all of the information about
+the physical properties of a material, it can and should be used by projects
+aiming to model those properties efficently.
+To help in this task, <a class="reference internal" href="brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> defines <code class="xref py py-class docutils literal notranslate"><span class="pre">BrillouinZone</span></code> to
+construct the first Brillouin zone and an irreducible Brillouin zone for any
+Reciprocal lattice.</p>
+</div>
+<div class="section" id="inelastic-neutron-scattering">
+<h4>Inelastic Neutron Scattering<a class="headerlink" href="#inelastic-neutron-scattering" title="Permalink to this headline">¶</a></h4>
+<p>Inelastic neutron scattering is an experimental technique which measures the
+probability of transitions between states of a condensed matter system, which
+in turn can tell us about the types and strengths of interactions within the
+material.</p>
+<p>Inelastic neutron scattering benefits from the use of neutrons with wavelengths
+comparable to typical interatomic spacings <em>and</em> energies comparable to typical
+energy levels of condensed matter systems.</p>
+<p>The straightforward comparison of intensity measured on a neutron spectrometer
+and favourable wavelength and energy of available neutrons compensates for the
+difficulty of neutron production compared to, e.g., x-rays which are easier to
+produce but can not have both favourable wavelengths and energies in the same
+photon.</p>
+<p>The difficulty of producing neutron beams led to the development of instruments
+like the Direct Geometry Time of Flight neutron spectrometer. Such instruments
+have an array of detectors at fixed positions and detect changes in the
+neutron energy by measuring the time it takes for a detected neutron to arrive
+at the detector. By knowing the neutron’s initial, <span class="math">\(\mathbf{k}_\text{i}\)</span>,
+and final momenta, <span class="math">\(\mathbf{k}_\text{f}\)</span> it is
+straightforward to work out the momenta and energy transferred to the sample.</p>
+<div class="math">
+\[\begin{aligned}
+\mathbf{Q} & = \mathbf{k}_\text{i} - \mathbf{k}_\text{f} \\
+E & = \frac{\hbar^2}{2m_\text{n}}\left(k_\text{i}^2 - k_\text{f}^2\right)
+\end{aligned}\]</div>
+</div>
+</div>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Through the use of one or more choppers, Direct Geometry Time of Flight
+spectrometers select a single <span class="math">\(\mathbf{k}_\text{i}\)</span> for all neutrons which
+interact with the sample before being counted in a detector. Each detector is
+at a unique set of spherical angles <span class="math">\((\theta,\phi)\)</span> relative to
+<span class="math">\(\hat{\mathbf{k}_\text{i}}\)</span> and therefore each counts neutrons with
+a unique <span class="math">\(\hat{\mathbf{k}}_\text{f}\)</span>. As a result each detector measures
+along a path through reciprocal <span class="math">\((\mathbf{Q},E)\)</span> space which is
+constrained by the kinematic relations listed above.</p>
+<p>Theoretical models of interactions in a material typically involve solving
+an eigenvalue problem for a given <span class="math">\(\mathbf{Q}\)</span> and are therefore best
+suited for simulating along <span class="math">\((\mathbf{Q},E)\)</span> paths with
+constant-<span class="math">\(\mathbf{Q}\)</span>.
+<a class="reference internal" href="brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> aims to help such models by reducing the number of
+<span class="math">\(\mathbf{Q}\)</span> points where they must perform their (typically expensive)
+calculation and interpolates their results onto the <span class="math">\((\mathbf{Q},E)\)</span> paths
+measured during experiments.
+To accomplish this, a number of polyhedron-filling connected grids are defined;
+notably <code class="xref py py-class docutils literal notranslate"><span class="pre">BZGridQ</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BZMeshQ</span></code>, and <code class="xref py py-class docutils literal notranslate"><span class="pre">BZTrellisQ</span></code>.</p>
+<div class="section" id="irreducible-brillouin-zone-interpolation">
+<h3>Irreducible Brillouin zone interpolation<a class="headerlink" href="#irreducible-brillouin-zone-interpolation" title="Permalink to this headline">¶</a></h3>
+<p>Each of the polyhedron-filling connected grids takes a first Brillouin zone
+polyhedron or an irreducible Brillouin zone polyhedron plus, e.g., a maximum
+distance between grid nodes or a maximum grid cell volume, and define a grid.</p>
+<div class="section" id="cartesian-grid">
+<h4>Cartesian grid<a class="headerlink" href="#cartesian-grid" title="Permalink to this headline">¶</a></h4>
+<p>One simple approach to defining a grid within a polyhedron is to</p>
+<ol class="arabic simple">
+<li><p>define one vertex of the polyhedron as the origin,</p></li>
+<li><p>find the vertex farthest away from the origin</p></li>
+<li><p>subdivide the rectangular prism defined by these two points.</p></li>
+</ol>
+<p>Such a grid has the advantage that for all space within it, the closest grid
+point(s) can be calculated analytically. This lends itself to fast neighbour
+location and fast linear interpolation.</p>
+<p>A disadvantage to such a grid is that it can only be commensurate with
+polyhedra which are also rectangular prisms, which is not the case for all but
+primitive cubic, primitive tetragonal, and primitive orthorhombic space groups.
+When the grid is not commensurate with the polyhedron it is likely to introduce
+unmanageable artifacts in any interpolation result.</p>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">BZGridQ</span></code> implements a cartesian grid in three dimensions
+which fills, and may extend beyond, the boundaries of a [irreducible]
+Brillouin zone.</p>
+</div>
+<div class="section" id="n-simplex-grid">
+<h4><span class="math">\(n\)</span>-simplex grid<a class="headerlink" href="#n-simplex-grid" title="Permalink to this headline">¶</a></h4>
+<p>Another straightforward approach to defining a grid within a polyhedron is the
+use of a tetrahedral tiling. Tetrahedra being the three dimensional simplex.
+Creating such a tiling with nice properties is nontrivial, so brille uses the
+<a class="reference external" href="http://tetgen.org">TetGen</a> library to do the heavy lifting.</p>
+<p>Tetrahedral tilings have the advantage that they can be made commensurate with
+any polyhedron, and therefore never introduce unmanageable artifacts when
+interpolating near their surfaces.
+But they lack the ability to calculate which tetrahedron contains a specified
+point.
+So interpolating with a tetrahedral tiling is either slow or required
+substantial metainformation to be determined in advance.</p>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">BZMeshQ</span></code> implements a 3-D <span class="math">\(n\)</span>-simplex grid which
+fills and does not extend beyond the boundaries of a [irreducible] Brillouin
+zone.</p>
+</div>
+<div class="section" id="hybrid-grid">
+<h4>Hybrid grid<a class="headerlink" href="#hybrid-grid" title="Permalink to this headline">¶</a></h4>
+<p>An alternative approach is to combine a cartesian grid with a <span class="math">\(n\)</span>-simplex
+grid. Such a grid has its rectangular-prism cells replaced by triangulated
+truncated-rectangular-prisms on the surface of the polyhedron.</p>
+<p>Such a construction has the advantage of direct calculation of the cell which
+contains any given point with a much-faster search over only those tetrahedra
+within the cell if the rectangular-prism passes the surface of the polyhedron.</p>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">BZTrellisQ</span></code> implements a hybrid grid in three dimensions
+which fills and does not extend beyond the boundaries of a [irreducible]
+Brillouin zone.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="memory_usage.html" class="btn btn-neutral float-right" title="Memory Use" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install_guide.html" class="btn btn-neutral float-left" title="Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

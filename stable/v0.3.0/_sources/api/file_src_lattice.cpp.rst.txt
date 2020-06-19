@@ -1,0 +1,46 @@
+
+.. _file_src_lattice.cpp:
+
+File lattice.cpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\lattice.cpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_lattice.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``hall_symbol.hpp`` (:ref:`file_src_hall_symbol.hpp`)
+
+- ``lattice.hpp`` (:ref:`file_src_lattice.hpp`)
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_lattice_8cpp_1a7399108074c65f99895d90bf149c2031`
+

@@ -1,0 +1,13 @@
+.. _exhale_function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6:
+
+Template Function find_bin
+==========================
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: find_bin(const std::vector<T>&, const T)

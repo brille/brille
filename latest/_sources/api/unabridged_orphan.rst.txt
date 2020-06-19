@@ -1,0 +1,323 @@
+:orphan:
+
+
+Full API
+========
+
+Directories
+***********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_src.rst
+
+Files
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_arrayvector.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_arrayvector.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_arrayvector_operators.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_balltrellis.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_balltrellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_basis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bravais.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bravais.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_grid.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_mesh.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_nest.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_trellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_wedge.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_debug.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_debug.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_grid.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_grid.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_grid4.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_grid4.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_grid_sorting.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_hall_symbol.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_hall_symbol.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolation_data.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lapjv.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lattice.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lattice.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_latvec.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_latvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_ldvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lqvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_mesh.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_mesh.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_munkres.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_neighbours.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_neighbours.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_nest.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_nest.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_permutation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_phonon.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointgroup.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointgroup.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointsymmetry.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointsymmetry.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_polyhedron.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_primitive.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_smp.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_spg_database.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_spg_database.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_transform.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_trellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_trellis.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation_layers.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation_simple.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_utilities.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_utilities.tpp.rst

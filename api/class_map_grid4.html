@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class MapGrid4 &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Mesh3" href="class_mesh3.html" />
+    <link rel="prev" title="Template Class MapGrid3" href="class_map_grid3.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class MapGrid4</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/class_map_grid4.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-mapgrid4">
+<span id="exhale-class-class-map-grid4"></span><h1>Template Class MapGrid4<a class="headerlink" href="#template-class-mapgrid4" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_grid4.hpp.html#file-src-grid4-hpp"><span class="std std-ref">File grid4.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">InterpolateGrid4&lt;</span> <span class="pre">T,</span> <span class="pre">S</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="class_interpolate_grid4.html#exhale-class-class-interpolate-grid4"><span class="std std-ref">Template Class InterpolateGrid4</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E8MapGrid4">
+<span id="_CPPv3I00E8MapGrid4"></span><span id="_CPPv2I00E8MapGrid4"></span><span class="target" id="class_map_grid4"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">S</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">MapGrid4</code><a class="headerlink" href="#_CPPv4I00E8MapGrid4" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A class holding a 4D grid which maps into an internal <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a>. </p>
+<p>The <a class="reference internal" href="#class_map_grid4"><span class="std std-ref">MapGrid4</span></a> holds a mapping grid where each entry is either a valid index into a held <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> or is <code class="docutils literal notranslate"><span class="pre">-1</span></code> to indicate that the grid point does not map. </p>
+<p>Subclassed by <a class="reference internal" href="class_interpolate_grid4.html#class_interpolate_grid4"><span class="std std-ref">InterpolateGrid4&lt; T, S &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid48MapGrid4EPK6size_t">
+<span id="_CPPv3N8MapGrid48MapGrid4EPK6size_t"></span><span id="_CPPv2N8MapGrid48MapGrid4EPK6size_t"></span><span id="MapGrid4::MapGrid4__sCP"></span><span class="target" id="class_map_grid4_1a08fe381d99ebc29464a7f5c852d5ced7"></span><code class="sig-name descname">MapGrid4</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em> = <a class="reference internal" href="variable_grid4_8hpp_1a1a0680d2eb5d1a7c9ab72fa7d17e43a6.html#_CPPv410default_n4" title="default_n4">default_n4</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid48MapGrid4EPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid48MapGrid4EPK6size_tRK11ArrayVectorI1TE">
+<span id="_CPPv3N8MapGrid48MapGrid4EPK6size_tRK11ArrayVectorI1TE"></span><span id="_CPPv2N8MapGrid48MapGrid4EPK6size_tRK11ArrayVectorI1TE"></span><span id="MapGrid4::MapGrid4__sCP.ArrayVector:T:CR"></span><span class="target" id="class_map_grid4_1a3ad2baccdd60ec275bf798468986d269"></span><code class="sig-name descname">MapGrid4</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid48MapGrid4EPK6size_tRK11ArrayVectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid48MapGrid4EPK6size_tPK5slongRK11ArrayVectorI1TE">
+<span id="_CPPv3N8MapGrid48MapGrid4EPK6size_tPK5slongRK11ArrayVectorI1TE"></span><span id="_CPPv2N8MapGrid48MapGrid4EPK6size_tPK5slongRK11ArrayVectorI1TE"></span><span id="MapGrid4::MapGrid4__sCP.slongCP.ArrayVector:T:CR"></span><span class="target" id="class_map_grid4_1aa86ad34ea31db052234143e0d8e8bcdf"></span><code class="sig-name descname">MapGrid4</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em>, <em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid48MapGrid4EPK6size_tPK5slongRK11ArrayVectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid48MapGrid4ERK8MapGrid4I1T1SE">
+<span id="_CPPv3N8MapGrid48MapGrid4ERK8MapGrid4I1T1SE"></span><span id="_CPPv2N8MapGrid48MapGrid4ERK8MapGrid4I1T1SE"></span><span id="MapGrid4::MapGrid4__MapGrid4:T.S:CR"></span><span class="target" id="class_map_grid4_1abb07143be389854ace5825c42cbf4503"></span><code class="sig-name descname">MapGrid4</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N8MapGrid48MapGrid4ERK8MapGrid4I1T1SE" title="MapGrid4::MapGrid4">MapGrid4</a>&lt;T, S&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid48MapGrid4ERK8MapGrid4I1T1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid4D0Ev">
+<span id="_CPPv3N8MapGrid4D0Ev"></span><span id="_CPPv2N8MapGrid4D0Ev"></span><span id="MapGrid4::~MapGrid4"></span><span class="target" id="class_map_grid4_1a1199cb8363b51876e5c54e5fbb8b9a6b"></span><code class="sig-name descname">~MapGrid4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid4D0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid4aSERK8MapGrid4I1T1SE">
+<span id="_CPPv3N8MapGrid4aSERK8MapGrid4I1T1SE"></span><span id="_CPPv2N8MapGrid4aSERK8MapGrid4I1T1SE"></span><span id="MapGrid4::assign-operator__MapGrid4:T.S:CR"></span><span class="target" id="class_map_grid4_1af790db445af8542ec01c3c1ae11e852d"></span>MapGrid4&lt;T, S&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> MapGrid4&lt;T, S&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid4aSERK8MapGrid4I1T1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47print_NEKb">
+<span id="_CPPv3NK8MapGrid47print_NEKb"></span><span id="_CPPv2NK8MapGrid47print_NEKb"></span><span id="MapGrid4::print_N__bCC"></span><span class="target" id="class_map_grid4_1ad7b4d8cbf054d288221e5b1813c806c8"></span>void <code class="sig-name descname">print_N</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>nl</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47print_NEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the number of points along each axis to the console. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid410print_spanEKb">
+<span id="_CPPv3NK8MapGrid410print_spanEKb"></span><span id="_CPPv2NK8MapGrid410print_spanEKb"></span><span id="MapGrid4::print_span__bCC"></span><span class="target" id="class_map_grid4_1ada2cd5ef159e1e187efe08f504d44f4e"></span>void <code class="sig-name descname">print_span</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>nl</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid410print_spanEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the span along each axis to the console. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid49print_mapEv">
+<span id="_CPPv3NK8MapGrid49print_mapEv"></span><span id="_CPPv2NK8MapGrid49print_mapEv"></span><span id="MapGrid4::print_map__voidC"></span><span class="target" id="class_map_grid4_1aa9253452edf44149dfc6526b1f0839f0"></span>void <code class="sig-name descname">print_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid49print_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the whole map to the console as stacked slices in the first two dimensions. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid47set_mapEv">
+<span id="_CPPv3N8MapGrid47set_mapEv"></span><span id="_CPPv2N8MapGrid47set_mapEv"></span><span id="MapGrid4::set_map__void"></span><span class="target" id="class_map_grid4_1af11be60d0c331cfdffc2457a5d0948b4"></span>int <code class="sig-name descname">set_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid47set_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the mapping index of each grid point to its linear index. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid47set_mapEPK5slongPK6size_tK6size_t">
+<span id="_CPPv3N8MapGrid47set_mapEPK5slongPK6size_tK6size_t"></span><span id="_CPPv2N8MapGrid47set_mapEPK5slongPK6size_tK6size_t"></span><span id="MapGrid4::set_map__slongCP.sCP.sC"></span><span class="target" id="class_map_grid4_1a743cc441b57e93e7a7dee81f0e4b91fc"></span>int <code class="sig-name descname">set_map</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em>, <em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> size_t <em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid47set_mapEPK5slongPK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-in a mapping grid <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inmap</span></code>: The existant mapping grid to copy into the object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code>: The number of points along each axis in <code class="docutils literal notranslate"><span class="pre">inmap</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d</span></code>: The number of dimensions in <code class="docutils literal notranslate"><span class="pre">n</span></code> and <code class="docutils literal notranslate"><span class="pre">inmap</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid414unsafe_set_mapEP5slong">
+<span id="_CPPv3N8MapGrid414unsafe_set_mapEP5slong"></span><span id="_CPPv2N8MapGrid414unsafe_set_mapEP5slong"></span><span id="MapGrid4::unsafe_set_map__slongP"></span><span class="target" id="class_map_grid4_1a1482c62459fe4844496176e9dc0fdabd"></span>int <code class="sig-name descname">unsafe_set_map</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid414unsafe_set_mapEP5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-in a mapping grid without checking that it is the right size. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid414unsafe_get_mapEP5slong">
+<span id="_CPPv3NK8MapGrid414unsafe_get_mapEP5slong"></span><span id="_CPPv2NK8MapGrid414unsafe_get_mapEP5slong"></span><span id="MapGrid4::unsafe_get_map__slongPC"></span><span class="target" id="class_map_grid4_1ab17345c0644574d8614426e6d8fef93f"></span>size_t <code class="sig-name descname">unsafe_get_map</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>outmap</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid414unsafe_get_mapEP5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-out the mapping grid without verifying that the storage location can hold it. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid415maximum_mappingEPK5slongK6size_t">
+<span id="_CPPv3NK8MapGrid415maximum_mappingEPK5slongK6size_t"></span><span id="_CPPv2NK8MapGrid415maximum_mappingEPK5slongK6size_t"></span><span id="MapGrid4::maximum_mapping__slongCP.sCC"></span><span class="target" id="class_map_grid4_1a7e0dd8200e6ea38d53fa8e5a6fa81e80"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>map2check</em>, <em class="property">const</em> size_t <em>num2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid415maximum_mappingEPK5slongK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of a map <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">map2check</span></code>: The mapping array to search through </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num2check</span></code>: The number of entries in the mapping index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid415maximum_mappingEPK5slong">
+<span id="_CPPv3NK8MapGrid415maximum_mappingEPK5slong"></span><span id="_CPPv2NK8MapGrid415maximum_mappingEPK5slong"></span><span id="MapGrid4::maximum_mapping__slongCPC"></span><span class="target" id="class_map_grid4_1ad8091437fbb64c2877658534214f7416"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>map2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid415maximum_mappingEPK5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of a map, assuming the size of <code class="docutils literal notranslate"><span class="pre">map2check</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">map</span></code> <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">map2check</span></code>: The mapping array to search through </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid415maximum_mappingEv">
+<span id="_CPPv3NK8MapGrid415maximum_mappingEv"></span><span id="_CPPv2NK8MapGrid415maximum_mappingEv"></span><span id="MapGrid4::maximum_mapping__voidC"></span><span class="target" id="class_map_grid4_1a88e5d673a8a8e086de48fead8d171230"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid415maximum_mappingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of <code class="docutils literal notranslate"><span class="pre">map</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid419valid_mapping_countEv">
+<span id="_CPPv3NK8MapGrid419valid_mapping_countEv"></span><span id="_CPPv2NK8MapGrid419valid_mapping_countEv"></span><span id="MapGrid4::valid_mapping_count__voidC"></span><span class="target" id="class_map_grid4_1a2f9c7231623c3c084f142d42fba2f833"></span>size_t <code class="sig-name descname">valid_mapping_count</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid419valid_mapping_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of valid mappings within <code class="docutils literal notranslate"><span class="pre">map</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid49check_mapERK11ArrayVectorI1TE">
+<span id="_CPPv3NK8MapGrid49check_mapERK11ArrayVectorI1TE"></span><span id="_CPPv2NK8MapGrid49check_mapERK11ArrayVectorI1TE"></span><span id="MapGrid4::check_map__ArrayVector:T:CRC"></span><span class="target" id="class_map_grid4_1a75f616dfc5ea5a59c6d4622b6d572257"></span>int <code class="sig-name descname">check_map</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>data2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid49check_mapERK11ArrayVectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if the interal mapping is consistent with an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data2check</span></code>: Will be compared against the maximum mapping in <code class="docutils literal notranslate"><span class="pre">map</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid49check_mapEv">
+<span id="_CPPv3NK8MapGrid49check_mapEv"></span><span id="_CPPv2NK8MapGrid49check_mapEv"></span><span id="MapGrid4::check_map__voidC"></span><span class="target" id="class_map_grid4_1ac5e6ebbb16165b039e4f12340b59599d"></span>int <code class="sig-name descname">check_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid49check_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if <code class="docutils literal notranslate"><span class="pre">map</span></code> is consistent with <code class="docutils literal notranslate"><span class="pre">data</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid44dataEv">
+<span id="_CPPv3NK8MapGrid44dataEv"></span><span id="_CPPv2NK8MapGrid44dataEv"></span><span id="MapGrid4::data__voidC"></span><span class="target" id="class_map_grid4_1a4a4217e9997c09f457b6ec01d160c516"></span><em class="property">const</em> InterpolationData&lt;T, S&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid44dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8MapGrid418replace_value_dataEvDp1A">
+<span id="_CPPv3IDpEN8MapGrid418replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN8MapGrid418replace_value_dataEDp1A"></span><span class="target" id="class_map_grid4_1ab2be2c76c927475073fc4cd32a559445"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br />void <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8MapGrid418replace_value_dataEvDp1A" title="MapGrid4::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8MapGrid418replace_value_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8MapGrid419replace_vector_dataEvDp1A">
+<span id="_CPPv3IDpEN8MapGrid419replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN8MapGrid419replace_vector_dataEDp1A"></span><span class="target" id="class_map_grid4_1a7ba3041a6e111550ea49fb2704e57648"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br />void <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8MapGrid419replace_vector_dataEvDp1A" title="MapGrid4::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8MapGrid419replace_vector_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47sub2linEK6size_tK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid47sub2linEK6size_tK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid47sub2linEK6size_tK6size_tK6size_tK6size_t"></span><span id="MapGrid4::sub2lin__sC.sC.sC.sCC"></span><span class="target" id="class_map_grid4_1a783216d5dc5a23f1e0b171b2c62a7fd4"></span>size_t <code class="sig-name descname">sub2lin</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em>, <em class="property">const</em> size_t <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47sub2linEK6size_tK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the linear index of a point given its four subscripted indices. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47sub2linEPK6size_tP6size_t">
+<span id="_CPPv3NK8MapGrid47sub2linEPK6size_tP6size_t"></span><span id="_CPPv2NK8MapGrid47sub2linEPK6size_tP6size_t"></span><span id="MapGrid4::sub2lin__sCP.sPC"></span><span class="target" id="class_map_grid4_1aa8bd21eae75f39570cd15189ffa8b31d"></span>int <code class="sig-name descname">sub2lin</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em>, size_t *<em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47sub2linEPK6size_tP6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the linear index of a point given an array of its four subscripted indices. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47lin2subEK6size_tP6size_t">
+<span id="_CPPv3NK8MapGrid47lin2subEK6size_tP6size_t"></span><span id="_CPPv2NK8MapGrid47lin2subEK6size_tP6size_t"></span><span id="MapGrid4::lin2sub__sC.sPC"></span><span class="target" id="class_map_grid4_1aea7a9970ad16370fc895d95a2fd83bc6"></span>int <code class="sig-name descname">lin2sub</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em>, size_t *<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47lin2subEK6size_tP6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the subscripted indices of a point given its linear index. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47sub2mapEPK6size_tR6size_t">
+<span id="_CPPv3NK8MapGrid47sub2mapEPK6size_tR6size_t"></span><span id="_CPPv2NK8MapGrid47sub2mapEPK6size_tR6size_t"></span><span id="MapGrid4::sub2map__sCP.sRC"></span><span class="target" id="class_map_grid4_1ad2715d1839fd39c6db2ae1e4ab14612b"></span>int <code class="sig-name descname">sub2map</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em>, size_t &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47sub2mapEPK6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the mapping of a point given an array of its three subscripted indices. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid47lin2mapEK6size_tR6size_t">
+<span id="_CPPv3NK8MapGrid47lin2mapEK6size_tR6size_t"></span><span id="_CPPv2NK8MapGrid47lin2mapEK6size_tR6size_t"></span><span id="MapGrid4::lin2map__sC.sRC"></span><span class="target" id="class_map_grid4_1ad42f473f022b5e8713e22f4153644c4b"></span>int <code class="sig-name descname">lin2map</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em>, size_t &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid47lin2mapEK6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the mapping of a point given its linear index. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid45numelEv">
+<span id="_CPPv3NK8MapGrid45numelEv"></span><span id="_CPPv2NK8MapGrid45numelEv"></span><span id="MapGrid4::numel__voidC"></span><span class="target" id="class_map_grid4_1a085e488ecce944ef0bb6c8ed6bb2af5c"></span>size_t <code class="sig-name descname">numel</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid45numelEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the total number of elements in the mapping grid. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid44sizeEK6size_t">
+<span id="_CPPv3NK8MapGrid44sizeEK6size_t"></span><span id="_CPPv2NK8MapGrid44sizeEK6size_t"></span><span id="MapGrid4::size__sCC"></span><span class="target" id="class_map_grid4_1a97860ded9b653737b15546652c947bf1"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid44sizeEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of elements in the mapping grid along a given dimension. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid46strideEK6size_t">
+<span id="_CPPv3NK8MapGrid46strideEK6size_t"></span><span id="_CPPv2NK8MapGrid46strideEK6size_t"></span><span id="MapGrid4::stride__sCC"></span><span class="target" id="class_map_grid4_1a3e2c20a71fc1b5f4cee7ddd3c821f442"></span>size_t <code class="sig-name descname">stride</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid46strideEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the stride (in bytes) necessary to move between neighbouring points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid46resizeEK6size_tK6size_tK6size_tK6size_t">
+<span id="_CPPv3N8MapGrid46resizeEK6size_tK6size_tK6size_tK6size_t"></span><span id="_CPPv2N8MapGrid46resizeEK6size_tK6size_tK6size_tK6size_t"></span><span id="MapGrid4::resize__sC.sC.sC.sC"></span><span class="target" id="class_map_grid4_1a2747e1f048cee3491c37ca282f62a395"></span>size_t <code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>n0</em>, <em class="property">const</em> size_t <em>n1</em>, <em class="property">const</em> size_t <em>n2</em>, <em class="property">const</em> size_t <em>n3</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid46resizeEK6size_tK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Change the size of the mapping grid given four new sizes. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid46resizeEPK6size_t">
+<span id="_CPPv3N8MapGrid46resizeEPK6size_t"></span><span id="_CPPv2N8MapGrid46resizeEPK6size_t"></span><span id="MapGrid4::resize__sCP"></span><span class="target" id="class_map_grid4_1a8467e7d33ae259b4d90553f21d81fa22"></span>size_t <code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid46resizeEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Change the size of the mapping grid given an array of the new sizes. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid45get_NEv">
+<span id="_CPPv3NK8MapGrid45get_NEv"></span><span id="_CPPv2NK8MapGrid45get_NEv"></span><span id="MapGrid4::get_N__voidC"></span><span class="target" id="class_map_grid4_1a7bb293457f46b8b01e8f90d80e09b672"></span>ArrayVector&lt;size_t&gt; <code class="sig-name descname">get_N</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid45get_NEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the three sizes of the mapping grid as an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a>. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid48set_sizeEPK6size_t">
+<span id="_CPPv3N8MapGrid48set_sizeEPK6size_t"></span><span id="_CPPv2N8MapGrid48set_sizeEPK6size_t"></span><span id="MapGrid4::set_size__sCP"></span><span class="target" id="class_map_grid4_1aff2acb074937c68e43e546c0a649cefe"></span>void <code class="sig-name descname">set_size</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid48set_sizeEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid49calc_spanEv">
+<span id="_CPPv3N8MapGrid49calc_spanEv"></span><span id="_CPPv2N8MapGrid49calc_spanEv"></span><span id="MapGrid4::calc_span"></span><span class="target" id="class_map_grid4_1ae4052a53274330ec36e6ebf2351f3793"></span>void <code class="sig-name descname">calc_span</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid49calc_spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid415instantiate_mapEv">
+<span id="_CPPv3N8MapGrid415instantiate_mapEv"></span><span id="_CPPv2N8MapGrid415instantiate_mapEv"></span><span id="MapGrid4::instantiate_map"></span><span class="target" id="class_map_grid4_1a0dfbe886d76f20d9ec62a3ee22cf6ad9"></span>void <code class="sig-name descname">instantiate_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid415instantiate_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid413valid_mappingEK6size_t">
+<span id="_CPPv3NK8MapGrid413valid_mappingEK6size_t"></span><span id="_CPPv2NK8MapGrid413valid_mappingEK6size_t"></span><span id="MapGrid4::valid_mapping__sCC"></span><span class="target" id="class_map_grid4_1aad721c2908be340a88dee8f4079352cd"></span>bool <code class="sig-name descname">valid_mapping</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid413valid_mappingEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid413valid_mappingEK6size_tK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid413valid_mappingEK6size_tK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid413valid_mappingEK6size_tK6size_tK6size_tK6size_t"></span><span id="MapGrid4::valid_mapping__sC.sC.sC.sCC"></span><span class="target" id="class_map_grid4_1a78014a17a25479c1e1d812e4a42a25c9"></span>bool <code class="sig-name descname">valid_mapping</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em>, <em class="property">const</em> size_t <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid413valid_mappingEK6size_tK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid411is_inboundsEK6size_tK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid411is_inboundsEK6size_tK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid411is_inboundsEK6size_tK6size_tK6size_tK6size_t"></span><span id="MapGrid4::is_inbounds__sC.sC.sC.sCC"></span><span class="target" id="class_map_grid4_1ab49af64c8c828f50cece89fadfb9be88"></span>bool <code class="sig-name descname">is_inbounds</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em>, <em class="property">const</em> size_t <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid411is_inboundsEK6size_tK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid411is_inboundsEPK6size_t">
+<span id="_CPPv3NK8MapGrid411is_inboundsEPK6size_t"></span><span id="_CPPv2NK8MapGrid411is_inboundsEPK6size_t"></span><span id="MapGrid4::is_inbounds__sCPC"></span><span class="target" id="class_map_grid4_1a0599d25961e711a81683d08fb5737b6a"></span>bool <code class="sig-name descname">is_inbounds</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid411is_inboundsEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp member">
+<dt id="_CPPv4IEN8MapGrid4I1T1SE1NE">
+<span id="_CPPv3IEN8MapGrid4I1T1SE1NE"></span><span id="_CPPv2IEN8MapGrid4I1T1SE1NE"></span>template&lt;&gt;<br /><span class="target" id="class_map_grid4_1a4a1639c3afe8f7efeafa6b473d813fa4"></span>size_t <code class="sig-name descname">N</code>[4]<a class="headerlink" href="#_CPPv4IEN8MapGrid4I1T1SE1NE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of points along each axis of the grid. </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4IEN8MapGrid4I1T1SE4spanE">
+<span id="_CPPv3IEN8MapGrid4I1T1SE4spanE"></span><span id="_CPPv2IEN8MapGrid4I1T1SE4spanE"></span>template&lt;&gt;<br /><span class="target" id="class_map_grid4_1a759b734bd14b8473e233f30d680a8cfc"></span>size_t <code class="sig-name descname">span</code>[4]<a class="headerlink" href="#_CPPv4IEN8MapGrid4I1T1SE4spanE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The span along each axis, allowing conversion from subscripted to linear indexing. </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N8MapGrid43mapE">
+<span id="_CPPv3N8MapGrid43mapE"></span><span id="_CPPv2N8MapGrid43mapE"></span><span id="MapGrid4::map__slongP"></span><span class="target" id="class_map_grid4_1a44812343b9a8bbc8eeb856b033be5542"></span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<code class="sig-name descname">map</code><a class="headerlink" href="#_CPPv4N8MapGrid43mapE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The mapping grid. </p>
+</dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N8MapGrid45data_E">
+<span id="_CPPv3N8MapGrid45data_E"></span><span id="_CPPv2N8MapGrid45data_E"></span><span id="MapGrid4::data___InterpolationData:T.S:"></span><span class="target" id="class_map_grid4_1aa75be817e47deb3859bc66ce4e682549"></span>InterpolationData&lt;T, S&gt; <code class="sig-name descname">data_</code><a class="headerlink" href="#_CPPv4N8MapGrid45data_E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="class_mesh3.html" class="btn btn-neutral float-right" title="Template Class Mesh3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="class_map_grid3.html" class="btn btn-neutral float-left" title="Template Class MapGrid3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

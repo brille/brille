@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1afaac905d0e1eadfe3062063f9949042c:
+
+Template Function frobenius_distance(const size_t, const T \*, const T \*)
+==========================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: frobenius_distance(const size_t, const T *, const T *)

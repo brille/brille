@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a39efa1d8d0a3ce413a1868424ede4ee5:
+
+Template Function matrix_adjoint
+================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: matrix_adjoint(R *, const R *, const int)

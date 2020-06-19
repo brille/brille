@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006:
+
+Template Function triangle_area_squared
+=======================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: triangle_area_squared(const T, const T, const T)

@@ -1,0 +1,13 @@
+.. _exhale_variable_grid4_8hpp_1af0c92c30025e1bad4452ef3633e96016:
+
+Variable default_step4
+======================
+
+- Defined in :ref:`file_src_grid4.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_step4

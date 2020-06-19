@@ -1,0 +1,16 @@
+.. _exhale_class_class_node_container:
+
+Class NodeContainer
+===================
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: NodeContainer
+   :members:
+   :protected-members:
+   :undoc-members:

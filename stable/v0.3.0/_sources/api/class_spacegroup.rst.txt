@@ -1,0 +1,16 @@
+.. _exhale_class_class_spacegroup:
+
+Class Spacegroup
+================
+
+- Defined in :ref:`file_src_spg_database.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Spacegroup
+   :members:
+   :protected-members:
+   :undoc-members:

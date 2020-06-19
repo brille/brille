@@ -1,0 +1,57 @@
+
+.. _file_src_bz_grid.hpp:
+
+File bz_grid.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\bz_grid.hpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz_grid.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bz.hpp`` (:ref:`file_src_bz.hpp`)
+
+- ``grid.hpp`` (:ref:`file_src_bz_grid.hpp`)
+
+- ``grid4.hpp`` (:ref:`file_src_grid4.hpp`)
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_brillouin_zone_grid3`
+
+- :ref:`exhale_class_class_brillouin_zone_grid4`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e`
+

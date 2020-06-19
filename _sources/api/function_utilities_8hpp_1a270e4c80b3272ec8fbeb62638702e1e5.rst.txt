@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a270e4c80b3272ec8fbeb62638702e1e5:
+
+Template Function encode_array_signs(const size_t, const T \*)
+==============================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: encode_array_signs(const size_t, const T *)

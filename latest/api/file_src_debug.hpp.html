@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File debug.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>File debug.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_debug.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-debug-hpp">
+<span id="file-src-debug-hpp"></span><h1>File debug.hpp<a class="headerlink" href="#file-debug-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-debug-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/debug.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+<li><p><a class="reference internal" href="#defines" id="id6">Defines</a></p></li>
+<li><p><a class="reference internal" href="#typedefs" id="id7">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id8">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-debug-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/debug.hpp</span></code>)<a class="headerlink" href="#definition-src-debug-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_debug.hpp.html">Program Listing for File debug.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">array</span></code> (<a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chrono</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">complex</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iomanip</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iostream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sstream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdio.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code> (<a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_src_utilities.hpp.html#file-src-utilities-hpp"><span class="std std-ref">File utilities.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_balltrellis.cpp.html#file-src-balltrellis-cpp"><span class="std std-ref">File balltrellis.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_polyhedron.hpp.html#file-src-polyhedron-hpp"><span class="std std-ref">File polyhedron.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation_layers.hpp.html#file-src-triangulation-layers-hpp"><span class="std std-ref">File triangulation_layers.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">File nest.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation_simple.hpp.html#file-src-triangulation-simple-hpp"><span class="std std-ref">File triangulation_simple.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_debug.cpp.html#file-src-debug-cpp"><span class="std std-ref">File debug.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation.hpp.html#file-src-triangulation-hpp"><span class="std std-ref">File triangulation.hpp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structis__container.html#exhale-struct-structis-container"><span class="std std-ref">Template Struct is_container</span></a></p></li>
+<li><p><a class="reference internal" href="structis__container_3_01std_1_1array_3_01T_00_01N_01_4_01_4.html#exhale-struct-structis-container-3-01std-1-1array-3-01t-00-01n-01-4-01-4"><span class="std std-ref">Template Struct is_container&lt; std::array&lt; T, N &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structis__container_3_01std_1_1vector_3_01T_01_4_01_4.html#exhale-struct-structis-container-3-01std-1-1vector-3-01t-01-4-01-4"><span class="std std-ref">Template Struct is_container&lt; std::vector&lt; T &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="classDebugPrinter.html#exhale-class-classdebugprinter"><span class="std std-ref">Class DebugPrinter</span></a></p></li>
+<li><p><a class="reference internal" href="classStopwatch.html#exhale-class-classstopwatch"><span class="std std-ref">Template Class Stopwatch</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37.html#exhale-function-debug-8hpp-1a6f9442bd052df5835781a74bbb2a3c37"><span class="std std-ref">Template Function local_abs(T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a8e5fb81891b64bdb89ec8a782ce2e2ec.html#exhale-function-debug-8hpp-1a8e5fb81891b64bdb89ec8a782ce2e2ec"><span class="std std-ref">Template Function local_abs(T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1abcffcdb2c2f41452f025c969f7aa6b21.html#exhale-function-debug-8hpp-1abcffcdb2c2f41452f025c969f7aa6b21"><span class="std std-ref">Template Function max_element_length(const T&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919.html#exhale-function-debug-8hpp-1aff3dfc331399c0aa0b523af487737919"><span class="std std-ref">Template Function max_element_length(const T&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079.html#exhale-function-debug-8hpp-1a0c20dd634e96d294377cec1a13de3079"><span class="std std-ref">Template Function my_to_string(const T, const size_t)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e.html#exhale-function-debug-8hpp-1a3871ece379eb7ac34c84a44a54540e0e"><span class="std std-ref">Template Function my_to_string(const std::complex&lt;T&gt;, const size_t)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679.html#exhale-function-debug-8hpp-1a0b3093fed158a3f0068dad54f912f679"><span class="std std-ref">Template Function my_to_string(const std::vector&lt;C&lt;T&gt;&gt;&amp;, const)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a139c8c143451283a24423405a1efa5be.html#exhale-function-debug-8hpp-1a139c8c143451283a24423405a1efa5be"><span class="std std-ref">Template Function my_to_string(const T&amp;, const size_t)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49.html#exhale-function-debug-8hpp-1a8e74dfc92a7960dee8846c4ca8b36e49"><span class="std std-ref">Function terminal_height(void)</span></a></p></li>
+<li><p><a class="reference internal" href="function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b.html#exhale-function-debug-8hpp-1a27fe47130ea545d2352dfb27d897668b"><span class="std std-ref">Function terminal_width(void)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="define_debug_8hpp_1abedbae75207c3ed5a9d1d073fdef8a08.html#exhale-define-debug-8hpp-1abedbae75207c3ed5a9d1d073fdef8a08"><span class="std std-ref">Define _MY_PRETTY_FUNC_</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1ac72ed6ed9aa2135cd2cdf31117063ed9.html#exhale-define-debug-8hpp-1ac72ed6ed9aa2135cd2cdf31117063ed9"><span class="std std-ref">Define debug_exec</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438.html#exhale-define-debug-8hpp-1ab91fe1aeaaf05b854aff42c73ccb3438"><span class="std std-ref">Define debug_update</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1acb19c496d0cfaaf9613f43d6e12ce690.html#exhale-define-debug-8hpp-1acb19c496d0cfaaf9613f43d6e12ce690"><span class="std std-ref">Define debug_update_if</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec.html#exhale-define-debug-8hpp-1aa09a9df35a65cf0a46c6d1204def01ec"><span class="std std-ref">Define info_update</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917.html#exhale-define-debug-8hpp-1a9e12fe7b023bd30105df59b431e65917"><span class="std std-ref">Define info_update_if</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25.html#exhale-define-debug-8hpp-1a3d84193837bbe8f95c90badc9b071a25"><span class="std std-ref">Define verbose_update</span></a></p></li>
+<li><p><a class="reference internal" href="define_debug_8hpp_1aa6ef311a30404b1b6353981d9dc58428.html#exhale-define-debug-8hpp-1aa6ef311a30404b1b6353981d9dc58428"><span class="std std-ref">Define verbose_update_if</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="typedefs">
+<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="typedef_debug_8hpp_1aa3198ffc0e17fcb31cd7053642959228.html#exhale-typedef-debug-8hpp-1aa3198ffc0e17fcb31cd7053642959228"><span class="std std-ref">Typedef enable_if_t</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55.html#exhale-variable-debug-8hpp-1a5fddb49cb3a6df9709e0136524901b55"><span class="std std-ref">Variable _debug_printer</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

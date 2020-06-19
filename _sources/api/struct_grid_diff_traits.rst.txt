@@ -1,0 +1,16 @@
+.. _exhale_struct_struct_grid_diff_traits:
+
+Template Struct GridDiffTraits
+==============================
+
+- Defined in :ref:`file_src_grid.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: GridDiffTraits
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,25 @@
+.. _exhale_class_class_brillouin_zone_grid4:
+
+Template Class BrillouinZoneGrid4
+=================================
+
+- Defined in :ref:`file_src_bz_grid.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public InterpolateGrid4< T, S >`` (:ref:`exhale_class_class_interpolate_grid4`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: BrillouinZoneGrid4
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a10230aa3fcd48acb6a6257aa00fe360b:
+
+Template Function vector_product(const size_t, const std::complex<T> \*, const T \*)
+====================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: vector_product(const size_t, const std::complex<T> *, const T *)

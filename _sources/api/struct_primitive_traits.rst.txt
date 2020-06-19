@@ -1,0 +1,16 @@
+.. _exhale_struct_struct_primitive_traits:
+
+Struct PrimitiveTraits
+======================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: PrimitiveTraits
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a27ee7d469953ceda53e91124843622e1:
+
+Template Function equal_matrix
+==============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: equal_matrix(const T *, const T *, const T)

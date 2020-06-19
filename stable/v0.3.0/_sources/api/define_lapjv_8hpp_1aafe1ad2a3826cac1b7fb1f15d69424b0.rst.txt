@@ -1,0 +1,13 @@
+.. _exhale_define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0:
+
+Define find_umins
+=================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: find_umins

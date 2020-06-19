@@ -1,0 +1,16 @@
+.. _exhale_class_class_debug_printer:
+
+Class DebugPrinter
+==================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: DebugPrinter
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a817741e64f73a8841240a91dffdc1d85:
+
+Template Function vector_norm_squared
+=====================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: vector_norm_squared(const R *)

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a7e21ee24d04f29f003f4c24f1422c605:
+
+Template Function vector_distance(const size_t, const std::complex<T> \*, const std::complex<T> \*)
+===================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: vector_distance(const size_t, const std::complex<T> *, const std::complex<T> *)

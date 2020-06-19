@@ -1,0 +1,16 @@
+.. _exhale_struct_structAVSizeInfo:
+
+Struct AVSizeInfo
+=================
+
+- Defined in :ref:`file_src_arrayvector.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: AVSizeInfo
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a9b4d63f4de2652b90011a8de66bf03ae:
+
+Template Function vector_cross
+==============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: vector_cross(T *, const R *, const S *)

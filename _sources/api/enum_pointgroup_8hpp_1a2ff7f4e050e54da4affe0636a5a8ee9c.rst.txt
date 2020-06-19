@@ -1,0 +1,13 @@
+.. _exhale_enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c:
+
+Enum Laue
+=========
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: Laue

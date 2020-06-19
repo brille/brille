@@ -1,0 +1,16 @@
+.. _exhale_struct_structis__complex_3_01std_1_1complex_3_01_t_01_4_01_4:
+
+Template Struct is_complex< std::complex< T > >
+===============================================
+
+- Defined in :ref:`file_src_interpolation_data.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: is_complex< std::complex< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

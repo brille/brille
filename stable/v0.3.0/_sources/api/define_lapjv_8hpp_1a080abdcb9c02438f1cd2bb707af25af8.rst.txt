@@ -1,0 +1,13 @@
+.. _exhale_define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8:
+
+Define restrict
+===============
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: restrict

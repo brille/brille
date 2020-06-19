@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766:
+
+Template Function polyhedron_box
+================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: polyhedron_box(std::array<T, 3>&, std::array<T, 3>&)

@@ -1,0 +1,50 @@
+
+.. _file_src_debug.cpp:
+
+File debug.cpp
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\debug.cpp``)
+------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_debug.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``sys/ioctl.h``
+
+- ``unistd.h``
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49`
+
+- :ref:`exhale_function_debug_8cpp_1a27fe47130ea545d2352dfb27d897668b`
+

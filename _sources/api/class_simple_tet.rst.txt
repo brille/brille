@@ -1,0 +1,16 @@
+.. _exhale_class_class_simple_tet:
+
+Class SimpleTet
+===============
+
+- Defined in :ref:`file_src_triangulation_simple.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: SimpleTet
+   :members:
+   :protected-members:
+   :undoc-members:

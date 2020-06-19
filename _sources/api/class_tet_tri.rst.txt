@@ -1,0 +1,16 @@
+.. _exhale_class_class_tet_tri:
+
+Class TetTri
+============
+
+- Defined in :ref:`file_src_triangulation.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: TetTri
+   :members:
+   :protected-members:
+   :undoc-members:

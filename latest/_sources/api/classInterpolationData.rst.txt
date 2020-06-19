@@ -1,0 +1,16 @@
+.. _exhale_class_classInterpolationData:
+
+Template Class InterpolationData
+================================
+
+- Defined in :ref:`file_src_interpolation_data.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: InterpolationData
+   :members:
+   :protected-members:
+   :undoc-members:

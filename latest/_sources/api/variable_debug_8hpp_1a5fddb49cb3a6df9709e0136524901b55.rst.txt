@@ -1,0 +1,13 @@
+.. _exhale_variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55:
+
+Variable _debug_printer
+=======================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: _debug_printer

@@ -1,0 +1,25 @@
+.. _exhale_class_class_gamma_table:
+
+Class GammaTable
+================
+
+- Defined in :ref:`file_src_phonon.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public RotateTable`` (:ref:`exhale_class_class_rotate_table`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: GammaTable
+   :members:
+   :protected-members:
+   :undoc-members:

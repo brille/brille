@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a530b531c3559671f976d7f825f9212eb:
+
+Template Function mul_arrays(std::complex<T> \*, const size_t, const size_t, const size_t, const std::complex<R> \*, const S \*)
+================================================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: mul_arrays(std::complex<T> *, const size_t, const size_t, const size_t, const std::complex<R> *, const S *)

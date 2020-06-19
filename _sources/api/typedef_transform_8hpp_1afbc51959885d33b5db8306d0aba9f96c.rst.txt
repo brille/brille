@@ -1,0 +1,13 @@
+.. _exhale_typedef_transform_8hpp_1afbc51959885d33b5db8306d0aba9f96c:
+
+Typedef invPtype
+================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: invPtype

@@ -1,0 +1,26 @@
+.. _exhale_class_classLDVec:
+
+Template Class LDVec
+====================
+
+- Defined in :ref:`file_src_latvec.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Types
+**********
+
+- ``public LatVec`` (:ref:`exhale_class_classLatVec`)
+- ``public ArrayVector< T >`` (:ref:`exhale_class_classArrayVector`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: LDVec
+   :members:
+   :protected-members:
+   :undoc-members:

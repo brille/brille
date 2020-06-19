@@ -1,0 +1,13 @@
+.. _exhale_variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a:
+
+Variable identity
+=================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: identity

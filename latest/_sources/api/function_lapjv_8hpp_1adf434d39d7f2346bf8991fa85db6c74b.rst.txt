@@ -1,0 +1,13 @@
+.. _exhale_function_lapjv_8hpp_1adf434d39d7f2346bf8991fa85db6c74b:
+
+Template Function find_umins_plain
+==================================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: find_umins_plain(idx, idx, const cost *restrict, const cost *restrict)

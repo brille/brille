@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a3eaf60733e193da30316760d07ab1172:
+
+Template Function hermitian_product(const size_t, const T \*, const T \*)
+=========================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: hermitian_product(const size_t, const T *, const T *)

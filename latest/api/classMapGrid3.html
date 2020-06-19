@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class MapGrid3 &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class MapGrid4" href="classMapGrid4.html" />
+    <link rel="prev" title="Template Class LQVec" href="classLQVec.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class MapGrid3</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classMapGrid3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-mapgrid3">
+<span id="exhale-class-classmapgrid3"></span><h1>Template Class MapGrid3<a class="headerlink" href="#template-class-mapgrid3" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_grid.hpp.html#file-src-grid-hpp"><span class="std std-ref">File grid.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">InterpolateGrid3&lt;</span> <span class="pre">T,</span> <span class="pre">R</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classInterpolateGrid3.html#exhale-class-classinterpolategrid3"><span class="std std-ref">Template Class InterpolateGrid3</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E8MapGrid3">
+<span id="_CPPv3I00E8MapGrid3"></span><span id="_CPPv2I00E8MapGrid3"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classMapGrid3"></span><em class="property">class </em><code class="sig-name descname">MapGrid3</code><a class="headerlink" href="#_CPPv4I00E8MapGrid3" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A class holding a 3D grid which maps into an internal <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a>. </p>
+<p>The <a class="reference internal" href="#classMapGrid3"><span class="std std-ref">MapGrid3</span></a> holds a mapping grid where each entry is either a valid index into a held <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> or is <code class="docutils literal notranslate"><span class="pre">-1</span></code> to indicate that the grid point does not map. </p>
+<p>Subclassed by <a class="reference internal" href="classInterpolateGrid3.html#classInterpolateGrid3"><span class="std std-ref">InterpolateGrid3&lt; T, R &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid38MapGrid3EPK6size_t">
+<span id="_CPPv3N8MapGrid38MapGrid3EPK6size_t"></span><span id="_CPPv2N8MapGrid38MapGrid3EPK6size_t"></span><span id="MapGrid3::MapGrid3__sCP"></span><span class="target" id="classMapGrid3_1aaa05090a12214b743f3985c7a9bb39c5"></span><code class="sig-name descname">MapGrid3</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em> = <a class="reference internal" href="variable_grid_8hpp_1a04ab2fc397bc6ff666f3bfb1208a4a73.html#_CPPv49default_n" title="default_n">default_n</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid38MapGrid3EPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid38MapGrid3ERK8MapGrid3I1T1RE">
+<span id="_CPPv3N8MapGrid38MapGrid3ERK8MapGrid3I1T1RE"></span><span id="_CPPv2N8MapGrid38MapGrid3ERK8MapGrid3I1T1RE"></span><span id="MapGrid3::MapGrid3__MapGrid3:T.R:CR"></span><span class="target" id="classMapGrid3_1a45f6a262485c71c2b3d6d93219483acf"></span><code class="sig-name descname">MapGrid3</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N8MapGrid38MapGrid3ERK8MapGrid3I1T1RE" title="MapGrid3::MapGrid3">MapGrid3</a>&lt;<a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid38MapGrid3ERK8MapGrid3I1T1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid3D0Ev">
+<span id="_CPPv3N8MapGrid3D0Ev"></span><span id="_CPPv2N8MapGrid3D0Ev"></span><span id="MapGrid3::~MapGrid3"></span><span class="target" id="classMapGrid3_1a58f0bd669245cce1cd8f0bb001214aed"></span><code class="sig-name descname">~MapGrid3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid3D0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid3aSERK8MapGrid3I1T1RE">
+<span id="_CPPv3N8MapGrid3aSERK8MapGrid3I1T1RE"></span><span id="_CPPv2N8MapGrid3aSERK8MapGrid3I1T1RE"></span><span id="MapGrid3::assign-operator__MapGrid3:T.R:CR"></span><span class="target" id="classMapGrid3_1aa2ed096a1b084fbabde2a5e261c3ce97"></span><a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3">MapGrid3</a>&lt;<a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::R">R</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3">MapGrid3</a>&lt;<a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid3aSERK8MapGrid3I1T1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37print_NEKb">
+<span id="_CPPv3NK8MapGrid37print_NEKb"></span><span id="_CPPv2NK8MapGrid37print_NEKb"></span><span id="MapGrid3::print_N__bCC"></span><span class="target" id="classMapGrid3_1ab3ed109c4ba4902196fc050d6b9f9a4e"></span>void <code class="sig-name descname">print_N</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>nl</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37print_NEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the number of points along each axis to the console. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid310print_spanEKb">
+<span id="_CPPv3NK8MapGrid310print_spanEKb"></span><span id="_CPPv2NK8MapGrid310print_spanEKb"></span><span id="MapGrid3::print_span__bCC"></span><span class="target" id="classMapGrid3_1af85a0e76c8800870410a36e3cf44e39f"></span>void <code class="sig-name descname">print_span</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>nl</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid310print_spanEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the span along each axis to the console. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid39print_mapEv">
+<span id="_CPPv3NK8MapGrid39print_mapEv"></span><span id="_CPPv2NK8MapGrid39print_mapEv"></span><span id="MapGrid3::print_map__voidC"></span><span class="target" id="classMapGrid3_1a2f1e22969a286d9750faf9cb454b21ae"></span>void <code class="sig-name descname">print_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid39print_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the whole map to the console as stacked slices in the first two dimensions. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid37set_mapEv">
+<span id="_CPPv3N8MapGrid37set_mapEv"></span><span id="_CPPv2N8MapGrid37set_mapEv"></span><span id="MapGrid3::set_map__void"></span><span class="target" id="classMapGrid3_1ab4d7230a8c8dad02c23f81157acd73c3"></span>int <code class="sig-name descname">set_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid37set_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the mapping index of each grid point to its linear index. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid37set_mapEPK5slongPK6size_tK6size_t">
+<span id="_CPPv3N8MapGrid37set_mapEPK5slongPK6size_tK6size_t"></span><span id="_CPPv2N8MapGrid37set_mapEPK5slongPK6size_tK6size_t"></span><span id="MapGrid3::set_map__slongCP.sCP.sC"></span><span class="target" id="classMapGrid3_1ae91f0465784a2e1be0862b1ef4aeb9b9"></span>int <code class="sig-name descname">set_map</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em>, <em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> size_t <em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid37set_mapEPK5slongPK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-in a mapping grid <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inmap</span></code>: The existant mapping grid to copy into the object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code>: The number of points along each axis in <code class="docutils literal notranslate"><span class="pre">inmap</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d</span></code>: The number of dimensions in <code class="docutils literal notranslate"><span class="pre">n</span></code> and <code class="docutils literal notranslate"><span class="pre">inmap</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid314unsafe_set_mapEP5slong">
+<span id="_CPPv3N8MapGrid314unsafe_set_mapEP5slong"></span><span id="_CPPv2N8MapGrid314unsafe_set_mapEP5slong"></span><span id="MapGrid3::unsafe_set_map__slongP"></span><span class="target" id="classMapGrid3_1a3c1bc4646957c43b477743e923bb618f"></span>int <code class="sig-name descname">unsafe_set_map</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid314unsafe_set_mapEP5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-in a mapping grid without checking that it is the right size. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid314unsafe_get_mapEP5slong">
+<span id="_CPPv3NK8MapGrid314unsafe_get_mapEP5slong"></span><span id="_CPPv2NK8MapGrid314unsafe_get_mapEP5slong"></span><span id="MapGrid3::unsafe_get_map__slongPC"></span><span class="target" id="classMapGrid3_1ad5d4e9f47f9fb1a061c656ece8cc3a0a"></span>size_t <code class="sig-name descname">unsafe_get_map</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>outmap</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid314unsafe_get_mapEP5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy-out the mapping grid without verifying that the storage location can hold it. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid315maximum_mappingEPK5slongK6size_t">
+<span id="_CPPv3NK8MapGrid315maximum_mappingEPK5slongK6size_t"></span><span id="_CPPv2NK8MapGrid315maximum_mappingEPK5slongK6size_t"></span><span id="MapGrid3::maximum_mapping__slongCP.sCC"></span><span class="target" id="classMapGrid3_1a978dff0b77ab4a9d7518a25b060c92c9"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>map2check</em>, <em class="property">const</em> size_t <em>num2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid315maximum_mappingEPK5slongK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of a map <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">map2check</span></code>: The mapping array to search through </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num2check</span></code>: The number of entries in the mapping index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid315maximum_mappingEPK5slong">
+<span id="_CPPv3NK8MapGrid315maximum_mappingEPK5slong"></span><span id="_CPPv2NK8MapGrid315maximum_mappingEPK5slong"></span><span id="MapGrid3::maximum_mapping__slongCPC"></span><span class="target" id="classMapGrid3_1ae8e571cdfbced91ebac1ae79bee1ae9d"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>map2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid315maximum_mappingEPK5slong" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of a map, assuming the size of <code class="docutils literal notranslate"><span class="pre">map2check</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">map</span></code> <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">map2check</span></code>: The mapping array to search through </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid315maximum_mappingEv">
+<span id="_CPPv3NK8MapGrid315maximum_mappingEv"></span><span id="_CPPv2NK8MapGrid315maximum_mappingEv"></span><span id="MapGrid3::maximum_mapping__voidC"></span><span class="target" id="classMapGrid3_1a080a7553c6706d142dee63c50502a7dc"></span>size_t <code class="sig-name descname">maximum_mapping</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid315maximum_mappingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the maximum mapping index of <code class="docutils literal notranslate"><span class="pre">map</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid319valid_mapping_countEv">
+<span id="_CPPv3NK8MapGrid319valid_mapping_countEv"></span><span id="_CPPv2NK8MapGrid319valid_mapping_countEv"></span><span id="MapGrid3::valid_mapping_count__voidC"></span><span class="target" id="classMapGrid3_1a90c83a0de690eb1c92e1d84dafb149d9"></span>size_t <code class="sig-name descname">valid_mapping_count</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid319valid_mapping_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of valid mappings within <code class="docutils literal notranslate"><span class="pre">map</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK8MapGrid39check_mapEiRK17InterpolationDataI1A1BE">
+<span id="_CPPv3I00ENK8MapGrid39check_mapERK17InterpolationDataI1A1BE"></span><span id="_CPPv2I00ENK8MapGrid39check_mapERK17InterpolationDataI1A1BE"></span>template&lt;class <code class="sig-name descname">A</code>, class <code class="sig-name descname">B</code>&gt;<br /><span class="target" id="classMapGrid3_1a531aa697abd0d9643fd7538a449858ac"></span>int <code class="sig-name descname">check_map</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classInterpolationData.html#_CPPv4I00E17InterpolationData" title="InterpolationData">InterpolationData</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK8MapGrid39check_mapEiRK17InterpolationDataI1A1BE" title="MapGrid3::check_map::A">A</a>, <a class="reference internal" href="#_CPPv4I00ENK8MapGrid39check_mapEiRK17InterpolationDataI1A1BE" title="MapGrid3::check_map::B">B</a>&gt; &amp;<em>data2check</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK8MapGrid39check_mapEiRK17InterpolationDataI1A1BE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if the interal mapping is consistent with an <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data2check</span></code>: Will be compared against the maximum mapping in <code class="docutils literal notranslate"><span class="pre">map</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid39check_mapEv">
+<span id="_CPPv3NK8MapGrid39check_mapEv"></span><span id="_CPPv2NK8MapGrid39check_mapEv"></span><span id="MapGrid3::check_map__voidC"></span><span class="target" id="classMapGrid3_1acf646d6b8a21812883ca660ce0de0261"></span>int <code class="sig-name descname">check_map</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid39check_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if <code class="docutils literal notranslate"><span class="pre">map</span></code> is consistent with <code class="docutils literal notranslate"><span class="pre">data</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8MapGrid318replace_value_dataEiDp1A">
+<span id="_CPPv3IDpEN8MapGrid318replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN8MapGrid318replace_value_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classMapGrid3_1a864fa1785258cdd6a33482c1ae01de40"></span>int <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8MapGrid318replace_value_dataEiDp1A" title="MapGrid3::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8MapGrid318replace_value_dataEiDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Replace the data stored in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8MapGrid319replace_vector_dataEiDp1A">
+<span id="_CPPv3IDpEN8MapGrid319replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN8MapGrid319replace_vector_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classMapGrid3_1a970dd6f0706081a449ea613aff72a74e"></span>int <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8MapGrid319replace_vector_dataEiDp1A" title="MapGrid3::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8MapGrid319replace_vector_dataEiDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37sub2linEK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid37sub2linEK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid37sub2linEK6size_tK6size_tK6size_t"></span><span id="MapGrid3::sub2lin__sC.sC.sCC"></span><span class="target" id="classMapGrid3_1a71a4693917a73d0cda5fc39359abfc26"></span>size_t <code class="sig-name descname">sub2lin</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37sub2linEK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the linear index of a point given its three subscripted indices. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37sub2linEPK6size_tP6size_t">
+<span id="_CPPv3NK8MapGrid37sub2linEPK6size_tP6size_t"></span><span id="_CPPv2NK8MapGrid37sub2linEPK6size_tP6size_t"></span><span id="MapGrid3::sub2lin__sCP.sPC"></span><span class="target" id="classMapGrid3_1aff888d1ce29b1e7dff8966c9b62f9e7f"></span>int <code class="sig-name descname">sub2lin</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em>, size_t *<em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37sub2linEPK6size_tP6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the linear index of a point given an array of its three subscripted indices <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if successful, 1 if unsuccessful </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: the subscripted index to convert </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">l</span></code>: the calculated linear index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37lin2subEK6size_tP6size_t">
+<span id="_CPPv3NK8MapGrid37lin2subEK6size_tP6size_t"></span><span id="_CPPv2NK8MapGrid37lin2subEK6size_tP6size_t"></span><span id="MapGrid3::lin2sub__sC.sPC"></span><span class="target" id="classMapGrid3_1a192620a3a52210f499ff2e22c127a928"></span>int <code class="sig-name descname">lin2sub</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em>, size_t *<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37lin2subEK6size_tP6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the subscripted indices of a point given its linear index <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if successful, 1 if unsuccessful. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: the linear index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">s</span></code>: a pointer to store the subscripted index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37sub2mapEPK6size_tR6size_t">
+<span id="_CPPv3NK8MapGrid37sub2mapEPK6size_tR6size_t"></span><span id="_CPPv2NK8MapGrid37sub2mapEPK6size_tR6size_t"></span><span id="MapGrid3::sub2map__sCP.sRC"></span><span class="target" id="classMapGrid3_1a209e63199859aacaaba1f95a0fd99367"></span>int <code class="sig-name descname">sub2map</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em>, size_t &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37sub2mapEPK6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the mapping of a point given an array of its three subscripted indices <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if successful, 1 if <code class="docutils literal notranslate"><span class="pre">s</span></code> is not a valid subscripted index, -1 if <code class="docutils literal notranslate"><span class="pre">s</span></code> is not a valid mapping index </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: the subscripted index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">m</span></code>: the mapped index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37sub2mapEPK6size_t">
+<span id="_CPPv3NK8MapGrid37sub2mapEPK6size_t"></span><span id="_CPPv2NK8MapGrid37sub2mapEPK6size_t"></span><span id="MapGrid3::sub2map__sCPC"></span><span class="target" id="classMapGrid3_1acb67ce7c44ad3a50b229593b1a53ccf8"></span>size_t <code class="sig-name descname">sub2map</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37sub2mapEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the mapping of a point given an array of its three subscripted indices <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the valid mapping index or one more than the maximum mapping if s is invalid. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: the subscripted indices </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37lin2mapEK6size_tR6size_t">
+<span id="_CPPv3NK8MapGrid37lin2mapEK6size_tR6size_t"></span><span id="_CPPv2NK8MapGrid37lin2mapEK6size_tR6size_t"></span><span id="MapGrid3::lin2map__sC.sRC"></span><span class="target" id="classMapGrid3_1ad3ccc0edfd39cf6056ba2003f836d6d1"></span>int <code class="sig-name descname">lin2map</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em>, size_t &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37lin2mapEK6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the mapping of a point given its linear index <p>Find the mapping of a point given its linear index </p>
+<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if successful, 1 if <code class="docutils literal notranslate"><span class="pre">l</span></code> is not a valid linear index, -1 if <code class="docutils literal notranslate"><span class="pre">l</span></code> is not a valid mapping index</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>0 if successful, 1 if <code class="docutils literal notranslate"><span class="pre">l</span></code> is not a valid linear index, -1 if <code class="docutils literal notranslate"><span class="pre">l</span></code> is not a valid mapping index </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: the linear index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">m</span></code>: a pointer to store the mapping index at </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: the linear index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">m</span></code>: a reference to store the mapping index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid37map2linEK6size_tR6size_t">
+<span id="_CPPv3NK8MapGrid37map2linEK6size_tR6size_t"></span><span id="_CPPv2NK8MapGrid37map2linEK6size_tR6size_t"></span><span id="MapGrid3::map2lin__sC.sRC"></span><span class="target" id="classMapGrid3_1a51859d99e97f4c2a7d95b17eafcff86f"></span>int <code class="sig-name descname">map2lin</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>m</em>, size_t &amp;<em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid37map2linEK6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the linear index of a point given its mapping, by searching through the mapping array  this is almost certainly highly ineficcient and should be avoided. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>0 if <code class="docutils literal notranslate"><span class="pre">l</span></code> was found successfully, 1 if <code class="docutils literal notranslate"><span class="pre">m</span></code> is not a valid mapping -1 if <code class="docutils literal notranslate"><span class="pre">m</span></code> is valid by <code class="docutils literal notranslate"><span class="pre">l</span></code> was not found. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code>: the mapping index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">l</span></code>: a reference to store the linear index </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid35numelEv">
+<span id="_CPPv3NK8MapGrid35numelEv"></span><span id="_CPPv2NK8MapGrid35numelEv"></span><span id="MapGrid3::numel__voidC"></span><span class="target" id="classMapGrid3_1a2d99f88e588bf9837e58e744a94a0770"></span>size_t <code class="sig-name descname">numel</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid35numelEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the total number of elements in the mapping grid. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid34sizeEK6size_t">
+<span id="_CPPv3NK8MapGrid34sizeEK6size_t"></span><span id="_CPPv2NK8MapGrid34sizeEK6size_t"></span><span id="MapGrid3::size__sCC"></span><span class="target" id="classMapGrid3_1a00a9816c2dad8ec2e79927d04c2b225b"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid34sizeEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of elements in the mapping grid along a given dimension. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid36strideEK6size_t">
+<span id="_CPPv3NK8MapGrid36strideEK6size_t"></span><span id="_CPPv2NK8MapGrid36strideEK6size_t"></span><span id="MapGrid3::stride__sCC"></span><span class="target" id="classMapGrid3_1a525fe083416a7aeb1fcebc4cbbc30aae"></span>size_t <code class="sig-name descname">stride</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid36strideEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the stride (in bytes) necessary to move between neighbouring points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid36resizeEK6size_tK6size_tK6size_t">
+<span id="_CPPv3N8MapGrid36resizeEK6size_tK6size_tK6size_t"></span><span id="_CPPv2N8MapGrid36resizeEK6size_tK6size_tK6size_t"></span><span id="MapGrid3::resize__sC.sC.sC"></span><span class="target" id="classMapGrid3_1a5ec3c45c41af127c1a9941aa905e8a0c"></span>size_t <code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>n0</em>, <em class="property">const</em> size_t <em>n1</em>, <em class="property">const</em> size_t <em>n2</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid36resizeEK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Change the size of the mapping grid given three new sizes. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid36resizeEPK6size_t">
+<span id="_CPPv3N8MapGrid36resizeEPK6size_t"></span><span id="_CPPv2N8MapGrid36resizeEPK6size_t"></span><span id="MapGrid3::resize__sCP"></span><span class="target" id="classMapGrid3_1ad19009a9a5677053c7bb04bcabf3c2b1"></span>size_t <code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid36resizeEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Change the size of the mapping grid given an array of the new sizes. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid34dataEv">
+<span id="_CPPv3NK8MapGrid34dataEv"></span><span id="_CPPv2NK8MapGrid34dataEv"></span><span id="MapGrid3::data__voidC"></span><span class="target" id="classMapGrid3_1aa951d7719299b719b9a76be07c5fb3de"></span><em class="property">const</em> <a class="reference internal" href="classInterpolationData.html#_CPPv4I00E17InterpolationData" title="InterpolationData">InterpolationData</a>&lt;<a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::R">R</a>&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid34dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid35get_NEv">
+<span id="_CPPv3NK8MapGrid35get_NEv"></span><span id="_CPPv2NK8MapGrid35get_NEv"></span><span id="MapGrid3::get_N__voidC"></span><span class="target" id="classMapGrid3_1a377d40fcdfd642d7549e9207d52c2e63"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; <code class="sig-name descname">get_N</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid35get_NEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the three sizes of the mapping grid as an <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid314get_neighboursEK6size_t">
+<span id="_CPPv3NK8MapGrid314get_neighboursEK6size_t"></span><span id="_CPPv2NK8MapGrid314get_neighboursEK6size_t"></span><span id="MapGrid3::get_neighbours__sCC"></span><span class="target" id="classMapGrid3_1a20458926fd03a03281c5e5e037892f44"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; <code class="sig-name descname">get_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>centre</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid314get_neighboursEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the neighbouring grid points of a given grid linear index <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>Up to 26 neighbouring linear indices, skipping points that are out of the grid or do not represent a valid mapping. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">centre</span></code>: The linear index to a point in the mapping grid </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid322find_sorted_neighboursERKNSt6vectorIbEEK6size_t">
+<span id="_CPPv3NK8MapGrid322find_sorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="_CPPv2NK8MapGrid322find_sorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="MapGrid3::find_sorted_neighbours__std::vector:b:CR.sCC"></span><span class="target" id="classMapGrid3_1a344ac32cf5525a3f2b57a6e686a2bf7a"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">find_sorted_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>clin</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid322find_sorted_neighboursERKNSt6vectorIbEEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine which neighbours have been sorted and, of those, which can be used in partial-derivative sorting. </p>
+<p>Given the linear index of a grid point which is itself a valid mapped point, first find all valid mapped neighbouring points. For each of the valid mapped neighbouring points identify if there is a second mapped point along the same direction which can be used for partial-derivative sorting. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector which (a) is empty, in which case no sorted neighbours exist, (b) has a single map index of a sorted neighbour, in which case no sorted neighbours could be used in partial-derivative sorting (c) has two map indexes: a sorted neighbour <em>and</em> a second sorted point suitable for partial-derivative sorting, in that order. In the case of (b) or (c) there may be additional sorted neighbours. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">map</span></code>: The <a class="reference internal" href="#classMapGrid3"><span class="std std-ref">MapGrid3</span></a> object containing data undergoing sorting. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sorted</span></code>: A logical vector indicating which mapped points have been sorted </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clin</span></code>: The linear index for the central valid-mapped-point. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid324find_unsorted_neighboursERKNSt6vectorIbEEK6size_t">
+<span id="_CPPv3NK8MapGrid324find_unsorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="_CPPv2NK8MapGrid324find_unsorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="MapGrid3::find_unsorted_neighbours__std::vector:b:CR.sCC"></span><span class="target" id="classMapGrid3_1a2ddcdc1c62e555f6685a1b2052d57ae4"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">find_unsorted_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>centre_map_idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid324find_unsorted_neighboursERKNSt6vectorIbEEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid315sort_differenceEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi">
+<span id="_CPPv3I0ENK8MapGrid315sort_differenceEK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi"></span><span id="_CPPv2I0ENK8MapGrid315sort_differenceEK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1a5e7e5ae8ce016914306632bdf7d499d7"></span>bool <code class="sig-name descname">sort_difference</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_differenceEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="MapGrid3::sort_difference::S">S</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_differenceEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="MapGrid3::sort_difference::S">S</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_differenceEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="MapGrid3::sort_difference::S">S</a>, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt;&amp;, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <em class="property">const</em> int <em>vcf</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid315sort_differenceEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assign the elements at one point to the elements at a second point, storing the permutation array. </p>
+<p>When sorting the data stored in a grid, it is necessary to make a sorting assignment based soley on the difference in values at two points if a partial derivative can not be calculated. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleS</span></code>: weight factor for scalar cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleE</span></code>: weight factor for eigenvector cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleV</span></code>: weight factor for vector cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleM</span></code>: weight factor for matrix cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">span</span></code>: the span of the elements of one object, nS*nV*nM*nM </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nobj</span></code>: the number of object per grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">perm</span></code>: the permutation per grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cidx</span></code>: the index of the central grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nidx</span></code>: the index of the neighbouring grid point, which has been sorted </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ecf</span></code>: which eigenvector cost function to use. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcf</span></code>: which vector cost function to use. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid315sort_derivativeEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi">
+<span id="_CPPv3I0ENK8MapGrid315sort_derivativeEK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi"></span><span id="_CPPv2I0ENK8MapGrid315sort_derivativeEK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1add2f7a5ad8b9ea71b12bc17905b68de6"></span>bool <code class="sig-name descname">sort_derivative</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_derivativeEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi" title="MapGrid3::sort_derivative::S">S</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_derivativeEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi" title="MapGrid3::sort_derivative::S">S</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315sort_derivativeEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi" title="MapGrid3::sort_derivative::S">S</a>, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt;&amp;, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <em class="property">const</em> size_t, <em class="property">const</em> int <em>vcf</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid315sort_derivativeEbK1SK1SK1SK6size_tK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tK6size_tKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use the sorted elements at two neighbouring grid points to determine the sorting permutation of the elements at a third neighbouring grid point using a finite differences approximation to the derivative. </p>
+<p>Given two grid points which have been sorted and lie along a line one and two steps away, respectively, from a to-be-sorted central grid point, estimate the values of each sorted element at the central point and use the estimate to determine an assignment permutation for the central grid point.</p>
+<p>In general one can predict the value of a function at x if its value and slope are known at a point x₀ to by y₀ and m, respectively, by <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>y = m (x-x₀) + y₀
+</pre></div>
+</div>
+</p>
+<p>The slope is the first derivative of the function and can be approximated by the difference in the value of the function at two points <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>y = [(y₀-y₁)/(x₀-x₁)](x-x₀) + y₀
+</pre></div>
+</div>
+</p>
+<p>If the difference between x₀ and x₁ is the same as the difference between x and x₀, as it is in our gridded system, then this simplifies to <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>y = 2y₀ - y₁
+</pre></div>
+</div>
+</p>
+<p>where y₀ is the value at the neighbouring point and y₁ is the value at the next neighbouring point.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleS</span></code>: weight factor for scalar cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleE</span></code>: weight factor for eigenvector cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleV</span></code>: weight factor for vector cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleM</span></code>: weight factor for matrix cost </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">span</span></code>: the span of the elements of one object, nS*nV*nM*nM </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nobj</span></code>: the number of object per grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">perm</span></code>: the permutation per grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cidx</span></code>: the index of the central grid point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nidx</span></code>: the index of the neighbouring grid point, which has been sorted </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nnidx</span></code>: the index of the next neighbouring grid point, which has also been sorted </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ecf</span></code>: which eigenvector cost function to use. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcf</span></code>: which vector cost function to use. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid314sort_recursionE6size_tK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE">
+<span id="_CPPv3I0ENK8MapGrid314sort_recursionEK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE"></span><span id="_CPPv2I0ENK8MapGrid314sort_recursionEK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1ad4d8ce5f9dc5007ced658f74086744d5"></span>size_t <code class="sig-name descname">sort_recursion</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>centre</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid314sort_recursionE6size_tK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE" title="MapGrid3::sort_recursion::S">S</a> <em>wS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid314sort_recursionE6size_tK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE" title="MapGrid3::sort_recursion::S">S</a> <em>wV</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid314sort_recursionE6size_tK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE" title="MapGrid3::sort_recursion::S">S</a> <em>wM</em>, <em class="property">const</em> int <em>vcf</em>, <em class="property">const</em> size_t <em>valspan</em>, <em class="property">const</em> size_t <em>vecspan</em>, <em class="property">const</em> size_t <em>nobj</em>, <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, std::vector&lt;bool&gt; &amp;<em>locked</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid314sort_recursionE6size_tK6size_tK1SK1SK1SKiK6size_tK6size_tK6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi">
+<span id="_CPPv3I0ENK8MapGrid316centre_sort_permEK1SK1SK1SKi"></span><span id="_CPPv2I0ENK8MapGrid316centre_sort_permEK1SK1SK1SKi"></span>template&lt;typename <code class="sig-name descname">S</code> = double&gt;<br /><span class="target" id="classMapGrid3_1af300492391ff3397eb7310a45ad82f99"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; <code class="sig-name descname">centre_sort_perm</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a> <em>scalar_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a> <em>vector_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a> <em>matrix_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::centre_sort_perm::S">S</a>(1), <em class="property">const</em> int <em>vcf</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid316centre_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid319classify_neighboursERKNSt6vectorIbEEK6size_t">
+<span id="_CPPv3NK8MapGrid319classify_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="_CPPv2NK8MapGrid319classify_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="MapGrid3::classify_neighbours__std::vector:b:CR.sCC"></span><span class="target" id="classMapGrid3_1a8a8c322800d500cd40411dd836035d62"></span>std::tuple&lt;std::vector&lt;size_t&gt;, std::vector&lt;size_t&gt;, std::vector&lt;size_t&gt;&gt; <code class="sig-name descname">classify_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>centre_map_idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid319classify_neighboursERKNSt6vectorIbEEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid326classify_sorted_neighboursERKNSt6vectorIbEEK6size_t">
+<span id="_CPPv3NK8MapGrid326classify_sorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="_CPPv2NK8MapGrid326classify_sorted_neighboursERKNSt6vectorIbEEK6size_t"></span><span id="MapGrid3::classify_sorted_neighbours__std::vector:b:CR.sCC"></span><span class="target" id="classMapGrid3_1a9a0eb95785c21bdf49d14ddae1eb40f1"></span>std::tuple&lt;std::vector&lt;size_t&gt;, std::vector&lt;size_t&gt;&gt; <code class="sig-name descname">classify_sorted_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>centre_map_idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid326classify_sorted_neighboursERKNSt6vectorIbEEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid321multi_sort_derivativeEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEEK6size_t">
+<span id="_CPPv3I0ENK8MapGrid321multi_sort_derivativeEAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEEK6size_t"></span><span id="_CPPv2I0ENK8MapGrid321multi_sort_derivativeEA3_K1SKiA2_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEEK6size_t"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1a9c320859c23bbb4ab6d6ed22a36cc81c"></span>bool <code class="sig-name descname">multi_sort_derivative</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid321multi_sort_derivativeEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEEK6size_t" title="MapGrid3::multi_sort_derivative::S">S</a> <em>scales</em>[3], <em class="property">const</em> int <em>func</em>, <em class="property">const</em> size_t <em>spobj</em>[2], <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>cidx</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>nidx</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>nnidx</em>, <em class="property">const</em> size_t <em>no_pairs</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid321multi_sort_derivativeEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid325multi_sort_derivative_allEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK8MapGrid325multi_sort_derivative_allEAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK8MapGrid325multi_sort_derivative_allEA3_K1SKiA2_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1a92363aab1e75bd7b50a549a4757d4290"></span>bool <code class="sig-name descname">multi_sort_derivative_all</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid325multi_sort_derivative_allEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEE" title="MapGrid3::multi_sort_derivative_all::S">S</a> <em>scales</em>[3], <em class="property">const</em> int <em>func</em>, <em class="property">const</em> size_t <em>spobj</em>[2], <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>cidx</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>nidx</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>nnidx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid325multi_sort_derivative_allEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEEKNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid321multi_sort_differenceEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK8MapGrid321multi_sort_differenceEAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK8MapGrid321multi_sort_differenceEA3_K1SKiA2_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1a1e143392acab7a28225e14d226152d4c"></span>bool <code class="sig-name descname">multi_sort_difference</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid321multi_sort_differenceEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE" title="MapGrid3::multi_sort_difference::S">S</a> <em>weights</em>[3], <em class="property">const</em> int <em>func</em>, <em class="property">const</em> size_t <em>spobj</em>[2], <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, <em class="property">const</em> size_t <em>cidx</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>nidx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid321multi_sort_differenceEbAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid320multi_sort_recursionE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK8MapGrid320multi_sort_recursionEK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK8MapGrid320multi_sort_recursionEK6size_tA3_K1SKiA2_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1afbdcbd5bffe3d3cc30abec5735c2594f"></span>size_t <code class="sig-name descname">multi_sort_recursion</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>centre</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid320multi_sort_recursionE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="MapGrid3::multi_sort_recursion::S">S</a> <em>weights</em>[3], <em class="property">const</em> int <em>func</em>, <em class="property">const</em> size_t <em>spobj</em>[2], <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, std::vector&lt;bool&gt; &amp;<em>locked</em>, std::vector&lt;size_t&gt; &amp;<em>visited</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid320multi_sort_recursionE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid310multi_sortE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK8MapGrid310multi_sortEK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK8MapGrid310multi_sortEK6size_tA3_K1SKiA2_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMapGrid3_1ad9bcb12a5a43cca3c3ba32510f44629f"></span>size_t <code class="sig-name descname">multi_sort</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>centre</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid310multi_sortE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="MapGrid3::multi_sort::S">S</a> <em>weights</em>[3], <em class="property">const</em> int <em>func</em>, <em class="property">const</em> size_t <em>spobj</em>[2], <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>perm</em>, std::vector&lt;bool&gt; &amp;<em>sorted</em>, std::vector&lt;bool&gt; &amp;<em>locked</em>, std::vector&lt;size_t&gt; &amp;<em>visited</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid310multi_sortE6size_tK6size_tAL3E_K1SKiAL2E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi">
+<span id="_CPPv3I0ENK8MapGrid315multi_sort_permEK1SK1SK1SKi"></span><span id="_CPPv2I0ENK8MapGrid315multi_sort_permEK1SK1SK1SKi"></span>template&lt;typename <code class="sig-name descname">S</code> = double&gt;<br /><span class="target" id="classMapGrid3_1a049b56f2ade90b8c104f3c2680b4408f"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; <code class="sig-name descname">multi_sort_perm</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a> <em>scalar_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a> <em>vector_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a> <em>matrix_weight</em> = <a class="reference internal" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="MapGrid3::multi_sort_perm::S">S</a>(1), <em class="property">const</em> int <em>vcf</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK8MapGrid315multi_sort_permE11ArrayVectorI6size_tEK1SK1SK1SKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK8MapGrid312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd">
+<span id="_CPPv3II0E0ENK8MapGrid312debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span id="_CPPv2II0E0ENK8MapGrid312debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classMapGrid3_1aeedf4642127fe25252bf82833c071dee"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">debye_waller</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0ENK8MapGrid312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="MapGrid3::debye_waller::A">A</a>&lt;double&gt; &amp;<em>Q</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>M</em>, <em class="property">const</em> double <em>t_K</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK8MapGrid312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid38set_sizeEPK6size_t">
+<span id="_CPPv3N8MapGrid38set_sizeEPK6size_t"></span><span id="_CPPv2N8MapGrid38set_sizeEPK6size_t"></span><span id="MapGrid3::set_size__sCP"></span><span class="target" id="classMapGrid3_1aec472ae9ff4f7e29d387b657835195aa"></span>void <code class="sig-name descname">set_size</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid38set_sizeEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid39calc_spanEv">
+<span id="_CPPv3N8MapGrid39calc_spanEv"></span><span id="_CPPv2N8MapGrid39calc_spanEv"></span><span id="MapGrid3::calc_span"></span><span class="target" id="classMapGrid3_1aa754fb710078471992c1477c77f42d63"></span>void <code class="sig-name descname">calc_span</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid39calc_spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8MapGrid315instantiate_mapEv">
+<span id="_CPPv3N8MapGrid315instantiate_mapEv"></span><span id="_CPPv2N8MapGrid315instantiate_mapEv"></span><span id="MapGrid3::instantiate_map"></span><span class="target" id="classMapGrid3_1abe6cf6bdff3b6ab8fdcd7fb758df08ee"></span>void <code class="sig-name descname">instantiate_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8MapGrid315instantiate_mapEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid313valid_mappingEK6size_t">
+<span id="_CPPv3NK8MapGrid313valid_mappingEK6size_t"></span><span id="_CPPv2NK8MapGrid313valid_mappingEK6size_t"></span><span id="MapGrid3::valid_mapping__sCC"></span><span class="target" id="classMapGrid3_1a996c9386293e0dd1f70a415742829a16"></span>bool <code class="sig-name descname">valid_mapping</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid313valid_mappingEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid313valid_mappingEK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid313valid_mappingEK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid313valid_mappingEK6size_tK6size_tK6size_t"></span><span id="MapGrid3::valid_mapping__sC.sC.sCC"></span><span class="target" id="classMapGrid3_1a6694ff4004df2a44ba26ad57a452866c"></span>bool <code class="sig-name descname">valid_mapping</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid313valid_mappingEK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid311is_inboundsEK6size_tK6size_tK6size_t">
+<span id="_CPPv3NK8MapGrid311is_inboundsEK6size_tK6size_tK6size_t"></span><span id="_CPPv2NK8MapGrid311is_inboundsEK6size_tK6size_tK6size_t"></span><span id="MapGrid3::is_inbounds__sC.sC.sCC"></span><span class="target" id="classMapGrid3_1a5652fe49a469c07875fde491dd36d909"></span>bool <code class="sig-name descname">is_inbounds</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em>, <em class="property">const</em> size_t <em>k</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid311is_inboundsEK6size_tK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8MapGrid311is_inboundsEPK6size_t">
+<span id="_CPPv3NK8MapGrid311is_inboundsEPK6size_t"></span><span id="_CPPv2NK8MapGrid311is_inboundsEPK6size_t"></span><span id="MapGrid3::is_inbounds__sCPC"></span><span class="target" id="classMapGrid3_1afeb3237873ae93eafaabc9d2af53c7e2"></span>bool <code class="sig-name descname">is_inbounds</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8MapGrid311is_inboundsEPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp var">
+<dt id="_CPPv4N8MapGrid31NE">
+<span id="_CPPv3N8MapGrid31NE"></span><span id="_CPPv2N8MapGrid31NE"></span><span id="MapGrid3::N__sA"></span><span class="target" id="classMapGrid3_1af2d69c92c70d7a594f019c545e1b7eca"></span>size_t <code class="sig-name descname">N</code>[3]<a class="headerlink" href="#_CPPv4N8MapGrid31NE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of points along each axis of the grid. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N8MapGrid34spanE">
+<span id="_CPPv3N8MapGrid34spanE"></span><span id="_CPPv2N8MapGrid34spanE"></span><span id="MapGrid3::span__sA"></span><span class="target" id="classMapGrid3_1a6a093048118eadd5bae6deb538bc53d2"></span>size_t <code class="sig-name descname">span</code>[3]<a class="headerlink" href="#_CPPv4N8MapGrid34spanE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The span along each axis, allowing conversion from subscripted to linear indexing. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N8MapGrid33mapE">
+<span id="_CPPv3N8MapGrid33mapE"></span><span id="_CPPv2N8MapGrid33mapE"></span><span id="MapGrid3::map__slongP"></span><span class="target" id="classMapGrid3_1afe9a031ac094d3b84a57a8a50f822fba"></span><a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<code class="sig-name descname">map</code><a class="headerlink" href="#_CPPv4N8MapGrid33mapE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The mapping grid. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N8MapGrid35data_E">
+<span id="_CPPv3N8MapGrid35data_E"></span><span id="_CPPv2N8MapGrid35data_E"></span><span id="MapGrid3::data___InterpolationData:T.R:"></span><span class="target" id="classMapGrid3_1ab25482ca9b9c6fc4d97e81d9f886b332"></span><a class="reference internal" href="classInterpolationData.html#_CPPv4I00E17InterpolationData" title="InterpolationData">InterpolationData</a>&lt;<a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E8MapGrid3" title="MapGrid3::R">R</a>&gt; <code class="sig-name descname">data_</code><a class="headerlink" href="#_CPPv4N8MapGrid35data_E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classMapGrid4.html" class="btn btn-neutral float-right" title="Template Class MapGrid4" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classLQVec.html" class="btn btn-neutral float-left" title="Template Class LQVec" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

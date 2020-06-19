@@ -1,0 +1,16 @@
+.. _exhale_class_class_inner_interpolation_data:
+
+Template Class InnerInterpolationData
+=====================================
+
+- Defined in :ref:`file_src_interpolation_data.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: InnerInterpolationData
+   :members:
+   :protected-members:
+   :undoc-members:

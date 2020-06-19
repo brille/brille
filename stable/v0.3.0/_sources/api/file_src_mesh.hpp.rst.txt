@@ -1,0 +1,70 @@
+
+.. _file_src_mesh.hpp:
+
+File mesh.hpp
+=============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\mesh.hpp``)
+-----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_mesh.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``interpolation.hpp`` (:ref:`file_src_interpolation.hpp`)
+
+- ``interpolation_data.hpp`` (:ref:`file_src_interpolation_data.hpp`)
+
+- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
+
+- ``mesh.tpp`` (:ref:`file_src_mesh.tpp`)
+
+- ``omp.h``
+
+- ``permutation.hpp`` (:ref:`file_src_permutation.hpp`)
+
+- ``queue``
+
+- ``triangulation_layers.hpp`` (:ref:`file_src_triangulation_layers.hpp`)
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz_mesh.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_mesh3`
+

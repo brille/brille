@@ -1,0 +1,16 @@
+.. _exhale_struct_struct_cost_traits_3_01std_1_1complex_3_01_t_01_4_01_4:
+
+Template Struct CostTraits< std::complex< T > >
+===============================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: CostTraits< std::complex< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

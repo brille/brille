@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480:
+
+Template Function is_dangling
+=============================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: is_dangling(const std::vector<size_t>&, const std::vector<T>&)

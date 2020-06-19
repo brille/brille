@@ -1,0 +1,13 @@
+.. _exhale_enum_lattice_8hpp_1a70ab36d1d4920fdd314279845af152c5:
+
+Enum AngleUnit
+==============
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: AngleUnit

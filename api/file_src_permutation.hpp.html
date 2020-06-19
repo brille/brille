@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File permutation.hpp &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>File permutation.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_permutation.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-permutation-hpp">
+<span id="file-src-permutation-hpp"></span><h1>File permutation.hpp<a class="headerlink" href="#file-permutation-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-permutation-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src\permutation.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-permutation-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src\permutation.hpp</span></code>)<a class="headerlink" href="#definition-src-permutation-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_permutation.hpp.html">Program Listing for File permutation.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cstdint</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lapjv.hpp</span></code> (<a class="reference internal" href="file_src_lapjv.hpp.html#file-src-lapjv-hpp"><span class="std std-ref">File lapjv.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">munkres.hpp</span></code> (<a class="reference internal" href="file_src_munkres.hpp.html#file-src-munkres-hpp"><span class="std std-ref">File munkres.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smp.hpp</span></code> (<a class="reference internal" href="file_src_smp.hpp.html#file-src-smp-hpp"><span class="std std-ref">File smp.hpp</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_src_interpolation_data.hpp.html#file-src-interpolation-data-hpp"><span class="std std-ref">File interpolation_data.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_grid.hpp.html#file-src-grid-hpp"><span class="std std-ref">File grid.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_mesh.hpp.html#file-src-mesh-hpp"><span class="std std-ref">File mesh.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="struct_cost_traits.html#exhale-struct-struct-cost-traits"><span class="std std-ref">Template Struct CostTraits</span></a></p></li>
+<li><p><a class="reference internal" href="struct_cost_traits_3_01std_1_1complex_3_01_t_01_4_01_4.html#exhale-struct-struct-cost-traits-3-01std-1-1complex-3-01-t-01-4-01-4"><span class="std std-ref">Template Struct CostTraits&lt; std::complex&lt; T &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="class_sorting_status.html#exhale-class-class-sorting-status"><span class="std std-ref">Class SortingStatus</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a.html#exhale-function-permutation-8hpp-1a06565f49f8cb3fc1b32d038b849d360a"><span class="std std-ref">Template Function jv_permutation(const S *, const T *, const S *, const T *, const std::array&lt;I, 3&gt;&amp;, const std::array&lt;I, 3&gt;&amp;, const R, const R, const R, const size_t, const size_t, const size_t, ArrayVector&lt;size_t&gt;&amp;, const size_t, const size_t, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea.html#exhale-function-permutation-8hpp-1ab6270ac83366d21ae16bb1e693dd4dea"><span class="std std-ref">Template Function jv_permutation(const std::vector&lt;T&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40.html#exhale-function-permutation-8hpp-1aff379cd6c820518445d6d9137e4ccf40"><span class="std std-ref">Template Function jv_permutation(const T *, const T *, const std::array&lt;I, 3&gt;&amp;, const R, const R, const R, const size_t, const size_t, ArrayVector&lt;size_t&gt;&amp;, const size_t, const size_t, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc.html#exhale-function-permutation-8hpp-1ae743853940edb62f23a5045a363daabc"><span class="std std-ref">Template Function munkres_permutation</span></a></p></li>
+<li><p><a class="reference internal" href="function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13.html#exhale-function-permutation-8hpp-1a221ca457429c58f8cbfdd6f62528bb13"><span class="std std-ref">Template Function sm_permutation</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+.. _exhale_class_class_array_vector:
+
+Template Class ArrayVector
+==========================
+
+- Defined in :ref:`file_src_arrayvector.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ArrayVector
+   :members:
+   :protected-members:
+   :undoc-members:

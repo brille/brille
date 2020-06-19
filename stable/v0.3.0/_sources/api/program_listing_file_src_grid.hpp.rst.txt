@@ -1,0 +1,560 @@
+
+.. _program_listing_file_src_grid.hpp:
+
+Program Listing for File grid.hpp
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_grid.hpp>` (``src\grid.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /* Copyright 2019 Greg Tucker
+   //
+   // This file is part of brille.
+   //
+   // brille is free software: you can redistribute it and/or modify it under the
+   // terms of the GNU Affero General Public License as published by the Free
+   // Software Foundation, either version 3 of the License, or (at your option)
+   // any later version.
+   //
+   // brille is distributed in the hope that it will be useful, but
+   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   // or FITNESS FOR A PARTICULAR PURPOSE.
+   // See the GNU Affero General Public License for more details.
+   //
+   // You should have received a copy of the GNU Affero General Public License
+   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   #ifndef _GRID_H_
+   #define _GRID_H_
+   typedef long slong; // ssize_t is only defined for gcc?
+   
+   #include "latvec.hpp"
+   #include "neighbours.hpp"
+   #include "interpolation.hpp"
+   #include <tuple>
+   #include <queue>
+   #include <omp.h>
+   // #include <complex>
+   // #include <memory>
+   #include "interpolation_data.hpp"
+   #include "utilities.hpp"
+   #include "permutation.hpp"
+   
+   // A grid is a 3 (or 4) dimensional object that for a given index, e.g.,
+   // [i][j][k], contains the (linear) index into a second ArrayVector object.
+   
+   const size_t default_n[3] = { 0u,0u,0u };
+   
+   template<class T, class R> class MapGrid3{
+   protected:
+     size_t N[3];                 
+     size_t span[3];              
+     slong *map;                  
+     InterpolationData<T,R> data_;
+   public:
+     // constructors
+     MapGrid3(const size_t *n=default_n): map(nullptr)
+       { this->set_size(n); }
+     // MapGrid3(const size_t *n, const ArrayVector<T>& av): map(nullptr)
+     //   { this->set_size(n); this->replace_data(av); }
+     // MapGrid3(const size_t *n, const slong *inmap, const ArrayVector<T>& av): map(nullptr)
+     //   { this->set_size(n); this->replace_data(av); this->set_map(inmap,n,3u); }
+     // copy constructor
+     MapGrid3(const MapGrid3<T,R>& other): map(nullptr) {
+       this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
+       for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
+       this->data_ = other.data();
+     }
+     // destructor
+     ~MapGrid3(){
+       if ( numel()>0 && map!=nullptr) delete[] map;
+     } // everything else is handled by itself
+     // Copy constructor:
+     // Assignment operator:
+     MapGrid3<T,R>& operator=(const MapGrid3<T,R> &other){
+       if (this != &other){
+         this->resize(other.size(0),other.size(1),other.size(2)); // sets N, calculates span, frees/allocates map memory if necessary
+         for (size_t i=0; i<other.numel(); i++) this->map[i] = other.map[i];
+         this->data_ = other.data();
+       }
+       return *this;
+     }
+     void print_N(const bool nl=false) const;
+     void print_span(const bool nl=false) const;
+     void print_map(void) const;
+     int set_map(void);
+     int set_map(const slong* inmap, const size_t* n, const size_t d);
+     int unsafe_set_map(slong *inmap);
+     size_t unsafe_get_map(slong *outmap) const;
+     //
+     size_t maximum_mapping(const slong *map2check, const size_t num2check) const;
+     size_t maximum_mapping(const slong *map2check) const;
+     size_t maximum_mapping(void) const;
+     size_t valid_mapping_count(void) const;
+     template<class A,class B>
+     int check_map(const InterpolationData<A,B>& data2check) const;
+     int check_map(void) const;
+     template<typename... A> int replace_value_data(A... args) { data_.replace_value_data(args...); return this->check_map(); }
+     template<typename... A> int replace_vector_data(A... args) { data_.replace_vector_data(args...); return this->check_map(); }
+     size_t sub2lin(const size_t i, const size_t j, const size_t k) const;
+     int sub2lin(const size_t *s, size_t *l) const;
+     int lin2sub(const size_t  l, size_t *s) const;
+     int sub2map(const size_t* s, size_t& m) const;
+     size_t sub2map(const size_t *s) const;
+     // /*! Find the mapping of a point given its linear index
+     // @param l the linear index
+     // @param[out] m a pointer to store the mapping index at
+     // @returns 0 if successful,
+     //          1 if `l` is not a valid linear index,
+     //         -1 if `l` is not a valid mapping index
+     // */
+     // int lin2map(const size_t  l, size_t *m) const;
+     int lin2map(const size_t  l, size_t& m) const;
+     int map2lin(const size_t m, size_t& l) const;
+     //
+     size_t numel(void) const;
+     size_t size(const size_t i) const;
+     // //! Return the span of elements neccessary to move between neighbouring points
+     // size_t span(const size_t i) const;
+     size_t stride(const size_t i) const;
+     size_t resize(const size_t n0, const size_t n1, const size_t n2);
+     size_t resize(const size_t *n);
+     // Get a constant reference to the stored data
+     const InterpolationData<T,R>& data(void) const {return data_;}
+     ArrayVector<size_t> get_N(void) const;
+     ArrayVector<size_t> get_neighbours(const size_t centre) const;
+   
+     std::vector<size_t> find_sorted_neighbours(const std::vector<bool>& sorted,
+                                                const size_t clin) const;
+     std::vector<size_t> find_unsorted_neighbours(const std::vector<bool>& sorted,
+                                                const size_t centre_map_idx) const;
+     template<typename S>
+     bool sort_difference(const S, const S, const S,
+                          const size_t, const size_t, const size_t,
+                          ArrayVector<size_t>&,
+                          const size_t, const size_t, const int vcf) const;
+     template<typename S>
+     bool sort_derivative(const S, const S, const S,
+                          const size_t, const size_t, const size_t,
+                          ArrayVector<size_t>&,
+                          const size_t, const size_t, const size_t, const int vcf) const;
+     template<typename S>
+     size_t sort_recursion(const size_t centre,
+                           const S wS, const S wV, const S wM, const int vcf,
+                           const size_t valspan, const size_t vecspan, const size_t nobj,
+                           ArrayVector<size_t>& perm,
+                           std::vector<bool>& sorted,
+                           std::vector<bool>& locked) const;
+     template<typename S=double>
+     ArrayVector<size_t> centre_sort_perm(const S scalar_weight=S(1),
+                                          const S vector_weight=S(1),
+                                          const S matrix_weight=S(1),
+                                          const int vcf=0) const;
+     //
+     std::tuple<std::vector<size_t>,std::vector<size_t>,std::vector<size_t>>
+     classify_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
+     //
+     std::tuple<std::vector<size_t>,std::vector<size_t>>
+     classify_sorted_neighbours(const std::vector<bool>& sorted, const size_t centre_map_idx) const;
+     //
+     template<class S>
+     bool multi_sort_derivative(const S scales[3], const int func,
+       const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+       const size_t cidx, const std::vector<size_t> nidx,
+       const std::vector<size_t> nnidx, const size_t no_pairs) const;
+     //
+     template<class S>
+     bool multi_sort_derivative_all(const S scales[3], const int func,
+       const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+       const size_t cidx, const std::vector<size_t> nidx,
+       const std::vector<size_t> nnidx/*, const size_t no_pairs*/) const;
+     //
+     template<class S>
+     bool multi_sort_difference(const S weights[3], const int func,
+       const size_t spobj[2], ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+       const size_t cidx, const std::vector<size_t> nidx) const;
+     //
+     template<class S> size_t multi_sort_recursion(const size_t centre,
+       const S weights[3], const int func, const size_t spobj[2],
+       ArrayVector<size_t>& perm, std::vector<bool>& sorted,
+       std::vector<bool>& locked, std::vector<size_t>& visited) const;
+     //
+     template<class S> size_t multi_sort(const size_t centre, const S weights[3],
+       const int func, const size_t spobj[2], ArrayVector<size_t>& perm,
+       std::vector<bool>& sorted, std::vector<bool>& locked,
+       std::vector<size_t>& visited) const;
+     //
+     template<typename S=double>
+     ArrayVector<size_t> multi_sort_perm(
+       const S scalar_weight=S(1),
+       const S vector_weight=S(1),
+       const S matrix_weight=S(1),
+       const int vcf=0) const ;
+     // Calculate the Debye-Waller factor for the provided Q points and ion masses
+     template<template<class> class A>
+     ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
+       return data_.debye_waller(Q,M,t_K);
+     }
+   protected:
+     void set_size(const size_t *n);
+     void calc_span();
+     void instantiate_map();
+     bool valid_mapping(const size_t l) const;
+     bool valid_mapping(const size_t i, const size_t j, const size_t k) const;
+     bool is_inbounds(const size_t i, const size_t j, const size_t k) const;
+     bool is_inbounds(const size_t* s) const;
+   };
+   
+   // TODO: allow for more-compact data arrays with appropriate reducing maps
+   
+   const double default_zero[3] = {0.,0.,0.};
+   const double default_step[3] = {1.,1.,1.};
+   
+   template<class T,class R> class InterpolateGrid3: public MapGrid3<T,R>{
+     double zero[3]; 
+     double step[3]; 
+   public:
+     InterpolateGrid3(const size_t *n=default_n, const double *z=default_zero, const double *s=default_step): MapGrid3<T,R>(n) { this->set_zero(z); this->set_step(s); }
+     InterpolateGrid3(const size_t *n, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T,R>(n,av){ this->set_zero(z); this->set_step(s); }
+     InterpolateGrid3(const size_t *n, const slong* inmap, const ArrayVector<T>& av, const double *z=default_zero, const double *s=default_step): MapGrid3<T,R>(n,inmap,av){ this->set_zero(z); this->set_step(s); }
+   
+   
+     void set_zero(const double *newzero){ for(int i=0;i<3;i++) this->zero[i] = newzero[i]; }
+     void set_step(const double *newstep){ for(int i=0;i<3;i++) this->step[i] = newstep[i]; }
+   
+     size_t get_grid_xyz(const size_t maxN, double *xyz) const {
+       if ( maxN < this->numel() ) return 0;
+       size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+       size_t cnt = 0;
+       double s0=this->step[0], z0=this->zero[0], s1=this->step[1], z1=this->zero[1], s2=this->step[2], z2=this->zero[2];
+       for (i=0; i<n0; i++)
+         for (j=0; j<n1; j++)
+           for (k=0; k<n2; k++){
+             xyz[ 3*cnt    ] = z0 + s0*i;
+             xyz[ 3*cnt +1 ] = z1 + s1*j;
+             xyz[ 3*cnt +2 ] = z2 + s2*k;
+             cnt++;
+           }
+       return cnt;
+     }
+     size_t get_grid_x(const size_t maxN, double *x) const {
+       if ( maxN < this->size(0) ) return 0;
+       size_t cnt = 0;
+       double s0=this->step[0], z0=this->zero[0];
+       for (size_t i=0; i<this->size(0); i++) x[ cnt++ ] = z0 + s0*i;
+       return cnt;
+     }
+     size_t get_grid_y(const size_t maxN, double *y) const {
+       if ( maxN < this->size(1) ) return 0;
+       size_t cnt = 0;
+       double s1=this->step[1], z1=this->zero[1];
+       for (size_t j=0; j<this->size(1); j++) y[ cnt++ ] = z1 + s1*j;
+       return cnt;
+     }
+     size_t get_grid_z(const size_t maxN, double *z) const {
+       if ( maxN < this->size(2) ) return 0;
+       size_t cnt = 0;
+       double s2=this->step[2], z2=this->zero[2];
+       for (size_t k=0; k<this->size(2); k++) z[ cnt++ ] = z2 + s2*k;
+       return cnt;
+     }
+     ArrayVector<double> get_grid_xyz() const {
+       ArrayVector<double> xyz(3u,this->numel());
+       size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+       size_t cnt = 0;
+       double s0=this->step[0], z0=this->zero[0], s1=this->step[1], z1=this->zero[1], s2=this->step[2], z2=this->zero[2];
+       for (i=0; i<n0; i++)
+         for (j=0; j<n1; j++)
+           for (k=0; k<n2; k++){
+             xyz.insert( z0+s0*i, cnt  ,0);
+             xyz.insert( z1+s1*j, cnt  ,1);
+             xyz.insert( z2+s2*k, cnt++,2);
+           }
+       return xyz;
+     }
+     ArrayVector<double> get_mapped_xyz() const {
+       ArrayVector<double> xyz(3u,this->valid_mapping_count());
+       size_t i,j,k, n0=this->size(0), n1=this->size(1), n2=this->size(2);
+       size_t cnt = 0;
+       double s0=this->step[0], z0=this->zero[0], s1=this->step[1], z1=this->zero[1], s2=this->step[2], z2=this->zero[2];
+       for (i=0; i<n0; ++i)
+         for (j=0; j<n1; ++j)
+           for (k=0; k<n2; ++k){
+             if ( this->valid_mapping(i,j,k) ) {
+               xyz.insert( z0+s0*i, cnt  ,0);
+               xyz.insert( z1+s1*j, cnt  ,1);
+               xyz.insert( z2+s2*k, cnt++,2);
+             } else {
+               // printf("Invalid mapping at (%u, %u, %u)\n",i,j,k);
+             }
+           }
+       return xyz;
+     }
+     ArrayVector<double> get_grid_x() const {
+       ArrayVector<double> x(1u,this->size(0));
+       double s0=this->step[0], z0=this->zero[0];
+       for (size_t i=0; i<x.size(); i++) x.insert( z0+s0*i, i);
+       return x;
+     }
+     ArrayVector<double> get_grid_y() const {
+       ArrayVector<double> y(1u,this->size(1));
+       double s1=this->step[1], z1=this->zero[1];
+       for (size_t j=0; j<y.size(); j++) y.insert( z1+s1*j, j);
+       return y;
+     }
+     ArrayVector<double> get_grid_z() const {
+       ArrayVector<double> z(1u,this->size(2));
+       double s2=this->step[2], z2=this->zero[2];
+       for (size_t k=0; k<z.size(); k++) z.insert( z2+s2*k, k);
+       return z;
+     }
+     unsigned int nearest_index(const double *x, size_t *ijk, unsigned int mask=0u) const {
+       unsigned int out=0;
+       slong tmp;
+       for (int i=0; i<3; i++){
+         tmp = (slong)( round( (x[i] - this->zero[i])/this->step[i] ) );
+         if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
+           if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
+             out += 1<<i; // exact match
+         } else {
+           if (tmp<0) {
+             tmp = 0;
+             if ((mask>>i)%2 == 1) // underflow allowed
+               out += 1<<i; // exact match to avoid out-of-bounds interpolation
+             else
+               out += 1<<(3+i); // underflow
+           } else {
+             tmp = unsigned_to_signed<slong>(this->size(i))-1;
+             if ((mask>>i)%2 == 1) // overflow allowed
+               out += 1<<i; // exact match to avoid out-of-bounds interpolation
+             else
+               out += 1<<(6+i); // overflow
+           }
+         }
+         ijk[i] = signed_to_unsigned<size_t>(tmp);
+       }
+       return out;
+     }
+     unsigned int floor_index(const double *x, size_t *ijk, unsigned int mask=0u) const {
+       unsigned int out=0;
+       slong tmp;
+       for (int i=0; i<3; i++){
+         tmp = (slong)( floor( (x[i] - this->zero[i])/this->step[i] ) );
+         if (tmp>=0 && static_cast<size_t>(tmp)<this->size(i)){
+           if (approx_scalar(this->step[i]*tmp + this->zero[i],x[i]))
+             out += 1<<i; // exact match
+         } else {
+           if (tmp<0) {
+             tmp = 0;
+             if ((mask>>i)%2 == 1) // underflow allowed
+               out += 1<<i; // exact match to avoid out-of-bounds interpolation
+             else
+               out += 1<<(3+i); // underflow
+           } else {
+             tmp = unsigned_to_signed<slong>(this->size(i))-1;
+             if ((mask>>i)%2 == 1) // overflow allowed
+               out += 1<<i; // exact match to avoid out-of-bounds interpolation
+             else
+               out += 1<<(6+i); // overflow
+           }
+         }
+         ijk[i] = signed_to_unsigned<size_t>(tmp);
+       }
+       return out;
+     }
+     template<typename S> unsigned int check_before_interpolating(const ArrayVector<S>& x) const {
+       unsigned int mask=0u;
+       if (this->data_.size()==0)
+         throw std::runtime_error("The grid must be filled before interpolating!");
+       if (x.numel()!=3u)
+         throw std::runtime_error("InterpolateGrid3 requires x values which are three-vectors.");
+       if (this->size(0)<2||this->size(1)<2||this->size(2)<2){
+         size_t ijk[3];
+         bool allok = true;
+         unsigned int flg;
+         std::vector<int> must_be_in_bounds;
+         for (int i=0; i<3; ++i){
+           if (this->size(i)<2)
+             mask += 1<<i;
+           else
+             must_be_in_bounds.push_back(i);
+         }
+         for (size_t i=0; i<x.size(); ++i){
+           flg = this->nearest_index(x.data(i), ijk, mask);
+           allok &= 0==(flg>>3);
+           if (!allok) break;
+         }
+         if (!allok){
+           std::string msg = "Interpolation on a grid with shape [";
+           for (size_t i=0; i<3; ++i) msg += " " + std::to_string(this->size(i));
+           msg += " ] can only be performed for points with dot(x, [";
+           for (size_t i=0; i<3; ++i) msg += (this->size(i)<2 ? " 0" : " 1");
+           msg += " ]) within the grid limits.";
+           throw std::runtime_error(msg);
+         }
+       }
+       return mask;
+     }
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     linear_interpolate_at(const LQVec<S>& x) const {return this->linear_interpolate_at(x.get_xyz());}
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     linear_interpolate_at(const LDVec<S>& x) const {return this->linear_interpolate_at(x.get_xyz());}
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     linear_interpolate_at(const ArrayVector<S>& x) const {
+       unsigned int mask = this->check_before_interpolating(x);
+       ArrayVector<T> valout(this->data_.values().numel(), x.size());
+       ArrayVector<R> vecout(this->data_.vectors().numel(), x.size());
+       std::vector<size_t> corners;
+       std::vector<double> weights;
+       size_t ijk[3], cnt;
+       unsigned int flg;
+       int oob=0;
+       std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
+       for (size_t i=0; i<x.size(); i++){
+         corners.resize(8u);
+         weights.resize(8u);
+         // find the closest grid subscripted indices to x[i]
+         flg = this->nearest_index(x.data(i), ijk, mask);
+         // flg = this->floor_index(x.data(i), ijk, mask );
+         cnt = 1u; // will be modified if more than one-point interpolation
+         // Alternatively, ignore out-of-bounds information by flg &= 7;
+         if (flg > 7){
+           std::string msg_flg = "grid.h::linear_interpolate_at";
+           msg_flg += " Unsure what to do with flg = " + std::to_string(flg);
+           msg_flg += " when mask = " + std::to_string(mask);
+           throw std::runtime_error(msg_flg);
+         }
+         if (7==flg)/*+++*/{
+           this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
+           weights[0] = 1.0; // and the weight to one
+         } else {
+           if (!flg)/*xxx*/{
+             dirs.resize(3);
+             dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
+           }
+           if ( flg && !(flg&(flg-1)) ) dirs.resize(2); // flg&(flg-1) is zero if flg is a power of 2 (or zero)
+           if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+           if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+           if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+   
+           if ( flg && (flg&(flg-1)) ) dirs.resize(1);
+           if (3==flg)/*++x*/ dirs[0] = 2u;
+           if (5==flg)/*+x+*/ dirs[0] = 1u;
+           if (6==flg)/*x++*/ dirs[0] = 0u;
+   
+           oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),3u,dirs);
+           cnt = corner_count[dirs.size()];
+           if (oob){
+             std::string msg = "Point " + std::to_string(i) + " with x = " + x.to_string(i) + " has " + std::to_string(oob) + " corners out of bounds!";
+             throw std::runtime_error(msg);
+           }
+         }
+         // now do the actual interpolation:
+         // extract an ArrayVector(data_.numel(),cnt) of the corner Arrays
+         // multiply all elements at each corner by the weight for that corner
+         // sum over the corners, returning an ArrayVector(data_.numel(),1u)
+         // and set that ArrayVector as element i of the output ArrayVector
+         corners.resize(cnt);
+         weights.resize(cnt);
+         this->data_.interpolate_at(corners, weights, valout, vecout, i);
+       }
+       return std::make_tuple(valout, vecout);
+     }
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     parallel_linear_interpolate_at(const LQVec<S>& x, const int threads) const {
+       return this->parallel_linear_interpolate_at(x.get_xyz(),threads);
+     }
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     parallel_linear_interpolate_at(const LDVec<S>& x, const int threads) const {
+       return this->parallel_linear_interpolate_at(x.get_xyz(),threads);
+     }
+     template<typename S>
+     std::tuple<ArrayVector<T>,ArrayVector<R>>
+     parallel_linear_interpolate_at(const ArrayVector<S>& x, const int threads) const {
+       unsigned int mask = this->check_before_interpolating(x);
+       ArrayVector<T> valout(this->data_.values().numel(), x.size());
+       ArrayVector<R> vecout(this->data_.vectors().numel(), x.size());
+   
+       (threads>0) ? omp_set_num_threads(threads) : omp_set_num_threads(omp_get_max_threads());
+       std::vector<size_t> corners(8,0);
+       std::vector<double> weights(8,0.);
+       size_t ijk[3], cnt=0u;
+       unsigned int flg=0;
+       int oob=0;
+       slong xsize = unsigned_to_signed<slong,size_t>(x.size());
+       std::vector<size_t> dirs, corner_count={1u,2u,4u,8u};
+       size_t n_oob{0};
+   #pragma omp parallel for default(none) shared(x,valout,vecout,corner_count,mask) firstprivate(corners,ijk,weights,xsize) private(flg,oob,cnt,dirs) reduction(+:n_oob) schedule(dynamic)
+       for (slong si=0; si<xsize; si++){
+         size_t i = signed_to_unsigned<size_t,slong>(si);
+         corners.resize(8u);
+         weights.resize(8u);
+         // find the closest grid subscripted indices to x[i]
+         flg = this->nearest_index(x.data(i), ijk, mask );
+         cnt = 1u; // will be modified if more than one-point interpolation
+         oob = 0;
+         if (flg <= 7){
+           if (7 == flg)/*+++*/{
+             this->sub2map(ijk,corners[0]); // set the first "corner" to this mapped index
+             weights[0] = 1.0; // and the weight to one
+           } else {
+             if (0==flg)/*xxx*/{
+               dirs.resize(3);
+               dirs[0]=0u; dirs[1]=1u; dirs[2]=2u;
+             }
+             if (1==flg || 2==flg || 4==flg) dirs.resize(2);
+             if (1==flg)/*+xx*/{ dirs[0] = 1u; dirs[1] = 2u;}
+             if (2==flg)/*x+x*/{ dirs[0] = 0u; dirs[1] = 2u;}
+             if (4==flg)/*xx+*/{ dirs[0] = 0u; dirs[1] = 1u;}
+   
+             if (3==flg || 5==flg || 6==flg) dirs.resize(1);
+             if (3==flg)/*++x*/ dirs[0] = 2u;
+             if (5==flg)/*+x+*/ dirs[0] = 1u;
+             if (6==flg)/*x++*/ dirs[0] = 0u;
+   
+             oob = corners_and_weights(this,this->zero,this->step,ijk,x.data(i),corners.data(),weights.data(),3u,dirs);
+             cnt = corner_count[dirs.size()];
+           }
+           if (!oob) {
+             corners.resize(cnt);
+             weights.resize(cnt);
+             this->data_.interpolate_at(corners, weights, valout, vecout, i);
+           } else {
+             ++n_oob;
+           }
+         } else {
+           ++n_oob;
+         }
+       }
+       if (n_oob > 0){
+         std::string msg = "parallel_linear_interpolate_at failed with ";
+         msg += std::to_string(n_oob) + " out of bounds points.";
+         throw std::runtime_error(msg);
+       }
+       return std::make_tuple(valout, vecout);
+     }
+   };
+   
+   
+   template<class T> struct GridDiffTraits{
+     using type = T;
+     constexpr static T max = (std::numeric_limits<T>::max)();
+   };
+   #ifndef DOXYGEN_SHOULD_SKIP_THIS
+   template<class T> struct GridDiffTraits<std::complex<T>>{
+     using type = T;
+     constexpr static T max = (std::numeric_limits<T>::max)();
+   };
+   #endif
+   
+   #include "grid.tpp"
+   #include "grid_sorting.tpp"
+   
+   #endif

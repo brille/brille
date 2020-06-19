@@ -1,0 +1,16 @@
+.. _exhale_class_class_l_q_vec:
+
+Template Class LQVec
+====================
+
+- Defined in :ref:`file_src_latvec.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: LQVec
+   :members:
+   :protected-members:
+   :undoc-members:

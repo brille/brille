@@ -1,0 +1,65 @@
+
+.. _file_src_triangulation.hpp:
+
+File triangulation.hpp
+======================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\triangulation.hpp``)
+--------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_triangulation.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``array`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``balltrellis.hpp`` (:ref:`file_src_balltrellis.hpp`)
+
+- ``cassert``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``tetgen.h``
+
+- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_tet_tri`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_triangulation_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a`
+
+- :ref:`exhale_function_triangulation_8hpp_1acf0bed752834c46ee78545a77943c17f`
+

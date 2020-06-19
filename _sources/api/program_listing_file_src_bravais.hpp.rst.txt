@@ -1,0 +1,22 @@
+
+.. _program_listing_file_src_bravais.hpp:
+
+Program Listing for File bravais.hpp
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_bravais.hpp>` (``src\bravais.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef _BRAVAIS_H_
+   #define _BRAVAIS_H_
+   #include <string>
+   
+   enum class Bravais {_, P, A, B, C, I, F, R};
+   
+   std::string bravais_string(const Bravais b);
+   char bravais_letter(const Bravais b);
+   
+   #endif

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ac88363aa628809922f56bf1f2e5bb864:
+
+Template Function multiply_matrix_matrix
+========================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: multiply_matrix_matrix(T *, const R *, const S *)

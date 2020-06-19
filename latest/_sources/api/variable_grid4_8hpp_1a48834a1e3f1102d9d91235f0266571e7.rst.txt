@@ -1,0 +1,13 @@
+.. _exhale_variable_grid4_8hpp_1a48834a1e3f1102d9d91235f0266571e7:
+
+Variable default_zero4
+======================
+
+- Defined in :ref:`file_src_grid4.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: default_zero4

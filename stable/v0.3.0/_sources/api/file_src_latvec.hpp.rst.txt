@@ -1,0 +1,94 @@
+
+.. _file_src_latvec.hpp:
+
+File latvec.hpp
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\latvec.hpp``)
+-------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_latvec.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``exception``
+
+- ``lattice.hpp`` (:ref:`file_src_lattice.hpp`)
+
+- ``latvec.tpp`` (:ref:`file_src_latvec.tpp`)
+
+- ``ldvec.tpp`` (:ref:`file_src_ldvec.tpp`)
+
+- ``lqvec.tpp`` (:ref:`file_src_lqvec.tpp`)
+
+- ``typeinfo``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_transform.hpp`
+
+- :ref:`file_src_polyhedron.hpp`
+
+- :ref:`file_src_phonon.hpp`
+
+- :ref:`file_src_grid.hpp`
+
+- :ref:`file_src_interpolation_data.hpp`
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_struct_lattice_traits_3_01_l_d_vec_3_01_t_01_4_01_4`
+
+- :ref:`exhale_struct_struct_lattice_traits_3_01_l_q_vec_3_01_t_01_4_01_4`
+
+- :ref:`exhale_struct_struct_lat_vec_traits`
+
+- :ref:`exhale_struct_struct_lat_vec_traits_3_01_direct_00_01_s_01_4`
+
+- :ref:`exhale_struct_struct_lat_vec_traits_3_01_l_d_vec_3_01_r_01_4_00_01_s_01_4`
+
+- :ref:`exhale_struct_struct_lat_vec_traits_3_01_l_q_vec_3_01_r_01_4_00_01_s_01_4`
+
+- :ref:`exhale_struct_struct_lat_vec_traits_3_01_reciprocal_00_01_s_01_4`
+
+- :ref:`exhale_class_class_lat_vec`
+
+- :ref:`exhale_class_class_l_d_vec`
+
+- :ref:`exhale_class_class_l_q_vec`
+

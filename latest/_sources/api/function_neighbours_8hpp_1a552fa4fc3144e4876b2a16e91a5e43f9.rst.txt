@@ -1,0 +1,13 @@
+.. _exhale_function_neighbours_8hpp_1a552fa4fc3144e4876b2a16e91a5e43f9:
+
+Function make_relative_neighbour_indices4(const int)
+====================================================
+
+- Defined in :ref:`file_src_neighbours.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: make_relative_neighbour_indices4(const int)

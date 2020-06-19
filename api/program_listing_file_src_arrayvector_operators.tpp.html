@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File arrayvector_operators.tpp &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File arrayvector_operators.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_arrayvector_operators.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-arrayvector-operators-tpp">
+<span id="program-listing-file-src-arrayvector-operators-tpp"></span><h1>Program Listing for File arrayvector_operators.tpp<a class="headerlink" href="#program-listing-for-file-arrayvector-operators-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_arrayvector_operators.tpp.html#file-src-arrayvector-operators-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src\arrayvector_operators.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// // In Place arithmetic ArrayVector +-*/ ArrayVector</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator += (const ArrayVector&lt;T&gt;&amp; av){</span>
+<span class="c1">//   AVSizeInfo si = this-&gt;inplace_consistency_check(av);</span>
+<span class="c1">//   unsigned flg = static_cast&lt;unsigned&gt;(si.onevecb) + (static_cast&lt;unsigned&gt;(si.singular)&lt;&lt;1u);</span>
+<span class="c1">//   switch(flg){</span>
+<span class="c1">//     case 3: /*singular &amp;&amp; onvecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) + av.getvalue(0,0), i,j); break;</span>
+<span class="c1">//     case 2: /*singular*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) + av.getvalue(i,0), i,j); break;</span>
+<span class="c1">//     case 1: /*onevecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) + av.getvalue(0,j), i,j); break;</span>
+<span class="c1">//     default:</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) + av.getvalue(i,j), i,j);</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator -= (const ArrayVector&lt;T&gt;&amp; av){</span>
+<span class="c1">//   AVSizeInfo si = this-&gt;inplace_consistency_check(av);</span>
+<span class="c1">//   unsigned flg = static_cast&lt;unsigned&gt;(si.onevecb) + (static_cast&lt;unsigned&gt;(si.singular)&lt;&lt;1u);</span>
+<span class="c1">//   switch(flg){</span>
+<span class="c1">//     case 3: /*singular &amp;&amp; onvecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) - av.getvalue(0,0), i,j); break;</span>
+<span class="c1">//     case 2: /*singular*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) - av.getvalue(i,0), i,j); break;</span>
+<span class="c1">//     case 1: /*onevecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) - av.getvalue(0,j), i,j); break;</span>
+<span class="c1">//     default:</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) - av.getvalue(i,j), i,j);</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator *= (const ArrayVector&lt;T&gt;&amp; av){</span>
+<span class="c1">//   AVSizeInfo si = this-&gt;inplace_consistency_check(av);</span>
+<span class="c1">//   unsigned flg = static_cast&lt;unsigned&gt;(si.onevecb) + (static_cast&lt;unsigned&gt;(si.singular)&lt;&lt;1u);</span>
+<span class="c1">//   switch(flg){</span>
+<span class="c1">//     case 3: /*singular &amp;&amp; onvecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) * av.getvalue(0,0), i,j); break;</span>
+<span class="c1">//     case 2: /*singular*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) * av.getvalue(i,0), i,j); break;</span>
+<span class="c1">//     case 1: /*onevecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) * av.getvalue(0,j), i,j); break;</span>
+<span class="c1">//     default:</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) * av.getvalue(i,j), i,j);</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator /= (const ArrayVector&lt;T&gt;&amp; av){</span>
+<span class="c1">//   AVSizeInfo si = this-&gt;inplace_consistency_check(av);</span>
+<span class="c1">//   unsigned flg = static_cast&lt;unsigned&gt;(si.onevecb) + (static_cast&lt;unsigned&gt;(si.singular)&lt;&lt;1u);</span>
+<span class="c1">//   switch(flg){</span>
+<span class="c1">//     case 3: /*singular &amp;&amp; onvecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) / av.getvalue(0,0), i,j); break;</span>
+<span class="c1">//     case 2: /*singular*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) / av.getvalue(i,0), i,j); break;</span>
+<span class="c1">//     case 1: /*onevecb*/</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) / av.getvalue(0,j), i,j); break;</span>
+<span class="c1">//     default:</span>
+<span class="c1">//     #pragma omp simd collapse(2)</span>
+<span class="c1">//     for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//       this-&gt;insert(this-&gt;getvalue(i,j) / av.getvalue(i,j), i,j);</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">//</span>
+<span class="c1">// // In-place binary operators with scalars</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator += (const T&amp; av){</span>
+<span class="c1">//   #pragma omp simd collapse(2)</span>
+<span class="c1">//   for (size_t i=0; i&lt;this-&gt;size(); ++i) for (size_t j=0; j&lt;this-&gt;numel(); ++j)</span>
+<span class="c1">//     this-&gt;insert(this-&gt;getvalue(i,j) + av, i,j);</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator -= (const T&amp; av){</span>
+<span class="c1">//   #pragma omp simd collapse(2)</span>
+<span class="c1">//   for (size_t i=0; i&lt;this-&gt;size(); ++i) for (size_t j=0; j&lt;this-&gt;numel(); ++j)</span>
+<span class="c1">//     this-&gt;insert(this-&gt;getvalue(i,j) - av, i,j);</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator *= (const T&amp; av){</span>
+<span class="c1">//   #pragma omp simd collapse(2)</span>
+<span class="c1">//   for (size_t i=0; i&lt;this-&gt;size(); ++i) for (size_t j=0; j&lt;this-&gt;numel(); ++j)</span>
+<span class="c1">//     this-&gt;insert(this-&gt;getvalue(i,j) * av, i,j);</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator /= (const T&amp; av){</span>
+<span class="c1">//   #pragma omp simd collapse(2)</span>
+<span class="c1">//   for (size_t i=0; i&lt;this-&gt;size(); ++i) for (size_t j=0; j&lt;this-&gt;numel(); ++j)</span>
+<span class="c1">//     this-&gt;insert(this-&gt;getvalue(i,j) / av, i,j);</span>
+<span class="c1">//   return *this;</span>
+<span class="c1">// }</span>
+<span class="c1">//</span>
+<span class="c1">// // binary ArrayVector ArrayVector operators:</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type,class S = typename std::common_type&lt;T,R&gt;::type&gt;</span>
+<span class="c1">// A&lt;S&gt; operator + (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){</span>
+<span class="c1">//   AVSizeInfo si = a.consistency_check(b);</span>
+<span class="c1">//   A&lt;S&gt; out = si.aorb ? A&lt;S&gt;(a) : A&lt;S&gt;(b);</span>
+<span class="c1">//   out.refresh(si.m,si.n); /*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span>
+<span class="c1">//   unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);</span>
+<span class="c1">//   unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);</span>
+<span class="c1">//   switch (scalarflg){</span>
+<span class="c1">//     case 3u: /*a and b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       out.insert(a.getvalue(0,0) + b.getvalue(0,0), 0,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) + b.getvalue(0,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) + b.getvalue(i,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) + b.getvalue(i,0), i,0);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 2u: /*b is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) + b.getvalue(0,0), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) + b.getvalue(0,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) + b.getvalue(i,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) + b.getvalue(i,0), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 1u: /*a is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) + b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) + b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) + b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) + b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     default: /*neither a nor b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) + b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) + b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) + b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) + b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return out;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type,class S = typename std::common_type&lt;T,R&gt;::type&gt;</span>
+<span class="c1">// A&lt;S&gt; operator - (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){</span>
+<span class="c1">//   AVSizeInfo si = a.consistency_check(b);</span>
+<span class="c1">//   A&lt;S&gt; out = si.aorb ? A&lt;S&gt;(a) : A&lt;S&gt;(b);</span>
+<span class="c1">//   out.refresh(si.m,si.n); /*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span>
+<span class="c1">//   unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);</span>
+<span class="c1">//   unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);</span>
+<span class="c1">//   switch (scalarflg){</span>
+<span class="c1">//     case 3u: /*a and b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       out.insert(a.getvalue(0,0) - b.getvalue(0,0), 0,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) - b.getvalue(0,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) - b.getvalue(i,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) - b.getvalue(i,0), i,0);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 2u: /*b is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) - b.getvalue(0,0), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) - b.getvalue(0,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) - b.getvalue(i,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) - b.getvalue(i,0), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 1u: /*a is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) - b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) - b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) - b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) - b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     default: /*neither a nor b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) - b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) - b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) - b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) - b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return out;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type,class S = typename std::common_type&lt;T,R&gt;::type&gt;</span>
+<span class="c1">// A&lt;S&gt; operator * (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){</span>
+<span class="c1">//   AVSizeInfo si = a.consistency_check(b);</span>
+<span class="c1">//   A&lt;S&gt; out = si.aorb ? A&lt;S&gt;(a) : A&lt;S&gt;(b);</span>
+<span class="c1">//   out.refresh(si.m,si.n); /*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span>
+<span class="c1">//   unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);</span>
+<span class="c1">//   unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);</span>
+<span class="c1">//   switch (scalarflg){</span>
+<span class="c1">//     case 3u: /*a and b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       out.insert(a.getvalue(0,0) * b.getvalue(0,0), 0,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) * b.getvalue(0,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) * b.getvalue(i,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) * b.getvalue(i,0), i,0);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 2u: /*b is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) * b.getvalue(0,0), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) * b.getvalue(0,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) * b.getvalue(i,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) * b.getvalue(i,0), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 1u: /*a is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) * b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) * b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) * b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) * b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     default: /*neither a nor b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) * b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) * b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) * b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) * b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return out;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type,class S = typename std::common_type&lt;T,R&gt;::type&gt;</span>
+<span class="c1">// A&lt;S&gt; operator / (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){</span>
+<span class="c1">//   AVSizeInfo si = a.consistency_check(b);</span>
+<span class="c1">//   A&lt;S&gt; out = si.aorb ? A&lt;S&gt;(a) : A&lt;S&gt;(b);</span>
+<span class="c1">//   out.refresh(si.m,si.n); /*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span>
+<span class="c1">//   unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);</span>
+<span class="c1">//   unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);</span>
+<span class="c1">//   switch (scalarflg){</span>
+<span class="c1">//     case 3u: /*a and b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       out.insert(a.getvalue(0,0) / b.getvalue(0,0), 0,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) / b.getvalue(0,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) / b.getvalue(i,0), i,0);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) / b.getvalue(i,0), i,0);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 2u: /*b is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) / b.getvalue(0,0), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) / b.getvalue(0,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) / b.getvalue(i,0), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) / b.getvalue(i,0), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     case 1u: /*a is a scalar*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) / b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) / b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,0) / b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,0) / b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     break;</span>
+<span class="c1">//     default: /*neither a nor b are scalars*/</span>
+<span class="c1">//     switch (onevecflg){</span>
+<span class="c1">//       case 3u:</span>
+<span class="c1">//       #pragma omp simd</span>
+<span class="c1">//       for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) / b.getvalue(0,j), 0,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 2u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) / b.getvalue(0,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       case 1u:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(0,j) / b.getvalue(i,j), i,j);</span>
+<span class="c1">//       break;</span>
+<span class="c1">//       default:</span>
+<span class="c1">//       #pragma omp simd collapse(2)</span>
+<span class="c1">//       for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j)</span>
+<span class="c1">//         out.insert(a.getvalue(i,j) / b.getvalue(i,j), i,j);</span>
+<span class="c1">//     }</span>
+<span class="c1">//   }</span>
+<span class="c1">//   return out;</span>
+<span class="c1">// }</span>
+
+<span class="cm">/*-----------------------------------------------------------------------------|</span>
+<span class="cm">|        Unused preprocessor macros to make the above more manageable          |</span>
+<span class="cm">|------------------------------------------------------------------------------|</span>
+<span class="cm">|    The macros can not be used along with preprocessor directives necessary   |</span>
+<span class="cm">|    to implement simd loop vectorization, sadly.                              |</span>
+<span class="cm">|-----------------------------------------------------------------------------*/</span>
+
+<span class="c1">// In Place arithmetic ArrayVector +-*/ ArrayVector</span>
+<span class="cp">#define INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(X,Y) template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator X (const ArrayVector&lt;T&gt;&amp; av){\</span>
+<span class="cp">  AVSizeInfo si = this-&gt;inplace_consistency_check(av);\</span>
+<span class="cp">  unsigned flg = static_cast&lt;unsigned&gt;(si.onevecb) + (static_cast&lt;unsigned&gt;(si.singular)&lt;&lt;1u);\</span>
+<span class="cp">  switch(flg){\</span>
+<span class="cp">    case 3: </span><span class="cm">/*singular &amp;&amp; onvecb*/</span><span class="cp">\</span>
+<span class="cp">    for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) this-&gt;insert(this-&gt;getvalue(i,j) Y av.getvalue(0,0), i,j); break;\</span>
+<span class="cp">    case 2: </span><span class="cm">/*singular*/</span><span class="cp">\</span>
+<span class="cp">    for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) this-&gt;insert(this-&gt;getvalue(i,j) Y av.getvalue(i,0), i,j); break;\</span>
+<span class="cp">    case 1: </span><span class="cm">/*onevecb*/</span><span class="cp">\</span>
+<span class="cp">    for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) this-&gt;insert(this-&gt;getvalue(i,j) Y av.getvalue(0,j), i,j); break;\</span>
+<span class="cp">    default:\</span>
+<span class="cp">    for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) this-&gt;insert(this-&gt;getvalue(i,j) Y av.getvalue(i,j), i,j);\</span>
+<span class="cp">  }\</span>
+<span class="cp">  return *this;\</span>
+<span class="cp">}</span>
+<span class="c1">// In-place binary operators with scalars</span>
+<span class="cp">#define INPLACE_ARRAYVECTOR_SCALAR_OPERATOR(X,Y) template&lt;typename T&gt; ArrayVector&lt;T&gt;&amp; ArrayVector&lt;T&gt;:: operator X (const T&amp; av){\</span>
+<span class="cp">  for (size_t i=0; i&lt;this-&gt;size(); ++i) for (size_t j=0; j&lt;this-&gt;numel(); ++j) this-&gt;insert(this-&gt;getvalue(i,j) Y av, i,j);\</span>
+<span class="cp">  return *this;\</span>
+<span class="cp">}</span>
+
+<span class="cp">#define BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR(X) template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type,class S = typename std::common_type&lt;T,R&gt;::type&gt;\</span>
+<span class="cp">A&lt;S&gt; operator X (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){\</span>
+<span class="cp">  AVSizeInfo si = a.consistency_check(b);\</span>
+<span class="cp">  A&lt;S&gt; out = si.aorb ? A&lt;S&gt;(a) : A&lt;S&gt;(b);\</span>
+<span class="cp">  out.refresh(si.m,si.n); </span><span class="cm">/*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span><span class="cp">\</span>
+<span class="cp">  unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);\</span>
+<span class="cp">  unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);\</span>
+<span class="cp">  switch (scalarflg){\</span>
+<span class="cp">    case 3u: </span><span class="cm">/*a and b are scalars*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u: out.insert(a.getvalue(0,0) X b.getvalue(0,0), 0,0); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(i,0) X b.getvalue(0,0), i,0); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(0,0) X b.getvalue(i,0), i,0); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(i,0) X b.getvalue(i,0), i,0);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    case 2u: </span><span class="cm">/*b is a scalar*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u: for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b.getvalue(0,0), 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b.getvalue(0,0), i,j); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b.getvalue(i,0), i,j); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b.getvalue(i,0), i,j);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    case 1u: </span><span class="cm">/*a is a scalar*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u: for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,0) X b.getvalue(0,j), 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,0) X b.getvalue(0,j), i,j); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,0) X b.getvalue(i,j), i,j); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,0) X b.getvalue(i,j), i,j);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    default: </span><span class="cm">/*neither a nor b are scalars*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u: for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b.getvalue(0,j), 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b.getvalue(0,j), i,j); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b.getvalue(i,j), i,j); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b.getvalue(i,j), i,j);\</span>
+<span class="cp">    }\</span>
+<span class="cp">  }\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+
+<span class="cp">#define BINARY_ARRAYVECTOR_STDARRAY_OPERATOR(X) template&lt;class T, class R, template&lt;class&gt; class A,typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,A&lt;T&gt;&gt;::value&gt;::type, class S = typename std::common_type&lt;T,R&gt;::type, size_t Nel&gt;\</span>
+<span class="cp">A&lt;S&gt; operator X (const A&lt;T&gt;&amp; a, const std::array&lt;R,Nel&gt;&amp; b){\</span>
+<span class="cp">  AVSizeInfo si = a.consistency_check(b);\</span>
+<span class="cp">  A&lt;S&gt; out = A&lt;S&gt;(a);\</span>
+<span class="cp">  out.refresh(si.m,si.n); </span><span class="cm">/*in case a.size == b.size but one is singular, or a.numel == b.numel but one is scalar*/</span><span class="cp">\</span>
+<span class="cp">  unsigned scalarflg = static_cast&lt;unsigned&gt;(si.scalara) + (static_cast&lt;unsigned&gt;(si.scalarb)&lt;&lt;1u);\</span>
+<span class="cp">  unsigned onevecflg = static_cast&lt;unsigned&gt;(si.oneveca) + (static_cast&lt;unsigned&gt;(si.onevecb)&lt;&lt;1u);\</span>
+<span class="cp">  std::string interpret_error_msg = &quot;I do not know how to interpret this std::array as an ArrayVector for binary operations&quot;;\</span>
+<span class="cp">  switch (scalarflg){\</span>
+<span class="cp">    case 3u: </span><span class="cm">/*a and b are scalars*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u: out.insert(a.getvalue(0,0) X b[0], 0,0); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(i,0) X b[0], i,0); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(0,0) X b[i], i,0); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) out.insert(a.getvalue(i,0) X b[i], i,0);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    case 2u: </span><span class="cm">/*b is a scalar*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u:                               for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b[0], 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b[0], i,j); break;\</span>
+<span class="cp">      case 1u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b[i], i,j); break;\</span>
+<span class="cp">      default: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b[i], i,j);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    case 1u: </span><span class="cm">/*a is a scalar*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u:                               for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,0) X b[j], 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,0) X b[j], i,j); break;\</span>
+<span class="cp">      default: throw std::runtime_error(interpret_error_msg);\</span>
+<span class="cp">    }\</span>
+<span class="cp">    break;\</span>
+<span class="cp">    default: </span><span class="cm">/*neither a nor b are scalars*/</span><span class="cp">\</span>
+<span class="cp">    switch (onevecflg){\</span>
+<span class="cp">      case 3u:                               for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(0,j) X b[j], 0,j); break;\</span>
+<span class="cp">      case 2u: for (size_t i=0; i&lt;si.n; ++i) for (size_t j=0; j&lt;si.m; ++j) out.insert(a.getvalue(i,j) X b[j], i,j); break;\</span>
+<span class="cp">      default: throw std::runtime_error(interpret_error_msg);\</span>
+<span class="cp">    }\</span>
+<span class="cp">  }\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+
+<span class="n">INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">+=</span><span class="p">,</span><span class="o">+</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">-=</span><span class="p">,</span><span class="o">-</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">*=</span><span class="p">,</span><span class="o">*</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">/=</span><span class="p">,</span><span class="o">/</span><span class="p">)</span>
+
+<span class="n">INPLACE_ARRAYVECTOR_SCALAR_OPERATOR</span><span class="p">(</span><span class="o">+=</span><span class="p">,</span><span class="o">+</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_SCALAR_OPERATOR</span><span class="p">(</span><span class="o">-=</span><span class="p">,</span><span class="o">-</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_SCALAR_OPERATOR</span><span class="p">(</span><span class="o">*=</span><span class="p">,</span><span class="o">*</span><span class="p">)</span>
+<span class="n">INPLACE_ARRAYVECTOR_SCALAR_OPERATOR</span><span class="p">(</span><span class="o">/=</span><span class="p">,</span><span class="o">/</span><span class="p">)</span>
+
+<span class="n">BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_ARRAYVECTOR_OPERATOR</span><span class="p">(</span><span class="o">/</span><span class="p">)</span>
+
+<span class="n">BINARY_ARRAYVECTOR_STDARRAY_OPERATOR</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_STDARRAY_OPERATOR</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_STDARRAY_OPERATOR</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="n">BINARY_ARRAYVECTOR_STDARRAY_OPERATOR</span><span class="p">(</span><span class="o">/</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

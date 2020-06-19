@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class Mesh3 &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Motion" href="class_motion.html" />
+    <link rel="prev" title="Template Class MapGrid4" href="class_map_grid4.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class Mesh3</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/class_mesh3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-mesh3">
+<span id="exhale-class-class-mesh3"></span><h1>Template Class Mesh3<a class="headerlink" href="#template-class-mesh3" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_mesh.hpp.html#file-src-mesh-hpp"><span class="std std-ref">File mesh.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">BrillouinZoneMesh3&lt;</span> <span class="pre">T,</span> <span class="pre">S</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="class_brillouin_zone_mesh3.html#exhale-class-class-brillouin-zone-mesh3"><span class="std std-ref">Template Class BrillouinZoneMesh3</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E5Mesh3">
+<span id="_CPPv3I00E5Mesh3"></span><span id="_CPPv2I00E5Mesh3"></span><span class="target" id="class_mesh3"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">S</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">Mesh3</code><a class="headerlink" href="#_CPPv4I00E5Mesh3" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Subclassed by <a class="reference internal" href="class_brillouin_zone_mesh3.html#class_brillouin_zone_mesh3"><span class="std std-ref">BrillouinZoneMesh3&lt; T, S &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5Mesh35Mesh3ERK11ArrayVectorIdERKNSt6vectorINSt6vectorIiEEEEKdKiKi">
+<span id="_CPPv3N5Mesh35Mesh3ERK11ArrayVectorIdERKNSt6vectorINSt6vectorIiEEEEKdKiKi"></span><span id="_CPPv2N5Mesh35Mesh3ERK11ArrayVectorIdERKNSt6vectorINSt6vectorIiEEEEKdKiKi"></span><span id="Mesh3::Mesh3__ArrayVector:double:CR.std::vector:std::vector:i::CR.doubleC.iC.iC"></span><span class="target" id="class_mesh3_1aac2172def210017907a22c8b510b6486"></span><code class="sig-name descname">Mesh3</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;double&gt; &amp;<em>verts</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>facets</em>, <em class="property">const</em> double <em>max_volume</em> = -1.0, <em class="property">const</em> int <em>num_levels</em> = 3, <em class="property">const</em> int <em>max_points</em> = -1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Mesh35Mesh3ERK11ArrayVectorIdERKNSt6vectorINSt6vectorIiEEEEKdKiKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5Mesh35Mesh3ERK5Mesh3I1T1SE">
+<span id="_CPPv3N5Mesh35Mesh3ERK5Mesh3I1T1SE"></span><span id="_CPPv2N5Mesh35Mesh3ERK5Mesh3I1T1SE"></span><span id="Mesh3::Mesh3__Mesh3:T.S:CR"></span><span class="target" id="class_mesh3_1a4d4b69d67adde0ca4f51af6ae173c1dc"></span><code class="sig-name descname">Mesh3</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5Mesh35Mesh3ERK5Mesh3I1T1SE" title="Mesh3::Mesh3">Mesh3</a>&lt;T, S&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Mesh35Mesh3ERK5Mesh3I1T1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5Mesh3aSERK5Mesh3I1T1SE">
+<span id="_CPPv3N5Mesh3aSERK5Mesh3I1T1SE"></span><span id="_CPPv2N5Mesh3aSERK5Mesh3I1T1SE"></span><span id="Mesh3::assign-operator__Mesh3:T.S:CR"></span><span class="target" id="class_mesh3_1a4c88cc12a23472fc58f5de8e76abcc37"></span>Mesh3&lt;T, S&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> Mesh3&lt;T, S&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Mesh3aSERK5Mesh3I1T1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5Mesh34sizeEv">
+<span id="_CPPv3NK5Mesh34sizeEv"></span><span id="_CPPv2NK5Mesh34sizeEv"></span><span id="Mesh3::sizeC"></span><span class="target" id="class_mesh3_1a2acd1f3449e33c79eb8c20345dba2e12"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5Mesh34sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of mesh vertices. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5Mesh312get_mesh_xyzEv">
+<span id="_CPPv3NK5Mesh312get_mesh_xyzEv"></span><span id="_CPPv2NK5Mesh312get_mesh_xyzEv"></span><span id="Mesh3::get_mesh_xyzC"></span><span class="target" id="class_mesh3_1affad470d207e0562a1ba8033c9a3983b"></span><em class="property">const</em> ArrayVector&lt;double&gt; &amp;<code class="sig-name descname">get_mesh_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5Mesh312get_mesh_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the positions of all vertices in the mesh. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5Mesh319get_mesh_tetrehedraEv">
+<span id="_CPPv3NK5Mesh319get_mesh_tetrehedraEv"></span><span id="_CPPv2NK5Mesh319get_mesh_tetrehedraEv"></span><span id="Mesh3::get_mesh_tetrehedraC"></span><span class="target" id="class_mesh3_1a5a6f3062b467600810bc4c843d94335f"></span><em class="property">const</em> ArrayVector&lt;size_t&gt; &amp;<code class="sig-name descname">get_mesh_tetrehedra</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5Mesh319get_mesh_tetrehedraEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the tetrahedron indices of the mesh. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5Mesh34dataEv">
+<span id="_CPPv3NK5Mesh34dataEv"></span><span id="_CPPv2NK5Mesh34dataEv"></span><span id="Mesh3::data__voidC"></span><span class="target" id="class_mesh3_1aa6cc63d6236cdf125cd3a83c3563ef81"></span><em class="property">const</em> InterpolationData&lt;T, S&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5Mesh34dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN5Mesh318replace_value_dataEvDp1A">
+<span id="_CPPv3IDpEN5Mesh318replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN5Mesh318replace_value_dataEDp1A"></span><span class="target" id="class_mesh3_1aeb3ed7a7d87ac34025bc380df1c5b2e7"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br />void <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN5Mesh318replace_value_dataEvDp1A" title="Mesh3::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN5Mesh318replace_value_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN5Mesh319replace_vector_dataEvDp1A">
+<span id="_CPPv3IDpEN5Mesh319replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN5Mesh319replace_vector_dataEDp1A"></span><span class="target" id="class_mesh3_1abadf089a825719e96f4eafc8a59acc52"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br />void <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN5Mesh319replace_vector_dataEvDp1A" title="Mesh3::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN5Mesh319replace_vector_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK5Mesh312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd">
+<span id="_CPPv3II0E0ENK5Mesh312debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span id="_CPPv2II0E0ENK5Mesh312debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span class="target" id="class_mesh3_1aad43bb054f1451df8b3a9f6fa4534541"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br />ArrayVector&lt;double&gt; <code class="sig-name descname">debye_waller</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0ENK5Mesh312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="Mesh3::debye_waller::A">A</a>&lt;double&gt; &amp;<em>Q</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>M</em>, <em class="property">const</em> double <em>t_K</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK5Mesh312debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh326check_before_interpolatingEjRK11ArrayVectorI1RE">
+<span id="_CPPv3I0ENK5Mesh326check_before_interpolatingERK11ArrayVectorI1RE"></span><span id="_CPPv2I0ENK5Mesh326check_before_interpolatingERK11ArrayVectorI1RE"></span><span class="target" id="class_mesh3_1a9f0f4df1abc002074d4efd1cf014ccb2"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />unsigned int <code class="sig-name descname">check_before_interpolating</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK5Mesh326check_before_interpolatingEjRK11ArrayVectorI1RE" title="Mesh3::check_before_interpolating::R">R</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh326check_before_interpolatingEjRK11ArrayVectorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform sanity checks before attempting to interpolate. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK5LQVecI1RE">
+<span id="_CPPv3I0ENK5Mesh314interpolate_atERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5Mesh314interpolate_atERK5LQVecI1RE"></span><span class="target" id="class_mesh3_1afa53eb69581d1df53f02f9c18cf60d7f"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;S&gt;&gt; <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> LQVec&lt;<a class="reference internal" href="#_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK5LQVecI1RE" title="Mesh3::interpolate_at::R">R</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation at the specified <a class="reference internal" href="class_reciprocal.html#class_reciprocal"><span class="std std-ref">Reciprocal</span></a> lattice points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1RE">
+<span id="_CPPv3I0ENK5Mesh314interpolate_atERK11ArrayVectorI1RE"></span><span id="_CPPv2I0ENK5Mesh314interpolate_atERK11ArrayVectorI1RE"></span><span class="target" id="class_mesh3_1aa417133cc0eceb9bdbec4a160e14663c"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;S&gt;&gt; <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1RE" title="Mesh3::interpolate_at::R">R</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh314interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolating at the specified points in the mesh’s orthonormal frame. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh323parallel_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1REKi">
+<span id="_CPPv3I0ENK5Mesh323parallel_interpolate_atERK11ArrayVectorI1REKi"></span><span id="_CPPv2I0ENK5Mesh323parallel_interpolate_atERK11ArrayVectorI1REKi"></span><span class="target" id="class_mesh3_1a87618e39379e1039dc6d6e3fa7ff50a9"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;S&gt;&gt; <code class="sig-name descname">parallel_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK5Mesh323parallel_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1REKi" title="Mesh3::parallel_interpolate_at::R">R</a>&gt; &amp;<em>x</em>, <em class="property">const</em> int <em>nthreads</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh323parallel_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1SEEERK11ArrayVectorI1REKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh316which_neighboursENSt6vectorI6size_tEERKNSt6vectorI1REEK1RK6size_t">
+<span id="_CPPv3I0ENK5Mesh316which_neighboursERKNSt6vectorI1REEK1RK6size_t"></span><span id="_CPPv2I0ENK5Mesh316which_neighboursERKNSt6vectorI1REEK1RK6size_t"></span><span class="target" id="class_mesh3_1a7fa03a1a3103346c00204eaf0a5f9447"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />std::vector&lt;size_t&gt; <code class="sig-name descname">which_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK5Mesh316which_neighboursENSt6vectorI6size_tEERKNSt6vectorI1REEK1RK6size_t" title="Mesh3::which_neighbours::R">R</a>&gt; &amp;<em>t</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh316which_neighboursENSt6vectorI6size_tEERKNSt6vectorI1REEK1RK6size_t" title="Mesh3::which_neighbours::R">R</a> <em>value</em>, <em class="property">const</em> size_t <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh316which_neighboursENSt6vectorI6size_tEERKNSt6vectorI1REEK1RK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the neighbours for which a passed boolean array holds true. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi">
+<span id="_CPPv3I0ENK5Mesh315multi_sort_permEK1RK1RK1RKi"></span><span id="_CPPv2I0ENK5Mesh315multi_sort_permEK1RK1RK1RKi"></span><span class="target" id="class_mesh3_1a50ab2cf1a0e9f2ff3d609c0029ae0efa"></span>template&lt;typename <code class="sig-name descname">R</code> = double&gt;<br />ArrayVector&lt;size_t&gt; <code class="sig-name descname">multi_sort_perm</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a> <em>s</em> = <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a> <em>v</em> = <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a>(1), <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a> <em>m</em> = <a class="reference internal" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Mesh3::multi_sort_perm::R">R</a>(1), <em class="property">const</em> int <em>vf</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh315multi_sort_permE11ArrayVectorI6size_tEK1RK1RK1RKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sort the values stored in the mesh by already-sorted neighbour consensus. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh319consensus_sort_fromE6size_tK6size_tAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK5Mesh319consensus_sort_fromEK6size_tAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK5Mesh319consensus_sort_fromEK6size_tA3_K1RKiA3_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE"></span><span class="target" id="class_mesh3_1a1334be6e6ef7d797406cef9b500f995a"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />size_t <code class="sig-name descname">consensus_sort_from</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>s</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh319consensus_sort_fromE6size_tK6size_tAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="Mesh3::consensus_sort_from::R">R</a> <em>w</em>[3], <em class="property">const</em> int <em>f</em>, <em class="property">const</em> size_t <em>so</em>[3], ArrayVector&lt;size_t&gt; &amp;<em>p</em>, std::vector&lt;bool&gt; &amp;<em>d</em>, std::vector&lt;bool&gt; &amp;<em>l</em>, std::vector&lt;size_t&gt; &amp;<em>v</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh319consensus_sort_fromE6size_tK6size_tAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEERNSt6vectorIbEERNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5Mesh325consensus_sort_differenceEbAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE">
+<span id="_CPPv3I0ENK5Mesh325consensus_sort_differenceEAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE"></span><span id="_CPPv2I0ENK5Mesh325consensus_sort_differenceEA3_K1RKiA3_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE"></span><span class="target" id="class_mesh3_1a72b78ce9a263d5d1bf64fbf67cf49083"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br />bool <code class="sig-name descname">consensus_sort_difference</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK5Mesh325consensus_sort_differenceEbAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE" title="Mesh3::consensus_sort_difference::R">R</a> <em>w</em>[3], <em class="property">const</em> int <em>f</em>, <em class="property">const</em> size_t <em>so</em>[3], ArrayVector&lt;size_t&gt; &amp;<em>p</em>, std::vector&lt;bool&gt; &amp;<em>d</em>, <em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> std::vector&lt;size_t&gt; <em>n</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5Mesh325consensus_sort_differenceEbAL3E_K1RKiAL3E_K6size_tR11ArrayVectorI6size_tERNSt6vectorIbEEK6size_tKNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5Mesh39to_stringEv">
+<span id="_CPPv3NK5Mesh39to_stringEv"></span><span id="_CPPv2NK5Mesh39to_stringEv"></span><span id="Mesh3::to_string__voidC"></span><span class="target" id="class_mesh3_1ace399646b8ae9a014edc6aadd87b79c5"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5Mesh39to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp member">
+<dt id="_CPPv4N5Mesh34meshE">
+<span id="_CPPv3N5Mesh34meshE"></span><span id="_CPPv2N5Mesh34meshE"></span><span id="Mesh3::mesh__TetTri"></span><span class="target" id="class_mesh3_1a52b61d1a2eae4195f694db7274a4d2c8"></span><a class="reference internal" href="class_tet_tri.html#_CPPv46TetTri" title="TetTri">TetTri</a> <code class="sig-name descname">mesh</code><a class="headerlink" href="#_CPPv4N5Mesh34meshE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp member">
+<dt id="_CPPv4N5Mesh35data_E">
+<span id="_CPPv3N5Mesh35data_E"></span><span id="_CPPv2N5Mesh35data_E"></span><span id="Mesh3::data___InterpolationData:T.S:"></span><span class="target" id="class_mesh3_1adc6a1b7c930b30e378c581b3a2134718"></span>InterpolationData&lt;T, S&gt; <code class="sig-name descname">data_</code><a class="headerlink" href="#_CPPv4N5Mesh35data_E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="class_motion.html" class="btn btn-neutral float-right" title="Template Class Motion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="class_map_grid4.html" class="btn btn-neutral float-left" title="Template Class MapGrid4" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class InnerInterpolationData &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class InterpolateGrid3" href="class_interpolate_grid3.html" />
+    <link rel="prev" title="Class HallSymbol" href="class_hall_symbol.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class InnerInterpolationData</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/class_inner_interpolation_data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-innerinterpolationdata">
+<span id="exhale-class-class-inner-interpolation-data"></span><h1>Template Class InnerInterpolationData<a class="headerlink" href="#template-class-innerinterpolationdata" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_interpolation_data.hpp.html#file-src-interpolation-data-hpp"><span class="std std-ref">File interpolation_data.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0E22InnerInterpolationData">
+<span id="_CPPv3I0E22InnerInterpolationData"></span><span id="_CPPv2I0E22InnerInterpolationData"></span><span class="target" id="class_inner_interpolation_data"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">InnerInterpolationData</code><a class="headerlink" href="#_CPPv4I0E22InnerInterpolationData" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData22InnerInterpolationDataE6size_t6size_t">
+<span id="_CPPv3N22InnerInterpolationData22InnerInterpolationDataE6size_t6size_t"></span><span id="_CPPv2N22InnerInterpolationData22InnerInterpolationDataE6size_t6size_t"></span><span id="InnerInterpolationData::InnerInterpolationData__s.s"></span><span class="target" id="class_inner_interpolation_data_1a57cd9af10d368cf9093f8241246fa780"></span><code class="sig-name descname">InnerInterpolationData</code><span class="sig-paren">(</span>size_t <em>scf_type</em> = 0, size_t <em>vcf_type</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData22InnerInterpolationDataE6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData22InnerInterpolationDataE12CostFunctionI1TE12CostFunctionI1TE">
+<span id="_CPPv3N22InnerInterpolationData22InnerInterpolationDataE12CostFunctionI1TE12CostFunctionI1TE"></span><span id="_CPPv2N22InnerInterpolationData22InnerInterpolationDataE12CostFunctionI1TE12CostFunctionI1TE"></span><span id="InnerInterpolationData::InnerInterpolationData__CostFunction:T:.CostFunction:T:"></span><span class="target" id="class_inner_interpolation_data_1a0a7c887a3e5038ddb1fbe41231100182"></span><code class="sig-name descname">InnerInterpolationData</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a.html#_CPPv4I0E12CostFunction" title="CostFunction">CostFunction</a>&lt;T&gt; <em>scf</em>, <a class="reference internal" href="typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a.html#_CPPv4I0E12CostFunction" title="CostFunction">CostFunction</a>&lt;T&gt; <em>vcf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData22InnerInterpolationDataE12CostFunctionI1TE12CostFunctionI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData10setup_fakeEK6size_tK9element_t">
+<span id="_CPPv3N22InnerInterpolationData10setup_fakeEK6size_tK9element_t"></span><span id="_CPPv2N22InnerInterpolationData10setup_fakeEK6size_tK9element_t"></span><span id="InnerInterpolationData::setup_fake__sC.element_tC"></span><span class="target" id="class_inner_interpolation_data_1a11e994afb56af785a31dcefd3ab411d1"></span>void <code class="sig-name descname">setup_fake</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>sz</em>, <em class="property">const</em> <a class="reference internal" href="typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.html#_CPPv49element_t" title="element_t">element_t</a> <em>br</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData10setup_fakeEK6size_tK9element_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData13set_cost_infoEKiKi">
+<span id="_CPPv3N22InnerInterpolationData13set_cost_infoEKiKi"></span><span id="_CPPv2N22InnerInterpolationData13set_cost_infoEKiKi"></span><span id="InnerInterpolationData::set_cost_info__iC.iC"></span><span class="target" id="class_inner_interpolation_data_1ae49687cdadcba9d7b017a204f7d8d541"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData13set_cost_infoEKiKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData13set_cost_infoEKiKiRK12ElementsCost">
+<span id="_CPPv3N22InnerInterpolationData13set_cost_infoEKiKiRK12ElementsCost"></span><span id="_CPPv2N22InnerInterpolationData13set_cost_infoEKiKiRK12ElementsCost"></span><span id="InnerInterpolationData::set_cost_info__iC.iC.ElementsCostCR"></span><span class="target" id="class_inner_interpolation_data_1ac96e714bae7e77ba03562d936c9a347e"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em>, <em class="property">const</em> <a class="reference internal" href="typedef_interpolation__data_8hpp_1abfffab46700de65d0a9721ccccd48255.html#_CPPv412ElementsCost" title="ElementsCost">ElementsCost</a> &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData13set_cost_infoEKiKiRK12ElementsCost" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData4sizeEv">
+<span id="_CPPv3NK22InnerInterpolationData4sizeEv"></span><span id="_CPPv2NK22InnerInterpolationData4sizeEv"></span><span id="InnerInterpolationData::size__voidC"></span><span class="target" id="class_inner_interpolation_data_1a7abc7ee270886f6fad5470b6d639c514"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData5numelEv">
+<span id="_CPPv3NK22InnerInterpolationData5numelEv"></span><span id="_CPPv2NK22InnerInterpolationData5numelEv"></span><span id="InnerInterpolationData::numel__voidC"></span><span class="target" id="class_inner_interpolation_data_1a23cb0f3184432b7602f612299f269671"></span>size_t <code class="sig-name descname">numel</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData5numelEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData4dataEv">
+<span id="_CPPv3NK22InnerInterpolationData4dataEv"></span><span id="_CPPv2NK22InnerInterpolationData4dataEv"></span><span id="InnerInterpolationData::data__voidC"></span><span class="target" id="class_inner_interpolation_data_1a37481d502f47b09e5a2bfc767e5b1cd5"></span><em class="property">const</em> ArrayVector&lt;T&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData5shapeEv">
+<span id="_CPPv3NK22InnerInterpolationData5shapeEv"></span><span id="_CPPv2NK22InnerInterpolationData5shapeEv"></span><span id="InnerInterpolationData::shape__voidC"></span><span class="target" id="class_inner_interpolation_data_1ac293059ebffd67b4daebcd48744bb62a"></span><em class="property">const</em> <a class="reference internal" href="typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5.html#_CPPv49ShapeType" title="ShapeType">ShapeType</a> &amp;<code class="sig-name descname">shape</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData5shapeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData8elementsEv">
+<span id="_CPPv3NK22InnerInterpolationData8elementsEv"></span><span id="_CPPv2NK22InnerInterpolationData8elementsEv"></span><span id="InnerInterpolationData::elements__voidC"></span><span class="target" id="class_inner_interpolation_data_1a4ed5b8552687a22add8e595c82f622df"></span><em class="property">const</em> <a class="reference internal" href="typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb.html#_CPPv412ElementsType" title="ElementsType">ElementsType</a> &amp;<code class="sig-name descname">elements</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData8elementsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData8branchesEv">
+<span id="_CPPv3NK22InnerInterpolationData8branchesEv"></span><span id="_CPPv2NK22InnerInterpolationData8branchesEv"></span><span id="InnerInterpolationData::branches__voidC"></span><span class="target" id="class_inner_interpolation_data_1a300c1ce65c001949c0b0ce720af00ea1"></span><a class="reference internal" href="typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.html#_CPPv49element_t" title="element_t">element_t</a> <code class="sig-name descname">branches</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb">
+<span id="_CPPv3I00ENK22InnerInterpolationData14interpolate_atERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb"></span><span id="_CPPv2I00ENK22InnerInterpolationData14interpolate_atERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb"></span><span class="target" id="class_inner_interpolation_data_1ac390260d2ecc4285256ed0b847080962"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb" title="InnerInterpolationData::interpolate_at::I">I</a>&gt;::value&gt;&gt;<br />void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>permutations</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb" title="InnerInterpolationData::interpolate_at::I">I</a>&gt; &amp;<em>indices</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>weights</em>, ArrayVector&lt;T&gt; &amp;<em>out</em>, <em class="property">const</em> size_t, <em class="property">const</em> bool <em>arbitrary_phase_allowed</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorI1IEERKNSt6vectorIdEER11ArrayVectorI1TEK6size_tKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb">
+<span id="_CPPv3I00ENK22InnerInterpolationData14interpolate_atERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb"></span><span id="_CPPv2I00ENK22InnerInterpolationData14interpolate_atERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb"></span><span class="target" id="class_inner_interpolation_data_1a7c255276886d04cfb1aed184c8edef71"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb" title="InnerInterpolationData::interpolate_at::I">I</a>&gt;::value&gt;&gt;<br />void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>permutations</em>, <em class="property">const</em> std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb" title="InnerInterpolationData::interpolate_at::I">I</a>, double&gt;&gt; &amp;<em>indices_weights</em>, ArrayVector&lt;T&gt; &amp;<em>out</em>, <em class="property">const</em> size_t, <em class="property">const</em> bool <em>arbitrary_phase_allowed</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK22InnerInterpolationData14interpolate_atEvRKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt4pairI1IdEEEER11ArrayVectorI1TEK6size_tKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK22InnerInterpolationData15rotate_in_placeEbR11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi">
+<span id="_CPPv3I00ENK22InnerInterpolationData15rotate_in_placeER11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span><span id="_CPPv2I00ENK22InnerInterpolationData15rotate_in_placeER11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span><span class="target" id="class_inner_interpolation_data_1a6e817f9248724a744969f0084fc953ef"></span>template&lt;class <code class="sig-name descname">R</code>, class <code class="sig-name descname">RotT</code>&gt;<br />bool <code class="sig-name descname">rotate_in_place</code><span class="sig-paren">(</span>ArrayVector&lt;T&gt; &amp;<em>x</em>, <em class="property">const</em> LQVec&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData15rotate_in_placeEbR11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="InnerInterpolationData::rotate_in_place::R">R</a>&gt; &amp;<em>q</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData15rotate_in_placeEbR11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="InnerInterpolationData::rotate_in_place::RotT">RotT</a> &amp;<em>rt</em>, <em class="property">const</em> <a class="reference internal" href="class_point_symmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> &amp;<em>ps</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>r</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>invr</em>, <em class="property">const</em> int <em>nth</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK22InnerInterpolationData15rotate_in_placeEbR11ArrayVectorI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData11rotateslikeEv">
+<span id="_CPPv3NK22InnerInterpolationData11rotateslikeEv"></span><span id="_CPPv2NK22InnerInterpolationData11rotateslikeEv"></span><span id="InnerInterpolationData::rotateslikeC"></span><span class="target" id="class_inner_interpolation_data_1aa408d230a04fff3db477d73785fdd953"></span><a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData11rotateslikeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData11rotateslikeEK11RotatesLike">
+<span id="_CPPv3N22InnerInterpolationData11rotateslikeEK11RotatesLike"></span><span id="_CPPv2N22InnerInterpolationData11rotateslikeEK11RotatesLike"></span><span id="InnerInterpolationData::rotateslike__RotatesLikeC"></span><span class="target" id="class_inner_interpolation_data_1a90f9da273282ab6889ec35b14cb233da"></span><a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData11rotateslikeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERK9ShapeTypeRKNSt5arrayI1IXL3EEEEK11RotatesLike">
+<span id="_CPPv3I0EN22InnerInterpolationData12replace_dataERK11ArrayVectorI1TERK9ShapeTypeRKNSt5arrayI1IXL3EEEEK11RotatesLike"></span><span id="_CPPv2I0EN22InnerInterpolationData12replace_dataERK11ArrayVectorI1TERK9ShapeTypeRKNSt5arrayI1IX3EEEK11RotatesLike"></span><span class="target" id="class_inner_interpolation_data_1a785eafa6744efdabb9e11f6691010e99"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br />void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>nd</em>, <em class="property">const</em> <a class="reference internal" href="typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5.html#_CPPv49ShapeType" title="ShapeType">ShapeType</a> &amp;<em>ns</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERK9ShapeTypeRKNSt5arrayI1IXL3EEEEK11RotatesLike" title="InnerInterpolationData::replace_data::I">I</a>, 3&gt; &amp;<em>ne</em>, <em class="property">const</em> <a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em> = <a class="reference internal" href="enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a>::Real<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERK9ShapeTypeRKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERKNSt5arrayI1IXL3EEEE">
+<span id="_CPPv3I0EN22InnerInterpolationData12replace_dataERK11ArrayVectorI1TERKNSt5arrayI1IXL3EEEE"></span><span id="_CPPv2I0EN22InnerInterpolationData12replace_dataERK11ArrayVectorI1TERKNSt5arrayI1IX3EEE"></span><span class="target" id="class_inner_interpolation_data_1a295df98acc3d9e4a17df76837fcf45c9"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br />void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>nd</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERKNSt5arrayI1IXL3EEEE" title="InnerInterpolationData::replace_data::I">I</a>, 3&gt; &amp;<em>ne</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN22InnerInterpolationData12replace_dataEvRK11ArrayVectorI1TERKNSt5arrayI1IXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N22InnerInterpolationData12replace_dataERK11ArrayVectorI1TE">
+<span id="_CPPv3N22InnerInterpolationData12replace_dataERK11ArrayVectorI1TE"></span><span id="_CPPv2N22InnerInterpolationData12replace_dataERK11ArrayVectorI1TE"></span><span id="InnerInterpolationData::replace_data__ArrayVector:T:CR"></span><span class="target" id="class_inner_interpolation_data_1adb0acd2c4e005bb9035bbae013d2a916"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>nd</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22InnerInterpolationData12replace_dataERK11ArrayVectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData11branch_spanEv">
+<span id="_CPPv3NK22InnerInterpolationData11branch_spanEv"></span><span id="_CPPv2NK22InnerInterpolationData11branch_spanEv"></span><span id="InnerInterpolationData::branch_spanC"></span><span class="target" id="class_inner_interpolation_data_1a2fb8faf61f4752a0a08b635bd3901da4"></span><a class="reference internal" href="typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.html#_CPPv49element_t" title="element_t">element_t</a> <code class="sig-name descname">branch_span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData11branch_spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK22InnerInterpolationData9to_stringEv">
+<span id="_CPPv3NK22InnerInterpolationData9to_stringEv"></span><span id="_CPPv2NK22InnerInterpolationData9to_stringEv"></span><span id="InnerInterpolationData::to_stringC"></span><span class="target" id="class_inner_interpolation_data_1a461e035b183360572b57dcdc534ae27c"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK22InnerInterpolationData9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK22InnerInterpolationData8add_costEvK1IK1IRNSt6vectorI1SEEKb">
+<span id="_CPPv3I00ENK22InnerInterpolationData8add_costEK1IK1IRNSt6vectorI1SEEKb"></span><span id="_CPPv2I00ENK22InnerInterpolationData8add_costEK1IK1IRNSt6vectorI1SEEKb"></span><span class="target" id="class_inner_interpolation_data_1ac86b8eb22d6ca2f0aeb888081545531b"></span>template&lt;typename <code class="sig-name descname">I</code>, typename <code class="sig-name descname">S</code>&gt;<br />void <code class="sig-name descname">add_cost</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData8add_costEvK1IK1IRNSt6vectorI1SEEKb" title="InnerInterpolationData::add_cost::I">I</a> <em>i0</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData8add_costEvK1IK1IRNSt6vectorI1SEEKb" title="InnerInterpolationData::add_cost::I">I</a> <em>i1</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I00ENK22InnerInterpolationData8add_costEvK1IK1IRNSt6vectorI1SEEKb" title="InnerInterpolationData::add_cost::S">S</a>&gt; &amp;<em>cost</em>, <em class="property">const</em> bool <em>arbitrary_phase_allowed</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK22InnerInterpolationData8add_costEvK1IK1IRNSt6vectorI1SEEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="class_interpolate_grid3.html" class="btn btn-neutral float-right" title="Template Class InterpolateGrid3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="class_hall_symbol.html" class="btn btn-neutral float-left" title="Class HallSymbol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+
+.. _program_listing_file_src_lattice.hpp:
+
+Program Listing for File lattice.hpp
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_lattice.hpp>` (``src\lattice.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /* Copyright 2019 Greg Tucker
+   //
+   // This file is part of brille.
+   //
+   // brille is free software: you can redistribute it and/or modify it under the
+   // terms of the GNU Affero General Public License as published by the Free
+   // Software Foundation, either version 3 of the License, or (at your option)
+   // any later version.
+   //
+   // brille is distributed in the hope that it will be useful, but
+   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   // or FITNESS FOR A PARTICULAR PURPOSE.
+   // See the GNU Affero General Public License for more details.
+   //
+   // You should have received a copy of the GNU Affero General Public License
+   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #ifndef _LATTICE_CLASS_H_
+   #define _LATTICE_CLASS_H_
+   
+   #include <assert.h>
+   #include <vector>
+   // #include "utilities.hpp"
+   #include "primitive.hpp"
+   #include "basis.hpp"
+   
+   
+   // forward declare the two types of lattices so that they can be mutually-referential
+   class Lattice;
+   class Direct;
+   class Reciprocal;
+   
+   enum class AngleUnit { not_provided, radian, degree, pi };
+   
+   template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, const I r, T* len, T* ang){
+     T n[9];
+     // compute the dot product of each row with itself
+     for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  len[i] += latmat[i*c+j*r]*latmat[i*c+j*r];
+     // the lattice vector lengths are the square root of this
+     for (int i=0; i<3; ++i) len[i] = std::sqrt(len[i]);
+     // normalize the row vectors, leaving only angle information
+     for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*c+j*r] = latmat[i*c+j*r]/len[i];
+     // take the dot product between cyclically permuted rows: 0=1⋅2, 1=2⋅0, 2=0⋅1
+     for (int i=0; i<3; ++i) for (int j=0; j<3; ++j)  ang[i] += n[c*((i+1)%3)+j*r]*n[c*((i+2)%3)+j*r];
+     // the lattice angles are the arccosines of these dot products of normalized lattice vectors
+     for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
+   }
+   
+   class Lattice{
+   protected:
+     std::array<double,3> len; 
+     std::array<double,3> ang; 
+     double volume; 
+     Spacegroup spg; 
+     Symmetry spgsym; 
+     Pointgroup ptg; 
+     PointSymmetry ptgsym; 
+     Basis basis; 
+   protected:
+     double unitvolume() const;
+     Lattice inner_star() const;
+     template<class I>
+     void set_len_pointer(const double *lvec, const I span){
+       for (int i=0;i<3;i++) this->len[i] = lvec[i*span];
+     }
+     template<class I>
+     void set_ang_pointer(const double *avec, const I span, const AngleUnit angle_unit){
+       AngleUnit au = angle_unit;
+       if (au == AngleUnit::not_provided){
+         double minang = (std::numeric_limits<double>::max)();
+         double maxang = (std::numeric_limits<double>::lowest)();
+         for (int i=0; i<3; ++i){
+           if (avec[i*span] < minang) minang = avec[i*span];
+           if (avec[i*span] > maxang) maxang = avec[i*span];
+         }
+         if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
+         // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
+         // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+         au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+       }
+       double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+       for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
+     }
+     // void set_len_scalars(const double, const double, const double);
+     // void set_ang_scalars(const double, const double, const double, const AngleUnit);
+     void check_ang(const AngleUnit);
+     void check_hall_number(const int h);
+     void check_IT_name(const std::string& itname, const std::string& choice="");
+   public:
+     Lattice(const double *, const int h=1);
+     template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
+     Lattice(const double * latmat, std::vector<I>& strides, const int h){
+       double l[3]={0,0,0}, a[3]={0,0,0};
+       latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
+       this->set_len_pointer(l,1);
+       this->set_ang_pointer(a,1, AngleUnit::radian);
+       this->volume=this->calculatevolume();
+       this->check_hall_number(h);
+     }
+     template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
+     Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const int h, const AngleUnit au=AngleUnit::not_provided){
+       this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
+       this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
+       this->volume=this->calculatevolume();
+       this->check_hall_number(h);
+     }
+     Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
+     Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
+     Lattice(const double *, const std::string&, const std::string& choice="");
+     Lattice(const double *, const double *, const std::string&, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided);
+     template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
+     Lattice(const double * latmat, std::vector<I>& strides, const std::string& itname, const std::string& choice=""){
+       double l[3]={0,0,0}, a[3]={0,0,0};
+       latmat_to_lenang(latmat,strides[0]/sizeof(double),strides[1]/sizeof(double),l,a);
+       this->set_len_pointer(l,1);
+       this->set_ang_pointer(a,1, AngleUnit::radian);
+       this->volume=this->calculatevolume();
+       this->check_IT_name(itname, choice);
+     }
+     template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
+     Lattice(const double * lengths, std::vector<I>& lenstrides, const double * angles, std::vector<I>& angstrides, const std::string& itname, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided){
+       this->set_len_pointer(lengths,lenstrides[0]/sizeof(double));
+       this->set_ang_pointer(angles,angstrides[0]/sizeof(double), au);
+       this->volume=this->calculatevolume();
+       this->check_IT_name(itname, choice);
+     }
+     Lattice(const double, const double, const double, const double, const double, const double, const std::string&, const std::string& choice="");
+     virtual ~Lattice() = default;
+     double get_a     () const {return len[0];}
+     double get_b     () const {return len[1];}
+     double get_c     () const {return len[2];}
+     double get_alpha () const {return ang[0];}
+     double get_beta  () const {return ang[1];}
+     double get_gamma () const {return ang[2];}
+     double get_volume() const {return volume;}
+     double calculatevolume();
+     void get_metric_tensor(double * mt) const ;
+     void get_covariant_metric_tensor(double *mt) const ;
+     void get_contravariant_metric_tensor(double *mt) const ;
+     // some functions don't logically make sense for this base class, but
+     // do for the derived classes. define them here for funsies
+     bool issame(const Lattice&) const; // this should really have a tolerance
+     bool isapprox(const Lattice&) const;
+     int ispermutation(const Lattice&) const;
+     virtual void print();
+     virtual std::string string_repr();
+     int get_hall() const {return spg.get_hall_number();}
+     int set_hall(const int h) { check_hall_number(h); return get_hall(); }
+     Spacegroup get_spacegroup_object() const { return spg; }
+     Pointgroup get_pointgroup_object() const { return ptg; }
+     Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
+       if (time_reversal && !spgsym.has_space_inversion()){
+         Symmetry gens = spgsym.generators();
+         Motion<int,double> space_inversion({{-1,0,0, 0,-1,0, 0,0,-1}},{{0.,0.,0.}});
+         gens.add(space_inversion);
+         return gens.generate();
+       }
+       return spgsym;
+     }
+     PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {
+       if (time_reversal && !ptgsym.has_space_inversion()){
+         // time_reversal == space_inversion. requested but not present
+         // get the generators of the pointgroup
+         PointSymmetry gens = ptgsym.generators();
+         // add time-reversal/space-inversion
+         std::array<int,9> trsi{{-1,0,0, 0,-1,0, 0,0,-1}};
+         gens.add(trsi);
+         // generate the new pointgroup
+         return gens.generate();
+       } else {
+         return ptgsym;
+       }
+     }
+     bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
+     Basis get_basis() const {return basis; }
+     //template <class R, class II>
+     Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<unsigned long>& typ) {
+       this->basis = Basis(pos, typ);
+       return this->get_basis();
+     }
+     Basis set_basis(const Basis& b) {
+       this->basis = b;
+       return this->get_basis();
+     }
+   };
+   
+   class Direct: public Lattice{
+   public:
+     template<class ...Types> Direct(Types ... args): Lattice(args...){}
+     Direct(const Lattice& lat): Lattice(lat){}
+     Reciprocal star() const;
+     void get_xyz_transform(double*) const;
+     void get_xyz_transform(double*, const size_t, const size_t) const;
+     template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+     void get_inverse_xyz_transform(double*) const;
+     void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+     template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+     void get_lattice_matrix(double*) const;
+     void get_lattice_matrix(double*, const size_t, const size_t) const;
+     template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
+     bool isstar(const Direct&) const;
+     bool isstar(const Reciprocal&) const;
+     void print() override;
+     std::string string_repr() override;
+     Direct primitive(void) const;
+   };
+   class Reciprocal: public Lattice{
+   public:
+     template<class ...Types> Reciprocal(Types ... args): Lattice(args...){}
+     Reciprocal(const Lattice& lat): Lattice(lat){}
+     Direct star() const;
+     void get_B_matrix(double*) const;
+     void get_B_matrix(double*, const size_t, const size_t) const;
+     template<class I> void get_B_matrix(double*, std::vector<I>&) const;
+     void get_xyz_transform(double*) const;
+     void get_xyz_transform(double*, const size_t, const size_t) const;
+     template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+     void get_inverse_xyz_transform(double*) const;
+     void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+     template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+     void get_lattice_matrix(double*) const;
+     void get_lattice_matrix(double*, const size_t, const size_t) const;
+     template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
+     bool isstar(const Reciprocal&) const;
+     bool isstar(const Direct&) const;
+     void print() override;
+     std::string string_repr() override;
+     Reciprocal primitive(void) const;
+   };
+   
+   template <typename T> struct LatticeTraits{
+     using type = void;
+     using star = void;
+   };
+   #ifndef DOXYGEN_SHOULD_SKIP_THIS
+   template<> struct LatticeTraits<Direct>{
+     using type = Direct;
+     using star = Reciprocal;
+   };
+   template<> struct LatticeTraits<Reciprocal>{
+     using type = Reciprocal;
+     using star = Direct;
+   };
+   #endif
+   
+   #endif

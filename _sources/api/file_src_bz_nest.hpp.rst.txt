@@ -1,0 +1,55 @@
+
+.. _file_src_bz_nest.hpp:
+
+File bz_nest.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\bz_nest.hpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz_nest.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bz.hpp`` (:ref:`file_src_bz.hpp`)
+
+- ``nest.hpp`` (:ref:`file_src_bz_nest.hpp`)
+
+- ``tuple``
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_brillouin_zone_nest3`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_bz__nest_8hpp_1ab362a895437fff981d5ce7b48b2afd0e`
+

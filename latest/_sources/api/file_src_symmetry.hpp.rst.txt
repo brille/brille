@@ -1,0 +1,84 @@
+
+.. _file_src_symmetry.hpp:
+
+File symmetry.hpp
+=================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/symmetry.hpp``)
+---------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_symmetry.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_basis.hpp`
+
+- :ref:`file_src_pointgroup.hpp`
+
+- :ref:`file_src_hall_symbol.hpp`
+
+- :ref:`file_src_pointgroup.cpp`
+
+- :ref:`file_src_symmetry.cpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classMotion`
+
+- :ref:`exhale_class_classSymmetry`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_symmetry_8hpp_1add015147308ba4f3406ca16ce401eacf`
+
+- :ref:`exhale_function_symmetry_8hpp_1adf95dda986b700406e0368dc60e8d6ef`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_symmetry_8hpp_1afcd610157c7da68729320cef638a084b`
+
+- :ref:`exhale_typedef_symmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef`
+
+- :ref:`exhale_typedef_symmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a`
+
+- :ref:`exhale_typedef_symmetry_8hpp_1af38183e237898f6af653810bc4c95c79`
+

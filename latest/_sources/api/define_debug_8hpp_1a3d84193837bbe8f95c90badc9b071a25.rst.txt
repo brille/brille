@@ -1,0 +1,13 @@
+.. _exhale_define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25:
+
+Define verbose_update
+=====================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: verbose_update

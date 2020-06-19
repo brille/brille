@@ -1,0 +1,44 @@
+
+.. _file_src_bz_wedge.cpp:
+
+File bz_wedge.cpp
+=================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\bz_wedge.cpp``)
+---------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz_wedge.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bz.hpp`` (:ref:`file_src_bz.hpp`)
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_bz__wedge_8cpp_1a264c92206205a7888358f8bb37871c30`
+

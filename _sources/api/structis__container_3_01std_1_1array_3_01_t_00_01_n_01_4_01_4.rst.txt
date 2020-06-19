@@ -1,0 +1,16 @@
+.. _exhale_struct_structis__container_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4:
+
+Template Struct is_container< std::array< T, N > >
+==================================================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: is_container< std::array< T, N > >
+   :members:
+   :protected-members:
+   :undoc-members:

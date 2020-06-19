@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File mesh.tpp &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File mesh.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_mesh.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-mesh-tpp">
+<span id="program-listing-file-src-mesh-tpp"></span><h1>Program Listing for File mesh.tpp<a class="headerlink" href="#program-listing-for-file-mesh-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_mesh.tpp.html#file-src-mesh-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src\mesh.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="c1">// Perform sanity checks before attempting to interpolate</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">unsigned</span> <span class="kt">int</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">check_before_interpolating</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">mask</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The mesh must be filled before interpolating!&quot;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">numel</span><span class="p">()</span><span class="o">!=</span><span class="mi">3u</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Mesh3 requires x values which are three-vectors.&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">mask</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//! Perform linear interpolating at the specified points in the mesh&#39;s orthonormal frame</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">interpolate_at</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_before_interpolating</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">numel</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">vecs</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">numel</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">weights</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">found_tet</span><span class="p">,</span> <span class="n">max_valid_tet</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">mesh</span><span class="p">.</span><span class="n">number_of_tetrahedra</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Locating &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">found_tet</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">mesh</span><span class="p">.</span><span class="n">locate</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
+    <span class="n">debug_update_if</span><span class="p">(</span><span class="n">found_tet</span> <span class="o">&gt;</span> <span class="n">max_valid_tet</span><span class="p">,</span><span class="s">&quot;Point &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">&quot; not found in tetrahedra!&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">found_tet</span> <span class="o">&gt;</span> <span class="n">max_valid_tet</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Point not found in tetrahedral mesh&quot;</span><span class="p">);</span>
+    <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Interpolate between vertices &quot;</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span><span class="s">&quot; with weights &quot;</span><span class="p">,</span><span class="n">weights</span><span class="p">);</span>
+    <span class="n">data_</span><span class="p">.</span><span class="n">interpolate_at</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">parallel_interpolate_at</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">threads</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="p">(</span><span class="n">threads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">threads</span> <span class="p">:</span> <span class="n">omp_get_max_threads</span><span class="p">()</span> <span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_before_interpolating</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="c1">// shared between threads</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">numel</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">vecs</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">numel</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="c1">// private to each thread</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">indexes</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">weights</span><span class="p">;</span>
+  <span class="c1">// OpenMP &lt; v3.0 (VS uses v2.0) requires signed indexes for omp parallel</span>
+  <span class="kt">long</span> <span class="n">xsize</span> <span class="o">=</span> <span class="n">unsigned_to_signed</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="cp">#pragma omp parallel for default(none) shared(x, vals, vecs, xsize) private(indexes, weights) schedule(dynamic)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">xsize</span><span class="p">;</span> <span class="o">++</span><span class="n">si</span><span class="p">){</span>
+    <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">signed_to_unsigned</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">mesh</span><span class="p">.</span><span class="n">locate</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">indexes</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
+    <span class="n">data_</span><span class="p">.</span><span class="n">interpolate_at</span><span class="p">(</span><span class="n">indexes</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">which_neighbours</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">value</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="nl">n</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">mesh</span><span class="p">.</span><span class="n">neighbours</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">)</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">multi_sort_perm</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">R</span> <span class="n">scalar_weight</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">vector_weight</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">matrix_weight</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">vf</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">weights</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+  <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">(</span><span class="n">scalar_weight</span><span class="p">);</span>
+  <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">(</span><span class="n">vector_weight</span><span class="p">);</span>
+  <span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">(</span><span class="n">matrix_weight</span><span class="p">);</span>
+  <span class="c1">// elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point</span>
+  <span class="c1">// or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!</span>
+  <span class="kt">size_t</span> <span class="n">nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">branches</span><span class="p">());</span>
+  <span class="kt">size_t</span> <span class="n">valspan</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">branch_span</span><span class="p">());</span>
+  <span class="kt">size_t</span> <span class="n">vecspan</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">branch_span</span><span class="p">());</span>
+  <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">]{</span><span class="n">valspan</span><span class="p">,</span> <span class="n">vecspan</span><span class="p">,</span> <span class="n">nobj</span><span class="p">};</span>
+  <span class="c1">// within each index of the data ArrayVector there are span*nobj entries.</span>
+
+  <span class="c1">// We will return the permutations of 0:nobj-1 which sort the objects globally</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">perm</span><span class="p">(</span> <span class="n">nobj</span><span class="p">,</span> <span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="p">);</span>
+  <span class="c1">// We need to keep track of which objects have been sorted thus far</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">sorted</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">locked</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">sorted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">locked</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">visited</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Start from the Γ point (which we previously need to ensure is in the mesh)</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">Gamma</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">verts</span><span class="p">;</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">mesh</span><span class="p">.</span><span class="n">locate</span><span class="p">(</span><span class="n">Gamma</span><span class="p">,</span> <span class="n">verts</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">verts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The Gamma points is not a mesh point?!&quot;</span><span class="p">);</span>
+  <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">verts</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="c1">// assign an arbitrary sorting permulation for the Γ point</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">perm</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+  <span class="n">sorted</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="o">++</span><span class="n">visited</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+  <span class="kt">size_t</span> <span class="n">num_sorted</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="c1">// Now do all of the sorting:</span>
+  <span class="n">num_sorted</span> <span class="o">+=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">consensus_sort_from</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">vf</span><span class="p">,</span> <span class="n">spobj</span><span class="p">,</span> <span class="n">perm</span><span class="p">,</span> <span class="n">sorted</span><span class="p">,</span> <span class="n">locked</span><span class="p">,</span> <span class="n">visited</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">num_sorted</span> <span class="o">!=</span> <span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Sorting visited &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">num_sorted</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; of &quot;</span>
+        <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; mesh points.&quot;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num_sorted</span> <span class="o">&lt;</span> <span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">count_sorted</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">sorted</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">sorted</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">count_sorted</span> <span class="o">!=</span> <span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Successfully sorted &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">count_sorted</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; of &quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; mesh points.&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">perm</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*! \brief Consensus sorting of objects on a relational mesh</span>
+
+<span class="cm">Starting from a provided mesh-vertex index which has an arbitrary sorting</span>
+<span class="cm">permutation for the objects it contains, find all neighbouring vertices and add</span>
+<span class="cm">them to a unique-element first-in first-out queue.</span>
+
+<span class="cm">Dequeue a vertex and find all of its unsorted neighbouring vertices and add them</span>
+<span class="cm">to the queue. Find all sorted vertices neighbouring the dequeued vertex and use</span>
+<span class="cm">them to perform a consensus-based sorting of the objects at the dequeued vertex.</span>
+<span class="cm">If no consensus exists accept the most-popular sorting and requeue all</span>
+<span class="cm">neighbours offering an alternative permutation.</span>
+<span class="cm">Move on to the next queued vertex.</span>
+
+<span class="cm">In order to shortcut deadlocked situtations where no global consensus can be</span>
+<span class="cm">achieved, keep track of how many times a vertex has been visited and lock its</span>
+<span class="cm">sorting permutation after some threshhold to escape the infinite loop.</span>
+
+<span class="cm">The unique-element queue has an overhead of either</span>
+<span class="cm">  1) O(queue.size()) comparisons, or</span>
+<span class="cm">  2) all_vertices.size() bytes of memory and an O(1) check</span>
+<span class="cm">per to-be-added vertex. It&#39;s not clear which approach is more appropriate.</span>
+<span class="cm">In either case, this over head is likely much smaller than the memory use of a</span>
+<span class="cm">freely-growing queue since there is no bound on the number of shared</span>
+<span class="cm">neighbouring vertices for two connected vertices in a relational mesh.</span>
+<span class="cm">*/</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">size_t</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">consensus_sort_from</span><span class="p">(</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">weights</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">func</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">perm</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">done</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">lock</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">visits</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">neighbours</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">queued</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">queue</span><span class="p">;</span>
+  <span class="n">queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+  <span class="kt">size_t</span> <span class="n">max_visits</span> <span class="o">=</span> <span class="mi">300</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">num_sorted</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0u</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="mi">1u</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">more_to_do</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">more_to_do</span><span class="p">){</span>
+    <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="n">queue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="n">queued</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lock</span><span class="p">[</span><span class="n">idx</span><span class="p">]){</span>
+      <span class="o">++</span><span class="n">visits</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">visits</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_visits</span><span class="p">)</span> <span class="n">lock</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">done</span><span class="p">[</span><span class="n">idx</span><span class="p">]){</span>
+        <span class="n">neighbours</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">which_neighbours</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span> <span class="c1">// find sorted neighbours</span>
+        <span class="n">done</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">consensus_sort_difference</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">spobj</span><span class="p">,</span> <span class="n">perm</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">neighbours</span><span class="p">);</span>
+        <span class="c1">// implement derivative-based sorting for mesh vertices :/</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">done</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="o">++</span><span class="n">num_sorted</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">done</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="nl">i</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">which_neighbours</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">idx</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">queued</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">queued</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">more_to_do</span> <span class="o">=</span> <span class="o">!</span><span class="n">queue</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">refresh</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">80</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">Points queued: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+      <span class="n">count</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="n">refresh</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">refresh</span> <span class="o">&lt;</span> <span class="mi">1u</span><span class="p">)</span> <span class="n">refresh</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
+      <span class="n">more_to_do</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">num_sorted</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">bool</span>
+<span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">consensus_sort_difference</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">R</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">func</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">done</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">neighbours</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">neighbours</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="kt">size_t</span> <span class="n">nn</span> <span class="o">=</span> <span class="n">neighbours</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="c1">// For each sorted neighbour, find the sorting permutation which sorts the</span>
+  <span class="c1">// data at idx the same as the data at the neighbour.</span>
+  <span class="c1">// Store the results into a temporary permutation array, abusing the last</span>
+  <span class="c1">// element to hold each neighbour&#39;s permutation in turn.</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">t</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">(),</span> <span class="n">nn</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span><span class="p">),</span> <span class="n">nn</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">jv_permutation</span><span class="p">(</span>
+      <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>           <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+      <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span>
+      <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">elements</span><span class="p">(),</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">elements</span><span class="p">(),</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+      <span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span><span class="p">,</span> <span class="n">func</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// The first neighbours.size() elements of tperm now contain the permutation</span>
+  <span class="c1">// for idx determined by the equal-index neighbour.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">uncounted</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">freq</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="mi">1u</span><span class="p">),</span> <span class="n">equiv_to</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">equiv_to</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="c1">//bool all_agreee;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">uncounted</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">uncounted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">.</span><span class="n">vector_approx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">uncounted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">freq</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">freq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">equiv_to</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">hfidx</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">max_element</span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">freq</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+  <span class="c1">// Pick the highest-frequency permutation as the right one</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">p</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">hfidx</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">idx</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+  <span class="c1">// If the highest frequency is neighbours.size() then all permutations agree.</span>
+  <span class="c1">// Otherwise we need to indicate that the disagreeing neighbours are not done.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">freq</span><span class="p">[</span><span class="n">hfidx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nn</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">equiv_to</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hfidx</span><span class="p">)</span> <span class="n">done</span><span class="p">[</span><span class="n">neighbours</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

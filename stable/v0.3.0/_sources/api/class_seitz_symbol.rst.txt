@@ -1,0 +1,16 @@
+.. _exhale_class_class_seitz_symbol:
+
+Class SeitzSymbol
+=================
+
+- Defined in :ref:`file_src_hall_symbol.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: SeitzSymbol
+   :members:
+   :protected-members:
+   :undoc-members:

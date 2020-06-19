@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c:
+
+Template Function unique
+========================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: unique(const std::vector<T>&)

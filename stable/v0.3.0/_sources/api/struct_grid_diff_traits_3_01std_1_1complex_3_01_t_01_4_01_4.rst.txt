@@ -1,0 +1,16 @@
+.. _exhale_struct_struct_grid_diff_traits_3_01std_1_1complex_3_01_t_01_4_01_4:
+
+Template Struct GridDiffTraits< std::complex< T > >
+===================================================
+
+- Defined in :ref:`file_src_grid.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: GridDiffTraits< std::complex< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

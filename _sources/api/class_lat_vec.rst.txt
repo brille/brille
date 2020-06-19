@@ -1,0 +1,16 @@
+.. _exhale_class_class_lat_vec:
+
+Class LatVec
+============
+
+- Defined in :ref:`file_src_latvec.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: LatVec
+   :members:
+   :protected-members:
+   :undoc-members:

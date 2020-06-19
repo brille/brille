@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File triangulation.hpp &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Program Listing for File triangulation.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_triangulation.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-triangulation-hpp">
+<span id="program-listing-file-src-triangulation-hpp"></span><h1>Program Listing for File triangulation.hpp<a class="headerlink" href="#program-listing-for-file-triangulation-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_triangulation.hpp.html#file-src-triangulation-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src\triangulation.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm">// Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+<span class="cm">*/</span>
+<span class="cp">#ifndef _TRIANGULATION_H_</span>
+<span class="cp">#define _TRIANGULATION_H_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;tetgen.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;balltrellis.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">&gt;</span> <span class="k">static</span> <span class="kt">size_t</span> <span class="n">find_first</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">val</span><span class="p">){</span>
+  <span class="k">auto</span> <span class="n">at</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">val</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">at</span> <span class="o">==</span> <span class="n">x</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Value not found?!&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">at</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// // In case we need to store the input polyhedron and mesh-refining parameters:</span>
+<span class="c1">// class TetgenInput{</span>
+<span class="c1">//   ArrayVector&lt;double&gt; _vertices;</span>
+<span class="c1">//   std::vector&lt;std::vector&lt;int&gt;&gt; _vertices_per_facet;</span>
+<span class="c1">//   double _max_cell_size;</span>
+<span class="c1">//   double _min_dihedral_angle;</span>
+<span class="c1">//   double _max_dihedral_angle;</span>
+<span class="c1">//   double _radius_edge_ratio;</span>
+<span class="c1">//   int _max_mesh_points;</span>
+<span class="c1">// public:</span>
+<span class="c1">//   TetgenInput(</span>
+<span class="c1">//     const ArrayVector&lt;double&gt;&amp; v, const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; f,</span>
+<span class="c1">//     const double mcs=-1.0, const double nda=-1.0, const double xda=-1.0,</span>
+<span class="c1">//     const double rer=-1.0, const int mmp=-1):</span>
+<span class="c1">//       _vertices(v), _vertices_per_facet(f), _max_cell_size(mcs),</span>
+<span class="c1">//       _min_dihedral_angle(nda), _max_dihedral_angle(xda),</span>
+<span class="c1">//       _radius_edge_ratio(rer), _max_mesh_points(mmp) {}</span>
+<span class="c1">//   const ArrayVector&lt;double&gt;&amp; vertices() const { return _vertices; }</span>
+<span class="c1">//   const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; vertices_per_facet() const {return _vertices_per_facet; }</span>
+<span class="c1">//   double max_cell_size() const { return _max_cell_size; }</span>
+<span class="c1">//   double max_dihedral_angle() const { return _max_dihedral_angle; }</span>
+<span class="c1">//   double min_dihedral_angle() const { return _min_dihedral_angle; }</span>
+<span class="c1">//   double radius_edge_ratio() const { return _radius_edge_ratio; }</span>
+<span class="c1">//   int max_mesh_points() const { return _max_mesh_points; }</span>
+<span class="c1">// };</span>
+
+<span class="c1">// template&lt;class T, template&lt;class&gt; class L, typename=typename std::enable_if&lt;std::is_base_of&lt;ArrayVector&lt;T&gt;,L&lt;T&gt;&gt;::value&gt;::type&gt;</span>
+<span class="k">class</span> <span class="nc">TetTri</span><span class="p">{</span>
+  <span class="c1">// L&lt;T&gt; vertex_positions; // (nVertices, 3), ArrayVector&lt;T&gt;, LQVec&lt;T&gt;, or LDVec&lt;T&gt;</span>
+  <span class="kt">size_t</span> <span class="n">nVertices</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">nTetrahedra</span><span class="p">;</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vertex_positions</span><span class="p">;</span> <span class="c1">// (nVertices, 3)</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">vertices_per_tetrahedron</span><span class="p">;</span> <span class="c1">// (nTetrahedra, 4)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">tetrahedra_per_vertex</span><span class="p">;</span> <span class="c1">// (nVertices,)(1+,)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">neighbours_per_tetrahedron</span><span class="p">;</span> <span class="c1">// (nTetrahedra,)(1+,)</span>
+  <span class="c1">//tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh</span>
+  <span class="c1">// BallNode tetrahedraTree;</span>
+  <span class="c1">// std::vector&lt;BallLeaf&gt; leaves;</span>
+  <span class="n">Trellis</span> <span class="n">tetrahedraTrellis</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TrellisLeaf</span><span class="o">&gt;</span> <span class="n">leaves</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">size_t</span> <span class="n">number_of_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">nVertices</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">number_of_tetrahedra</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">nTetrahedra</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">get_vertex_positions</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">vertex_positions</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">get_vertices_per_tetrahedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">vertices_per_tetrahedron</span><span class="p">;}</span>
+
+  <span class="n">TetTri</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">:</span> <span class="n">nVertices</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">nTetrahedra</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">vertex_positions</span><span class="p">({</span><span class="mi">3u</span><span class="p">,</span><span class="mi">0u</span><span class="p">}),</span> <span class="n">vertices_per_tetrahedron</span><span class="p">({</span><span class="mi">4u</span><span class="p">,</span><span class="mi">0u</span><span class="p">}){}</span>
+  <span class="n">TetTri</span><span class="p">(</span><span class="k">const</span> <span class="n">tetgenio</span><span class="o">&amp;</span> <span class="n">tgio</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">fraction</span><span class="p">)</span><span class="o">:</span> <span class="n">vertex_positions</span><span class="p">({</span><span class="mi">3u</span><span class="p">,</span><span class="mi">0u</span><span class="p">}),</span> <span class="n">vertices_per_tetrahedron</span><span class="p">({</span><span class="mi">4u</span><span class="p">,</span><span class="mi">0u</span><span class="p">}){</span> <span class="c1">//, tgsource(tgio){</span>
+    <span class="n">nVertices</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">numberofpoints</span><span class="p">);</span>
+    <span class="n">nTetrahedra</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">numberoftetrahedra</span><span class="p">);</span>
+    <span class="c1">// copy-over all vertex positions:</span>
+    <span class="n">vertex_positions</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nVertices</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nVertices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">vertex_positions</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">pointlist</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="c1">// copy-over all tetrahedron vertex indices</span>
+    <span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nTetrahedra</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">tetrahedronlist</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">tgio</span><span class="p">.</span><span class="n">numberofcorners</span><span class="o">+</span><span class="n">j</span><span class="p">]),</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="c1">// Construct the tetrahedra per vertex vector of vectors</span>
+    <span class="n">tetrahedra_per_vertex</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nVertices</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nVertices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)</span><span class="o">==</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">tetrahedra_per_vertex</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+    <span class="c1">// Construct the neighbours per tetrahedron vector of vectors</span>
+    <span class="n">neighbours_per_tetrahedron</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nTetrahedra</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">neighborlist</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">4u</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="n">neighbours_per_tetrahedron</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tgio</span><span class="p">.</span><span class="n">neighborlist</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">4u</span><span class="o">+</span><span class="n">j</span><span class="p">]));</span>
+    <span class="c1">// ensure that all tetrahedra have positive (orient3d) volume</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">correct_tetrahedra_vertex_ordering</span><span class="p">();</span>
+    <span class="c1">// construct the tree for faster locating:</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">make_balltree</span><span class="p">(</span><span class="n">fraction</span><span class="p">);</span>
+    <span class="c1">// Create a string full of object information:</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+    <span class="n">str</span>  <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">nVertices</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; vertices&quot;</span><span class="p">;</span>
+    <span class="n">str</span> <span class="o">+=</span> <span class="s">&quot; in &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">nTetrahedra</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; tetrahedra&quot;</span><span class="p">;</span>
+    <span class="n">str</span> <span class="o">+=</span> <span class="s">&quot; with a Trellis[&quot;</span> <span class="o">+</span> <span class="n">tetrahedraTrellis</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// emulate the locate functionality of CGAL -- for which we need an enumeration</span>
+  <span class="k">enum</span> <span class="n">Locate_Type</span><span class="p">{</span> <span class="n">VERTEX</span><span class="p">,</span> <span class="n">EDGE</span><span class="p">,</span> <span class="n">FACET</span><span class="p">,</span> <span class="n">CELL</span><span class="p">,</span> <span class="n">OUTSIDE_CONVEX_HULL</span> <span class="p">};</span>
+  <span class="kt">size_t</span> <span class="nf">old_locate</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">Locate_Type</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&amp;</span> <span class="n">v0</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&amp;</span> <span class="n">v1</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">locate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+      <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">OUTSIDE_CONVEX_HULL</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">VERTEX</span><span class="p">;</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">EDGE</span><span class="p">;</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">FACET</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+          <span class="n">v0</span> <span class="o">=</span> <span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">v0</span><span class="p">)</span> <span class="o">==</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">CELL</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Intentionally unreachable switch statement..&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Make a new locator which slots into the interpolation routine more easily</span>
+  <span class="c1">// size_t locate(const ArrayVector&lt;double&gt;&amp; x, std::vector&lt;size_t&gt;&amp; v, std::vector&lt;double&gt;&amp; w) const {</span>
+  <span class="c1">//   if (x.numel() != 3u || x.size() != 1u)</span>
+  <span class="c1">//     throw std::runtime_error(&quot;locate requires a single 3-element vector.&quot;);</span>
+  <span class="c1">//   std::array&lt;double,4&gt; ws;</span>
+  <span class="c1">//   v.clear();</span>
+  <span class="c1">//   w.clear(); // make sure w is back to zero-elements</span>
+  <span class="c1">//</span>
+  <span class="c1">//   size_t tet_idx;</span>
+  <span class="c1">//   for (tet_idx=0; tet_idx &lt; nTetrahedra; ++tet_idx) if (this-&gt;might_contain(tet_idx, x)){</span>
+  <span class="c1">//     this-&gt;weights(tet_idx, x, ws);</span>
+  <span class="c1">//     // if all weights are greater or equal to ~zero, we can use this tetrahedron</span>
+  <span class="c1">//     if (std::all_of(ws.begin(), ws.end(), [](double z){return z&gt;0. || approx_scalar(z,0.);})){</span>
+  <span class="c1">//       for (size_t i=0; i&lt;4u; ++i) if (!approx_scalar(ws[i], 0.)){</span>
+  <span class="c1">//         v.push_back(vertices_per_tetrahedron.getvalue(tet_idx, i));</span>
+  <span class="c1">//         w.push_back(ws[i]);</span>
+  <span class="c1">//       }</span>
+  <span class="c1">//       break;</span>
+  <span class="c1">//     }</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   return tet_idx;</span>
+  <span class="c1">// }</span>
+  <span class="kt">size_t</span> <span class="nf">locate</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3u</span> <span class="o">||</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1u</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;locate requires a single 3-element vector.&quot;</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;</span> <span class="n">ws</span><span class="p">;</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">w</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span> <span class="c1">// make sure w is back to zero-elements</span>
+
+    <span class="c1">// verbose_update(&quot;Find which tetrahedra might contain the point &quot;,x.to_string(0));</span>
+    <span class="c1">// std::vector&lt;size_t&gt; tets_to_check = tetrahedraTree.all_containing_leaf_indexes(x);</span>
+    <span class="c1">// verbose_update(&quot;The tree would have us search &quot;,tets_to_check);</span>
+    <span class="c1">// for (size_t tet_idx: tets_to_check) if (this-&gt;unsafe_might_contain(tet_idx, x)){</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="nl">node</span><span class="p">:</span> <span class="n">tetrahedraTrellis</span><span class="p">.</span><span class="n">nodes_to_search</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1">// returns a distance-sorted list of nodes which might have a containing leaf</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">tetrahedraTrellis</span><span class="p">.</span><span class="n">node_leaves</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">unsafe_might_contain</span><span class="p">(</span><span class="n">leaf</span><span class="p">.</span><span class="n">index</span><span class="p">(),</span> <span class="n">x</span><span class="p">)){</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">weights</span><span class="p">(</span><span class="n">leaf</span><span class="p">.</span><span class="n">index</span><span class="p">(),</span> <span class="n">x</span><span class="p">,</span> <span class="n">ws</span><span class="p">);</span>
+      <span class="c1">// if all weights are greater or equal to ~zero, we can use this tetrahedron</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">ws</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ws</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">double</span> <span class="n">z</span><span class="p">){</span><span class="k">return</span> <span class="n">z</span><span class="o">&gt;</span><span class="mf">0.</span> <span class="o">||</span> <span class="n">approx_scalar</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mf">0.</span><span class="p">);})){</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">approx_scalar</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.</span><span class="p">)){</span>
+          <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">leaf</span><span class="p">.</span><span class="n">index</span><span class="p">(),</span> <span class="n">i</span><span class="p">));</span>
+          <span class="n">w</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">leaf</span><span class="p">.</span><span class="n">index</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The containing tetrahedra was not found?!&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">nTetrahedra</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// and a special version which doesn&#39;t return the weights</span>
+  <span class="kt">size_t</span> <span class="nf">locate</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">locate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// /* If the following function is more useful than the preceeding, it could be</span>
+  <span class="c1">//    advantageous to replicate the above code in this function&#39;s for loop.</span>
+  <span class="c1">//    Either way, this should probably be parallelised with OpenMP.</span>
+  <span class="c1">// */</span>
+  <span class="c1">// std::vector&lt;std::vector&lt;size_t&gt;&gt; locate_all_for_interpolation(const ArrayVector&lt;double&gt;&amp; x) const {</span>
+  <span class="c1">//   if (x.numel()!=3u){</span>
+  <span class="c1">//     std::string msg = &quot;locate_all requires 3-element vector(s)&quot;;</span>
+  <span class="c1">//     throw std::runtime_error(msg);</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   std::vector&lt;std::vector&lt;size_t&gt;&gt; all_idx(x.size());</span>
+  <span class="c1">//   for (size_t i=0; i&lt;x.size(); ++i)</span>
+  <span class="c1">//     all_idx[i] = this-&gt;locate_for_interpolation(x.extract(i));</span>
+  <span class="c1">//   return all_idx;</span>
+  <span class="c1">// }</span>
+
+  <span class="cm">/* Given a vertex in the mesh, return a vector of all of the other vertices to</span>
+<span class="cm">     which it is connected.</span>
+<span class="cm">  */</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">neighbours</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">locate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1u</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;The provided point is not a mesh vertex.&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">neighbours</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">neighbours</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">vert</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vert</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nVertices</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;The provided vertex index is out of bounds&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">n</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="nl">t</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">tetrahedra_per_vertex</span><span class="p">[</span><span class="n">vert</span><span class="p">])</span>
+    <span class="c1">// for (size_t v: this-&gt;vertices_per_tetrahedron[t]) // would work if vertices_per_tetrahedron was a vector&lt;array&lt;size_t,4&gt;&gt;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">4u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+      <span class="n">v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="n">v</span><span class="o">!=</span> <span class="n">vert</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">n</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="p">)</span> <span class="n">n</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">volume</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">tet</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">0u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">1u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">2u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">3u</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="mf">6.0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">might_contain</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">tet</span><span class="p">,</span> <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1u</span> <span class="o">||</span> <span class="n">x</span><span class="p">.</span><span class="n">numel</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;x must be a single 3-vector&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tet</span> <span class="o">&gt;=</span> <span class="n">nTetrahedra</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">unsafe_might_contain</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">unsafe_might_contain</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">tet</span><span class="p">,</span> <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// double is;</span>
+    <span class="c1">// // any tetrahedron can be circumscribed by a sphere. The tetgen/predicates</span>
+    <span class="c1">// // function insphere can be used to check whether a point is inside a</span>
+    <span class="c1">// // tetrahedron&#39;s circumsphere: it returns a positive if the point is inside,</span>
+    <span class="c1">// // a negative if it is outside, and zero if it is on the surface -- assuming</span>
+    <span class="c1">// // that the volume returned by orient3d is positive for the tetrahedron.</span>
+    <span class="c1">// is = insphere(</span>
+    <span class="c1">//   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),</span>
+    <span class="c1">//   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),</span>
+    <span class="c1">//   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),</span>
+    <span class="c1">//   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),</span>
+    <span class="c1">//   x.data() );</span>
+    <span class="c1">// // since we only care if this tetrahedron *might* contain the point x, here</span>
+    <span class="c1">// // we just want to know if the insphere result is greater or ~equal to zero.</span>
+    <span class="c1">// return (is &gt; 0. || approx_scalar(is, 0.));</span>
+    <span class="k">return</span> <span class="n">leaves</span><span class="p">[</span><span class="n">tet</span><span class="p">].</span><span class="n">fuzzy_contains</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">weights</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">tet</span><span class="p">,</span> <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">vol6</span> <span class="o">=</span> <span class="mf">6.0</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="p">(</span><span class="n">tet</span><span class="p">);</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span>
+      <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">1u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">2u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">3u</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">0u</span><span class="p">)),</span>
+      <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">2u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">3u</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">0u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">1u</span><span class="p">)),</span>
+      <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">3u</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">0u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">1u</span><span class="p">)),</span>
+      <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="mi">2u</span><span class="p">)),</span>
+      <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">()</span>                                                          <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">correct_tetrahedra_vertex_ordering</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">signbit</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span> <span class="c1">// the volume of tetrahedra i is negative</span>
+    <span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// swap two vertices to switch sign</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">make_balltree</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">fraction</span><span class="p">){</span>
+    <span class="c1">// Construct a vector of BallLeaf objects for each tetrahedra:</span>
+    <span class="c1">// std::vector&lt;BallLeaf&gt; leaves;</span>
+    <span class="n">leaves</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">centre</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">radius</span><span class="p">;</span>
+    <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Pull together the circumsphere information for all tetrahedra&quot;</span><span class="p">);</span>
+    <span class="n">tetgenmesh</span> <span class="n">tgm</span><span class="p">;</span> <span class="c1">// to get access to circumsphere</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nTetrahedra</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="c1">// use tetgen&#39;s circumsphere to find the centre and radius for each tetrahedra</span>
+      <span class="n">tgm</span><span class="p">.</span><span class="n">circumsphere</span><span class="p">(</span>
+        <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0u</span><span class="p">)),</span>
+        <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1u</span><span class="p">)),</span>
+        <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2u</span><span class="p">)),</span>
+        <span class="n">vertex_positions</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">3u</span><span class="p">)),</span>
+        <span class="n">centre</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">radius</span><span class="p">);</span>
+      <span class="c1">// leaves.push_back(BallLeaf(centre, radius, i));</span>
+      <span class="n">leaves</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">TrellisLeaf</span><span class="p">(</span><span class="n">centre</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">i</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="c1">// // construct the full tree structure at once using an algorithm similar to</span>
+    <span class="c1">// // Omohundro&#39;s Kd algorithm in &#39;Five Balltree Construction Algorithms&#39;</span>
+    <span class="c1">// if (nTetrahedra &gt; 0){</span>
+    <span class="c1">//   // we will construct a binary tree. If we have N leaves to place at the</span>
+    <span class="c1">//   // end of the branches, they can occupy as many as N branches.</span>
+    <span class="c1">//   // A tree with N final branches has log₂(N) levels, so we will never need</span>
+    <span class="c1">//   // to exceed this.</span>
+    <span class="c1">//   // If we reduce the number of branchings we increase the number of leaves</span>
+    <span class="c1">//   // per terminal branch. There must be some trade-off between tree-granularity</span>
+    <span class="c1">//   // and tree-size for how quickly a containing tetrahedra can be located.</span>
+    <span class="c1">//   size_t maximum_branchings = static_cast&lt;size_t&gt;(std::log2(nTetrahedra))-2;</span>
+    <span class="c1">//   maximum_branchings = 3;</span>
+    <span class="c1">//   verbose_update(&quot;Construct a tree for tetrahedra location with up to &quot;,maximum_branchings,&quot; branchings.&quot;);</span>
+    <span class="c1">//   tetrahedraTree = construct_balltree(leaves, maximum_branchings);</span>
+    <span class="c1">//   verbose_update(&quot;Tree for locating tetrahedra now exists&quot;);</span>
+    <span class="c1">//   // info_update(&quot;Tetrahedra tree:\n&quot;,tetrahedraTree.to_string());</span>
+    <span class="c1">// }</span>
+    <span class="n">tetrahedraTrellis</span> <span class="o">=</span> <span class="n">construct_trellis</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">fraction</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">TetTri</span> <span class="n">triangulate</span><span class="p">(</span><span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">verts</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">vpf</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">double</span> <span class="n">max_cell_size</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">double</span> <span class="n">min_dihedral</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">double</span> <span class="n">max_dihedral</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">double</span> <span class="n">radius_edge_ratio</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">int</span> <span class="n">max_mesh_points</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="kt">double</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">verts</span><span class="p">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">// otherwise we can&#39;t make a 3-D triangulation</span>
+  <span class="c1">// create the tetgenbehavior object which contains all options/switches for tetrahedralize</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Creating `tetgenbehavior` object&quot;</span><span class="p">);</span>
+  <span class="n">tetgenbehavior</span> <span class="n">tgb</span><span class="p">;</span>
+  <span class="n">tgb</span><span class="p">.</span><span class="n">plc</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// we will always tetrahedralize a piecewise linear complex</span>
+  <span class="n">tgb</span><span class="p">.</span><span class="n">quality</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// we will (almost) always improve the tetrahedral mesh</span>
+  <span class="n">tgb</span><span class="p">.</span><span class="n">neighout</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// we *need* the neighbour information to be stored into tgo.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">max_cell_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+    <span class="c1">// volume constraint with a specified size</span>
+    <span class="n">tgb</span><span class="p">.</span><span class="n">fixedvolume</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">tgb</span><span class="p">.</span><span class="n">maxvolume</span> <span class="o">=</span> <span class="n">max_cell_size</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span><span class="p">{</span>
+    <span class="c1">//volume constraint without a specified size?</span>
+    <span class="n">tgb</span><span class="p">.</span><span class="n">varvolume</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">max_mesh_points</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">tgb</span><span class="p">.</span><span class="n">steinerleft</span> <span class="o">=</span> <span class="n">max_mesh_points</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">radius_edge_ratio</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">tgb</span><span class="p">.</span><span class="n">minratio</span> <span class="o">=</span> <span class="n">radius_edge_ratio</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">min_dihedral</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">tgb</span><span class="p">.</span><span class="n">mindihedral</span> <span class="o">=</span> <span class="n">min_dihedral</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">max_dihedral</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">tgb</span><span class="p">.</span><span class="n">optmaxdihedral</span> <span class="o">=</span> <span class="n">max_dihedral</span><span class="p">;</span>
+  <span class="cp">#ifndef VERBOSE_MESHING</span>
+  <span class="n">tgb</span><span class="p">.</span><span class="n">quiet</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="cp">#endif</span>
+  <span class="cp">#ifdef VERBOSE_MESHING</span>
+  <span class="n">tgb</span><span class="p">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+  <span class="cp">#endif</span>
+
+  <span class="c1">// make the input and output tetgenio objects and fill the input with our polyhedron</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Creating input and output `tetgenio` objects&quot;</span><span class="p">);</span>
+  <span class="n">tetgenio</span> <span class="n">tgi</span><span class="p">,</span> <span class="n">tgo</span><span class="p">;</span>
+  <span class="c1">// we have to handle initializing points/facets, but tetgenio has a destructor</span>
+  <span class="c1">// which handles deleting all non-NULL fields.</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Initialize and fill the input object&#39;s pointlist parameter&quot;</span><span class="p">);</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">numberofpoints</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">verts</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">pointlist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">tgi</span><span class="p">.</span><span class="n">numberofpoints</span><span class="p">];</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">pointmarkerlist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">tgi</span><span class="p">.</span><span class="n">numberofpoints</span><span class="p">];</span>
+  <span class="c1">//tgi.point2tetlist = new int[tgi.numberofpoints];</span>
+  <span class="kt">int</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">verts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">pointmarkerlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">verts</span><span class="p">.</span><span class="n">numel</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="n">tgi</span><span class="p">.</span><span class="n">pointlist</span><span class="p">[</span><span class="n">idx</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">verts</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Initialize and fill the input object&#39;s facetlist parameter&quot;</span><span class="p">);</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">numberoffacets</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vpf</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span> <span class="o">=</span> <span class="k">new</span> <span class="n">tetgenio</span><span class="o">::</span><span class="n">facet</span><span class="p">[</span><span class="n">tgi</span><span class="p">.</span><span class="n">numberoffacets</span><span class="p">];</span>
+  <span class="n">tgi</span><span class="p">.</span><span class="n">facetmarkerlist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">tgi</span><span class="p">.</span><span class="n">numberoffacets</span><span class="p">];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">vpf</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">facetmarkerlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">numberofpolygons</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">polygonlist</span> <span class="o">=</span> <span class="k">new</span> <span class="n">tetgenio</span><span class="o">::</span><span class="n">polygon</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">polygonlist</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">numberofvertices</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vpf</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">polygonlist</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">vertexlist</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">polygonlist</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">numberofvertices</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">vpf</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="n">tgi</span><span class="p">.</span><span class="n">facetlist</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">polygonlist</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">vertexlist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">vpf</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="c1">// The input is now filled with the piecewise linear complex information.</span>
+  <span class="c1">// so we can call tetrahedralize:</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Calling tetgen::tetrahedralize&quot;</span><span class="p">);</span>
+  <span class="k">try</span> <span class="p">{</span>
+      <span class="n">tetrahedralize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tgb</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">tgi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">tgo</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;tetgen threw a logic error with message</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;tetgen threw a runtime_error with message</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;tetgen threw an undetermined error&quot;</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Constructing TetTri object&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">TetTri</span><span class="p">(</span><span class="n">tgo</span><span class="p">,</span> <span class="n">fraction</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#endif </span><span class="c1">// _TRIANGULATION_H_</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

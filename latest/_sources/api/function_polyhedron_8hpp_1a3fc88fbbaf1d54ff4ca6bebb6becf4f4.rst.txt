@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4:
+
+Template Function reverse_each
+==============================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: reverse_each(const std::vector<std::vector<T>>&)

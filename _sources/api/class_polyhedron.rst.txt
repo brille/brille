@@ -1,0 +1,16 @@
+.. _exhale_class_class_polyhedron:
+
+Class Polyhedron
+================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Polyhedron
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6:
+
+Template Function transpose
+===========================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: transpose(const std::array<T, 9>&)

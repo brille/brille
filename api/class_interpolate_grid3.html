@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class InterpolateGrid3 &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class InterpolateGrid4" href="class_interpolate_grid4.html" />
+    <link rel="prev" title="Template Class InnerInterpolationData" href="class_inner_interpolation_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class InterpolateGrid3</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/class_interpolate_grid3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-interpolategrid3">
+<span id="exhale-class-class-interpolate-grid3"></span><h1>Template Class InterpolateGrid3<a class="headerlink" href="#template-class-interpolategrid3" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_grid.hpp.html#file-src-grid-hpp"><span class="std std-ref">File grid.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">MapGrid3&lt;</span> <span class="pre">T,</span> <span class="pre">R</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="class_map_grid3.html#exhale-class-class-map-grid3"><span class="std std-ref">Template Class MapGrid3</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">BrillouinZoneGrid3&lt;</span> <span class="pre">T,</span> <span class="pre">R</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="class_brillouin_zone_grid3.html#exhale-class-class-brillouin-zone-grid3"><span class="std std-ref">Template Class BrillouinZoneGrid3</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E16InterpolateGrid3">
+<span id="_CPPv3I00E16InterpolateGrid3"></span><span id="_CPPv2I00E16InterpolateGrid3"></span><span class="target" id="class_interpolate_grid3"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">R</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">InterpolateGrid3</code> : <em class="property">public</em> MapGrid3&lt;<a class="reference internal" href="#_CPPv4I00E16InterpolateGrid3" title="InterpolateGrid3::T">T</a>, <a class="reference internal" href="#_CPPv4I00E16InterpolateGrid3" title="InterpolateGrid3::R">R</a>&gt;<a class="headerlink" href="#_CPPv4I00E16InterpolateGrid3" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extends the <a class="reference internal" href="class_map_grid3.html#class_map_grid3"><span class="std std-ref">MapGrid3</span></a> class to have positions of each grid point enabling interpolation between mapped points. </p>
+<p>Subclassed by <a class="reference internal" href="class_brillouin_zone_grid3.html#class_brillouin_zone_grid3"><span class="std std-ref">BrillouinZoneGrid3&lt; T, R &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tPKdPKd">
+<span id="_CPPv3N16InterpolateGrid316InterpolateGrid3EPK6size_tPKdPKd"></span><span id="_CPPv2N16InterpolateGrid316InterpolateGrid3EPK6size_tPKdPKd"></span><span id="InterpolateGrid3::InterpolateGrid3__sCP.doubleCP.doubleCP"></span><span class="target" id="class_interpolate_grid3_1a90524e74130dc002adec8c904bcf79bf"></span><code class="sig-name descname">InterpolateGrid3</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em> = <a class="reference internal" href="variable_grid_8hpp_1a04ab2fc397bc6ff666f3bfb1208a4a73.html#_CPPv49default_n" title="default_n">default_n</a>, <em class="property">const</em> double *<em>z</em> = <a class="reference internal" href="variable_grid_8hpp_1a6332f850c22f5566732caa3b54cf3c44.html#_CPPv412default_zero" title="default_zero">default_zero</a>, <em class="property">const</em> double *<em>s</em> = <a class="reference internal" href="variable_grid_8hpp_1ab090ba1f97fdf6b1bb27874bc3d23e76.html#_CPPv412default_step" title="default_step">default_step</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tPKdPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tRK11ArrayVectorI1TEPKdPKd">
+<span id="_CPPv3N16InterpolateGrid316InterpolateGrid3EPK6size_tRK11ArrayVectorI1TEPKdPKd"></span><span id="_CPPv2N16InterpolateGrid316InterpolateGrid3EPK6size_tRK11ArrayVectorI1TEPKdPKd"></span><span id="InterpolateGrid3::InterpolateGrid3__sCP.ArrayVector:T:CR.doubleCP.doubleCP"></span><span class="target" id="class_interpolate_grid3_1a7d3e75b2c46d2926b3ce403860fc25af"></span><code class="sig-name descname">InterpolateGrid3</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>av</em>, <em class="property">const</em> double *<em>z</em> = <a class="reference internal" href="variable_grid_8hpp_1a6332f850c22f5566732caa3b54cf3c44.html#_CPPv412default_zero" title="default_zero">default_zero</a>, <em class="property">const</em> double *<em>s</em> = <a class="reference internal" href="variable_grid_8hpp_1ab090ba1f97fdf6b1bb27874bc3d23e76.html#_CPPv412default_step" title="default_step">default_step</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tRK11ArrayVectorI1TEPKdPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tPK5slongRK11ArrayVectorI1TEPKdPKd">
+<span id="_CPPv3N16InterpolateGrid316InterpolateGrid3EPK6size_tPK5slongRK11ArrayVectorI1TEPKdPKd"></span><span id="_CPPv2N16InterpolateGrid316InterpolateGrid3EPK6size_tPK5slongRK11ArrayVectorI1TEPKdPKd"></span><span id="InterpolateGrid3::InterpolateGrid3__sCP.slongCP.ArrayVector:T:CR.doubleCP.doubleCP"></span><span class="target" id="class_interpolate_grid3_1ab1cca46f0f0c863d7eb48a3d868d9244"></span><code class="sig-name descname">InterpolateGrid3</code><span class="sig-paren">(</span><em class="property">const</em> size_t *<em>n</em>, <em class="property">const</em> <a class="reference internal" href="typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.html#_CPPv45slong" title="slong">slong</a> *<em>inmap</em>, <em class="property">const</em> ArrayVector&lt;T&gt; &amp;<em>av</em>, <em class="property">const</em> double *<em>z</em> = <a class="reference internal" href="variable_grid_8hpp_1a6332f850c22f5566732caa3b54cf3c44.html#_CPPv412default_zero" title="default_zero">default_zero</a>, <em class="property">const</em> double *<em>s</em> = <a class="reference internal" href="variable_grid_8hpp_1ab090ba1f97fdf6b1bb27874bc3d23e76.html#_CPPv412default_step" title="default_step">default_step</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16InterpolateGrid316InterpolateGrid3EPK6size_tPK5slongRK11ArrayVectorI1TEPKdPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16InterpolateGrid38set_zeroEPKd">
+<span id="_CPPv3N16InterpolateGrid38set_zeroEPKd"></span><span id="_CPPv2N16InterpolateGrid38set_zeroEPKd"></span><span id="InterpolateGrid3::set_zero__doubleCP"></span><span class="target" id="class_interpolate_grid3_1ab384bac8524e5dddee335c22188e48b3"></span>void <code class="sig-name descname">set_zero</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>newzero</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16InterpolateGrid38set_zeroEPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16InterpolateGrid38set_stepEPKd">
+<span id="_CPPv3N16InterpolateGrid38set_stepEPKd"></span><span id="_CPPv2N16InterpolateGrid38set_stepEPKd"></span><span id="InterpolateGrid3::set_step__doubleCP"></span><span class="target" id="class_interpolate_grid3_1a95541391bbfc2e25bc189acb8c960b0e"></span>void <code class="sig-name descname">set_step</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>newstep</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16InterpolateGrid38set_stepEPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid312get_grid_xyzEK6size_tPd">
+<span id="_CPPv3NK16InterpolateGrid312get_grid_xyzEK6size_tPd"></span><span id="_CPPv2NK16InterpolateGrid312get_grid_xyzEK6size_tPd"></span><span id="InterpolateGrid3::get_grid_xyz__sC.doublePC"></span><span class="target" id="class_interpolate_grid3_1a6ea843ce5ea857ec4168040739b324f5"></span>size_t <code class="sig-name descname">get_grid_xyz</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>maxN</em>, double *<em>xyz</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid312get_grid_xyzEK6size_tPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the positions of all grid points. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the number of grid points returned </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maxN</span></code>: the maximum number of grid points which can be stored in <code class="docutils literal notranslate"><span class="pre">xyz</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">xyz</span></code>: A location to store the grid point coordinates </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_xEK6size_tPd">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_xEK6size_tPd"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_xEK6size_tPd"></span><span id="InterpolateGrid3::get_grid_x__sC.doublePC"></span><span class="target" id="class_interpolate_grid3_1a65133f2b9bf5c6276e3c0b4f5361abaa"></span>size_t <code class="sig-name descname">get_grid_x</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>maxN</em>, double *<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_xEK6size_tPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the x coordiates of the grid points. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the number of values stored </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maxN</span></code>: the maximum number of values which can be stored in <code class="docutils literal notranslate"><span class="pre">x</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">x</span></code>: A location to store the x values </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_yEK6size_tPd">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_yEK6size_tPd"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_yEK6size_tPd"></span><span id="InterpolateGrid3::get_grid_y__sC.doublePC"></span><span class="target" id="class_interpolate_grid3_1a86691f749893ad5ee903e6a7a568b938"></span>size_t <code class="sig-name descname">get_grid_y</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>maxN</em>, double *<em>y</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_yEK6size_tPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the y coordiates of the grid points. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the number of values stored </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maxN</span></code>: the maximum number of values which can be stored in <code class="docutils literal notranslate"><span class="pre">y</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">y</span></code>: A location to store the y values </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_zEK6size_tPd">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_zEK6size_tPd"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_zEK6size_tPd"></span><span id="InterpolateGrid3::get_grid_z__sC.doublePC"></span><span class="target" id="class_interpolate_grid3_1ad5c9bf66b28ee0e44f4d4c97d1e32115"></span>size_t <code class="sig-name descname">get_grid_z</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>maxN</em>, double *<em>z</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_zEK6size_tPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the z coordiates of the grid points. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the number of values stored </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maxN</span></code>: the maximum number of values which can be stored in <code class="docutils literal notranslate"><span class="pre">z</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">z</span></code>: A location to store the z values </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid312get_grid_xyzEv">
+<span id="_CPPv3NK16InterpolateGrid312get_grid_xyzEv"></span><span id="_CPPv2NK16InterpolateGrid312get_grid_xyzEv"></span><span id="InterpolateGrid3::get_grid_xyzC"></span><span class="target" id="class_interpolate_grid3_1a649ecf9d6de3ff43d238d943bc7d9dd3"></span>ArrayVector&lt;double&gt; <code class="sig-name descname">get_grid_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid312get_grid_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the coordinates for all grid points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid314get_mapped_xyzEv">
+<span id="_CPPv3NK16InterpolateGrid314get_mapped_xyzEv"></span><span id="_CPPv2NK16InterpolateGrid314get_mapped_xyzEv"></span><span id="InterpolateGrid3::get_mapped_xyzC"></span><span class="target" id="class_interpolate_grid3_1abb57ccbd1ccda3e0ec4b2e5a8ebfa710"></span>ArrayVector&lt;double&gt; <code class="sig-name descname">get_mapped_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid314get_mapped_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the coordinates for all mapped grid points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_xEv">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_xEv"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_xEv"></span><span id="InterpolateGrid3::get_grid_xC"></span><span class="target" id="class_interpolate_grid3_1a5ef7cd74182151eb3be46db5e523b259"></span>ArrayVector&lt;double&gt; <code class="sig-name descname">get_grid_x</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_xEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the grid x coordinates. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_yEv">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_yEv"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_yEv"></span><span id="InterpolateGrid3::get_grid_yC"></span><span class="target" id="class_interpolate_grid3_1aad2b99e39605a118a81e0e2a762722d7"></span>ArrayVector&lt;double&gt; <code class="sig-name descname">get_grid_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_yEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the grid y coordinates. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid310get_grid_zEv">
+<span id="_CPPv3NK16InterpolateGrid310get_grid_zEv"></span><span id="_CPPv2NK16InterpolateGrid310get_grid_zEv"></span><span id="InterpolateGrid3::get_grid_zC"></span><span class="target" id="class_interpolate_grid3_1a76f98f3878ad32bd7904e110ccf71e8c"></span>ArrayVector&lt;double&gt; <code class="sig-name descname">get_grid_z</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid310get_grid_zEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the grid z coordinates. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid313nearest_indexEPKdP6size_tj">
+<span id="_CPPv3NK16InterpolateGrid313nearest_indexEPKdP6size_tj"></span><span id="_CPPv2NK16InterpolateGrid313nearest_indexEPKdP6size_tj"></span><span id="InterpolateGrid3::nearest_index__doubleCP.sP.unsigned-iC"></span><span class="target" id="class_interpolate_grid3_1ad38825af8878892eef182a88a2990aab"></span>unsigned int <code class="sig-name descname">nearest_index</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>x</em>, size_t *<em>ijk</em>, unsigned int <em>mask</em> = 0u<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid313nearest_indexEPKdP6size_tj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the subscripted indices of the closest grid point to a specified position <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An integer with detailed information about if and how <code class="docutils literal notranslate"><span class="pre">x</span></code> is out of bounds of the grid. </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">out</span></code> encodes details about how each component of <code class="docutils literal notranslate"><span class="pre">x</span></code> is located in relation to the boundaries of the grid, using its bits as flags. For a given axis n, a number fₙ takes one of four values {0,2ⁿ,2ⁿ⁺³,2ⁿ⁺⁶} to indicate that <code class="docutils literal notranslate"><span class="pre">x</span></code> is between two grid points, within machine precision of a grid point, smaller than the lowest grid point, or larger than the highest grid point, respectively. <code class="docutils literal notranslate"><span class="pre">out</span></code> is then f₀+f₁+f₂. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: The test position </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">ijk</span></code>: A storage location for the subscripted indices </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16InterpolateGrid311floor_indexEPKdP6size_tj">
+<span id="_CPPv3NK16InterpolateGrid311floor_indexEPKdP6size_tj"></span><span id="_CPPv2NK16InterpolateGrid311floor_indexEPKdP6size_tj"></span><span id="InterpolateGrid3::floor_index__doubleCP.sP.unsigned-iC"></span><span class="target" id="class_interpolate_grid3_1a76d30d4eeeb03e1e20cec682b9dc563e"></span>unsigned int <code class="sig-name descname">floor_index</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>x</em>, size_t *<em>ijk</em>, unsigned int <em>mask</em> = 0u<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16InterpolateGrid311floor_indexEPKdP6size_tj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the subscripted indices of the grid point to a specified position which is smaller than the position in all coordinates. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An integer with detailed information about if and how <code class="docutils literal notranslate"><span class="pre">x</span></code> is out of bounds of the grid. </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">out</span></code> encodes details about how each component of <code class="docutils literal notranslate"><span class="pre">x</span></code> is located in relation to the boundaries of the grid, using its bits as flags. For a given axis n, a number fₙ takes one of four values {0,2ⁿ,2ⁿ⁺³,2ⁿ⁺⁶} to indicate that <code class="docutils literal notranslate"><span class="pre">x</span></code> is between two grid points, within machine precision of a grid point, smaller than the lowest grid point, or larger than the highest grid point, respectively. <code class="docutils literal notranslate"><span class="pre">out</span></code> is then f₀+f₁+f₂. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: The test position </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">ijk</span></code>: A storage location for the subscripted indices </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid326check_before_interpolatingEjRK11ArrayVectorI1SE">
+<span id="_CPPv3I0ENK16InterpolateGrid326check_before_interpolatingERK11ArrayVectorI1SE"></span><span id="_CPPv2I0ENK16InterpolateGrid326check_before_interpolatingERK11ArrayVectorI1SE"></span><span class="target" id="class_interpolate_grid3_1aea7df198524aa11f7fc5bf4d64195098"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />unsigned int <code class="sig-name descname">check_before_interpolating</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid326check_before_interpolatingEjRK11ArrayVectorI1SE" title="InterpolateGrid3::check_before_interpolating::S">S</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid326check_before_interpolatingEjRK11ArrayVectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform sanity checks before attempting to interpolate. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SE">
+<span id="_CPPv3I0ENK16InterpolateGrid321linear_interpolate_atERK5LQVecI1SE"></span><span id="_CPPv2I0ENK16InterpolateGrid321linear_interpolate_atERK5LQVecI1SE"></span><span class="target" id="class_interpolate_grid3_1ab3630d5b1edb03c88efe3cbd5a7345f6"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> LQVec&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SE" title="InterpolateGrid3::linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation at the specified points expressed in a <a class="reference internal" href="class_reciprocal.html#class_reciprocal"><span class="std std-ref">Reciprocal</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SE">
+<span id="_CPPv3I0ENK16InterpolateGrid321linear_interpolate_atERK5LDVecI1SE"></span><span id="_CPPv2I0ENK16InterpolateGrid321linear_interpolate_atERK5LDVecI1SE"></span><span class="target" id="class_interpolate_grid3_1afe97b7f52692ef8ff18ddc6d9aaa4de7"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> LDVec&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SE" title="InterpolateGrid3::linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation at the specified points expressed in a <a class="reference internal" href="class_direct.html#class_direct"><span class="std std-ref">Direct</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SE">
+<span id="_CPPv3I0ENK16InterpolateGrid321linear_interpolate_atERK11ArrayVectorI1SE"></span><span id="_CPPv2I0ENK16InterpolateGrid321linear_interpolate_atERK11ArrayVectorI1SE"></span><span class="target" id="class_interpolate_grid3_1ae41920557769bb91d551749a708c6eb3"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SE" title="InterpolateGrid3::linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid321linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation at the specified points expressed in an orthonormal frame <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the itnerpolated values </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p>In the event that one or more coordinates of a vector in <code class="docutils literal notranslate"><span class="pre">x</span></code> is an exact match for a grid point this routine will perform a lower-dimensional interpolation. For three exact matches the point in x <em>is</em> a grid point and no interpolation is performed, for two exact matches 1D linear interpolation is performed, for one exact match bilinear 2D interpolation is used, and for no exact matches the method uses trilinear interpolation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SEKi">
+<span id="_CPPv3I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK5LQVecI1SEKi"></span><span id="_CPPv2I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK5LQVecI1SEKi"></span><span class="target" id="class_interpolate_grid3_1a77b0137d9118dd7abbcd35da853e16e7"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">parallel_linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> LQVec&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SEKi" title="InterpolateGrid3::parallel_linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em>, <em class="property">const</em> int <em>threads</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LQVecI1SEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation in parallel at the specified points expressed in a <a class="reference internal" href="class_reciprocal.html#class_reciprocal"><span class="std std-ref">Reciprocal</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SEKi">
+<span id="_CPPv3I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK5LDVecI1SEKi"></span><span id="_CPPv2I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK5LDVecI1SEKi"></span><span class="target" id="class_interpolate_grid3_1a4d1261fc93f7aeea36ab5e5bba979004"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">parallel_linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> LDVec&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SEKi" title="InterpolateGrid3::parallel_linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em>, <em class="property">const</em> int <em>threads</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK5LDVecI1SEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation in parallel at the specified points expressed in a <a class="reference internal" href="class_direct.html#class_direct"><span class="std std-ref">Direct</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SEKi">
+<span id="_CPPv3I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK11ArrayVectorI1SEKi"></span><span id="_CPPv2I0ENK16InterpolateGrid330parallel_linear_interpolate_atERK11ArrayVectorI1SEKi"></span><span class="target" id="class_interpolate_grid3_1a193c8f6e42f0b011e38ca6a1ccf24a85"></span>template&lt;typename <code class="sig-name descname">S</code>&gt;<br />std::tuple&lt;ArrayVector&lt;T&gt;, ArrayVector&lt;<a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv41R" title="R">R</a>&gt;&gt; <code class="sig-name descname">parallel_linear_interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> ArrayVector&lt;<a class="reference internal" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SEKi" title="InterpolateGrid3::parallel_linear_interpolate_at::S">S</a>&gt; &amp;<em>x</em>, <em class="property">const</em> int <em>threads</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK16InterpolateGrid330parallel_linear_interpolate_atENSt5tupleI11ArrayVectorI1TE11ArrayVectorI1REEERK11ArrayVectorI1SEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform linear interpolation in parallel at the specified points expressed in an orthonormal frame <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An <a class="reference internal" href="class_array_vector.html#class_array_vector"><span class="std std-ref">ArrayVector</span></a> of the interpolated values </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p>In the event that one or more coordinates of a vector in <code class="docutils literal notranslate"><span class="pre">x</span></code> is an exact match for a grid point this routine will perform a lower-dimensional interpolation. For three exact matches the point in x <em>is</em> a grid point and no interpolation is performed, for two exact matches 1D linear interpolation is performed, for one exact match bilinear 2D interpolation is used, and for no exact matches the method uses trilinear interpolation. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: The coordinates to interpolate at expressed in the same orthonormal frame as the mapping grid </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">threads</span></code>: The number of OpenMP threads to use, <code class="docutils literal notranslate"><span class="pre">omp_get_max_threads()</span></code> if <code class="docutils literal notranslate"><span class="pre">threads</span></code>≤0 </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="class_interpolate_grid4.html" class="btn btn-neutral float-right" title="Template Class InterpolateGrid4" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="class_inner_interpolation_data.html" class="btn btn-neutral float-left" title="Template Class InnerInterpolationData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

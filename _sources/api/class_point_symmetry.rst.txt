@@ -1,0 +1,16 @@
+.. _exhale_class_class_point_symmetry:
+
+Class PointSymmetry
+===================
+
+- Defined in :ref:`file_src_pointsymmetry.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: PointSymmetry
+   :members:
+   :protected-members:
+   :undoc-members:

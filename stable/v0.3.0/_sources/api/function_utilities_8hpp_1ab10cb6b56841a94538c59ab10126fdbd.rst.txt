@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ab10cb6b56841a94538c59ab10126fdbd:
+
+Template Function my_cast
+=========================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: my_cast(const R)

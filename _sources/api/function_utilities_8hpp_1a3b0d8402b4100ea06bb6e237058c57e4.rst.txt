@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a3b0d8402b4100ea06bb6e237058c57e4:
+
+Template Function cast_array
+============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cast_array(T *, const R *)

@@ -1,0 +1,16 @@
+.. _exhale_struct_struct_lat_vec_traits_3_01_reciprocal_00_01_s_01_4:
+
+Template Struct LatVecTraits< Reciprocal, S >
+=============================================
+
+- Defined in :ref:`file_src_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: LatVecTraits< Reciprocal, S >
+   :members:
+   :protected-members:
+   :undoc-members:

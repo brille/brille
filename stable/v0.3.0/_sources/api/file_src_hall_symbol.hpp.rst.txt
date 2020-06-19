@@ -1,0 +1,83 @@
+
+.. _file_src_hall_symbol.hpp:
+
+File hall_symbol.hpp
+====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src\hall_symbol.hpp``)
+------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_hall_symbol.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``bravais.hpp`` (:ref:`file_src_bravais.hpp`)
+
+- ``cstring``
+
+- ``iostream``
+
+- ``pointsymmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+- ``sstream``
+
+- ``string``
+
+- ``symmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_hall_symbol.cpp`
+
+- :ref:`file_src_lattice.cpp`
+
+- :ref:`file_src_spg_database.cpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_class_hall_symbol`
+
+- :ref:`exhale_class_class_seitz_symbol`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_hall__symbol_8hpp_1afcd610157c7da68729320cef638a084b`
+
+- :ref:`exhale_typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef`
+
+- :ref:`exhale_typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a`
+
+- :ref:`exhale_typedef_hall__symbol_8hpp_1af38183e237898f6af653810bc4c95c79`
+

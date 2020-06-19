@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Function sm_permutation &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Function smp" href="function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24.html" />
+    <link rel="prev" title="Template Function similar_matrix" href="function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Function sm_permutation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-function-sm-permutation">
+<span id="exhale-function-permutation-8hpp-1a221ca457429c58f8cbfdd6f62528bb13"></span><h1>Template Function sm_permutation<a class="headerlink" href="#template-function-sm-permutation" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_permutation.hpp.html#file-src-permutation-hpp"><span class="std std-ref">File permutation.hpp</span></a></p></li>
+</ul>
+<div class="section" id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp function">
+<dt id="_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi">
+<span id="_CPPv3I0000E14sm_permutationPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi"></span><span id="_CPPv2I0000E14sm_permutationPK1TPK1TRKNSt5arrayI1IX3EEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi"></span><span class="target" id="permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">R</code>, class <code class="sig-name descname">I</code>, typename = <em class="property">typename</em> std::enable_if&lt;std::is_same&lt;<em class="property">typename</em> CostTraits&lt;<a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::T">T</a>&gt;::<a class="reference internal" href="struct_cost_traits.html#_CPPv4IEN10CostTraitsI1TE4typeE" title="CostTraits&lt;T&gt;::type">type</a>, <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::R">R</a>&gt;::value&gt;::type&gt;<br />bool <code class="sig-name descname">sm_permutation</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::T">T</a> *<em>centre</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::T">T</a> *<em>neighbour</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::I">I</a>, 3&gt; &amp;<em>Nel</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::R">R</a> <em>Wscl</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::R">R</a> <em>Wvec</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="sm_permutation::R">R</a> <em>Wmat</em>, <em class="property">const</em> size_t <em>span</em>, <em class="property">const</em> size_t <em>Nobj</em>, ArrayVector&lt;size_t&gt; &amp;<em>permutations</em>, <em class="property">const</em> size_t <em>centre_idx</em>, <em class="property">const</em> size_t <em>neighbour_idx</em>, <em class="property">const</em> int <em>vec_cost_func</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0000E14sm_permutationbPK1TPK1TRKNSt5arrayI1IXL3EEEEK1RK1RK1RK6size_tK6size_tR11ArrayVectorI6size_tEK6size_tK6size_tKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use a Stable Matching algorithm to determine a permutation. </p>
+<p>For two arrays of data, located in memory at <code class="docutils literal notranslate"><span class="pre">centre</span></code> and <code class="docutils literal notranslate"><span class="pre">neighbour</span></code>, and each representing <code class="docutils literal notranslate"><span class="pre">Nobj</span></code> sets of <code class="docutils literal notranslate"><span class="pre">Nel[0]</span></code> scalars, <code class="docutils literal notranslate"><span class="pre">Nel[1]</span></code> vector elements, and <code class="docutils literal notranslate"><span class="pre">Nel[2]</span></code> matrix elements, determine the sorting permutation that maps the elements at <code class="docutils literal notranslate"><span class="pre">centre</span></code> onto the same global mapping as the sorting permutation already stored at <code class="docutils literal notranslate"><span class="pre">permutations[neighbour_idx]</span></code>. The resultant global permutation is stored at <code class="docutils literal notranslate"><span class="pre">permutations[centre_idx]</span></code>.</p>
+<p>Each array of data to be compared must be formatted as: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  [ 0{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)}
+    1{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)}
+    ⋮
+    Nobj-1{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)} ]
+</pre></div>
+</div>
+</p>
+<p>The function constructs an <code class="docutils literal notranslate"><span class="pre">Nobj</span></code>×<code class="docutils literal notranslate"><span class="pre">Nobj</span></code> cost matrix, where each element is given by <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  Cᵢⱼ = Wscl×∑ₖ₋₀ᴺˢᶜˡ√(centre[i,k]-neighbour[j,k])
+      + Wvec×𝔣ᵥ(centre_vec[i],neighbour_vec[j])
+      + Wmat×𝔣ₘ(centre_mat[i],neighbour_mat[j])
+</pre></div>
+</div>
+</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">Wscl</span></code>, <code class="docutils literal notranslate"><span class="pre">Wvec</span></code>, and <code class="docutils literal notranslate"><span class="pre">Wmat</span></code> are weight factors for adjusting the relative cost of the scalar, vector, and matrix differences, respectively; 𝔣ᵥ is the vector cost function; and 𝔣ₘ is the matrix cost function.</p>
+<p>The vector cost function is selected by <code class="docutils literal notranslate"><span class="pre">vec_cost_func</span></code> to be one of: the absolute value of the sine of the hermitian angle between eigenvectors, the distance between eigenvectors, or one minus the inner product between eigenvectors.</p>
+<p>The matrix cost function is the Frobenius norm of the difference between the two matrices.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the permutation was assigned successfully, otherwise <code class="docutils literal notranslate"><span class="pre">false</span></code> </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">centre</span></code>: The values to be sorted by the determined permutation </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neighbour</span></code>: The values against which the <code class="docutils literal notranslate"><span class="pre">centre</span></code> values are compared </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Nel[0]</span></code>: The number of scalars per object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Nel[1]</span></code>: The number of vector elements per object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Nel[2]</span></code>: The square root of the number of matrix elements per object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wscl</span></code>: The cost weight for scalar elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wvec</span></code>: The cost weight for vectors </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wmat</span></code>: The cost weight for matrices </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">span</span></code>: The number of elements per object, <code class="docutils literal notranslate"><span class="pre">Nel[0]+Nel[1]+Nel[2]</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Nobj</span></code>: The number of objects at each of <code class="docutils literal notranslate"><span class="pre">centre</span></code> and <code class="docutils literal notranslate"><span class="pre">neighbour</span></code> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">permutations</span></code>: Contains the global permutation sorting for the neighbour and is where the centre permutation is stored </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">centre_idx</span></code>: The index into <code class="docutils literal notranslate"><span class="pre">permutations</span></code> where the output is stored </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neighbour_idx</span></code>: The index into <code class="docutils literal notranslate"><span class="pre">permutations</span></code> to find the neighbour permutation </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vec_cost_func</span></code>: Used to select the eigenvector cost function: 0 –&gt; <code class="docutils literal notranslate"><span class="pre">abs(sin(hermitian_angle))</span></code> 1 –&gt; <code class="docutils literal notranslate"><span class="pre">vector_distance</span></code> 2 –&gt; <code class="docutils literal notranslate"><span class="pre">1-vector_product</span></code> 3 –&gt; <code class="docutils literal notranslate"><span class="pre">vector_angle</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24.html" class="btn btn-neutral float-right" title="Template Function smp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.html" class="btn btn-neutral float-left" title="Template Function similar_matrix" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

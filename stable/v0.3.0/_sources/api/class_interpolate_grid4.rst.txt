@@ -1,0 +1,31 @@
+.. _exhale_class_class_interpolate_grid4:
+
+Template Class InterpolateGrid4
+===============================
+
+- Defined in :ref:`file_src_grid4.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public MapGrid4< T, S >`` (:ref:`exhale_class_class_map_grid4`)
+
+
+Derived Type
+************
+
+- ``public BrillouinZoneGrid4< T, S >`` (:ref:`exhale_class_class_brillouin_zone_grid4`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: InterpolateGrid4
+   :members:
+   :protected-members:
+   :undoc-members:

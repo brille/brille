@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class NodeContainer &mdash; brille  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists\js\CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists\js\apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists\css\tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class NullNode" href="class_null_node.html" />
+    <link rel="prev" title="Class NestNode" href="class_nest_node.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">_brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class NodeContainer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/class_node_container.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-nodecontainer">
+<span id="exhale-class-class-node-container"></span><h1>Class NodeContainer<a class="headerlink" href="#class-nodecontainer" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv413NodeContainer">
+<span id="_CPPv313NodeContainer"></span><span id="_CPPv213NodeContainer"></span><span id="NodeContainer"></span><span class="target" id="class_node_container"></span><em class="property">class </em><code class="sig-name descname">NodeContainer</code><a class="headerlink" href="#_CPPv413NodeContainer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer4sizeEv">
+<span id="_CPPv3NK13NodeContainer4sizeEv"></span><span id="_CPPv2NK13NodeContainer4sizeEv"></span><span id="NodeContainer::size__voidC"></span><span class="target" id="class_node_container_1a470beb4b5bd18405ce3bcfdaadb3ca72"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer10cube_countEv">
+<span id="_CPPv3NK13NodeContainer10cube_countEv"></span><span id="_CPPv2NK13NodeContainer10cube_countEv"></span><span id="NodeContainer::cube_countC"></span><span class="target" id="class_node_container_1a472b0d39eed2a4cef2a9c9a349b3564b"></span>size_t <code class="sig-name descname">cube_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer10cube_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer10poly_countEv">
+<span id="_CPPv3NK13NodeContainer10poly_countEv"></span><span id="_CPPv2NK13NodeContainer10poly_countEv"></span><span id="NodeContainer::poly_countC"></span><span class="target" id="class_node_container_1a189eea40036d7a12d66a111592ba2550"></span>size_t <code class="sig-name descname">poly_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer10poly_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer10null_countEv">
+<span id="_CPPv3NK13NodeContainer10null_countEv"></span><span id="_CPPv2NK13NodeContainer10null_countEv"></span><span id="NodeContainer::null_countC"></span><span class="target" id="class_node_container_1a7b89b81468ead4f7415f74192426f836"></span>size_t <code class="sig-name descname">null_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer10null_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13NodeContainer9push_backERK8CubeNode">
+<span id="_CPPv3N13NodeContainer9push_backERK8CubeNode"></span><span id="_CPPv2N13NodeContainer9push_backERK8CubeNode"></span><span id="NodeContainer::push_back__CubeNodeCR"></span><span class="target" id="class_node_container_1a1d81c88594d6d26f3dd47ab9bc2ca4a3"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="class_cube_node.html#_CPPv48CubeNode" title="CubeNode">CubeNode</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13NodeContainer9push_backERK8CubeNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13NodeContainer9push_backERK8PolyNode">
+<span id="_CPPv3N13NodeContainer9push_backERK8PolyNode"></span><span id="_CPPv2N13NodeContainer9push_backERK8PolyNode"></span><span id="NodeContainer::push_back__PolyNodeCR"></span><span class="target" id="class_node_container_1a85313b071be3b2fc31d8f49fd812755a"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="class_poly_node.html#_CPPv48PolyNode" title="PolyNode">PolyNode</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13NodeContainer9push_backERK8PolyNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13NodeContainer9push_backERK8NullNode">
+<span id="_CPPv3N13NodeContainer9push_backERK8NullNode"></span><span id="_CPPv2N13NodeContainer9push_backERK8NullNode"></span><span id="NodeContainer::push_back__NullNodeCR"></span><span class="target" id="class_node_container_1a9b4f2fcfd9ec3eb0e2a014da7ce923be"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="class_null_node.html#_CPPv48NullNode" title="NullNode">NullNode</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13NodeContainer9push_backERK8NullNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer4typeEK7index_t">
+<span id="_CPPv3NK13NodeContainer4typeEK7index_t"></span><span id="_CPPv2NK13NodeContainer4typeEK7index_t"></span><span id="NodeContainer::type__index_tCC"></span><span class="target" id="class_node_container_1a41def763106dc106c7788020d6848baa"></span><a class="reference internal" href="enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16.html#_CPPv48NodeType" title="NodeType">NodeType</a> <code class="sig-name descname">type</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer4typeEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer7is_cubeEK7index_t">
+<span id="_CPPv3NK13NodeContainer7is_cubeEK7index_t"></span><span id="_CPPv2NK13NodeContainer7is_cubeEK7index_t"></span><span id="NodeContainer::is_cube__index_tCC"></span><span class="target" id="class_node_container_1a69cb70b91bc6153d5ed34b707d116de0"></span>bool <code class="sig-name descname">is_cube</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer7is_cubeEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer7is_polyEK7index_t">
+<span id="_CPPv3NK13NodeContainer7is_polyEK7index_t"></span><span id="_CPPv2NK13NodeContainer7is_polyEK7index_t"></span><span id="NodeContainer::is_poly__index_tCC"></span><span class="target" id="class_node_container_1ae67852fc6b847e1be3db00b088b8d850"></span>bool <code class="sig-name descname">is_poly</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer7is_polyEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer7is_nullEK7index_t">
+<span id="_CPPv3NK13NodeContainer7is_nullEK7index_t"></span><span id="_CPPv2NK13NodeContainer7is_nullEK7index_t"></span><span id="NodeContainer::is_null__index_tCC"></span><span class="target" id="class_node_container_1a752c07e7dbf791d2b9783bc9091fe237"></span>bool <code class="sig-name descname">is_null</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer7is_nullEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer7cube_atEK7index_t">
+<span id="_CPPv3NK13NodeContainer7cube_atEK7index_t"></span><span id="_CPPv2NK13NodeContainer7cube_atEK7index_t"></span><span id="NodeContainer::cube_at__index_tCC"></span><span class="target" id="class_node_container_1a33bc2b970e95415b1d8d4a5824f5e447"></span><em class="property">const</em> <a class="reference internal" href="class_cube_node.html#_CPPv48CubeNode" title="CubeNode">CubeNode</a> &amp;<code class="sig-name descname">cube_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer7cube_atEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer7poly_atEK7index_t">
+<span id="_CPPv3NK13NodeContainer7poly_atEK7index_t"></span><span id="_CPPv2NK13NodeContainer7poly_atEK7index_t"></span><span id="NodeContainer::poly_at__index_tCC"></span><span class="target" id="class_node_container_1a4da1c807480432493a9ceca88c741a25"></span><em class="property">const</em> <a class="reference internal" href="class_poly_node.html#_CPPv48PolyNode" title="PolyNode">PolyNode</a> &amp;<code class="sig-name descname">poly_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer7poly_atEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer12vertex_countEK7index_t">
+<span id="_CPPv3NK13NodeContainer12vertex_countEK7index_t"></span><span id="_CPPv2NK13NodeContainer12vertex_countEK7index_t"></span><span id="NodeContainer::vertex_count__index_tCC"></span><span class="target" id="class_node_container_1ac952e6060b3e31f05d3cef917a335431"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">vertex_count</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer12vertex_countEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer8verticesEK7index_t">
+<span id="_CPPv3NK13NodeContainer8verticesEK7index_t"></span><span id="_CPPv2NK13NodeContainer8verticesEK7index_t"></span><span id="NodeContainer::vertices__index_tCC"></span><span class="target" id="class_node_container_1a6645330bd64a26715307330f8d626dd2"></span>std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; <code class="sig-name descname">vertices</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer8verticesEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer24vertices_per_tetrahedronEK7index_t">
+<span id="_CPPv3NK13NodeContainer24vertices_per_tetrahedronEK7index_t"></span><span id="_CPPv2NK13NodeContainer24vertices_per_tetrahedronEK7index_t"></span><span id="NodeContainer::vertices_per_tetrahedron__index_tCC"></span><span class="target" id="class_node_container_1acd6f5eb614921311c2e7ad752535c29a"></span>std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 4&gt;&gt; <code class="sig-name descname">vertices_per_tetrahedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer24vertices_per_tetrahedronEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13NodeContainer15indices_weightsEK7index_tRK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE">
+<span id="_CPPv3NK13NodeContainer15indices_weightsEK7index_tRK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="_CPPv2NK13NodeContainer15indices_weightsEK7index_tRK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="NodeContainer::indices_weights__index_tC.ArrayVector:double:CR.ArrayVector:double:CR.std::vector:index_t:R.std::vector:double:RC"></span><span class="target" id="class_node_container_1a11aa2a64f803de89b6430fb47afc0c82"></span>bool <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>i</em>, <em class="property">const</em> ArrayVector&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> ArrayVector&lt;double&gt; &amp;<em>x</em>, std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; &amp;<em>indices</em>, std::vector&lt;double&gt; &amp;<em>weights</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13NodeContainer15indices_weightsEK7index_tRK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="class_null_node.html" class="btn btn-neutral float-right" title="Class NullNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="class_nest_node.html" class="btn btn-neutral float-left" title="Class NestNode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
