@@ -31,8 +31,7 @@ echo "git described as ${named}"
 echo ::endgroup::
 
 echo ::group::Build and install the python module
-#echo_run python3 -m pip install $REPO_SRC
-echo_run python3 -m pip install brille
+echo_run python3 -m pip install $REPO_SRC
 echo ::endgroup::
 
 echo ::group::Configure pages author information
@@ -76,7 +75,7 @@ if [ "${INPUT_IS_RELEASE}" = true ]; then
 	echo_run rsync -a "${HTML_DIR}/" $GH_PAGES
 	echo_run touch "${GH_PAGES}/.nojekyll"
 	# Switch from gh_pages/latest to (ideally) gh_pages/stable/[version name]
-	named_dir="${GH_PAGES}/stable/${named}"	
+	named_dir="${GH_PAGES}/stable/${named}"
 fi
 # Copy the newly built HTML pages into either gh_pages/latest or gh_pages/stable/[version name]
 echo_run mkdir -p $named_dir
