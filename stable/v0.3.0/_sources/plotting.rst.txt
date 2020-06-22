@@ -1,2 +1,0 @@
-.. automodule:: brille.plotting
-  :members:
