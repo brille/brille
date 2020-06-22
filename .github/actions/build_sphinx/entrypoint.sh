@@ -22,7 +22,9 @@ echo_run cd $REPO_SRC
 AUTHOR_NAME="$(git show --format=%an -s)"
 AUTHOR_EMAIL="$(git show --format=%ae -s)"
 DOCS_SHA8="$(echo ${GITHUB_SHA} | cut -c 1-8)"
-: "${named:=$(git describe --tags)}" "${named:=$(git describe --all)}"
+# Determine the tag name or branch name -- nevermind, tag or 'latest'
+#: "${named:=$(git describe --tags)}" "${named:=$(git describe --all)}"
+: "${named:=$(git describe --tags)}" "${named:=latest}"
 echo "::set-output name=name::"${AUTHOR_NAME}""
 echo "::set-output name=email::"$AUTHOR_EMAIL}""
 echo "::set-output name=docs_sha::$(echo ${GITHUB_SHA})"
@@ -58,34 +60,24 @@ if [ "${INPUT_CREATE_README}" = true ]; then
 	echo ::endgroup::
 fi
 
-
 echo ::group::Move documentation into the correct places
-named_dir="${GH_PAGES}/latest"
-if [ "${INPUT_IS_RELEASE}" = true ]; then
-	# Cleanup the gh-pages root
-	echo_run cd $GH_PAGES
-	echo_run git rm -rf --quiet .
-	# unsage delection and recover directories
-	echo "git reset then checkout stable and latest directories"
-	git reset --quiet -- stable || true
-	git reset --quiet -- latest || true
-	git checkout --quiet -- stable || true
-	git checkout --quiet -- latest || true
-	# Copy the newly built HTML pages into the gh_pages root
-	echo_run rsync -a "${HTML_DIR}/" $GH_PAGES
-	echo_run touch "${GH_PAGES}/.nojekyll"
-	# Switch from gh_pages/latest to (ideally) gh_pages/stable/[version name]
-	named_dir="${GH_PAGES}/stable/${named}"
-fi
-# Copy the newly built HTML pages into either gh_pages/latest or gh_pages/stable/[version name]
+named_dir="${GH_PAGES}/${named}"
+# Copy the newly built HTML pages into either gh_pages/latest or gh_pages/[version name]
 echo_run mkdir -p $named_dir
 echo_run rsync -a --delete "${HTML_DIR}/" $named_dir
-# Add all changes to the gh_pages branch
+# make sure we're in the root of the gh-pages branch
 echo_run cd $GH_PAGES
+# for releases, move the stable symlink
+if [ "${INPUT_IS_RELEASE}" = true ]; then
+	echo_run unlink stable
+	echo_run ln -s ${named} stable
+fi
+# Add all changes to the gh_pages branch
 echo_run git add .
 echo ::endgroup::
 
-echo ::group::Commit to repository, overwriting last commit, and push
-echo_run git commit --amend --date="$(date)" --message='Auto commit from Versioned Sphinx GH-Pages Action'
-echo_run git push --force-with-lease
+echo ::group::Commit to repository and push
+echo_run git commit --date="$(date)" --message='Auto commit from Versioned Sphinx GH-Pages Action'
+echo_run git push
 echo ::endgroup::
+
