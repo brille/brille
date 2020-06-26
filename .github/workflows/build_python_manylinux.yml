@@ -1,5 +1,5 @@
 # Adapted from https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
-name: Python package build and publish
+name: Build and Publish Linux Python packages
 
 on:
   release:
@@ -20,7 +20,7 @@ jobs:
     - name: Install python dependencies
       run: |
        python -m pip install --upgrade pip
-       pip install twine
+       python -m pip install twine
 
     - name: Build manylinux wheels
       uses: RalfG/python-wheels-manylinux-build@v0.2.2-manylinux2010_x86_64
@@ -31,13 +31,9 @@ jobs:
         package-path: ''
         pip-wheel-args: '--no-deps'
 
-    - name: Build source distribution
-      run: |
-        python setup.py sdist
-
-    - name: Publish wheels and source to PyPI
+    - name: Publish wheels to PyPI
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        twine upload wheelhouse/*-manylinux*.whl dist/*.tar.gz
+        twine upload wheelhouse/*-manylinux*.whl

@@ -17,6 +17,7 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <mutex>
 #include <cassert>
 #include <functional>
 #include <omp.h>
@@ -24,6 +25,7 @@
 #include "latvec.hpp"
 #include "phonon.hpp"
 #include "permutation.hpp"
+#include "permutation_table.hpp"
 
 #ifndef _INTERPOLATION_DATA_H_
 #define _INTERPOLATION_DATA_H_
@@ -32,6 +34,9 @@ typedef unsigned long element_t;
 typedef std::vector<size_t> ShapeType;
 typedef std::array<element_t,3> ElementsType;
 typedef std::array<double,3> ElementsCost;
+
+using int_t = PermutationTable::int_t;
+
 
 //template<class T> using CostFunction = std::function<typename CostTraits<T>::type(element_t, T*, T*)>;
 template<class T> using CostFunction = std::function<double(element_t, T*, T*)>;
@@ -118,10 +123,10 @@ public:
   element_t branches(void) const {return branches_;}
   //
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  void interpolate_at(const std::vector<std::vector<int>>&, const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, const size_t, const bool) const;
+  void interpolate_at(const std::vector<std::vector<int_t>>&, const std::vector<I>&, const std::vector<double>&, ArrayVector<T>&, const size_t, const bool) const;
   //
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  void interpolate_at(const std::vector<std::vector<int>>&, const std::vector<std::pair<I,double>>&, ArrayVector<T>&, const size_t, const bool) const;
+  void interpolate_at(const std::vector<std::vector<int_t>>&, const std::vector<std::pair<I,double>>&, ArrayVector<T>&, const size_t, const bool) const;
   //
   template<class R, class RotT>
   bool rotate_in_place(ArrayVector<T>& x,
@@ -252,6 +257,35 @@ public:
     }
     // info_update_if(arbitrary_phase_allowed, i0,'-',i1,'\n',cost);
   }
+  template<typename I>
+  void permute_modes(const I idx, const std::vector<int_t>& p){
+    std::vector<int_t> perm;
+    std::copy(p.begin(), p.end(), std::back_inserter(perm));
+    // perm is used as scratch space by ArrayVector::permute_modes
+    data_.permute_modes(idx, perm);
+  }
+  template<typename I>
+  void inverse_permute_modes(const I idx, const std::vector<int_t>& invp){
+    std::vector<int_t> invperm;
+    std::copy(invp.begin(), invp.end(), std::back_inserter(invperm));
+    // invperm is used as scratch space by ArrayVector::inverse_permute_modes
+    data_.inverse_permute_modes(idx, invperm);
+  }
+  template<typename I>
+  bool any_equal_modes(const I idx) const {
+    size_t span = static_cast<size_t>(this->branch_span());
+    // since we're probably only using this when the data is provided and
+    // most eigenproblem solvers sort their output by eigenvalue magnitude it is
+    // most-likely for mode i and mode i+1 to be equal.
+    // ∴ search (i,j), (i+1,j+1), (i+2,j+2), ..., i ∈ (0,N], j ∈ (1,N]
+    // for each j = i+1, i+2, i+3, ..., i+N-1
+    for (element_t offset=1; offset < branches_; ++offset)
+    for (element_t i=0, j=offset; j < branches_; ++i, ++j)
+    if (approx_vector(span, data_.data(idx, i*span), data_.data(idx, j*span)))
+      return true;
+    // no matches
+    return false;
+  }
 private:
   template<typename I> element_t branch_span(const std::array<I,3>& e) const {
     return static_cast<element_t>(e[0])+static_cast<element_t>(e[1])+static_cast<element_t>(e[2]);
@@ -277,60 +311,9 @@ private:
   }
 };
 
-
-// template<typename T> template<typename I, typename>
-// void InnerInterpolationData<T>::interpolate_at(
-//   const std::vector<std::vector<int>>& permutations,
-//   const std::vector<I>& indices,
-//   const std::vector<double>& weights,
-//   ArrayVector<T>& out,
-//   const size_t to
-// ) const {
-//   if (indices.size()==0 || weights.size()==0)
-//     throw std::logic_error("Interpolation requires input data!");
-//   T *out_to = out.data(to), *ptr0 = data_.data(indices[0]);
-//   element_t span = this->branch_span();
-//   verbose_update("Combining\n",data_.extract(indices).to_string(),"with weights ", weights);
-//   for (size_t x=0; x<indices.size(); ++x){
-//     T *ptrX = data_.data(indices[x]);
-//     // loop over the branches:
-//     for (element_t b=0; b < branches_; ++b){
-//       // grab the permuted branch index for this vertex:
-//       element_t pb = static_cast<element_t>(permutations[x][b]);
-//       // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
-//       T scth = antiphase(elements_[0], ptr0, ptrX);
-//       for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += weights[x]*(scth*ptrX[pb*span+s]);
-//       // handle any vectors
-//       if (elements_[1]){
-//         element_t o1 = b*span + elements_[0];
-//         element_t p1 = pb*span + elements_[0];
-//         // find the arbitrary phase eⁱᶿ between different point eigenvectors
-//         T eith = antiphase(elements_[1], ptr0+o1, ptrX+p1);
-//         // remove the arbitrary phase while adding the weighted value
-//         for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += weights[x]*(eith*ptrX[p1+e]);
-//       }
-//       // handle any remaining matrix elements
-//       if (elements_[2]){
-//         element_t o3 = b*span + elements_[0] + elements_[1];
-//         element_t p3 = bp*span + elements_[0] + elements_[1];
-//         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+p3);
-//         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += weights[x]*(mtth*ptrX[p3+r]);
-//       }
-//     }
-//   }
-//   verbose_update("Yields\n",out.extract(to).to_string());
-//
-//   // // ensure that any eigenvectors are still normalised
-//   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
-//   //   element_t o2 = b*span + elements_[0];
-//   //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
-//   //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
-//   // }
-// }
-
 template<typename T> template<typename I, typename>
 void InnerInterpolationData<T>::interpolate_at(
-  const std::vector<std::vector<int>>& permutations,
+  const std::vector<std::vector<int_t>>& permutations,
   const std::vector<I>& indices,
   const std::vector<double>& weights,
   ArrayVector<T>& out,
@@ -364,7 +347,7 @@ void InnerInterpolationData<T>::interpolate_at(
 
 template<typename T> template<typename I, typename>
 void InnerInterpolationData<T>::interpolate_at(
-  const std::vector<std::vector<int>>& permutations,
+  const std::vector<std::vector<int_t>>& permutations,
   const std::vector<std::pair<I,double>>& indices_weights,
   ArrayVector<T>& out,
   const size_t to,
@@ -377,7 +360,7 @@ void InnerInterpolationData<T>::interpolate_at(
   std::vector<int> dummy;
   if (arbitrary_phase_allowed){
     std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy),
-    [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
+    [&](const std::vector<int_t>& perm, const std::pair<I,double>& iw){
       T *ptrX = data_.data(iw.first);
       for (element_t b=0; b<branches_; ++b){
         element_t p = static_cast<element_t>(perm[b]);
@@ -388,7 +371,7 @@ void InnerInterpolationData<T>::interpolate_at(
     });
   } else {
     std::transform(permutations.begin(), permutations.end(), indices_weights.begin(), std::back_inserter(dummy),
-    [&](const std::vector<int>& perm, const std::pair<I,double>& iw){
+    [&](const std::vector<int_t>& perm, const std::pair<I,double>& iw){
       T *ptrX = data_.data(iw.first);
       for (element_t b=0; b<branches_; ++b){
         element_t p = static_cast<element_t>(perm[b]);
@@ -398,53 +381,6 @@ void InnerInterpolationData<T>::interpolate_at(
     });
   }
 }
-
-//
-// template<typename T> template<typename I, typename>
-// void InnerInterpolationData<T>::interpolate_at(
-//   const std::vector<std::vector<int>>& permutations,
-//   const std::vector<std::pair<I,double>>& indices_weights,
-//   ArrayVector<T>& out,
-//   const size_t to
-// ) const {
-//   if (indices_weights.size()==0)
-//     throw std::logic_error("Interpolation requires input data!");
-//   T *out_to = out.data(to), *ptr0 = data_.data(indices_weights[0].first);
-//   element_t span = this->branch_span();
-//   for (auto iw: indices_weights){
-//     T *ptrX = data_.data(iw.first);
-//     // loop over the branches:
-//     for (element_t b=0; b < branches_; ++b){
-//       // grab the permuted branch index for this vertex:
-//       element_t pb = static_cast<element_t>(permutations[x][b]);
-//       // find the weighted sum of each scalar, allowing for an arbitrary eⁱᶿ phase:
-//       T scth = antiphase(elements_[0], ptr0, ptrX);
-//       for (element_t s=0; s < elements_[0]; ++s) out_to[b*span+s] += iw.second*(scth*ptrX[pb*span+s]);
-//       // handle any vectors
-//       if (elements_[1]){
-//         element_t o1 = b*span + elements_[0];
-//         element_t p1 = pb*span + elements_[0];
-//         // find the arbitrary phase eⁱᶿ between different point eigenvectors
-//         T eith = antiphase(elements_[1], ptr0+o1, ptrX+p1);
-//         // remove the arbitrary phase while adding the weighted value
-//         for (element_t e=0; e<elements_[1]; ++e) out_to[o1+e] += iw.second*(eith*ptrX[p1+e]);
-//       }
-//       // handle any remaining matrix elements
-//       if (elements_[2]){
-//         element_t o3 = b*span + elements_[0] + elements_[1];
-//         element_t p3 = pb*span + elements_[0] + elements_[1];
-//         T mtth = antiphase(elements_[2], ptr0+o3, ptrX+p3);
-//         for (element_t r=0; r<elements_[2]; ++r) out_to[o3+r] += iw.second*(mtth*ptrX[p3+r]);
-//       }
-//     }
-//   }
-//   // // ensure that any eigenvectors are still normalised
-//   // if (elements_[1]) for (element_t b=0; b<branches_; ++b){
-//   //   element_t o2 = b*span + elements_[0];
-//   //   auto normI = std::sqrt(inner_product(elements_[1], out_to+o2, out_to+o2));
-//   //   for (element_t e=0; e<elements_[1]; ++e) out_to[o2+e]/=normI;
-//   // }
-// }
 
 template<typename T>
 bool InnerInterpolationData<T>::rip_recip(
@@ -673,8 +609,9 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
 template<class T, class R> class InterpolationData{
   InnerInterpolationData<T> values_;
   InnerInterpolationData<R> vectors_;
+  PermutationTable permutation_table_;
 public:
-  InterpolationData(): values_(), vectors_() {};
+  InterpolationData(): values_(), vectors_(), permutation_table_(0,0) {};
   //
   void validate_values() {
     if (values_.size()!=vectors_.size() || values_.branches()!=vectors_.branches())
@@ -708,9 +645,11 @@ public:
   void interpolate_at(const std::vector<std::pair<I,double>>&, ArrayVector<T>&, ArrayVector<R>&, const size_t) const;
   //
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  std::vector<std::vector<int>> get_permutations(const std::vector<I>&) const;
+  std::vector<int_t> get_permutation(const I, const I) const;
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  std::vector<std::vector<int>> get_permutations(const std::vector<std::pair<I,double>>&) const;
+  std::vector<std::vector<int_t>> get_permutations(const std::vector<I>&) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  std::vector<std::vector<int_t>> get_permutations(const std::vector<std::pair<I,double>>&) const;
   //
 //  bool rotate_in_place(ArrayVector<T>& vals, ArrayVector<R>& vecs, const std::vector<std::array<int,9>>& r) const {
 //    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
@@ -723,10 +662,20 @@ public:
   template<typename... A> void replace_value_data(A... args) {
     values_.replace_data(args...);
     this->validate_vectors();
+    this->update_permutation_table();
   }
   template<typename... A> void replace_vector_data(A... args) {
     vectors_.replace_data(args...);
     this->validate_values();
+    this->update_permutation_table();
+  }
+  // used during holding-object initialisation
+  void initialize_permutation_table(const size_t nverts, const std::set<size_t>& keys){
+    this->permutation_table_ = PermutationTable(nverts, this->branches(), keys);
+  }
+  void update_permutation_table(){
+    // preserve the keys in the permutation table, if possible
+    this->permutation_table_.refresh(this->size(), this->branches());
   }
   //
   void set_value_cost_info(const int csf, const int cvf, const ElementsCost& elcost){
@@ -743,12 +692,30 @@ public:
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const;
-private:
-  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
-  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const{ return this->debye_waller_sum(Q.get_xyz(), beta); }
   //
   template<typename I, typename S=typename CostTraits<T>::type, typename=std::enable_if_t<std::is_integral<I>::value> >
   std::vector<S> cost_matrix(const I i0, const I i1) const;
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
+  void permute_modes(const I i, const std::vector<int_t>& p){
+    values_.permute_modes(i, p);
+    vectors_.permute_modes(i, p);
+  }
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
+  void inverse_permute_modes(const I i, const std::vector<int_t>& p){
+    values_.inverse_permute_modes(i, p);
+    vectors_.inverse_permute_modes(i, p);
+  }
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
+  bool is_degenerate(const I idx) const {
+    return values_.any_equal_modes(idx);
+    // we could try and do something fancier, but it's probaby not useful.
+  }
+  void sort(void);
+  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
+  bool determine_permutation_ij(const I i, const I j, std::mutex& map_mutex);
+private:
+  ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
+  ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const{ return this->debye_waller_sum(Q.get_xyz(), beta); }
 };
 
 
@@ -824,7 +791,7 @@ InterpolationData<T,R>::interpolate_at(
   ArrayVector<R>& vectors_out,
   const size_t to
 ) const {
-  std::vector<std::vector<int>> permutations = this->get_permutations(indices);
+  std::vector<std::vector<int_t>> permutations = this->get_permutations(indices);
   values_.interpolate_at(permutations, indices, weights, values_out, to, false);
   vectors_.interpolate_at(permutations, indices, weights, vectors_out, to, true);
 }
@@ -837,28 +804,60 @@ InterpolationData<T,R>::interpolate_at(
   ArrayVector<R>& vectors_out,
   const size_t to
 ) const {
-  std::vector<std::vector<int>> permutations = this->get_permutations(indices_weights);
+  std::vector<std::vector<int_t>> permutations = this->get_permutations(indices_weights);
   values_.interpolate_at(permutations, indices_weights, values_out, to, false);
   vectors_.interpolate_at(permutations, indices_weights, vectors_out, to, true);
 }
 
+// template<class T, class R> template<typename I, typename>
+// std::vector<int_t>
+// InterpolationData<T,R>::get_permutation(const I i, const I j) const {
+//   std::vector<int_t> perm;
+//   /*
+//   Since missing permutations are added, and might be the same for two threads,
+//   we can not allow multiple threads to perform their get call at the same time
+//   otherwise the table might end up with Nthread copies of every unique
+//   permutation vector.
+//   This is probably an unacceptable performance hit.
+//   */
+//   #pragma omp critical
+//   {
+//     perm = permutation_table_.safe_get(i, j);
+//     // perm is empty if i:j is not present in the table
+//     if (perm.empty()){
+//       jv_permutation_fill(this->cost_matrix(i, j), perm);
+//       permutation_table_.set(i, j, perm);
+//     }
+//   }
+//   // jv_permutation_fill(this->cost_matrix(i, j), perm);
+//   // perm = jv_permutation(this->cost_matrix(i, j));
+//   // and return it
+//   return perm;
+// }
 template<class T, class R> template<typename I, typename>
-std::vector<std::vector<int>>
-InterpolationData<T,R>::get_permutations(const std::vector<I>& indices) const{
-  std::vector<std::vector<int>> permutations;
-  const I pvt{indices[0]};
-  for (const I idx: indices)
-    permutations.push_back(jv_permutation(this->cost_matrix(pvt, idx)));
-  return permutations;
+std::vector<int_t>
+InterpolationData<T,R>::get_permutation(const I i, const I j) const {
+  return permutation_table_.safe_get(i, j);
+}
+
+template<class T, class R> template<typename I, typename>
+std::vector<std::vector<int_t>>
+InterpolationData<T,R>::get_permutations(const std::vector<I>& indices) const {
+  std::vector<std::vector<int_t>> perms;
+  // find the minimum index so that permutation(pvt,idx) is always ordered
+  I pvt{indices[0]};
+  //for (const I idx: indices) if (idx < pvt) pvt = idx;
+  for (const I idx: indices) perms.push_back(this->get_permutation(pvt, idx));
+  return perms;
 }
 template<class T, class R> template<typename I, typename>
-std::vector<std::vector<int>>
-InterpolationData<T,R>::get_permutations(const std::vector<std::pair<I,double>>& iw) const{
-  std::vector<std::vector<int>> permutations;
-  const I pvt{iw[0].first};
-  for (const auto pidx: iw)
-    permutations.push_back(jv_permutation(this->cost_matrix(pvt, pidx.first)));
-  return permutations;
+std::vector<std::vector<int_t>>
+InterpolationData<T,R>::get_permutations(const std::vector<std::pair<I,double>>& iw) const {
+  std::vector<std::vector<int_t>> perms;
+  I pvt{iw[0].first};
+  //for (const auto piw: iw) if (piw.first < pvt) pvt = piw.first;
+  for (const auto piw: iw) perms.push_back(this->get_permutation(pvt, piw.first));
+  return perms;
 }
 
 template<class T, class R> template<typename I, typename S, typename>
@@ -874,4 +873,41 @@ InterpolationData<T,R>::cost_matrix(const I i0, const I i1) const {
   }
   return cost;
 }
+
+template<class T, class R>
+void InterpolationData<T,R>::sort(void){
+  std::set<size_t> keys = permutation_table_.keys();
+  // find the keys corresponding to one triangular part of the matrix (i<j)
+  std::vector<std::array<size_t,2>> tri_ij;
+  tri_ij.reserve(keys.size()/2);
+  size_t no = this->size();
+  for (const auto & key: keys){
+    size_t i = key/no;
+    if (i*(no+1) < key) tri_ij.push_back({i, key-i*no});
+  }
+  info_update("Finding permutations for ",keys.size()," connections between the ",no," vertices");
+  // now find the permutations in parallel
+  std::mutex m;
+  long long nok = unsigned_to_signed<long long, size_t>(tri_ij.size());
+  #pragma omp parallel for default(none) shared(tri_ij, m, nok)
+  for (long long sk=0; sk<nok; ++sk){
+    size_t k = signed_to_unsigned<size_t, long long>(sk);
+    this->determine_permutation_ij(tri_ij[k][0], tri_ij[k][1], m);
+  }
+  info_update("Done");
+}
+
+template<class T, class R> template<typename I, typename>
+bool
+InterpolationData<T,R>::determine_permutation_ij(const I i, const I j, std::mutex& map_mutex){
+  // if (!permutation_table_.value_needed(i,j)) return false;
+  std::vector<int_t> row, col;
+  jv_permutation_fill(this->cost_matrix(i,j), row, col);
+  std::unique_lock<std::mutex> map_lock(map_mutex);
+  permutation_table_.overwrite(i, j, row);
+  permutation_table_.overwrite(j, i, col);
+  map_lock.unlock();
+  return true;
+}
+
 #endif

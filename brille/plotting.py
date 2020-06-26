@@ -74,7 +74,6 @@ def plot(*args, **kwds):
         exception is raised.
     """
     bz_types = (brille.BrillouinZone,
-                brille.BZGridQdc   , brille.BZGridQcc   , brille.BZGridQdd,
                 brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
                 brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
                 brille.BZTrellisQdc, brille.BZTrellisQcc, brille.BZTrellisQdd)
@@ -163,7 +162,6 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     Parameters
     ----------
     bz : :py:class:`BrillouinZone`, \
-         :py:class:`BZGridQdc`, :py:class:`BZGridQcc`, :py:class:`BZGridQdd`, \
          :py:class:`BZMeshQdc`, :py:class:`BZMeshQcc`, :py:class:`BZMeshQdd`, \
          :py:class:`BZNestQdc`, :py:class:`BZNestQcc`, :py:class:`BZNestQdd`, \
          :py:class:`BZTrellisQdc`, :py:class:`BZTrellisQcc`, :py:class:`BZTrellisQ`
@@ -233,8 +231,7 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
-    types_with_points = (brille.BZGridQdc, brille.BZGridQcc, brille.BZGridQdd,
-                         brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
+    types_with_points = (brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
                          brille.BZNestQdc, brille.BZNestQcc, brille.BZNestQdd,
                          brille.BZTrellisQdc, brille.BZTrellisQcc,
                          brille.BZTrellisQdd)

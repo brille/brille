@@ -6,4 +6,3 @@ include version_info.py
 graft src
 graft lib
 graft wrap
-graft +brille

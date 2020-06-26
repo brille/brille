@@ -176,4 +176,18 @@ py::array_t<T> av2np_shape(const ArrayVector<T>& av,
   return out;
 }
 
+template<typename T>
+std::vector<T> np2vec(py::array_t<T> pyV){
+  py::buffer_info vinfo = pyV.request();
+  if (vinfo.ndim != 1u)
+    throw std::runtime_error("np2vec expects a 1-D input buffer object");
+  size_t span = static_cast<size_t>(vinfo.strides[0])/sizeof(T);
+  std::vector<T> v;
+  size_t vlen = static_cast<size_t>(vinfo.shape[0]);
+  v.reserve(vlen);
+  T * vptr = (T*) vinfo.ptr;
+  for (size_t i=0; i<vlen; ++i) v.push_back(vptr[i*span]);
+  return v;  
+}
+
 #endif

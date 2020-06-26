@@ -42,8 +42,8 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   using Class = BrillouinZoneTrellis3<T,R>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class>(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr())
-  // Initializer (BrillouinZone, maximum node volume fraction)
-  .def(py::init<BrillouinZone,double>(), "brillouinzone"_a, "node_volume_fraction"_a=0.1)
+  // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
+  .def(py::init<BrillouinZone,double,bool>(), "brillouinzone"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false)
 
   .def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();})
 
@@ -61,7 +61,8 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     // py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
     // py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl
     py::array_t<T> pyvals, py::array_t<int> pyvalel,
-    py::array_t<R> pyvecs, py::array_t<int> pyvecel
+    py::array_t<R> pyvecs, py::array_t<int> pyvecel,
+    bool sort
   ){
     ArrayVector<T> vals;
     ArrayVector<R> vecs;
@@ -76,7 +77,8 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
 
     cobj.replace_value_data(vals, val_sh, val_el, val_rl);
     cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
-  }, "values_data"_a, "values_elements"_a, "vectors_data"_a, "vectors_elements"_a)
+    if (sort) cobj.sort();
+  }, "values_data"_a, "values_elements"_a, "vectors_data"_a, "vectors_elements"_a, "sort"_a=false)
 
   //.def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
   .def_property_readonly("values",[](Class& cobj){
@@ -92,7 +94,8 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     // py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
     // py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl
     py::array_t<T> pyvals, py::array_t<int> pyvalel, py::array_t<double> pyvalwght,
-    py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght
+    py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght,
+    bool sort
   ){
     ArrayVector<T> vals;
     ArrayVector<R> vecs;
@@ -109,7 +112,8 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
     cobj.set_value_cost_info(val_sf, val_vf, val_wght);
     cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
-  }, "values_data"_a, "values_elements"_a, "values_weights"_a,"vectors_data"_a, "vectors_elements"_a, "vectors_weights"_a)
+    if (sort) cobj.sort();
+  }, "values_data"_a, "values_elements"_a, "values_weights"_a,"vectors_data"_a, "vectors_elements"_a, "vectors_weights"_a, "sort"_a=false)
 
   //.def_property_readonly("data", /*get data*/ [](Class& cobj){ return av2np_shape(cobj.data().data(), cobj.data().shape(), false);})
   .def_property_readonly("values",[](Class& cobj){
@@ -173,38 +177,48 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     return std::make_tuple(valout, vecout);
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
 
+  .def("ir_interpolate_at_dw",[](Class& cobj,
+                           py::array_t<double> pyX,
+                           py::array_t<double> pyM, double temp_k,
+                           const bool& useparallel,
+                           const int& threads, const bool& no_move){
+    py::buffer_info bi = pyX.request();
+    if ( bi.shape[bi.ndim-1] !=3 )
+      throw std::runtime_error("Interpolation requires one or more 3-vectors");
+    // store shape of X before three-vector dimension for shaping output
+    std::vector<ssize_t> preshape;
+    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
+    // copy the Python X array
+    BrillouinZone b = cobj.get_brillouinzone();
+    Reciprocal lat = b.get_lattice();
+    LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
+    // perform the interpolation and rotate and vectors/tensors afterwards
+    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
+    ArrayVector<T> valres;
+    ArrayVector<R> vecres;
+    std::tie(valres, vecres) = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    // copy results to Python arrays and return
+    auto valout = iid2np(valres, cobj.data().values(),  preshape);
+    auto vecout = iid2np(vecres, cobj.data().vectors(), preshape);
+    // calculate the Debye-Waller factor
+    auto Wd = av2np_squeeze(cobj.debye_waller(qv, np2vec(pyM), temp_k));
+    return std::make_tuple(valout, vecout, Wd);
+  },"Q"_a,"M/amu"_a,"temperature/K"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false)
+
   .def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
-    // handle Q
     py::buffer_info bi = pyQ.request();
     if ( bi.shape[bi.ndim-1] !=3 )
       throw std::runtime_error("debye_waller requires one or more 3-vectors");
-    // ssize_t npts = 1;
-    // if (bi.ndim > 1) for (ssize_t i=0; i<bi.ndim-1; i++) npts *= bi.shape[i];
     BrillouinZone b = cobj.get_brillouinzone();
     Reciprocal lat = b.get_lattice();
     LQVec<double> cQ(lat, (double*)bi.ptr, bi.shape, bi.strides); //memcopy
-    // handle the masses
-    py::buffer_info mi = pyM.request();
-    if ( mi.ndim != 1u )
-      throw std::runtime_error("debey_waller requires masses as a 1-D vector.");
-    size_t span = static_cast<size_t>(mi.strides[0])/sizeof(double);
-    std::vector<double> masses(mi.shape[0]);
-    double * mass_ptr = (double*) mi.ptr;
-    for (size_t i=0; i<static_cast<size_t>(mi.shape[0]); ++i) masses.push_back(mass_ptr[i*span]);
-    return av2np_squeeze(cobj.debye_waller(cQ, masses, temp_k));
+    return av2np_squeeze(cobj.debye_waller(cQ, np2vec(pyM), temp_k));
   }, "Q"_a, "masses"_a, "Temperature_in_K"_a)
 
   // .def("__repr__",&Class::to_string)
   //
-  .def("multi_sort_perm",
-    [](Class& cobj, const double wS, const double wV,
-                    const double wM, const int vwf){
-    return av2np(cobj.multi_sort_perm(wS,wV,wM,vwf));
-  }, "scalar_cost_weight"_a=1,
-     "vector_cost_weight"_a=1,
-     "matrix_cost_weight"_a=1,
-     "vector_weight_function"_a=0
-  )
+  .def("sort",&Class::sort)
   ;
 }
 

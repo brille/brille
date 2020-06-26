@@ -582,6 +582,9 @@ public:
   bool swap(const size_t i, const size_t j);
   bool swap(const size_t i, const size_t a, const size_t b);
   std::vector<T> to_std() const;
+
+  template<class I> void permute_modes(const size_t, std::vector<I>&);
+  template<class I> void inverse_permute_modes(const size_t, std::vector<I>&);
 };
 
 #include "arrayvector_operators.tpp"

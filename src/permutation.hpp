@@ -20,7 +20,10 @@
 #ifndef _PERMUTATION_H
 #define _PERMUTATION_H
 
+#include <complex>
 #include <cstdint>
+#include "arrayvector.hpp"
+#include "sorting_status.hpp"
 #include "munkres.hpp"
 #include "lapjv.hpp"
 #include "smp.hpp"
@@ -47,61 +50,6 @@ template<class T> struct CostTraits<std::complex<T>>{
 };
 #endif
 
-/*! \brief A type to hold sorting status information for an object
-
-Every vertex/node/etc. in a grid-like object will have sorting information
-associated with it. Notably, whether or not it is considered sorted, if it is
-allowed to be further modified, and how many times its sorting permutation has
-been changed.
-The first two are flags and the last a positive integer, so this information
-could all be stored in a single unsigned N-bit integer with the visit count
-occupying only N-2 bits. This is probably overkill
-*/
-class SortingStatus{
-  std::uint_fast32_t status;
-public:
-  explicit SortingStatus(): status{0u} {};
-  SortingStatus(bool s, bool f, unsigned int v): status{0} {
-    this->sorted(s);
-    this->locked(f);
-    this->visits(v);
-  }
-  bool sorted() const { return (status>>31u) & 1u; }
-  bool locked() const { return (status>>30u) & 1u; }
-  std::uint_fast32_t visits() const { return ((1u<<30u)-1u) & status; }
-  bool sorted(bool s) {
-    if (this->sorted() != s) {
-      std::uint_fast32_t rem = ((1u<<31u)-1u) & this->status;
-      this->status = rem + (s ? 1u<<31u : 0u);
-    }
-    return this->sorted();
-  }
-  bool locked(bool l){
-    if (this->locked() != l){
-      std::uint_fast32_t rem = this->status + (this->sorted() ? (1u<<31u) : 0u);
-      this->status = rem + (l ? 1u<<30u : 0u);
-    }
-    return this->locked();
-  }
-  template<typename T>
-  std::uint_fast32_t visits(T v) {
-    if (v <= (1u<<30u)-1u){
-      this->status = (this->sorted() ? (1u<31u) : 0u) + (this->locked() ? (1u<30u) : 0u);
-      this->status += v;
-    }
-    else
-      throw std::overflow_error("SortingStatus can not hold more than 2^30-1 visits.");
-    return this->visits();
-  }
-  std::uint_fast32_t addvisit() {
-    if (this->visits() < (1u<<30u)-1u)
-      ++status;
-    else
-      throw std::overflow_error("SortingStatus can not hold more than 2^30-1 visits.");
-    return this->visits();
-  }
-
-};
 
 
 /*! \brief Use Munkres' Assignment algorithm to determine a permutation
@@ -558,58 +506,40 @@ return true;
 @param cost A square matrix held in a std::vector of the costs for each assignment
 @returns The permutation as a std::vector<size_t>
 */
-template<class T>
-std::vector<int> jv_permutation(const std::vector<T>& cost){
-  size_t Nobj = std::sqrt(cost.size());
+template<class I, class T>
+std::vector<I> jv_permutation(const std::vector<T>& cost){
+  I Nobj = static_cast<I>(std::sqrt(cost.size()));
   assert( cost.size() == Nobj*Nobj);
   std::vector<T> usol(Nobj,T(0)), vsol(Nobj,T(0));
-  std::vector<int> rowsol(Nobj,0), colsol(Nobj,0);
+  std::vector<I> rows(Nobj,I(0)), cols(Nobj,I(0));
 
-  // // protect against equally-good solutions in the same row:
-  // for (size_t i=0; i<Nobj; ++i){
-  //   T rowmin{cost[i*Nobj]};
-  //   for (size_t j=1; j<Nobj; ++j) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
-  //   int equal_to_min{0};
-  //   for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
-  //   if (equal_to_min > 1){
-  //     info_update(equal_to_min," columns have the same lowest cost in row ",i);
-  //     for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))
-  //     cost[i*Nobj+j] += static_cast<T>(--equal_to_min*100)*std::numeric_limits<T>::epsilon();
-  //   }
-  // }
-  // // and same column
-  // for (size_t j=0; j<Nobj; ++j){
-  //   T rowmin{cost[j]};
-  //   for (size_t i=1; i<Nobj; ++i) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
-  //   int equal_to_min{0};
-  //   for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
-  //   if (equal_to_min > 1){
-  //     info_update(equal_to_min," rows have the same lowest cost in column ",j);
-  //     for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))
-  //     cost[i*Nobj+j] += static_cast<T>(--equal_to_min*100)*std::numeric_limits<T>::epsilon();
-  //   }
-  // }
-  // /* Normalising the cost matrix before running Jonker-Volgenant *might* help
-  //   with the infinite loop situation */
-  // T maxcost{cost[0]}, mincost{cost[0]};
-  // for (auto i: cost){
-  //   if (maxcost < i) maxcost = i;
-  //   if (mincost > i) mincost = i;
-  // }
-  // info_update("JV costs range is (",mincost,",",maxcost,")");
-  // for (size_t i=1; i<cost.size(); ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);
+  lapjv(Nobj, cost.data(), false, rows.data(), cols.data(), usol.data(), vsol.data());
+  return rows;
+}
+template<class T>
+std::vector<int> jv_permutation(const std::vector<T>& cost){
+  return jv_permutation<int,T>(cost);
+}
 
-  // use the Jonker-Volgenant algorithm to determine the optimal assignment
-  /*
-  There might be a hidden problem here.
-  As discussed in the README at https://github.com/hrldcpr/pyLAPJV
-
-  Supposedly, if two costs are equally smallest (in a row) to machine precision
-  then the Jonker-Volgenant algorithm enters an infinite loop.
-  The version in lapjv.h has a check to avoid this but it might still be a
-  problem. */
-  lapjv((int)Nobj, cost.data(), false, rowsol.data(), colsol.data(), usol.data(), vsol.data());
-  return rowsol; // or should this be colsol?
+template<class T, class I>
+bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
+  I Nobj = static_cast<I>(std::sqrt(cost.size()));
+  assert( cost.size() == Nobj*Nobj);
+  std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
+  std::vector<I> col(Nobj,0);
+  row.resize(Nobj);
+  lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
+  return true;
+}
+template<class T, class I>
+bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row, std::vector<I>& col){
+  I Nobj = static_cast<I>(std::sqrt(cost.size()));
+  assert( cost.size() == Nobj*Nobj);
+  std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
+  row.resize(Nobj);
+  col.resize(Nobj);
+  lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
+  return true;
 }
 
 /*! \brief Use a Stable Matching algorithm to determine a permutation
@@ -741,6 +671,81 @@ delete[] cost;
 delete[] rowsol;
 delete[] colsol;
 return true;
+}
+
+// The following apply_permutation has been adapted from
+//  https://devblogs.microsoft.com/oldnewthing/20170104-00/?p=95115
+/*! \brief Apply a permutation to a random access iterable object
+
+For a permutation held in one random access iterable object of length `N`
+comprised of the integers `(0,N]` in some order, and a second iterable
+containing `N` objects, find the permuted iterable such that
+
+  permuted_object_iterable[i] = object_iterable[index_iterable[i]]
+
+for all `i` by swapping elements in place and using the permutation iterable
+as a scratch workspace.
+
+Upon completion the permutation iterable will be ordered 0:N-1.
+
+@param objects An iterator pointing to the first element of the object iterable
+@param end An iterator pointing to the end of the object iterable
+@param indices An iterator pointing to the first element of the permutation iterable
+*/
+template<typename ObjItr, typename PermItr>
+void
+apply_permutation(ObjItr objects, ObjItr end, PermItr indices){
+  using Obj = typename std::iterator_traits<ObjItr>::value_type;
+  using Dif = typename std::iterator_traits<PermItr>::value_type;
+  Dif numel = end - objects;
+  for (Dif i=0; i<numel; ++i) if (i != indices[i]) {
+    // move the object to a temporary location (fallsback to copy)
+    Obj obji{std::move(objects[i])};
+    // keep track of where we are in the swap loop
+    Dif current = i;
+    while (i != indices[current]){
+      Dif next = indices[current];
+      objects[current] = std::move(objects[next]);
+      indices[current] = current;
+      current = next;
+    }
+    objects[current] = std::move(obji);
+    indices[current] = current;
+  }
+}
+
+/*! \brief Apply an inverse permutation to a random access iterable object
+
+For an inverse permutation held in one random access iterable object of length
+`N` comprised of the integers `(0,N]` in some order, and a second iterable
+containing `N` objects, find the inverse permuted iterable such that
+
+  permuted_object_iterable[index_iterable[i]] = object_iterable[i]
+
+for all `i` by swapping elements in place and using the inverse permutation
+iterable as a scratch workspace.
+
+@param objects An iterator pointing to the first element of the object iterable
+@param end An iterator pointing to the end of the object iterable
+@param indices An iterator pointing to the first element of the inverse permutation iterable
+*/
+template<typename ObjItr, typename PermItr>
+void
+apply_inverse_permutation(ObjItr objects, ObjItr end, PermItr indices){
+  using Obj = typename std::iterator_traits<ObjItr>::value_type;
+  using Dif = typename std::iterator_traits<PermItr>::value_type;
+  Dif numel = end - objects;
+  for (Dif i=0; i<numel; ++i) while (i != indices[i]) {
+    // pop-out the targeted object and its index
+    Dif pop_idx = indices[indices[i]];
+    Obj pop_obj{std::move(objects[indices[i]])};
+    // move the current object and index to the target
+    objects[indices[i]] = std::move(objects[i]);
+    indices[indices[i]] = indices[i];
+    // and put the popped object and index back in here
+    objects[i] = std::move(pop_idx);
+    indices[i] = pop_idx;
+  }
 }
 
 #endif

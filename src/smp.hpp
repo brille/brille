@@ -19,6 +19,8 @@
 #ifndef _SMP_H
 #define _SMP_H
 
+#include <iostream>
+
 template<typename T, typename P> void smp_pmat(const T dim, const P *restrict tp){
   for (T i=0; i<dim; ++i){
     for (T j=0; j<dim; ++j) std::cout << " " << std::to_string(tp[i*dim + j]);
