@@ -65,6 +65,16 @@ public:
       for (size_t j=0; j<verts.numel(); ++j)
         tgi.pointlist[idx++] = verts.getvalue(i,j);
     }
+    verbose_update_if(addGamma,"Check whether the Gamma point is present");
+    bool gammaPresent{false};
+    if (addGamma) {
+      for (size_t i=0; i<verts.size(); ++i){
+        bool isGamma{true};
+	for (size_t j=0; j<verts.numel(); ++j)
+          isGamma &= approx_scalar(verts.getvalue(i,j), 0.);
+	gammaPresent |= isGamma;
+      }
+    }
     verbose_update("Initialize and fill the input object's facetlist parameter");
     tgi.numberoffacets = static_cast<int>(vpf.size());
     tgi.facetlist = new tetgenio::facet[tgi.numberoffacets];
@@ -82,7 +92,7 @@ public:
     // so we can call tetrahedralize:
     verbose_update("Calling tetgen::tetrahedralize");
     try {
-      if (addGamma){
+      if (addGamma && !gammaPresent){
         tgb.insertaddpoints = 1;
         tetgenio addin;
         addin.numberofpoints = 1;
