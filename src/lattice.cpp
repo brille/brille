@@ -161,29 +161,18 @@ double Lattice::calculatevolume(){
   return tmp;
 }
 Lattice Lattice::inner_star() const {
-  const double *a = this->ang.data();
-  const double *l = this->len.data();
-
-  double sas, sbs, scs;
-  sas = 2*PI*l[1]*l[2]*sin(a[0])/this->volume;
-  sbs = 2*PI*l[2]*l[0]*sin(a[1])/this->volume;
-  scs = 2*PI*l[0]*l[1]*sin(a[2])/this->volume;
-
-  double cosa, cosb, cosc, sina, sinb, sinc;
-  cosa = cos(a[0]);
-  cosb = cos(a[1]);
-  cosc = cos(a[2]);
-  sina = sin(a[0]);
-  sinb = sin(a[1]);
-  sinc = sin(a[2]);
-  double saa, sbb, scc;
-  saa = acos( (cosb*cosc-cosa)/(sinb*sinc) );
-  sbb = acos( (cosc*cosa-cosb)/(sinc*sina) );
-  scc = acos( (cosa*cosb-cosc)/(sina*sinb) );
-
-  Lattice out(sas, sbs, scs, saa, sbb, scc, this->get_hall());
-  out.set_basis(this->get_basis());
-  return out;
+  std::array<double,3> lstar, astar, cosang, sinang;
+  for (size_t i=0; i<3u; ++i){
+    cosang[i] = std::cos(this->ang[i]);
+    sinang[i] = std::sin(this->ang[i]);
+  }
+  for (size_t i=0; i<3u; ++i){
+    size_t j = (i+1)%3;
+    size_t k = (i+2)%3;
+    lstar[i] = 2*PI*sinang[i]*this->len[j]*this->len[k]/this->volume;
+    astar[i] = std::acos((cosang[j]*cosang[k]-cosang[i])/(sinang[j]*sinang[k]));
+  }
+  return Lattice(lstar, astar, this->spg, this->spgsym, this->ptg, this->ptgsym, this->basis);
 }
 void Lattice::get_metric_tensor(double * mt) const {
   const double *a = this->ang.data();
