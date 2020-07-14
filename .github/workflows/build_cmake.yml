@@ -7,88 +7,29 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
-        config:
-        - {
-           name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
-           os: windows-latest,
-           build_type: "Release", cc: "cl", cxx: "cl",
-           environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-         }
-        #- {
-        #    name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
-        #    os: windows-latest,
-        #    build_type: "Release", cc: "gcc", cxx: "g++"
-        #  }
-        - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: "Release", cc: "gcc", cxx: "g++"
-          }
-        - {
-           name: "macOS Latest Clang", artifact: "macOS.tar.xz",
-           os: macos-latest,
-           build_type: "Release", cc: "clang", cxx: "clang++"
-         }
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v1
-
-    - name: Install OpenMP
-      if: startsWith(matrix.config.name, 'macOS')
+    - name: (macOS) Install OpenMP
+      if: startsWith(matrix.os, 'macos')
       run: |
         brew install libomp
 
-    - name: Configure
-      shell: cmake -P {0}
+    - uses: actions/checkout@v2
+
+    - name: Configure CMake
       run: |
-        set(ENV{CC} ${{ matrix.config.cc }})
-        set(ENV{CXX} ${{ matrix.config.cxx }})
-
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          execute_process(
-            COMMAND "${{ matrix.config.environment_script }}" && set
-            OUTPUT_FILE environment_script_output.txt
-          )
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
-        endif()
-
-        execute_process(
-          COMMAND cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Bad exit status")
-        endif()
+        cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
     - name: Build
-      shell: cmake -P {0}
       run: |
-        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-          file(STRINGS environment_script_output.txt output_lines)
-          foreach(line IN LISTS output_lines)
-            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-            endif()
-          endforeach()
-        endif()
-
-        execute_process(
-          COMMAND cmake --build build
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Bad exit status")
-        endif()
+        cmake --build build --config ${{ matrix.build_type }}
 
     - name: Run tests
       shell: cmake -P {0}
@@ -96,7 +37,7 @@ jobs:
         include(ProcessorCount)
         ProcessorCount(N)
         execute_process(
-          COMMAND ctest -j ${N} -C ${{ matrix.config.build_type }}
+          COMMAND ctest -j ${N} -C ${{ matrix.build_type }} --output-on-failure
           WORKING_DIRECTORY build
           RESULT_VARIABLE result
         )
