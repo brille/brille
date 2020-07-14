@@ -109,9 +109,9 @@ Functions
 
 - :ref:`exhale_function_pointgroup_8cpp_1a11f82a4ea69025d95e62c3e5f41dfe6b`
 
-- :ref:`exhale_function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa`
-
 - :ref:`exhale_function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b`
+
+- :ref:`exhale_function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa`
 
 
 Defines
