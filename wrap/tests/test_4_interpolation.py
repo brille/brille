@@ -105,12 +105,13 @@ def complex_scalar(Q):
 
 def setup_grid(iscomplex=False, halfN=(2, 2, 2)):
     """Create a grid object for interpolating."""
-    rlat = s.Reciprocal((1, 1, 1), np.array([1, 1, 1])*np.pi/2)
+    rlat = s.Reciprocal((1, 1, 1), (90, 90, 90))
     bz = s.BrillouinZone(rlat)
+    max_volume = rlat.volume/(8*np.prod(halfN))
     if iscomplex:
-        bzg = s.BZGridQcomplex(bz, halfN=halfN)
+        bzg = s.BZTrellisQdc(bz, max_volume)
     else:
-        bzg = s.BZGridQ(bz, halfN=halfN)
+        bzg = s.BZTrellisQdd(bz, max_volume)
     return bzg
 
 
@@ -259,7 +260,7 @@ class Interpolate (unittest.TestCase):
         d = s.Direct((2.87, 2.87, 2.87), np.pi/2*np.array((1, 1, 1)), "Im-3m")
         r = d.star
         bz = s.BrillouinZone(r)
-        bzg = s.BZGridQcomplex(bz, halfN=(1, 1, 1))
+        bzg = s.BZTrellisQdc(bz, 0.125)
         Q = bzg.rlu
         bzg.fill(fe_dispersion(Q),[1,])
         intres = bzg.interpolate_at(Q, False, False)

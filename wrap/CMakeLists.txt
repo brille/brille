@@ -17,7 +17,6 @@ add_dependencies(${BRILLE_PYTHON_MODULE} write_version_info)
 set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
   _bz.cpp
-  _grid.cpp
   _hall_symbol.cpp
   _lattice.cpp
   _mesh.cpp
@@ -26,6 +25,7 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   _pointsymmetry.cpp
   _polyhedron.cpp
   _primitive.cpp
+  _sorting_status.cpp
   _spacegroup.cpp
   _symmetry.cpp
   _trellis.cpp

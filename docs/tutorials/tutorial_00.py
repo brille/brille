@@ -4,8 +4,8 @@ import requests
 import numpy as np, matplotlib as mpl, matplotlib.pyplot as pp
 import brille as b, brille.plotting as bp
 from pathlib import Path
-from euphonic.data.interpolation import InterpolationData
-from brille.euphonic import BrEu
+from euphonic import ForceConstants
+from brilleu import BrillEu
 
 images_dir = os.path.join(os.path.dirname(__file__), 'images')
 def dirsavefig(dirname, filename, transparent=True, **kwds):
@@ -13,7 +13,7 @@ def dirsavefig(dirname, filename, transparent=True, **kwds):
         os.makedirs(dirname)
     pp.savefig(os.path.join(dirname, filename), transparent=transparent, **kwds)
 
-def fetch_InterpolationData_object(material):
+def fetchForceConstants(material):
     base_url = "https://raw.githubusercontent.com/g5t/brille/master/docs/tutorials"
     file_to_fetch = material + ".castep_bin"
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -22,16 +22,16 @@ def fetch_InterpolationData_object(material):
             raise Exception("Fetching {} failed with reason '{}'".format(file_to_fetch, r.reason))
         out_path = Path(tmp_dir, file_to_fetch)
         open(str(out_path), 'wb').write(r.content)
-        idata = InterpolationData.from_castep(path=tmp_dir, seedname=material)
+        idata = ForceConstants.from_castep(str(out_path))
     return idata
 
-def get_InterpolationData_object(material):
-	docs_dir = os.path.dirname(os.path.abspath(__file__))
-	try:
-		return InterpolationData.from_castep(path=docs_dir, seedname=material)
-	except FileNotFoundError:
-		print('{} not found in {}. Fetching remote content.'.format(material, docs_dir))
-	return fetch_InterpolationData_object(material)
+def getForceConstants(material):
+    docs_dir = os.path.dirname(os.path.abspath(__file__))
+    try:
+        return ForceConstants.from_castep(str(Path(docs_dir, material + ".castep_bin")))
+    except FileNotFoundError:
+        print('{} not found in {}. Fetching remote content.'.format(material, docs_dir))
+        return fetchForceConstants(material)
 
 def centre_to_corner(X):
     dX = np.diff(X, axis=0)/2
@@ -47,16 +47,15 @@ def centre_to_corner(X):
     return X
 
 # Construct a brille BZTrellisQdc object from a Euphonic object.
-# parallel=False ensures the Euphonic C module is *not* used.
-nacl = BrEu(get_InterpolationData_object('NaCl'), trellis=True, max_volume=1e-5, parallel=False)
-# but we want to use the brille C++ module
-nacl.parallel = True
+# use_c=False ensures the Euphonic C module is *not* used.
+# but *need* to use the brille C++ module, and parallel=True ensures we do so with OpenMP
+nacl = BrillEu(getForceConstants('NaCl'), trellis=True, max_volume=1e-5, parallel=True, use_c=False)
 
 # Define a path through reciprocal space from (000) to (123)
 xi = np.linspace(0, 1, 100)
 qhkl = np.vstack((xi, 2*xi, 3*xi)).T
 # Interpolate the mode energies at qhkl
-w_q = nacl.w_q(qhkl).magnitude
+w_q = nacl.w_q(qhkl)
 
 bz = nacl.grid.BrillouinZone
 # plot the first Brillouin zones for (000), (111), (022), and (113) and path

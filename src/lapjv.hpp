@@ -58,27 +58,29 @@
 #define restrict
 #endif
 
+using sidx = long long int; // in case idx is unsigned :/
+
 template <typename idx, typename cost>
-always_inline std::tuple<cost, cost, idx, idx>
+always_inline std::tuple<cost, cost, sidx, sidx>
 find_umins_plain(
     idx dim, idx i, const cost *restrict assign_cost,
     const cost *restrict v) {
   const cost *local_cost = &assign_cost[i * dim];
   cost umin = local_cost[0] - v[0];
-  idx j1 = 0;
-  idx j2 = -1;
+  sidx j1 = 0;
+  sidx j2 = -1;
   cost usubmin = (std::numeric_limits<cost>::max)();
   for (idx j = 1; j < dim; j++) {
     cost h = local_cost[j] - v[j];
     if (h < usubmin) {
       if (h >= umin) {
         usubmin = h;
-        j2 = j;
+        j2 = static_cast<sidx>(j);
       } else {
         usubmin = umin;
         umin = h;
         j2 = j1;
-        j1 = j;
+        j1 = static_cast<sidx>(j);
       }
     }
   }
@@ -93,7 +95,7 @@ find_umins_plain(
 #define DOUBLE_MIN_DIM 100000  // 64-bit code is actually always slower
 
 template <typename idx>
-always_inline std::tuple<float, float, idx, idx>
+always_inline std::tuple<float, float, sidx, sidx>
 find_umins(
     idx dim, idx i, const float *restrict assign_cost,
     const float *restrict v) {
@@ -129,13 +131,13 @@ find_umins(
   _mm256_store_si256(reinterpret_cast<__m256i*>(j1mem), j1vec);
   _mm256_store_si256(reinterpret_cast<__m256i*>(j2mem), j2vec);
 
-  idx j1 = -1, j2 = -1;
+  sidx j1 = -1, j2 = -1;
   float umin = (std::numeric_limits<float>::max)(),
         usubmin = (std::numeric_limits<float>::max)();
   for (int vi = 0; vi < 8; vi++) {
     float h = uminmem[vi];
     if (h < usubmin) {
-      idx jnew = j1mem[vi];
+      sidx jnew = static_cast<sidx>(j1mem[vi]);
       if (h >= umin) {
         usubmin = h;
         j2 = jnew;
@@ -151,7 +153,7 @@ find_umins(
     float h = usubminmem[vi];
     if (h < usubmin) {
       usubmin = h;
-      j2 = j2mem[vi];
+      j2 = static_cast<sidx>(j2mem[vi]);
     }
   }
   for (idx j = dim & 0xFFFFFFF8u; j < dim; j++) {
@@ -159,12 +161,12 @@ find_umins(
     if (h < usubmin) {
       if (h >= umin) {
         usubmin = h;
-        j2 = j;
+        j2 = static_cast<sidx>(j);
       } else {
         usubmin = umin;
         umin = h;
         j2 = j1;
-        j1 = j;
+        j1 = static_cast<sidx>(j);
       }
     }
   }
@@ -172,7 +174,7 @@ find_umins(
 }
 
 template <typename idx>
-always_inline std::tuple<double, double, idx, idx>
+always_inline std::tuple<double, double, sidx, sidx>
 find_umins(
     idx dim, idx i, const double *restrict assign_cost,
     const double *restrict v) {
@@ -208,13 +210,13 @@ find_umins(
   _mm256_store_si256(reinterpret_cast<__m256i*>(j1mem), j1vec);
   _mm256_store_si256(reinterpret_cast<__m256i*>(j2mem), j2vec);
 
-  idx j1 = -1, j2 = -1;
+  sidx j1 = -1, j2 = -1;
   double umin = (std::numeric_limits<double>::max)(),
          usubmin = (std::numeric_limits<double>::max)();
   for (int vi = 0; vi < 4; vi++) {
     double h = uminmem[vi];
     if (h < usubmin) {
-      idx jnew = j1mem[vi];
+      sidx jnew = static_cast<sidx>(j1mem[vi]);
       if (h >= umin) {
         usubmin = h;
         j2 = jnew;
@@ -230,7 +232,7 @@ find_umins(
     double h = usubminmem[vi];
     if (h < usubmin) {
       usubmin = h;
-      j2 = j2mem[vi];
+      j2 = static_cast<sidx>(j2mem[vi]);
     }
   }
   for (idx j = dim & 0xFFFFFFFCu; j < dim; j++) {
@@ -238,12 +240,12 @@ find_umins(
     if (h < usubmin) {
       if (h >= umin) {
         usubmin = h;
-        j2 = j;
+        j2 = static_cast<sidx>(j);
       } else {
         usubmin = umin;
         umin = h;
         j2 = j1;
-        j1 = j;
+        j1 = static_cast<sidx>(j);
       }
     }
   }
@@ -266,7 +268,7 @@ find_umins(
 /// @param v out dual variables, column reduction numbers / size dim
 /// @return achieved minimum assignment cost
 template <typename idx, typename cost>
-cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
+cost lapjv(idx dim, const cost *restrict assign_cost, bool verbose,
          idx *restrict rowsol, idx *restrict colsol,
          cost *restrict u, cost *restrict v) {
   auto free = std::unique_ptr<idx[]>(new idx[dim]);     // list of unassigned rows.
@@ -275,6 +277,10 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
   auto d = std::unique_ptr<cost[]>(new cost[dim]);      // 'cost-distance' in augmenting path calculation.
   auto pred = std::unique_ptr<idx[]>(new idx[dim]);     // row-predecessor of column in augmenting/alternating path.
 
+  if (1==dim){
+    rowsol[0] = colsol[0] = static_cast<idx>(0);
+    return assign_cost[0];
+  }
   // init how many times a row will be assigned in the column reduction.
   #if _OPENMP >= 201307
   #pragma omp simd
@@ -290,7 +296,8 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
   cost cost_epsilon = total_cost / static_cast<cost>(10000*dim);
 
   // COLUMN REDUCTION
-  for (idx j = dim - 1; j >= 0; j--) {   // reverse order gives better results.
+  //for (idx j = dim - 1; j >= 0; j--) {   // reverse order gives better results.
+  for (idx j = dim; j-- > 0; ){
     // find minimum cost over rows.
     cost min = assign_cost[j];
     idx imin = 0;
@@ -308,7 +315,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
       rowsol[imin] = j;
       colsol[j] = imin;
     } else {
-      colsol[j] = -1;        // row already assigned, column not assigned.
+      colsol[j] = static_cast<idx>(-1);        // row already assigned, column not assigned.
     }
   }
   if (verbose) {
@@ -350,7 +357,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
 
       // find minimum and second minimum reduced cost over columns.
       cost umin, usubmin;
-      idx j1, j2;
+      sidx j1, j2;
       std::tie(umin, usubmin, j1, j2) = find_umins(dim, i, assign_cost, v);
 
       idx i0 = colsol[j1];
@@ -360,7 +367,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
         // change the reduction of the minimum column to increase the minimum
         // reduced cost in the row to the subminimum.
         v[j1] = vj1_new;
-      } else if (i0 >= 0) {  // minimum and subminimum equal.
+      } else if (i0 != static_cast<idx>(-1)) {  // (was >=0) minimum and subminimum equal.
         // minimum column j1 is assigned.
         // swap columns j1 and j2, as j2 may be unassigned.
         j1 = j2;
@@ -368,10 +375,10 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
       }
 
       // (re-)assign i to j1, possibly de-assigning an i0.
-      rowsol[i] = j1;
+      rowsol[i] = static_cast<idx>(j1);
       colsol[j1] = i;
 
-      if (i0 >= 0) {  // minimum column j1 assigned earlier.
+      if (i0 != static_cast<idx>(-1)) {  // (was >=0) minimum column j1 assigned earlier.
         if (vj1_lowers) {
           // put in current k, and go back to that k.
           // continue augmenting path i - j1 with i0.
@@ -414,11 +421,11 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
                  // at this stage the list simply contains all columns
     bool unassigned_found = false;
     // initialized in the first iteration: low == up == 0
-    idx last = 0;
+    sidx last = 0;
     cost min = 0;
     do {
       if (up == low) {        // no more columns to be scanned for current minimum.
-        last = low - 1;
+        last = static_cast<sidx>(low) - 1;
         // scan columns for up..dim-1 to find all indices for which new minimum occurs.
         // store these indices between low..up-1 (increasing up).
         min = d[collist[up++]];
@@ -439,7 +446,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
         // check if any of the minimum columns happens to be unassigned.
         // if so, we have an augmenting path right away.
         for (idx k = low; k < up; k++) {
-          if (colsol[collist[k]] < 0) {
+          if (colsol[collist[k]] == static_cast<idx>(-1)) { // (was <0)
             endofpath = collist[k];
             unassigned_found = true;
             break;
@@ -460,7 +467,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
           if (v2 < d[j]) {
             pred[j] = i;
             if (v2 == min) {  // new column found at same minimum value
-              if (colsol[j] < 0) {
+              if (colsol[j] == static_cast<idx>(-1)) { //(was <0)
                 // if unassigned, shortest augmenting path is complete.
                 endofpath = j;
                 unassigned_found = true;
@@ -480,7 +487,7 @@ cost lapjv(int dim, const cost *restrict assign_cost, bool verbose,
     #if _OPENMP >= 201307
     #pragma omp simd
     #endif
-    for (idx k = 0; k <= last; k++) {
+    for (sidx k = 0; k <= last; k++) {
       idx j1 = collist[k];
       v[j1] = v[j1] + d[j1] - min;
     }

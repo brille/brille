@@ -17,6 +17,7 @@
 
 #ifndef _TRIANGULATION_H_
 #define _TRIANGULATION_H_
+#include <set>
 #include <vector>
 #include <array>
 #include <omp.h>
@@ -173,6 +174,22 @@ public:
     if (tet >= nTetrahedra) return false;
     return this->unsafe_contains(tet, x);
   }
+  std::set<size_t> collect_keys() const {
+    long long ntets = unsigned_to_signed<long long, size_t>(this->number_of_tetrahedra());
+    size_t nvert = this->number_of_vertices();
+    std::set<size_t> keys;
+    #pragma omp parallel for default(none) shared(ntets, keys, nvert)
+    for (long long si=0; si<ntets; ++si){
+      size_t i = signed_to_unsigned<size_t, long long>(si);
+      auto v = vertices_per_tetrahedron.extract(i).to_std();
+      std::set<size_t> t = permutation_table_keys_from_indicies(v.begin(), v.end(), nvert);
+      #pragma omp critical
+      {
+        keys.insert(t.begin(), t.end());
+      }
+    }
+    return keys;
+  }
 protected:
   bool unsafe_might_contain(const size_t tet, const ArrayVector<double>& x) const {
     return norm(x - circum_centres.extract(tet)).all_approx(Comp::le, circum_radii[tet]);
@@ -297,7 +314,7 @@ public:
   size_t number_of_vertices() const {return layers.back().number_of_vertices(); }
   const ArrayVector<double>& get_vertex_positions() const {return layers.back().get_vertex_positions(); }
   const ArrayVector<size_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
-
+  std::set<size_t> collect_keys() const {return layers.back().collect_keys();}
 private:
   // TetMap connect(const size_t high, const size_t low) const{
   //   Stopwatch<> stopwatch;

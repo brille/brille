@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
+#include <set>
 #include <vector>
 #include <array>
 #include <tuple>
@@ -150,6 +151,19 @@ public:
       msg += branches_[i].to_string(prefix+(not_last?"|  ":"   "),i+1!=branches_.size());
     return msg;
   }
+  std::set<size_t> collect_keys(const size_t nv) const {
+    std::set<size_t> keys;
+    if (this->is_leaf()){
+      auto v = boundary_.vertices();
+      keys = permutation_table_keys_from_indicies(v.begin(), v.end(), nv);
+    } else {
+      for (auto b: branches_) {
+        std::set<size_t> t = b.collect_keys(nv);
+        keys.insert(t.begin(), t.end());
+      }
+    }
+    return keys;
+  }
 protected:
   std::vector<std::pair<size_t,double>> __indices_weights(
     const ArrayVector<double>& v,
@@ -195,6 +209,8 @@ public:
   {
     this->construct(p, nb, vol);
     // this->make_all_to_terminal_map();
+    size_t nvert = this->vertex_count();
+    data_.initialize_permutation_table(nvert, root_.collect_keys(nvert));
   }
   // Build using desired leaf number density
   Nest(const Polyhedron& p, const size_t rho, const size_t nb=5u):
@@ -202,6 +218,8 @@ public:
   {
     this->construct(p, nb, p.get_volume()/static_cast<double>(rho));
     // this->make_all_to_terminal_map();
+    size_t nvert = this->vertex_count();
+    data_.initialize_permutation_table(nvert, root_.collect_keys(nvert));
   }
   std::vector<bool> vertex_is_leaf(void) const {
     std::vector<bool> vert_is_term(vertices_.size(), false);
@@ -271,13 +289,16 @@ public:
     }
     return std::make_tuple(vals, vecs);
   }
-  const InterpolationData<T,S>& data(void) const {return data_;}  
+  const InterpolationData<T,S>& data(void) const {return data_;}
   template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
   template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
+  template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
+  template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
     return data_.debye_waller(Q,M,t_K);
   }
+  void sort() {data_.sort();}
 private:
   void construct(const Polyhedron&, const size_t, const double);
   // void make_all_to_terminal_map(void) {

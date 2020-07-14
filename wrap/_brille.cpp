@@ -19,7 +19,6 @@
 #include <pybind11/pybind11.h>
 
 void wrap_brillouinzone(pybind11::module &);
-void wrap_grid(pybind11::module &);
 void wrap_hallsymbol(pybind11::module &);
 //void wrap_interpolationdata(pybind11::module &);
 void wrap_lattice(pybind11::module &);
@@ -29,6 +28,7 @@ void wrap_pointgroup(pybind11::module &);
 void wrap_pointsymmetry(pybind11::module &);
 void wrap_polyhedron(pybind11::module &);
 void wrap_primitivetransform(pybind11::module &);
+void wrap_sortingstatus(pybind11::module &);
 void wrap_spacegroup(pybind11::module &);
 void wrap_symmetry(pybind11::module &);
 void wrap_trellis(pybind11::module &);
@@ -66,13 +66,13 @@ PYBIND11_MODULE(_brille, m){
   wrap_version(m);
   wrap_lattice(m);
   wrap_brillouinzone(m);
-  wrap_grid(m);
   wrap_mesh(m);
   wrap_trellis(m);
   wrap_nest(m);
   wrap_primitivetransform(m);
   wrap_spacegroup(m);
   wrap_pointgroup(m);
+  wrap_sortingstatus(m);
   wrap_symmetry(m);
   wrap_pointsymmetry(m);
   wrap_polyhedron(m);
