@@ -516,7 +516,7 @@
   <span class="n">stopwatch</span><span class="p">.</span><span class="n">tic</span><span class="p">();</span>
   <span class="n">TetMap</span> <span class="nf">map</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">high</span><span class="p">].</span><span class="n">number_of_tetrahedra</span><span class="p">());</span>
   <span class="kt">long</span> <span class="n">mapsize</span> <span class="o">=</span> <span class="n">unsigned_to_signed</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
-<span class="cp">#if defined(__GNUC__) &amp;&amp; __GNUC__ &lt; 9</span>
+<span class="cp">#if defined(__GNUC__) &amp;&amp; !defined(__llvm__) &amp;&amp; __GNUC__ &lt; 9</span>
 <span class="c1">// this version is necessary with g++ &lt;= 8.3.0</span>
 <span class="cp">#pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)</span>
 <span class="cp">#else</span>

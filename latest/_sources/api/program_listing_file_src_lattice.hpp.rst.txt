@@ -99,6 +99,14 @@ Program Listing for File lattice.hpp
      void check_hall_number(const int h);
      void check_IT_name(const std::string& itname, const std::string& choice="");
    public:
+     Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
+             const Spacegroup spacegroup, const Symmetry spacegroupsym,
+             const Pointgroup pointgroup, const PointSymmetry pointgroupsym,
+             const Basis b):
+       len(l), ang(a), spg(spacegroup), spgsym(spacegroupsym), ptg(pointgroup),
+       ptgsym(pointgroupsym), basis(b) {
+         this->volume = this->calculatevolume();
+       }
      Lattice(const double *, const int h=1);
      template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
      Lattice(const double * latmat, std::vector<I>& strides, const int h){

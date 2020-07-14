@@ -258,6 +258,14 @@ protected:
   void check_hall_number(const int h);
   void check_IT_name(const std::string&amp; itname, const std::string&amp; choice=&quot;&quot;);
 public:
+  Lattice(const std::array&lt;double,3&gt;&amp; l, const std::array&lt;double,3&gt;&amp; a,
+          const Spacegroup spacegroup, const Symmetry spacegroupsym,
+          const Pointgroup pointgroup, const PointSymmetry pointgroupsym,
+          const Basis b):
+    len(l), ang(a), spg(spacegroup), spgsym(spacegroupsym), ptg(pointgroup),
+    ptgsym(pointgroupsym), basis(b) {
+      this-&gt;volume = this-&gt;calculatevolume();
+    }
   Lattice(const double *, const int h=1);
   template&lt;class I&gt;//, typename=typename std::enable_if&lt;std::is_integral&lt;I&gt;::value&gt;::type&gt;
   Lattice(const double * latmat, std::vector&lt;I&gt;&amp; strides, const int h){

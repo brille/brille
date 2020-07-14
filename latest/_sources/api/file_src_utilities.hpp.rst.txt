@@ -93,19 +93,19 @@ Functions
 
 - :ref:`exhale_function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1`
 
-- :ref:`exhale_function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c`
-
 - :ref:`exhale_function_utilities_8hpp_1a01b33e09a492522b50fb5f2cc61883b5`
 
-- :ref:`exhale_function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98`
+- :ref:`exhale_function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c`
 
 - :ref:`exhale_function_utilities_8hpp_1af390113c9ec83aa21c368ae4fa9e0f7b`
 
+- :ref:`exhale_function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98`
+
 - :ref:`exhale_function_utilities_8hpp_1a5ba982f43dc1b75d303d96d712d7a7ae`
 
-- :ref:`exhale_function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e`
-
 - :ref:`exhale_function_utilities_8hpp_1a1c1f0b0f19b87ec97bcadb4eb1c31269`
+
+- :ref:`exhale_function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e`
 
 - :ref:`exhale_function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88`
 
