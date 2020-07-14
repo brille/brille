@@ -188,6 +188,7 @@
 
 <span class="cp">#ifndef _TRIANGULATION_H_</span>
 <span class="cp">#define _TRIANGULATION_H_</span>
+<span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
@@ -344,6 +345,22 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">tet</span> <span class="o">&gt;=</span> <span class="n">nTetrahedra</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
     <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">unsafe_contains</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
   <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">collect_keys</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">ntets</span> <span class="o">=</span> <span class="n">unsigned_to_signed</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">number_of_tetrahedra</span><span class="p">());</span>
+    <span class="kt">size_t</span> <span class="n">nvert</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">number_of_vertices</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">keys</span><span class="p">;</span>
+    <span class="cp">#pragma omp parallel for default(none) shared(ntets, keys, nvert)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">ntets</span><span class="p">;</span> <span class="o">++</span><span class="n">si</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">signed_to_unsigned</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+      <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">vertices_per_tetrahedron</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">to_std</span><span class="p">();</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">permutation_table_keys_from_indicies</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">nvert</span><span class="p">);</span>
+      <span class="cp">#pragma omp critical</span>
+      <span class="p">{</span>
+        <span class="n">keys</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">t</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">keys</span><span class="p">;</span>
+  <span class="p">}</span>
 <span class="k">protected</span><span class="o">:</span>
   <span class="kt">bool</span> <span class="n">unsafe_might_contain</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">tet</span><span class="p">,</span> <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">circum_centres</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">tet</span><span class="p">)).</span><span class="n">all_approx</span><span class="p">(</span><span class="n">Comp</span><span class="o">::</span><span class="n">le</span><span class="p">,</span> <span class="n">circum_radii</span><span class="p">[</span><span class="n">tet</span><span class="p">]);</span>
@@ -468,7 +485,7 @@
   <span class="kt">size_t</span> <span class="n">number_of_vertices</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">layers</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">number_of_vertices</span><span class="p">();</span> <span class="p">}</span>
   <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">get_vertex_positions</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">layers</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">get_vertex_positions</span><span class="p">();</span> <span class="p">}</span>
   <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">get_vertices_per_tetrahedron</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">layers</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">get_vertices_per_tetrahedron</span><span class="p">();</span> <span class="p">}</span>
-
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">collect_keys</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">layers</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">collect_keys</span><span class="p">();}</span>
 <span class="k">private</span><span class="o">:</span>
   <span class="c1">// TetMap connect(const size_t high, const size_t low) const{</span>
   <span class="c1">//   Stopwatch&lt;&gt; stopwatch;</span>

@@ -30,6 +30,7 @@ Program Listing for File mesh.hpp
    #ifndef _MESH_H_
    #define _MESH_H_
    
+   #include <set>
    #include "latvec.hpp"
    #include <vector>
    #include <array>
@@ -56,6 +57,7 @@ Program Listing for File mesh.hpp
          ){
        // this->mesh = triangulate(verts, facets, max_volume, min_angle, max_angle, min_ratio, max_points, trellis_fraction);
        this->mesh = triangulate(verts, facets, max_volume, num_levels, max_points);
+       data_.initialize_permutation_table(this->size(), this->mesh.collect_keys());
      }
      Mesh3(const Mesh3<T,S>& other){
        this->mesh = other.mesh;
@@ -75,6 +77,8 @@ Program Listing for File mesh.hpp
      // template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
      template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
      template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
+     template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
+     template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
      // Calculate the Debye-Waller factor for the provided Q points and ion masses
      template<template<class> class A>
      ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
@@ -92,19 +96,12 @@ Program Listing for File mesh.hpp
      std::tuple<ArrayVector<T>,ArrayVector<S>>
      parallel_interpolate_at(const ArrayVector<R>& x, const int nthreads) const;
      template<typename R> std::vector<size_t> which_neighbours(const std::vector<R>& t, const R value, const size_t idx) const;
-     template<typename R=double>
-     ArrayVector<size_t> multi_sort_perm(const R s=R(1), const R v=R(1), const R m=R(1), const int vf=0) const;
-     template<typename R> size_t consensus_sort_from(const size_t s, const R w[3],
-       const int f, const size_t so[3], ArrayVector<size_t>& p,
-       std::vector<bool>& d, std::vector<bool>& l, std::vector<size_t>& v) const;
-     template<typename R> bool consensus_sort_difference(const R w[3],
-       const int f, const size_t so[3], ArrayVector<size_t>& p,
-       std::vector<bool>& d, const size_t i, const std::vector<size_t> n) const;
      std::string to_string(void) const {
        std::string str= data_.to_string();
        str += " for the points of a TetTri[" + mesh.to_string() + "]";
        return str;
      }
+     void sort() {data_.sort();}
    private:
    };
    

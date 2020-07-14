@@ -39,9 +39,13 @@ Includes
 
 - ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
 
+- ``mutex``
+
 - ``omp.h``
 
 - ``permutation.hpp`` (:ref:`file_src_permutation.hpp`)
+
+- ``permutation_table.hpp`` (:ref:`file_src_permutation_table.hpp`)
 
 - ``phonon.hpp`` (:ref:`file_src_phonon.hpp`)
 
@@ -54,10 +58,6 @@ Includes
 Included By
 -----------
 
-
-- :ref:`file_src_grid.hpp`
-
-- :ref:`file_src_grid4.hpp`
 
 - :ref:`file_src_mesh.hpp`
 
@@ -108,6 +108,8 @@ Typedefs
 - :ref:`exhale_typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb`
 
 - :ref:`exhale_typedef_interpolation__data_8hpp_1aa3198ffc0e17fcb31cd7053642959228`
+
+- :ref:`exhale_typedef_interpolation__data_8hpp_1aafb2d4bd129b2238a12ab90db803ecb9`
 
 - :ref:`exhale_typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5`
 

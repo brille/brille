@@ -47,6 +47,8 @@ Includes
 
 - ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
 
+- ``set``
+
 - ``triangulation_simple.hpp`` (:ref:`file_src_triangulation_simple.hpp`)
 
 - ``tuple``

@@ -70,11 +70,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_src_bz_grid.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_src_bz_mesh.hpp.rst
 
 .. toctree::
@@ -101,31 +96,6 @@ Files
    :maxdepth: 5
 
    file_src_debug.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_grid.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_grid.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_grid4.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_grid4.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_grid_sorting.tpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -225,6 +195,11 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_src_permutation_table.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_src_phonon.hpp.rst
 
 .. toctree::
@@ -261,6 +236,11 @@ Files
    :maxdepth: 5
 
    file_src_smp.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_sorting_status.hpp.rst
 
 .. toctree::
    :maxdepth: 5

@@ -52,9 +52,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_lapjv_8hpp_1adf434d39d7f2346bf8991fa85db6c74b`
+- :ref:`exhale_function_lapjv_8hpp_1ac9edf9cda6f1621e06d49f48f1c60ce0`
 
-- :ref:`exhale_function_lapjv_8hpp_1a89e676b04b27f8030467b182d15be6dd`
+- :ref:`exhale_function_lapjv_8hpp_1aba8c19ca4c04f4a17671d835e3039b5e`
 
 
 Defines
@@ -66,4 +66,11 @@ Defines
 - :ref:`exhale_define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0`
 
 - :ref:`exhale_define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_lapjv_8hpp_1aca7783c049f660b93ed1338110b37d93`
 

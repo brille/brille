@@ -191,7 +191,10 @@
 <span class="cp">#ifndef _PERMUTATION_H</span>
 <span class="cp">#define _PERMUTATION_H</span>
 
+<span class="cp">#include</span> <span class="cpf">&lt;complex&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;cstdint&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;arrayvector.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;sorting_status.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;munkres.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;lapjv.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;smp.hpp&quot;</span><span class="cp"></span>
@@ -207,51 +210,6 @@
 <span class="p">};</span>
 <span class="cp">#endif</span>
 
-<span class="k">class</span> <span class="nc">SortingStatus</span><span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">status</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">SortingStatus</span><span class="p">()</span><span class="o">:</span> <span class="n">status</span><span class="p">{</span><span class="mi">0u</span><span class="p">}</span> <span class="p">{};</span>
-  <span class="n">SortingStatus</span><span class="p">(</span><span class="kt">bool</span> <span class="n">s</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">f</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span><span class="o">:</span> <span class="n">status</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="p">{</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">sorted</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">visits</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="kt">bool</span> <span class="n">sorted</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">status</span><span class="o">&gt;&gt;</span><span class="mi">31u</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1u</span><span class="p">;</span> <span class="p">}</span>
-  <span class="kt">bool</span> <span class="n">locked</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">status</span><span class="o">&gt;&gt;</span><span class="mi">30u</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1u</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">visits</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="p">((</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">30u</span><span class="p">)</span><span class="o">-</span><span class="mi">1u</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">status</span><span class="p">;</span> <span class="p">}</span>
-  <span class="kt">bool</span> <span class="n">sorted</span><span class="p">(</span><span class="kt">bool</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">sorted</span><span class="p">()</span> <span class="o">!=</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">rem</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">31u</span><span class="p">)</span><span class="o">-</span><span class="mi">1u</span><span class="p">)</span> <span class="o">&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span><span class="p">;</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">=</span> <span class="n">rem</span> <span class="o">+</span> <span class="p">(</span><span class="n">s</span> <span class="o">?</span> <span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">31u</span> <span class="o">:</span> <span class="mi">0u</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sorted</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="kt">bool</span> <span class="n">locked</span><span class="p">(</span><span class="kt">bool</span> <span class="n">l</span><span class="p">){</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">()</span> <span class="o">!=</span> <span class="n">l</span><span class="p">){</span>
-      <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">rem</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">+</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">sorted</span><span class="p">()</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">31u</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0u</span><span class="p">);</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">=</span> <span class="n">rem</span> <span class="o">+</span> <span class="p">(</span><span class="n">l</span> <span class="o">?</span> <span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">30u</span> <span class="o">:</span> <span class="mi">0u</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-  <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">visits</span><span class="p">(</span><span class="n">T</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">30u</span><span class="p">)</span><span class="o">-</span><span class="mi">1u</span><span class="p">){</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">sorted</span><span class="p">()</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1u</span><span class="o">&lt;</span><span class="mi">31u</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0u</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">locked</span><span class="p">()</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1u</span><span class="o">&lt;</span><span class="mi">30u</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0u</span><span class="p">);</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">+=</span> <span class="n">v</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">overflow_error</span><span class="p">(</span><span class="s">&quot;SortingStatus can not hold more than 2^30-1 visits.&quot;</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">visits</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="kt">uint_fast32_t</span> <span class="n">addvisit</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">visits</span><span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1u</span><span class="o">&lt;&lt;</span><span class="mi">30u</span><span class="p">)</span><span class="o">-</span><span class="mi">1u</span><span class="p">)</span>
-      <span class="o">++</span><span class="n">status</span><span class="p">;</span>
-    <span class="k">else</span>
-      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">overflow_error</span><span class="p">(</span><span class="s">&quot;SortingStatus can not hold more than 2^30-1 visits.&quot;</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">visits</span><span class="p">();</span>
-  <span class="p">}</span>
-
-<span class="p">};</span>
 
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
@@ -592,58 +550,40 @@
 <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">){</span>
-  <span class="kt">size_t</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
   <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">usol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">vsol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">rowsol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">colsol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">rows</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">cols</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
 
-  <span class="c1">// // protect against equally-good solutions in the same row:</span>
-  <span class="c1">// for (size_t i=0; i&lt;Nobj; ++i){</span>
-  <span class="c1">//   T rowmin{cost[i*Nobj]};</span>
-  <span class="c1">//   for (size_t j=1; j&lt;Nobj; ++j) if (rowmin &gt; cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];</span>
-  <span class="c1">//   int equal_to_min{0};</span>
-  <span class="c1">//   for (size_t j=0; j&lt;Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;</span>
-  <span class="c1">//   if (equal_to_min &gt; 1){</span>
-  <span class="c1">//     info_update(equal_to_min,&quot; columns have the same lowest cost in row &quot;,i);</span>
-  <span class="c1">//     for (size_t j=0; j&lt;Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))</span>
-  <span class="c1">//     cost[i*Nobj+j] += static_cast&lt;T&gt;(--equal_to_min*100)*std::numeric_limits&lt;T&gt;::epsilon();</span>
-  <span class="c1">//   }</span>
-  <span class="c1">// }</span>
-  <span class="c1">// // and same column</span>
-  <span class="c1">// for (size_t j=0; j&lt;Nobj; ++j){</span>
-  <span class="c1">//   T rowmin{cost[j]};</span>
-  <span class="c1">//   for (size_t i=1; i&lt;Nobj; ++i) if (rowmin &gt; cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];</span>
-  <span class="c1">//   int equal_to_min{0};</span>
-  <span class="c1">//   for (size_t i=0; i&lt;Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;</span>
-  <span class="c1">//   if (equal_to_min &gt; 1){</span>
-  <span class="c1">//     info_update(equal_to_min,&quot; rows have the same lowest cost in column &quot;,j);</span>
-  <span class="c1">//     for (size_t i=0; i&lt;Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))</span>
-  <span class="c1">//     cost[i*Nobj+j] += static_cast&lt;T&gt;(--equal_to_min*100)*std::numeric_limits&lt;T&gt;::epsilon();</span>
-  <span class="c1">//   }</span>
-  <span class="c1">// }</span>
-  <span class="c1">// /* Normalising the cost matrix before running Jonker-Volgenant *might* help</span>
-  <span class="c1">//   with the infinite loop situation */</span>
-  <span class="c1">// T maxcost{cost[0]}, mincost{cost[0]};</span>
-  <span class="c1">// for (auto i: cost){</span>
-  <span class="c1">//   if (maxcost &lt; i) maxcost = i;</span>
-  <span class="c1">//   if (mincost &gt; i) mincost = i;</span>
-  <span class="c1">// }</span>
-  <span class="c1">// info_update(&quot;JV costs range is (&quot;,mincost,&quot;,&quot;,maxcost,&quot;)&quot;);</span>
-  <span class="c1">// for (size_t i=1; i&lt;cost.size(); ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);</span>
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">rows</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">cols</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">usol</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">vsol</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="n">rows</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">jv_permutation</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cost</span><span class="p">);</span>
+<span class="p">}</span>
 
-  <span class="c1">// use the Jonker-Volgenant algorithm to determine the optimal assignment</span>
-  <span class="cm">/*</span>
-<span class="cm">  There might be a hidden problem here.</span>
-<span class="cm">  As discussed in the README at https://github.com/hrldcpr/pyLAPJV</span>
-
-<span class="cm">  Supposedly, if two costs are equally smallest (in a row) to machine precision</span>
-<span class="cm">  then the Jonker-Volgenant algorithm enters an infinite loop.</span>
-<span class="cm">  The version in lapjv.h has a check to avoid this but it might still be a</span>
-<span class="cm">  problem. */</span>
-  <span class="n">lapjv</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">rowsol</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">colsol</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">usol</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">vsol</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
-  <span class="k">return</span> <span class="n">rowsol</span><span class="p">;</span> <span class="c1">// or should this be colsol?</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation_fill</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">row</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">u</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">v</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">col</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">row</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">row</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">u</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation_fill</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">col</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">u</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">v</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">row</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">col</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">row</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">u</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
@@ -719,6 +659,49 @@
 <span class="k">delete</span><span class="p">[]</span> <span class="n">rowsol</span><span class="p">;</span>
 <span class="k">delete</span><span class="p">[]</span> <span class="n">colsol</span><span class="p">;</span>
 <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// The following apply_permutation has been adapted from</span>
+<span class="c1">//  https://devblogs.microsoft.com/oldnewthing/20170104-00/?p=95115</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ObjItr</span><span class="p">,</span> <span class="k">typename</span> <span class="n">PermItr</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">apply_permutation</span><span class="p">(</span><span class="n">ObjItr</span> <span class="n">objects</span><span class="p">,</span> <span class="n">ObjItr</span> <span class="n">end</span><span class="p">,</span> <span class="n">PermItr</span> <span class="n">indices</span><span class="p">){</span>
+  <span class="k">using</span> <span class="n">Obj</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">ObjItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">Dif</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">PermItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="n">Dif</span> <span class="n">numel</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">objects</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Dif</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numel</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+    <span class="c1">// move the object to a temporary location (fallsback to copy)</span>
+    <span class="n">Obj</span> <span class="n">obji</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">])};</span>
+    <span class="c1">// keep track of where we are in the swap loop</span>
+    <span class="n">Dif</span> <span class="n">current</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]){</span>
+      <span class="n">Dif</span> <span class="n">next</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">];</span>
+      <span class="n">objects</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">next</span><span class="p">]);</span>
+      <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+      <span class="n">current</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obji</span><span class="p">);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ObjItr</span><span class="p">,</span> <span class="k">typename</span> <span class="n">PermItr</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">apply_inverse_permutation</span><span class="p">(</span><span class="n">ObjItr</span> <span class="n">objects</span><span class="p">,</span> <span class="n">ObjItr</span> <span class="n">end</span><span class="p">,</span> <span class="n">PermItr</span> <span class="n">indices</span><span class="p">){</span>
+  <span class="k">using</span> <span class="n">Obj</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">ObjItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">Dif</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">PermItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="n">Dif</span> <span class="n">numel</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">objects</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Dif</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numel</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+    <span class="c1">// pop-out the targeted object and its index</span>
+    <span class="n">Dif</span> <span class="n">pop_idx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+    <span class="n">Obj</span> <span class="n">pop_obj</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]])};</span>
+    <span class="c1">// move the current object and index to the target</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="c1">// and put the popped object and index back in here</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">pop_idx</span><span class="p">);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_idx</span><span class="p">;</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="cp">#endif</span>

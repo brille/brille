@@ -63,8 +63,6 @@ Included By
 
 - :ref:`file_src_polyhedron.hpp`
 
-- :ref:`file_src_grid.hpp`
-
 - :ref:`file_src_mesh.hpp`
 
 - :ref:`file_src_nest.hpp`

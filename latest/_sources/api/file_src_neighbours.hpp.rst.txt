@@ -39,10 +39,6 @@ Included By
 
 - :ref:`file_src_bz.hpp`
 
-- :ref:`file_src_grid.hpp`
-
-- :ref:`file_src_grid4.hpp`
-
 - :ref:`file_src_neighbours.cpp`
 
 

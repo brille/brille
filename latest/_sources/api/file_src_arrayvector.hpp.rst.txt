@@ -57,6 +57,8 @@ Included By
 
 - :ref:`file_src_interpolation_data.hpp`
 
+- :ref:`file_src_permutation.hpp`
+
 - :ref:`file_src_nest.hpp`
 
 - :ref:`file_src_trellis.hpp`

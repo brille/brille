@@ -53,7 +53,7 @@ Program Listing for File bz_nest.hpp
    
      template<typename R>
      std::tuple<ArrayVector<T>,ArrayVector<S>>
-     ir_interpolate_at(const LQVec<R>& x, const int nth, const bool no_move=false) const{
+     ir_interpolate_at(const LQVec<R>& x, const int nth, const bool no_move=false) const {
        LQVec<R> ir_q(x.get_lattice(), x.size());
        LQVec<int> tau(x.get_lattice(), x.size());
        std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);

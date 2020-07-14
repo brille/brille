@@ -31,7 +31,11 @@ Program Listing for File trellis.hpp
    #include <array>
    #include <queue>
    #include <tuple>
+   #include <mutex>
+   #include <condition_variable>
+   #include <atomic>
    #include <algorithm>
+   #include <functional>
    #include <omp.h>
    #include "arrayvector.hpp"
    #include "latvec.hpp"
@@ -305,7 +309,7 @@ Program Listing for File trellis.hpp
      NodeContainer nodes_;
      std::array<std::vector<double>,3> boundaries_; 
    public:
-     explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume);
+     explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume, const bool always_triangulate=false);
      // explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume){
      //   this->construct(polyhedron, max_volume);
      // }
@@ -468,9 +472,9 @@ Program Listing for File trellis.hpp
        std::vector<index_t> out;
        std::array<index_t,3> sz{this->size()}, sp{this->span()}, sub;
        sub = this->idx2sub(idx, sp);
-       for (index_t i=0; i<3; ++i) if (sub[0]+i > 0 && sub[0]+i < sz[0])
-       for (index_t j=0; j<3; ++j) if (sub[1]+j > 0 && sub[1]+j < sz[1])
-       for (index_t k=0; k<3; ++k) if (sub[2]+k > 0 && sub[2]+k < sz[2])
+       for (index_t i=0; i<3; ++i) if (sub[0]+i > 0 && sub[0]+i < sz[0]+1)
+       for (index_t j=0; j<3; ++j) if (sub[1]+j > 0 && sub[1]+j < sz[1]+1)
+       for (index_t k=0; k<3; ++k) if (sub[2]+k > 0 && sub[2]+k < sz[2]+1)
        if (!(1==i&&1==j&&1==k)) {
          std::array<index_t,3> n_sub {{sub[0]+i-1, sub[1]+j-1, sub[2]+k-1}};
          index_t n_idx = this->sub2idx(n_sub, sp);
@@ -505,76 +509,7 @@ Program Listing for File trellis.hpp
      ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
        return data_.debye_waller(Q,M,t_K);
      }
-     template<typename S=double>
-     ArrayVector<size_t> multi_sort_perm(
-       const S scalar_weight=R(1), const S vector_weight=R(1),
-       const S matrix_weight=R(1), const int vf=0
-     ) const {
-       typename CostTraits<T>::type weights[3];
-       weights[0] = typename CostTraits<T>::type(scalar_weight);
-       weights[1] = typename CostTraits<T>::type(vector_weight);
-       weights[2] = typename CostTraits<T>::type(matrix_weight);
-       // elshape → (data.size(),Nobj, Na, Nb, ..., Nz) stored at each grid point
-       // or (data.size(), Na, Nb, ..., Nz) ... but we have properties to help us out!
-       size_t nobj = static_cast<size_t>(data_.branches());
-       size_t val_span = static_cast<size_t>(data_.values().branch_span());
-       size_t vec_span = static_cast<size_t>(data_.vectors().branch_span());
-       size_t spobj[3]{val_span, vec_span, nobj};
-       // within each index of the data ArrayVector there are span*nobj entries.
-   
-       // We will return the permutations of 0:nobj-1 which sort the objects globally
-       ArrayVector<size_t> perm( nobj, vertices_.size() );
-       for (size_t j=0; j<vertices_.size(); ++j) for (size_t i=0; i<nobj; ++i) perm.insert(i, j, i);
-       // We need to keep track of which objects have been sorted thus far
-       std::vector<bool> vertex_sorted(data_.size(), false);
-       std::vector<bool> vertex_locked(data_.size(), false);
-       std::vector<size_t> vertex_visited(data_.size(), 0);
-       std::vector<bool> node_sorted(nodes_.size(), false);
-       std::vector<bool> node_locked(nodes_.size(), false);
-       std::vector<size_t> node_visited(nodes_.size(), 0);
-       // Start from the node containing the  Γ point
-       ArrayVector<double> Gamma(1u, 3u, 0.);
-       std::array<index_t,3> node_sub = node_subscript(Gamma);
-       index_t node_lin = this->sub2idx(node_sub);
-       if (nodes_.is_null(node_lin))
-         throw std::runtime_error("The Gamma point must not be in a null node!");
-       // find the vertex associated with this node closest to Γ
-       std::vector<index_t> node_verts = nodes_.vertices(node_lin);
-       std::vector<double> vG_dist;
-       for (index_t & i: node_verts) vG_dist.push_back(vertices_.norm(i));
-       size_t min_vG_dist_idx = std::distance(vG_dist.begin(), std::min_element(vG_dist.begin(), vG_dist.end()));
-       index_t idx = node_verts[min_vG_dist_idx];
-       // and arbitrarily say this vertex *is* sorted
-       vertex_sorted[idx] = true;
-       ++vertex_visited[idx];
-       //size_t num_sorted =
-       this->consensus_sort_nodes(
-         node_lin, weights, vf, spobj, perm,
-         node_sorted, node_locked, node_visited,
-         vertex_sorted, vertex_locked, vertex_visited
-       );
-       //
-       // if (num_sorted != nodes_.size() - nodes_.null_count()){
-       //   std::string msg;
-       //   msg = "Sorted " + std::to_string(num_sorted) + " of "
-       //       + std::to_string(nodes_.cube_count()) + " cube nodes and "
-       //       + std::to_string(nodes_.poly_count()) + " polyhedron nodes.";
-       //   // if (num_sorted < nodes_.size()) throw std::runtime_error(msg);
-       //   std::cout << msg << std::endl;
-       // }
-       size_t node_count = std::count(node_sorted.begin(), node_sorted.end(), true);
-       if (node_count != nodes_.size() - nodes_.null_count()){
-         std::cout << "Successfully sorted " << node_count << " of ";
-         std::cout << nodes_.size() - nodes_.null_count() << " valid trellis nodes." << std::endl;
-       }
-       size_t vertex_count = std::count(vertex_sorted.begin(), vertex_sorted.end(), true);
-       if (vertex_count != data_.size()){
-         std::cout << "Successfully sorted " << vertex_count << " of ";
-         std::cout << data_.size() << " trellis points." << std::endl;
-       }
-       return perm;
-     }
-   
+     void sort(void){ data_.sort(); }
    private:
      bool subscript_ok_and_not_null(const std::array<index_t,3>& sub) const {
        return this->subscript_ok(sub) && !nodes_.is_null(this->sub2idx(sub));
@@ -626,29 +561,16 @@ Program Listing for File trellis.hpp
        for (index_t n: this->node_neighbours(idx)) if (value == t[n]) out.push_back(n);
        return out;
      }
-     template<typename S=double> size_t consensus_sort_nodes(
-      const index_t first_idx, const S weights[3], const int func, const size_t spobj[3],
-      ArrayVector<size_t>& perm,
-      std::vector<bool>& node_done,
-      std::vector<bool>& node_lock,
-      std::vector<size_t>& node_visists,
-      std::vector<bool>& vertex_done,
-      std::vector<bool>& vertex_lock,
-      std::vector<size_t>& vertex_visits
-    ) const;
-    template<typename S=double> bool consensus_sort_node(
-      const S w[3], const int func, const size_t spobj[3],
-      ArrayVector<size_t>& p,
-      std::vector<bool>& done,
-      std::vector<bool>& lock,
-      std::vector<size_t>& visits,
-      const index_t node
-    ) const;
-    template<typename S=double> bool consensus_sort_difference(
-      const S w[3], const int func, const size_t spobj[3],
-      ArrayVector<size_t>& p, std::vector<bool>& done, const index_t idx,
-      const std::vector<index_t>& presorted
-    ) const;
+     template<typename S, typename Func>
+     std::vector<index_t> which_node_neighbours(
+       const std::vector<S>& t, Func ufunc, const index_t node
+     ) const {
+       std::vector<index_t> out;
+       for (index_t n: this->node_neighbours(node)) if (ufunc(t[n])) out.push_back(n);
+       return out;
+     }
+     std::set<size_t> collect_keys();
+     std::set<size_t> collect_keys_node(const index_t);
    };
    
    #include "trellis.tpp"

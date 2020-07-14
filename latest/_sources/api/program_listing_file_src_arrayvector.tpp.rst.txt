@@ -1371,3 +1371,67 @@ Program Listing for File arrayvector.tpp
      out.push_back(this->getvalue(i,j));
      return out;
    }
+   
+   
+   template<class T> template<class I>
+   void
+   ArrayVector<T>::permute_modes(const size_t idx, std::vector<I>& indices){
+     assert(idx < this->size());
+     size_t n_modes = indices.size();
+     size_t span = this->numel()/n_modes;
+     assert(this->numel() == span*n_modes);
+     // we need temporary storage
+     auto holder = std::unique_ptr<T[]>(new T[span]);
+     // now the actual work
+     for (size_t m=0; m<n_modes; ++m) if (m != static_cast<size_t>(indices[m])){
+       // move-out the current mᵗʰ mode into the temporary holder
+       for(size_t j=0; j<span; ++j)
+         holder[j] = this->getvalue(idx, m*span + j);
+       // loop through swapping as we go
+       size_t current{m};
+       while (m != static_cast<size_t>(indices[current])) {
+         // the next index along the chain
+         size_t next = static_cast<size_t>(indices[current]);
+         // copy from next to current
+         for(size_t j=0; j<span; ++j)
+           this->insert(this->getvalue(idx, next*span+j), idx, current*span+j);
+         // setting the current destination index to the current index
+         indices[current] = static_cast<I>(current);
+         // update the current index to the next one
+         current = next;
+       }
+       // finished a loop, so move the original mᵗʰ into the last place
+       for(size_t j=0; j<span; ++j)
+         this->insert(holder[j], idx, current*span+j);
+       indices[current] = static_cast<I>(current);
+     }
+   }
+   
+   template<class T> template<class I>
+   void
+   ArrayVector<T>::inverse_permute_modes(const size_t idx, std::vector<I>& indices){
+     assert(idx < this->size());
+     size_t n_modes = indices.size();
+     size_t span = this->numel()/n_modes;
+     assert(this->numel() == span*n_modes);
+     // we need temporary storage
+     auto holder = std::unique_ptr<T[]>(new T[span]);
+     // the inverse permutation is just a bunch of swaps.
+     for (size_t m=0; m<n_modes; ++m)
+     while (m != static_cast<size_t>(indices[m])) {
+       size_t target = static_cast<size_t>(indices[m]);
+       // move-out the targeted mode into the temporary holder
+       for(size_t j=0; j<span; ++j)
+         holder[j] = this->getvalue(idx, target*span + j);
+       // also keep track of its target's index
+       I pop_idx = indices[target];
+       // move the current object and index to the target
+       for(size_t j=0; j<span; ++j)
+         this->insert(this->getvalue(idx, m*span+j), idx, target*span+j);
+       indices[target] = target;
+       // and put the temporarily held data and index back at m
+       for(size_t j=0; j<span; ++j)
+         this->insert(holder[j], idx, m*span+j);
+       indices[m] = pop_idx;
+     }
+   }

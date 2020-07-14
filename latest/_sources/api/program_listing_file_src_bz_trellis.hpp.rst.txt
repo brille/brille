@@ -54,7 +54,7 @@ Program Listing for File bz_trellis.hpp
    
      template<typename S>
      std::tuple<ArrayVector<T>,ArrayVector<R>>
-     interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const{
+     interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
        LQVec<S> q(x.get_lattice(), x.size());
        LQVec<int> tau(x.get_lattice(), x.size());
        if (no_move){
@@ -74,7 +74,7 @@ Program Listing for File bz_trellis.hpp
    
      template<typename S>
      std::tuple<ArrayVector<T>,ArrayVector<R>>
-     ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const{
+     ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
        verbose_update("BZTrellisQ::ir_interpoalte_at called with ",nth," threads");
        LQVec<S> ir_q(x.get_lattice(), x.size());
        LQVec<int> tau(x.get_lattice(), x.size());

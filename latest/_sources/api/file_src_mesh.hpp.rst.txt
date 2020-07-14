@@ -45,6 +45,8 @@ Includes
 
 - ``queue``
 
+- ``set``
+
 - ``triangulation_layers.hpp`` (:ref:`file_src_triangulation_layers.hpp`)
 
 - ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)

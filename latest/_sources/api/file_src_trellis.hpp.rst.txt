@@ -35,11 +35,19 @@ Includes
 
 - ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
 
+- ``atomic``
+
+- ``condition_variable``
+
 - ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``functional``
 
 - ``interpolation_data.hpp`` (:ref:`file_src_interpolation_data.hpp`)
 
 - ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
+
+- ``mutex``
 
 - ``omp.h``
 

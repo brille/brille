@@ -218,6 +218,33 @@ string. Namely, there are no sub- or superscript glyphs and some scheme must
 be enacted to represent them.</p>
 </dd></dl>
 
+<dl class="py class">
+<dt id="brille._brille.SortingStatus">
+<em class="property">class </em><code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">SortingStatus</code><a class="headerlink" href="#brille._brille.SortingStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object representing the status of a single object under sorting.</p>
+<p>Internally may be represented as a single unsigned integer where two or
+more bits are reserved for various flags, or as a set of boolean values
+and an integer.</p>
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.locked">
+<em class="property">property </em><code class="sig-name descname">locked</code><a class="headerlink" href="#brille._brille.SortingStatus.locked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the locked flag</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.sorted">
+<em class="property">property </em><code class="sig-name descname">sorted</code><a class="headerlink" href="#brille._brille.SortingStatus.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sorted flag</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.visits">
+<em class="property">property </em><code class="sig-name descname">visits</code><a class="headerlink" href="#brille._brille.SortingStatus.visits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the visit count</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

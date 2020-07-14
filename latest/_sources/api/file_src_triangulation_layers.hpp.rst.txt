@@ -41,6 +41,8 @@ Includes
 
 - ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
 
+- ``set``
+
 - ``tetgen.h``
 
 - ``vector`` (:ref:`file_src_arrayvector.hpp`)

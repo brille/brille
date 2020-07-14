@@ -21,18 +21,12 @@ Files
 - :ref:`file_src_bravais.hpp`
 - :ref:`file_src_bz.cpp`
 - :ref:`file_src_bz.hpp`
-- :ref:`file_src_bz_grid.hpp`
 - :ref:`file_src_bz_mesh.hpp`
 - :ref:`file_src_bz_nest.hpp`
 - :ref:`file_src_bz_trellis.hpp`
 - :ref:`file_src_bz_wedge.cpp`
 - :ref:`file_src_debug.cpp`
 - :ref:`file_src_debug.hpp`
-- :ref:`file_src_grid.hpp`
-- :ref:`file_src_grid.tpp`
-- :ref:`file_src_grid4.hpp`
-- :ref:`file_src_grid4.tpp`
-- :ref:`file_src_grid_sorting.tpp`
 - :ref:`file_src_hall_symbol.cpp`
 - :ref:`file_src_hall_symbol.hpp`
 - :ref:`file_src_interpolation.hpp`
@@ -52,6 +46,7 @@ Files
 - :ref:`file_src_nest.hpp`
 - :ref:`file_src_nest.tpp`
 - :ref:`file_src_permutation.hpp`
+- :ref:`file_src_permutation_table.hpp`
 - :ref:`file_src_phonon.hpp`
 - :ref:`file_src_pointgroup.cpp`
 - :ref:`file_src_pointgroup.hpp`
@@ -60,6 +55,7 @@ Files
 - :ref:`file_src_polyhedron.hpp`
 - :ref:`file_src_primitive.hpp`
 - :ref:`file_src_smp.hpp`
+- :ref:`file_src_sorting_status.hpp`
 - :ref:`file_src_spg_database.cpp`
 - :ref:`file_src_spg_database.hpp`
 - :ref:`file_src_symmetry.cpp`

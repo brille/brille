@@ -3,7 +3,7 @@
 Class SortingStatus
 ===================
 
-- Defined in :ref:`file_src_permutation.hpp`
+- Defined in :ref:`file_src_sorting_status.hpp`
 
 
 Class Documentation
