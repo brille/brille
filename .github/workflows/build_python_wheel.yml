@@ -10,6 +10,7 @@ jobs:
 
     strategy:
       matrix:
+        cfg:
         os: [windows-latest, macos-latest]
         architecture: [x64]
         python-version: [3.6, 3.7, 3.8]
@@ -20,6 +21,11 @@ jobs:
             wheelname: macos
 
     steps:
+    - name: Install OpenMP
+      if: startsWith(matrix.os, 'macos')
+      run: |
+        brew install libomp
+
     - uses: actions/checkout@v2
 
     - name: Setup Python ${{ matrix.python-version }}
@@ -42,7 +48,7 @@ jobs:
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        WHEEL_NAME: ${{ wheelname }}
+        WHEEL_NAME: ${{ matrix.wheelname }}
       run: |
         python -m twine upload wheelhouse/*-${WHEEL_NAME}*.whl
       shell: bash
