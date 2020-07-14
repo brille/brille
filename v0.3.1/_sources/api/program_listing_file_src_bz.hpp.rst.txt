@@ -1,0 +1,233 @@
+
+.. _program_listing_file_src_bz.hpp:
+
+Program Listing for File bz.hpp
+===============================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_bz.hpp>` (``src/bz.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /* Copyright 2019 Greg Tucker
+   //
+   // This file is part of brille.
+   //
+   // brille is free software: you can redistribute it and/or modify it under the
+   // terms of the GNU Affero General Public License as published by the Free
+   // Software Foundation, either version 3 of the License, or (at your option)
+   // any later version.
+   //
+   // brille is distributed in the hope that it will be useful, but
+   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   // or FITNESS FOR A PARTICULAR PURPOSE.
+   // See the GNU Affero General Public License for more details.
+   //
+   // You should have received a copy of the GNU Affero General Public License
+   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #ifndef _BZ_CLASS_H_
+   #define _BZ_CLASS_H_
+   
+   #include "neighbours.hpp"
+   #include "transform.hpp"
+   // #include "pointgroup.hpp"
+   // #include <iostream>
+   // #include <algorithm>
+   // #include <vector>
+   #include "polyhedron.hpp"
+   // #include "debug.hpp"
+   #include "phonon.hpp"
+   
+   class BrillouinZone {
+     Reciprocal lattice;               
+     Reciprocal outerlattice;          
+     Polyhedron polyhedron; 
+     Polyhedron ir_polyhedron; 
+     ArrayVector<double> ir_wedge_normals; 
+     bool time_reversal; 
+     bool has_inversion; 
+     bool is_primitive; 
+     bool no_ir_mirroring;
+   public:
+     BrillouinZone(const Reciprocal& lat,
+                   const bool toprim=true,
+                   const int extent=1,
+                   const bool tr=false,
+                   const bool wedge_search=true
+                  ):
+     lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr)
+     {
+       this->is_primitive = !(this->lattice.issame(this->outerlattice));
+       this->has_inversion = this->time_reversal || lat.has_space_inversion();
+       this->no_ir_mirroring = true;
+       double old_volume = -1.0, new_volume=0.0;
+       int test_extent = extent-1;
+       // initial test_extent based on spacegroup or pointgroup?
+       while (!approx_scalar(new_volume, old_volume)){
+         old_volume = new_volume;
+         this->voro_search(++test_extent);
+         new_volume = this->polyhedron.get_volume();
+       }
+       // fallback in case voro_search fails for some reason?!?
+       if (approx_scalar(new_volume, 0.)){
+         info_update("voro_search failed to produce a non-null first Brillouin zone.");
+         this->vertex_search(extent);
+       } else {
+         verbose_update("New polyhedron volume ", this->polyhedron.get_volume());
+         verbose_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
+       }
+       // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
+       // set the irreducible wedge now as the search will do nothing.
+       this->ir_polyhedron = this->polyhedron;
+       if (wedge_search){
+         this->wedge_brute_force();
+         if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false); // no special 2-fold or mirror handling
+         if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,true); // no special 2-fold handling (but special mirror handling)
+         if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false); // no special mirror handling (maybe not useful)
+         if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
+         // other combinations of special_2_folds, special_mirrors,
+         // and sort_by_length are possible but not necessarily useful.
+         if (!this->check_ir_polyhedron())
+           info_update("Failed to find an irreducible Brillouin zone.");
+       }
+     }
+     void check_if_mirroring_needed(void){
+       this->no_ir_mirroring = true;
+       if (!this->has_inversion){
+         PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
+         double goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
+         double found = this->ir_polyhedron.get_volume();
+         if (approx_scalar(goal, 2.0*found)){
+           /*The current Polyhedron at this->ir_polyhedron has half the anticipated
+           volume. We can 'fix' this the easy way by mirroring the Polyhedron and
+           gluing it onto the current version; the resultant polyhedron will come
+           to a point at (0,0,0) and will not be convex. Instead, try to be clever
+           and look for a convex combination of the found polyhedron and its
+           mirror with one of the pointgroup operations applied:*/
+           std::vector<Polyhedron> all_unions;
+           Polyhedron mirrored = this->ir_polyhedron.mirror();
+           for (auto & r: ps.getall())
+             all_unions.push_back(this->ir_polyhedron + mirrored.rotate(r));
+           // The combination of a polyhedron and its rotated inverse which has
+           // the least number of vertices is (hopefully) convex.
+           auto min_vert_union = std::min_element(
+             all_unions.begin(),all_unions.end(),
+             [](const Polyhedron & a, const Polyhedron & b){
+               return a.num_vertices() < b.num_vertices();
+             }
+           );
+           // Polyhedron::operator+() needs to be fixed. As of now it does not look
+           // for extraneous faces (like internal faces which are coplanar and
+           // pointing in opposite directions) or coplanar external faces which
+           // share an edge. Until this is fixed cross our fingers and hope that we
+           // created a convex polyhedron such that the convex hull of its points
+           // gives the same polyhedron back:
+           Polyhedron mvu_convex_hull(min_vert_union->get_vertices());
+           if (approx_scalar(goal, mvu_convex_hull.get_volume())){
+             // we found a polyhedron with the right volume which is convex!
+             // so we can keep this as *the* ir_polyhedron
+             this->ir_polyhedron = mvu_convex_hull;
+             // and we need to update the found volume for the check below
+             found = goal;
+           }
+         }
+         // if found == goal no mirroring is required.
+         // if found == goal/2, mirroring is required.
+         this->no_ir_mirroring = approx_scalar(goal, found);
+       }
+     }
+   
+     bool check_ir_polyhedron(void);
+     bool wedge_explicit(void);
+     const Reciprocal get_lattice() const { return this->outerlattice;};
+     const Reciprocal get_primitive_lattice() const { return this->lattice;};
+     size_t vertices_count() const { return this->get_vertices().size();};
+     size_t faces_count() const { return this->get_points().size();};
+     // irreducible reciprocal space wedge
+     void set_ir_wedge_normals(const LQVec<double>&);
+     LQVec<double> get_ir_wedge_normals() const;
+     LQVec<double> get_primitive_ir_wedge_normals() const;
+     template<typename... A> void set_polyhedron(const LQVec<double>&, const LQVec<double>&, A...);
+     template<typename... A> void set_ir_polyhedron(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, A...);
+     bool set_ir_vertices(const LQVec<double>&);
+     Polyhedron get_polyhedron(void) const;
+     LQVec<double> get_vertices(void) const;
+     LQVec<double> get_points(void) const;
+     LQVec<double> get_normals(void) const;
+     LQVec<double> get_half_edges(void) const;
+     LQVec<double> get_primitive_vertices(void) const;
+     LQVec<double> get_primitive_points(void) const;
+     LQVec<double> get_primitive_normals(void) const;
+     std::vector<std::vector<int>> get_faces_per_vertex(void) const;
+     std::vector<std::vector<int>> get_vertices_per_face(void) const;
+     Polyhedron get_ir_polyhedron(const bool true_ir=true) const;
+     LQVec<double> get_ir_vertices(void) const;
+     LQVec<double> get_ir_points(void) const;
+     LQVec<double> get_ir_normals(void) const;
+     LQVec<double> get_ir_primitive_vertices(void) const;
+     LQVec<double> get_ir_primitive_points(void) const;
+     LQVec<double> get_ir_primitive_normals(void) const;
+     std::vector<std::vector<int>> get_ir_faces_per_vertex(void) const;
+     std::vector<std::vector<int>> get_ir_vertices_per_face(void) const;
+     void print() const;
+     void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
+     void wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true);
+     void wedge_triclinic(void);
+     void irreducible_vertex_search();
+     void vertex_search(const int extent=1);
+     void voro_search(const int extent=1);
+     // void vertex_search_xyz(const int extent=1);
+     bool isprimitive(void) const {return this->is_primitive;};
+   
+     template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
+     template<typename T> std::vector<bool> isinside_std(const LQVec<T>& p) const ;
+     template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p, const bool constructing=false) const;
+     template<typename T> std::vector<bool> isinside_wedge_std(const LQVec<T> &p, const bool constructing=false) const;
+     bool moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, int nthreads=0) const;
+     bool ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<size_t>& Rm, std::vector<size_t>& invRm, int nthreads=0) const ;
+     bool ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<std::array<int,9>>& R, int threads=0) const;
+     PointSymmetry get_pointgroup_symmetry() const{
+       return this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+     }
+     int add_time_reversal() const {
+       return this->time_reversal ? 1 : 0;
+     }
+   private:
+     void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
+     bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
+     bool wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num);
+     bool ir_wedge_is_ok(const LQVec<double>& normals);
+     LQVec<double> get_ir_polyhedron_wedge_normals(void) const;
+   };
+   
+   bool between_origin_and_plane(const LQVec<double> *p,
+                                 const LQVec<double> *v,
+                                 const ArrayVector<int> *ijk,
+                                 const int idx,
+                                       LQVec<double> *inv,
+                                 const int store_at=0,
+                                 const double tol=0*1e-15);
+   bool three_plane_intersection(const LQVec<double>& n,
+                                 const LQVec<double>& p,
+                                 const ArrayVector<double>& xyz,
+                                 const int i, const int j, const int k,
+                                 LQVec<double>& iat, const int idx=0);
+   bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                     const LQVec<double>& nj, const LQVec<double>& pj,
+                     const LQVec<double>& nk, const LQVec<double>& pk,
+                     LQVec<double>& intersect, const int idx);
+   bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                     const LQVec<double>& nj, const LQVec<double>& pj,
+                     const LQVec<double>& nk,
+                     LQVec<double>& intersect, const int idx);
+   bool intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+                     const LQVec<double>& nj,
+                     const LQVec<double>& nk,
+                     LQVec<double>& intersect, const int idx);
+   bool intersect_at(const LQVec<double>& ni,
+                     const LQVec<double>& nj,
+                     const LQVec<double>& nk,
+                     LQVec<double>& intersect, const int idx);
+   #endif

@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856:
+
+Function get_pointgroup_class_table
+===================================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: get_pointgroup_class_table(int, const PointSymmetry&)

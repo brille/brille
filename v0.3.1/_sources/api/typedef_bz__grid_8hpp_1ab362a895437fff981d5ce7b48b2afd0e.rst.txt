@@ -1,0 +1,13 @@
+.. _exhale_typedef_bz__grid_8hpp_1ab362a895437fff981d5ce7b48b2afd0e:
+
+Typedef slong
+=============
+
+- Defined in :ref:`file_src_bz_grid.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: slong

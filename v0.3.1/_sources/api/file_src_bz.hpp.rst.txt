@@ -1,0 +1,83 @@
+
+.. _file_src_bz.hpp:
+
+File bz.hpp
+===========
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/bz.hpp``)
+---------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``neighbours.hpp`` (:ref:`file_src_neighbours.hpp`)
+
+- ``phonon.hpp`` (:ref:`file_src_phonon.hpp`)
+
+- ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
+
+- ``transform.hpp`` (:ref:`file_src_transform.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.cpp`
+
+- :ref:`file_src_bz_grid.hpp`
+
+- :ref:`file_src_bz_mesh.hpp`
+
+- :ref:`file_src_bz_nest.hpp`
+
+- :ref:`file_src_bz_trellis.hpp`
+
+- :ref:`file_src_bz_wedge.cpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classBrillouinZone`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_bz_8hpp_1aa333ffe2bd7ee0510c69e2ba2598cc7a`
+
+- :ref:`exhale_function_bz_8hpp_1a747d3e85ef77e760d5ae4aa702cf5bd2`
+
+- :ref:`exhale_function_bz_8hpp_1a944bff6029393cd34068ab139d528f10`
+
+- :ref:`exhale_function_bz_8hpp_1adf94fc99f077a349f5f996b2ece44182`
+
+- :ref:`exhale_function_bz_8hpp_1a420a3ad8100b7cc7423656c6dcde433e`
+
+- :ref:`exhale_function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c`
+

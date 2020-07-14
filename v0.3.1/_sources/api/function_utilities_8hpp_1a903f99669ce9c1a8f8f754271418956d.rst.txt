@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a903f99669ce9c1a8f8f754271418956d:
+
+Template Function is_int_matrix(const int \*, const)
+====================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: is_int_matrix(const int *, const)

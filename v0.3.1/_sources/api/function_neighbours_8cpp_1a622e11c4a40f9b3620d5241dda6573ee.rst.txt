@@ -1,0 +1,13 @@
+.. _exhale_function_neighbours_8cpp_1a622e11c4a40f9b3620d5241dda6573ee:
+
+Function make_relative_neighbour_indices4(const int)
+====================================================
+
+- Defined in :ref:`file_src_neighbours.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: make_relative_neighbour_indices4(const int)

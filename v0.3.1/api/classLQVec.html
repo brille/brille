@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class LQVec &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class MapGrid3" href="classMapGrid3.html" />
+    <link rel="prev" title="Template Class LDVec" href="classLDVec.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class LQVec</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classLQVec.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-lqvec">
+<span id="exhale-class-classlqvec"></span><h1>Template Class LQVec<a class="headerlink" href="#template-class-lqvec" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_latvec.hpp.html#file-src-latvec-hpp"><span class="std std-ref">File latvec.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-types">
+<h3>Base Types<a class="headerlink" href="#base-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">LatVec</span></code> (<a class="reference internal" href="classLatVec.html#exhale-class-classlatvec"><span class="std std-ref">Class LatVec</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">ArrayVector&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classArrayVector.html#exhale-class-classarrayvector"><span class="std std-ref">Template Class ArrayVector</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0E5LQVec">
+<span id="_CPPv3I0E5LQVec"></span><span id="_CPPv2I0E5LQVec"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classLQVec"></span><em class="property">class </em><code class="sig-name descname">LQVec</code> : <em class="property">public</em> <a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <em class="property">public</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0E5LQVec" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>3-vector(s) expressed in units of a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice </p>
+<p>By adding a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice to a 3-element <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> this class represents one or more 3-vector in units of a reciprocal-space-spanning lattice. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec5LQVecERK10ReciprocalK6size_tPK1T">
+<span id="_CPPv3N5LQVec5LQVecERK10ReciprocalK6size_tPK1T"></span><span id="_CPPv2N5LQVec5LQVecERK10ReciprocalK6size_tPK1T"></span><span id="LQVec::LQVec__ReciprocalCR.sC.TCP"></span><span class="target" id="classLQVec_1a5d6dab7b9b5003a85af87c20ec731db6"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em> = <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a>(), <em class="property">const</em> size_t <em>n</em> = 0, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> *<em>d</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec5LQVecERK10ReciprocalK6size_tPK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Default constructor, enforces that 3-vectors are held. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi">
+<span id="_CPPv3I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi"></span><span id="_CPPv2I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi"></span>template&lt;class <code class="sig-name descname">Integer</code>, typename = <em class="property">typename</em> std::enable_if&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LQVec::LQVec::Integer">Integer</a>&gt;::value&gt;::type&gt;<br /><span class="target" id="classLQVec_1a3c2425c6f0b707323b4b827a9731ac35"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> *<em>d</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LQVec::LQVec::Integer">Integer</a>&gt; &amp;<em>shape</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LQVec::LQVec::Integer">Integer</a>&gt; &amp;<em>strides</em>, <em class="property">const</em> int <em>flag</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN5LQVec5LQVecERK10ReciprocalPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor taking a possibly non-contigous and/or non-row-ordered input. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec5LQVecERK10ReciprocalRK11ArrayVectorI1TEKi">
+<span id="_CPPv3N5LQVec5LQVecERK10ReciprocalRK11ArrayVectorI1TEKi"></span><span id="_CPPv2N5LQVec5LQVecERK10ReciprocalRK11ArrayVectorI1TEKi"></span><span id="LQVec::LQVec__ReciprocalCR.ArrayVector:T:CR.iC"></span><span class="target" id="classLQVec_1a8044dfbaa2791b268d3c94776acc1f58"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>vec</em>, <em class="property">const</em> int <em>flag</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec5LQVecERK10ReciprocalRK11ArrayVectorI1TEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy constructor, optionally verifying that only 3-element arrays are provided. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE">
+<span id="_CPPv3I0EN5LQVec5LQVecERK5LQVecI1RE"></span><span id="_CPPv2I0EN5LQVec5LQVecERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1ad0cb02da7c9b46b63948af31e32ac506"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="LQVec::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="LQVec::LQVec::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>[Optional type conversion] copy constructor </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN5LQVec5LQVecERK10ReciprocalRKNSt6vectorINSt5arrayI1RXL3EEEEEE">
+<span id="_CPPv3I0EN5LQVec5LQVecERK10ReciprocalRKNSt6vectorINSt5arrayI1RXL3EEEEEE"></span><span id="_CPPv2I0EN5LQVec5LQVecERK10ReciprocalRKNSt6vectorINSt5arrayI1RX3EEEEE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1ab051c1153e7ae27fc863230ed6cd4513"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="#_CPPv4I0EN5LQVec5LQVecERK10ReciprocalRKNSt6vectorINSt5arrayI1RXL3EEEEEE" title="LQVec::LQVec::R">R</a>, 3&gt;&gt; &amp;<em>va</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LQVec5LQVecERK10ReciprocalRKNSt6vectorINSt5arrayI1RXL3EEEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>std::vector&lt;std::array&lt;T,3&gt;&gt; copy constructor </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec5LQVecERK5LQVecI1TE">
+<span id="_CPPv3N5LQVec5LQVecERK5LQVecI1TE"></span><span id="_CPPv2N5LQVec5LQVecERK5LQVecI1TE"></span><span id="LQVec::LQVec__LQVec:T:CR"></span><span class="target" id="classLQVec_1a30384b9fd166808eecf13aac8a8e30c5"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5LQVec5LQVecERK5LQVecI1TE" title="LQVec::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec5LQVecERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Explicit copy constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecaSERK5LQVecI1TE">
+<span id="_CPPv3N5LQVecaSERK5LQVecI1TE"></span><span id="_CPPv2N5LQVecaSERK5LQVecI1TE"></span><span id="LQVec::assign-operator__LQVec:T:CR"></span><span class="target" id="classLQVec_1aef9365ee51694e4d33cf0c9d188ad5e7"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecaSERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assignment operator reusing data if we can. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVecixEK6size_t">
+<span id="_CPPv3NK5LQVecixEK6size_t"></span><span id="_CPPv2NK5LQVecixEK6size_t"></span><span id="LQVec::subscript-operator__sCC"></span><span class="target" id="classLQVec_1a20a23efaef9abd874d4502e447fc716c"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVecixEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the 3-vector with index <code class="docutils literal notranslate"><span class="pre">i</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec11get_latticeEv">
+<span id="_CPPv3NK5LQVec11get_latticeEv"></span><span id="_CPPv2NK5LQVec11get_latticeEv"></span><span id="LQVec::get_latticeC"></span><span class="target" id="classLQVec_1aa540d41c3e31ed24e9eed5e53035c5ff"></span><a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> <code class="sig-name descname">get_lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec11get_latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeEPK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1afb07bfeb3cdf18c6da61f1c8f6ef85da"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE" title="LQVec::samelattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeEPK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a6304b8a0acd957f8535f129260e907f9"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE" title="LQVec::samelattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeEPK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a05b797457b920a9040c843d21be0433e"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE" title="LQVec::starlattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeEPK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a492674a5e14c703289dd497dded26542"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE" title="LQVec::starlattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeERK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a1c04f12959af9cd8af013aba773938e3"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE" title="LQVec::samelattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeERK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1aac10bccbc509c0df268d4eeabb8222c8"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE" title="LQVec::samelattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeERK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1ad900410ea93da25c8ffbac3b3e81cdfb"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE" title="LQVec::starlattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeERK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1aa4a4aeacaee4e599786c09bb02d86dc3"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE" title="LQVec::starlattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7extractEK6size_t">
+<span id="_CPPv3NK5LQVec7extractEK6size_t"></span><span id="_CPPv2NK5LQVec7extractEK6size_t"></span><span id="LQVec::extract__sCC"></span><span class="target" id="classLQVec_1ac9563360ac784a7ca77a43500e3d0729"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7extractEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the ith single-array <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5firstEK6size_t">
+<span id="_CPPv3NK5LQVec5firstEK6size_t"></span><span id="_CPPv2NK5LQVec5firstEK6size_t"></span><span id="LQVec::first__sCC"></span><span class="target" id="classLQVec_1af47ef2a82a18a1237ec11220403cde1b"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">first</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>num</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5firstEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the first <code class="docutils literal notranslate"><span class="pre">num</span></code> vectors from an <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a>. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a LQec containing the <code class="docutils literal notranslate"><span class="pre">num</span></code> vectors </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">num</span></code>: the number of vectors to return </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7extractEK6size_tPK6size_t">
+<span id="_CPPv3NK5LQVec7extractEK6size_tPK6size_t"></span><span id="_CPPv2NK5LQVec7extractEK6size_tPK6size_t"></span><span id="LQVec::extract__sC.sCPC"></span><span class="target" id="classLQVec_1abcfbc8e0226501cba43d79ee6d5f119f"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>n</em>, <em class="property">const</em> size_t *<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7extractEK6size_tPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> containing the n arrays </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code>: the number of arrays to return </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code>: a pointer to the first index of the n arrays to return </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7extractERK11ArrayVectorI6size_tE">
+<span id="_CPPv3NK5LQVec7extractERK11ArrayVectorI6size_tE"></span><span id="_CPPv2NK5LQVec7extractERK11ArrayVectorI6size_tE"></span><span id="LQVec::extract__ArrayVector:s:CRC"></span><span class="target" id="classLQVec_1a820060415a8631ae8670a628b546dcc5"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7extractERK11ArrayVectorI6size_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> containing the indicies indicated by idx </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">idx</span></code>: a reference to an <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> containing the to-be-returned indices </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7extractERK11ArrayVectorIbE">
+<span id="_CPPv3NK5LQVec7extractERK11ArrayVectorIbE"></span><span id="_CPPv2NK5LQVec7extractERK11ArrayVectorIbE"></span><span id="LQVec::extract__ArrayVector:b:CRC"></span><span class="target" id="classLQVec_1a7e2ed7c146c775051e66e10009e239b5"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;bool&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7extractERK11ArrayVectorIbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> containing the indicies indicated by tfvec </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tfvec</span></code>: a reference to an ArrayVector&lt;bool&gt; with true for the to-be-returned indices </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7extractERKNSt6vectorIbEE">
+<span id="_CPPv3NK5LQVec7extractERKNSt6vectorIbEE"></span><span id="_CPPv2NK5LQVec7extractERKNSt6vectorIbEE"></span><span id="LQVec::extract__std::vector:b:CRC"></span><span class="target" id="classLQVec_1a4b6fcf9fbcbfbd769bf318b67c2fdf2c"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7extractERKNSt6vectorIbEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec3getEK6size_t">
+<span id="_CPPv3NK5LQVec3getEK6size_t"></span><span id="_CPPv2NK5LQVec3getEK6size_t"></span><span id="LQVec::get__sCC"></span><span class="target" id="classLQVec_1ac0338cb76ae02b0f93c254eeb2edb6e9"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec3getEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the 3-vector with index <code class="docutils literal notranslate"><span class="pre">i</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7get_hklEv">
+<span id="_CPPv3NK5LQVec7get_hklEv"></span><span id="_CPPv2NK5LQVec7get_hklEv"></span><span id="LQVec::get_hklC"></span><span class="target" id="classLQVec_1affd24632c7f1fdc1a7be02d769706654"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">get_hkl</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7get_hklEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract just the coordinates in units of the <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice (strip off the lattice information) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7get_xyzEv">
+<span id="_CPPv3NK5LQVec7get_xyzEv"></span><span id="_CPPv2NK5LQVec7get_xyzEv"></span><span id="LQVec::get_xyzC"></span><span class="target" id="classLQVec_1a47659419bb43e8d3ab14b07474b9e256"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7get_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the coordinates in an orthonormal frame with its first axis, x, along a*, its second, y, perpendicular with y⋅b*&gt;0 , and it’s third forming the right-handed set z=x×y. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4starEv">
+<span id="_CPPv3NK5LQVec4starEv"></span><span id="_CPPv2NK5LQVec4starEv"></span><span id="LQVec::starC"></span><span class="target" id="classLQVec_1afb436c9141c8f11a9efee7f60e96c09b"></span><a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;double&gt; <code class="sig-name descname">star</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4starEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the vector(s) expressed in units of the <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec3dotEK6size_tK6size_t">
+<span id="_CPPv3NK5LQVec3dotEK6size_tK6size_t"></span><span id="_CPPv2NK5LQVec3dotEK6size_tK6size_t"></span><span id="LQVec::dot__sC.sCC"></span><span class="target" id="classLQVec_1a186a456010e1ca031b6fde46b9761a13"></span>double <code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec3dotEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the scalar product between two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4normEK6size_t">
+<span id="_CPPv3NK5LQVec4normEK6size_t"></span><span id="_CPPv2NK5LQVec4normEK6size_t"></span><span id="LQVec::norm__sCC"></span><span class="target" id="classLQVec_1a5d6f57b6647177d01987339e1ffb1b84"></span>double <code class="sig-name descname">norm</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4normEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the absolute length of a vector in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5crossEK6size_tK6size_t">
+<span id="_CPPv3NK5LQVec5crossEK6size_tK6size_t"></span><span id="_CPPv2NK5LQVec5crossEK6size_tK6size_t"></span><span id="LQVec::cross__sC.sCC"></span><span class="target" id="classLQVec_1aafecd6228358758c551449f28972f53f"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">cross</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5crossEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the cross product of two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecpLERK5LQVecI1TE">
+<span id="_CPPv3N5LQVecpLERK5LQVecI1TE"></span><span id="_CPPv2N5LQVecpLERK5LQVecI1TE"></span><span id="LQVec::add-assign-operator__LQVec:T:CR"></span><span class="target" id="classLQVec_1a26d28a21242ee4ccbd4c8b156d6c32e4"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecpLERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecmIERK5LQVecI1TE">
+<span id="_CPPv3N5LQVecmIERK5LQVecI1TE"></span><span id="_CPPv2N5LQVecmIERK5LQVecI1TE"></span><span id="LQVec::sub-assign-operator__LQVec:T:CR"></span><span class="target" id="classLQVec_1a0998da0feed0a308701d2700ad257252"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecmIERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecpLERK1T">
+<span id="_CPPv3N5LQVecpLERK1T"></span><span id="_CPPv2N5LQVecpLERK1T"></span><span id="LQVec::add-assign-operator__TCR"></span><span class="target" id="classLQVec_1a621ba325b33a83b01f0dcda1b4ea8c44"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecpLERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecmIERK1T">
+<span id="_CPPv3N5LQVecmIERK1T"></span><span id="_CPPv2N5LQVecmIERK1T"></span><span id="LQVec::sub-assign-operator__TCR"></span><span class="target" id="classLQVec_1a4c6737579829a52922b05cda7b1a1c53"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecmIERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecmLERK1T">
+<span id="_CPPv3N5LQVecmLERK1T"></span><span id="_CPPv2N5LQVecmLERK1T"></span><span id="LQVec::mul-assign-operator__TCR"></span><span class="target" id="classLQVec_1aec5031fb22cd2e66d336e75c6f1bcd36"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator*=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecmLERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVecdVERK1T">
+<span id="_CPPv3N5LQVecdVERK1T"></span><span id="_CPPv2N5LQVecdVERK1T"></span><span id="LQVec::div-assign-operator__TCR"></span><span class="target" id="classLQVec_1ae1c8d5fd4761f230b818d5fcb173576e"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator/=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVecdVERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec17consistency_checkERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec17consistency_checkERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a391bd284d16ddef598edca722660cc88"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE" title="LQVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Verify that a second <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> object is compatible for binary operations. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec17consistency_checkERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec17consistency_checkERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a8e2547024d14c61a1ac7a8a3f721ba57"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE" title="LQVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE">
+<span id="_CPPv3I0I0E00ENK5LQVec17consistency_checkERK1AI1RE"></span><span id="_CPPv2I0I0E00ENK5LQVec17consistency_checkERK1AI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">A</code>, typename = <em class="property">typename</em> std::enable_if&lt;!std::is_base_of&lt;<a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::R">R</a>&gt;&gt;::value &amp;&amp; std::is_base_of&lt;<a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::R">R</a>&gt;, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::R">R</a>&gt;&gt;::value&gt;::type&gt;<br /><span class="target" id="classLQVec_1a224343d9db0837ad4e4ec5b7546e73c1"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LQVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0I0E00ENK5LQVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Verify that an <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> object is compatible for binary operations. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec8isapproxEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec8isapproxERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec8isapproxERK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a6e70e2ce951ebf73b6c85efbe7769e3a"></span>bool <code class="sig-name descname">isapprox</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec8isapproxEbRK5LQVecI1RE" title="LQVec::isapprox::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec8isapproxEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check whether a second <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> is approximately the same as this object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec8isapproxEK6size_tK6size_t">
+<span id="_CPPv3NK5LQVec8isapproxEK6size_tK6size_t"></span><span id="_CPPv2NK5LQVec8isapproxEK6size_tK6size_t"></span><span id="LQVec::isapprox__sC.sCC"></span><span class="target" id="classLQVec_1a6c26a7bf247952429c2d29e8d1dc631c"></span>bool <code class="sig-name descname">isapprox</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec8isapproxEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check whether two vectors in the object are approximately the same. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5roundEv">
+<span id="_CPPv3NK5LQVec5roundEv"></span><span id="_CPPv2NK5LQVec5roundEv"></span><span id="LQVec::roundC"></span><span class="target" id="classLQVec_1a9214ba42dd027931fbc53fc8115e7fd1"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">round</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5roundEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Round all elements using std::round. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5floorEv">
+<span id="_CPPv3NK5LQVec5floorEv"></span><span id="_CPPv2NK5LQVec5floorEv"></span><span id="LQVec::floorC"></span><span class="target" id="classLQVec_1a1d1c8a6e7969604c28cb6fd363028222"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">floor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5floorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the floor of all elements using std::floor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4ceilEv">
+<span id="_CPPv3NK5LQVec4ceilEv"></span><span id="_CPPv2NK5LQVec4ceilEv"></span><span id="LQVec::ceilC"></span><span class="target" id="classLQVec_1af3844f6f2ec39f91fb4979ce6f632fbc"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">ceil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4ceilEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the ceiling of all elements using std::ceil. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec17check_arrayvectorEKi">
+<span id="_CPPv3N5LQVec17check_arrayvectorEKi"></span><span id="_CPPv2N5LQVec17check_arrayvectorEKi"></span><span id="LQVec::check_arrayvector__iC"></span><span class="target" id="classLQVec_1a5fde389adbffe76c64f6d461763bf61c"></span>void <code class="sig-name descname">check_arrayvector</code><span class="sig-paren">(</span><em class="property">const</em> int<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec17check_arrayvectorEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classMapGrid3.html" class="btn btn-neutral float-right" title="Template Class MapGrid3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classLDVec.html" class="btn btn-neutral float-left" title="Template Class LDVec" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

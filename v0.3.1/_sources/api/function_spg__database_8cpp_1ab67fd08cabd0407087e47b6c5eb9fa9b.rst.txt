@@ -1,0 +1,13 @@
+.. _exhale_function_spg__database_8cpp_1ab67fd08cabd0407087e47b6c5eb9fa9b:
+
+Function international_string_to_hall_number(const std::string&, const std::string&)
+====================================================================================
+
+- Defined in :ref:`file_src_spg_database.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: international_string_to_hall_number(const std::string&, const std::string&)

@@ -1,0 +1,13 @@
+.. _exhale_function_symmetry_8hpp_1add015147308ba4f3406ca16ce401eacf:
+
+Template Function operator\*(const Motion<R, T>&, const Motion<T, T>&)
+======================================================================
+
+- Defined in :ref:`file_src_symmetry.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator*(const Motion<R, T>&, const Motion<T, T>&)

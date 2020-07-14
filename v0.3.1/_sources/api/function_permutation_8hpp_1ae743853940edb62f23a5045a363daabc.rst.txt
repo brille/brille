@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc:
+
+Template Function munkres_permutation
+=====================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: munkres_permutation(const T *, const T *, const std::array<I, 3>&, const R, const R, const R, const size_t, const size_t, ArrayVector<size_t>&, const size_t, const size_t, const int)

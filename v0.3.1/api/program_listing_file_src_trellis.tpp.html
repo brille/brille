@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File trellis.tpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File trellis.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_trellis.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-trellis-tpp">
+<span id="program-listing-file-src-trellis-tpp"></span><h1>Program Listing for File trellis.tpp<a class="headerlink" href="#program-listing-for-file-trellis-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_trellis.tpp.html#file-src-trellis-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/trellis.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+<span class="n">PolyhedronTrellis</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">PolyhedronTrellis</span><span class="p">(</span><span class="k">const</span> <span class="n">Polyhedron</span><span class="o">&amp;</span> <span class="n">poly</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">max_volume</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">polyhedron_</span><span class="p">(</span><span class="n">poly</span><span class="p">),</span> <span class="n">vertices_</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">})</span>
+<span class="p">{</span>
+  <span class="c1">// find the extents of the polyhedron</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">minmax</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+    <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pv</span><span class="p">{</span><span class="n">poly</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">()};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">pv</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pv</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="n">minmax</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pv</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="n">minmax</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// try to make an integer number of nodes fit along each dimension</span>
+  <span class="c1">// If the Polyhedron does not have a face perpendicular to the given direction</span>
+  <span class="c1">// this will make no difference for build time.</span>
+  <span class="kt">double</span> <span class="n">intended_length</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">cbrt</span><span class="p">(</span><span class="n">max_volume</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">node_length</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="kt">double</span> <span class="n">len</span> <span class="o">=</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">node_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">len</span><span class="o">/</span><span class="n">std</span><span class="o">::</span><span class="n">ceil</span><span class="p">(</span><span class="n">len</span><span class="o">/</span><span class="n">intended_length</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// construct the trellis boundaries:</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+      <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">()</span><span class="o">+</span><span class="n">node_length</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;PolyhedronTrellis has &quot;</span><span class="p">,</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot; bins along axis &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;, with boundaries &quot;</span><span class="p">,</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="c1">// find which trellis intersections are inside of the polyhedron</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">va_int</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="nl">z</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="nl">y</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="nl">x</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">va_int</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">});</span>
+  <span class="c1">// the definition of this intersections span needs to match the looping order above!</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">intersections_span</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">(),</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">*</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="p">()};</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">all_intersections</span><span class="p">(</span><span class="n">va_int</span><span class="p">);</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">are_inside</span> <span class="o">=</span> <span class="n">poly</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">all_intersections</span><span class="p">);</span>
+  <span class="c1">// these will be retained as node vertices</span>
+  <span class="kt">size_t</span> <span class="n">kept_idx</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">n_mapped</span> <span class="o">=</span> <span class="n">are_inside</span><span class="p">.</span><span class="n">count_true</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">map_idx</span><span class="p">(</span><span class="n">all_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">n_mapped</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">all_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">are_inside</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">map_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">kept_idx</span><span class="o">++</span><span class="p">;</span>
+
+  <span class="c1">// find the nodes which are fully inside the polyhedron</span>
+  <span class="cm">/* Each node with linear index idx has a subscripted index (i,j,k)</span>
+<span class="cm">     and is surrounded by the trellis intersections of boundaries</span>
+<span class="cm">     (i,j,k) + { (000), (100), (110), (010), (101), (001), (011), (111)};</span>
+<span class="cm">  */</span>
+  <span class="n">index_t</span> <span class="n">nNodes</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">node_count</span><span class="p">();</span>
+  <span class="c1">// the order of the cube node intersections is paramount:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">node_intersections</span><span class="p">{{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}}};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">node_is_cube</span><span class="p">(</span><span class="n">nNodes</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">node_is_outside</span><span class="p">(</span><span class="n">nNodes</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">index_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nNodes</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">node_ijk</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">idx2sub</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="c1">// this node is a cube if all node intersection vertices are mapped</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">ni</span><span class="p">:</span> <span class="n">node_intersections</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">node_is_cube</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="kt">size_t</span> <span class="n">intersection_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">intersection_idx</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">ni</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">*</span><span class="n">intersections_span</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+      <span class="n">node_is_cube</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_idx</span><span class="p">[</span><span class="n">intersection_idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">n_mapped</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">node_is_cube</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="kt">bool</span> <span class="n">any_mapped</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">ni</span><span class="p">:</span> <span class="n">node_intersections</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">size_t</span> <span class="n">intersection_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">intersection_idx</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">ni</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">*</span><span class="n">intersections_span</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="n">any_mapped</span> <span class="o">|=</span> <span class="n">map_idx</span><span class="p">[</span><span class="n">intersection_idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">n_mapped</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">node_is_outside</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="n">any_mapped</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// Pull out the intersection points which we will keep as vertices:</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">kept_intersections</span> <span class="o">=</span> <span class="n">all_intersections</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">are_inside</span><span class="p">);</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">extra_intersections</span><span class="p">(</span><span class="mi">3u</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="p">(</span><span class="n">all_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="n">kept_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">index_t</span> <span class="n">nExtra</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="c1">// Now actually create the node objects (which are not fully outside)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">index_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nNodes</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">node_is_outside</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">NullNode</span><span class="p">());</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">node_ijk</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">idx2sub</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">8</span><span class="o">&gt;</span> <span class="n">vert_idx</span><span class="p">;</span> <span class="c1">// the 8 vertex indices of the cube</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">mapped_vert_idx</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">int_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">int_idx</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">node_intersections</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">])</span><span class="o">*</span><span class="n">intersections_span</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+      <span class="n">vert_idx</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">map_idx</span><span class="p">[</span><span class="n">int_idx</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">map_idx</span><span class="p">[</span><span class="n">int_idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">n_mapped</span><span class="p">)</span> <span class="n">mapped_vert_idx</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">map_idx</span><span class="p">[</span><span class="n">int_idx</span><span class="p">]));</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">contains_Gamma</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+      <span class="kt">double</span> <span class="n">tocheck</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="p">];</span>
+      <span class="n">contains_Gamma</span> <span class="o">&amp;=</span> <span class="n">tocheck</span> <span class="o">&lt;</span> <span class="mf">0.</span> <span class="o">||</span> <span class="n">approx_scalar</span><span class="p">(</span><span class="n">tocheck</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+      <span class="n">tocheck</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">contains_Gamma</span> <span class="o">&amp;=</span> <span class="n">tocheck</span> <span class="o">&gt;</span> <span class="mf">0.</span> <span class="o">||</span> <span class="n">approx_scalar</span><span class="p">(</span><span class="n">tocheck</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">node_is_cube</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">contains_Gamma</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">CubeNode</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// This node intersects the polyhedron. First, find the interior part</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">min_corner</span><span class="p">,</span> <span class="n">max_corner</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+        <span class="n">min_corner</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="p">];</span>
+        <span class="n">max_corner</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">node_ijk</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="n">Polyhedron</span> <span class="n">cube</span> <span class="o">=</span> <span class="n">polyhedron_box</span><span class="p">(</span><span class="n">min_corner</span><span class="p">,</span> <span class="n">max_corner</span><span class="p">);</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Node &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot; has bounding box</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">cube</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">().</span><span class="n">to_string</span><span class="p">());</span>
+      <span class="c1">// the cubic node extends beyond the bounding polyhedron so we must truncate it</span>
+      <span class="c1">// Polyhedron pbc = poly.intersection(cube);</span>
+      <span class="n">Polyhedron</span> <span class="n">cbp</span> <span class="o">=</span> <span class="n">cube</span><span class="p">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">poly</span><span class="p">);</span> <span class="c1">// &lt;- this one should (probably) always be faster since the cube is smaller</span>
+      <span class="kt">double</span> <span class="n">cut_volume</span> <span class="o">=</span> <span class="n">cbp</span><span class="p">.</span><span class="n">get_volume</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cbp</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">().</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">cut_volume</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">approx_scalar</span><span class="p">(</span><span class="n">cut_volume</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)){</span>
+        <span class="c1">// less than four vertices can not be a polyhedron</span>
+        <span class="c1">// negative volume means something went wrong</span>
+        <span class="c1">// zero volume means the node is actually outside and can remain null</span>
+        <span class="n">nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">NullNode</span><span class="p">());</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cut_volume</span> <span class="o">&gt;</span> <span class="n">cube</span><span class="p">.</span><span class="n">get_volume</span><span class="p">())</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Cutting the node increased its volume?!&quot;</span><span class="p">);</span>
+      <span class="c1">// cut the larger polyhedron by the smaller one:</span>
+      <span class="c1">// Then triangulate it into tetrahedra</span>
+      <span class="n">SimpleTet</span> <span class="nf">tri_cut</span><span class="p">(</span><span class="n">cbp</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">contains_Gamma</span><span class="p">);</span>
+      <span class="c1">// SimpleTet tri_cut(cbp, max_volume, contains_Gamma);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">){</span>
+        <span class="c1">//something went wrong.</span>
+        <span class="cm">/* A (somehow) likely cuplrit is that a face is missing from the cut</span>
+<span class="cm">        cube and therefor is not a piecewise linear complex. try to re-form</span>
+<span class="cm">        the input polyhedron and then re-triangulate.*/</span>
+        <span class="n">tri_cut</span> <span class="o">=</span> <span class="n">SimpleTet</span><span class="p">(</span><span class="n">Polyhedron</span><span class="p">(</span><span class="n">cbp</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">()),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">contains_Gamma</span><span class="p">);</span>
+        <span class="c1">// tri_cut = SimpleTet(Polyhedron(cbp.get_vertices()), max_volume, contains_Gamma);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">)</span>
+          <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Error determining cut cube triangulation&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="c1">// we need to retain the *additional* vertices from the triangulation</span>
+      <span class="c1">// and figure-out a local vertex index mapping</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">local_map</span><span class="p">;</span>
+      <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">triverts</span><span class="p">{</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">()};</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">triverts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+        <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">trij</span><span class="p">{</span><span class="n">triverts</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">j</span><span class="p">)};</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;checking vertex &quot;</span><span class="p">,</span> <span class="n">trij</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">));</span>
+        <span class="k">auto</span> <span class="n">cube_idx</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">kept_intersections</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">mapped_vert_idx</span><span class="p">)</span><span class="o">-</span><span class="n">trij</span><span class="p">).</span><span class="n">is_approx</span><span class="p">(</span><span class="n">Comp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">0.</span><span class="p">));</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cube_idx</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Too many matching vertices&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cube_idx</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+          <span class="n">local_map</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">mapped_vert_idx</span><span class="p">[</span><span class="n">cube_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">auto</span> <span class="n">extra_idx</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">extra_intersections</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">nExtra</span><span class="p">)</span><span class="o">-</span><span class="n">trij</span><span class="p">).</span><span class="n">is_approx</span><span class="p">(</span><span class="n">Comp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">0.</span><span class="p">));</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">extra_idx</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;How does one point match multiple points when all points should be unique?&quot;</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">extra_idx</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+            <span class="c1">// info_update(&quot;Polyhedron vertex in extra_intersections: idx = &quot;,cube_idx);</span>
+            <span class="n">local_map</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">kept_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="n">extra_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// info_update(&quot;Polyhedron vertex not in kept or extra intersections, so add it.&quot;);</span>
+            <span class="c1">// make sure we have room to store this new intersection</span>
+            <span class="c1">// if we don&#39;t, make room; but since this involves a memory copy make lots of room</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">extra_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">nExtra</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">extra_intersections</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">nExtra</span><span class="p">);</span>
+            <span class="c1">// store the extra vertex</span>
+            <span class="n">extra_intersections</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">nExtra</span><span class="p">,</span> <span class="n">trij</span><span class="p">);</span>
+            <span class="c1">// and its mapping information</span>
+            <span class="n">local_map</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">kept_intersections</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">+</span> <span class="n">nExtra</span><span class="p">);</span>
+            <span class="o">++</span><span class="n">nExtra</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">idx_per_tet</span><span class="p">;</span>
+      <span class="k">const</span> <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">local_ipt</span><span class="p">{</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">get_vertices_per_tetrahedron</span><span class="p">()};</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">local_ipt</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">index_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;</span> <span class="n">one_tet</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="n">one_tet</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_map</span><span class="p">[</span><span class="n">local_ipt</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)];</span>
+        <span class="n">idx_per_tet</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">one_tet</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">cci_per_tet</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vol_per_tet</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">number_of_tetrahedra</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+        <span class="n">cci_per_tet</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">circumsphere_info</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+        <span class="n">vol_per_tet</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">tri_cut</span><span class="p">.</span><span class="n">volume</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">idx_per_tet</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">NullNode</span><span class="p">());</span>
+      <span class="p">}</span>
+      <span class="k">else</span><span class="p">{</span>
+        <span class="n">nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">PolyNode</span><span class="p">(</span><span class="n">idx_per_tet</span><span class="p">,</span> <span class="n">cci_per_tet</span><span class="p">,</span> <span class="n">vol_per_tet</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// Now all non-null nodes have been populated with the indices of their vertices</span>
+  <span class="c1">// Combine the retained trellis vertices and the extra triangulated vertices</span>
+  <span class="n">vertices_</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="n">kept_intersections</span><span class="p">,</span> <span class="n">extra_intersections</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">nExtra</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cm">/*! \brief Consensus sorting of objects on a relational mesh</span>
+
+<span class="cm">Starting from a provided mesh-vertex index which has an arbitrary sorting</span>
+<span class="cm">permutation for the objects it contains, find all neighbouring vertices and add</span>
+<span class="cm">them to a unique-element first-in first-out queue.</span>
+
+<span class="cm">Dequeue a vertex and find all of its unsorted neighbouring vertices and add them</span>
+<span class="cm">to the queue. Find all sorted vertices neighbouring the dequeued vertex and use</span>
+<span class="cm">them to perform a consensus-based sorting of the objects at the dequeued vertex.</span>
+<span class="cm">If no consensus exists accept the most-popular sorting and requeue all</span>
+<span class="cm">neighbours offering an alternative permutation.</span>
+<span class="cm">Move on to the next queued vertex.</span>
+
+<span class="cm">In order to shortcut deadlocked situtations where no global consensus can be</span>
+<span class="cm">achieved, keep track of how many times a vertex has been visited and lock its</span>
+<span class="cm">sorting permutation after some threshhold to escape the infinite loop.</span>
+
+<span class="cm">The unique-element queue has an overhead of either</span>
+<span class="cm">  1) O(queue.size()) comparisons, or</span>
+<span class="cm">  2) all_vertices.size() bytes of memory and an O(1) check</span>
+<span class="cm">per to-be-added vertex. It&#39;s not clear which approach is more appropriate.</span>
+<span class="cm">In either case, this over head is likely much smaller than the memory use of a</span>
+<span class="cm">freely-growing queue since there is no bound on the number of shared</span>
+<span class="cm">neighbouring vertices for two connected vertices in a relational mesh.</span>
+<span class="cm">*/</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">size_t</span> <span class="n">PolyhedronTrellis</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">consensus_sort_nodes</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">index_t</span> <span class="n">first_idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">weights</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">func</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">perm</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">node_done</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">node_lock</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">node_visits</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">vertex_done</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">vertex_lock</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">vertex_visits</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">neighbours</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">queued</span><span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">queue</span><span class="p">;</span>
+  <span class="n">queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">first_idx</span><span class="p">);</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">max_visits</span><span class="p">{</span><span class="mi">10</span><span class="p">};</span>
+  <span class="kt">size_t</span> <span class="n">num_sorted</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0u</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="mi">1u</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">more_to_do</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">blanks</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot;Nodes queued: &quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">prompt</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">more_to_do</span><span class="p">){</span>
+    <span class="n">index_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+    <span class="n">queue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="n">queued</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">node_lock</span><span class="p">[</span><span class="n">idx</span><span class="p">]){</span>
+      <span class="n">node_lock</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">node_visits</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_visits</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">node_done</span><span class="p">[</span><span class="n">idx</span><span class="p">]){</span>
+        <span class="n">node_done</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">consensus_sort_node</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">spobj</span><span class="p">,</span> <span class="n">perm</span><span class="p">,</span> <span class="n">vertex_done</span><span class="p">,</span> <span class="n">vertex_lock</span><span class="p">,</span> <span class="n">vertex_visits</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">node_done</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="o">++</span><span class="n">num_sorted</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c1">// enqueue the neighbouring nodes no matter what</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">index_t</span> <span class="nl">n_idx</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">which_node_neighbours</span><span class="p">(</span><span class="n">node_done</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">idx</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">queued</span><span class="p">[</span><span class="n">n_idx</span><span class="p">])</span> <span class="p">{</span>
+          <span class="n">queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">n_idx</span><span class="p">);</span>
+          <span class="n">queued</span><span class="p">[</span><span class="n">n_idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="c1">// and then re-add this node if it wasn&#39;t finished</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">node_done</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="n">queued</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">more_to_do</span> <span class="o">=</span> <span class="o">!</span><span class="n">queue</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">refresh</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">blanks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\b</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="kt">size_t</span> <span class="n">new_blanks</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">new_blanks</span> <span class="o">+=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">floor</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">log10</span><span class="p">(</span><span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">())));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">new_blanks</span> <span class="o">&lt;</span> <span class="n">blanks</span><span class="p">){</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">blanks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">blanks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\b</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+      <span class="n">blanks</span> <span class="o">=</span> <span class="n">new_blanks</span><span class="p">;</span>
+      <span class="n">count</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="n">refresh</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">refresh</span> <span class="o">&lt;</span> <span class="mi">1u</span><span class="p">)</span> <span class="n">refresh</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
+      <span class="n">more_to_do</span> <span class="o">=</span> <span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="n">blanks</span> <span class="o">+=</span> <span class="n">prompt</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">blanks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\r</span><span class="s">&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">num_sorted</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">PolyhedronTrellis</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">consensus_sort_node</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">R</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">func</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">done</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">lock</span><span class="p">,</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">visits</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">index_t</span> <span class="n">node</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">max_visits</span><span class="p">{</span><span class="mi">10</span><span class="p">};</span> <span class="c1">// this is bad.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">verts</span> <span class="o">=</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">vertices</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">index_t</span> <span class="o">&amp;</span> <span class="nl">i</span><span class="p">:</span> <span class="n">verts</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lock</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">done</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">are_done</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">copy_if</span><span class="p">(</span><span class="n">verts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">verts</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">are_done</span><span class="p">),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">index_t</span> <span class="n">i</span><span class="p">){</span><span class="k">return</span> <span class="n">done</span><span class="p">[</span><span class="n">i</span><span class="p">];});</span>
+      <span class="n">done</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">consensus_sort_difference</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">spobj</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">are_done</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">lock</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">visits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_visits</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">count_done</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">verts</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">verts</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">index_t</span> <span class="n">i</span><span class="p">){</span><span class="k">return</span> <span class="n">done</span><span class="p">[</span><span class="n">i</span><span class="p">];});</span>
+  <span class="k">return</span> <span class="n">count_done</span> <span class="o">==</span> <span class="n">verts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">PolyhedronTrellis</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">consensus_sort_difference</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">R</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">func</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">done</span><span class="p">,</span> <span class="k">const</span> <span class="n">index_t</span> <span class="n">idx</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;&amp;</span> <span class="n">presorted</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">presorted</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="c1">// Find the *closest* point(s) which are sorted</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vectors</span> <span class="o">=</span> <span class="n">vertices_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">presorted</span><span class="p">)</span> <span class="o">-</span> <span class="n">vertices_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">lengths</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">vectors</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">lengths</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vectors</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="kt">double</span> <span class="n">min_length</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">min_element</span><span class="p">(</span><span class="n">lengths</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">lengths</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index_t</span><span class="o">&gt;</span> <span class="n">nearest</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">lengths</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">approx_scalar</span><span class="p">(</span><span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">min_length</span><span class="p">))</span>
+      <span class="n">nearest</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">presorted</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+
+  <span class="kt">size_t</span> <span class="n">nn</span> <span class="o">=</span> <span class="n">nearest</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="c1">// For each sorted neighbour, find the sorting permutation which sorts the</span>
+  <span class="c1">// data at idx the same as the data at the neighbour.</span>
+  <span class="c1">// Store the results into a temporary permutation array, abusing the last</span>
+  <span class="c1">// element to hold each neighbour&#39;s permutation in turn.</span>
+  <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">t</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">(),</span> <span class="n">nn</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">nearest</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span><span class="p">),</span> <span class="n">nn</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">jv_permutation</span><span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>        <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                   <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">nearest</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">data</span><span class="p">().</span><span class="n">data</span><span class="p">(</span><span class="n">nearest</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span>
+                   <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">elements</span><span class="p">(),</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">elements</span><span class="p">(),</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">spobj</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                   <span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span><span class="p">,</span> <span class="n">func</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// The first presorted.size() elements of tperm now contain the permutation</span>
+  <span class="c1">// for idx determined by the equal-index neighbour.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">uncounted</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">freq</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="mi">1u</span><span class="p">),</span> <span class="n">equiv_to</span><span class="p">(</span><span class="n">nn</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">equiv_to</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="c1">//bool all_agreee;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">uncounted</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">uncounted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">.</span><span class="n">vector_approx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">uncounted</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="o">++</span><span class="n">freq</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">freq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">equiv_to</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">hfidx</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">max_element</span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">freq</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+  <span class="c1">// Pick the highest-frequency permutation as the right one</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">numel</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">p</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">hfidx</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">idx</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+  <span class="c1">// If the highest frequency is nearest.size() then all permutations agree.</span>
+  <span class="c1">// Otherwise we need to indicate that the disagreeing nearest are not done.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">freq</span><span class="p">[</span><span class="n">hfidx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nn</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nn</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">equiv_to</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hfidx</span><span class="p">)</span> <span class="n">done</span><span class="p">[</span><span class="n">nearest</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611:
+
+Variable PIOVERTWO
+==================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: PIOVERTWO

@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49:
+
+Function terminal_height(void)
+==============================
+
+- Defined in :ref:`file_src_debug.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: terminal_height(void)

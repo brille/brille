@@ -1,0 +1,13 @@
+.. _exhale_function_spg__database_8cpp_1a57c0a95c3f9fe439fb08700967a9adac:
+
+Function hall_number_ok(const int)
+==================================
+
+- Defined in :ref:`file_src_spg_database.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: hall_number_ok(const int)

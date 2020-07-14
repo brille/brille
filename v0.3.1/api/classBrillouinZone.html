@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class BrillouinZone &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class BrillouinZoneGrid3" href="classBrillouinZoneGrid3.html" />
+    <link rel="prev" title="Class Basis" href="classBasis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class BrillouinZone</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classBrillouinZone.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-brillouinzone">
+<span id="exhale-class-classbrillouinzone"></span><h1>Class BrillouinZone<a class="headerlink" href="#class-brillouinzone" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_bz.hpp.html#file-src-bz-hpp"><span class="std std-ref">File bz.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv413BrillouinZone">
+<span id="_CPPv313BrillouinZone"></span><span id="_CPPv213BrillouinZone"></span><span id="BrillouinZone"></span><span class="target" id="classBrillouinZone"></span><em class="property">class </em><code class="sig-name descname">BrillouinZone</code><a class="headerlink" href="#_CPPv413BrillouinZone" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An object to hold information about the first Brillouin zone of a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice. </p>
+<p>The <a class="reference internal" href="#classBrillouinZone"><span class="std std-ref">BrillouinZone</span></a> object is created from a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice and if that lattice is not a primitive type the object contains the primitive lattice as well. By looking for intersections between three (primitive) reciprocal planes, the class object identifies the minimal subset of vertices that define the first Brillouin zone as well as keeping track of the planes which contributed to each vertex and the plane reciprocal vectors themselves. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone13BrillouinZoneERK10ReciprocalKbKiKbKb">
+<span id="_CPPv3N13BrillouinZone13BrillouinZoneERK10ReciprocalKbKiKbKb"></span><span id="_CPPv2N13BrillouinZone13BrillouinZoneERK10ReciprocalKbKiKbKb"></span><span id="BrillouinZone::BrillouinZone__ReciprocalCR.bC.iC.bC.bC"></span><span class="target" id="classBrillouinZone_1a3efef38bb1e213c5be2ffe6ac914d8d2"></span><code class="sig-name descname">BrillouinZone</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <em class="property">const</em> bool <em>toprim</em> = true, <em class="property">const</em> int <em>extent</em> = 1, <em class="property">const</em> bool <em>tr</em> = false, <em class="property">const</em> bool <em>wedge_search</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone13BrillouinZoneERK10ReciprocalKbKiKbKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lat</span></code>: A <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">toprim</span></code>: A flag to indicate if the primtive lattice should be used </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extent</span></code>: An integer to control how-far the vertex-finding algorithm should search in τ-index. The default indicates that (̄1̄1̄1), (̄1̄10), (̄1̄11), (̄10̄1), …, (111) are included. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone25check_if_mirroring_neededEv">
+<span id="_CPPv3N13BrillouinZone25check_if_mirroring_neededEv"></span><span id="_CPPv2N13BrillouinZone25check_if_mirroring_neededEv"></span><span id="BrillouinZone::check_if_mirroring_needed__void"></span><span class="target" id="classBrillouinZone_1a3bf2332527956ab4611be59ec873f57d"></span>void <code class="sig-name descname">check_if_mirroring_needed</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone25check_if_mirroring_neededEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone19check_ir_polyhedronEv">
+<span id="_CPPv3N13BrillouinZone19check_ir_polyhedronEv"></span><span id="_CPPv2N13BrillouinZone19check_ir_polyhedronEv"></span><span id="BrillouinZone::check_ir_polyhedron__void"></span><span class="target" id="classBrillouinZone_1a3c2f598c4d75fd554c3277bc846bbb77"></span>bool <code class="sig-name descname">check_ir_polyhedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone19check_ir_polyhedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone14wedge_explicitEv">
+<span id="_CPPv3N13BrillouinZone14wedge_explicitEv"></span><span id="_CPPv2N13BrillouinZone14wedge_explicitEv"></span><span id="BrillouinZone::wedge_explicit__void"></span><span class="target" id="classBrillouinZone_1a18e538fdad8fb49974915d0222074ced"></span>bool <code class="sig-name descname">wedge_explicit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone14wedge_explicitEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone11get_latticeEv">
+<span id="_CPPv3NK13BrillouinZone11get_latticeEv"></span><span id="_CPPv2NK13BrillouinZone11get_latticeEv"></span><span id="BrillouinZone::get_latticeC"></span><span class="target" id="classBrillouinZone_1ac088938585883189fa555de9e2988e29"></span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> <code class="sig-name descname">get_lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone11get_latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the lattice passed in at construction. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone21get_primitive_latticeEv">
+<span id="_CPPv3NK13BrillouinZone21get_primitive_latticeEv"></span><span id="_CPPv2NK13BrillouinZone21get_primitive_latticeEv"></span><span id="BrillouinZone::get_primitive_latticeC"></span><span class="target" id="classBrillouinZone_1a9ae388b0e7c87e3eaf14ae03d993c3ef"></span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> <code class="sig-name descname">get_primitive_lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone21get_primitive_latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the lattice actually used to find the Brillouin zone vertices, which may be a primitive lattice depending on the flag at creation </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone14vertices_countEv">
+<span id="_CPPv3NK13BrillouinZone14vertices_countEv"></span><span id="_CPPv2NK13BrillouinZone14vertices_countEv"></span><span id="BrillouinZone::vertices_countC"></span><span class="target" id="classBrillouinZone_1a3a33dc858770b8f353a82b28078e793f"></span>size_t <code class="sig-name descname">vertices_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone14vertices_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the number of vertices defining the first Brillouin zone. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone11faces_countEv">
+<span id="_CPPv3NK13BrillouinZone11faces_countEv"></span><span id="_CPPv2NK13BrillouinZone11faces_countEv"></span><span id="BrillouinZone::faces_countC"></span><span class="target" id="classBrillouinZone_1ad06c426cd6cca90b72d8f4a8ceb42e94"></span>size_t <code class="sig-name descname">faces_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone11faces_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the number of reciprocal lattice points defining the first Brillouin zone. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone20set_ir_wedge_normalsERK5LQVecIdE">
+<span id="_CPPv3N13BrillouinZone20set_ir_wedge_normalsERK5LQVecIdE"></span><span id="_CPPv2N13BrillouinZone20set_ir_wedge_normalsERK5LQVecIdE"></span><span id="BrillouinZone::set_ir_wedge_normals__LQVec:double:CR"></span><span class="target" id="classBrillouinZone_1a8b2c711fd16282b2f99600b2d7f66a4c"></span>void <code class="sig-name descname">set_ir_wedge_normals</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone20set_ir_wedge_normalsERK5LQVecIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone20get_ir_wedge_normalsEv">
+<span id="_CPPv3NK13BrillouinZone20get_ir_wedge_normalsEv"></span><span id="_CPPv2NK13BrillouinZone20get_ir_wedge_normalsEv"></span><span id="BrillouinZone::get_ir_wedge_normalsC"></span><span class="target" id="classBrillouinZone_1afa8078f7cf30ab93275bb8b48b48fb50"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_wedge_normals</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone20get_ir_wedge_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone30get_primitive_ir_wedge_normalsEv">
+<span id="_CPPv3NK13BrillouinZone30get_primitive_ir_wedge_normalsEv"></span><span id="_CPPv2NK13BrillouinZone30get_primitive_ir_wedge_normalsEv"></span><span id="BrillouinZone::get_primitive_ir_wedge_normalsC"></span><span class="target" id="classBrillouinZone_1afc8672b8f9e13cd4c4c1520c95df8d13"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_primitive_ir_wedge_normals</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone30get_primitive_ir_wedge_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN13BrillouinZone14set_polyhedronEvRK5LQVecIdERK5LQVecIdEDp1A">
+<span id="_CPPv3IDpEN13BrillouinZone14set_polyhedronERK5LQVecIdERK5LQVecIdEDp1A"></span><span id="_CPPv2IDpEN13BrillouinZone14set_polyhedronERK5LQVecIdERK5LQVecIdEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classBrillouinZone_1af38b7316d99192deebf7d0527a55b986"></span>void <code class="sig-name descname">set_polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;, <a class="reference internal" href="#_CPPv4IDpEN13BrillouinZone14set_polyhedronEvRK5LQVecIdERK5LQVecIdEDp1A" title="BrillouinZone::set_polyhedron::A">A</a>...<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN13BrillouinZone14set_polyhedronEvRK5LQVecIdERK5LQVecIdEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the first Brillouin zone polyhedron from its vertices, central facet plane points, and either the three intersecting planes which gave each vertex or all intersecting planes which give each vertex as well as all vertices which form a corner of each facet plane polygon. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: All vertices in the polyhedron </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: All (τ/2) plane points which define the facets of the polyhedron </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fpv</span></code>: An ArrayVector&lt;int&gt; with three facet-plane indices for each vertex </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fpv</span></code>: A std::vector&lt;std::vector&lt;int&gt;&gt; with <em>all</em> facet-plane indices for each vertex </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vpf</span></code>: A std::vector&lt;std::vector&lt;int&gt;&gt; with <em>all</em> vertex indices for each facet-plane </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN13BrillouinZone17set_ir_polyhedronEvRK5LQVecIdERK5LQVecIdERK5LQVecIdEDp1A">
+<span id="_CPPv3IDpEN13BrillouinZone17set_ir_polyhedronERK5LQVecIdERK5LQVecIdERK5LQVecIdEDp1A"></span><span id="_CPPv2IDpEN13BrillouinZone17set_ir_polyhedronERK5LQVecIdERK5LQVecIdERK5LQVecIdEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classBrillouinZone_1acda3486d4ead79488ec764d24b729b13"></span>void <code class="sig-name descname">set_ir_polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;, <a class="reference internal" href="#_CPPv4IDpEN13BrillouinZone17set_ir_polyhedronEvRK5LQVecIdERK5LQVecIdERK5LQVecIdEDp1A" title="BrillouinZone::set_ir_polyhedron::A">A</a>...<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN13BrillouinZone17set_ir_polyhedronEvRK5LQVecIdERK5LQVecIdERK5LQVecIdEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the irreducible first Brillouin zone polyhedron from its vertices, facet plane points, facet plane normals, and, optionally, all intersecting planes which give each vertex as well as all vertices which form a corner of each facet plane polygon. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: All vertices in the polyhedron </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: A point on each of the planes which define the facets of the polyhedron </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normals</span></code>: The normal direction which, along with the on-plane-point, defines each facet plane </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[optional]</span></code>: fpv A std::vector&lt;std::vector&lt;int&gt;&gt; with <em>all</em> facet-plane indices for each vertex </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[optional]</span></code>: vpf A std::vector&lt;std::vector&lt;int&gt;&gt; with <em>all</em> vertex indices for each facet-plane </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone15set_ir_verticesERK5LQVecIdE">
+<span id="_CPPv3N13BrillouinZone15set_ir_verticesERK5LQVecIdE"></span><span id="_CPPv2N13BrillouinZone15set_ir_verticesERK5LQVecIdE"></span><span id="BrillouinZone::set_ir_vertices__LQVec:double:CR"></span><span class="target" id="classBrillouinZone_1a25861ac26346e38ff0dc112b788181f4"></span>bool <code class="sig-name descname">set_ir_vertices</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone15set_ir_verticesERK5LQVecIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the irreducible first Brillouin zone polyhedron from its vertices. Since no facet information is provided via this method, a convex hull of the provided points is calculated and used as the irreducible polyhedron. Additionally the volume and symmetry of the calculated polyhedron is checked against the first Brillouin zone using the pointgroup symmetry operations. <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A bool indicating if the found convex hull polyhedron is the expected volume and has the expected symmetry. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: All vertices in the irreducible polyhedron </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone14get_polyhedronEv">
+<span id="_CPPv3NK13BrillouinZone14get_polyhedronEv"></span><span id="_CPPv2NK13BrillouinZone14get_polyhedronEv"></span><span id="BrillouinZone::get_polyhedron__voidC"></span><span class="target" id="classBrillouinZone_1a2eb57f3f76418aaef22655a58b5a8645"></span><a class="reference internal" href="classPolyhedron.html#_CPPv410Polyhedron" title="Polyhedron">Polyhedron</a> <code class="sig-name descname">get_polyhedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone14get_polyhedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone12get_verticesEv">
+<span id="_CPPv3NK13BrillouinZone12get_verticesEv"></span><span id="_CPPv2NK13BrillouinZone12get_verticesEv"></span><span id="BrillouinZone::get_vertices__voidC"></span><span class="target" id="classBrillouinZone_1a4b72d5f2dec77c1068158d0c2cbeea8a"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone12get_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertices of the first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone10get_pointsEv">
+<span id="_CPPv3NK13BrillouinZone10get_pointsEv"></span><span id="_CPPv2NK13BrillouinZone10get_pointsEv"></span><span id="BrillouinZone::get_points__voidC"></span><span class="target" id="classBrillouinZone_1af8695a5fdb90e5388e2b068780fb8998"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_points</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone10get_pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the on-plane points (τ/2) of the first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone11get_normalsEv">
+<span id="_CPPv3NK13BrillouinZone11get_normalsEv"></span><span id="_CPPv2NK13BrillouinZone11get_normalsEv"></span><span id="BrillouinZone::get_normals__voidC"></span><span class="target" id="classBrillouinZone_1a37925dee4e4baedc1c8d8ab6c88c9ae0"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone11get_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone14get_half_edgesEv">
+<span id="_CPPv3NK13BrillouinZone14get_half_edgesEv"></span><span id="_CPPv2NK13BrillouinZone14get_half_edgesEv"></span><span id="BrillouinZone::get_half_edges__voidC"></span><span class="target" id="classBrillouinZone_1a2abc29c205da671a41f80b22b4c57c51"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_half_edges</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone14get_half_edgesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the half-edge points of the first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone22get_primitive_verticesEv">
+<span id="_CPPv3NK13BrillouinZone22get_primitive_verticesEv"></span><span id="_CPPv2NK13BrillouinZone22get_primitive_verticesEv"></span><span id="BrillouinZone::get_primitive_vertices__voidC"></span><span class="target" id="classBrillouinZone_1af0bb350101cefd45a1b2efb7b8ae6360"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_primitive_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone22get_primitive_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertices of the first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone20get_primitive_pointsEv">
+<span id="_CPPv3NK13BrillouinZone20get_primitive_pointsEv"></span><span id="_CPPv2NK13BrillouinZone20get_primitive_pointsEv"></span><span id="BrillouinZone::get_primitive_points__voidC"></span><span class="target" id="classBrillouinZone_1affa7f2edff4b12a76489b4040f693485"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_primitive_points</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone20get_primitive_pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the on-plane points (τ/2) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone21get_primitive_normalsEv">
+<span id="_CPPv3NK13BrillouinZone21get_primitive_normalsEv"></span><span id="_CPPv2NK13BrillouinZone21get_primitive_normalsEv"></span><span id="BrillouinZone::get_primitive_normals__voidC"></span><span class="target" id="classBrillouinZone_1a91dfbfa50bdbd9f57542502284ddc3ca"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_primitive_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone21get_primitive_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone20get_faces_per_vertexEv">
+<span id="_CPPv3NK13BrillouinZone20get_faces_per_vertexEv"></span><span id="_CPPv2NK13BrillouinZone20get_faces_per_vertexEv"></span><span id="BrillouinZone::get_faces_per_vertex__voidC"></span><span class="target" id="classBrillouinZone_1af363fd68468ede8fe8852f7a08fd90cc"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_faces_per_vertex</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone20get_faces_per_vertexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">points</span></code> and <code class="docutils literal notranslate"><span class="pre">normals</span></code> indices for each vertex of the first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone21get_vertices_per_faceEv">
+<span id="_CPPv3NK13BrillouinZone21get_vertices_per_faceEv"></span><span id="_CPPv2NK13BrillouinZone21get_vertices_per_faceEv"></span><span id="BrillouinZone::get_vertices_per_face__voidC"></span><span class="target" id="classBrillouinZone_1ac5d6b61e70c92e3241bc1cc53302475a"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_vertices_per_face</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone21get_vertices_per_faceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertex indices for each facet of the first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone17get_ir_polyhedronEKb">
+<span id="_CPPv3NK13BrillouinZone17get_ir_polyhedronEKb"></span><span id="_CPPv2NK13BrillouinZone17get_ir_polyhedronEKb"></span><span id="BrillouinZone::get_ir_polyhedron__bCC"></span><span class="target" id="classBrillouinZone_1a39436ab8d93da2f058d61dea52ae6d20"></span><a class="reference internal" href="classPolyhedron.html#_CPPv410Polyhedron" title="Polyhedron">Polyhedron</a> <code class="sig-name descname">get_ir_polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>true_ir</em> = true<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone17get_ir_polyhedronEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the irreducible first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone15get_ir_verticesEv">
+<span id="_CPPv3NK13BrillouinZone15get_ir_verticesEv"></span><span id="_CPPv2NK13BrillouinZone15get_ir_verticesEv"></span><span id="BrillouinZone::get_ir_vertices__voidC"></span><span class="target" id="classBrillouinZone_1af711e1e1c932efb788f839d43927bc9b"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone15get_ir_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone13get_ir_pointsEv">
+<span id="_CPPv3NK13BrillouinZone13get_ir_pointsEv"></span><span id="_CPPv2NK13BrillouinZone13get_ir_pointsEv"></span><span id="BrillouinZone::get_ir_points__voidC"></span><span class="target" id="classBrillouinZone_1a8a3eaab4058b5949b2b67af411950aa4"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_points</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone13get_ir_pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the on-plane points of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone14get_ir_normalsEv">
+<span id="_CPPv3NK13BrillouinZone14get_ir_normalsEv"></span><span id="_CPPv2NK13BrillouinZone14get_ir_normalsEv"></span><span id="BrillouinZone::get_ir_normals__voidC"></span><span class="target" id="classBrillouinZone_1a8666e03b2b558590648c60d508e24d26"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone14get_ir_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the normals of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone25get_ir_primitive_verticesEv">
+<span id="_CPPv3NK13BrillouinZone25get_ir_primitive_verticesEv"></span><span id="_CPPv2NK13BrillouinZone25get_ir_primitive_verticesEv"></span><span id="BrillouinZone::get_ir_primitive_vertices__voidC"></span><span class="target" id="classBrillouinZone_1aae4d253c9a182a3407dc9942fca375cb"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_primitive_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone25get_ir_primitive_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone23get_ir_primitive_pointsEv">
+<span id="_CPPv3NK13BrillouinZone23get_ir_primitive_pointsEv"></span><span id="_CPPv2NK13BrillouinZone23get_ir_primitive_pointsEv"></span><span id="BrillouinZone::get_ir_primitive_points__voidC"></span><span class="target" id="classBrillouinZone_1a8e8dbe0d8154a0e332832339f63e81b2"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_primitive_points</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone23get_ir_primitive_pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the on-plane points of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone24get_ir_primitive_normalsEv">
+<span id="_CPPv3NK13BrillouinZone24get_ir_primitive_normalsEv"></span><span id="_CPPv2NK13BrillouinZone24get_ir_primitive_normalsEv"></span><span id="BrillouinZone::get_ir_primitive_normals__voidC"></span><span class="target" id="classBrillouinZone_1a3637c9813f5c90498ea26e93c18e54e6"></span><a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">get_ir_primitive_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone24get_ir_primitive_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the normals of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone23get_ir_faces_per_vertexEv">
+<span id="_CPPv3NK13BrillouinZone23get_ir_faces_per_vertexEv"></span><span id="_CPPv2NK13BrillouinZone23get_ir_faces_per_vertexEv"></span><span id="BrillouinZone::get_ir_faces_per_vertex__voidC"></span><span class="target" id="classBrillouinZone_1a3a24e8f0922660f4156e72965546e3b3"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_ir_faces_per_vertex</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone23get_ir_faces_per_vertexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <code class="docutils literal notranslate"><span class="pre">points</span></code> and <code class="docutils literal notranslate"><span class="pre">normals</span></code> indices for each vertex of the irreducible first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone24get_ir_vertices_per_faceEv">
+<span id="_CPPv3NK13BrillouinZone24get_ir_vertices_per_faceEv"></span><span id="_CPPv2NK13BrillouinZone24get_ir_vertices_per_faceEv"></span><span id="BrillouinZone::get_ir_vertices_per_face__voidC"></span><span class="target" id="classBrillouinZone_1a1cdf87eda2b3eb4583fb0fd9e11457d0"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_ir_vertices_per_face</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone24get_ir_vertices_per_faceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the vertex indices for each facet of the irreducible first Brillouin zone polyhedron. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone5printEv">
+<span id="_CPPv3NK13BrillouinZone5printEv"></span><span id="_CPPv2NK13BrillouinZone5printEv"></span><span id="BrillouinZone::printC"></span><span class="target" id="classBrillouinZone_1a8411622a6e323c3ee1d2899c80dba12c"></span>void <code class="sig-name descname">print</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone5printEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print a representation of the object to std::cout. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone12wedge_searchEKbKb">
+<span id="_CPPv3N13BrillouinZone12wedge_searchEKbKb"></span><span id="_CPPv2N13BrillouinZone12wedge_searchEKbKb"></span><span id="BrillouinZone::wedge_search__bC.bC"></span><span class="target" id="classBrillouinZone_1a088f4c02121a8edb22cf32eaf60f2c4c"></span>void <code class="sig-name descname">wedge_search</code><span class="sig-paren">(</span><em class="property">const</em> bool <em>prefer_basis_vectors</em> = true, <em class="property">const</em> bool <em>parallel_ok</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone12wedge_searchEKbKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Using the pointgroup symmetry opperations of the conventional unit cell, this method defines <em>an</em> irreducible section of reciprocal space. The irreducible section bounds a solid angle N and consequently the full reciprocal space is 4π/N larger than the irreducible wedge. As the selected irreducible section is related by symmetry to the rest of reciprocal space there are (at least) 4π/N - 1 equivalent other choices for the irreducible wedge. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone17wedge_brute_forceEbbb">
+<span id="_CPPv3N13BrillouinZone17wedge_brute_forceEbbb"></span><span id="_CPPv2N13BrillouinZone17wedge_brute_forceEbbb"></span><span id="BrillouinZone::wedge_brute_force__b.b.b"></span><span class="target" id="classBrillouinZone_1a12e9bd7d503439acebfda0644c52bf9a"></span>void <code class="sig-name descname">wedge_brute_force</code><span class="sig-paren">(</span>bool <em>special_2_folds</em> = true, bool <em>special_mirrors</em> = true, bool <em>sort_by_length</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone17wedge_brute_forceEbbb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone15wedge_triclinicEv">
+<span id="_CPPv3N13BrillouinZone15wedge_triclinicEv"></span><span id="_CPPv2N13BrillouinZone15wedge_triclinicEv"></span><span id="BrillouinZone::wedge_triclinic__void"></span><span class="target" id="classBrillouinZone_1a78d483f73c1e7498ac835bcd31d850ba"></span>void <code class="sig-name descname">wedge_triclinic</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone15wedge_triclinicEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone25irreducible_vertex_searchEv">
+<span id="_CPPv3N13BrillouinZone25irreducible_vertex_searchEv"></span><span id="_CPPv2N13BrillouinZone25irreducible_vertex_searchEv"></span><span id="BrillouinZone::irreducible_vertex_search"></span><span class="target" id="classBrillouinZone_1a67074d3867619536e785bf04b1266a90"></span>void <code class="sig-name descname">irreducible_vertex_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone25irreducible_vertex_searchEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>With the first Brillouin zone and <em>an</em> irreducible section of reciprocal space already identified, this method finds all intersections of combinations of three planes (nBz,nIr) = {(0,3), (1,2), (2,1), and (3,0)} where nBz are the number of intersecting first Brillouin zone facet planes and nIr are the number of intersecting irreducible reciprocal space wedge planes. Once all combinations of intersection points are found, those within the first Brillouin zone <em>and</em> the irreducible reciprocal space wedge define the irreducible first Brillouin zone. <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>the (3,0) intersection points <em>are</em> the first Brillouin zone vertices and the (0,3) intersection points are all identically ⃗0. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone13vertex_searchEKi">
+<span id="_CPPv3N13BrillouinZone13vertex_searchEKi"></span><span id="_CPPv2N13BrillouinZone13vertex_searchEKi"></span><span id="BrillouinZone::vertex_search__iC"></span><span class="target" id="classBrillouinZone_1a691f740039a7511eb230e291564d19da"></span>void <code class="sig-name descname">vertex_search</code><span class="sig-paren">(</span><em class="property">const</em> int <em>extent</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone13vertex_searchEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Search for the vertices defining the first Brillouin zone. </p>
+<p>Search through all combinations of three planes from <code class="docutils literal notranslate"><span class="pre">extent</span></code>*(̄1̄1̄1) to <code class="docutils literal notranslate"><span class="pre">extent</span></code>*(111) for three-plane intersection points, these are all the vertices of <em>a</em> Brillouin zone. Sort through the intersection points to find the subset that are closer to the origin than any of the non-intersection-defining planes, these are vertices of the <em>first</em> Brillouin zone but may not be unique. So determine a unique subset and record their locations, contributing intersecting-planes, and all planes which contribute to one or more vertex in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N13BrillouinZone11voro_searchEKi">
+<span id="_CPPv3N13BrillouinZone11voro_searchEKi"></span><span id="_CPPv2N13BrillouinZone11voro_searchEKi"></span><span id="BrillouinZone::voro_search__iC"></span><span class="target" id="classBrillouinZone_1ab7cbeb2bf0f3fc8f8d6cf8afa9e01c20"></span>void <code class="sig-name descname">voro_search</code><span class="sig-paren">(</span><em class="property">const</em> int <em>extent</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N13BrillouinZone11voro_searchEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone11isprimitiveEv">
+<span id="_CPPv3NK13BrillouinZone11isprimitiveEv"></span><span id="_CPPv2NK13BrillouinZone11isprimitiveEv"></span><span id="BrillouinZone::isprimitive__voidC"></span><span class="target" id="classBrillouinZone_1a034f11ae17c56532db5f4f13c7de96d9"></span>bool <code class="sig-name descname">isprimitive</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone11isprimitiveEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK13BrillouinZone8isinsideE11ArrayVectorIbERK5LQVecI1TE">
+<span id="_CPPv3I0ENK13BrillouinZone8isinsideERK5LQVecI1TE"></span><span id="_CPPv2I0ENK13BrillouinZone8isinsideERK5LQVecI1TE"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classBrillouinZone_1a53eef678245a09795765ca4e064f4668"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;bool&gt; <code class="sig-name descname">isinside</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK13BrillouinZone8isinsideE11ArrayVectorIbERK5LQVecI1TE" title="BrillouinZone::isinside::T">T</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK13BrillouinZone8isinsideE11ArrayVectorIbERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine whether points are inside of the first Brillouin zone. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An ArrayVector&lt;bool&gt; with each 1-element array indicating if the associated Q point is inside of the Brillouin zone. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: A reference to a <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec</span></a> list of Q points to be checked </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK13BrillouinZone12isinside_stdENSt6vectorIbEERK5LQVecI1TE">
+<span id="_CPPv3I0ENK13BrillouinZone12isinside_stdERK5LQVecI1TE"></span><span id="_CPPv2I0ENK13BrillouinZone12isinside_stdERK5LQVecI1TE"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classBrillouinZone_1aa17efb5b475c2636a72fb1056a2ab43e"></span>std::vector&lt;bool&gt; <code class="sig-name descname">isinside_std</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK13BrillouinZone12isinside_stdENSt6vectorIbEERK5LQVecI1TE" title="BrillouinZone::isinside_std::T">T</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK13BrillouinZone12isinside_stdENSt6vectorIbEERK5LQVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK13BrillouinZone14isinside_wedgeE11ArrayVectorIbERK5LQVecI1TEKb">
+<span id="_CPPv3I0ENK13BrillouinZone14isinside_wedgeERK5LQVecI1TEKb"></span><span id="_CPPv2I0ENK13BrillouinZone14isinside_wedgeERK5LQVecI1TEKb"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classBrillouinZone_1a5c80f2291d2335fe90da945c47e1d3a8"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;bool&gt; <code class="sig-name descname">isinside_wedge</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK13BrillouinZone14isinside_wedgeE11ArrayVectorIbERK5LQVecI1TEKb" title="BrillouinZone::isinside_wedge::T">T</a>&gt; &amp;<em>p</em>, <em class="property">const</em> bool <em>constructing</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK13BrillouinZone14isinside_wedgeE11ArrayVectorIbERK5LQVecI1TEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine whither points are inside the irreducible reciprocal space wedge. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An ArrayVector&lt;bool&gt; with each 1-element array indicating if the associated Q point is inside our irreducible reciprocal space. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: A reference to a <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec</span></a> list of Q points to be checked </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK13BrillouinZone18isinside_wedge_stdENSt6vectorIbEERK5LQVecI1TEKb">
+<span id="_CPPv3I0ENK13BrillouinZone18isinside_wedge_stdERK5LQVecI1TEKb"></span><span id="_CPPv2I0ENK13BrillouinZone18isinside_wedge_stdERK5LQVecI1TEKb"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classBrillouinZone_1a7c52fc3319b46ad7596f1f51d720ff68"></span>std::vector&lt;bool&gt; <code class="sig-name descname">isinside_wedge_std</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK13BrillouinZone18isinside_wedge_stdENSt6vectorIbEERK5LQVecI1TEKb" title="BrillouinZone::isinside_wedge_std::T">T</a>&gt; &amp;<em>p</em>, <em class="property">const</em> bool <em>constructing</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK13BrillouinZone18isinside_wedge_stdENSt6vectorIbEERK5LQVecI1TEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone8moveintoERK5LQVecIdER5LQVecIdER5LQVecIiEi">
+<span id="_CPPv3NK13BrillouinZone8moveintoERK5LQVecIdER5LQVecIdER5LQVecIiEi"></span><span id="_CPPv2NK13BrillouinZone8moveintoERK5LQVecIdER5LQVecIdER5LQVecIiEi"></span><span id="BrillouinZone::moveinto__LQVec:double:CR.LQVec:double:R.LQVec:i:R.iC"></span><span class="target" id="classBrillouinZone_1a9dd3fa50df3426e8f3621383076031d7"></span>bool <code class="sig-name descname">moveinto</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>Q</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>q</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; &amp;<em>tau</em>, int <em>nthreads</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone8moveintoERK5LQVecIdER5LQVecIdER5LQVecIiEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">Q</span></code>: A reference to <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec</span></a> list of Q points </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">q</span></code>: The reduced reciprocal lattice vectors </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">tau</span></code>: The reciprocal lattice zone centres </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone11ir_moveintoERK5LQVecIdER5LQVecIdER5LQVecIiERNSt6vectorI6size_tEERNSt6vectorI6size_tEEi">
+<span id="_CPPv3NK13BrillouinZone11ir_moveintoERK5LQVecIdER5LQVecIdER5LQVecIiERNSt6vectorI6size_tEERNSt6vectorI6size_tEEi"></span><span id="_CPPv2NK13BrillouinZone11ir_moveintoERK5LQVecIdER5LQVecIdER5LQVecIiERNSt6vectorI6size_tEERNSt6vectorI6size_tEEi"></span><span id="BrillouinZone::ir_moveinto__LQVec:double:CR.LQVec:double:R.LQVec:i:R.std::vector:s:R.std::vector:s:R.iC"></span><span class="target" id="classBrillouinZone_1a31bc45a1eaac53d57b21c5e304e6f603"></span>bool <code class="sig-name descname">ir_moveinto</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>Q</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>q</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; &amp;<em>tau</em>, std::vector&lt;size_t&gt; &amp;<em>Rm</em>, std::vector&lt;size_t&gt; &amp;<em>invRm</em>, int <em>nthreads</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone11ir_moveintoERK5LQVecIdER5LQVecIdER5LQVecIiERNSt6vectorI6size_tEERNSt6vectorI6size_tEEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find q, τ, and R∈G such that Q = Rᵀq + τ, where τ is a reciprocal lattice vector and R is a pointgroup symmetry operation of the conventional unit cell pointgroup, G. </p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>R and invR index the <a class="reference internal" href="classPointSymmetry.html#classPointSymmetry"><span class="std std-ref">PointSymmetry</span></a> object accessible via <a class="reference internal" href="#classBrillouinZone_1adec2c010f6de726a366d09f137117021"><span class="std std-ref">BrillouinZone::get_pointgroup_symmetry()</span></a>; </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">Q</span></code>: a refernce to a <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec</span></a> list of Q points </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">q</span></code>: The irreducible reduced reciprocal lattice vectors </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">τ</span></code>: The conventional reciprocal lattice zone centres </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">R</span></code>: The pointgroup operation index for R </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">invR</span></code>: The pointgroup operation index for R⁻¹ </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">nthreads</span></code>: An optional number of OpenMP threads to use </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone17ir_moveinto_wedgeERK5LQVecIdER5LQVecIdERNSt6vectorINSt5arrayIiXL9EEEEEEi">
+<span id="_CPPv3NK13BrillouinZone17ir_moveinto_wedgeERK5LQVecIdER5LQVecIdERNSt6vectorINSt5arrayIiXL9EEEEEEi"></span><span id="_CPPv2NK13BrillouinZone17ir_moveinto_wedgeERK5LQVecIdER5LQVecIdERNSt6vectorINSt5arrayIiX9EEEEEi"></span><span id="BrillouinZone::ir_moveinto_wedge__LQVec:double:CR.LQVec:double:R.std::vector:std::array:i.9::R.iC"></span><span class="target" id="classBrillouinZone_1a67f4943d85785ff47639fbebec4350fa"></span>bool <code class="sig-name descname">ir_moveinto_wedge</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>Q</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>q</em>, std::vector&lt;std::array&lt;int, 9&gt;&gt; &amp;<em>R</em>, int <em>threads</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone17ir_moveinto_wedgeERK5LQVecIdER5LQVecIdERNSt6vectorINSt5arrayIiXL9EEEEEEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone23get_pointgroup_symmetryEv">
+<span id="_CPPv3NK13BrillouinZone23get_pointgroup_symmetryEv"></span><span id="_CPPv2NK13BrillouinZone23get_pointgroup_symmetryEv"></span><span id="BrillouinZone::get_pointgroup_symmetryC"></span><span class="target" id="classBrillouinZone_1adec2c010f6de726a366d09f137117021"></span><a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> <code class="sig-name descname">get_pointgroup_symmetry</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone23get_pointgroup_symmetryEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the <a class="reference internal" href="classPointSymmetry.html#classPointSymmetry"><span class="std std-ref">PointSymmetry</span></a> object used by this <a class="reference internal" href="#classBrillouinZone"><span class="std std-ref">BrillouinZone</span></a> object internally. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK13BrillouinZone17add_time_reversalEv">
+<span id="_CPPv3NK13BrillouinZone17add_time_reversalEv"></span><span id="_CPPv2NK13BrillouinZone17add_time_reversalEv"></span><span id="BrillouinZone::add_time_reversalC"></span><span class="target" id="classBrillouinZone_1aa75761e9ec317f94c6592088d16f7262"></span>int <code class="sig-name descname">add_time_reversal</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK13BrillouinZone17add_time_reversalEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Accessor for whether the <a class="reference internal" href="#classBrillouinZone"><span class="std std-ref">BrillouinZone</span></a> was constructed with additional time reversal symmetry. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classBrillouinZoneGrid3.html" class="btn btn-neutral float-right" title="Template Class BrillouinZoneGrid3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classBasis.html" class="btn btn-neutral float-left" title="Class Basis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

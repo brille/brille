@@ -1,0 +1,16 @@
+.. _exhale_struct_structLatticeTraits_3_01Direct_01_4:
+
+Template Struct LatticeTraits< Direct >
+=======================================
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: LatticeTraits< Direct >
+   :members:
+   :protected-members:
+   :undoc-members:

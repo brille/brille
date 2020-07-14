@@ -1,0 +1,16 @@
+.. _exhale_class_classNestNode:
+
+Class NestNode
+==============
+
+- Defined in :ref:`file_src_nest.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: NestNode
+   :members:
+   :protected-members:
+   :undoc-members:

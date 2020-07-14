@@ -1,0 +1,99 @@
+
+.. _file_src_polyhedron.hpp:
+
+File polyhedron.hpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/polyhedron.hpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_polyhedron.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``chrono``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
+
+- ``random``
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classPolyhedron`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_polyhedron_8hpp_1af37d16dd40b9231c5cd5fca595923dc9`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a05687f604a2ac37273f06fc7aba2e6e6`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ada80908509b8e04589003873062d1775`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480`
+
+- :ref:`exhale_function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a60e61f41d54c247fffbb4d13c753cdfa`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a6581a2a2cbf1232f7466e4bf79161294`
+
+- :ref:`exhale_function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4`
+
+- :ref:`exhale_function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c`
+

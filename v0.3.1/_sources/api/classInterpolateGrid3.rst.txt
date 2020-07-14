@@ -1,0 +1,31 @@
+.. _exhale_class_classInterpolateGrid3:
+
+Template Class InterpolateGrid3
+===============================
+
+- Defined in :ref:`file_src_grid.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public MapGrid3< T, R >`` (:ref:`exhale_class_classMapGrid3`)
+
+
+Derived Type
+************
+
+- ``public BrillouinZoneGrid3< T, R >`` (:ref:`exhale_class_classBrillouinZoneGrid3`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: InterpolateGrid3
+   :members:
+   :protected-members:
+   :undoc-members:

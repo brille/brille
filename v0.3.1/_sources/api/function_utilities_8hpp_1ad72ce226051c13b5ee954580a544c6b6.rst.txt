@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ad72ce226051c13b5ee954580a544c6b6:
+
+Template Function matrix_determinant_and_inverse
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: matrix_determinant_and_inverse(R *, const R *, const R, const int)

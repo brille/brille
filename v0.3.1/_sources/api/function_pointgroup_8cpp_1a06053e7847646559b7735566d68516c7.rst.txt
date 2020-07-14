@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7:
+
+Function my_to_string(const Laue&)
+==================================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: my_to_string(const Laue&)
