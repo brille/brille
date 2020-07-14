@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e:
+
+Template Function approx_vector(const T \*, const R \*, const int)
+==================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: approx_vector(const T *, const R *, const int)

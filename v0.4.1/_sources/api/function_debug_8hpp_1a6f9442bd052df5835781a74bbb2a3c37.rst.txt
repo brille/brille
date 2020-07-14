@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37:
+
+Template Function local_abs(T)
+==============================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: local_abs(T)

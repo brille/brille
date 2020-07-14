@@ -1,0 +1,13 @@
+.. _exhale_define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1:
+
+Define NUM_ROT_AXES
+===================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: NUM_ROT_AXES

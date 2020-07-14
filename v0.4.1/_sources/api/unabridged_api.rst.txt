@@ -1,0 +1,1732 @@
+
+Full API
+--------
+
+Classes and Structs
+*******************
+
+
+.. toctree::
+   :maxdepth: 5
+
+   structAVSizeInfo.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structCostTraits.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structCostTraits_3_01std_1_1complex_3_01T_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structis__complex.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structis__complex_3_01std_1_1complex_3_01T_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structis__container.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structis__container_3_01std_1_1array_3_01T_00_01N_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structis__container_3_01std_1_1vector_3_01T_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatticeTraits.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatticeTraits_3_01Direct_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatticeTraits_3_01LDVec_3_01T_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatticeTraits_3_01LQVec_3_01T_01_4_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatticeTraits_3_01Reciprocal_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatVecTraits.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatVecTraits_3_01Direct_00_01S_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structLatVecTraits_3_01Reciprocal_00_01S_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structPointgroupType.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   structPrimitiveTraits.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classArrayVector.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classBasis.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classBrillouinZone.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classBrillouinZoneMesh3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classBrillouinZoneNest3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classBrillouinZoneTrellis3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classCubeNode.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classDebugPrinter.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classDirect.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classGammaTable.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classHallSymbol.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classInnerInterpolationData.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classInterpolationData.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classLattice.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classLatVec.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classLDVec.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classLQVec.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classMesh3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classMotion.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classMunkres.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classNest.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classNestLeaf.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classNestNode.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classNodeContainer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classNullNode.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPermutationTable.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPointgroup.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPointSymmetry.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPolyhedron.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPolyhedronTrellis.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPolyNode.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classPrimitiveTransform.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classReciprocal.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classRotateTable.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSeitzSymbol.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSimpleTet.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSortingStatus.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSpacegroup.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classStopwatch.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classSymmetry.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classTetTri.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classTetTriLayer.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classTrellis.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classTrellisLeaf.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classvector__cross__impl.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classvector__cross__impl_3_01T_00_01R_00_01S_00_013_01_4.rst
+
+Enums
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_lattice_8hpp_1a70ab36d1d4920fdd314279845af152c5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_arrayvector_8hpp_1a585fdeb97b639ef3445d0950886ab0b2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_pointgroup_8hpp_1afb7670c9af88ff4483b56dfa699d310f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.rst
+
+Functions
+*********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a38d8df4dc4890071492f6706fe75ffca.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a4a87d9aab424e45ece64ca20a4cfef88.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a0095bb2ef5966c7e781a2a6e01f4bf78.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a01b33e09a492522b50fb5f2cc61883b5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1af390113c9ec83aa21c368ae4fa9e0f7b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a5ba982f43dc1b75d303d96d712d7a7ae.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a1c1f0b0f19b87ec97bcadb4eb1c31269.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a7aea49c6acc728108c6bf5f1acd0864f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1af37d16dd40b9231c5cd5fca595923dc9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1aea8b2af848fed519acfe1b5312c12419.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1aa333ffe2bd7ee0510c69e2ba2598cc7a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bravais_8hpp_1a96a2f0327107e0e0be0be9a97e91cd87.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bravais_8cpp_1a45870576401424f3a427f4987448c1cd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a3b0d8402b4100ea06bb6e237058c57e4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a1c2d6ea127045d599247d7a47560b92a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a930fd65ee7f8f883029bc0c41e6f21e4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_balltrellis_8hpp_1a8422f8db814524f649a7ab610a7f4106.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a626b2c0c4b6b81ff706f550fa2125e36.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a385471e4db96b45e29756ecb36763678.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a5044d8e34a95237e2f0587f79191a8c3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation_8hpp_1a92089ed2ce03a4a6e736cb23e62f2efd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1afeb3bcc8c2e9355d72b32d2aef1cf992.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation__data_8hpp_1a9818966d59dc284343051cb0c7625368.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a270e4c80b3272ec8fbeb62638702e1e5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aba491962e87602eb27885086eaaf6585.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1abd44d720f83e832c853ecf6d7e132b26.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a27ee7d469953ceda53e91124843622e1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a12fb226fb8b6e64c4ad53f3f4fa48cc1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a0f4867ebcf85b802e1e80d978ec4c12c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a05687f604a2ac37273f06fc7aba2e6e6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_triangulation_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_triangulation__layers_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_lapjv_8hpp_1ac9edf9cda6f1621e06d49f48f1c60ce0.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation_8hpp_1a3d8d482ea9789e4a0ab2b1dcc7f205af.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1afaac905d0e1eadfe3062063f9949042c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a9992eda059d95f2acb20df022c7202dc.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1ae2daa86c31cef3276236932f5b0ee4ae.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a20629ee7a060d8188bc8bb50d45bcb35.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a3e2feb5bef72434f5f9698b960a4b3a2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a157a71d24fc4b00411e095f89924d453.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a87d769efbc4d11ac95675e7d6d33add1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a21d3bdcefe1c40f935b36cbd024ae453.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a664059afdee3524f413d782609bacb9a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8cpp_1a57c0a95c3f9fe439fb08700967a9adac.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8hpp_1a1d331ed75ad8d0c0f29ae2d0010b0674.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8cpp_1af16de9b2344523308d97d5d728b5bdd2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8hpp_1af16de9b2344523308d97d5d728b5bdd2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a0bd6f217926b11b58e0f66e06b780f42.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a8e98824e9f3bfbdbae3cdb0d538f5842.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a3eaf60733e193da30316760d07ab1172.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a2bc80b953ce9d6483134394bcafa276e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a718e66d69f9b7b954b46576aa1306956.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1acd900ea9cf980512e9ca9739fddfa1b7.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1a0dc390c6c52ed9e87fa1be6ab6a78add.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a72b3d7d0bcedc4e7ed0b50bf2f443f18.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1af728b6801993da6c0bd9ad2c9527dce6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8cpp_1a74bfdd4a4b4cea202d2806e92404af48.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8hpp_1abd66fc0768afd1ad4aca5fc81fbda335.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8cpp_1ab67fd08cabd0407087e47b6c5eb9fa9b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8hpp_1adbc01f31d611bda498d39caa97735215.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1adf94fc99f077a349f5f996b2ece44182.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1a420a3ad8100b7cc7423656c6dcde433e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1a944bff6029393cd34068ab139d528f10.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1adf94fc99f077a349f5f996b2ece44182.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1a420a3ad8100b7cc7423656c6dcde433e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1a747d3e85ef77e760d5ae4aa702cf5bd2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1a944bff6029393cd34068ab139d528f10.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1ada80908509b8e04589003873062d1775.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a7d83385a889cabeabd6ceda857bff4ae.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a903f99669ce9c1a8f8f754271418956d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a2ddf892e62fccffedeca040c8ecdb4f9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1ac49786d3941915eb23005899e7576f87.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a4d3bd3fb82cffda7184b384db05ccf03.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a3e94727d4e5e3b7901ef3f5582e0da4b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz__wedge_8cpp_1a264c92206205a7888358f8bb37871c30.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_lapjv_8hpp_1aba8c19ca4c04f4a17671d835e3039b5e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_lattice_8hpp_1a4925107d36c2f138b7fd8a6136c3d4f4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_lattice_8cpp_1a7399108074c65f99895d90bf149c2031.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a9efb4e6014d8d854ad3288b9009a2753.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1ac266489cc0bcb36b85a351cb4bfacb8f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a8e5fb81891b64bdb89ec8a782ce2e2ec.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1abba058b53ce339f9355d762d33e59891.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a7d4721723ac79587cc96052d3b09d746.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a82f8eecb96feebcd85d2b850992ee87f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1abdb7e185f0ba77090b64eb689192bffd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8cpp_1a8a8cd05bcb1a02b9164c9893c3a7a41d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8hpp_1ab298014048257572d2c49e5652d269f0.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8cpp_1a622e11c4a40f9b3620d5241dda6573ee.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8hpp_1a552fa4fc3144e4876b2a16e91a5e43f9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8cpp_1a471cfdc60cc703d871d6e4ec66f7dcb7.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_neighbours_8hpp_1a5dbe7c6ad269fccab97a6f0a062121e7.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a39efa1d8d0a3ce413a1868424ede4ee5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aa644790fa8e82080a77697dc327b3828.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ad9f36c81408bef0c594d6456ad1d763f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ad72ce226051c13b5ee954580a544c6b6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aa881c9eae1d686ad0aa20789acbf9d13.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a1aff8c6fa2839438aab09eb845a17047.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a6c919bdb1fa6539a2846a7348ada52d6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a3c2386f0db28cfe4df1f469500c0d140.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1abcffcdb2c2f41452f025c969f7aa6b21.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ac287a909838769a27a85b0d701a6c835.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a0af00b5511ef7d3c76b96c5a5f634515.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a80d206f558a63c5e02d32f669d2102a9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a530b531c3559671f976d7f825f9212eb.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a658efa877e860b6a67b6577a2c36db8f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a28883f647a45a06ece631cc7ebcd549a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a69e8d2c0f9fd7e5d756805065ccd365c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a42c5779b3528610fd342c65a1d226b53.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a3d0d8611e902749598f741a7bb274a14.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ac88363aa628809922f56bf1f2e5bb864.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ad4626d72b8bb0685181be89fed4bd317.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a406286295a5ab203d72d658e83cf40b0.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ab10cb6b56841a94538c59ab10126fdbd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a139c8c143451283a24423405a1efa5be.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_nest_8hpp_1a7e4706e6b32b7e80b3b5e389ee8154fe.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a60e61f41d54c247fffbb4d13c753cdfa.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_symmetry_8hpp_1add015147308ba4f3406ca16ce401eacf.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_symmetry_8hpp_1adf95dda986b700406e0368dc60e8d6ef.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation__table_8hpp_1a73c637c2e9ebf7417aed00b003f665a1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a6581a2a2cbf1232f7466e4bf79161294.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a11fc284d8c077ba887d54c1164f8098c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1ad08abd9f7f45c68ee852504b9afeafa2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1ad08abd9f7f45c68ee852504b9afeafa2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a725220077e7877c4550ca9aa6285840e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a725220077e7877c4550ca9aa6285840e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8hpp_1a11f82a4ea69025d95e62c3e5f41dfe6b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a97879d84ce99aba94ea7e144922799e9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_smp_8hpp_1a80a5a10b7764a237af1bba812a308f66.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_smp_8hpp_1aaac9c4d7bd60bad9e4a5a04990e6ddff.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aac7d4c3a45b061478ac489225f0b220e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a99264bff91e8e12d43703fbb0f927ca3.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8cpp_1a8ff7d53a99bc05c46e0e1b26d30e6b20.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_spg__database_8hpp_1aa8907e6195a903a1331d3b23c9bb9211.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a360821e49d763aa3c30252c21bbbb9d4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a301522e0e862d48199f3b3bb04aba563.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8cpp_1a27fe47130ea545d2352dfb27d897668b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation_8hpp_1a896ff0d71810a332a78b8088e407b375.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation_8hpp_1ab6003e574f7c91bdda9fe94275967254.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8cpp_1a4b192cdeefa32dc3520cd71e4a577942.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aad3deea458a64955982b85edbbcbbf80.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1acbf833bb0d55190130dc71aad295c619.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1a14c2b3d7c03bcb543c24e0531b709f6a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1ab34393ec4728941dd5897362d37c427d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1ad8cbc7f1ec780313668f25a0c7a9aab8.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_interpolation_8hpp_1a0e897dfb2d951678e5f39fd1e2b8c1f5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_triangulation_8hpp_1acf0bed752834c46ee78545a77943c17f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_triangulation__layers_8hpp_1a8dc7c36309a283c7d12c6396d6d4e27e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_triangulation__layers_8hpp_1a021b328065e9a5cb4cda58b02177224d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aa34458d2135d27eaa9d6d77d1da004b4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a122b8387068ad87a8f3dd2d4c92cc765.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1ad1c57de58f1467ed1562974f54bc0d2a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a9b4d63f4de2652b90011a8de66bf03ae.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a1eedbf1ae0a103e09d1d28b0a36ed422.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a7e21ee24d04f29f003f4c24f1422c605.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a57d4522fa58f7ecd3cf04d0a79cf53db.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a817741e64f73a8841240a91dffdc1d85.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a8d7f7193cdd77d5b706844454e946d38.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1aeded5b24796c93e1b4daa5aa39e26dfd.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a10230aa3fcd48acb6a6257aa00fe360b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_utilities_8hpp_1a80507ae9b38cb01dc2a90ccb9c993d28.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_transform_8hpp_1ae795781ac9098d7093925b9cfdd75fdf.rst
+
+Variables
+*********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_spg__database_8cpp_1a578037fa51efca00d3055071a91f456a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_pointgroup_8cpp_1a8e05c5c58b7447fc592389d86b14d037.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_utilities_8hpp_1a952eac791b596a61bba0a133a3bb439f.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_utilities_8hpp_1a11800301331418e03f6ccd288d68e959.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_pointgroup_8cpp_1acc89e2b03f55ac3cfc5c6eaca4d83e03.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   variable_utilities_8hpp_1adbdcb5208ca656bd4ac203c9cabf2ac3.rst
+
+Defines
+*******
+
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1abedbae75207c3ed5a9d1d073fdef8a08.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_lapjv_8hpp_1ac620672df61cb1f3f6bf8901869b6be2.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1ac72ed6ed9aa2135cd2cdf31117063ed9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1acb19c496d0cfaaf9613f43d6e12ce690.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_debug_8hpp_1aa6ef311a30404b1b6353981d9dc58428.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f.rst
+
+Typedefs
+********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1abfffab46700de65d0a9721ccccd48255.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_debug_8hpp_1aa3198ffc0e17fcb31cd7053642959228.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1aa3198ffc0e17fcb31cd7053642959228.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1aafb2d4bd129b2238a12ab90db803ecb9.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_transform_8hpp_1afbc51959885d33b5db8306d0aba9f96c.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_utilities_8hpp_1aceb39604fd38574cd57c210f88029430.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_utilities_8hpp_1a7d703b6a4cf28c8dd3e8d2e6fe46ff2d.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_hall__symbol_8hpp_1afcd610157c7da68729320cef638a084b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_pointsymmetry_8hpp_1afcd610157c7da68729320cef638a084b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_symmetry_8hpp_1afcd610157c7da68729320cef638a084b.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_pointsymmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_symmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_transform_8hpp_1ac39cc28ca385d0a8a410b3dcb7d23585.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_lapjv_8hpp_1aca7783c049f660b93ed1338110b37d93.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_bz__mesh_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_bz__nest_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_bz__trellis_8hpp_1ab362a895437fff981d5ce7b48b2afd0e.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_pointsymmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_symmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_hall__symbol_8hpp_1af38183e237898f6af653810bc4c95c79.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_pointsymmetry_8hpp_1af38183e237898f6af653810bc4c95c79.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_symmetry_8hpp_1af38183e237898f6af653810bc4c95c79.rst

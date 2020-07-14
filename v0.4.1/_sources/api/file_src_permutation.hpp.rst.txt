@@ -1,0 +1,93 @@
+
+.. _file_src_permutation.hpp:
+
+File permutation.hpp
+====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/permutation.hpp``)
+------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_permutation.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``complex``
+
+- ``cstdint``
+
+- ``lapjv.hpp`` (:ref:`file_src_lapjv.hpp`)
+
+- ``munkres.hpp`` (:ref:`file_src_munkres.hpp`)
+
+- ``smp.hpp`` (:ref:`file_src_smp.hpp`)
+
+- ``sorting_status.hpp`` (:ref:`file_src_sorting_status.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_interpolation_data.hpp`
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structCostTraits`
+
+- :ref:`exhale_struct_structCostTraits_3_01std_1_1complex_3_01T_01_4_01_4`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_permutation_8hpp_1a4a87d9aab424e45ece64ca20a4cfef88`
+
+- :ref:`exhale_function_permutation_8hpp_1a0095bb2ef5966c7e781a2a6e01f4bf78`
+
+- :ref:`exhale_function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a`
+
+- :ref:`exhale_function_permutation_8hpp_1ac49786d3941915eb23005899e7576f87`
+
+- :ref:`exhale_function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea`
+
+- :ref:`exhale_function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40`
+
+- :ref:`exhale_function_permutation_8hpp_1a3e94727d4e5e3b7901ef3f5582e0da4b`
+
+- :ref:`exhale_function_permutation_8hpp_1a4d3bd3fb82cffda7184b384db05ccf03`
+
+- :ref:`exhale_function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc`
+
+- :ref:`exhale_function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13`
+

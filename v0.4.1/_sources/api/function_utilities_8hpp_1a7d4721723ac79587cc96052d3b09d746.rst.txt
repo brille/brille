@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a7d4721723ac79587cc96052d3b09d746:
+
+Template Function magnitude(const std::complex<T>)
+==================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: magnitude(const std::complex<T>)

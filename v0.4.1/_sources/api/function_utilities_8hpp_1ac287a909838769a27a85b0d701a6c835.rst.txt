@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ac287a909838769a27a85b0d701a6c835:
+
+Template Function mod1
+======================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: mod1(const T)

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a0bd6f217926b11b58e0f66e06b780f42:
+
+Template Function hermitian_angle(const size_t, const std::complex<T> \*, const std::complex<T> \*)
+===================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: hermitian_angle(const size_t, const std::complex<T> *, const std::complex<T> *)

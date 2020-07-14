@@ -1,0 +1,13 @@
+.. _exhale_function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87:
+
+Function bravais_letter(const Bravais)
+======================================
+
+- Defined in :ref:`file_src_bravais.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: bravais_letter(const Bravais)

@@ -1,0 +1,26 @@
+.. _exhale_class_classLattice:
+
+Class Lattice
+=============
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public Direct`` (:ref:`exhale_class_classDirect`)
+- ``public Reciprocal`` (:ref:`exhale_class_classReciprocal`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Lattice
+   :members:
+   :protected-members:
+   :undoc-members:

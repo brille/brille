@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a3d0d8611e902749598f741a7bb274a14:
+
+Template Function multiply_arrays
+=================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: multiply_arrays(T *, const R *, const S *)

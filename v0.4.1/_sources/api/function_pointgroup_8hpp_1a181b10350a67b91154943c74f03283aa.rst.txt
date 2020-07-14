@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa:
+
+Function get_unique_rotations(const std::vector<std::array<int, 9>>&, const int)
+================================================================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: get_unique_rotations(const std::vector<std::array<int, 9>>&, const int)

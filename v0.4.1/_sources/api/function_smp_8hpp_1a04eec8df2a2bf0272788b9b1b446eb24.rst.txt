@@ -1,0 +1,13 @@
+.. _exhale_function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24:
+
+Template Function smp
+=====================
+
+- Defined in :ref:`file_src_smp.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: smp(const T, const P *restrict, T *restrict, T *restrict, const bool)

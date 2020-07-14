@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a122b8387068ad87a8f3dd2d4c92cc765:
+
+Template Function vector_angle(const size_t, const T \*, const T \*)
+====================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: vector_angle(const size_t, const T *, const T *)

@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Trellis &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class TrellisLeaf" href="classTrellisLeaf.html" />
+    <link rel="prev" title="Class TetTriLayer" href="classTetTriLayer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Trellis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classTrellis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-trellis">
+<span id="exhale-class-classtrellis"></span><h1>Class Trellis<a class="headerlink" href="#class-trellis" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_balltrellis.hpp.html#file-src-balltrellis-hpp"><span class="std std-ref">File balltrellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv47Trellis">
+<span id="_CPPv37Trellis"></span><span id="_CPPv27Trellis"></span><span id="Trellis"></span><span class="target" id="classTrellis"></span><em class="property">class </em><code class="sig-name descname">Trellis</code><a class="headerlink" href="#_CPPv47Trellis" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis7TrellisEv">
+<span id="_CPPv3N7Trellis7TrellisEv"></span><span id="_CPPv2N7Trellis7TrellisEv"></span><span id="Trellis::Trellis"></span><span class="target" id="classTrellis_1a211c5bcb331eaf51bf0260def51990e6"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis7TrellisEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE">
+<span id="_CPPv3N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE"></span><span id="_CPPv2N7Trellis7TrellisERKNSt5arrayIdX9EEERKNSt5arrayINSt6vectorIdEEX3EEE"></span><span id="Trellis::Trellis__std::array:double.9:CR.std::array:std::vector:double:.3:CR"></span><span class="target" id="classTrellis_1a965fb6f346a144015efdc1240164c794"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>abc</em>, <em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>bounds</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N7Trellis7TrellisERKNSt5arrayIdX9EEERKNSt5arrayINSt6vectorIdEEX3EEERKNSt6vectorI11TrellisLeafEE"></span><span id="Trellis::Trellis__std::array:double.9:CR.std::array:std::vector:double:.3:CR.std::vector:TrellisLeaf:CR"></span><span class="target" id="classTrellis_1ac19eef034788ce90ef8ee47cb9508b36"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>abc</em>, <em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>bounds</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>leaves</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis10node_countEv">
+<span id="_CPPv3N7Trellis10node_countEv"></span><span id="_CPPv2N7Trellis10node_countEv"></span><span id="Trellis::node_count"></span><span class="target" id="classTrellis_1a1f94ab0f32b5e678cd027c4208f07d75"></span>size_t <code class="sig-name descname">node_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis10node_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis4sizeEv">
+<span id="_CPPv3NK7Trellis4sizeEv"></span><span id="_CPPv2NK7Trellis4sizeEv"></span><span id="Trellis::sizeC"></span><span class="target" id="classTrellis_1ae3269321db17a9cd4ba746e79b97ade0"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis4spanEv">
+<span id="_CPPv3NK7Trellis4spanEv"></span><span id="_CPPv2NK7Trellis4spanEv"></span><span id="Trellis::spanC"></span><span class="target" id="classTrellis_1a8d06007fd8043568b7be125144454891"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis4spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE">
+<span id="_CPPv3N7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE"></span><span id="_CPPv2N7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEX3EEE"></span><span id="Trellis::boundaries__std::array:std::vector:double:.3:CR"></span><span class="target" id="classTrellis_1a188e32c08abaece3cf26a952cf141aa1"></span>size_t <code class="sig-name descname">boundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>xyzb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE">
+<span id="_CPPv3N7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE"></span><span id="_CPPv2N7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE"></span><span id="Trellis::boundaries__std::vector:double:CR.std::vector:double:CR.std::vector:double:CR"></span><span class="target" id="classTrellis_1a718078bdf35f6755ec42323809a57c94"></span>size_t <code class="sig-name descname">boundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>xb</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>yb</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>zb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis11xboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N7Trellis11xboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N7Trellis11xboundariesERKNSt6vectorIdEE"></span><span id="Trellis::xboundaries__std::vector:double:CR"></span><span class="target" id="classTrellis_1a4c810b6bb0de0f302749e82f5fe938aa"></span>size_t <code class="sig-name descname">xboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>xb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis11xboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis11yboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N7Trellis11yboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N7Trellis11yboundariesERKNSt6vectorIdEE"></span><span id="Trellis::yboundaries__std::vector:double:CR"></span><span class="target" id="classTrellis_1ae6c72d2086afb219bea365be0fb66fa0"></span>size_t <code class="sig-name descname">yboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>yb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis11yboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis11zboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N7Trellis11zboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N7Trellis11zboundariesERKNSt6vectorIdEE"></span><span id="Trellis::zboundaries__std::vector:double:CR"></span><span class="target" id="classTrellis_1a7378d393f765df0b4d74feaced5c2eca"></span>size_t <code class="sig-name descname">zboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>zb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis11zboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis1xEv">
+<span id="_CPPv3NK7Trellis1xEv"></span><span id="_CPPv2NK7Trellis1xEv"></span><span id="Trellis::xC"></span><span class="target" id="classTrellis_1a2c216643548fc5d915c6be4478bab94b"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">x</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis1xEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis1yEv">
+<span id="_CPPv3NK7Trellis1yEv"></span><span id="_CPPv2NK7Trellis1yEv"></span><span id="Trellis::yC"></span><span class="target" id="classTrellis_1a3ed7b8929be92ab379318014a0821ced"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">y</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis1yEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis1zEv">
+<span id="_CPPv3NK7Trellis1zEv"></span><span id="_CPPv2NK7Trellis1zEv"></span><span id="Trellis::zC"></span><span class="target" id="classTrellis_1a2f8854c1e7318139f700d440f65be3ab"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">z</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis1zEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis1xERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N7Trellis1xERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N7Trellis1xERKNSt5arrayIdX3EEE"></span><span id="Trellis::x__std::array:double.3:CR"></span><span class="target" id="classTrellis_1acc7b318964a5688998ab55c66ca19765"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">x</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis1xERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis1yERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N7Trellis1yERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N7Trellis1yERKNSt5arrayIdX3EEE"></span><span id="Trellis::y__std::array:double.3:CR"></span><span class="target" id="classTrellis_1addda80e3cae28fd4950b18ead5927c69"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">y</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis1yERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis1zERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N7Trellis1zERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N7Trellis1zERKNSt5arrayIdX3EEE"></span><span id="Trellis::z__std::array:double.3:CR"></span><span class="target" id="classTrellis_1acab0569d3d05c3d08e6e51f017e798f8"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">z</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis1zERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis3xyzEv">
+<span id="_CPPv3NK7Trellis3xyzEv"></span><span id="_CPPv2NK7Trellis3xyzEv"></span><span id="Trellis::xyzC"></span><span class="target" id="classTrellis_1a2adec94dfd61138e8ef439b0964b24ec"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis3xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis3xyzERKNSt5arrayIdXL9EEEE">
+<span id="_CPPv3N7Trellis3xyzERKNSt5arrayIdXL9EEEE"></span><span id="_CPPv2N7Trellis3xyzERKNSt5arrayIdX9EEE"></span><span id="Trellis::xyz__std::array:double.9:CR"></span><span class="target" id="classTrellis_1a8afbde7f7be9f77efe30f00954874b94"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis3xyzERKNSt5arrayIdXL9EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N7Trellis3xyzERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEE"></span><span id="Trellis::xyz__std::array:double.3:CR.std::array:double.3:CR.std::array:double.3:CR"></span><span class="target" id="classTrellis_1a1f1013cb143e70bb3e96f136e10c6c9c"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nx</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>ny</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nz</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N7Trellis3xyzERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEE"></span><span id="Trellis::xyz__std::array:double.3:CR.std::array:double.3:CR"></span><span class="target" id="classTrellis_1a607f319fd9c3c9aed347f1fe9d97a73a"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nx</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>ny</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3NK7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2NK7Trellis14node_subscriptERKNSt5arrayIdX3EEE"></span><span id="Trellis::node_subscript__std::array:double.3:CRC"></span><span class="target" id="classTrellis_1ad7a8405f0ad81954cad1399aded14cc6"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis14node_subscriptERK11ArrayVectorIdE">
+<span id="_CPPv3NK7Trellis14node_subscriptERK11ArrayVectorIdE"></span><span id="_CPPv2NK7Trellis14node_subscriptERK11ArrayVectorIdE"></span><span id="Trellis::node_subscript__ArrayVector:double:CRC"></span><span class="target" id="classTrellis_1acabb3317a32b84ce976acfa2539a511c"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis14node_subscriptERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis14node_subscriptERK11TrellisLeaf">
+<span id="_CPPv3NK7Trellis14node_subscriptERK11TrellisLeaf"></span><span id="_CPPv2NK7Trellis14node_subscriptERK11TrellisLeaf"></span><span id="Trellis::node_subscript__TrellisLeafCRC"></span><span class="target" id="classTrellis_1ab778d5a3d596eadbe0ca1a9e059df6b9"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a> &amp;<em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis14node_subscriptERK11TrellisLeaf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7Trellis10node_indexE6size_tRK1T">
+<span id="_CPPv3I0ENK7Trellis10node_indexERK1T"></span><span id="_CPPv2I0ENK7Trellis10node_indexERK1T"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classTrellis_1a53c60424035880ac773924fbf5b4e746"></span>size_t <code class="sig-name descname">node_index</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7Trellis10node_indexE6size_tRK1T" title="Trellis::node_index::T">T</a> &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7Trellis10node_indexE6size_tRK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis11node_leavesEK6size_t">
+<span id="_CPPv3NK7Trellis11node_leavesEK6size_t"></span><span id="_CPPv2NK7Trellis11node_leavesEK6size_t"></span><span id="Trellis::node_leaves__sCC"></span><span class="target" id="classTrellis_1a0d3345f08129c2793e9aa7c1a607cc67"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis11node_leavesEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE"></span><span id="Trellis::node_leaves__sC.std::vector:TrellisLeaf:CR"></span><span class="target" id="classTrellis_1a72e4459bdb78cb2e622ffc30fb4ab8f1"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>idx</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis11node_leavesERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3NK7Trellis11node_leavesERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2NK7Trellis11node_leavesERKNSt5arrayIdX3EEE"></span><span id="Trellis::node_leaves__std::array:double.3:CRC"></span><span class="target" id="classTrellis_1a5a7e1f55d218adff7f2e4f44c97de0fd"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis11node_leavesERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis11node_leavesERK11ArrayVectorIdE">
+<span id="_CPPv3NK7Trellis11node_leavesERK11ArrayVectorIdE"></span><span id="_CPPv2NK7Trellis11node_leavesERK11ArrayVectorIdE"></span><span id="Trellis::node_leaves__ArrayVector:double:CRC"></span><span class="target" id="classTrellis_1a41f06a65192c7340243f436ec59ef806"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis11node_leavesERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis8add_leafERK11TrellisLeaf">
+<span id="_CPPv3N7Trellis8add_leafERK11TrellisLeaf"></span><span id="_CPPv2N7Trellis8add_leafERK11TrellisLeaf"></span><span id="Trellis::add_leaf__TrellisLeafCR"></span><span class="target" id="classTrellis_1a768a8243c7ce5952071e27c272f11920"></span>bool <code class="sig-name descname">add_leaf</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a> &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis8add_leafERK11TrellisLeaf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE"></span><span id="Trellis::add_leaves__std::vector:TrellisLeaf:CR"></span><span class="target" id="classTrellis_1ab8f1b280ec7e74bb6971915d56b99e19"></span>bool <code class="sig-name descname">add_leaves</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classTrellisLeaf.html#_CPPv411TrellisLeaf" title="TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>leaves</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T">
+<span id="_CPPv3I0ENK7Trellis15nodes_to_searchERK1T"></span><span id="_CPPv2I0ENK7Trellis15nodes_to_searchERK1T"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classTrellis_1afd017c5a894491a965fc97de1ee98722"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">nodes_to_search</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T" title="Trellis::nodes_to_search::T">T</a> &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Trellis9to_stringEv">
+<span id="_CPPv3NK7Trellis9to_stringEv"></span><span id="_CPPv2NK7Trellis9to_stringEv"></span><span id="Trellis::to_string__voidC"></span><span class="target" id="classTrellis_1a7f57ba4b8af40b20ec7ee027f104cf09"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Trellis9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classTrellisLeaf.html" class="btn btn-neutral float-right" title="Class TrellisLeaf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classTetTriLayer.html" class="btn btn-neutral float-left" title="Class TetTriLayer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

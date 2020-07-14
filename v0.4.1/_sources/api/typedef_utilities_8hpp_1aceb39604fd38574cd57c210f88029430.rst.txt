@@ -1,0 +1,13 @@
+.. _exhale_typedef_utilities_8hpp_1aceb39604fd38574cd57c210f88029430:
+
+Typedef IsInteger
+=================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: IsInteger

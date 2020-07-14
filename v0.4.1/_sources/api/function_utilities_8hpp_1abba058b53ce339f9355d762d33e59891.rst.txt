@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1abba058b53ce339f9355d762d33e59891:
+
+Template Function magnitude(const T)
+====================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: magnitude(const T)

@@ -1,0 +1,16 @@
+.. _exhale_struct_structCostTraits:
+
+Template Struct CostTraits
+==========================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: CostTraits
+   :members:
+   :protected-members:
+   :undoc-members:

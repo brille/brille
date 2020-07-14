@@ -1,0 +1,16 @@
+.. _exhale_class_classSortingStatus:
+
+Class SortingStatus
+===================
+
+- Defined in :ref:`file_src_sorting_status.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: SortingStatus
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aba491962e87602eb27885086eaaf6585:
+
+Template Function encode_array_signs(const size_t, const std::complex<T> \*)
+============================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: encode_array_signs(const size_t, const std::complex<T> *)

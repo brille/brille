@@ -1,0 +1,13 @@
+.. _exhale_typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef:
+
+Typedef Matrix
+==============
+
+- Defined in :ref:`file_src_hall_symbol.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: Matrix

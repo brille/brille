@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a360821e49d763aa3c30252c21bbbb9d4:
+
+Template Function subtract_arrays
+=================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: subtract_arrays(T *, const R *, const S *)

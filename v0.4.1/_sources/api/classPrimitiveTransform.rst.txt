@@ -1,0 +1,16 @@
+.. _exhale_class_classPrimitiveTransform:
+
+Class PrimitiveTransform
+========================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: PrimitiveTransform
+   :members:
+   :protected-members:
+   :undoc-members:
