@@ -59,19 +59,20 @@ public:
     tgi.numberofpoints = static_cast<int>(verts.size());
     tgi.pointlist = new double[3*tgi.numberofpoints];
     tgi.pointmarkerlist = new int[tgi.numberofpoints];
-    int idx=0;
+    size_t numel = verts.numel();
     for (size_t i=0; i<verts.size(); ++i){
       tgi.pointmarkerlist[i] = static_cast<int>(i);
-      for (size_t j=0; j<verts.numel(); ++j)
-        tgi.pointlist[idx++] = verts.getvalue(i,j);
+      for (size_t j=0; j<numel; ++j)
+        tgi.pointlist[i*numel+j] = verts.getvalue(i,j);
     }
     verbose_update_if(addGamma,"Check whether the Gamma point is present");
     bool gammaPresent{false};
     if (addGamma) {
       for (size_t i=0; i<verts.size(); ++i){
         bool isGamma{true};
-	for (size_t j=0; j<verts.numel(); ++j)
-          isGamma &= approx_scalar(verts.getvalue(i,j), 0.);
+	for (size_t j=0; j<numel; ++j)
+          isGamma &= approx_scalar(tgi.pointlist[i*numel+j], 0.);
+        if (isGamma) for (size_t j=0; j<numel; ++j) tgi.pointlist[i*numel+j] = 0.;
 	gammaPresent |= isGamma;
       }
     }
