@@ -98,6 +98,15 @@ protected:
   void check_hall_number(const int h);
   void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
+  //! Construct the Lattice from its components, excluding the volume which is calculated
+  Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
+          const Spacegroup spacegroup, const Symmetry spacegroupsym,
+          const Pointgroup pointgroup, const PointSymmetry pointgroupsym,
+          const Basis b):
+    len(l), ang(a), spg(spacegroup), spgsym(spacegroupsym), ptg(pointgroup),
+    ptgsym(pointgroupsym), basis(b) {
+      this->volume = this->calculatevolume();
+    }
   //! Construct the Lattice from a matrix of the basis vectors
   Lattice(const double *, const int h=1);
   //! Construct the Lattice from a possibly-not-contiguous matrix of the basis vectors
