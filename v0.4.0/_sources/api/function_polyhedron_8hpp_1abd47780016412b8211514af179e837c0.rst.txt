@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0:
+
+Function ok_size
+================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ok_size(const size_t&, const size_t&)

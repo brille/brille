@@ -1,0 +1,16 @@
+.. _exhale_struct_structPointgroupType:
+
+Struct PointgroupType
+=====================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: PointgroupType
+   :members:
+   :protected-members:
+   :undoc-members:

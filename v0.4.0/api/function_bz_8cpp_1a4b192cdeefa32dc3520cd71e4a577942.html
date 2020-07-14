@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int) &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)" href="function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c.html" />
+    <link rel="prev" title="Template Function tetrahedron_weights" href="function_interpolation_8hpp_1ab6003e574f7c91bdda9fe94275967254.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/function_bz_8cpp_1a4b192cdeefa32dc3520cd71e4a577942.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="function-three-plane-intersection-const-lqvec-double-const-lqvec-double-const-arrayvector-double-const-int-const-int-const-int-lqvec-double-const-int">
+<span id="exhale-function-bz-8cpp-1a4b192cdeefa32dc3520cd71e4a577942"></span><h1>Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)<a class="headerlink" href="#function-three-plane-intersection-const-lqvec-double-const-lqvec-double-const-arrayvector-double-const-int-const-int-const-int-lqvec-double-const-int" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_bz.cpp.html#file-src-bz-cpp"><span class="std std-ref">File bz.cpp</span></a></p></li>
+</ul>
+<div class="section" id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp function">
+<dt id="_CPPv424three_plane_intersectionRK5LQVecIdERK5LQVecIdERK11ArrayVectorIdEKiKiKiR5LQVecIdEKi">
+<span id="_CPPv324three_plane_intersectionRK5LQVecIdERK5LQVecIdERK11ArrayVectorIdEKiKiKiR5LQVecIdEKi"></span><span id="_CPPv224three_plane_intersectionRK5LQVecIdERK5LQVecIdERK11ArrayVectorIdEKiKiKiR5LQVecIdEKi"></span><span id="three_plane_intersection__LQVec:double:CR.LQVec:double:CR.ArrayVector:double:CR.iC.iC.iC.LQVec:double:R.iC"></span><span class="target" id="bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c"></span>bool <code class="sig-name descname">three_plane_intersection</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>p</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>xyz</em>, <em class="property">const</em> int <em>i</em>, <em class="property">const</em> int <em>j</em>, <em class="property">const</em> int <em>k</em>, <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; &amp;<em>iat</em>, <em class="property">const</em> int <em>idx</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424three_plane_intersectionRK5LQVecIdERK5LQVecIdERK11ArrayVectorIdEKiKiKiR5LQVecIdEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the intersection point of three planes if it exists. </p>
+<p>From vectors to points on three planes and their normals determine if an intersection point exists and is not too large. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code>: A pointer to the plane normal vectors </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: A pointer to the points on each plane </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xyz</span></code>: A pointer to the plane normals in orthonormal units </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code>: index into <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>, and <code class="docutils literal notranslate"><span class="pre">xyz</span></code> for the first plane </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">j</span></code>: index into <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>, and <code class="docutils literal notranslate"><span class="pre">xyz</span></code> for the second plane </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">k</span></code>: index into <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>, and <code class="docutils literal notranslate"><span class="pre">xyz</span></code> for the third plane </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">iat</span></code>: A <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec</span></a> to hold the intersection point, if it exists </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">idx</span></code>: Where the intersection point should be stored in <code class="docutils literal notranslate"><span class="pre">iat</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="function_bz_8hpp_1a0899a4cb03ce47e8ae844fb49d2c923c.html" class="btn btn-neutral float-right" title="Function three_plane_intersection(const LQVec&lt;double&gt;&amp;, const LQVec&lt;double&gt;&amp;, const ArrayVector&lt;double&gt;&amp;, const int, const int, const int, LQVec&lt;double&gt;&amp;, const int)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="function_interpolation_8hpp_1ab6003e574f7c91bdda9fe94275967254.html" class="btn btn-neutral float-left" title="Template Function tetrahedron_weights" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

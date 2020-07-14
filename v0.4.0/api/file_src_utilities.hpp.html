@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File utilities.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>File utilities.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_utilities.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-utilities-hpp">
+<span id="file-src-utilities-hpp"></span><h1>File utilities.hpp<a class="headerlink" href="#file-utilities-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-utilities-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/utilities.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+<li><p><a class="reference internal" href="#typedefs" id="id6">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id7">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-utilities-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/utilities.hpp</span></code>)<a class="headerlink" href="#definition-src-utilities-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_utilities.hpp.html">Program Listing for File utilities.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">debug.hpp</span></code> (<a class="reference internal" href="file_src_debug.hpp.html#file-src-debug-hpp"><span class="std std-ref">File debug.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">math.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdexcept</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_traits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utilities.tpp</span></code> (<a class="reference internal" href="file_src_utilities.tpp.html#file-src-utilities-tpp"><span class="std std-ref">File utilities.tpp</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_symmetry.hpp.html#file-src-symmetry-hpp"><span class="std std-ref">File symmetry.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_basis.hpp.html#file-src-basis-hpp"><span class="std std-ref">File basis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_pointsymmetry.hpp.html#file-src-pointsymmetry-hpp"><span class="std std-ref">File pointsymmetry.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_polyhedron.hpp.html#file-src-polyhedron-hpp"><span class="std std-ref">File polyhedron.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_mesh.hpp.html#file-src-mesh-hpp"><span class="std std-ref">File mesh.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">File nest.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_pointgroup.cpp.html#file-src-pointgroup-cpp"><span class="std std-ref">File pointgroup.cpp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="classvector__cross__impl.html#exhale-class-classvector-cross-impl"><span class="std std-ref">Template Class vector_cross_impl</span></a></p></li>
+<li><p><a class="reference internal" href="classvector__cross__impl_3_01T_00_01R_00_01S_00_013_01_4.html#exhale-class-classvector-cross-impl-3-01t-00-01r-00-01s-00-013-01-4"><span class="std std-ref">Template Class vector_cross_impl&lt; T, R, S, 3 &gt;</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a38d8df4dc4890071492f6706fe75ffca.html#exhale-function-utilities-8hpp-1a38d8df4dc4890071492f6706fe75ffca"><span class="std std-ref">Template Function add_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aa59df5442483014986938a5e3d040ac1.html#exhale-function-utilities-8hpp-1aa59df5442483014986938a5e3d040ac1"><span class="std std-ref">Template Function add_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a01b33e09a492522b50fb5f2cc61883b5.html#exhale-function-utilities-8hpp-1a01b33e09a492522b50fb5f2cc61883b5"><span class="std std-ref">Template Function approx_array(const size_t, const size_t, const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1acebcd503b69bc778f5e1a803b668a37c.html#exhale-function-utilities-8hpp-1acebcd503b69bc778f5e1a803b668a37c"><span class="std std-ref">Template Function approx_array(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1af390113c9ec83aa21c368ae4fa9e0f7b.html#exhale-function-utilities-8hpp-1af390113c9ec83aa21c368ae4fa9e0f7b"><span class="std std-ref">Template Function approx_matrix(const size_t, const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7e81366c4427eda8424f4bb1108a3d98.html#exhale-function-utilities-8hpp-1a7e81366c4427eda8424f4bb1108a3d98"><span class="std std-ref">Template Function approx_matrix(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a5ba982f43dc1b75d303d96d712d7a7ae.html#exhale-function-utilities-8hpp-1a5ba982f43dc1b75d303d96d712d7a7ae"><span class="std std-ref">Template Function approx_scalar</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1c1f0b0f19b87ec97bcadb4eb1c31269.html#exhale-function-utilities-8hpp-1a1c1f0b0f19b87ec97bcadb4eb1c31269"><span class="std std-ref">Template Function approx_vector(const size_t, const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1eb127903f36de8047c941a92bb80a7e.html#exhale-function-utilities-8hpp-1a1eb127903f36de8047c941a92bb80a7e"><span class="std std-ref">Template Function approx_vector(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88.html#exhale-function-utilities-8hpp-1adefe74b5297b96c778cc2afc11b02f88"><span class="std std-ref">Template Function array_cofactor</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7aea49c6acc728108c6bf5f1acd0864f.html#exhale-function-utilities-8hpp-1a7aea49c6acc728108c6bf5f1acd0864f"><span class="std std-ref">Template Function array_transpose</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.html#exhale-function-utilities-8hpp-1a96ed974f3ba58e0b3fc16d13d2da4cae"><span class="std std-ref">Template Function binomial_coefficient</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3b0d8402b4100ea06bb6e237058c57e4.html#exhale-function-utilities-8hpp-1a3b0d8402b4100ea06bb6e237058c57e4"><span class="std std-ref">Template Function cast_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1c2d6ea127045d599247d7a47560b92a.html#exhale-function-utilities-8hpp-1a1c2d6ea127045d599247d7a47560b92a"><span class="std std-ref">Template Function cast_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a930fd65ee7f8f883029bc0c41e6f21e4.html#exhale-function-utilities-8hpp-1a930fd65ee7f8f883029bc0c41e6f21e4"><span class="std std-ref">Template Function cast_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a626b2c0c4b6b81ff706f550fa2125e36.html#exhale-function-utilities-8hpp-1a626b2c0c4b6b81ff706f550fa2125e36"><span class="std std-ref">Template Function copy_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a385471e4db96b45e29756ecb36763678.html#exhale-function-utilities-8hpp-1a385471e4db96b45e29756ecb36763678"><span class="std std-ref">Template Function copy_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a5044d8e34a95237e2f0587f79191a8c3.html#exhale-function-utilities-8hpp-1a5044d8e34a95237e2f0587f79191a8c3"><span class="std std-ref">Template Function copy_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1afeb3bcc8c2e9355d72b32d2aef1cf992.html#exhale-function-utilities-8hpp-1afeb3bcc8c2e9355d72b32d2aef1cf992"><span class="std std-ref">Template Function determine_tols</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a270e4c80b3272ec8fbeb62638702e1e5.html#exhale-function-utilities-8hpp-1a270e4c80b3272ec8fbeb62638702e1e5"><span class="std std-ref">Template Function encode_array_signs(const size_t, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aba491962e87602eb27885086eaaf6585.html#exhale-function-utilities-8hpp-1aba491962e87602eb27885086eaaf6585"><span class="std std-ref">Template Function encode_array_signs(const size_t, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1abd44d720f83e832c853ecf6d7e132b26.html#exhale-function-utilities-8hpp-1abd44d720f83e832c853ecf6d7e132b26"><span class="std std-ref">Template Function equal_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a27ee7d469953ceda53e91124843622e1.html#exhale-function-utilities-8hpp-1a27ee7d469953ceda53e91124843622e1"><span class="std std-ref">Template Function equal_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a12fb226fb8b6e64c4ad53f3f4fa48cc1.html#exhale-function-utilities-8hpp-1a12fb226fb8b6e64c4ad53f3f4fa48cc1"><span class="std std-ref">Template Function equal_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0f4867ebcf85b802e1e80d978ec4c12c.html#exhale-function-utilities-8hpp-1a0f4867ebcf85b802e1e80d978ec4c12c"><span class="std std-ref">Template Function euclidean_angle</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1afaac905d0e1eadfe3062063f9949042c.html#exhale-function-utilities-8hpp-1afaac905d0e1eadfe3062063f9949042c"><span class="std std-ref">Template Function frobenius_distance(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a9992eda059d95f2acb20df022c7202dc.html#exhale-function-utilities-8hpp-1a9992eda059d95f2acb20df022c7202dc"><span class="std std-ref">Template Function frobenius_distance(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0bd6f217926b11b58e0f66e06b780f42.html#exhale-function-utilities-8hpp-1a0bd6f217926b11b58e0f66e06b780f42"><span class="std std-ref">Template Function hermitian_angle(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a8e98824e9f3bfbdbae3cdb0d538f5842.html#exhale-function-utilities-8hpp-1a8e98824e9f3bfbdbae3cdb0d538f5842"><span class="std std-ref">Template Function hermitian_angle(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3eaf60733e193da30316760d07ab1172.html#exhale-function-utilities-8hpp-1a3eaf60733e193da30316760d07ab1172"><span class="std std-ref">Template Function hermitian_product(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a2bc80b953ce9d6483134394bcafa276e.html#exhale-function-utilities-8hpp-1a2bc80b953ce9d6483134394bcafa276e"><span class="std std-ref">Template Function hermitian_product(const size_t, const T *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a718e66d69f9b7b954b46576aa1306956.html#exhale-function-utilities-8hpp-1a718e66d69f9b7b954b46576aa1306956"><span class="std std-ref">Template Function hermitian_product(const size_t, const std::complex&lt;T&gt; *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1acd900ea9cf980512e9ca9739fddfa1b7.html#exhale-function-utilities-8hpp-1acd900ea9cf980512e9ca9739fddfa1b7"><span class="std std-ref">Template Function hermitian_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a72b3d7d0bcedc4e7ed0b50bf2f443f18.html#exhale-function-utilities-8hpp-1a72b3d7d0bcedc4e7ed0b50bf2f443f18"><span class="std std-ref">Template Function inner_product(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1af728b6801993da6c0bd9ad2c9527dce6.html#exhale-function-utilities-8hpp-1af728b6801993da6c0bd9ad2c9527dce6"><span class="std std-ref">Template Function inner_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7d83385a889cabeabd6ceda857bff4ae.html#exhale-function-utilities-8hpp-1a7d83385a889cabeabd6ceda857bff4ae"><span class="std std-ref">Template Function is_int_matrix(const T *, const R)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a903f99669ce9c1a8f8f754271418956d.html#exhale-function-utilities-8hpp-1a903f99669ce9c1a8f8f754271418956d"><span class="std std-ref">Template Function is_int_matrix(const int *, const)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1abba058b53ce339f9355d762d33e59891.html#exhale-function-utilities-8hpp-1abba058b53ce339f9355d762d33e59891"><span class="std std-ref">Template Function magnitude(const T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7d4721723ac79587cc96052d3b09d746.html#exhale-function-utilities-8hpp-1a7d4721723ac79587cc96052d3b09d746"><span class="std std-ref">Template Function magnitude(const std::complex&lt;T&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a82f8eecb96feebcd85d2b850992ee87f.html#exhale-function-utilities-8hpp-1a82f8eecb96feebcd85d2b850992ee87f"><span class="std std-ref">Template Function make_eigenvectors_equivalent(const size_t, const T *, T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1abdb7e185f0ba77090b64eb689192bffd.html#exhale-function-utilities-8hpp-1abdb7e185f0ba77090b64eb689192bffd"><span class="std std-ref">Template Function make_eigenvectors_equivalent(const size_t, const std::complex&lt;T&gt; *, std::complex&lt;T&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a39efa1d8d0a3ce413a1868424ede4ee5.html#exhale-function-utilities-8hpp-1a39efa1d8d0a3ce413a1868424ede4ee5"><span class="std std-ref">Template Function matrix_adjoint</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aa644790fa8e82080a77697dc327b3828.html#exhale-function-utilities-8hpp-1aa644790fa8e82080a77697dc327b3828"><span class="std std-ref">Template Function matrix_cofactor</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad9f36c81408bef0c594d6456ad1d763f.html#exhale-function-utilities-8hpp-1ad9f36c81408bef0c594d6456ad1d763f"><span class="std std-ref">Template Function matrix_determinant</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad72ce226051c13b5ee954580a544c6b6.html#exhale-function-utilities-8hpp-1ad72ce226051c13b5ee954580a544c6b6"><span class="std std-ref">Template Function matrix_determinant_and_inverse</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aa881c9eae1d686ad0aa20789acbf9d13.html#exhale-function-utilities-8hpp-1aa881c9eae1d686ad0aa20789acbf9d13"><span class="std std-ref">Template Function matrix_inverse</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1aff8c6fa2839438aab09eb845a17047.html#exhale-function-utilities-8hpp-1a1aff8c6fa2839438aab09eb845a17047"><span class="std std-ref">Template Function matrix_metric</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a6c919bdb1fa6539a2846a7348ada52d6.html#exhale-function-utilities-8hpp-1a6c919bdb1fa6539a2846a7348ada52d6"><span class="std std-ref">Template Function matrix_transpose(R *, const R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3c2386f0db28cfe4df1f469500c0d140.html#exhale-function-utilities-8hpp-1a3c2386f0db28cfe4df1f469500c0d140"><span class="std std-ref">Template Function matrix_transpose(R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac287a909838769a27a85b0d701a6c835.html#exhale-function-utilities-8hpp-1ac287a909838769a27a85b0d701a6c835"><span class="std std-ref">Template Function mod1</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0af00b5511ef7d3c76b96c5a5f634515.html#exhale-function-utilities-8hpp-1a0af00b5511ef7d3c76b96c5a5f634515"><span class="std std-ref">Template Function mul_arrays(T *, const size_t, const size_t, const size_t, const R *, const S *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a80d206f558a63c5e02d32f669d2102a9.html#exhale-function-utilities-8hpp-1a80d206f558a63c5e02d32f669d2102a9"><span class="std std-ref">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const R *, const std::complex&lt;S&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a530b531c3559671f976d7f825f9212eb.html#exhale-function-utilities-8hpp-1a530b531c3559671f976d7f825f9212eb"><span class="std std-ref">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const std::complex&lt;R&gt; *, const S *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a658efa877e860b6a67b6577a2c36db8f.html#exhale-function-utilities-8hpp-1a658efa877e860b6a67b6577a2c36db8f"><span class="std std-ref">Template Function mul_arrays(std::complex&lt;T&gt; *, const size_t, const size_t, const size_t, const std::complex&lt;R&gt; *, const std::complex&lt;S&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a28883f647a45a06ece631cc7ebcd549a.html#exhale-function-utilities-8hpp-1a28883f647a45a06ece631cc7ebcd549a"><span class="std std-ref">Template Function mul_mat_mat</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a69e8d2c0f9fd7e5d756805065ccd365c.html#exhale-function-utilities-8hpp-1a69e8d2c0f9fd7e5d756805065ccd365c"><span class="std std-ref">Template Function mul_mat_vec</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a42c5779b3528610fd342c65a1d226b53.html#exhale-function-utilities-8hpp-1a42c5779b3528610fd342c65a1d226b53"><span class="std std-ref">Template Function mul_vec_mat</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3d0d8611e902749598f741a7bb274a14.html#exhale-function-utilities-8hpp-1a3d0d8611e902749598f741a7bb274a14"><span class="std std-ref">Template Function multiply_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac88363aa628809922f56bf1f2e5bb864.html#exhale-function-utilities-8hpp-1ac88363aa628809922f56bf1f2e5bb864"><span class="std std-ref">Template Function multiply_matrix_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad4626d72b8bb0685181be89fed4bd317.html#exhale-function-utilities-8hpp-1ad4626d72b8bb0685181be89fed4bd317"><span class="std std-ref">Template Function multiply_matrix_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a406286295a5ab203d72d658e83cf40b0.html#exhale-function-utilities-8hpp-1a406286295a5ab203d72d658e83cf40b0"><span class="std std-ref">Template Function multiply_vector_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ab10cb6b56841a94538c59ab10126fdbd.html#exhale-function-utilities-8hpp-1ab10cb6b56841a94538c59ab10126fdbd"><span class="std std-ref">Template Function my_cast</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a97879d84ce99aba94ea7e144922799e9.html#exhale-function-utilities-8hpp-1a97879d84ce99aba94ea7e144922799e9"><span class="std std-ref">Template Function signed_to_unsigned</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a54ceeea822f774071a7809c093e8c212.html#exhale-function-utilities-8hpp-1a54ceeea822f774071a7809c093e8c212"><span class="std std-ref">Template Function similar_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aac7d4c3a45b061478ac489225f0b220e.html#exhale-function-utilities-8hpp-1aac7d4c3a45b061478ac489225f0b220e"><span class="std std-ref">Template Function squared_distance(const T&amp;, const T&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a99264bff91e8e12d43703fbb0f927ca3.html#exhale-function-utilities-8hpp-1a99264bff91e8e12d43703fbb0f927ca3"><span class="std std-ref">Template Function squared_distance(const std::complex&lt;T&gt;&amp;, const std::complex&lt;T&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a360821e49d763aa3c30252c21bbbb9d4.html#exhale-function-utilities-8hpp-1a360821e49d763aa3c30252c21bbbb9d4"><span class="std std-ref">Template Function subtract_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a301522e0e862d48199f3b3bb04aba563.html#exhale-function-utilities-8hpp-1a301522e0e862d48199f3b3bb04aba563"><span class="std std-ref">Template Function subtract_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aad3deea458a64955982b85edbbcbbf80.html#exhale-function-utilities-8hpp-1aad3deea458a64955982b85edbbcbbf80"><span class="std std-ref">Template Function trace</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aa34458d2135d27eaa9d6d77d1da004b4.html#exhale-function-utilities-8hpp-1aa34458d2135d27eaa9d6d77d1da004b4"><span class="std std-ref">Template Function unsigned_to_signed</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a122b8387068ad87a8f3dd2d4c92cc765.html#exhale-function-utilities-8hpp-1a122b8387068ad87a8f3dd2d4c92cc765"><span class="std std-ref">Template Function vector_angle(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad1c57de58f1467ed1562974f54bc0d2a.html#exhale-function-utilities-8hpp-1ad1c57de58f1467ed1562974f54bc0d2a"><span class="std std-ref">Template Function vector_angle(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a9b4d63f4de2652b90011a8de66bf03ae.html#exhale-function-utilities-8hpp-1a9b4d63f4de2652b90011a8de66bf03ae"><span class="std std-ref">Template Function vector_cross</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1eedbf1ae0a103e09d1d28b0a36ed422.html#exhale-function-utilities-8hpp-1a1eedbf1ae0a103e09d1d28b0a36ed422"><span class="std std-ref">Template Function vector_distance(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7e21ee24d04f29f003f4c24f1422c605.html#exhale-function-utilities-8hpp-1a7e21ee24d04f29f003f4c24f1422c605"><span class="std std-ref">Template Function vector_distance(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a57d4522fa58f7ecd3cf04d0a79cf53db.html#exhale-function-utilities-8hpp-1a57d4522fa58f7ecd3cf04d0a79cf53db"><span class="std std-ref">Template Function vector_dot</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a817741e64f73a8841240a91dffdc1d85.html#exhale-function-utilities-8hpp-1a817741e64f73a8841240a91dffdc1d85"><span class="std std-ref">Template Function vector_norm_squared</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a8d7f7193cdd77d5b706844454e946d38.html#exhale-function-utilities-8hpp-1a8d7f7193cdd77d5b706844454e946d38"><span class="std std-ref">Template Function vector_product(const size_t, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aeded5b24796c93e1b4daa5aa39e26dfd.html#exhale-function-utilities-8hpp-1aeded5b24796c93e1b4daa5aa39e26dfd"><span class="std std-ref">Template Function vector_product(const size_t, const T *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a10230aa3fcd48acb6a6257aa00fe360b.html#exhale-function-utilities-8hpp-1a10230aa3fcd48acb6a6257aa00fe360b"><span class="std std-ref">Template Function vector_product(const size_t, const std::complex&lt;T&gt; *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a80507ae9b38cb01dc2a90ccb9c993d28.html#exhale-function-utilities-8hpp-1a80507ae9b38cb01dc2a90ccb9c993d28"><span class="std std-ref">Template Function vector_product(const size_t, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="typedefs">
+<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="typedef_utilities_8hpp_1aceb39604fd38574cd57c210f88029430.html#exhale-typedef-utilities-8hpp-1aceb39604fd38574cd57c210f88029430"><span class="std std-ref">Typedef IsInteger</span></a></p></li>
+<li><p><a class="reference internal" href="typedef_utilities_8hpp_1a7d703b6a4cf28c8dd3e8d2e6fe46ff2d.html#exhale-typedef-utilities-8hpp-1a7d703b6a4cf28c8dd3e8d2e6fe46ff2d"><span class="std std-ref">Typedef IsNotInteger</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1a952eac791b596a61bba0a133a3bb439f.html#exhale-variable-utilities-8hpp-1a952eac791b596a61bba0a133a3bb439f"><span class="std std-ref">Variable PI</span></a></p></li>
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1a11800301331418e03f6ccd288d68e959.html#exhale-variable-utilities-8hpp-1a11800301331418e03f6ccd288d68e959"><span class="std std-ref">Variable PICUBED</span></a></p></li>
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html#exhale-variable-utilities-8hpp-1aab78dbade0c0eb67fec29e76582c5611"><span class="std std-ref">Variable PIOVERTWO</span></a></p></li>
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1adbdcb5208ca656bd4ac203c9cabf2ac3.html#exhale-variable-utilities-8hpp-1adbdcb5208ca656bd4ac203c9cabf2ac3"><span class="std std-ref">Variable TOL_MULT</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

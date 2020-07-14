@@ -1,0 +1,26 @@
+.. _exhale_class_classNullNode:
+
+Class NullNode
+==============
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public CubeNode`` (:ref:`exhale_class_classCubeNode`)
+- ``public PolyNode`` (:ref:`exhale_class_classPolyNode`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: NullNode
+   :members:
+   :protected-members:
+   :undoc-members:

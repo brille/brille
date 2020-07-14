@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1adefe74b5297b96c778cc2afc11b02f88:
+
+Template Function array_cofactor
+================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: array_cofactor(R *, const R *, const int, const int, const int, const int)

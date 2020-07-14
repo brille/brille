@@ -1,0 +1,13 @@
+.. _exhale_function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd:
+
+Function bravais_string(const Bravais)
+======================================
+
+- Defined in :ref:`file_src_bravais.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: bravais_string(const Bravais)

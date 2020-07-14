@@ -1,0 +1,64 @@
+
+.. _program_listing_file_src_debug.cpp:
+
+Program Listing for File debug.cpp
+==================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_debug.cpp>` (``src/debug.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /* Copyright 2019 Greg Tucker
+   //
+   // This file is part of brille.
+   //
+   // brille is free software: you can redistribute it and/or modify it under the
+   // terms of the GNU Affero General Public License as published by the Free
+   // Software Foundation, either version 3 of the License, or (at your option)
+   // any later version.
+   //
+   // brille is distributed in the hope that it will be useful, but
+   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   // or FITNESS FOR A PARTICULAR PURPOSE.
+   // See the GNU Affero General Public License for more details.
+   //
+   // You should have received a copy of the GNU Affero General Public License
+   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #include "debug.hpp"
+   /*******************************************************************************
+   | These functions could be defined static and/or inline and then placed in the |
+   | debug header file, however doing so forces all other source files to include |
+   | the windows.h header file. Such behaviour is undesirable as it wreaks havok  |
+   | on standard functions (e.g., std::max) by replacing them with macros.        |
+   *******************************************************************************/
+   #if defined(_MSC_VER) || defined(__MINGW32__)
+   // #ifdef _MSC_VER
+     // #define NOMINMAX
+     #include <windows.h>
+     int terminal_width(void){
+       CONSOLE_SCREEN_BUFFER_INFO csbi;
+       GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+       return csbi.srWindow.Right - csbi.srWindow.Left;
+     }
+     int terminal_height(void){
+       CONSOLE_SCREEN_BUFFER_INFO csbi;
+       GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+       return csbi.srWindow.Bottom - csbi.srWindow.Top;
+     }
+   #else
+     #include <sys/ioctl.h>
+     #include <unistd.h>
+     int terminal_width(void){
+       struct winsize w;
+       ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+       return w.ws_col > 0 ? w.ws_col : std::numeric_limits<int>::max();
+     }
+     int terminal_height(void){
+       struct winsize w;
+       ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+       return w.ws_row > 0 ? w.ws_row : std::numeric_limits<int>::max();
+     }
+   #endif

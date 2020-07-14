@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1a0095bb2ef5966c7e781a2a6e01f4bf78:
+
+Template Function apply_permutation
+===================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: apply_permutation(ObjItr, ObjItr, PermItr)

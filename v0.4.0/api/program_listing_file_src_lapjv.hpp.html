@@ -1,0 +1,743 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File lapjv.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File lapjv.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_lapjv.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-lapjv-hpp">
+<span id="program-listing-file-src-lapjv-hpp"></span><h1>Program Listing for File lapjv.hpp<a class="headerlink" href="#program-listing-for-file-lapjv-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_lapjv.hpp.html#file-src-lapjv-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/lapjv.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+
+<span class="cm">/* This file started life as lap.h from https://github.com/src-d/lapjv</span>
+<span class="cm">   Licensed under The MIT License (MIT)</span>
+
+<span class="cm">   Copyright (c) 2016 source{d}.</span>
+
+<span class="cm">   Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="cm">   of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="cm">   in the Software without restriction, including without limitation the rights</span>
+<span class="cm">   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="cm">   copies of the Software, and to permit persons to whom the Software is</span>
+<span class="cm">   furnished to do so, subject to the following conditions:</span>
+
+<span class="cm">   The above copyright notice and this permission notice shall be included in all</span>
+<span class="cm">   copies or substantial portions of the Software.</span>
+
+<span class="cm">   THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="cm">   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="cm">   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="cm">   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="cm">   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="cm">   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="cm">   SOFTWARE.</span>
+<span class="cm">*/</span>
+<span class="cp">#ifndef _LAPJV_H</span>
+<span class="cp">#define _LAPJV_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstdio&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;limits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+
+<span class="cp">#ifdef __GNUC__</span>
+<span class="cp">#define always_inline __attribute__((always_inline)) inline</span>
+<span class="cp">#define restrict __restrict__</span>
+<span class="cp">#elif _WIN32</span>
+<span class="cp">#define always_inline __forceinline</span>
+<span class="cp">#define restrict __restrict</span>
+<span class="cp">#else</span>
+<span class="cp">#define always_inline inline</span>
+<span class="cp">#define restrict</span>
+<span class="cp">#endif</span>
+
+<span class="k">using</span> <span class="n">sidx</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span> <span class="kt">int</span><span class="p">;</span> <span class="c1">// in case idx is unsigned :/</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">idx</span><span class="p">,</span> <span class="k">typename</span> <span class="n">cost</span><span class="o">&gt;</span>
+<span class="n">always_inline</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">cost</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">sidx</span><span class="p">,</span> <span class="n">sidx</span><span class="o">&gt;</span>
+<span class="n">find_umins_plain</span><span class="p">(</span>
+    <span class="n">idx</span> <span class="n">dim</span><span class="p">,</span> <span class="n">idx</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">assign_cost</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">assign_cost</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">];</span>
+  <span class="n">cost</span> <span class="n">umin</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="n">sidx</span> <span class="n">j1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">sidx</span> <span class="n">j2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="n">cost</span> <span class="n">usubmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">cost</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cost</span> <span class="n">h</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">umin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">umin</span><span class="p">;</span>
+        <span class="n">umin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">umin</span><span class="p">,</span> <span class="n">usubmin</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// MSVC++ has an awful AVX2 support which does not allow to compile the code</span>
+<span class="cp">#if defined(__AVX2__) &amp;&amp; !defined(_WIN32)</span>
+<span class="cp">#include</span> <span class="cpf">&lt;immintrin.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#define FLOAT_MIN_DIM 64</span>
+<span class="cp">#define DOUBLE_MIN_DIM 100000  </span><span class="c1">// 64-bit code is actually always slower</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">idx</span><span class="o">&gt;</span>
+<span class="n">always_inline</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="p">,</span> <span class="n">sidx</span><span class="p">,</span> <span class="n">sidx</span><span class="o">&gt;</span>
+<span class="n">find_umins</span><span class="p">(</span>
+    <span class="n">idx</span> <span class="n">dim</span><span class="p">,</span> <span class="n">idx</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">assign_cost</span><span class="p">,</span>
+    <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">FLOAT_MIN_DIM</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">find_umins_plain</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_cost</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="n">assign_cost</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">;</span>
+  <span class="n">__m256i</span> <span class="n">idxvec</span> <span class="o">=</span> <span class="n">_mm256_setr_epi32</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+  <span class="n">__m256i</span> <span class="n">j1vec</span> <span class="o">=</span> <span class="n">_mm256_set1_epi32</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_set1_epi32</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">__m256</span> <span class="n">uminvec</span> <span class="o">=</span> <span class="n">_mm256_set1_ps</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)()),</span>
+         <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_set1_ps</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">7</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">__m256</span> <span class="n">acvec</span> <span class="o">=</span> <span class="n">_mm256_loadu_ps</span><span class="p">(</span><span class="n">local_cost</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">__m256</span> <span class="n">vvec</span> <span class="o">=</span> <span class="n">_mm256_loadu_ps</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">__m256</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_mm256_sub_ps</span><span class="p">(</span><span class="n">acvec</span><span class="p">,</span> <span class="n">vvec</span><span class="p">);</span>
+    <span class="n">__m256</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">_mm256_cmp_ps</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">,</span> <span class="n">_CMP_LE_OQ</span><span class="p">);</span>
+    <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_ps</span><span class="p">(</span><span class="n">usubminvec</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j2vec</span><span class="p">,</span> <span class="n">j1vec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">uminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_ps</span><span class="p">(</span><span class="n">uminvec</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j1vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j1vec</span><span class="p">,</span> <span class="n">idxvec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">cmp</span> <span class="o">=</span> <span class="n">_mm256_andnot_ps</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">_mm256_cmp_ps</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">usubminvec</span><span class="p">,</span> <span class="n">_CMP_LT_OQ</span><span class="p">));</span>
+    <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_ps</span><span class="p">(</span><span class="n">usubminvec</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j2vec</span><span class="p">,</span> <span class="n">idxvec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">idxvec</span> <span class="o">=</span> <span class="n">_mm256_add_epi32</span><span class="p">(</span><span class="n">idxvec</span><span class="p">,</span> <span class="n">_mm256_set1_epi32</span><span class="p">(</span><span class="mi">8</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">alignas</span><span class="p">(</span><span class="n">__m256</span><span class="p">)</span> <span class="kt">float</span> <span class="n">uminmem</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">usubminmem</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+  <span class="k">alignas</span><span class="p">(</span><span class="n">__m256</span><span class="p">)</span> <span class="kt">int32_t</span> <span class="n">j1mem</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">j2mem</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+  <span class="n">_mm256_store_ps</span><span class="p">(</span><span class="n">uminmem</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">);</span>
+  <span class="n">_mm256_store_ps</span><span class="p">(</span><span class="n">usubminmem</span><span class="p">,</span> <span class="n">usubminvec</span><span class="p">);</span>
+  <span class="n">_mm256_store_si256</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">j1mem</span><span class="p">),</span> <span class="n">j1vec</span><span class="p">);</span>
+  <span class="n">_mm256_store_si256</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">j2mem</span><span class="p">),</span> <span class="n">j2vec</span><span class="p">);</span>
+
+  <span class="n">sidx</span> <span class="n">j1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="kt">float</span> <span class="n">umin</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)(),</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">vi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">h</span> <span class="o">=</span> <span class="n">uminmem</span><span class="p">[</span><span class="n">vi</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sidx</span> <span class="n">jnew</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j1mem</span><span class="p">[</span><span class="n">vi</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">umin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">jnew</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">umin</span><span class="p">;</span>
+        <span class="n">umin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="n">jnew</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">vi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">h</span> <span class="o">=</span> <span class="n">usubminmem</span><span class="p">[</span><span class="n">vi</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+      <span class="n">j2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j2mem</span><span class="p">[</span><span class="n">vi</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFF8u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">h</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">umin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">umin</span><span class="p">;</span>
+        <span class="n">umin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">umin</span><span class="p">,</span> <span class="n">usubmin</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">idx</span><span class="o">&gt;</span>
+<span class="n">always_inline</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">sidx</span><span class="p">,</span> <span class="n">sidx</span><span class="o">&gt;</span>
+<span class="n">find_umins</span><span class="p">(</span>
+    <span class="n">idx</span> <span class="n">dim</span><span class="p">,</span> <span class="n">idx</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">assign_cost</span><span class="p">,</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">DOUBLE_MIN_DIM</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">find_umins_plain</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_cost</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="n">assign_cost</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">;</span>
+  <span class="n">__m256i</span> <span class="n">idxvec</span> <span class="o">=</span> <span class="n">_mm256_setr_epi64x</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="n">__m256i</span> <span class="n">j1vec</span> <span class="o">=</span> <span class="n">_mm256_set1_epi64x</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_set1_epi64x</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">__m256d</span> <span class="n">uminvec</span> <span class="o">=</span> <span class="n">_mm256_set1_pd</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)()),</span>
+          <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_set1_pd</span><span class="p">((</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">3</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">__m256d</span> <span class="n">acvec</span> <span class="o">=</span> <span class="n">_mm256_loadu_pd</span><span class="p">(</span><span class="n">local_cost</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">__m256d</span> <span class="n">vvec</span> <span class="o">=</span> <span class="n">_mm256_loadu_pd</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+    <span class="n">__m256d</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_mm256_sub_pd</span><span class="p">(</span><span class="n">acvec</span><span class="p">,</span> <span class="n">vvec</span><span class="p">);</span>
+    <span class="n">__m256d</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">_mm256_cmp_pd</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">,</span> <span class="n">_CMP_LE_OQ</span><span class="p">);</span>
+    <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_pd</span><span class="p">(</span><span class="n">usubminvec</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j2vec</span><span class="p">,</span> <span class="n">j1vec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">uminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_pd</span><span class="p">(</span><span class="n">uminvec</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j1vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j1vec</span><span class="p">,</span> <span class="n">idxvec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">cmp</span> <span class="o">=</span> <span class="n">_mm256_andnot_pd</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">_mm256_cmp_pd</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">usubminvec</span><span class="p">,</span> <span class="n">_CMP_LT_OQ</span><span class="p">));</span>
+    <span class="n">usubminvec</span> <span class="o">=</span> <span class="n">_mm256_blendv_pd</span><span class="p">(</span><span class="n">usubminvec</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">cmp</span><span class="p">);</span>
+    <span class="n">j2vec</span> <span class="o">=</span> <span class="n">_mm256_blendv_epi8</span><span class="p">(</span>
+        <span class="n">j2vec</span><span class="p">,</span> <span class="n">idxvec</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cmp</span><span class="p">));</span>
+    <span class="n">idxvec</span> <span class="o">=</span> <span class="n">_mm256_add_epi64</span><span class="p">(</span><span class="n">idxvec</span><span class="p">,</span> <span class="n">_mm256_set1_epi64x</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">alignas</span><span class="p">(</span><span class="n">__m256d</span><span class="p">)</span> <span class="kt">double</span> <span class="n">uminmem</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">usubminmem</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+  <span class="k">alignas</span><span class="p">(</span><span class="n">__m256d</span><span class="p">)</span> <span class="kt">int64_t</span> <span class="n">j1mem</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">j2mem</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+  <span class="n">_mm256_store_pd</span><span class="p">(</span><span class="n">uminmem</span><span class="p">,</span> <span class="n">uminvec</span><span class="p">);</span>
+  <span class="n">_mm256_store_pd</span><span class="p">(</span><span class="n">usubminmem</span><span class="p">,</span> <span class="n">usubminvec</span><span class="p">);</span>
+  <span class="n">_mm256_store_si256</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">j1mem</span><span class="p">),</span> <span class="n">j1vec</span><span class="p">);</span>
+  <span class="n">_mm256_store_si256</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">__m256i</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">j2mem</span><span class="p">),</span> <span class="n">j2vec</span><span class="p">);</span>
+
+  <span class="n">sidx</span> <span class="n">j1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">umin</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)(),</span>
+         <span class="n">usubmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">vi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">h</span> <span class="o">=</span> <span class="n">uminmem</span><span class="p">[</span><span class="n">vi</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sidx</span> <span class="n">jnew</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j1mem</span><span class="p">[</span><span class="n">vi</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">umin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">jnew</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">umin</span><span class="p">;</span>
+        <span class="n">umin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="n">jnew</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">vi</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">vi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">h</span> <span class="o">=</span> <span class="n">usubminmem</span><span class="p">[</span><span class="n">vi</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+      <span class="n">j2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j2mem</span><span class="p">[</span><span class="n">vi</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFCu</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">h</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">usubmin</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">umin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">usubmin</span> <span class="o">=</span> <span class="n">umin</span><span class="p">;</span>
+        <span class="n">umin</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+        <span class="n">j2</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">umin</span><span class="p">,</span> <span class="n">usubmin</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#else  </span><span class="c1">// __AVX__</span>
+
+<span class="cp">#define find_umins find_umins_plain</span>
+
+<span class="cp">#endif  </span><span class="c1">// __AVX__</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">idx</span><span class="p">,</span> <span class="k">typename</span> <span class="n">cost</span><span class="o">&gt;</span>
+<span class="n">cost</span> <span class="n">lapjv</span><span class="p">(</span><span class="n">idx</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">assign_cost</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">verbose</span><span class="p">,</span>
+         <span class="n">idx</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">rowsol</span><span class="p">,</span> <span class="n">idx</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">colsol</span><span class="p">,</span>
+         <span class="n">cost</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">u</span><span class="p">,</span> <span class="n">cost</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">free</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">idx</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">idx</span><span class="p">[</span><span class="n">dim</span><span class="p">]);</span>     <span class="c1">// list of unassigned rows.</span>
+  <span class="k">auto</span> <span class="n">collist</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">idx</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">idx</span><span class="p">[</span><span class="n">dim</span><span class="p">]);</span>  <span class="c1">// list of columns to be scanned in various ways.</span>
+  <span class="k">auto</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">idx</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">idx</span><span class="p">[</span><span class="n">dim</span><span class="p">]);</span>  <span class="c1">// counts how many times a row could be assigned.</span>
+  <span class="k">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">cost</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">cost</span><span class="p">[</span><span class="n">dim</span><span class="p">]);</span>      <span class="c1">// &#39;cost-distance&#39; in augmenting path calculation.</span>
+  <span class="k">auto</span> <span class="n">pred</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">idx</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">idx</span><span class="p">[</span><span class="n">dim</span><span class="p">]);</span>     <span class="c1">// row-predecessor of column in augmenting/alternating path.</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="n">dim</span><span class="p">){</span>
+    <span class="n">rowsol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">colsol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">assign_cost</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="c1">// init how many times a row will be assigned in the column reduction.</span>
+  <span class="cp">#if _OPENMP &gt;= 201307</span>
+  <span class="cp">#pragma omp simd</span>
+  <span class="cp">#endif</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Following https://github.com/Fil/lap-jv/blob/master/lap.js</span>
+  <span class="c1">// add an epsilon to comparisons to break infinite loops</span>
+  <span class="n">cost</span> <span class="n">total_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">tc</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">tc</span><span class="o">&lt;</span><span class="n">dim</span><span class="o">*</span><span class="n">dim</span><span class="p">;</span> <span class="o">++</span><span class="n">tc</span><span class="p">)</span> <span class="n">total_cost</span> <span class="o">+=</span> <span class="n">assign_cost</span><span class="p">[</span><span class="n">tc</span><span class="p">];</span>
+  <span class="n">cost</span> <span class="n">cost_epsilon</span> <span class="o">=</span> <span class="n">total_cost</span> <span class="o">/</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">cost</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">10000</span><span class="o">*</span><span class="n">dim</span><span class="p">);</span>
+
+  <span class="c1">// COLUMN REDUCTION</span>
+  <span class="c1">//for (idx j = dim - 1; j &gt;= 0; j--) {   // reverse order gives better results.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="p">){</span>
+    <span class="c1">// find minimum cost over rows.</span>
+    <span class="n">cost</span> <span class="n">min</span> <span class="o">=</span> <span class="n">assign_cost</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="n">idx</span> <span class="n">imin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">assign_cost</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">min</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="n">imin</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">matches</span><span class="p">[</span><span class="n">imin</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// init assignment if minimum row assigned for first time.</span>
+      <span class="n">rowsol</span><span class="p">[</span><span class="n">imin</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+      <span class="n">colsol</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">imin</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">colsol</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>        <span class="c1">// row already assigned, column not assigned.</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: COLUMN REDUCTION finished</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// REDUCTION TRANSFER</span>
+  <span class="n">idx</span> <span class="n">numfree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">assign_cost</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// fill list of unassigned &#39;free&#39; rows.</span>
+      <span class="n">free</span><span class="p">[</span><span class="n">numfree</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// transfer reduction from rows that are assigned once.</span>
+      <span class="n">idx</span> <span class="n">j1</span> <span class="o">=</span> <span class="n">rowsol</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="n">cost</span> <span class="n">min</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">cost</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">j1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min</span> <span class="o">+</span> <span class="n">cost_epsilon</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">min</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">min</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: REDUCTION TRANSFER finished</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// AUGMENTING ROW REDUCTION</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">loopcnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">loopcnt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">loopcnt</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// loop to be done twice.</span>
+    <span class="c1">// scan all free rows.</span>
+    <span class="c1">// in some cases, a free row may be replaced with another one to be scanned next.</span>
+    <span class="n">idx</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">idx</span> <span class="n">prevnumfree</span> <span class="o">=</span> <span class="n">numfree</span><span class="p">;</span>
+    <span class="n">numfree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// start list of rows still free after augmenting row reduction.</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">k</span> <span class="o">&lt;</span> <span class="n">prevnumfree</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="n">free</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">];</span>
+
+      <span class="c1">// find minimum and second minimum reduced cost over columns.</span>
+      <span class="n">cost</span> <span class="n">umin</span><span class="p">,</span> <span class="n">usubmin</span><span class="p">;</span>
+      <span class="n">sidx</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">umin</span><span class="p">,</span> <span class="n">usubmin</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">)</span> <span class="o">=</span> <span class="n">find_umins</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_cost</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+
+      <span class="n">idx</span> <span class="n">i0</span> <span class="o">=</span> <span class="n">colsol</span><span class="p">[</span><span class="n">j1</span><span class="p">];</span>
+      <span class="n">cost</span> <span class="n">vj1_new</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">usubmin</span> <span class="o">+</span> <span class="n">cost_epsilon</span> <span class="o">-</span> <span class="n">umin</span><span class="p">);</span>
+      <span class="kt">bool</span> <span class="n">vj1_lowers</span> <span class="o">=</span> <span class="n">vj1_new</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">];</span>  <span class="c1">// the trick to eliminate the epsilon bug</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">vj1_lowers</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// change the reduction of the minimum column to increase the minimum</span>
+        <span class="c1">// reduced cost in the row to the subminimum.</span>
+        <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vj1_new</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">i0</span> <span class="o">!=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>  <span class="c1">// (was &gt;=0) minimum and subminimum equal.</span>
+        <span class="c1">// minimum column j1 is assigned.</span>
+        <span class="c1">// swap columns j1 and j2, as j2 may be unassigned.</span>
+        <span class="n">j1</span> <span class="o">=</span> <span class="n">j2</span><span class="p">;</span>
+        <span class="n">i0</span> <span class="o">=</span> <span class="n">colsol</span><span class="p">[</span><span class="n">j2</span><span class="p">];</span>
+      <span class="p">}</span>
+
+      <span class="c1">// (re-)assign i to j1, possibly de-assigning an i0.</span>
+      <span class="n">rowsol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">j1</span><span class="p">);</span>
+      <span class="n">colsol</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">i0</span> <span class="o">!=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>  <span class="c1">// (was &gt;=0) minimum column j1 assigned earlier.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">vj1_lowers</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// put in current k, and go back to that k.</span>
+          <span class="c1">// continue augmenting path i - j1 with i0.</span>
+          <span class="n">free</span><span class="p">[</span><span class="o">--</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">i0</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="c1">// no further augmenting reduction possible.</span>
+          <span class="c1">// store i0 in list of free rows for next phase.</span>
+          <span class="n">free</span><span class="p">[</span><span class="n">numfree</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">i0</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: AUGMENTING ROW REDUCTION %d / %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">loopcnt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>  <span class="c1">// for loopcnt</span>
+
+  <span class="c1">// AUGMENT SOLUTION for each free row.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">f</span> <span class="o">&lt;</span> <span class="n">numfree</span><span class="p">;</span> <span class="n">f</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">idx</span> <span class="n">endofpath</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="n">idx</span> <span class="n">freerow</span> <span class="o">=</span> <span class="n">free</span><span class="p">[</span><span class="n">f</span><span class="p">];</span>       <span class="c1">// start row of augmenting path.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: AUGMENT SOLUTION row %d [%d / %d]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">freerow</span><span class="p">,</span> <span class="n">f</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">numfree</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Dijkstra shortest path algorithm.</span>
+    <span class="c1">// runs until unassigned column added to shortest path tree.</span>
+    <span class="cp">#if _OPENMP &gt;= 201307</span>
+    <span class="cp">#pragma omp simd</span>
+    <span class="cp">#endif</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">assign_cost</span><span class="p">[</span><span class="n">freerow</span> <span class="o">*</span> <span class="n">dim</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+      <span class="n">pred</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">freerow</span><span class="p">;</span>
+      <span class="n">collist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>  <span class="c1">// init column list.</span>
+    <span class="p">}</span>
+
+    <span class="n">idx</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// columns in 0..low-1 are ready, now none.</span>
+    <span class="n">idx</span> <span class="n">up</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// columns in low..up-1 are to be scanned for current minimum, now none.</span>
+                 <span class="c1">// columns in up..dim-1 are to be considered later to find new minimum,</span>
+                 <span class="c1">// at this stage the list simply contains all columns</span>
+    <span class="kt">bool</span> <span class="n">unassigned_found</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="c1">// initialized in the first iteration: low == up == 0</span>
+    <span class="n">sidx</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">cost</span> <span class="n">min</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">up</span> <span class="o">==</span> <span class="n">low</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">// no more columns to be scanned for current minimum.</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sidx</span><span class="o">&gt;</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="c1">// scan columns for up..dim-1 to find all indices for which new minimum occurs.</span>
+        <span class="c1">// store these indices between low..up-1 (increasing up).</span>
+        <span class="n">min</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">collist</span><span class="p">[</span><span class="n">up</span><span class="o">++</span><span class="p">]];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">k</span> <span class="o">=</span> <span class="n">up</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+          <span class="n">cost</span> <span class="n">h</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;=</span> <span class="n">min</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">min</span><span class="p">)</span> <span class="p">{</span>   <span class="c1">// new minimum.</span>
+              <span class="n">up</span> <span class="o">=</span> <span class="n">low</span><span class="p">;</span>      <span class="c1">// restart list at index low.</span>
+              <span class="n">min</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">// new index with same minimum, put on undex up, and extend list.</span>
+            <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">up</span><span class="p">];</span>
+            <span class="n">collist</span><span class="p">[</span><span class="n">up</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">// check if any of the minimum columns happens to be unassigned.</span>
+        <span class="c1">// if so, we have an augmenting path right away.</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">k</span> <span class="o">=</span> <span class="n">low</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">up</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">colsol</span><span class="p">[</span><span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">==</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// (was &lt;0)</span>
+            <span class="n">endofpath</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+            <span class="n">unassigned_found</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">unassigned_found</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// update &#39;distances&#39; between freerow and all unscanned columns, via next scanned column.</span>
+        <span class="n">idx</span> <span class="n">j1</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">low</span><span class="p">];</span>
+        <span class="n">low</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="n">colsol</span><span class="p">[</span><span class="n">j1</span><span class="p">];</span>
+        <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">assign_cost</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">];</span>
+        <span class="n">cost</span> <span class="n">h</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">min</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">k</span> <span class="o">=</span> <span class="n">up</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+          <span class="n">cost</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">h</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">v2</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">pred</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">v2</span> <span class="o">==</span> <span class="n">min</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// new column found at same minimum value</span>
+              <span class="k">if</span> <span class="p">(</span><span class="n">colsol</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span> <span class="c1">//(was &lt;0)</span>
+                <span class="c1">// if unassigned, shortest augmenting path is complete.</span>
+                <span class="n">endofpath</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+                <span class="n">unassigned_found</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+              <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  <span class="c1">// else add to list to be scanned right away.</span>
+                <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">up</span><span class="p">];</span>
+                <span class="n">collist</span><span class="p">[</span><span class="n">up</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v2</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">unassigned_found</span><span class="p">);</span>
+
+    <span class="c1">// update column prices.</span>
+    <span class="cp">#if _OPENMP &gt;= 201307</span>
+    <span class="cp">#pragma omp simd</span>
+    <span class="cp">#endif</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">sidx</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">last</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">idx</span> <span class="n">j1</span> <span class="o">=</span> <span class="n">collist</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+      <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">min</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// reset row and column assignments along the alternating path.</span>
+    <span class="p">{</span>
+      <span class="n">idx</span> <span class="n">i</span><span class="p">;</span>
+      <span class="k">do</span> <span class="p">{</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[</span><span class="n">endofpath</span><span class="p">];</span>
+        <span class="n">colsol</span><span class="p">[</span><span class="n">endofpath</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">idx</span> <span class="n">j1</span> <span class="o">=</span> <span class="n">endofpath</span><span class="p">;</span>
+        <span class="n">endofpath</span> <span class="o">=</span> <span class="n">rowsol</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">rowsol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j1</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">freerow</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: AUGMENT SOLUTION finished</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// calculate optimal cost.</span>
+  <span class="n">cost</span> <span class="n">lapcost</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="cp">#if _OPENMP &gt;= 201307</span>
+  <span class="cp">#pragma omp simd reduction(+:lapcost)</span>
+  <span class="cp">#endif</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">idx</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dim</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">cost</span> <span class="o">*</span><span class="n">local_cost</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">assign_cost</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dim</span><span class="p">];</span>
+    <span class="n">idx</span> <span class="n">j</span> <span class="o">=</span> <span class="n">rowsol</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="n">lapcost</span> <span class="o">+=</span> <span class="n">local_cost</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;lapjv: optimal cost calculated</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">lapcost</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
