@@ -20,7 +20,24 @@
 #include "utilities.hpp"
 
 void wrap_polyhedron(pybind11::module &m){
+  using namespace pybind11::literals;
   pybind11::class_<Polyhedron> cls(m, "Polyhedron");
+
+  cls.def(pybind11::init([](py::array_t<double> pyv){
+    pybind11::buffer_info bi = pyv.request();
+    if (bi.shape[bi.ndim-1] != 3)
+      throw std::runtime_error("Vertices must be three-vectors");
+    ArrayVector<double> verts((double*)bi.ptr, bi.shape, bi.strides);
+    return Polyhedron(verts);
+  }),"vertices"_a);
+
+  cls.def(pybind11::init([](py::array_t<double> pyv, const std::vector<std::vector<int>>& vpf){
+    pybind11::buffer_info bi = pyv.request();
+    if (bi.shape[bi.ndim-1] != 3)
+      throw std::runtime_error("Vertices must be three-vectors");
+    ArrayVector<double> verts((double*)bi.ptr, bi.shape, bi.strides);
+    return Polyhedron(verts, vpf);
+  }),"vertices"_a, "vertices_per_face"_a);
 
   cls.def_property_readonly("vertices",[](const Polyhedron& o){return av2np(o.get_vertices());});
 

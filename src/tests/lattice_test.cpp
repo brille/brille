@@ -23,3 +23,11 @@ TEST_CASE("Lattice inner_star", "[lattice]"){
   Reciprocal rlat(h, h, h, h, h, h, hall_symbol);
   REQUIRE(rlat.issame(dlat.star()));
 }
+
+TEST_CASE("Lattice with Seitz symbol","[lattice]"){
+  double h = PI/2;
+  std::string seitz_symbol = "x, y+1/2, -z";
+  Direct dlat(4., 4., 4., h, h, h, seitz_symbol);
+  Reciprocal rlat(h,h,h, h,h,h, seitz_symbol);
+  REQUIRE(rlat.issame(dlat.star()));
+}

@@ -81,3 +81,56 @@ TEST_CASE("Polyhedron random point distribution","[polyhedron]"){
   r1 = poly.rand_rejection(npoints);
   REQUIRE(!(r1-r0).all_approx(0.));
 }
+
+TEST_CASE("Polyhedron intersection La2Zr2O7","[polyhedron][intersection]"){
+  // The La2Zr2O7 irreducible Brillouin zone:
+  std::vector<std::array<double,3>> va_verts{
+    {0.16911452700846194,    -0.11958202884495578,     0.62136644889376591},
+    {5.9764222286586582e-18, -1.6903874740503940e-17, -9.2979218529888708e-34},
+    {2.1958566835792056e-13, -2.4632350748338648e-13,  0.62136644889376336},
+    {0.33822905401652814,    -0.059791014422781175,    0.51780537407842375},
+    {0.16911452700828469,     0.23916405768938562,     0.41424429926267342},
+    {0.33822905401644060,    -0.23916405768994600,     0.41424429926267337}
+  };
+  ArrayVector<double> verts(va_verts);
+  std::vector<std::vector<int>> verts_per_face{
+    {2,0,3,4},
+    {0,5,3},
+    {2,4,1},
+    {3,5,1,4},
+    {0,2,1,5}
+  };
+  Polyhedron poly(verts, verts_per_face);
+  // And a cube near its corner:
+  std::array<double,3> min {{5.9764222286586582e-18, -0.047832811538213366, 0.53259981333751372}};
+  std::array<double,3> max {{0.084557263504132035, 0.047832811537652953, 0.62136644889376602}};
+  Polyhedron cube = polyhedron_box(min, max);
+  // Must have an intersection no larger in volume than the cube
+  Polyhedron cbp = cube.intersection(poly);
+  REQUIRE(cbp.get_volume() == Approx(0.000366739));
+  REQUIRE(cbp.get_volume() <= cube.get_volume());
+  REQUIRE(cbp.get_vertices().size() == 10u);
+}
+
+TEST_CASE("Small face polyhedron convex hull","[!shouldfail][polyhedron][convexhull]"){
+  std::vector<std::array<double,3>> va_verts
+  {{0.0846, 0.0217, 0.1775},
+   {0.0846, 0.0652, 0.1775},
+   {0.0846, 0.0217, 0.1506},
+   {0.101 , 0.0217, 0.1775},
+   {0.0846, 0.0652, 0.1757},
+   {0.0857, 0.0652, 0.1775}};
+  ArrayVector<double> verts(va_verts);
+  Polyhedron cv_poly(verts);
+
+  std::vector<std::vector<int>> vpf
+  {{0,1,4,2},
+   {0,3,5,1},
+   {0,2,3},
+   {2,4,5,3},
+   {4,1,5}};
+  Polyhedron fct_poly(verts, vpf);
+
+  //REQUIRE(cv_poly.get_vertices_per_face().size() == fct_poly.get_vertices_per_face().size());
+  REQUIRE(cv_poly.get_volume() == Approx(fct_poly.get_volume()));
+}

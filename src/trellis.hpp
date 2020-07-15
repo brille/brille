@@ -95,6 +95,7 @@ public:
   virtual std::vector<index_t> vertices(void) const {return std::vector<index_t>();}
   virtual std::vector<std::array<index_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<index_t,4>>();}
   virtual bool indices_weights(const ArrayVector<double>&, const ArrayVector<double>&, std::vector<index_t>&, std::vector<double>&) const {return false;};
+  virtual double volume(const ArrayVector<double>&) const {return 0.;}
 };
 class CubeNode: public NullNode {
   std::array<index_t, 8> vertex_indices;
@@ -135,6 +136,14 @@ public:
       weights.push_back(w.getvalue(i));
     }
     return true;
+  }
+  double volume(const ArrayVector<double>& vertices) const {
+    // The CubeNode object contains the indices into `vertices` necessary to find
+    // the 8 corners of the cube. Those indices should be ordered
+    // (000) (100) (110) (010) (101) (001) (011) (111)
+    // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
+    ArrayVector<double> node_verts = vertices.extract(vertex_indices);
+    return abs(node_verts.extract(0)-node_verts.extract(7)).prod(1).getvalue(0,0);
   }
 };
 class PolyNode: public NullNode {
@@ -178,6 +187,9 @@ public:
       return true;
     }
     return false;
+  }
+  double volume(const ArrayVector<double>&) const {
+    return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
   }
 private:
   bool tetrahedra_contains(
@@ -286,6 +298,16 @@ public:
         throw std::logic_error("attempting to access null node!");
       default:
       return false;
+    }
+  }
+  double volume(const ArrayVector<double>& verts, const index_t i) const {
+    switch (nodes_[i].first){
+      case NodeType::cube:
+      return cube_nodes_[nodes_[i].second].volume(verts);
+      case NodeType::poly:
+      return poly_nodes_[nodes_[i].second].volume(verts);
+      default:
+      return 0.;
     }
   }
 };
@@ -495,12 +517,20 @@ public:
   template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
   template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
+  //! Return the number of bytes used per Q point
+  size_t bytes_per_point() const {return data_.bytes_per_point(); }
   //! Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
   ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
     return data_.debye_waller(Q,M,t_K);
   }
   void sort(void){ data_.sort(); }
+  double total_node_volume() const {
+    double vol{0.};
+    for (index_t i=0; i<nodes_.size(); ++i)
+      vol += nodes_.volume(vertices_, i);
+    return vol;
+  }
 private:
   bool subscript_ok_and_not_null(const std::array<index_t,3>& sub) const {
     return this->subscript_ok(sub) && !nodes_.is_null(this->sub2idx(sub));

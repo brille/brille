@@ -54,6 +54,8 @@ void declare_bznestq(py::module &m, const std::string &typestr){
 
   .def_property_readonly("tetrahedra",[](const Class& cobj){return cobj.tetrahedra();})
 
+  .def_property_readonly("bytes_per_point", &Class::bytes_per_point)
+
   .def("fill",[](Class& cobj,
     py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
     py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl,

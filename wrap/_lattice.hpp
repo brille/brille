@@ -96,7 +96,7 @@ template<class T>
 void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {
   std::string hnum = "Hall Number";
   int hnumdef = 1;
-  std::string hstr = "IT Name | Hall Symbol";
+  std::string hstr = "IT Name | Hall Symbol | Seitz notation symmetry";
   std::string hstrdef = "P_1";
     declare_lattice_scl_init(pclass,lenunit,hnum,hnumdef);
     declare_lattice_scl_init(pclass,lenunit,hstr,hstrdef);

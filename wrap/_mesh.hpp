@@ -45,6 +45,8 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   .def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_mesh_xyz());})
   .def_property_readonly("tetrahedra",[](const Class& cobj){return av2np(cobj.get_mesh_tetrehedra());})
 
+  .def_property_readonly("bytes_per_point", &Class::bytes_per_point)
+
   .def("fill",[](Class& cobj,
     py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
     py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl,

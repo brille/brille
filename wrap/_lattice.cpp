@@ -55,8 +55,22 @@ void wrap_lattice(py::module &m){
   cls.def_property_readonly("beta",  &Lattice::get_beta);
   cls.def_property_readonly("gamma", &Lattice::get_gamma);
   cls.def_property_readonly("volume",&Lattice::get_volume);
-  cls.def_property("hall",&Lattice::get_hall,&Lattice::set_hall);
-  cls.def_property_readonly("spacegroup",&Lattice::get_spacegroup_object);
+  cls.def_property_readonly("bravais",&Lattice::get_bravais_type);
+  //cls.def_property("spacegroup",&Lattice::get_spacegroup_symmetry,&Lattice::set_spacegroup_symmetry);
+  cls.def_property("spacegroup",
+    [](const Lattice& l){
+    return l.get_spacegroup_symmetry();
+    },
+    [](Lattice& l, const Symmetry& s){
+    return l.set_spacegroup_symmetry(s);
+  });
+  //cls.def_property_readonly("pointgroup",&Lattice::get_pointgroup_symmetry);
+  cls.def_property_readonly("pointgroup",
+    [](const Lattice& l){
+    return l.get_pointgroup_symmetry();
+    });
+  // The next line would require that the Basis type is exposed to Python
+  //cls.def_property_readonly("basis",&Lattice::get_basis);
 
   cls.def("get_covariant_metric_tensor",[](Lattice &l){
     auto result = py::array_t<double, py::array::c_style >({3,3});

@@ -86,7 +86,7 @@ bool HallSymbol::from_ascii(const std::string& s){
 
 bool HallSymbol::validate(){
   // verify that everything went ok
-  bool ok = this->L != Bravais::_;
+  bool ok = bravais_is_known(this->L);
   for (auto ss: this->symbols) ok &= ss.validate();
   // further validation could be possible by finding the full spacegroup
   return ok;

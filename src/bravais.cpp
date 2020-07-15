@@ -29,3 +29,19 @@ char bravais_letter(const Bravais b){
   }
   return '\0';
 }
+
+bool bravais_is_known(const Bravais b){
+  switch (b){
+    case Bravais::P:
+    case Bravais::A:
+    case Bravais::B:
+    case Bravais::C:
+    case Bravais::I:
+    case Bravais::F:
+    case Bravais::R:
+      return true;
+    default:
+      return false;
+  }
+  return false;
+}

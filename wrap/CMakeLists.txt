@@ -16,6 +16,7 @@ add_dependencies(${BRILLE_PYTHON_MODULE} write_version_info)
 
 set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
+  _bravais.cpp
   _bz.cpp
   _hall_symbol.cpp
   _lattice.cpp

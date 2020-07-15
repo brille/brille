@@ -62,9 +62,8 @@ protected:
   std::array<double,3> len; //!< basis vector lengths
   std::array<double,3> ang; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
   double volume; //!< volume of the unit cell formed by the basis vectors
-  Spacegroup spg; //!< Spacegroup information
+  Bravais bravais; //!< Lattice centring type
   Symmetry spgsym; //!< Spacegroup symmetry operators
-  Pointgroup ptg; //!< Pointgroup information
   PointSymmetry ptgsym; //!< Pointgroup symmetry operators
   Basis basis; //!< The positions of all atoms within the unit cell
 protected:
@@ -100,11 +99,9 @@ protected:
 public:
   //! Construct the Lattice from its components, excluding the volume which is calculated
   Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
-          const Spacegroup spacegroup, const Symmetry spacegroupsym,
-          const Pointgroup pointgroup, const PointSymmetry pointgroupsym,
-          const Basis b):
-    len(l), ang(a), spg(spacegroup), spgsym(spacegroupsym), ptg(pointgroup),
-    ptgsym(pointgroupsym), basis(b) {
+          const Bravais b, const Symmetry sgs, const PointSymmetry pgs,
+          const Basis base):
+    len(l), ang(a), bravais(b), spgsym(sgs), ptgsym(pgs), basis(base) {
       this->volume = this->calculatevolume();
     }
   //! Construct the Lattice from a matrix of the basis vectors
@@ -230,14 +227,13 @@ public:
   virtual void print();
   //! Return a string representation of the basis vector lengths and angles
   virtual std::string string_repr();
-  //! Return the Hall number of the Lattice
-  int get_hall() const {return spg.get_hall_number();}
-  //! Set the symmetry of the Lattice by changing the Hall number
-  int set_hall(const int h) { check_hall_number(h); return get_hall(); }
-  //! Return the Spacegroup object of the Lattice
-  Spacegroup get_spacegroup_object() const { return spg; }
-  //! Return the Pointgroup object of the Lattice
-  Pointgroup get_pointgroup_object() const { return ptg; }
+  //! Return the Bravais centring of the Lattice
+  Bravais get_bravais_type() const { return bravais; }
+  //! Set the Bravais centring of the Lattice
+  Bravais set_bravais_type(const Bravais b) {
+    this->bravais = b;
+    return this->get_bravais_type();
+  }
   //! Return the Spacegroup symmetry operation object of the Lattice
   Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
     if (time_reversal && !spgsym.has_space_inversion()){
@@ -246,6 +242,13 @@ public:
       gens.add(space_inversion);
       return gens.generate();
     }
+    return spgsym;
+  }
+  //! Set the Spacegroup symmetry operation object -- also sets PointSymmetry
+  Symmetry set_spacegroup_symmetry(const Symmetry& gens){
+    spgsym = gens.generate();
+    bravais = spgsym.getcentring();
+    ptgsym = PointSymmetry(get_unique_rotations(spgsym.getallr(),0));
     return spgsym;
   }
   //! Return the Pointgroup Symmetry operation object of the Lattice
