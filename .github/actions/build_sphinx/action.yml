@@ -12,7 +12,7 @@ inputs:
     description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the repository is checked out'
     required: false
   pages_dir:
-    description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the gh-pages branch is checked out'
+    description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the pages branch is checked out'
     required: true
   is_release:
     description: 'Whether this is a release documentation build'
