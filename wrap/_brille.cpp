@@ -18,6 +18,7 @@
 
 #include <pybind11/pybind11.h>
 
+void wrap_bravais(pybind11::module &);
 void wrap_brillouinzone(pybind11::module &);
 void wrap_hallsymbol(pybind11::module &);
 //void wrap_interpolationdata(pybind11::module &);
@@ -78,4 +79,5 @@ PYBIND11_MODULE(_brille, m){
   wrap_polyhedron(m);
   wrap_hallsymbol(m);
   //wrap_interpolationdata(m);
+  wrap_bravais(m);
 }

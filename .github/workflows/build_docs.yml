@@ -23,11 +23,17 @@ jobs:
         ref: gh-pages
         path: pages
 
+    - name: Checkout brille.github.io repository
+      uses: actions/checkout@v2
+      with:
+        repository: brille/brille.github.io
+        token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
+        path: io
+
     - name: Sphinx Docker build
       uses: ./repository/.github/actions/build_sphinx
       with:
         source_dir: repository
-        pages_dir: pages
+        pages_dir: "pages io"
         is_release: ${{ contains(github.event_name, 'release') }}
         create_readme: true
-

@@ -286,6 +286,10 @@ public:
     // no matches
     return false;
   }
+  size_t bytes_per_point() const {
+    size_t n_elements = data_.numel();
+    return n_elements * sizeof(T);
+  }
 private:
   template<typename I> element_t branch_span(const std::array<I,3>& e) const {
     return static_cast<element_t>(e[0])+static_cast<element_t>(e[1])+static_cast<element_t>(e[2]);
@@ -713,6 +717,9 @@ public:
   void sort(void);
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
   bool determine_permutation_ij(const I i, const I j, std::mutex& map_mutex);
+  size_t bytes_per_point() const {
+    return values_.bytes_per_point() + vectors_.bytes_per_point();
+  }
 private:
   ArrayVector<double> debye_waller_sum(const ArrayVector<double>& Q, const double t_K) const;
   ArrayVector<double> debye_waller_sum(const LQVec<double>& Q, const double beta) const{ return this->debye_waller_sum(Q.get_xyz(), beta); }
@@ -885,7 +892,7 @@ void InterpolationData<T,R>::sort(void){
     size_t i = key/no;
     if (i*(no+1) < key) tri_ij.push_back({i, key-i*no});
   }
-  info_update("Finding permutations for ",keys.size()," connections between the ",no," vertices");
+  debug_update("Finding permutations for ",keys.size()," connections between the ",no," vertices");
   // now find the permutations in parallel
   std::mutex m;
   long long nok = unsigned_to_signed<long long, size_t>(tri_ij.size());
@@ -894,7 +901,7 @@ void InterpolationData<T,R>::sort(void){
     size_t k = signed_to_unsigned<size_t, long long>(sk);
     this->determine_permutation_ij(tri_ij[k][0], tri_ij[k][1], m);
   }
-  info_update("Done");
+  debug_update("Done");
 }
 
 template<class T, class R> template<typename I, typename>

@@ -26,7 +26,7 @@ void BrillouinZone::set_polyhedron(const LQVec<double>& v, const LQVec<double>& 
   bool is_outer = this->outerlattice.issame(v.get_lattice());
   bool is_inner = this->lattice.issame(v.get_lattice());
   LQVec<double> vp(this->outerlattice), pp(this->outerlattice);
-  PrimitiveTransform PT(this->outerlattice.get_spacegroup_object().get_bravais_type());
+  PrimitiveTransform PT(this->outerlattice.get_bravais_type());
   is_inner &= PT.does_anything();
   if (!(is_outer || is_inner))
     throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
@@ -46,7 +46,7 @@ void BrillouinZone::set_ir_polyhedron(const LQVec<double>& v, const LQVec<double
   bool is_outer = this->outerlattice.issame(v.get_lattice());
   bool is_inner = this->lattice.issame(v.get_lattice());
   LQVec<double> vp(this->outerlattice), pp(this->outerlattice), np(this->outerlattice);
-  PrimitiveTransform PT(this->outerlattice.get_spacegroup_object().get_bravais_type());
+  PrimitiveTransform PT(this->outerlattice.get_bravais_type());
   is_inner &= PT.does_anything();
   if (!(is_outer || is_inner))
     throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
@@ -98,7 +98,7 @@ bool BrillouinZone::set_ir_vertices(const LQVec<double>& v){
   bool is_outer = this->outerlattice.issame(v.get_lattice());
   bool is_inner = this->lattice.issame(v.get_lattice());
   LQVec<double> vp(this->outerlattice);
-  PrimitiveTransform PT(this->outerlattice.get_spacegroup_object().get_bravais_type());
+  PrimitiveTransform PT(this->outerlattice.get_bravais_type());
   is_inner &= PT.does_anything();
   if (!(is_outer || is_inner))
     throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
@@ -309,7 +309,7 @@ LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
 void BrillouinZone::set_ir_wedge_normals(const LQVec<double>& x){
   bool already_same = this->outerlattice.issame(x.get_lattice());
   LQVec<double> xp(this->outerlattice);
-  PrimitiveTransform PT(this->outerlattice.get_spacegroup_object().get_bravais_type());
+  PrimitiveTransform PT(this->outerlattice.get_bravais_type());
   bool transform_needed = ( PT.does_anything() && this->lattice.issame(x.get_lattice()) );
   if (!(already_same || transform_needed))
     throw std::runtime_error("ir_wedge_normals must be in the standard or primitive lattice used to define the BrillouinZone object");
@@ -989,7 +989,7 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
   LQVec<int> tauprim(this->lattice);
-  PrimitiveTransform PT(this->outerlattice.get_spacegroup_object().get_bravais_type());
+  PrimitiveTransform PT(this->outerlattice.get_bravais_type());
   bool transform_needed = ( PT.does_anything() && this->outerlattice.issame(Q.get_lattice()) );
   if (!(already_same || transform_needed))
     throw std::runtime_error("Q points provided to BrillouinZone::moveinto must be in the standard or primitive lattice used to define the BrillouinZone object");

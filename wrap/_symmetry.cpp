@@ -30,6 +30,25 @@ void wrap_symmetry(pybind11::module & m){
 
   cls.def(pybind11::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),"Hall number"_a);
 
+  cls.def(pybind11::init([](py::array_t<int> pyW, py::array_t<double> pyw){
+    std::vector<std::array<int,9>> Ws = np2sva<int,9>(pyW);
+    std::vector<std::array<double,3>> ws = np2sva<double,3>(pyw);
+    if (Ws.size() != ws.size())
+      throw std::runtime_error("Equal number of matrices and vectors required");
+    Symmetry::Motions mots;
+    mots.reserve(Ws.size());
+    for (size_t i=0; i<Ws.size(); ++i)
+      mots.push_back(Motion<int,double>(Ws[i], ws[i]));
+    Symmetry s(mots);
+    return s;
+  }),"W"_a,"w"_a);
+
+  cls.def(pybind11::init([](const std::string& str){
+    Symmetry s;
+    s.from_ascii(str);
+    return s;
+  }),"CIF xyz string"_a);
+
   cls.def_property_readonly("size",&Symmetry::size);
 
   cls.def_property_readonly("W",[](Symmetry& ps){
@@ -45,6 +64,8 @@ void wrap_symmetry(pybind11::module & m){
   cls.def("generate",&Symmetry::generate);
 
   cls.def("generators",&Symmetry::generators);
+
+  cls.def_property_readonly("centring",&Symmetry::getcentring);
 
   cls.def(pybind11::self == pybind11::self);
 }

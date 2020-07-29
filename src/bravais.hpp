@@ -36,4 +36,6 @@ enum class Bravais {_, P, A, B, C, I, F, R};
 std::string bravais_string(const Bravais b);
 char bravais_letter(const Bravais b);
 
+bool bravais_is_known(const Bravais b);
+
 #endif

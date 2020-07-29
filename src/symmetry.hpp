@@ -24,6 +24,7 @@
 #include <algorithm>
 // #include <numeric>
 #include "utilities.hpp"
+#include "bravais.hpp"
 
 template<class T> using Matrix = std::array<T,9>;
 template<class T> using Vector = std::array<T,3>;
@@ -146,11 +147,13 @@ size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
     debug_update_if(special, "next character ", c);
     ++ret; // we've read another character
     switch (c){
-      case ';': // end of one motion
       case ' ': // end of motion component in the special case, otherwise nothing
-        if (special) this->w[n++] = static_cast<T>(i)/T(12);
-        debug_update_if(special, "set w[",n-1,"] to ", this->w[n-1]);
+        if (special) {
+          this->w[n++] = static_cast<T>(i)/T(12);
+          debug_update("set w[",n-1,"] to ", this->w[n-1]);
+        }
         break;
+      case ';': // end of one motion -- must fall through for third component end
       case ',': // end of motion component
         i=1;
         this->w[n++] = f;
@@ -179,6 +182,7 @@ size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
           haspoint |= '.'==stream.peek();
           tmp << char(stream.get()); // without char() the output of stream.get() is interpreted as an integer (under MSVC, at least)
         }
+        // Make sure the end-of-motion character is next even if we're at the end of the string
         if (!stream.good()) stream.putback(special ? ' ' : ';');
         debug_update_if(special, "Finished searching. Result ",tmp.str()," which");
         debug_update_if(special, " ", (haspoint ? "has" : "does not have"), " a decimal point");
@@ -294,6 +298,8 @@ private:
 public:
   Symmetry(size_t n=0) { M.resize(n); }
   Symmetry(const Motions& m): M(m) {};
+  Symmetry(const std::string& strrep){ this->from_ascii(strrep); };
+  Bravais                getcentring() const;
   const Motions&         getallm() const {return this->M;}
   Matrices<int>          getallr() const;
   Vectors<double>        getallt() const;
