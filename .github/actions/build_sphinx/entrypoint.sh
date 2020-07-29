@@ -63,7 +63,7 @@ fi
 
 for val in $INPUT_PAGES_DIR; do
 	echo ::group::Move documentation into the correct places
-	named_dir="{GITHUB_WORKSPACE}/${val}/${named}"
+	named_dir="${GITHUB_WORKSPACE}/${val}/${named}"
 	# Copy the newly built HTML pages into either gh_pages/latest or gh_pages/[version name]
 	echo_run mkdir -p $named_dir
 	echo_run rsync -a --delete "${HTML_DIR}/" $named_dir
