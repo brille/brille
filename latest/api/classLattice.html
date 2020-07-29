@@ -196,8 +196,8 @@
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK10SpacegroupK8SymmetryK10PointgroupK13PointSymmetryK5Basis">
-<span id="_CPPv3N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK10SpacegroupK8SymmetryK10PointgroupK13PointSymmetryK5Basis"></span><span id="_CPPv2N7Lattice7LatticeERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEEK10SpacegroupK8SymmetryK10PointgroupK13PointSymmetryK5Basis"></span><span id="Lattice::Lattice__std::array:double.3:CR.std::array:double.3:CR.SpacegroupC.SymmetryC.PointgroupC.PointSymmetryC.BasisC"></span><span class="target" id="classLattice_1a5d73bc627169540d719446a8e6c3caa6"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>l</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>a</em>, <em class="property">const</em> <a class="reference internal" href="classSpacegroup.html#_CPPv410Spacegroup" title="Spacegroup">Spacegroup</a> <em>spacegroup</em>, <em class="property">const</em> <a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <em>spacegroupsym</em>, <em class="property">const</em> <a class="reference internal" href="classPointgroup.html#_CPPv410Pointgroup" title="Pointgroup">Pointgroup</a> <em>pointgroup</em>, <em class="property">const</em> <a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> <em>pointgroupsym</em>, <em class="property">const</em> <a class="reference internal" href="classBasis.html#_CPPv45Basis" title="Basis">Basis</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK10SpacegroupK8SymmetryK10PointgroupK13PointSymmetryK5Basis" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis">
+<span id="_CPPv3N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis"></span><span id="_CPPv2N7Lattice7LatticeERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEEK7BravaisK8SymmetryK13PointSymmetryK5Basis"></span><span id="Lattice::Lattice__std::array:double.3:CR.std::array:double.3:CR.BravaisC.SymmetryC.PointSymmetryC.BasisC"></span><span class="target" id="classLattice_1a501e9be5d157d9d9cf7f9798f3b926f9"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>l</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>a</em>, <em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <em>b</em>, <em class="property">const</em> <a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <em>sgs</em>, <em class="property">const</em> <a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> <em>pgs</em>, <em class="property">const</em> <a class="reference internal" href="classBasis.html#_CPPv45Basis" title="Basis">Basis</a> <em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Construct the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a> from its components, excluding the volume which is calculated. </p>
 </dd></dl>
 
@@ -393,33 +393,27 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK7Lattice8get_hallEv">
-<span id="_CPPv3NK7Lattice8get_hallEv"></span><span id="_CPPv2NK7Lattice8get_hallEv"></span><span id="Lattice::get_hallC"></span><span class="target" id="classLattice_1a6bbaf52e1a2341052bba194a378b5601"></span>int <code class="sig-name descname">get_hall</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice8get_hallEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return the Hall number of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
+<dt id="_CPPv4NK7Lattice16get_bravais_typeEv">
+<span id="_CPPv3NK7Lattice16get_bravais_typeEv"></span><span id="_CPPv2NK7Lattice16get_bravais_typeEv"></span><span id="Lattice::get_bravais_typeC"></span><span class="target" id="classLattice_1af3a6040dea69337367608c09a8363946"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">get_bravais_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice16get_bravais_typeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the Bravais centring of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N7Lattice8set_hallEKi">
-<span id="_CPPv3N7Lattice8set_hallEKi"></span><span id="_CPPv2N7Lattice8set_hallEKi"></span><span id="Lattice::set_hall__iC"></span><span class="target" id="classLattice_1a1852214f8d5d7e6918745caa2f9345e6"></span>int <code class="sig-name descname">set_hall</code><span class="sig-paren">(</span><em class="property">const</em> int <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice8set_hallEKi" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Set the symmetry of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a> by changing the Hall number. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK7Lattice21get_spacegroup_objectEv">
-<span id="_CPPv3NK7Lattice21get_spacegroup_objectEv"></span><span id="_CPPv2NK7Lattice21get_spacegroup_objectEv"></span><span id="Lattice::get_spacegroup_objectC"></span><span class="target" id="classLattice_1acc106976340b6caca72182a7ce3f1433"></span><a class="reference internal" href="classSpacegroup.html#_CPPv410Spacegroup" title="Spacegroup">Spacegroup</a> <code class="sig-name descname">get_spacegroup_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice21get_spacegroup_objectEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return the <a class="reference internal" href="classSpacegroup.html#classSpacegroup"><span class="std std-ref">Spacegroup</span></a> object of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK7Lattice21get_pointgroup_objectEv">
-<span id="_CPPv3NK7Lattice21get_pointgroup_objectEv"></span><span id="_CPPv2NK7Lattice21get_pointgroup_objectEv"></span><span id="Lattice::get_pointgroup_objectC"></span><span class="target" id="classLattice_1ab11164b2ec5af6fde806f7bcca609fd9"></span><a class="reference internal" href="classPointgroup.html#_CPPv410Pointgroup" title="Pointgroup">Pointgroup</a> <code class="sig-name descname">get_pointgroup_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice21get_pointgroup_objectEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return the <a class="reference internal" href="classPointgroup.html#classPointgroup"><span class="std std-ref">Pointgroup</span></a> object of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
+<dt id="_CPPv4N7Lattice16set_bravais_typeEK7Bravais">
+<span id="_CPPv3N7Lattice16set_bravais_typeEK7Bravais"></span><span id="_CPPv2N7Lattice16set_bravais_typeEK7Bravais"></span><span id="Lattice::set_bravais_type__BravaisC"></span><span class="target" id="classLattice_1a9ea74138f845b70cd668af7ff2674094"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">set_bravais_type</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice16set_bravais_typeEK7Bravais" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Bravais centring of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK7Lattice23get_spacegroup_symmetryEKi">
 <span id="_CPPv3NK7Lattice23get_spacegroup_symmetryEKi"></span><span id="_CPPv2NK7Lattice23get_spacegroup_symmetryEKi"></span><span id="Lattice::get_spacegroup_symmetry__iCC"></span><span class="target" id="classLattice_1a65ff2cddbd009fc7346f5f50cfdba58f"></span><a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <code class="sig-name descname">get_spacegroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice23get_spacegroup_symmetryEKi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Return the <a class="reference internal" href="classSpacegroup.html#classSpacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operation object of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N7Lattice23set_spacegroup_symmetryERK8Symmetry">
+<span id="_CPPv3N7Lattice23set_spacegroup_symmetryERK8Symmetry"></span><span id="_CPPv2N7Lattice23set_spacegroup_symmetryERK8Symmetry"></span><span id="Lattice::set_spacegroup_symmetry__SymmetryCR"></span><span class="target" id="classLattice_1aa2ffac93732f2f50c96b733b7adabaa7"></span><a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <code class="sig-name descname">set_spacegroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> &amp;<em>gens</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice23set_spacegroup_symmetryERK8Symmetry" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the <a class="reference internal" href="classSpacegroup.html#classSpacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operation object  also sets <a class="reference internal" href="classPointSymmetry.html#classPointSymmetry"><span class="std std-ref">PointSymmetry</span></a>. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -509,21 +503,15 @@
 </dd></dl>
 
 <dl class="cpp var">
-<dt id="_CPPv4N7Lattice3spgE">
-<span id="_CPPv3N7Lattice3spgE"></span><span id="_CPPv2N7Lattice3spgE"></span><span id="Lattice::spg__Spacegroup"></span><span class="target" id="classLattice_1ad3d3ec94b1810bb5ff108bc1ddb90196"></span><a class="reference internal" href="classSpacegroup.html#_CPPv410Spacegroup" title="Spacegroup">Spacegroup</a> <code class="sig-name descname">spg</code><a class="headerlink" href="#_CPPv4N7Lattice3spgE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><a class="reference internal" href="classSpacegroup.html#classSpacegroup"><span class="std std-ref">Spacegroup</span></a> information. </p>
+<dt id="_CPPv4N7Lattice7bravaisE">
+<span id="_CPPv3N7Lattice7bravaisE"></span><span id="_CPPv2N7Lattice7bravaisE"></span><span id="Lattice::bravais__Bravais"></span><span class="target" id="classLattice_1aefd9e18e34554fecb3c5b7a43ae868b1"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">bravais</code><a class="headerlink" href="#_CPPv4N7Lattice7bravaisE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a> centring type. </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt id="_CPPv4N7Lattice6spgsymE">
 <span id="_CPPv3N7Lattice6spgsymE"></span><span id="_CPPv2N7Lattice6spgsymE"></span><span id="Lattice::spgsym__Symmetry"></span><span class="target" id="classLattice_1a612e3c563706469599a5b18de3b2d734"></span><a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <code class="sig-name descname">spgsym</code><a class="headerlink" href="#_CPPv4N7Lattice6spgsymE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><a class="reference internal" href="classSpacegroup.html#classSpacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operators. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt id="_CPPv4N7Lattice3ptgE">
-<span id="_CPPv3N7Lattice3ptgE"></span><span id="_CPPv2N7Lattice3ptgE"></span><span id="Lattice::ptg__Pointgroup"></span><span class="target" id="classLattice_1a8e78e35900948bb4a7bca406f4075cf2"></span><a class="reference internal" href="classPointgroup.html#_CPPv410Pointgroup" title="Pointgroup">Pointgroup</a> <code class="sig-name descname">ptg</code><a class="headerlink" href="#_CPPv4N7Lattice3ptgE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><a class="reference internal" href="classPointgroup.html#classPointgroup"><span class="std std-ref">Pointgroup</span></a> information. </p>
 </dd></dl>
 
 <dl class="cpp var">

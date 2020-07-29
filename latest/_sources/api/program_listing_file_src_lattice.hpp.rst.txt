@@ -63,9 +63,8 @@ Program Listing for File lattice.hpp
      std::array<double,3> len; 
      std::array<double,3> ang; 
      double volume; 
-     Spacegroup spg; 
+     Bravais bravais; 
      Symmetry spgsym; 
-     Pointgroup ptg; 
      PointSymmetry ptgsym; 
      Basis basis; 
    protected:
@@ -100,11 +99,9 @@ Program Listing for File lattice.hpp
      void check_IT_name(const std::string& itname, const std::string& choice="");
    public:
      Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
-             const Spacegroup spacegroup, const Symmetry spacegroupsym,
-             const Pointgroup pointgroup, const PointSymmetry pointgroupsym,
-             const Basis b):
-       len(l), ang(a), spg(spacegroup), spgsym(spacegroupsym), ptg(pointgroup),
-       ptgsym(pointgroupsym), basis(b) {
+             const Bravais b, const Symmetry sgs, const PointSymmetry pgs,
+             const Basis base):
+       len(l), ang(a), bravais(b), spgsym(sgs), ptgsym(pgs), basis(base) {
          this->volume = this->calculatevolume();
        }
      Lattice(const double *, const int h=1);
@@ -164,10 +161,11 @@ Program Listing for File lattice.hpp
      int ispermutation(const Lattice&) const;
      virtual void print();
      virtual std::string string_repr();
-     int get_hall() const {return spg.get_hall_number();}
-     int set_hall(const int h) { check_hall_number(h); return get_hall(); }
-     Spacegroup get_spacegroup_object() const { return spg; }
-     Pointgroup get_pointgroup_object() const { return ptg; }
+     Bravais get_bravais_type() const { return bravais; }
+     Bravais set_bravais_type(const Bravais b) {
+       this->bravais = b;
+       return this->get_bravais_type();
+     }
      Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
        if (time_reversal && !spgsym.has_space_inversion()){
          Symmetry gens = spgsym.generators();
@@ -175,6 +173,12 @@ Program Listing for File lattice.hpp
          gens.add(space_inversion);
          return gens.generate();
        }
+       return spgsym;
+     }
+     Symmetry set_spacegroup_symmetry(const Symmetry& gens){
+       spgsym = gens.generate();
+       bravais = spgsym.getcentring();
+       ptgsym = PointSymmetry(get_unique_rotations(spgsym.getallr(),0));
        return spgsym;
      }
      PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {

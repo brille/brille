@@ -103,10 +103,10 @@ Program Listing for File lattice.cpp
      }
    }
    void Lattice::check_hall_number(const int h){
-     this->spg = Spacegroup(h); // if h is invalid the next three lines might fail`
-     this->ptg = this->spg.get_pointgroup();
-     this->spgsym = this->spg.get_spacegroup_symmetry();
-     this->ptgsym = this->spg.get_pointgroup_symmetry();
+     Spacegroup spg(h); // if h is invalid the next three lines might fail
+     this->bravais = spg.get_bravais_type();
+     this->spgsym = spg.get_spacegroup_symmetry();
+     this->ptgsym = spg.get_pointgroup_symmetry();
    }
    void Lattice::check_IT_name(const std::string& itname, const std::string& choice){
      int hall_number = string_to_hall_number(itname, choice);
@@ -114,24 +114,17 @@ Program Listing for File lattice.cpp
        this->check_hall_number(hall_number);
      } else {
        // maybe itname is actually a non-standard Hall symbol?
-       // possibly leave Spacegroup and Pointgroup (partially) unset
        HallSymbol hs(itname);
+       Symmetry gens;
        if (hs.validate()){
-         Symmetry generators = hs.get_generators();
-         this->spgsym = generators.generate();
-         this->spg.set_hall_symbol(hs.to_ascii()); // use a standardized form
-         this->spg.set_bravais_type(hs.getl());
+         gens = hs.get_generators();
+         bravais = hs.getl();
        } else {
          // last-ditch effort: maybe x,y,z notation Seitz matrices were passed?
-         std::istringstream stream(itname);
-         std::vector<Motion<int,double>> motions;
-         for (std::string m; std::getline(stream, m, ';'); ) motions.push_back(Motion<int,double>(m));
-         Symmetry mgens(motions);
-         Motion<int,double> mone; // initalised to {𝟙|0}
-         if (!mgens.has(mone)) mgens.add(mone); // make sure {𝟙|0}≡E is present
-         this->spgsym = mgens.generate();
+         gens.from_ascii(itname);
+         bravais = Bravais::P; // without any extra information this must be primitive
        }
-       this->ptgsym = PointSymmetry(get_unique_rotations(this->spgsym.getallr(),0));
+       this->set_spacegroup_symmetry(gens);
      }
    }
    double Lattice::unitvolume() const{
@@ -184,7 +177,7 @@ Program Listing for File lattice.cpp
        lstar[i] = 2*PI*sinang[i]*this->len[j]*this->len[k]/this->volume;
        astar[i] = std::acos((cosang[j]*cosang[k]-cosang[i])/(sinang[j]*sinang[k]));
      }
-     return Lattice(lstar, astar, this->spg, this->spgsym, this->ptg, this->ptgsym, this->basis);
+     return Lattice(lstar, astar, this->bravais, this->spgsym, this->ptgsym, this->basis);
    }
    void Lattice::get_metric_tensor(double * mt) const {
      const double *a = this->ang.data();
@@ -426,7 +419,7 @@ Program Listing for File lattice.cpp
    
    
    Direct Direct::primitive(void) const{
-     PrimitiveTransform P(this->spg.get_bravais_type());
+     PrimitiveTransform P(this->bravais);
      if (P.does_anything()){
        double plm[9], lm[9];
        this->get_lattice_matrix(lm); // now returns *row* vectors!

@@ -256,7 +256,7 @@
 
 <span class="kt">bool</span> <span class="n">HallSymbol</span><span class="o">::</span><span class="n">validate</span><span class="p">(){</span>
   <span class="c1">// verify that everything went ok</span>
-  <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span> <span class="o">!=</span> <span class="n">Bravais</span><span class="o">::</span><span class="n">_</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">bravais_is_known</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">);</span>
   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">ss</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">symbols</span><span class="p">)</span> <span class="n">ok</span> <span class="o">&amp;=</span> <span class="n">ss</span><span class="p">.</span><span class="n">validate</span><span class="p">();</span>
   <span class="c1">// further validation could be possible by finding the full spacegroup</span>
   <span class="k">return</span> <span class="n">ok</span><span class="p">;</span>

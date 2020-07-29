@@ -200,6 +200,22 @@
   <span class="p">}</span>
   <span class="k">return</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
 <span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">bravais_is_known</span><span class="p">(</span><span class="k">const</span> <span class="n">Bravais</span> <span class="n">b</span><span class="p">){</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">b</span><span class="p">){</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">P</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">A</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">B</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">C</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">I</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">F</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">R</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>

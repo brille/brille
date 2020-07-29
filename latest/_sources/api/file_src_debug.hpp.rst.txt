@@ -101,13 +101,13 @@ Functions
 
 - :ref:`exhale_function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919`
 
-- :ref:`exhale_function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079`
-
-- :ref:`exhale_function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e`
-
 - :ref:`exhale_function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679`
 
 - :ref:`exhale_function_debug_8hpp_1a139c8c143451283a24423405a1efa5be`
+
+- :ref:`exhale_function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079`
+
+- :ref:`exhale_function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e`
 
 - :ref:`exhale_function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49`
 

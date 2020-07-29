@@ -40,6 +40,8 @@ Functions
 ---------
 
 
+- :ref:`exhale_function_bravais_8cpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca`
+
 - :ref:`exhale_function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87`
 
 - :ref:`exhale_function_bravais_8cpp_1a45870576401424f3a427f4987448c1cd`

@@ -477,6 +477,16 @@ Functions
 .. toctree::
    :maxdepth: 5
 
+   function_bravais_8cpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   function_bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca.rst
+
+.. toctree::
+   :maxdepth: 5
+
    function_bravais_8cpp_1a96a2f0327107e0e0be0be9a97e91cd87.rst
 
 .. toctree::

@@ -1,0 +1,13 @@
+.. _exhale_function_bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca:
+
+Function bravais_is_known(const Bravais)
+========================================
+
+- Defined in :ref:`file_src_bravais.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: bravais_is_known(const Bravais)

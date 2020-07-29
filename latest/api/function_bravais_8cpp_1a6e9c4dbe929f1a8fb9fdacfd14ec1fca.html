@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Program Listing for File bravais.hpp &mdash; brille  documentation</title>
+  <title>Function bravais_is_known(const Bravais) &mdash; brille  documentation</title>
   
 
   
@@ -43,7 +43,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Function bravais_is_known(const Bravais)" href="function_bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca.html" />
+    <link rel="prev" title="Template Function binomial_coefficient" href="function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -147,13 +149,15 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Program Listing for File bravais.hpp</li>
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Function bravais_is_known(const Bravais)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/program_listing_file_src_bravais.hpp.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/function_bravais_8cpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,22 +170,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="program-listing-for-file-bravais-hpp">
-<span id="program-listing-file-src-bravais-hpp"></span><h1>Program Listing for File bravais.hpp<a class="headerlink" href="#program-listing-for-file-bravais-hpp" title="Permalink to this headline">¶</a></h1>
-<p>↰ <a class="reference internal" href="file_src_bravais.hpp.html#file-src-bravais-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bravais.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef _BRAVAIS_H_</span>
-<span class="cp">#define _BRAVAIS_H_</span>
-<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+  <div class="section" id="function-bravais-is-known-const-bravais">
+<span id="exhale-function-bravais-8cpp-1a6e9c4dbe929f1a8fb9fdacfd14ec1fca"></span><h1>Function bravais_is_known(const Bravais)<a class="headerlink" href="#function-bravais-is-known-const-bravais" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_bravais.cpp.html#file-src-bravais-cpp"><span class="std std-ref">File bravais.cpp</span></a></p></li>
+</ul>
+<div class="section" id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp function">
+<dt id="_CPPv416bravais_is_knownK7Bravais">
+<span id="_CPPv316bravais_is_knownK7Bravais"></span><span id="_CPPv216bravais_is_knownK7Bravais"></span><span id="bravais_is_known__BravaisC"></span><span class="target" id="bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca"></span>bool <code class="sig-name descname">bravais_is_known</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416bravais_is_knownK7Bravais" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
 
-<span class="k">enum</span> <span class="k">class</span> <span class="nc">Bravais</span> <span class="p">{</span><span class="n">_</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">R</span><span class="p">};</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">bravais_string</span><span class="p">(</span><span class="k">const</span> <span class="n">Bravais</span> <span class="n">b</span><span class="p">);</span>
-<span class="kt">char</span> <span class="nf">bravais_letter</span><span class="p">(</span><span class="k">const</span> <span class="n">Bravais</span> <span class="n">b</span><span class="p">);</span>
-
-<span class="kt">bool</span> <span class="nf">bravais_is_known</span><span class="p">(</span><span class="k">const</span> <span class="n">Bravais</span> <span class="n">b</span><span class="p">);</span>
-
-<span class="cp">#endif</span>
-</pre></div>
 </div>
 </div>
 
@@ -190,6 +190,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="function_bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca.html" class="btn btn-neutral float-right" title="Function bravais_is_known(const Bravais)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="function_utilities_8hpp_1a96ed974f3ba58e0b3fc16d13d2da4cae.html" class="btn btn-neutral float-left" title="Template Function binomial_coefficient" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

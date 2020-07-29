@@ -215,23 +215,21 @@ Program Listing for File bz_wedge.cpp
    
    void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length){
      debug_exec(std::string msg;)
-     Spacegroup sg = this->outerlattice.get_spacegroup_object();
-     // For P1 the irreducible Brillouin zone *is* the first Brillouin zone
-     // which has already been set
-     if (/*P 1*/sg.get_international_table_number() < 2) return;
-     // The other triclinic spacegroup, P -1, is too complicated for this algorithm
-     if (/*P 1 or P-1*/sg.get_international_table_number() < 3){
-       this->wedge_triclinic();
-       return;
-     }
-     // Get and combine the characteristic points of the first Brillouin zone:
-     // The face centres, face corners, and mid-face-edge points.
-     LQVec<double> special = cat(this->get_points(), this->get_vertices(), this->get_half_edges());
-   
      // Grab the pointgroup symmetry operations
      PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
      // Now restrict the symmetry operations to those with order > 1.
      PointSymmetry ps = fullps.higher(1);
+     // if the full pointgroup contains only 𝟙 (and -𝟙) then ps is empty and there
+     // this algorithm can not be used:
+     if (0 == ps.size()){
+       if (fullps.size() > 1) // 𝟙 & -𝟙 → P -1 triclinic spacegroup
+         this->wedge_triclinic();
+       return;
+     }
+   
+     // Get and combine the characteristic points of the first Brillouin zone:
+     // The face centres, face corners, and mid-face-edge points.
+     LQVec<double> special = cat(this->get_points(), this->get_vertices(), this->get_half_edges());
      std::vector<size_t> perm(ps.size());
      std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
        // ps is sorted in increasing rotation-order order, but we want to sort

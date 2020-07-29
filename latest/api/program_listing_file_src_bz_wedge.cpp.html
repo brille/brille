@@ -374,23 +374,21 @@
 
 <span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">special_2_folds</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">special_mirrors</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">sort_by_length</span><span class="p">){</span>
   <span class="n">debug_exec</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">;)</span>
-  <span class="n">Spacegroup</span> <span class="n">sg</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_spacegroup_object</span><span class="p">();</span>
-  <span class="c1">// For P1 the irreducible Brillouin zone *is* the first Brillouin zone</span>
-  <span class="c1">// which has already been set</span>
-  <span class="k">if</span> <span class="p">(</span><span class="cm">/*P 1*/</span><span class="n">sg</span><span class="p">.</span><span class="n">get_international_table_number</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-  <span class="c1">// The other triclinic spacegroup, P -1, is too complicated for this algorithm</span>
-  <span class="k">if</span> <span class="p">(</span><span class="cm">/*P 1 or P-1*/</span><span class="n">sg</span><span class="p">.</span><span class="n">get_international_table_number</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">){</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_triclinic</span><span class="p">();</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="c1">// Get and combine the characteristic points of the first Brillouin zone:</span>
-  <span class="c1">// The face centres, face corners, and mid-face-edge points.</span>
-  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">special</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_half_edges</span><span class="p">());</span>
-
   <span class="c1">// Grab the pointgroup symmetry operations</span>
   <span class="n">PointSymmetry</span> <span class="n">fullps</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="p">);</span>
   <span class="c1">// Now restrict the symmetry operations to those with order &gt; 1.</span>
   <span class="n">PointSymmetry</span> <span class="n">ps</span> <span class="o">=</span> <span class="n">fullps</span><span class="p">.</span><span class="n">higher</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="c1">// if the full pointgroup contains only 𝟙 (and -𝟙) then ps is empty and there</span>
+  <span class="c1">// this algorithm can not be used:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">fullps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// 𝟙 &amp; -𝟙 → P -1 triclinic spacegroup</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_triclinic</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Get and combine the characteristic points of the first Brillouin zone:</span>
+  <span class="c1">// The face centres, face corners, and mid-face-edge points.</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">special</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_half_edges</span><span class="p">());</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">perm</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
   <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// 0u, 1u, 2u,...</span>
     <span class="c1">// ps is sorted in increasing rotation-order order, but we want to sort</span>
