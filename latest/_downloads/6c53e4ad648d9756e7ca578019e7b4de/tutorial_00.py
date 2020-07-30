@@ -1,37 +1,13 @@
 import os
-import tempfile
-import requests
 import numpy as np, matplotlib as mpl, matplotlib.pyplot as pp
 import brille as b, brille.plotting as bp
-from pathlib import Path
-from euphonic import ForceConstants
-from brilleu import BrillEu
+from brilleu.brilleu import getBrillEuObj
 
 images_dir = os.path.join(os.path.dirname(__file__), 'images')
 def dirsavefig(dirname, filename, transparent=True, **kwds):
     if not os.path.isdir(dirname):
         os.makedirs(dirname)
     pp.savefig(os.path.join(dirname, filename), transparent=transparent, **kwds)
-
-def fetchForceConstants(material):
-    base_url = "https://raw.githubusercontent.com/g5t/brille/master/docs/tutorials"
-    file_to_fetch = material + ".castep_bin"
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        r = requests.get(base_url + "/" + file_to_fetch)
-        if not r.ok:
-            raise Exception("Fetching {} failed with reason '{}'".format(file_to_fetch, r.reason))
-        out_path = Path(tmp_dir, file_to_fetch)
-        open(str(out_path), 'wb').write(r.content)
-        idata = ForceConstants.from_castep(str(out_path))
-    return idata
-
-def getForceConstants(material):
-    docs_dir = os.path.dirname(os.path.abspath(__file__))
-    try:
-        return ForceConstants.from_castep(str(Path(docs_dir, material + ".castep_bin")))
-    except FileNotFoundError:
-        print('{} not found in {}. Fetching remote content.'.format(material, docs_dir))
-        return fetchForceConstants(material)
 
 def centre_to_corner(X):
     dX = np.diff(X, axis=0)/2
@@ -49,7 +25,7 @@ def centre_to_corner(X):
 # Construct a brille BZTrellisQdc object from a Euphonic object.
 # use_c=False ensures the Euphonic C module is *not* used.
 # but *need* to use the brille C++ module, and parallel=True ensures we do so with OpenMP
-nacl = BrillEu(getForceConstants('NaCl'), trellis=True, max_volume=1e-5, parallel=True, use_c=False)
+nacl = getBrillEuObj('NaCl', max_volume=1e-5, parallel=True, use_c=False, sort=True)
 
 # Define a path through reciprocal space from (000) to (123)
 xi = np.linspace(0, 1, 100)
