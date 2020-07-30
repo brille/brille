@@ -5,7 +5,7 @@ Installation Guide
 ==================
 This module relies heavily on C++ wrapped using `pybind11 <https://github.com/pybind/pybind11>`_.
 You can obtain a working copy through the `Python Package Index <https://pypi.org/>`_ using ``pip``
-or by compiling the source after downloading it from the `brille Github repository <https://github.com/g5t/brille>`_.
+or by compiling the source after downloading it from the `brille Github repository <https://github.com/brille/brille>`_.
 
 pip
 ===
@@ -28,7 +28,7 @@ then you can build the latest version of brille from source via
 
 .. code-block:: bash
 
-  git clone https://github.com/g5t/brille
+  git clone https://github.com/brille/brille
   cd brille
   python setup.py install
 
@@ -49,7 +49,7 @@ constructing from source using the ``develop`` option.
 
 .. code-block:: bash
 
-    git clone https://github.com/g5t/brille
+    git clone https://github.com/brille/brille
     cd brille
     python setup.py develop
 

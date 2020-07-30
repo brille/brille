@@ -65,7 +65,7 @@ class CMakeBuild(build_ext):
                 cmake_args += ['-A', 'x64']
             else:
                 cmake_args += ['-A', 'Win32']
-				
+
         if is_mingw():
             cmake_args += ['-G','Unix Makefiles'] # Must be two entries to work
 
@@ -121,7 +121,7 @@ KEYWORDARGS = dict(
     packages=find_packages(),
     extras_require = {'interactive':['matplotlib>=2.2.0',],},
     cmdclass=dict(build_ext=CMakeBuild),
-    url="https://github.com/g5t/brille",
+    url="https://github.com/brille/brille",
     zip_safe=False,
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

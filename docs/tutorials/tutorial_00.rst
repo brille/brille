@@ -34,7 +34,7 @@ conjunction with :download:`this script<tutorial_00.py>` to reproduce the
 content of this tutorial.
 
 .. literalinclude:: tutorial_00.py
-    :lines: 52
+    :lines: 28
 
 Constructing the :py:class:`brille.euphonic.BrEu` object creates a hybrid grid
 in the irreducible Brillouin zone and then uses the
@@ -67,14 +67,14 @@ We can construct points along the path and find :math:`\omega_i(\mathbf{Q})`
 using
 
 .. literalinclude:: tutorial_00.py
-    :lines: 55,56,58
+    :lines: 31,32,34
 
 Since this path passes through four first Brillouin zones, an equivalent path
 must pass through the irreducible Brillouin zone multiple times. We can find
 the irreducible path using
 
 .. literalinclude:: tutorial_00.py
-    :lines: 74
+    :lines: 50
 
 .. figure:: images/nacl_123_disp.png
     :align: center
@@ -130,7 +130,7 @@ Here we will avoid these complications by calculating :math:`S(\mathbf{Q},E)`
 for all points in a :math:`(\mathbf{Q},E)` grid.
 
 .. literalinclude:: tutorial_00.py
-    :lines: 90-95
+    :lines: 66-71
 
 .. figure:: images/nacl_123_sqw.png
     :align: center

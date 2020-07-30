@@ -11,7 +11,7 @@ TEST_CASE("Lattice and its subclasses are tested","[lattice]"){
 
 /*
 Add a test case to expose the bug associated with
-      github.com/g5t/brille/issues/28
+      github.com/brille/brille/issues/28
 which raises an exception due to the valid Hall symbol 'P -2zb' not having
 an assigned Hall 'number' and `Lattice::inner_star` not written to handle
 this valid possibility.
