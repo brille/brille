@@ -58,6 +58,8 @@ public:
   }
   //! Return the number of mesh vertices
   size_t size() const { return this->mesh.number_of_vertices(); }
+  //! Return the number of mesh vertices
+  size_t vertex_count() const { return this->mesh.number_of_vertices(); }
   //! Return the positions of all vertices in the mesh
   const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
   //! Return the tetrahedron indices of the mesh

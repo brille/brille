@@ -19,6 +19,7 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   _bravais.cpp
   _bz.cpp
   _hall_symbol.cpp
+  _interpolation_data.cpp
   _lattice.cpp
   _mesh.cpp
   _nest.cpp
