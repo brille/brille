@@ -29,9 +29,11 @@ a class, :py:class:`brille.euphonic.BrEu`.
 
 The first step in creating an appropriate interpolation grid object is to load
 the force constant data from, e.g., a CASTEP binary file.
-An appropriate file for :download:`NaCl<NaCl.castep_bin>` can be used in
-conjunction with :download:`this script<tutorial_00.py>` to reproduce the
-content of this tutorial.
+An appropriate file for `NaCl`_ can be used in conjunction with
+:download:`this script <tutorial_00.py>` to reproduce the content of this
+tutorial.
+
+.. _NaCl: https://github.com/brille/brilleu/raw/master/brilleu/NaCl.castep_bin
 
 .. literalinclude:: tutorial_00.py
     :lines: 28

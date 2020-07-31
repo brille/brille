@@ -69,6 +69,7 @@ Program Listing for File mesh.hpp
        return *this;
      }
      size_t size() const { return this->mesh.number_of_vertices(); }
+     size_t vertex_count() const { return this->mesh.number_of_vertices(); }
      const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
      const ArrayVector<size_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
      // Get a constant reference to the stored data

@@ -22,10 +22,10 @@ def centre_to_corner(X):
         X[:, np.newaxis, -1]+dY[:, np.newaxis, -1]), axis=1)
     return X
 
-# Construct a brille BZTrellisQdc object from a Euphonic object.
 # use_c=False ensures the Euphonic C module is *not* used.
 # but *need* to use the brille C++ module, and parallel=True ensures we do so with OpenMP
-nacl = getBrillEuObj('NaCl', max_volume=1e-5, parallel=True, use_c=False, sort=True)
+scattering_lengths = {'Na': 3.63, 'Cl': 9.577} # in fm
+nacl = getBrillEuObj('NaCl', max_volume=1e-5, parallel=True, sort=True, scattering_lengths=scattering_lengths)
 
 # Define a path through reciprocal space from (000) to (123)
 xi = np.linspace(0, 1, 100)
@@ -68,14 +68,22 @@ mu, nu = np.mgrid[0:1:50j, 0.5:30:60j]
 En = nu.reshape(nu.size,1)
 Qhkl = np.concatenate((ξ, 2*ξ, 3*ξ), axis=1)
 
-SQE = nacl(Qhkl, En, resfun='sho', param=1., T=1.).reshape(mu.shape)
+brSQE = nacl(Qhkl, En, resfun='sho', param=1., T=1.).reshape(mu.shape)
+euSQE = nacl(Qhkl, En, resfun='sho', param=1., T=1., interpolate=False).reshape(mu.shape)
 
 mu = centre_to_corner(mu)
 nu = centre_to_corner(nu)
-fig = pp.figure(figsize=pp.figaspect(1))
-ax2 = fig.add_axes([0.1,0.1,0.8,0.8])
-ax2.pcolormesh(mu, nu, SQE, shading='flat')
+fig = pp.figure(figsize=pp.figaspect(0.5))
+ax2 = fig.add_axes([0.07,0.1,0.4,0.8])
+ax2.pcolormesh(mu, nu, brSQE, shading='flat')
 ax2.set_xlabel(r'$\xi$ in $\mathbf{Q}=(\xi\,2\xi\,3\xi)$')
 ax2.set_ylabel(r'$E$/meV')
+ax2.set_title('brille')
+
+ax3 = fig.add_axes([0.55,0.1,0.4,0.8])
+ax3.pcolormesh(mu, nu, euSQE, shading='flat')
+ax3.set_xlabel(r'$\xi$ in $\mathbf{Q}=(\xi\,2\xi\,3\xi)$')
+ax3.set_ylabel(r'$E$/meV')
+ax3.set_title('euphonic')
 
 dirsavefig(images_dir, 'nacl_123_sqw.png')
