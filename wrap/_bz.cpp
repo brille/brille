@@ -88,9 +88,23 @@ void wrap_brillouinzone(py::module & m){
     bool *rptr = (bool *) result.request().ptr;
     for (ssize_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
     return result;
-  },"points"_a);
+  },"points"_a, R"pbdoc(
+    Determine whether each of the provided reciprocal lattice points is located
+    within the first Brillouin zone
 
-  cls.def("moveinto",[](CLS &b, py::array_t<double> Q){
+    Parameters
+    ----------
+    Q : :py:class:`numpy.ndarray`
+      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      units of the reciprocal lattice.
+
+    Returns
+    -------
+    :py:class:`numpy.ndarray`
+      Logical array with one less dimension than `Q` and shape `Q.shape[0:-1]`
+  )pbdoc");
+
+  cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
     py::buffer_info bi = Q.request();
     ssize_t ndim=bi.ndim;
     if (bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional Q points is required");
@@ -99,7 +113,7 @@ void wrap_brillouinzone(py::module & m){
     LQVec<double> Qv( b.get_lattice(),(double*) bi.ptr, bi.shape, bi.strides); // memcopy
     LQVec<double> qv(b.get_lattice(), npts); // output
     LQVec<int>  tauv(b.get_lattice(), npts); // output
-    bool success = b.moveinto(Qv,qv,tauv);
+    bool success = b.moveinto(Qv,qv,tauv,threads);
     if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
     auto qout = py::array_t<double, py::array::c_style>(bi.shape);
     auto tout = py::array_t<int, py::array::c_style>(bi.shape);
@@ -112,9 +126,27 @@ void wrap_brillouinzone(py::module & m){
       }
     }
     return py::make_tuple(qout,tout);
-  }, "Q"_a);
+  }, "Q"_a, "threads"_a=0, R"pbdoc(
+    Find points equivalent to those provided within the first Brillouin zone.
 
-  cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q){
+    Parameters
+    ----------
+    Q : :py:class:`numpy.ndarray`
+      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      units of the reciprocal lattice.
+    threads : integer, optional (default 0)
+      The number of parallel threads that should be used. If this value is less
+      than one the maximum number of OpenMP threads will be used -- this value
+      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      typically the number of logical cores if not explicitly set.
+
+    Returns
+    -------
+    :py:class:`numpy.ndarray`
+      The array of equivalent irreducible points for all Q.
+  )pbdoc");
+
+  cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
     py::buffer_info bi = Q.request();
     ssize_t ndim = bi.ndim;
     if (bi.shape[ndim-1] != 3)
@@ -126,7 +158,7 @@ void wrap_brillouinzone(py::module & m){
     LQVec<double> qv(b.get_lattice(), npts);
     LQVec<int>  tauv(b.get_lattice(), npts);
     std::vector<size_t> rotidx(npts), invrotidx(npts);
-    if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx))
+    if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // get the pointgroup symmetry operations indexed by rotidx and invrotidx
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
@@ -152,9 +184,32 @@ void wrap_brillouinzone(py::module & m){
       }
     }
     return py::make_tuple(qout, tout, rout, invrout);
-  }, "Q"_a);
+  }, "Q"_a, "threads"_a=0, R"pbdoc(
+    Find points equivalent to those provided within the irreducible Brillouin zone.
 
-  cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q){
+    The BrillouinZone object defines a volume of reciprocal space which contains
+    an irreducible part of the full reciprocal-space. This method will find
+    points equivalent under the operations of the lattice which fall within this
+    irreducible volume.
+
+    Parameters
+    ----------
+    Q : :py:class:`numpy.ndarray`
+      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      units of the reciprocal lattice.
+    threads : integer, optional (default 0)
+      The number of parallel threads that should be used. If this value is less
+      than one the maximum number of OpenMP threads will be used -- this value
+      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      typically the number of logical cores if not explicitly set.
+
+    Returns
+    -------
+    :py:class:`numpy.ndarray`
+      The array of equivalent irreducible points for all Q.
+  )pbdoc");
+
+  cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
     py::buffer_info bi = Q.request();
     ssize_t ndim = bi.ndim;
     if (bi.shape[ndim-1] != 3)
@@ -165,7 +220,7 @@ void wrap_brillouinzone(py::module & m){
     // prepare intermediate outputs
     LQVec<double> qv(b.get_lattice(), npts);
     std::vector<std::array<int,9>> rots(npts);
-    if (!b.ir_moveinto_wedge(Qv, qv, rots))
+    if (!b.ir_moveinto_wedge(Qv, qv, rots, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     auto qout = py::array_t<double, py::array::c_style>(bi.shape);
@@ -181,5 +236,29 @@ void wrap_brillouinzone(py::module & m){
       for (size_t k=0; k<3u; ++k) rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
     }
     return py::make_tuple(qout, rout);
-  }, "Q"_a);
+  }, "Q"_a, "threads"_a=0, R"pbdoc(
+    Find points equivalent to those provided within the irreducible wedge.
+
+    The BrillouinZone object defines a wedge of reciprocal space which contains
+    an irreducible part of the full-space 4π steradian solid angle. This method
+    will find points equivalent under the pointgroup operations of the lattice
+    which fall within this irreducible solid angle and maintain their absolute
+    magntiude.
+
+    Parameters
+    ----------
+    Q : :py:class:`numpy.ndarray`
+      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      units of the reciprocal lattice.
+    threads : integer, optional (default 0)
+      The number of parallel threads that should be used. If this value is less
+      than one the maximum number of OpenMP threads will be used -- this value
+      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      typically the number of logical cores if not explicitly set.
+
+    Returns
+    -------
+    :py:class:`numpy.ndarray`
+      The array of equivalent in-wedge points for all Q
+  )pbdoc");
 }
