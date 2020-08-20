@@ -48,7 +48,6 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   }
   index_t nNodes = this->node_count();
 
-
   ArrayVector<double> node_centres(this->trellis_centres());
   double max_dist = this->trellis_node_circumsphere_radius() + poly.get_circumsphere_radius();
   std::vector<bool> node_is_null = norm(node_centres-poly.get_centroid()).is_approx(Comp::gt, max_dist).to_std();
@@ -92,9 +91,8 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
         map_idx[idx] = n_kept++;
       for (auto idx: this_node_idx) node_index_map[i].push_back(map_idx[idx]);
     } else if (!node_is_null[i]) {
-      Polyhedron this_node_cube = node_zero.translate(node_centres.extract(i));
-      // Polyhedron this_node_cube = Polyhedron(this_node_int);
-      Polyhedron this_node = this_node_cube.intersection(poly);
+      // Find the intersection of the Node Polyhedron and the input Polyhedron
+      Polyhedron this_node = node_zero.translate(node_centres.extract(i)).intersection(poly);
       node_is_null[i] = this_node.get_vertices().size() < 4u;
       if (!node_is_null[i]){
         double this_node_volume = this_node.get_volume();
