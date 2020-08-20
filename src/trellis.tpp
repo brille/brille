@@ -46,20 +46,16 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       boundaries_[i].push_back(boundaries_[i].back()+node_length[i]);
     debug_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
   }
-  // find which trellis intersections are inside of the polyhedron
-  std::vector<std::array<double,3>> va_int;
-  for (double z: boundaries_[2]) for (double y: boundaries_[1]) for (double x: boundaries_[0])
-    va_int.push_back({x,y,z});
-  // the definition of this intersections span needs to match the looping order above!
-  std::array<size_t,3> intersections_span{1,boundaries_[0].size(),boundaries_[0].size()*boundaries_[1].size()};
-  ArrayVector<double> all_intersections(va_int);
-  /* Each node with linear index idx has a subscripted index (i,j,k)
-     and is surrounded by the trellis intersections of boundaries
-     (i,j,k) + { (000), (100), (110), (010), (101), (001), (011), (111)};
-  */
-  // the order of the cube node intersections is paramount:
-  std::vector<std::array<index_t,3>> node_intersections{{{0,0,0}},{{1,0,0}},{{1,1,0}},{{0,1,0}},{{1,0,1}},{{0,0,1}},{{0,1,1}},{{1,1,1}}};
   index_t nNodes = this->node_count();
+
+
+  ArrayVector<double> node_centres(this->trellis_centres());
+  double max_dist = this->trellis_node_circumsphere_radius() + poly.get_circumsphere_radius();
+  std::vector<bool> node_is_null = norm(node_centres-poly.get_centroid()).is_approx(Comp::gt, max_dist).to_std();
+
+  ArrayVector<double> all_intersections(this->trellis_intersections());
+  auto intersections_span = this->trellis_intersections_span();
+  auto node_intersections = this->trellis_local_cube_indices();
   /*
   Find intersections corresponding to nodes that intersect with the polyhedron:
   The original approach was too simplistic as it *only* considered whether an
@@ -71,11 +67,10 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   ArrayVector<double> extra_intersections(3u, n_intersections >> 1u);
   std::vector<size_t> map_idx(n_intersections, n_intersections+1);
   std::vector<std::vector<index_t>> node_index_map(n_intersections);
-  // ArrayVector<bool> are_inside = poly.contains(all_intersections);
-  std::vector<bool> node_is_cube(nNodes, false), node_is_null(nNodes, false);
+  std::vector<bool> node_is_cube(nNodes, false);
   ArrayVector<double> Gamma(3u, 1u, 0.);
   std::map<size_t, Polyhedron> poly_stash;
-  for (index_t i=0; i<nNodes; ++i){
+  for (index_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
     std::array<index_t,3> node_ijk = this->idx2sub(i);
     std::vector<index_t> this_node_idx;
     for (auto ni: node_intersections){
@@ -84,24 +79,19 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
         intersection_idx += (node_ijk[j]+ni[j])*intersections_span[j];
       this_node_idx.push_back(intersection_idx);
     }
-    ArrayVector<double> this_node_intersections = all_intersections.extract(this_node_idx);
+    ArrayVector<double> this_node_int = all_intersections.extract(this_node_idx);
 
-    Polyhedron this_node_cube = Polyhedron(this_node_intersections);
-    if (!always_triangulate){
-      node_is_cube[i] = poly.contains(this_node_intersections).count_true() == 8;
-      if (node_is_cube[i]){
-        // check for the node containing Γ
-        node_is_cube[i] = this_node_cube.contains(Gamma).count_true() == 0u;
-      }
-    }
+    if (!always_triangulate && poly.contains(this_node_int).all_true()
+      && !(this_node_int.min(0).all_approx(Comp::le, 0.) && this_node_int.max(0).all_approx(Comp::ge, 0.)) )
+      node_is_cube[i] = true;
 
     if (node_is_cube[i]){
-      info_update_if(poly.contains(this_node_intersections).count_true() != 8, "Node ",i," is a cube but the polyhedron does not contain all of its vertices?!");
       debug_update("Node ",i," is a cube");
       for (auto idx: this_node_idx) if (map_idx[idx] > n_intersections)
         map_idx[idx] = n_kept++;
       for (auto idx: this_node_idx) node_index_map[i].push_back(map_idx[idx]);
-    } else {
+    } else if (!node_is_null[i]) {
+      Polyhedron this_node_cube = Polyhedron(this_node_int);
       Polyhedron this_node = this_node_cube.intersection(poly);
       node_is_null[i] = this_node.get_vertices().size() < 4u;
       if (!node_is_null[i]){
@@ -114,7 +104,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       for (size_t j=0; j<this_node_verts.size(); ++j){
         const ArrayVector<double> tnvj{this_node_verts.extract(j)};
         debug_update("checking vertex ", tnvj.to_string(""));
-        auto cube_idx = find(norm(this_node_intersections-tnvj).is_approx(Comp::eq,0.));
+        auto cube_idx = find(norm(this_node_int-tnvj).is_approx(Comp::eq,0.));
         if (cube_idx.size()>1) throw std::logic_error("Too many matching vertices");
         if (cube_idx.size()==1){
           index_t local_idx = this_node_idx[cube_idx[0]];
@@ -141,7 +131,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
         }
       }
       if (!node_is_null[i] && this_node.contains(Gamma).count_true() > 0){
-        auto gamma_idx = find(norm(this_node_intersections-Gamma).is_approx(Comp::eq, 0.));
+        auto gamma_idx = find(norm(this_node_int-Gamma).is_approx(Comp::eq, 0.));
         if (gamma_idx.size() == 0) {
           gamma_idx = find(norm(extra_intersections.first(n_extra)-Gamma).is_approx(Comp::eq, 0.));
           if (gamma_idx.size() == 0) {
@@ -151,7 +141,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
           }
         }
       }
-    if (!node_is_null[i]) poly_stash.emplace(i, this_node);
+      if (!node_is_null[i]) poly_stash.emplace(i, this_node);
     }
   }
 
@@ -181,10 +171,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       for (auto idx: node_index_map[i])
         poly_vert_idx.push_back( idx < n_kept ? idx : idx - n_intersections + n_kept);
       auto node_verts = vertices_.extract(poly_vert_idx);
-      // reconstructing the polyhedron for this node could be problematic if
-      // the input polyhedron is not convex.
-      // Think about storing the polyhedron in a std::map instead?
-      // Polyhedron this_node(node_verts);
+      // get the stashed Polyhedron from before:
       auto this_node = poly_stash[i];
       bool contains_Gamma = this_node.contains(Gamma).count_true() == 1u;
       // Triangulate the node polyhedron into tetrahedra

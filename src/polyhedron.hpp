@@ -315,6 +315,11 @@ public:
       multiply_matrix_vector<double,T,double>(newn.data(i), rot.data(), normals.data(i));
     return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
   }
+  template<class T> Polyhedron translate(const ArrayVector<T>& vec) const {
+    if (vec.size() != 1 || vec.numel() != 3)
+      throw std::runtime_error("Translating a Polyhedron requires a single three-vector");
+    return Polyhedron(vertices+vec, points+vec, normals, this->faces_per_vertex, this->vertices_per_face);
+  }
   Polyhedron operator+(const Polyhedron& other) const {
     size_t d = this->vertices.numel();
     if (other.vertices.numel() != d) throw std::runtime_error("Only equal dimensionality polyhedra can be combined.");
@@ -441,6 +446,9 @@ public:
     double normalisation = 1.0/(48 * this->get_volume());
     for (int j=0; j<3; ++j) centroid[j] *= normalisation;
     return ArrayVector<double>(3u, 1u, centroid);
+  }
+  double get_circumsphere_radius(void) const {
+    return norm(vertices - this->get_centroid()).max(0).getvalue(0,0);
   }
 protected:
   void keep_unique_vertices(void){
