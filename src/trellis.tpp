@@ -70,6 +70,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   std::vector<bool> node_is_cube(nNodes, false);
   ArrayVector<double> Gamma(3u, 1u, 0.);
   std::map<size_t, Polyhedron> poly_stash;
+  Polyhedron node_zero = this->trellis_local_cube();
   for (index_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
     std::array<index_t,3> node_ijk = this->idx2sub(i);
     std::vector<index_t> this_node_idx;
@@ -91,7 +92,8 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
         map_idx[idx] = n_kept++;
       for (auto idx: this_node_idx) node_index_map[i].push_back(map_idx[idx]);
     } else if (!node_is_null[i]) {
-      Polyhedron this_node_cube = Polyhedron(this_node_int);
+      Polyhedron this_node_cube = node_zero.translate(node_centres.extract(i));
+      // Polyhedron this_node_cube = Polyhedron(this_node_int);
       Polyhedron this_node = this_node_cube.intersection(poly);
       node_is_null[i] = this_node.get_vertices().size() < 4u;
       if (!node_is_null[i]){
