@@ -14,11 +14,13 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#include <cassert>
 
 template<class T, class R>
 PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate):
   polyhedron_(poly), vertices_({3,0})
 {
+  assert(poly.num_vertices() > 3 && poly.get_volume() > 0);
   // find the extents of the polyhedron
   std::array<std::array<double,2>,3> minmax;
   for (int i=0; i<3; ++i){

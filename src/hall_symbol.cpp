@@ -5,6 +5,7 @@
 bool HallSymbol::from_ascii(const std::string& s){
   char c;
   bool hassubsup;
+  this->L = Bravais::_;
   hassubsup = s.find('^') != std::string::npos;
   hassubsup |= s.find('_') != std::string::npos;
   // bool hasspace = s.find(' ') != std::string::npos;

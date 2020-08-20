@@ -774,12 +774,9 @@ public:
   */
   bool intersects(const Polyhedron& other) const {
     verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
-    ArrayVector<double> centroid = this->get_centroid();
-    Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
-    Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
-    double iv = ipoly.get_volume();
+    auto itrsct = Polyhedron::bisect(*this, other.normals, other.points);
     // If two polyhedra intersect one another, their intersection is not null.
-    return !approx_scalar(iv, 0.);
+    return !approx_scalar(itrsct.get_volume(), 0.);
   }
   bool fuzzy_intersects(const Polyhedron& other) const {
     verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
@@ -1026,6 +1023,8 @@ public:
         verbose_update("keep? plane normals:\n",pn.to_string(keep));
         verbose_update("keep? plane points:\n",pp.to_string(keep));
         // use the Polyhedron intializer to sort out fpv and vpf -- really just fpv, vpf should be correct
+	if (pv.size() < 4 || pp.size() < 4 || pn.size() < 4)
+		return Polyhedron();
         pout = Polyhedron(pv, pp, pn, vpf);
         // pout = Polyhedron(pv);
         verbose_update("New ",pout.string_repr());
