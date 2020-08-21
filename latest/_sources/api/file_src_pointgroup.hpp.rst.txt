@@ -76,9 +76,9 @@ Functions
 
 - :ref:`exhale_function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7`
-
 - :ref:`exhale_function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7`
 
 - :ref:`exhale_function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c`
 

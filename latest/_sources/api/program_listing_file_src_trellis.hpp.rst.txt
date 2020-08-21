@@ -600,6 +600,55 @@ Program Listing for File trellis.hpp
      }
      std::set<size_t> collect_keys();
      std::set<size_t> collect_keys_node(const index_t);
+   
+     std::vector<std::array<double,3>> trellis_centres() const {
+       std::array<std::vector<double>,3> cents;
+       for (size_t i=0; i<3; ++i) for (size_t j=0; j<boundaries_[i].size()-1; ++j)
+         cents[i].push_back((boundaries_[i][j]+boundaries_[i][j+1])/2);
+       std::vector<std::array<double,3>> centres;
+       for (auto z: cents[2]) for (auto y: cents[1]) for (auto x: cents[0])
+         centres.push_back({x,y,z});
+       return centres;
+     }
+     std::array<size_t,3> trellis_centres_span() const {
+       size_t cs0{boundaries_[0].size()-1}, cs1{boundaries_[1].size()-1};
+       return std::array<size_t,3>({1, cs0, cs0*cs1});
+     }
+     std::vector<std::array<double,3>> trellis_intersections() const {
+       std::vector<std::array<double,3>> intersections;
+       for (auto z: boundaries_[2]) for (auto y: boundaries_[1]) for (auto x: boundaries_[0])
+         intersections.push_back({x,y,z});
+       return intersections;
+     }
+     std::array<size_t,3> trellis_intersections_span() const {
+       size_t bs0{boundaries_[0].size()}, bs1{boundaries_[1].size()};
+       return std::array<size_t,3>({1, bs0, bs0*bs1});
+     }
+     std::vector<std::array<index_t,3>> trellis_local_cube_indices() const {
+       /* Each node with linear index idx has a subscripted index (i,j,k)
+          and is surrounded by the trellis intersections of boundaries
+          (i,j,k) + { (000), (100), (110), (010), (101), (001), (011), (111)};
+       */
+       // the order of the cube node intersections is paramount:
+       std::vector<std::array<index_t,3>> idx{{{0,0,0}},{{1,0,0}},{{1,1,0}},{{0,1,0}},{{1,0,1}},{{0,0,1}},{{0,1,1}},{{1,1,1}}};
+       return idx;
+     }
+     Polyhedron trellis_local_cube() const {
+       std::array<double,3> min_corner, max_corner;
+       for (size_t i=0; i<3; ++i){
+         double cen = (boundaries_[i][0] + boundaries_[i][1])/2;
+         min_corner[i] = (boundaries_[i][0] < boundaries_[i][1] ? boundaries_[i][0] : boundaries_[i][1])-cen;
+         max_corner[i] = (boundaries_[i][0] > boundaries_[i][1] ? boundaries_[i][0] : boundaries_[i][1])-cen;
+       }
+       return polyhedron_box(min_corner, max_corner);
+     }
+     double trellis_node_circumsphere_radius() const {
+       // this will break if the boundaries_ are ever allowed to be non-uniform
+       double a = boundaries_[0][1]-boundaries_[0][0];
+       double b = boundaries_[1][1]-boundaries_[1][0];
+       double c = boundaries_[2][1]-boundaries_[2][0];
+       return 0.5*std::sqrt(a*a+b*b+c*c);
+     }
    };
    
    #include "trellis.tpp"
