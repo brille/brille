@@ -26,6 +26,7 @@
 #include <math.h>
 // #include <complex> // included by debug
 #include <numeric>
+#include <tuple>
 #include "debug.hpp"
 
 // A mulitplier for the approximate-comparison tolerance
