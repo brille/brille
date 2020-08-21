@@ -24,6 +24,7 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       run: |
         brew install libomp
+        brew install cmake
 
     - uses: actions/checkout@v2
 
