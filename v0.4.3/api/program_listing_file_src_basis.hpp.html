@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File basis.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File basis.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_basis.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-basis-hpp">
+<span id="program-listing-file-src-basis-hpp"></span><h1>Program Listing for File basis.hpp<a class="headerlink" href="#program-listing-for-file-basis-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_basis.hpp.html#file-src-basis-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/basis.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2020 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef BASIS_HPP</span>
+<span class="cp">#define BASIS_HPP</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;tuple&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;symmetry.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;utilities.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Basis</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">using</span> <span class="n">point</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">index</span> <span class="o">=</span> <span class="kt">unsigned</span> <span class="kt">long</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">point</span><span class="o">&gt;</span> <span class="n">positions_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index</span><span class="o">&gt;</span> <span class="n">types_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">Basis</span><span class="p">(){};</span>
+  <span class="n">Basis</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">point</span><span class="o">&gt;&amp;</span> <span class="n">pos</span><span class="p">)</span><span class="o">:</span> <span class="n">positions_</span><span class="p">(</span><span class="n">pos</span><span class="p">){</span>
+    <span class="n">types_</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">types_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">types_</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">Basis</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">point</span><span class="o">&gt;&amp;</span> <span class="n">pos</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index</span><span class="o">&gt;&amp;</span> <span class="n">typ</span><span class="p">)</span><span class="o">:</span> <span class="n">positions_</span><span class="p">(</span><span class="n">pos</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pos</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">typ</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+      <span class="n">types_</span> <span class="o">=</span> <span class="n">typ</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">types_</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">types_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">types_</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">();}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">point</span><span class="o">&gt;</span> <span class="n">positions</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">positions_</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">point</span> <span class="n">position</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+      <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">positions_</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Provided index is out of bounds&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">index</span><span class="o">&gt;</span> <span class="n">types</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">types_</span><span class="p">;}</span>
+  <span class="c1">// Check if there is an atom in the basis with position ⃗k&#39; =  ⃗K + ⃗G</span>
+  <span class="c1">// if so, return its index and ⃗G</span>
+  <span class="c1">// otherwise, return the number of atoms and ⃗K - ⃗G (which is not an existant atom position)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">equivalent_to</span><span class="p">(</span><span class="k">const</span> <span class="n">point</span><span class="o">&amp;</span> <span class="n">Kappa</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// find κ&#39; equivalent to K in the first unit cell, all elements ∈ [0,1)</span>
+    <span class="c1">// We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce</span>
+    <span class="c1">// by looking for an equivalent Κ&#39; = Κ%1. This discontinuity near 0 and 1</span>
+    <span class="c1">// is exactly what we don&#39;t want. Instead map numbers near 0 and near 1 to</span>
+    <span class="c1">// near zero before checking for point equivalency</span>
+    <span class="k">auto</span> <span class="n">checker</span> <span class="o">=</span> <span class="p">[</span><span class="n">Kappa</span><span class="p">](</span><span class="k">const</span> <span class="n">point</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">){</span>
+      <span class="n">point</span> <span class="n">d</span><span class="p">,</span> <span class="n">z</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+      <span class="c1">// find the difference vector % 1, with the discontinuity moved to 0.5</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Kappa</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">std</span><span class="o">::</span><span class="n">floor</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">-</span><span class="mf">0.5</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nf">approx_vector</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">z</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+    <span class="p">};</span>
+    <span class="c1">// now search for κ&#39;</span>
+    <span class="k">auto</span> <span class="n">kp_itr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">positions_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">positions_</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">checker</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="n">kp_itr</span> <span class="o">!=</span> <span class="n">positions_</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+    <span class="c1">// κ&#39; (or size(positions_) if no equivalent position found)</span>
+    <span class="kt">size_t</span> <span class="n">kp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">positions_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">kp_itr</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">kp</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// apply the Motion op (a Spacegroup symmetry operation) to atom position k</span>
+  <span class="c1">// then check if the resulting position has an equivalent index k&#39;</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">equivalent_after_operation</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">Motion</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">op</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&gt;=</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;invalid atom position index&quot;</span><span class="p">);</span>
+    <span class="n">point</span> <span class="n">K_pos</span> <span class="o">=</span> <span class="n">op</span><span class="p">.</span><span class="n">move_point</span><span class="p">(</span><span class="n">positions_</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">equivalent_to</span><span class="p">(</span><span class="n">K_pos</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// apply the matrix op (a Pointgroup symmetry operation) to atom position k</span>
+  <span class="c1">// then check if the resulting position ahs an equivalent index k&#39;</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">equivalent_after_operation</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;&amp;</span> <span class="n">op</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&gt;=</span><span class="n">positions_</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;invalid atom positon index&quot;</span><span class="p">);</span>
+    <span class="n">point</span> <span class="n">K_pos</span><span class="p">;</span>
+    <span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">K_pos</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">op</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">positions_</span><span class="p">[</span><span class="n">k</span><span class="p">].</span><span class="n">data</span><span class="p">());</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">equivalent_to</span><span class="p">(</span><span class="n">K_pos</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">//</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">repr</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">repr</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">types_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot; : &quot;</span> <span class="o">+</span> <span class="s">&quot;( &quot;</span>
+            <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">positions_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
+            <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">positions_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
+            <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">positions_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>  <span class="o">+</span> <span class="s">&quot; )</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">repr</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="cp">#endif </span><span class="c1">// BASIS_HPP</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

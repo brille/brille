@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class PolyhedronTrellis &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class PolyNode" href="classPolyNode.html" />
+    <link rel="prev" title="Class Polyhedron" href="classPolyhedron.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class PolyhedronTrellis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classPolyhedronTrellis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-polyhedrontrellis">
+<span id="exhale-class-classpolyhedrontrellis"></span><h1>Template Class PolyhedronTrellis<a class="headerlink" href="#template-class-polyhedrontrellis" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derived-type">
+<h3>Derived Type<a class="headerlink" href="#derived-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">BrillouinZoneTrellis3&lt;</span> <span class="pre">T,</span> <span class="pre">R</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classBrillouinZoneTrellis3.html#exhale-class-classbrillouinzonetrellis3"><span class="std std-ref">Template Class BrillouinZoneTrellis3</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E17PolyhedronTrellis">
+<span id="_CPPv3I00E17PolyhedronTrellis"></span><span id="_CPPv2I00E17PolyhedronTrellis"></span>template&lt;typename <code class="sig-name descname">T</code>, typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classPolyhedronTrellis"></span><em class="property">class </em><code class="sig-name descname">PolyhedronTrellis</code><a class="headerlink" href="#_CPPv4I00E17PolyhedronTrellis" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Subclassed by <a class="reference internal" href="classBrillouinZoneTrellis3.html#classBrillouinZoneTrellis3"><span class="std std-ref">BrillouinZoneTrellis3&lt; T, R &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N17PolyhedronTrellis17PolyhedronTrellisERK10PolyhedronKdKb">
+<span id="_CPPv3N17PolyhedronTrellis17PolyhedronTrellisERK10PolyhedronKdKb"></span><span id="_CPPv2N17PolyhedronTrellis17PolyhedronTrellisERK10PolyhedronKdKb"></span><span id="PolyhedronTrellis::PolyhedronTrellis__PolyhedronCR.doubleC.bC"></span><span class="target" id="classPolyhedronTrellis_1a19926a9f2a063a73d5af56d9d6ef5a05"></span><code class="sig-name descname">PolyhedronTrellis</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classPolyhedron.html#_CPPv410Polyhedron" title="Polyhedron">Polyhedron</a> &amp;<em>polyhedron</em>, <em class="property">const</em> double <em>max_volume</em>, <em class="property">const</em> bool <em>always_triangulate</em> = false<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17PolyhedronTrellis17PolyhedronTrellisERK10PolyhedronKdKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N17PolyhedronTrellis17PolyhedronTrellisEv">
+<span id="_CPPv3N17PolyhedronTrellis17PolyhedronTrellisEv"></span><span id="_CPPv2N17PolyhedronTrellis17PolyhedronTrellisEv"></span><span id="PolyhedronTrellis::PolyhedronTrellis"></span><span class="target" id="classPolyhedronTrellis_1a0a7bab35170ddeb11413120dd594b98d"></span><code class="sig-name descname">PolyhedronTrellis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17PolyhedronTrellis17PolyhedronTrellisEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis21expected_vertex_countEv">
+<span id="_CPPv3NK17PolyhedronTrellis21expected_vertex_countEv"></span><span id="_CPPv2NK17PolyhedronTrellis21expected_vertex_countEv"></span><span id="PolyhedronTrellis::expected_vertex_countC"></span><span class="target" id="classPolyhedronTrellis_1a8194278e4ff99d4aa9eec3eeabe0a079"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">expected_vertex_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis21expected_vertex_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis12vertex_countEv">
+<span id="_CPPv3NK17PolyhedronTrellis12vertex_countEv"></span><span id="_CPPv2NK17PolyhedronTrellis12vertex_countEv"></span><span id="PolyhedronTrellis::vertex_countC"></span><span class="target" id="classPolyhedronTrellis_1aa5374ffd1f6a201299fb54f1816a22e1"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">vertex_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis12vertex_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis8verticesEv">
+<span id="_CPPv3NK17PolyhedronTrellis8verticesEv"></span><span id="_CPPv2NK17PolyhedronTrellis8verticesEv"></span><span id="PolyhedronTrellis::vertices__voidC"></span><span class="target" id="classPolyhedronTrellis_1aca532d448ef33bfc0d029c2d0aff2f68"></span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<code class="sig-name descname">vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis8verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N17PolyhedronTrellis8verticesERK11ArrayVectorIdE">
+<span id="_CPPv3N17PolyhedronTrellis8verticesERK11ArrayVectorIdE"></span><span id="_CPPv2N17PolyhedronTrellis8verticesERK11ArrayVectorIdE"></span><span id="PolyhedronTrellis::vertices__ArrayVector:double:CR"></span><span class="target" id="classPolyhedronTrellis_1a566a3951c457368bba005f30e3fba564"></span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<code class="sig-name descname">vertices</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17PolyhedronTrellis8verticesERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis13cube_verticesEv">
+<span id="_CPPv3NK17PolyhedronTrellis13cube_verticesEv"></span><span id="_CPPv2NK17PolyhedronTrellis13cube_verticesEv"></span><span id="PolyhedronTrellis::cube_vertices__voidC"></span><span class="target" id="classPolyhedronTrellis_1a26b3a3a1bd7d5a9901236eba2a010ef9"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">cube_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis13cube_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis13poly_verticesEv">
+<span id="_CPPv3NK17PolyhedronTrellis13poly_verticesEv"></span><span id="_CPPv2NK17PolyhedronTrellis13poly_verticesEv"></span><span id="PolyhedronTrellis::poly_vertices__voidC"></span><span class="target" id="classPolyhedronTrellis_1aef06c28805b19c08a56a1211bfc1a158"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">poly_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis13poly_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis24vertices_per_tetrahedronEv">
+<span id="_CPPv3NK17PolyhedronTrellis24vertices_per_tetrahedronEv"></span><span id="_CPPv2NK17PolyhedronTrellis24vertices_per_tetrahedronEv"></span><span id="PolyhedronTrellis::vertices_per_tetrahedron__voidC"></span><span class="target" id="classPolyhedronTrellis_1a90b8544af08a61e00f643b0850fcdda6"></span>std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 4&gt;&gt; <code class="sig-name descname">vertices_per_tetrahedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis24vertices_per_tetrahedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis15indices_weightsERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE">
+<span id="_CPPv3NK17PolyhedronTrellis15indices_weightsERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="_CPPv2NK17PolyhedronTrellis15indices_weightsERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="PolyhedronTrellis::indices_weights__ArrayVector:double:CR.std::vector:index_t:R.std::vector:double:RC"></span><span class="target" id="classPolyhedronTrellis_1a239d47e159e9d6119f8395ff9ae3e5e7"></span>bool <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; &amp;<em>indices</em>, std::vector&lt;double&gt; &amp;<em>weights</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis15indices_weightsERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK17PolyhedronTrellis26check_before_interpolatingEjRK11ArrayVectorI1SE">
+<span id="_CPPv3I0ENK17PolyhedronTrellis26check_before_interpolatingERK11ArrayVectorI1SE"></span><span id="_CPPv2I0ENK17PolyhedronTrellis26check_before_interpolatingERK11ArrayVectorI1SE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1a8335f366659c4ca27dba174a1b94c0e4"></span>unsigned <code class="sig-name descname">check_before_interpolating</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK17PolyhedronTrellis26check_before_interpolatingEjRK11ArrayVectorI1SE" title="PolyhedronTrellis::check_before_interpolating::S">S</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK17PolyhedronTrellis26check_before_interpolatingEjRK11ArrayVectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdE">
+<span id="_CPPv3NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdE"></span><span id="_CPPv2NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdE"></span><span id="PolyhedronTrellis::interpolate_at__ArrayVector:double:CRC"></span><span class="target" id="classPolyhedronTrellis_1a34c7b4c7600c357b3de8a872773b0f84"></span>std::tuple&lt;<a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::T">T</a>&gt;, <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::R">R</a>&gt;&gt; <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdEKi">
+<span id="_CPPv3NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdEKi"></span><span id="_CPPv2NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdEKi"></span><span id="PolyhedronTrellis::interpolate_at__ArrayVector:double:CR.iCC"></span><span class="target" id="classPolyhedronTrellis_1aeee44bf379ad64f59f7f074cdef2a99b"></span>std::tuple&lt;<a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::T">T</a>&gt;, <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::R">R</a>&gt;&gt; <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em>, <em class="property">const</em> int <em>threads</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis14interpolate_atERK11ArrayVectorIdEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N17PolyhedronTrellis10node_countEv">
+<span id="_CPPv3N17PolyhedronTrellis10node_countEv"></span><span id="_CPPv2N17PolyhedronTrellis10node_countEv"></span><span id="PolyhedronTrellis::node_count"></span><span class="target" id="classPolyhedronTrellis_1a64c72455d0657e8eac35d8751ca12ffd"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">node_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17PolyhedronTrellis10node_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis4sizeEv">
+<span id="_CPPv3NK17PolyhedronTrellis4sizeEv"></span><span id="_CPPv2NK17PolyhedronTrellis4sizeEv"></span><span id="PolyhedronTrellis::sizeC"></span><span class="target" id="classPolyhedronTrellis_1a4450181ea1ceb4624c0928ffb4516a2c"></span>std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 3&gt; <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis4spanEv">
+<span id="_CPPv3NK17PolyhedronTrellis4spanEv"></span><span id="_CPPv2NK17PolyhedronTrellis4spanEv"></span><span id="PolyhedronTrellis::spanC"></span><span class="target" id="classPolyhedronTrellis_1ae6ae2a3430854bc210d17257a935d96d"></span>std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 3&gt; <code class="sig-name descname">span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis4spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis14node_subscriptERK11ArrayVectorIdE">
+<span id="_CPPv3NK17PolyhedronTrellis14node_subscriptERK11ArrayVectorIdE"></span><span id="_CPPv2NK17PolyhedronTrellis14node_subscriptERK11ArrayVectorIdE"></span><span id="PolyhedronTrellis::node_subscript__ArrayVector:double:CRC"></span><span class="target" id="classPolyhedronTrellis_1ae14cbe92ea57a0fbf3340417a9aec96f"></span>std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis14node_subscriptERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK17PolyhedronTrellis10node_indexE7index_tRK1S">
+<span id="_CPPv3I0ENK17PolyhedronTrellis10node_indexERK1S"></span><span id="_CPPv2I0ENK17PolyhedronTrellis10node_indexERK1S"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1ad2574692a38cdf858466e08b4c6c57f0"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">node_index</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK17PolyhedronTrellis10node_indexE7index_tRK1S" title="PolyhedronTrellis::node_index::S">S</a> &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK17PolyhedronTrellis10node_indexE7index_tRK1S" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis15node_neighboursEK7index_t">
+<span id="_CPPv3NK17PolyhedronTrellis15node_neighboursEK7index_t"></span><span id="_CPPv2NK17PolyhedronTrellis15node_neighboursEK7index_t"></span><span id="PolyhedronTrellis::node_neighbours__index_tCC"></span><span class="target" id="classPolyhedronTrellis_1ac68463a3321988e0dc590b21ae119111"></span>std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; <code class="sig-name descname">node_neighbours</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis15node_neighboursEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis9cube_nodeEK7index_t">
+<span id="_CPPv3NK17PolyhedronTrellis9cube_nodeEK7index_t"></span><span id="_CPPv2NK17PolyhedronTrellis9cube_nodeEK7index_t"></span><span id="PolyhedronTrellis::cube_node__index_tCC"></span><span class="target" id="classPolyhedronTrellis_1ab06bb47b278fef54b68099ff40fdea69"></span><em class="property">const</em> <a class="reference internal" href="classCubeNode.html#_CPPv48CubeNode" title="CubeNode">CubeNode</a> &amp;<code class="sig-name descname">cube_node</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis9cube_nodeEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis9poly_nodeEK7index_t">
+<span id="_CPPv3NK17PolyhedronTrellis9poly_nodeEK7index_t"></span><span id="_CPPv2NK17PolyhedronTrellis9poly_nodeEK7index_t"></span><span id="PolyhedronTrellis::poly_node__index_tCC"></span><span class="target" id="classPolyhedronTrellis_1af05871816ae2c92750cc39c47c4c9e3e"></span><em class="property">const</em> <a class="reference internal" href="classPolyNode.html#_CPPv48PolyNode" title="PolyNode">PolyNode</a> &amp;<code class="sig-name descname">poly_node</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis9poly_nodeEK7index_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis9to_stringEv">
+<span id="_CPPv3NK17PolyhedronTrellis9to_stringEv"></span><span id="_CPPv2NK17PolyhedronTrellis9to_stringEv"></span><span id="PolyhedronTrellis::to_string__voidC"></span><span class="target" id="classPolyhedronTrellis_1a7b694e2706c491b5a0aedcbc374ddaa9"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis4dataEv">
+<span id="_CPPv3NK17PolyhedronTrellis4dataEv"></span><span id="_CPPv2NK17PolyhedronTrellis4dataEv"></span><span id="PolyhedronTrellis::data__voidC"></span><span class="target" id="classPolyhedronTrellis_1af9b1b186a93e506b22e9f9da5edb783b"></span><em class="property">const</em> <a class="reference internal" href="classInterpolationData.html#_CPPv4I00E17InterpolationData" title="InterpolationData">InterpolationData</a>&lt;<a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::T">T</a>, <a class="reference internal" href="#_CPPv4I00E17PolyhedronTrellis" title="PolyhedronTrellis::R">R</a>&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get a constant reference to the stored data. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN17PolyhedronTrellis18replace_value_dataEvDp1A">
+<span id="_CPPv3IDpEN17PolyhedronTrellis18replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN17PolyhedronTrellis18replace_value_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1a9aa92f116dfc053cde129071b8962f49"></span>void <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN17PolyhedronTrellis18replace_value_dataEvDp1A" title="PolyhedronTrellis::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN17PolyhedronTrellis18replace_value_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Replace the data stored in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN17PolyhedronTrellis19replace_vector_dataEvDp1A">
+<span id="_CPPv3IDpEN17PolyhedronTrellis19replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN17PolyhedronTrellis19replace_vector_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1a615324f8649a4fdd22e519e9dec51223"></span>void <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN17PolyhedronTrellis19replace_vector_dataEvDp1A" title="PolyhedronTrellis::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN17PolyhedronTrellis19replace_vector_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN17PolyhedronTrellis19set_value_cost_infoEvDp1A">
+<span id="_CPPv3IDpEN17PolyhedronTrellis19set_value_cost_infoEDp1A"></span><span id="_CPPv2IDpEN17PolyhedronTrellis19set_value_cost_infoEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1acedfddae6825d4cd0dc2b9dfbe380c6f"></span>void <code class="sig-name descname">set_value_cost_info</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN17PolyhedronTrellis19set_value_cost_infoEvDp1A" title="PolyhedronTrellis::set_value_cost_info::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN17PolyhedronTrellis19set_value_cost_infoEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN17PolyhedronTrellis20set_vector_cost_infoEvDp1A">
+<span id="_CPPv3IDpEN17PolyhedronTrellis20set_vector_cost_infoEDp1A"></span><span id="_CPPv2IDpEN17PolyhedronTrellis20set_vector_cost_infoEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1aa1d28e7dd8bb8c3e08c2bbaa8c483f58"></span>void <code class="sig-name descname">set_vector_cost_info</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN17PolyhedronTrellis20set_vector_cost_infoEvDp1A" title="PolyhedronTrellis::set_vector_cost_info::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN17PolyhedronTrellis20set_vector_cost_infoEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis15bytes_per_pointEv">
+<span id="_CPPv3NK17PolyhedronTrellis15bytes_per_pointEv"></span><span id="_CPPv2NK17PolyhedronTrellis15bytes_per_pointEv"></span><span id="PolyhedronTrellis::bytes_per_pointC"></span><span class="target" id="classPolyhedronTrellis_1a856711ed07429838bce79ab3896e7752"></span>size_t <code class="sig-name descname">bytes_per_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis15bytes_per_pointEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the number of bytes used per Q point. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK17PolyhedronTrellis12debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd">
+<span id="_CPPv3II0E0ENK17PolyhedronTrellis12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span id="_CPPv2II0E0ENK17PolyhedronTrellis12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classPolyhedronTrellis_1a9813cdc7a131078fe6dd92fa1ee63ca3"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">debye_waller</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0ENK17PolyhedronTrellis12debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="PolyhedronTrellis::debye_waller::A">A</a>&lt;double&gt; &amp;<em>Q</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>M</em>, <em class="property">const</em> double <em>t_K</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK17PolyhedronTrellis12debye_wallerE11ArrayVectorIdERK1AIdERKNSt6vectorIdEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the Debye-Waller factor for the provided Q points and ion masses. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N17PolyhedronTrellis4sortEv">
+<span id="_CPPv3N17PolyhedronTrellis4sortEv"></span><span id="_CPPv2N17PolyhedronTrellis4sortEv"></span><span id="PolyhedronTrellis::sort__void"></span><span class="target" id="classPolyhedronTrellis_1a3cbecc2f9318952547722b573eec3587"></span>void <code class="sig-name descname">sort</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17PolyhedronTrellis4sortEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK17PolyhedronTrellis17total_node_volumeEv">
+<span id="_CPPv3NK17PolyhedronTrellis17total_node_volumeEv"></span><span id="_CPPv2NK17PolyhedronTrellis17total_node_volumeEv"></span><span id="PolyhedronTrellis::total_node_volumeC"></span><span class="target" id="classPolyhedronTrellis_1aa814df5b7716da50c896c760d1ce88ca"></span>double <code class="sig-name descname">total_node_volume</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK17PolyhedronTrellis17total_node_volumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classPolyNode.html" class="btn btn-neutral float-right" title="Class PolyNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classPolyhedron.html" class="btn btn-neutral float-left" title="Class Polyhedron" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

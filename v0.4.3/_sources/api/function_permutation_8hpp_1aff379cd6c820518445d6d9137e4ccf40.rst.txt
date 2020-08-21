@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40:
+
+Template Function jv_permutation(const T \*, const T \*, const std::array<I, 3>&, const R, const R, const R, const size_t, const size_t, ArrayVector<size_t>&, const size_t, const size_t, const int)
+=====================================================================================================================================================================================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: jv_permutation(const T *, const T *, const std::array<I, 3>&, const R, const R, const R, const size_t, const size_t, ArrayVector<size_t>&, const size_t, const size_t, const int)

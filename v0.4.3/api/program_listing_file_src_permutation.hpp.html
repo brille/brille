@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File permutation.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File permutation.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_permutation.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-permutation-hpp">
+<span id="program-listing-file-src-permutation-hpp"></span><h1>Program Listing for File permutation.hpp<a class="headerlink" href="#program-listing-for-file-permutation-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_permutation.hpp.html#file-src-permutation-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/permutation.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cm">/* This file holds implementations of Linear Assignment Problem solvers which</span>
+<span class="cm">   can be used to find the sorting permutations at grid points.              */</span>
+<span class="cp">#ifndef _PERMUTATION_H</span>
+<span class="cp">#define _PERMUTATION_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;complex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstdint&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;arrayvector.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;sorting_status.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;munkres.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;lapjv.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;smp.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">CostTraits</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span>
+  <span class="k">constexpr</span> <span class="k">static</span> <span class="n">T</span> <span class="n">max</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+<span class="p">};</span>
+<span class="cp">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">T</span><span class="p">;</span>
+  <span class="k">constexpr</span> <span class="k">static</span> <span class="n">T</span> <span class="n">max</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
+          <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_same</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">,</span> <span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span>
+        <span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">munkres_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">centre</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">neighbour</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">Nel</span><span class="p">,</span>
+                         <span class="k">const</span> <span class="n">R</span> <span class="n">Wscl</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wvec</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wmat</span><span class="p">,</span>
+                         <span class="k">const</span> <span class="kt">size_t</span> <span class="n">span</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">Nobj</span><span class="p">,</span>
+                         <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">permutations</span><span class="p">,</span>
+                         <span class="k">const</span> <span class="kt">size_t</span> <span class="n">centre_idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">neighbour_idx</span><span class="p">,</span>
+                         <span class="k">const</span> <span class="kt">int</span> <span class="n">vec_cost_func</span> <span class="o">=</span> <span class="mi">0</span>
+                       <span class="p">){</span>
+<span class="cm">/* An earlier version of this function took `centre` and `neighbour` arrays</span>
+<span class="cm">   which were effectively [span, Nobj] 2D arrays. This has the unfortunate</span>
+<span class="cm">   property that individual objects were not contiguous in memory but instead</span>
+<span class="cm">   had a stride equal to Nobj.</span>
+<span class="cm">   Now this function requires arrays which are [Nobj, span], placing each</span>
+<span class="cm">   object in contiguous memory and eliminating the need to copy sub-object</span>
+<span class="cm">   vector/matrices into contiguous memory before calling subroutines.</span>
+<span class="cm">*/</span>
+<span class="c1">// initialize variables</span>
+<span class="n">R</span> <span class="n">s_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">v_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">m_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">Munkres</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">munkres</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+<span class="kt">size_t</span> <span class="o">*</span><span class="n">assignment</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">size_t</span><span class="p">[</span><span class="n">Nobj</span><span class="p">]();</span>
+<span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">n_j</span><span class="p">;</span>
+<span class="c1">// calculate costs and fill the Munkres cost matrix</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">c_i</span> <span class="o">=</span> <span class="n">centre</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">n_j</span> <span class="o">=</span> <span class="n">neighbour</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">s_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">s_cost</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">c_i</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">n_j</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+      <span class="cm">/* As long as the eigenvectors at each grid point are the eigenvectors of</span>
+<span class="cm">         a Hermitian matrix (for which H=H†, † ≡ complex conjugate transpose)</span>
+<span class="cm">         then the *entire* Nel[1] dimensional eigenvectors at a given grid</span>
+<span class="cm">         point *are* orthogonal, and equivalent-mode eigenvectors at neighbouring</span>
+<span class="cm">         grid points should be least-orthogonal.</span>
+
+<span class="cm">         If ⃗a and ⃗b are eigenvectors of D with eigenvalues α and β,</span>
+<span class="cm">         respectively, then (using Einstein summation notation)</span>
+<span class="cm">         &lt;D ⃗a, ⃗b &gt; = (Dᵢⱼaⱼ)† bᵢ = Dᵢⱼ* aⱼ* bᵢ = aⱼ* Dᵢⱼ* bᵢ = &lt; ⃗a, D† ⃗b &gt;</span>
+<span class="cm">         and, since D ⃗a = α ⃗a and D† ⃗b = D ⃗b = β ⃗b,</span>
+<span class="cm">         &lt; α ⃗a, ⃗b &gt; = &lt; ⃗a, β ⃗b &gt; → (α-β)&lt; ⃗a, ⃗b &gt; = 0.</span>
+<span class="cm">         ∴ &lt; ⃗a, ⃗b &gt; = 0 for non-degenerate solutions to D ϵ = ω² ϵ.</span>
+<span class="cm">         For degenerate solutions, eigenvalue solvers still tend to return an</span>
+<span class="cm">         arbitrary linear combination c₀ ⃗a + s₁ ⃗b and s₀ ⃗a + c₁ ⃗b which are</span>
+<span class="cm">         still orthogonal.</span>
+
+<span class="cm">         It stands to reason that at nearby grid points the orthogonality will</span>
+<span class="cm">         only be approximate, and we can instead try to identify the any</span>
+<span class="cm">         least-orthogonal modes as being equivalent.</span>
+<span class="cm">      */</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">vec_cost_func</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">hermitian_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">)));</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">vector_distance</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">vector_product</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">vector_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]){</span>
+      <span class="n">I</span> <span class="n">nel2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">nel2</span><span class="o">*</span><span class="n">nel2</span> <span class="o">!=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Non-square matrix in munkres_permutation&quot;</span><span class="p">);</span>
+      <span class="n">m_cost</span> <span class="o">=</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="n">nel2</span><span class="p">,</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// for each i we want to determine the cheapest j</span>
+    <span class="n">munkres</span><span class="p">.</span><span class="n">get_cost</span><span class="p">()[</span><span class="n">i</span><span class="o">*</span><span class="n">Nobj</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Wscl</span><span class="o">*</span><span class="n">s_cost</span> <span class="o">+</span> <span class="n">Wvec</span><span class="o">*</span><span class="n">v_cost</span> <span class="o">+</span> <span class="n">Wmat</span><span class="o">*</span><span class="n">m_cost</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// use the Munkres&#39; algorithm to determine the optimal assignment</span>
+<span class="n">munkres</span><span class="p">.</span><span class="n">run_assignment</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">munkres</span><span class="p">.</span><span class="n">get_assignment</span><span class="p">(</span><span class="n">assignment</span><span class="p">)){</span>
+  <span class="k">delete</span><span class="p">[]</span> <span class="n">assignment</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/* use the fact that the neighbour objects have already had their global</span>
+<span class="cm">   permutation saved into `permutations` to determine the global permuation</span>
+<span class="cm">   for the centre objects too; storing the result into `permutations` as well.</span>
+<span class="cm">*/</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">neighbour_idx</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="n">assignment</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+      <span class="n">permutations</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">centre_idx</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">assignment</span><span class="p">;</span>
+<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
+          <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_same</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">,</span> <span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span>
+        <span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">centre</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">neighbour</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">Nel</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">R</span> <span class="n">Wscl</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wvec</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wmat</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">span</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">Nobj</span><span class="p">,</span>
+                    <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">permutations</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">centre_idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">neighbour_idx</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">int</span> <span class="n">vec_cost_func</span> <span class="o">=</span> <span class="mi">0</span>
+                   <span class="p">){</span>
+<span class="cm">/* An earlier version of this function took `centre` and `neighbour` arrays</span>
+<span class="cm">   which were effectively [span, Nobj] 2D arrays. This has the unfortunate</span>
+<span class="cm">   property that individual objects were not contiguous in memory but instead</span>
+<span class="cm">   had a stride equal to Nobj.</span>
+<span class="cm">   Now this function requires arrays which are [Nobj, span], placing each</span>
+<span class="cm">   object in contiguous memory and eliminating the need to copy sub-object</span>
+<span class="cm">   vector/matrices into contiguous memory before calling subroutines.</span>
+<span class="cm">*/</span>
+<span class="c1">// initialize variables</span>
+<span class="n">R</span> <span class="n">s_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">v_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">m_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">R</span> <span class="o">*</span><span class="n">cost</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">usol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">vsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span>
+<span class="n">cost</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">usol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">vsol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="kt">int</span> <span class="o">*</span><span class="n">rowsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">colsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span>
+<span class="n">rowsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">colsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+
+<span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">n_j</span><span class="p">;</span>
+<span class="c1">// calculate costs and fill the Munkres cost matrix</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">c_i</span> <span class="o">=</span> <span class="n">centre</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">n_j</span> <span class="o">=</span> <span class="n">neighbour</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">s_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">s_cost</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">c_i</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">n_j</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">vec_cost_func</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">hermitian_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">)));</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">vector_distance</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">vector_product</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span>     <span class="n">vector_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]){</span>
+      <span class="n">I</span> <span class="n">nel2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">nel2</span><span class="o">*</span><span class="n">nel2</span> <span class="o">!=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Non-square matrix in jv_permutation&quot;</span><span class="p">);</span>
+      <span class="n">m_cost</span> <span class="o">=</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="n">nel2</span><span class="p">,</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// for each i we want to determine the cheapest j</span>
+    <span class="c1">// cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);</span>
+    <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">Nobj</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Wscl</span><span class="o">*</span><span class="n">s_cost</span> <span class="o">+</span> <span class="n">Wvec</span><span class="o">*</span><span class="n">v_cost</span> <span class="o">+</span> <span class="n">Wmat</span><span class="o">*</span><span class="n">m_cost</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// // protect against equally-good solutions in the same row:</span>
+<span class="c1">// for (size_t i=0; i&lt;Nobj; ++i){</span>
+<span class="c1">//   R rowmin{cost[i*Nobj]};</span>
+<span class="c1">//   for (size_t j=1; j&lt;Nobj; ++j) if (rowmin &gt; cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];</span>
+<span class="c1">//   int equal_to_min{0};</span>
+<span class="c1">//   for (size_t j=0; j&lt;Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;</span>
+<span class="c1">//   if (equal_to_min &gt; 1){</span>
+<span class="c1">//     info_update(equal_to_min,&quot; columns have the same lowest cost in row &quot;,i);</span>
+<span class="c1">//     for (size_t j=0; j&lt;Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))</span>
+<span class="c1">//     cost[i*Nobj+j] += static_cast&lt;R&gt;(--equal_to_min*100)*std::numeric_limits&lt;R&gt;::epsilon();</span>
+<span class="c1">//   }</span>
+<span class="c1">// }</span>
+<span class="c1">// // and same column</span>
+<span class="c1">// for (size_t j=0; j&lt;Nobj; ++j){</span>
+<span class="c1">//   R rowmin{cost[j]};</span>
+<span class="c1">//   for (size_t i=1; i&lt;Nobj; ++i) if (rowmin &gt; cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];</span>
+<span class="c1">//   int equal_to_min{0};</span>
+<span class="c1">//   for (size_t i=0; i&lt;Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;</span>
+<span class="c1">//   if (equal_to_min &gt; 1){</span>
+<span class="c1">//     info_update(equal_to_min,&quot; rows have the same lowest cost in column &quot;,j);</span>
+<span class="c1">//     for (size_t i=0; i&lt;Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))</span>
+<span class="c1">//     cost[i*Nobj+j] += static_cast&lt;R&gt;(--equal_to_min*100)*std::numeric_limits&lt;R&gt;::epsilon();</span>
+<span class="c1">//   }</span>
+<span class="c1">// }</span>
+<span class="c1">// /* Normalising the cost matrix before running Jonker-Volgenant *might* help</span>
+<span class="c1">//    with the infinite loop situation</span>
+<span class="c1">// */</span>
+<span class="c1">// R maxcost{cost[0]}, mincost{cost[0]};</span>
+<span class="c1">// for (size_t i=1; i&lt;Nobj*Nobj; ++i){</span>
+<span class="c1">//   if (maxcost &lt; cost[i]) maxcost = cost[i];</span>
+<span class="c1">//   if (mincost &gt; cost[i]) mincost = cost[i];</span>
+<span class="c1">// }</span>
+<span class="c1">// info_update(&quot;JV costs range is (&quot;,mincost,&quot;,&quot;,maxcost,&quot;)&quot;);</span>
+<span class="c1">// for (size_t i=1; i&lt;Nobj*Nobj; ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);</span>
+
+<span class="c1">// use the Jonker-Volgenant algorithm to determine the optimal assignment</span>
+<span class="cm">/*</span>
+<span class="cm">There might be a hidden problem here.</span>
+<span class="cm">As discussed in the README at https://github.com/hrldcpr/pyLAPJV</span>
+
+<span class="cm">Supposedly, if two costs are equally smallest (in a row) to machine precision</span>
+<span class="cm">then the Jonker-Volgenant algorithm enters an infinite loop.</span>
+<span class="cm">The version in lapjv.h has a check to avoid this but it might still be a</span>
+<span class="cm">problem.</span>
+<span class="cm">*/</span>
+<span class="n">lapjv</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">rowsol</span><span class="p">,</span> <span class="n">colsol</span><span class="p">,</span> <span class="n">usol</span><span class="p">,</span> <span class="n">vsol</span><span class="p">);</span>
+<span class="cm">/* use the fact that the neighbour objects have already had their global</span>
+<span class="cm">   permutation saved into `permutations` to determine the global permuation</span>
+<span class="cm">   for the centre objects too; storing the result into `permutations` as well.</span>
+<span class="cm">*/</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">neighbour_idx</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rowsol</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span> <span class="c1">// or should this be colsol?</span>
+      <span class="n">permutations</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">centre_idx</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+
+<span class="k">delete</span><span class="p">[]</span> <span class="n">cost</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">usol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">vsol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">rowsol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">colsol</span><span class="p">;</span>
+<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
+          <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_same</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">,</span> <span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span>
+        <span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">centre_vals</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">centre_vecs</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">neighbour_vals</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">neighbour_vecs</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">vals_Nel</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">vecs_Nel</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">R</span> <span class="n">Wscl</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wvec</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wmat</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">vals_span</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">vecs_span</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">Nobj</span><span class="p">,</span>
+                    <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">permutations</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">centre_idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">neighbour_idx</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">int</span> <span class="n">vec_cost_func</span> <span class="o">=</span> <span class="mi">0</span>
+                   <span class="p">){</span>
+<span class="cm">/* An earlier version of this function took `centre` and `neighbour` arrays</span>
+<span class="cm">   which were effectively [span, Nobj] 2D arrays. This has the unfortunate</span>
+<span class="cm">   property that individual objects were not contiguous in memory but instead</span>
+<span class="cm">   had a stride equal to Nobj.</span>
+<span class="cm">   Now this function requires arrays which are [Nobj, span], placing each</span>
+<span class="cm">   object in contiguous memory and eliminating the need to copy sub-object</span>
+<span class="cm">   vector/matrices into contiguous memory before calling subroutines.</span>
+<span class="cm">*/</span>
+<span class="c1">// initialize variables</span>
+<span class="n">R</span> <span class="n">s_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">v_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">m_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">R</span> <span class="o">*</span><span class="n">cost</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">usol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">vsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span>
+<span class="n">cost</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">usol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">vsol</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="kt">int</span> <span class="o">*</span><span class="n">rowsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">,</span> <span class="o">*</span><span class="n">colsol</span><span class="o">=</span><span class="k">nullptr</span><span class="p">;</span>
+<span class="n">rowsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="n">colsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+
+<span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">vals_c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">vals_n_j</span><span class="p">;</span>
+<span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">vecs_c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">vecs_n_j</span><span class="p">;</span>
+<span class="c1">// calculate costs and fill the Munkres cost matrix</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">vals_c_i</span> <span class="o">=</span> <span class="n">centre_vals</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">vals_span</span><span class="p">;</span>
+    <span class="n">vals_n_j</span> <span class="o">=</span> <span class="n">neighbour_vals</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">vals_span</span><span class="p">;</span>
+    <span class="n">vecs_c_i</span> <span class="o">=</span> <span class="n">centre_vecs</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">vecs_span</span><span class="p">;</span>
+    <span class="n">vecs_n_j</span> <span class="o">=</span> <span class="n">neighbour_vecs</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">vecs_span</span><span class="p">;</span>
+    <span class="n">s_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">s_cost</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">vals_c_i</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">vals_n_j</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+      <span class="n">vals_c_i</span> <span class="o">+=</span> <span class="n">vals_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">vals_n_j</span> <span class="o">+=</span> <span class="n">vals_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">s_cost</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">vecs_c_i</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">vecs_n_j</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+      <span class="n">vecs_c_i</span> <span class="o">+=</span> <span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">vecs_n_j</span> <span class="o">+=</span> <span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">v_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">vec_cost_func</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">hermitian_angle</span><span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vals_c_i</span><span class="p">,</span> <span class="n">vals_n_j</span><span class="p">)));</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span>  <span class="n">vector_distance</span><span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vals_c_i</span><span class="p">,</span> <span class="n">vals_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">-</span><span class="n">vector_product</span><span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vals_c_i</span><span class="p">,</span> <span class="n">vals_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span>     <span class="n">vector_angle</span><span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vals_c_i</span><span class="p">,</span> <span class="n">vals_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">vals_c_i</span> <span class="o">+=</span> <span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">vals_n_j</span> <span class="o">+=</span> <span class="n">vals_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">vec_cost_func</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">hermitian_angle</span><span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vecs_c_i</span><span class="p">,</span> <span class="n">vecs_n_j</span><span class="p">)));</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span>  <span class="n">vector_distance</span><span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vecs_c_i</span><span class="p">,</span> <span class="n">vecs_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">-</span><span class="n">vector_product</span><span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vecs_c_i</span><span class="p">,</span> <span class="n">vecs_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">+=</span>     <span class="n">vector_angle</span><span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vecs_c_i</span><span class="p">,</span> <span class="n">vecs_n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">vecs_c_i</span> <span class="o">+=</span> <span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">vecs_n_j</span> <span class="o">+=</span> <span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">m_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]){</span>
+      <span class="n">I</span> <span class="n">nel2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vals_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">nel2</span><span class="o">*</span><span class="n">nel2</span> <span class="o">!=</span> <span class="n">vals_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Non-square matrix in jv_permutation&quot;</span><span class="p">);</span>
+      <span class="n">m_cost</span> <span class="o">=</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="n">nel2</span><span class="p">,</span> <span class="n">vals_c_i</span><span class="p">,</span> <span class="n">vals_n_j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]){</span>
+      <span class="n">I</span> <span class="n">nel2</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">nel2</span><span class="o">*</span><span class="n">nel2</span> <span class="o">!=</span> <span class="n">vecs_Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Non-square matrix in jv_permutation&quot;</span><span class="p">);</span>
+      <span class="n">m_cost</span> <span class="o">=</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="n">nel2</span><span class="p">,</span> <span class="n">vecs_c_i</span><span class="p">,</span> <span class="n">vecs_n_j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// for each i we want to determine the cheapest j</span>
+    <span class="c1">// cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);</span>
+    <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">Nobj</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Wscl</span><span class="o">*</span><span class="n">s_cost</span> <span class="o">+</span> <span class="n">Wvec</span><span class="o">*</span><span class="n">v_cost</span> <span class="o">+</span> <span class="n">Wmat</span><span class="o">*</span><span class="n">m_cost</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// use the Jonker-Volgenant algorithm to determine the optimal assignment</span>
+<span class="cm">/*</span>
+<span class="cm">There might be a hidden problem here.</span>
+<span class="cm">As discussed in the README at https://github.com/hrldcpr/pyLAPJV</span>
+
+<span class="cm">Supposedly, if two costs are equally smallest (in a row) to machine precision</span>
+<span class="cm">then the Jonker-Volgenant algorithm enters an infinite loop.</span>
+<span class="cm">The version in lapjv.h has a check to avoid this but it might still be a</span>
+<span class="cm">problem.</span>
+<span class="cm">*/</span>
+<span class="n">lapjv</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">rowsol</span><span class="p">,</span> <span class="n">colsol</span><span class="p">,</span> <span class="n">usol</span><span class="p">,</span> <span class="n">vsol</span><span class="p">);</span>
+<span class="cm">/* use the fact that the neighbour objects have already had their global</span>
+<span class="cm">   permutation saved into `permutations` to determine the global permuation</span>
+<span class="cm">   for the centre objects too; storing the result into `permutations` as well.</span>
+<span class="cm">*/</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">neighbour_idx</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rowsol</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span> <span class="c1">// or should this be colsol?</span>
+      <span class="n">permutations</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">centre_idx</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+
+<span class="k">delete</span><span class="p">[]</span> <span class="n">cost</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">usol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">vsol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">rowsol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">colsol</span><span class="p">;</span>
+<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">usol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">vsol</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">rows</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">cols</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">I</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">rows</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">cols</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">usol</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">vsol</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="n">rows</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">jv_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">jv_permutation</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cost</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation_fill</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">row</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">u</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">v</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">col</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">row</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">row</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">u</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">jv_permutation_fill</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">cost</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">row</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">col</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">Nobj</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">u</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">v</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="n">row</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">col</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Nobj</span><span class="p">);</span>
+  <span class="n">lapjv</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="n">row</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">u</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="p">,</span>
+          <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_same</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">CostTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">,</span> <span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span>
+        <span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">sm_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">centre</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">neighbour</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">Nel</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">R</span> <span class="n">Wscl</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wvec</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Wmat</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">span</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">Nobj</span><span class="p">,</span>
+                    <span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">permutations</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">centre_idx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">neighbour_idx</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">int</span> <span class="n">vec_cost_func</span> <span class="o">=</span> <span class="mi">0</span>
+                   <span class="p">){</span>
+<span class="cm">/* An earlier version of this function took `centre` and `neighbour` arrays</span>
+<span class="cm">   which were effectively [span, Nobj] 2D arrays. This has the unfortunate</span>
+<span class="cm">   property that individual objects were not contiguous in memory but instead</span>
+<span class="cm">   had a stride equal to Nobj.</span>
+<span class="cm">   Now this function requires arrays which are [Nobj, span], placing each</span>
+<span class="cm">   object in contiguous memory and eliminating the need to copy sub-object</span>
+<span class="cm">   vector/matrices into contiguous memory before calling subroutines.</span>
+<span class="cm">*/</span>
+<span class="c1">// initialize variables</span>
+<span class="n">R</span> <span class="n">s_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">v_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">m_cost</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">R</span><span class="o">*</span> <span class="n">cost</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">[</span><span class="n">Nobj</span><span class="o">*</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="o">*</span> <span class="n">rowsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">size_t</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="o">*</span> <span class="n">colsol</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">size_t</span><span class="p">[</span><span class="n">Nobj</span><span class="p">];</span>
+
+<span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">c_i</span><span class="p">,</span> <span class="o">*</span><span class="n">n_j</span><span class="p">;</span>
+<span class="c1">// calculate costs and fill the Munkres cost matrix</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">c_i</span> <span class="o">=</span> <span class="n">centre</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">n_j</span> <span class="o">=</span> <span class="n">neighbour</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">span</span><span class="p">;</span>
+    <span class="n">s_cost</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">s_cost</span> <span class="o">+=</span> <span class="n">magnitude</span><span class="p">(</span><span class="n">c_i</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">n_j</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+      <span class="k">switch</span><span class="p">(</span><span class="n">vec_cost_func</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">hermitian_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">)));</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span>  <span class="n">vector_distance</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">vector_product</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">v_cost</span> <span class="o">=</span>     <span class="n">vector_angle</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Unknown vector cost function. None used.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">c_i</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="n">n_j</span> <span class="o">+=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]){</span>
+      <span class="n">I</span> <span class="n">nel2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">nel2</span><span class="o">*</span><span class="n">nel2</span> <span class="o">!=</span> <span class="n">Nel</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Non-square matrix in sm_permutation&quot;</span><span class="p">);</span>
+      <span class="n">m_cost</span> <span class="o">=</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="n">nel2</span><span class="p">,</span> <span class="n">c_i</span><span class="p">,</span> <span class="n">n_j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// for each i we want to determine the cheapest j</span>
+    <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">Nobj</span><span class="o">+</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Wscl</span><span class="o">*</span><span class="n">s_cost</span> <span class="o">+</span> <span class="n">Wvec</span><span class="o">*</span><span class="n">v_cost</span> <span class="o">+</span> <span class="n">Wmat</span><span class="o">*</span><span class="n">m_cost</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">smp</span><span class="p">(</span><span class="n">Nobj</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">rowsol</span><span class="p">,</span> <span class="n">colsol</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+<span class="cm">/* use the fact that the neighbour objects have already had their global</span>
+<span class="cm">   permutation saved into `permutations` to determine the global permuation</span>
+<span class="cm">   for the centre objects too; storing the result into `permutations` as well.</span>
+<span class="cm">*/</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nobj</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">neighbour_idx</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="n">rowsol</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="c1">// or should this be colsol?</span>
+      <span class="n">permutations</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">centre_idx</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+
+<span class="k">delete</span><span class="p">[]</span> <span class="n">cost</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">rowsol</span><span class="p">;</span>
+<span class="k">delete</span><span class="p">[]</span> <span class="n">colsol</span><span class="p">;</span>
+<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// The following apply_permutation has been adapted from</span>
+<span class="c1">//  https://devblogs.microsoft.com/oldnewthing/20170104-00/?p=95115</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ObjItr</span><span class="p">,</span> <span class="k">typename</span> <span class="n">PermItr</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">apply_permutation</span><span class="p">(</span><span class="n">ObjItr</span> <span class="n">objects</span><span class="p">,</span> <span class="n">ObjItr</span> <span class="n">end</span><span class="p">,</span> <span class="n">PermItr</span> <span class="n">indices</span><span class="p">){</span>
+  <span class="k">using</span> <span class="n">Obj</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">ObjItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">Dif</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">PermItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="n">Dif</span> <span class="n">numel</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">objects</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Dif</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numel</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+    <span class="c1">// move the object to a temporary location (fallsback to copy)</span>
+    <span class="n">Obj</span> <span class="n">obji</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">])};</span>
+    <span class="c1">// keep track of where we are in the swap loop</span>
+    <span class="n">Dif</span> <span class="n">current</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]){</span>
+      <span class="n">Dif</span> <span class="n">next</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">];</span>
+      <span class="n">objects</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">next</span><span class="p">]);</span>
+      <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+      <span class="n">current</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">obji</span><span class="p">);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">ObjItr</span><span class="p">,</span> <span class="k">typename</span> <span class="n">PermItr</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">apply_inverse_permutation</span><span class="p">(</span><span class="n">ObjItr</span> <span class="n">objects</span><span class="p">,</span> <span class="n">ObjItr</span> <span class="n">end</span><span class="p">,</span> <span class="n">PermItr</span> <span class="n">indices</span><span class="p">){</span>
+  <span class="k">using</span> <span class="n">Obj</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">ObjItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">Dif</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">PermItr</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">;</span>
+  <span class="n">Dif</span> <span class="n">numel</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">objects</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Dif</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numel</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+    <span class="c1">// pop-out the targeted object and its index</span>
+    <span class="n">Dif</span> <span class="n">pop_idx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+    <span class="n">Obj</span> <span class="n">pop_obj</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]])};</span>
+    <span class="c1">// move the current object and index to the target</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="c1">// and put the popped object and index back in here</span>
+    <span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">pop_idx</span><span class="p">);</span>
+    <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_idx</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

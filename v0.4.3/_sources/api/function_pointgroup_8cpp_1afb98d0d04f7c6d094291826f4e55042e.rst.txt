@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e:
+
+Function get_orthogonal_axis
+============================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: get_orthogonal_axis(int, const int *, const int)

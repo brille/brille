@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1a4a87d9aab424e45ece64ca20a4cfef88:
+
+Template Function apply_inverse_permutation
+===========================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: apply_inverse_permutation(ObjItr, ObjItr, PermItr)

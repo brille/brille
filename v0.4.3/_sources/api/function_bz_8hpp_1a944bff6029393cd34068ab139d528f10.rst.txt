@@ -1,0 +1,13 @@
+.. _exhale_function_bz_8hpp_1a944bff6029393cd34068ab139d528f10:
+
+Function intersect_at(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, LQVec<double>&, const int)
+==================================================================================================================
+
+- Defined in :ref:`file_src_bz.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: intersect_at(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, LQVec<double>&, const int)

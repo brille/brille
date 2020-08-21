@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a97879d84ce99aba94ea7e144922799e9:
+
+Template Function signed_to_unsigned
+====================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: signed_to_unsigned(const S)

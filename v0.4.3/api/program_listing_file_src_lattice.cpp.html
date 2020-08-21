@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File lattice.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File lattice.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_lattice.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-lattice-cpp">
+<span id="program-listing-file-src-lattice-cpp"></span><h1>Program Listing for File lattice.cpp<a class="headerlink" href="#program-listing-for-file-lattice-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_lattice.cpp.html#file-src-lattice-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/lattice.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;lattice.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;hall_symbol.hpp&quot;</span><span class="cp"></span>
+
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">latmat</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">h</span><span class="p">){</span>
+  <span class="kt">double</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+  <span class="n">latmat_to_lenang</span><span class="p">(</span><span class="n">latmat</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">a</span><span class="p">);</span> <span class="c1">// (3,1) -&gt; assume row-ordered matrix</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_len_pointer</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ang_pointer</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="n">radian</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_hall_number</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">lengths</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">angles</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">h</span><span class="p">,</span> <span class="k">const</span> <span class="n">AngleUnit</span> <span class="n">au</span><span class="p">){</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_len_pointer</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ang_pointer</span><span class="p">(</span><span class="n">angles</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">au</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_hall_number</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">la</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">lb</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">lc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">al</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">bl</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">cl</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">len</span><span class="p">{{</span><span class="n">la</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">lc</span><span class="p">}},</span> <span class="n">ang</span><span class="p">{{</span><span class="n">al</span><span class="p">,</span><span class="n">bl</span><span class="p">,</span><span class="n">cl</span><span class="p">}}</span> <span class="p">{</span>
+  <span class="c1">// this-&gt;set_len_scalars(la,lb,lc);</span>
+  <span class="c1">// this-&gt;set_ang_scalars(al,bl,cl, AngleUnit::not_provided);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ang</span><span class="p">(</span><span class="n">AngleUnit</span><span class="o">::</span><span class="n">not_provided</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_hall_number</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">latmat</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">itname</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">choice</span><span class="p">){</span>
+  <span class="kt">double</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+  <span class="n">latmat_to_lenang</span><span class="p">(</span><span class="n">latmat</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_len_pointer</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ang_pointer</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="n">radian</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_IT_name</span><span class="p">(</span><span class="n">itname</span><span class="p">,</span> <span class="n">choice</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">lengths</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">angles</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">itname</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">choice</span><span class="p">,</span> <span class="k">const</span> <span class="n">AngleUnit</span> <span class="n">au</span><span class="p">){</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_len_pointer</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ang_pointer</span><span class="p">(</span><span class="n">angles</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">au</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_IT_name</span><span class="p">(</span><span class="n">itname</span><span class="p">,</span> <span class="n">choice</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Lattice</span><span class="o">::</span><span class="n">Lattice</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">la</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">lb</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">lc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">al</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">bl</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">cl</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">itname</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">choice</span><span class="p">)</span><span class="o">:</span>
+<span class="n">len</span><span class="p">({{</span><span class="n">la</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">lc</span><span class="p">}}),</span> <span class="n">ang</span><span class="p">({{</span><span class="n">al</span><span class="p">,</span><span class="n">bl</span><span class="p">,</span><span class="n">cl</span><span class="p">}})</span> <span class="p">{</span>
+  <span class="c1">// this-&gt;set_len_scalars(la,lb,lc);</span>
+  <span class="c1">// this-&gt;set_ang_scalars(al,bl,cl, AngleUnit::not_provided);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ang</span><span class="p">(</span><span class="n">AngleUnit</span><span class="o">::</span><span class="n">not_provided</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">calculatevolume</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_IT_name</span><span class="p">(</span><span class="n">itname</span><span class="p">,</span> <span class="n">choice</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// void Lattice::set_len_scalars(const double a, const double b, const double c){</span>
+<span class="c1">//   this-&gt;len[0] = a;</span>
+<span class="c1">//   this-&gt;len[1] = b;</span>
+<span class="c1">//   this-&gt;len[2] = c;</span>
+<span class="c1">// }</span>
+<span class="c1">// void Lattice::set_ang_scalars(const double a, const double b, const double g, const AngleUnit angle_unit){</span>
+<span class="c1">//   this-&gt;ang[0] = a;</span>
+<span class="c1">//   this-&gt;ang[1] = b;</span>
+<span class="c1">//   this-&gt;ang[2] = g;</span>
+<span class="c1">//   this-&gt;check_ang(angle_unit);</span>
+<span class="c1">// }</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">check_ang</span><span class="p">(</span><span class="k">const</span> <span class="n">AngleUnit</span> <span class="n">angle_unit</span><span class="p">){</span>
+  <span class="n">AngleUnit</span> <span class="n">au</span> <span class="o">=</span> <span class="n">angle_unit</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">au</span> <span class="o">==</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="n">not_provided</span><span class="p">){</span>
+    <span class="kt">double</span> <span class="n">minang</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+    <span class="kt">double</span> <span class="n">maxang</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">)();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">minang</span><span class="p">)</span> <span class="n">minang</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxang</span><span class="p">)</span> <span class="n">maxang</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">minang</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Unexpected negative inter-facial cell angle&quot;</span><span class="p">);</span>
+    <span class="n">au</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxang</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">PIOVERTWO</span><span class="p">)</span> <span class="o">?</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="nl">radian</span> <span class="p">:</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="n">degree</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">au</span> <span class="o">!=</span> <span class="n">AngleUnit</span><span class="o">::</span><span class="n">radian</span><span class="p">){</span>
+    <span class="kt">double</span> <span class="n">conversion</span> <span class="o">=</span> <span class="n">PIOVERTWO</span><span class="o">*</span><span class="p">((</span><span class="n">AngleUnit</span><span class="o">::</span><span class="n">degree</span> <span class="o">==</span> <span class="n">au</span><span class="p">)</span> <span class="o">?</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">90.0</span> <span class="o">:</span> <span class="mf">2.0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">conversion</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">check_hall_number</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">h</span><span class="p">){</span>
+  <span class="n">Spacegroup</span> <span class="n">spg</span><span class="p">(</span><span class="n">h</span><span class="p">);</span> <span class="c1">// if h is invalid the next three lines might fail</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">bravais</span> <span class="o">=</span> <span class="n">spg</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">spgsym</span> <span class="o">=</span> <span class="n">spg</span><span class="p">.</span><span class="n">get_spacegroup_symmetry</span><span class="p">();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">ptgsym</span> <span class="o">=</span> <span class="n">spg</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">check_IT_name</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">itname</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">choice</span><span class="p">){</span>
+  <span class="kt">int</span> <span class="n">hall_number</span> <span class="o">=</span> <span class="n">string_to_hall_number</span><span class="p">(</span><span class="n">itname</span><span class="p">,</span> <span class="n">choice</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">hall_number</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">hall_number</span> <span class="o">&lt;</span> <span class="mi">531</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_hall_number</span><span class="p">(</span><span class="n">hall_number</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// maybe itname is actually a non-standard Hall symbol?</span>
+    <span class="n">HallSymbol</span> <span class="n">hs</span><span class="p">(</span><span class="n">itname</span><span class="p">);</span>
+    <span class="n">Symmetry</span> <span class="n">gens</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hs</span><span class="p">.</span><span class="n">validate</span><span class="p">()){</span>
+      <span class="n">gens</span> <span class="o">=</span> <span class="n">hs</span><span class="p">.</span><span class="n">get_generators</span><span class="p">();</span>
+      <span class="n">bravais</span> <span class="o">=</span> <span class="n">hs</span><span class="p">.</span><span class="n">getl</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// last-ditch effort: maybe x,y,z notation Seitz matrices were passed?</span>
+      <span class="n">gens</span><span class="p">.</span><span class="n">from_ascii</span><span class="p">(</span><span class="n">itname</span><span class="p">);</span>
+      <span class="n">bravais</span> <span class="o">=</span> <span class="n">Bravais</span><span class="o">::</span><span class="n">P</span><span class="p">;</span> <span class="c1">// without any extra information this must be primitive</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_spacegroup_symmetry</span><span class="p">(</span><span class="n">gens</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">unitvolume</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
+  <span class="c1">// The volume of a parallelpiped with unit length sides and our body angles</span>
+  <span class="kt">double</span> <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="kt">double</span> <span class="n">sos</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prd</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">sos</span><span class="o">+=</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">prd</span><span class="o">*=</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">sos</span> <span class="o">+</span> <span class="n">prd</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">calculatevolume</span><span class="p">(){</span>
+  <span class="c1">// we could replace this by l[0]*l[1]*l[2]*this-&gt;unitvolume()</span>
+  <span class="kt">double</span> <span class="n">tmp</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+  <span class="kt">double</span> <span class="o">*</span><span class="n">l</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+  <span class="n">tmp</span> <span class="o">*=</span> <span class="n">sin</span><span class="p">((</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">*=</span> <span class="n">sin</span><span class="p">((</span><span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">*=</span> <span class="n">sin</span><span class="p">((</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">*=</span> <span class="n">sin</span><span class="p">((</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+  <span class="n">tmp</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">isnan</span><span class="p">(</span><span class="n">tmp</span><span class="p">)){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Invalid lattice unit cell &quot;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">isnan</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">unitvolume</span><span class="p">())){</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;angles [&quot;</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mf">180.</span><span class="p">);</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; ]&quot;</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;lengths [&quot;</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; ]&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">domain_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Lattice</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">inner_star</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">lstar</span><span class="p">,</span> <span class="n">astar</span><span class="p">,</span> <span class="n">cosang</span><span class="p">,</span> <span class="n">sinang</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">cosang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">sinang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">;</span>
+    <span class="n">lstar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="o">*</span><span class="n">sinang</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">/</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">volume</span><span class="p">;</span>
+    <span class="n">astar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">acos</span><span class="p">((</span><span class="n">cosang</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">cosang</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-</span><span class="n">cosang</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">sinang</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">sinang</span><span class="p">[</span><span class="n">k</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">Lattice</span><span class="p">(</span><span class="n">lstar</span><span class="p">,</span> <span class="n">astar</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bravais</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">spgsym</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ptgsym</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">basis</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">get_metric_tensor</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span> <span class="n">mt</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+  <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">l</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+
+  <span class="kt">double</span> <span class="n">cosa</span><span class="p">,</span> <span class="n">cosb</span><span class="p">,</span> <span class="n">cosc</span><span class="p">;</span>
+  <span class="n">cosa</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="n">cosb</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="n">cosc</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+  <span class="n">mt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cosc</span><span class="p">;</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cosb</span><span class="p">;</span>
+
+  <span class="n">mt</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cosc</span><span class="p">;</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cosa</span><span class="p">;</span>
+
+  <span class="n">mt</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">cosb</span><span class="p">;</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">cosa</span><span class="p">;</span>
+  <span class="n">mt</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">get_covariant_metric_tensor</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">mt</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_metric_tensor</span><span class="p">(</span><span class="n">mt</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">get_contravariant_metric_tensor</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">mt</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+  <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="p">[</span><span class="mi">9</span><span class="p">]();</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_metric_tensor</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+  <span class="n">matrix_inverse</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span><span class="n">tmp</span><span class="p">);</span>
+  <span class="k">delete</span><span class="p">[]</span> <span class="n">tmp</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">issame</span><span class="p">(</span><span class="k">const</span> <span class="n">Lattice</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">return</span> <span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">isapprox</span><span class="p">(</span><span class="k">const</span> <span class="n">Lattice</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ispermutation</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span> <span class="o">?</span> <span class="nb">false</span> <span class="o">:</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">ispermutation</span><span class="p">(</span><span class="k">const</span> <span class="n">Lattice</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">ap</span><span class="p">[</span><span class="mi">3</span><span class="p">]{</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="c1">// for anti-permutations</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">];</span>
+      <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lat</span><span class="p">.</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">lat</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span>
+      <span class="k">return</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="n">ap</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">]];</span>
+      <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="n">ap</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span><span class="p">]];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lat</span><span class="p">.</span><span class="n">ang</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="n">approx_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">lat</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span>
+      <span class="k">return</span> <span class="o">-</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">print</span><span class="p">(){</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g) &quot;</span> <span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lattice2string</span><span class="p">(</span><span class="k">const</span> <span class="n">Lattice</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">lenunit</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">angunit</span><span class="o">=</span><span class="s">&quot;°&quot;</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">repr</span><span class="p">;</span>
+  <span class="n">repr</span> <span class="o">=</span> <span class="s">&quot;(&quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_a</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
+             <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_b</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
+             <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_c</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span> <span class="o">+</span> <span class="n">lenunit</span>
+       <span class="o">+</span><span class="s">&quot; (&quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_alpha</span><span class="p">()</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
+             <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_beta</span><span class="p">()</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">)</span>  <span class="o">+</span> <span class="s">&quot; &quot;</span>
+             <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">get_gamma</span><span class="p">()</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span> <span class="o">+</span> <span class="n">angunit</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">repr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Lattice</span><span class="o">::</span><span class="n">string_repr</span><span class="p">(){</span> <span class="k">return</span> <span class="n">lattice2string</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span> <span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Direct</span><span class="o">::</span><span class="n">string_repr</span><span class="p">(){</span><span class="k">return</span> <span class="n">lattice2string</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;Å&quot;</span><span class="p">);}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">string_repr</span><span class="p">(){</span><span class="k">return</span> <span class="n">lattice2string</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;Å⁻¹&quot;</span><span class="p">);}</span>
+
+<span class="n">Reciprocal</span> <span class="n">Direct</span><span class="o">::</span><span class="n">star</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Reciprocal</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_star</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">Direct</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">star</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Direct</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_star</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">latmat</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">latmat</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">latmat</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">strides</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">latmat</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">latmat</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="c1">// define the lattice basis vectors using the same convention as spglib</span>
+  <span class="kt">double</span> <span class="n">c0</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">c1</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">c2</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+  <span class="kt">double</span> <span class="n">s2</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+  <span class="kt">double</span> <span class="n">xhat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span> <span class="n">yhat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">c2</span><span class="p">,</span><span class="n">s2</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+  <span class="kt">double</span> <span class="n">zhat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">c1</span><span class="p">,</span> <span class="p">(</span><span class="n">c0</span><span class="o">-</span><span class="n">c2</span><span class="o">*</span><span class="n">c1</span><span class="p">)</span><span class="o">/</span><span class="n">s2</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">unitvolume</span><span class="p">()</span><span class="o">/</span><span class="n">s2</span><span class="p">};</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="c1">// latmat[i*c+0*r] = this-&gt;len[0]*xhat[i];</span>
+    <span class="c1">// latmat[i*c+1*r] = this-&gt;len[1]*yhat[i];</span>
+    <span class="c1">// latmat[i*c+2*r] = this-&gt;len[2]*zhat[i];</span>
+    <span class="n">latmat</span><span class="p">[</span><span class="mi">0</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">xhat</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// ̂x direction, first row</span>
+    <span class="n">latmat</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">yhat</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// ̂y direction, second row</span>
+    <span class="n">latmat</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">zhat</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// ̂z direction, third row</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">fromxyz</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">fromxyz</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">toxyz</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="c1">// there are infinite possibilities for your choice of axes.</span>
+  <span class="c1">// the original spglib used x along a and y in the (a,b) plane</span>
+  <span class="c1">// here we&#39;re going with x along astar and y in the (astar, bstar) plane -- this is the &quot;B-matrix&quot;</span>
+  <span class="kt">double</span> <span class="n">B</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">().</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="c1">// we want toxyz to be 2*pi*transpose(inverse(B));</span>
+  <span class="c1">// use t as a buffer</span>
+  <span class="n">matrix_inverse</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+  <span class="n">matrix_transpose</span><span class="p">(</span><span class="n">t</span><span class="p">);</span> <span class="c1">// in-place transpose using swap</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">toxyz</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="o">*</span><span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">fromxyz</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="n">fromxyz</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">fromxyz</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="kt">double</span> <span class="n">toxyz</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">toxyz</span><span class="p">,</span><span class="mi">3u</span><span class="p">,</span><span class="mi">1u</span><span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">matrix_inverse</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">toxyz</span><span class="p">))</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;xyz_transform matrix has zero determinant&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">fromxyz</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">latmat</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">latmat</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">strides</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">latmat</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="n">Direct</span> <span class="n">d</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">();</span>
+  <span class="kt">double</span> <span class="n">m</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+  <span class="n">d</span><span class="p">.</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="n">matrix_inverse</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">m</span><span class="p">);</span>
+  <span class="n">matrix_transpose</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*=</span><span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">latmat</span><span class="p">[</span><span class="n">c</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">r</span><span class="o">*</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">B</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">strides</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="c1">//Calculate the B-matrix as in Acta Cryst. (1967). 22, 457</span>
+  <span class="c1">// http://dx.doi.org/10.1107/S0365110X67000970</span>
+  <span class="n">Direct</span> <span class="n">d</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">();</span>
+
+  <span class="kt">double</span> <span class="n">asb</span><span class="p">,</span> <span class="n">asg</span><span class="p">;</span>
+  <span class="n">asb</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_beta</span><span class="p">());</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">asb</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">asb</span><span class="o">*=-</span><span class="mf">1.0</span><span class="p">;</span>
+  <span class="n">asg</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_gamma</span><span class="p">());</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">asg</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">asg</span><span class="o">*=-</span><span class="mf">1.0</span><span class="p">;</span>
+  <span class="c1">// Be careful about indexing B. Make sure each vector goes in as a column, not a row!</span>
+  <span class="c1">// if you mix this up, you&#39;ll only notice for non-orthogonal space groups</span>
+
+  <span class="c1">// a-star along x -- first column (constant row index = 0)</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">0</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_a</span><span class="p">();</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">0</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">0</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  <span class="c1">// b-star in the x-y plane -- second column</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_b</span><span class="p">()</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_gamma</span><span class="p">());</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_b</span><span class="p">()</span><span class="o">*</span><span class="n">asg</span><span class="p">;</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  <span class="c1">// and c-star -- third column</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_c</span><span class="p">()</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_beta</span><span class="p">());</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_c</span><span class="p">())</span><span class="o">*</span><span class="n">asb</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">get_alpha</span><span class="p">());</span>
+  <span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="o">/</span><span class="n">d</span><span class="p">.</span><span class="n">get_c</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">toxyz</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">toxyz</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">toxyz</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">strides</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">toxyz</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">toxyz</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="c1">// there are infinite possibilities for your choice of axes.</span>
+  <span class="c1">// the original spglib used x along a and y in the (a,b) plane</span>
+  <span class="c1">// here we&#39;re going with x along astar and y in the (astar, bstar) plane -- this is the &quot;B-matrix&quot;</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="n">toxyz</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">fromxyz</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="n">fromxyz</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">strides</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">get_inverse_xyz_transform</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">fromxyz</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="n">toxyz</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">toxyz</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">matrix_inverse</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">toxyz</span><span class="p">))</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;xyz_transform matrix has zero determinant&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">fromxyz</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="o">*</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// We have to define these separately from Lattice since Lattice.star() doesn&#39;t exist.</span>
+<span class="kt">bool</span> <span class="n">Direct</span><span class="o">::</span><span class="n">isstar</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span> <span class="n">latt</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="c1">// two lattices are the star of each other if the star of one is the same as the other</span>
+  <span class="c1">// we need to check both ways in case rounding errors in the inversion cause a problem</span>
+  <span class="k">return</span> <span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">issame</span><span class="p">(</span> <span class="n">latt</span><span class="p">.</span><span class="n">star</span><span class="p">()</span> <span class="p">)</span> <span class="o">||</span> <span class="n">latt</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">()</span> <span class="p">)</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">isstar</span><span class="p">(</span><span class="k">const</span> <span class="n">Direct</span><span class="o">&amp;</span> <span class="n">latt</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="c1">// two lattices are the star of each other if the star of one is the same as the other</span>
+  <span class="c1">// we need to check both ways in case rounding errors in the inversion cause a problem</span>
+  <span class="k">return</span> <span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">issame</span><span class="p">(</span> <span class="n">latt</span><span class="p">.</span><span class="n">star</span><span class="p">()</span> <span class="p">)</span> <span class="o">||</span> <span class="n">latt</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">()</span> <span class="p">)</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//bool Direct::issame(const Reciprocal) const {printf(&quot;call to Direct::issame(Reciprocal)\n&quot;); return false;}</span>
+<span class="kt">bool</span> <span class="n">Direct</span><span class="o">::</span><span class="n">isstar</span><span class="p">(</span><span class="k">const</span> <span class="n">Direct</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="nb">false</span><span class="p">;}</span>
+<span class="c1">//bool Reciprocal::issame(const Direct) const {printf(&quot;call to Reciprocal::issame(Direct)\n&quot;); return false;}</span>
+<span class="kt">bool</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">isstar</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="nb">false</span><span class="p">;}</span>
+
+<span class="kt">void</span> <span class="n">Direct</span><span class="o">::</span><span class="n">print</span><span class="p">(){</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g)A &quot;</span> <span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">print</span><span class="p">(){</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g)/A &quot;</span> <span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;(%g %g %g)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">PI</span><span class="o">*</span><span class="mi">180</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="n">Direct</span> <span class="n">Direct</span><span class="o">::</span><span class="n">primitive</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="n">PrimitiveTransform</span> <span class="n">P</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">bravais</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">P</span><span class="p">.</span><span class="n">does_anything</span><span class="p">()){</span>
+    <span class="kt">double</span> <span class="n">plm</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">lm</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_lattice_matrix</span><span class="p">(</span><span class="n">lm</span><span class="p">);</span> <span class="c1">// now returns *row* vectors!</span>
+    <span class="c1">// The transformation matrix P gives us the primitive basis column-vector</span>
+    <span class="c1">// matrix Aₚ from the standard basis column-vector matrix Aₛ by</span>
+    <span class="c1">// Aₚ = Aₛ P. But here we have Aₛᵀ and want Aₚᵀ:</span>
+    <span class="c1">// Aₚᵀ = (Aₛ P)ᵀ = Pᵀ Aₛᵀ</span>
+    <span class="c1">// So we need the transpose of P from the PrimitiveTransform object:</span>
+    <span class="n">multiply_matrix_matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">plm</span><span class="p">,</span><span class="n">P</span><span class="p">.</span><span class="n">get_Pt</span><span class="p">().</span><span class="n">data</span><span class="p">(),</span><span class="n">lm</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nf">Direct</span><span class="p">(</span><span class="n">plm</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Reciprocal</span> <span class="n">Reciprocal</span><span class="o">::</span><span class="n">primitive</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="c1">// We could try to use the fact that for column vectors Bₚ = Bₛ (P⁻¹)ᵀ</span>
+  <span class="c1">// but it&#39;s probably safer to continue using the reciprocal of the primitive</span>
+  <span class="c1">// of the reciprocal of this lattice.</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">star</span><span class="p">().</span><span class="n">primitive</span><span class="p">().</span><span class="n">star</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

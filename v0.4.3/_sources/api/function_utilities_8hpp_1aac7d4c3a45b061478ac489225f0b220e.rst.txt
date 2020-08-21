@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aac7d4c3a45b061478ac489225f0b220e:
+
+Template Function squared_distance(const T&, const T&)
+======================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: squared_distance(const T&, const T&)

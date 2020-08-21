@@ -1,0 +1,25 @@
+.. _exhale_class_classNest:
+
+Template Class Nest
+===================
+
+- Defined in :ref:`file_src_nest.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Type
+************
+
+- ``public BrillouinZoneNest3< T, S >`` (:ref:`exhale_class_classBrillouinZoneNest3`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Nest
+   :members:
+   :protected-members:
+   :undoc-members:

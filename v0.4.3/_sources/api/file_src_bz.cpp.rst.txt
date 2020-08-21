@@ -1,0 +1,56 @@
+
+.. _file_src_bz.cpp:
+
+File bz.cpp
+===========
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/bz.cpp``)
+---------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bz.hpp`` (:ref:`file_src_bz.hpp`)
+
+- ``omp.h``
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_bz_8cpp_1aea8b2af848fed519acfe1b5312c12419`
+
+- :ref:`exhale_function_bz_8cpp_1a420a3ad8100b7cc7423656c6dcde433e`
+
+- :ref:`exhale_function_bz_8cpp_1a747d3e85ef77e760d5ae4aa702cf5bd2`
+
+- :ref:`exhale_function_bz_8cpp_1a944bff6029393cd34068ab139d528f10`
+
+- :ref:`exhale_function_bz_8cpp_1adf94fc99f077a349f5f996b2ece44182`
+
+- :ref:`exhale_function_bz_8cpp_1a4b192cdeefa32dc3520cd71e4a577942`
+

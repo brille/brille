@@ -1,0 +1,16 @@
+.. _exhale_class_classSymmetry:
+
+Class Symmetry
+==============
+
+- Defined in :ref:`file_src_symmetry.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Symmetry
+   :members:
+   :protected-members:
+   :undoc-members:

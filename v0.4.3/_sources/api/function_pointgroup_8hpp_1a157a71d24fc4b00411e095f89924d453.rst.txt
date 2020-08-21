@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453:
+
+Function get_pointgroup_rotations_hall_number(int \*, const int, const int, const int)
+======================================================================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: get_pointgroup_rotations_hall_number(int *, const int, const int, const int)

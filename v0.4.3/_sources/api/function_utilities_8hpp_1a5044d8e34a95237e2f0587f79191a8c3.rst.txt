@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a5044d8e34a95237e2f0587f79191a8c3:
+
+Template Function copy_vector
+=============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: copy_vector(T *, const T *)

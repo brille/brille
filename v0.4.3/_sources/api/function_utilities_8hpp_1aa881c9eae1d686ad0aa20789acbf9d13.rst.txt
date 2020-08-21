@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aa881c9eae1d686ad0aa20789acbf9d13:
+
+Template Function matrix_inverse
+================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: matrix_inverse(R *, const R *, R, const int)

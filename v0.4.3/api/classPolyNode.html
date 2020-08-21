@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class PolyNode &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class PrimitiveTransform" href="classPrimitiveTransform.html" />
+    <link rel="prev" title="Template Class PolyhedronTrellis" href="classPolyhedronTrellis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class PolyNode</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classPolyNode.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-polynode">
+<span id="exhale-class-classpolynode"></span><h1>Class PolyNode<a class="headerlink" href="#class-polynode" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">NullNode</span></code> (<a class="reference internal" href="classNullNode.html#exhale-class-classnullnode"><span class="std std-ref">Class NullNode</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv48PolyNode">
+<span id="_CPPv38PolyNode"></span><span id="_CPPv28PolyNode"></span><span id="PolyNode"></span><span class="target" id="classPolyNode"></span><em class="property">class </em><code class="sig-name descname">PolyNode</code> : <em class="property">public</em> <a class="reference internal" href="classNullNode.html#_CPPv48NullNode" title="NullNode">NullNode</a><a class="headerlink" href="#_CPPv48PolyNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8PolyNode8PolyNodeEv">
+<span id="_CPPv3N8PolyNode8PolyNodeEv"></span><span id="_CPPv2N8PolyNode8PolyNodeEv"></span><span id="PolyNode::PolyNode"></span><span class="target" id="classPolyNode_1ae6c7ef96ada4b055ad09868447e7ab28"></span><code class="sig-name descname">PolyNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8PolyNode8PolyNodeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI7index_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE">
+<span id="_CPPv3N8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI7index_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE"></span><span id="_CPPv2N8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI7index_tX4EEEEERKNSt6vectorINSt5arrayIdX4EEEEERKNSt6vectorIdEE"></span><span id="PolyNode::PolyNode__std::vector:std::array:index_t.4::CR.std::vector:std::array:double.4::CR.std::vector:double:CR"></span><span class="target" id="classPolyNode_1a45b4bc5ed96ed6d6e65d53f80b4c349b"></span><code class="sig-name descname">PolyNode</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 4&gt;&gt; &amp;<em>vit</em>, <em class="property">const</em> std::vector&lt;std::array&lt;double, 4&gt;&gt; &amp;<em>cit</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>volt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI7index_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode16tetrahedra_countEv">
+<span id="_CPPv3NK8PolyNode16tetrahedra_countEv"></span><span id="_CPPv2NK8PolyNode16tetrahedra_countEv"></span><span id="PolyNode::tetrahedra_countC"></span><span class="target" id="classPolyNode_1a475e569d244a89745413abc7221c5880"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">tetrahedra_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode16tetrahedra_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode12vertex_countEv">
+<span id="_CPPv3NK8PolyNode12vertex_countEv"></span><span id="_CPPv2NK8PolyNode12vertex_countEv"></span><span id="PolyNode::vertex_countC"></span><span class="target" id="classPolyNode_1aac90110aba9f86c2326addc499b964df"></span><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a> <code class="sig-name descname">vertex_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode12vertex_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode8verticesEv">
+<span id="_CPPv3NK8PolyNode8verticesEv"></span><span id="_CPPv2NK8PolyNode8verticesEv"></span><span id="PolyNode::vertices__voidC"></span><span class="target" id="classPolyNode_1aa8978d06c4f332e09fdbd79e2a3d2738"></span>std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; <code class="sig-name descname">vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode8verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode24vertices_per_tetrahedronEv">
+<span id="_CPPv3NK8PolyNode24vertices_per_tetrahedronEv"></span><span id="_CPPv2NK8PolyNode24vertices_per_tetrahedronEv"></span><span id="PolyNode::vertices_per_tetrahedron__voidC"></span><span class="target" id="classPolyNode_1a6879de95df9070851233d76da109516d"></span>std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>, 4&gt;&gt; <code class="sig-name descname">vertices_per_tetrahedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode24vertices_per_tetrahedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE">
+<span id="_CPPv3NK8PolyNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="_CPPv2NK8PolyNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE"></span><span id="PolyNode::indices_weights__ArrayVector:double:CR.ArrayVector:double:CR.std::vector:index_t:R.std::vector:double:RC"></span><span class="target" id="classPolyNode_1a3cf2bd97d06e7c5e499d3ab764790f8d"></span>bool <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>vertices</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;<a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#_CPPv47index_t" title="index_t">index_t</a>&gt; &amp;<em>indices</em>, std::vector&lt;double&gt; &amp;<em>weights</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt6vectorI7index_tEERNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8PolyNode6volumeERK11ArrayVectorIdE">
+<span id="_CPPv3NK8PolyNode6volumeERK11ArrayVectorIdE"></span><span id="_CPPv2NK8PolyNode6volumeERK11ArrayVectorIdE"></span><span id="PolyNode::volume__ArrayVector:double:CRC"></span><span class="target" id="classPolyNode_1ad1c681ae11d940dd29074789547e3480"></span>double <code class="sig-name descname">volume</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8PolyNode6volumeERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classPrimitiveTransform.html" class="btn btn-neutral float-right" title="Class PrimitiveTransform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classPolyhedronTrellis.html" class="btn btn-neutral float-left" title="Template Class PolyhedronTrellis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class NestNode &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class NodeContainer" href="classNodeContainer.html" />
+    <link rel="prev" title="Class NestLeaf" href="classNestLeaf.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class NestNode</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classNestNode.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-nestnode">
+<span id="exhale-class-classnestnode"></span><h1>Class NestNode<a class="headerlink" href="#class-nestnode" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">File nest.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv48NestNode">
+<span id="_CPPv38NestNode"></span><span id="_CPPv28NestNode"></span><span id="NestNode"></span><span class="target" id="classNestNode"></span><em class="property">class </em><code class="sig-name descname">NestNode</code><a class="headerlink" href="#_CPPv48NestNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N8NestNode8NestNodeEb">
+<span id="_CPPv3N8NestNode8NestNodeEb"></span><span id="_CPPv2N8NestNode8NestNodeEb"></span><span id="NestNode::NestNode__b"></span><span class="target" id="classNestNode_1ac541314324463af09609fd4ba53f77b5"></span><code class="sig-name descname">NestNode</code><span class="sig-paren">(</span>bool <em>ir</em> = false<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8NestNode8NestNodeEb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8NestNode8NestNodeERK8NestLeaf">
+<span id="_CPPv3N8NestNode8NestNodeERK8NestLeaf"></span><span id="_CPPv2N8NestNode8NestNodeERK8NestLeaf"></span><span id="NestNode::NestNode__NestLeafCR"></span><span class="target" id="classNestNode_1ae8d700a34164e3f4975255cb00fbe536"></span><code class="sig-name descname">NestNode</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classNestLeaf.html#_CPPv48NestLeaf" title="NestLeaf">NestLeaf</a> &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8NestNode8NestNodeERK8NestLeaf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8NestNode8NestNodeERKNSt5arrayI6size_tXL4EEEERKNSt5arrayIdXL4EEEEKd">
+<span id="_CPPv3N8NestNode8NestNodeERKNSt5arrayI6size_tXL4EEEERKNSt5arrayIdXL4EEEEKd"></span><span id="_CPPv2N8NestNode8NestNodeERKNSt5arrayI6size_tX4EEERKNSt5arrayIdX4EEEKd"></span><span id="NestNode::NestNode__std::array:s.4:CR.std::array:double.4:CR.doubleC"></span><span class="target" id="classNestNode_1a3e43f2908a6f524df78d2c8e002c3e1b"></span><code class="sig-name descname">NestNode</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;size_t, 4&gt; &amp;<em>vit</em>, <em class="property">const</em> std::array&lt;double, 4&gt; &amp;<em>ci</em>, <em class="property">const</em> double <em>vol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8NestNode8NestNodeERKNSt5arrayI6size_tXL4EEEERKNSt5arrayIdXL4EEEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode7is_rootEv">
+<span id="_CPPv3NK8NestNode7is_rootEv"></span><span id="_CPPv2NK8NestNode7is_rootEv"></span><span id="NestNode::is_root__voidC"></span><span class="target" id="classNestNode_1a995bf44dd40e441cf9cd82a200ba8b02"></span>bool <code class="sig-name descname">is_root</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode7is_rootEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode7is_leafEv">
+<span id="_CPPv3NK8NestNode7is_leafEv"></span><span id="_CPPv2NK8NestNode7is_leafEv"></span><span id="NestNode::is_leaf__voidC"></span><span class="target" id="classNestNode_1a99f9285a4100c0583e633a3d79fafc96"></span>bool <code class="sig-name descname">is_leaf</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode7is_leafEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode8boundaryEv">
+<span id="_CPPv3NK8NestNode8boundaryEv"></span><span id="_CPPv2NK8NestNode8boundaryEv"></span><span id="NestNode::boundary__voidC"></span><span class="target" id="classNestNode_1a77f3226891bcb2853638660eebc7d59c"></span><em class="property">const</em> <a class="reference internal" href="classNestLeaf.html#_CPPv48NestLeaf" title="NestLeaf">NestLeaf</a> &amp;<code class="sig-name descname">boundary</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode8boundaryEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode8branchesEv">
+<span id="_CPPv3NK8NestNode8branchesEv"></span><span id="_CPPv2NK8NestNode8branchesEv"></span><span id="NestNode::branches__voidC"></span><span class="target" id="classNestNode_1a8209e694a2e7a951b8c256b3c06f22aa"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv48NestNode" title="NestNode">NestNode</a>&gt; &amp;<code class="sig-name descname">branches</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N8NestNode8branchesEv">
+<span id="_CPPv3N8NestNode8branchesEv"></span><span id="_CPPv2N8NestNode8branchesEv"></span><span id="NestNode::branches__void"></span><span class="target" id="classNestNode_1a308c657c18a9f64630a4c145ed69f0d0"></span>std::vector&lt;<a class="reference internal" href="#_CPPv48NestNode" title="NestNode">NestNode</a>&gt; &amp;<code class="sig-name descname">branches</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8NestNode8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode6volumeEv">
+<span id="_CPPv3NK8NestNode6volumeEv"></span><span id="_CPPv2NK8NestNode6volumeEv"></span><span id="NestNode::volume__voidC"></span><span class="target" id="classNestNode_1aca8dffc86dcfb707f3271f6e14ae0933"></span>double <code class="sig-name descname">volume</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode6volumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8NestNode8containsEbDp1A">
+<span id="_CPPv3IDpEN8NestNode8containsEDp1A"></span><span id="_CPPv2IDpEN8NestNode8containsEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classNestNode_1a5dc1c606e99044e9f9a2095d608a63bf"></span>bool <code class="sig-name descname">contains</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8NestNode8containsEbDp1A" title="NestNode::contains::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8NestNode8containsEbDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN8NestNode7weightsENSt5arrayIdXL4EEEEDp1A">
+<span id="_CPPv3IDpEN8NestNode7weightsEDp1A"></span><span id="_CPPv2IDpEN8NestNode7weightsEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classNestNode_1a5878dd88bdbd1d372cb3d5993c9ed746"></span>std::array&lt;double, 4&gt; <code class="sig-name descname">weights</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN8NestNode7weightsENSt5arrayIdXL4EEEEDp1A" title="NestNode::weights::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN8NestNode7weightsENSt5arrayIdXL4EEEEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdE">
+<span id="_CPPv3NK8NestNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdE"></span><span id="_CPPv2NK8NestNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdE"></span><span id="NestNode::indices_weights__ArrayVector:double:CR.ArrayVector:double:CRC"></span><span class="target" id="classNestNode_1a6ee173e0fc026f17eb1dd819d0ede30b"></span>std::vector&lt;std::pair&lt;size_t, double&gt;&gt; <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode15indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode10tetrahedraEv">
+<span id="_CPPv3NK8NestNode10tetrahedraEv"></span><span id="_CPPv2NK8NestNode10tetrahedraEv"></span><span id="NestNode::tetrahedra__voidC"></span><span class="target" id="classNestNode_1a0fba5c617905c26230627bf71365410a"></span>std::vector&lt;std::array&lt;size_t, 4&gt;&gt; <code class="sig-name descname">tetrahedra</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode10tetrahedraEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode9to_stringERKNSt6stringEKb">
+<span id="_CPPv3NK8NestNode9to_stringERKNSt6stringEKb"></span><span id="_CPPv2NK8NestNode9to_stringERKNSt6stringEKb"></span><span id="NestNode::to_string__ssCR.bCC"></span><span class="target" id="classNestNode_1aa11459d72a6f75703ef7588f650f0825"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>prefix</em>, <em class="property">const</em> bool <em>not_last</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode9to_stringERKNSt6stringEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode12collect_keysEK6size_t">
+<span id="_CPPv3NK8NestNode12collect_keysEK6size_t"></span><span id="_CPPv2NK8NestNode12collect_keysEK6size_t"></span><span id="NestNode::collect_keys__sCC"></span><span class="target" id="classNestNode_1a225bb5f9689575338cfad0cab4122c2a"></span>std::set&lt;size_t&gt; <code class="sig-name descname">collect_keys</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>nv</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode12collect_keysEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK8NestNode17__indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt5arrayIdXL4EEEE">
+<span id="_CPPv3NK8NestNode17__indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt5arrayIdXL4EEEE"></span><span id="_CPPv2NK8NestNode17__indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt5arrayIdX4EEE"></span><span id="NestNode::__indices_weights__ArrayVector:double:CR.ArrayVector:double:CR.std::array:double.4:RC"></span><span class="target" id="classNestNode_1a73b0814f3c9c16487eaefa70f3406d85"></span>std::vector&lt;std::pair&lt;size_t, double&gt;&gt; <code class="sig-name descname">__indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; &amp;<em>x</em>, std::array&lt;double, 4&gt; &amp;<em>w</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK8NestNode17__indices_weightsERK11ArrayVectorIdERK11ArrayVectorIdERNSt5arrayIdXL4EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classNodeContainer.html" class="btn btn-neutral float-right" title="Class NodeContainer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classNestLeaf.html" class="btn btn-neutral float-left" title="Class NestLeaf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

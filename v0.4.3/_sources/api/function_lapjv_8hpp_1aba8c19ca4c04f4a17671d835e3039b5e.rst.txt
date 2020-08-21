@@ -1,0 +1,13 @@
+.. _exhale_function_lapjv_8hpp_1aba8c19ca4c04f4a17671d835e3039b5e:
+
+Template Function lapjv
+=======================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: lapjv(idx, const cost *restrict, bool, idx *restrict, idx *restrict, cost *restrict, cost *restrict)

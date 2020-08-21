@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1abd44d720f83e832c853ecf6d7e132b26:
+
+Template Function equal_array
+=============================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: equal_array(const T *, const T *, const T)

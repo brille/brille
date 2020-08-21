@@ -1,0 +1,13 @@
+.. _exhale_define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438:
+
+Define debug_update
+===================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: debug_update

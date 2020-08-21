@@ -1,0 +1,79 @@
+
+.. _file_src_triangulation_layers.hpp:
+
+File triangulation_layers.hpp
+=============================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/triangulation_layers.hpp``)
+---------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_triangulation_layers.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``array`` (:ref:`file_src_arrayvector.hpp`)
+
+- ``cassert``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``omp.h``
+
+- ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
+
+- ``set``
+
+- ``tetgen.h``
+
+- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_mesh.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classTetTri`
+
+- :ref:`exhale_class_classTetTriLayer`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a8dc7c36309a283c7d12c6396d6d4e27e`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a021b328065e9a5cb4cda58b02177224d`
+

@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5:
+
+Template Function intersection(const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, ArrayVector<T>&)
+=========================================================================================================================================================================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: intersection(const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, const ArrayVector<T>&, ArrayVector<T>&)

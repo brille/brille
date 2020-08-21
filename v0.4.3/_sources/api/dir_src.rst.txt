@@ -1,0 +1,72 @@
+.. _dir_src:
+
+
+Directory src
+=============
+
+
+*Directory path:* ``src``
+
+
+Files
+-----
+
+- :ref:`file_src_arrayvector.hpp`
+- :ref:`file_src_arrayvector.tpp`
+- :ref:`file_src_arrayvector_operators.tpp`
+- :ref:`file_src_balltrellis.cpp`
+- :ref:`file_src_balltrellis.hpp`
+- :ref:`file_src_basis.hpp`
+- :ref:`file_src_bravais.cpp`
+- :ref:`file_src_bravais.hpp`
+- :ref:`file_src_bz.cpp`
+- :ref:`file_src_bz.hpp`
+- :ref:`file_src_bz_mesh.hpp`
+- :ref:`file_src_bz_nest.hpp`
+- :ref:`file_src_bz_trellis.hpp`
+- :ref:`file_src_bz_wedge.cpp`
+- :ref:`file_src_debug.cpp`
+- :ref:`file_src_debug.hpp`
+- :ref:`file_src_hall_symbol.cpp`
+- :ref:`file_src_hall_symbol.hpp`
+- :ref:`file_src_interpolation.hpp`
+- :ref:`file_src_interpolation_data.hpp`
+- :ref:`file_src_lapjv.hpp`
+- :ref:`file_src_lattice.cpp`
+- :ref:`file_src_lattice.hpp`
+- :ref:`file_src_latvec.hpp`
+- :ref:`file_src_latvec.tpp`
+- :ref:`file_src_ldvec.tpp`
+- :ref:`file_src_lqvec.tpp`
+- :ref:`file_src_mesh.hpp`
+- :ref:`file_src_mesh.tpp`
+- :ref:`file_src_munkres.hpp`
+- :ref:`file_src_neighbours.cpp`
+- :ref:`file_src_neighbours.hpp`
+- :ref:`file_src_nest.hpp`
+- :ref:`file_src_nest.tpp`
+- :ref:`file_src_permutation.hpp`
+- :ref:`file_src_permutation_table.hpp`
+- :ref:`file_src_phonon.hpp`
+- :ref:`file_src_pointgroup.cpp`
+- :ref:`file_src_pointgroup.hpp`
+- :ref:`file_src_pointsymmetry.cpp`
+- :ref:`file_src_pointsymmetry.hpp`
+- :ref:`file_src_polyhedron.hpp`
+- :ref:`file_src_primitive.hpp`
+- :ref:`file_src_smp.hpp`
+- :ref:`file_src_sorting_status.hpp`
+- :ref:`file_src_spg_database.cpp`
+- :ref:`file_src_spg_database.hpp`
+- :ref:`file_src_symmetry.cpp`
+- :ref:`file_src_symmetry.hpp`
+- :ref:`file_src_transform.hpp`
+- :ref:`file_src_trellis.hpp`
+- :ref:`file_src_trellis.tpp`
+- :ref:`file_src_triangulation.hpp`
+- :ref:`file_src_triangulation_layers.hpp`
+- :ref:`file_src_triangulation_simple.hpp`
+- :ref:`file_src_utilities.hpp`
+- :ref:`file_src_utilities.tpp`
+
+

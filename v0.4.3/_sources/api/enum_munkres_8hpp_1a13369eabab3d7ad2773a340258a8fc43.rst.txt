@@ -1,0 +1,13 @@
+.. _exhale_enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43:
+
+Enum marker
+===========
+
+- Defined in :ref:`file_src_munkres.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: marker

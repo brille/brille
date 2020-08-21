@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10:
+
+Function isometry_type
+======================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: isometry_type(const int *)
