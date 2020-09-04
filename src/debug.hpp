@@ -120,7 +120,7 @@ public:
   template<typename... L> void print(const std::string& fnc, L... l){
     if (last_function.compare(fnc)){
       last_function = fnc;
-      std::cout << fnc << std::endl;
+      std::cout << std::endl << fnc << std::endl;
     }
     this->inner_print(l...);
   }
@@ -147,7 +147,8 @@ private:
     if (l) w /= static_cast<int>(l)+1;
     int count = 0;
     std::string s;
-    if (x.size() == n*n){
+    // if (x.size() == n*n){
+    if (3u == n){
       for (auto y: x){
         s += " " + my_to_string(y, l);
         ++count;

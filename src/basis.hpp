@@ -23,6 +23,7 @@
 
 #include "symmetry.hpp"
 #include "utilities.hpp"
+#include "approx.hpp"
 
 class Basis{
 public:
@@ -67,7 +68,7 @@ public:
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
       for (int i=0; i<3; ++i) d[i] = std::abs(d[i]-std::floor(d[i]))-0.5;
-      return approx_vector(d.data(), z.data());
+      return brille::approx::vector(d.data(), z.data());
     };
     // now search for κ'
     auto kp_itr = std::find_if(positions_.begin(), positions_.end(), checker);
@@ -88,7 +89,7 @@ public:
   template<class T> std::tuple<bool, size_t> equivalent_after_operation(const size_t k, const std::array<T,9>& op){
     if (k>=positions_.size()) throw std::runtime_error("invalid atom positon index");
     point K_pos;
-    multiply_matrix_vector(K_pos.data(), op.data(), positions_[k].data());
+    brille::utils::multiply_matrix_vector(K_pos.data(), op.data(), positions_[k].data());
     return this->equivalent_to(K_pos);
   }
   //

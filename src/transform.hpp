@@ -35,14 +35,18 @@ using invPtype = PrimitiveTraits::invP;
 template<class T,typename S=typename std::common_type<T,Ptype>::type>
 LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
-  if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
+  if (!lat.issame(a.get_lattice()))
+    throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
   if (PT.does_nothing()) return a;
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<Ptype,9> P = PT.get_Pt(); // the transpose of the P matrix
-  LQVec<S> out(lat.primitive(), a.size());
-  for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,Ptype,T,3>(out.data(i), P.data(), a.data(i) );
+  auto sh = a.shape();
+  LQVec<S> out(lat.primitive(), sh);
+  sh.back() = 0;
+  for (auto x: SubIt(a.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), P.data(), a.ptr(x));
   return out;
 }
 
@@ -55,14 +59,18 @@ LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
 template<class T,typename S=typename std::common_type<T,invPtype>::type>
 LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
-  if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
+  if (!lat.primitive().issame(a.get_lattice()))
+    throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
   if (PT.does_nothing()) return a;
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<invPtype,9> P = PT.get_invPt(); // the inverse of the transpose of P (or the transpose of the inverse of P)
-  LQVec<S> out(lat, a.size());
-  for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,invPtype,T,3>(out.data(i), P.data(), a.data(i) );
+  auto sh = a.shape();
+  LQVec<S> out(lat, sh);
+  sh.back() = 0;
+  for (auto x: SubIt(a.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), P.data(), a.ptr(x));
   return out;
 }
 
@@ -77,14 +85,18 @@ LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
 template<class T,typename S=typename std::common_type<T,invPtype>::type>
 LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
-  if (!lat.issame(a.get_lattice())) throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
+  if (!lat.issame(a.get_lattice()))
+    throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
   if (PT.does_nothing()) return a;
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<invPtype,9> P = PT.get_invP(); // xₚ = P⁻¹ xₛ
-  LDVec<S> out(lat.primitive(), a.size());
-  for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,invPtype,T,3>(out.data(i), P.data(), a.data(i) );
+  auto sh = a.shape();
+  LDVec<S> out(lat.primitive(), sh);
+  sh.back() = 0;
+  for (auto x: SubIt(a.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), P.data(), a.ptr(x));
   return out;
 }
 
@@ -97,37 +109,42 @@ LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
 template<class T,typename S=typename std::common_type<T,Ptype>::type>
 LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
-  if (!lat.primitive().issame(a.get_lattice())) throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
+  if (!lat.primitive().issame(a.get_lattice()))
+    throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
   if (PT.does_nothing()) return a;
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<Ptype,9> P = PT.get_P(); // xₛ = P xₚ
-  LDVec<S> out(lat, a.size());
-  for (size_t i=0; i<a.size(); ++i)
-    multiply_matrix_vector<S,Ptype,T,3>(out.data(i), P.data(), a.data(i) );
+  auto sh = a.shape();
+  LDVec<S> out(lat, sh);
+  sh.back() = 0;
+  for (auto x: SubIt(a.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), P.data(), a.ptr(x));
   return out;
 }
 
 // utility functions for conversion of lattice vectors where only their components are stored
 template<class T,typename S=typename std::common_type<T,double>::type>
-ArrayVector<S> xyz_to_hkl(const Reciprocal& lat, const ArrayVector<T>& xyz){
-  // this error could be relaxed by changing to hkl(xyz.numel(), xyz.size()) below
-  if (xyz.numel()!=3u) throw std::runtime_error("coordinate transformation only defined for three-vectors");
-  double toxyz[9], fromxyz[9];
-  lat.get_xyz_transform(toxyz);
-  if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-  ArrayVector<S> hkl(3, xyz.size());
-  for (size_t i=0; i<xyz.size(); ++i) multiply_matrix_vector<S,double,T,3>(hkl.data(i), fromxyz, xyz.data(i));
+brille::Array<S> xyz_to_hkl(const Reciprocal& lat, const brille::Array<T>& xyz){
+  assert(xyz.stride().back() == 1u && xyz.size(xyz.ndim()-1)==3);
+  auto fromxyz = lat.get_inverse_xyz_transform();
+  auto sh = xyz.shape();
+  brille::Array<S> hkl(sh);
+  sh.back() = 0;
+  for (auto x: SubIt(xyz.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,double,T,3>(hkl.ptr(x), fromxyz.data(), xyz.ptr(x));
   return hkl;
 }
 template<class T,typename S=typename std::common_type<T,double>::type>
-ArrayVector<S> hkl_to_xyz(const Reciprocal& lat, const ArrayVector<T>& hkl){
-  // this error could be relaxed by changing to xyz(hkl.numel(), hkl.size()) below
-  if (hkl.numel()!=3u) throw std::runtime_error("coordinate transformation only defined for three-vectors");
-  double toxyz[9];
-  lat.get_xyz_transform(toxyz);
-  ArrayVector<S> xyz(3, hkl.size());
-  for (size_t i=0; i<hkl.size(); ++i) multiply_matrix_vector<S,double,T,3>(xyz.data(i), toxyz, hkl.data(i));
+brille::Array<S> hkl_to_xyz(const Reciprocal& lat, const brille::Array<T>& hkl){
+  assert(hkl.stride().back() == 1u && hkl.size(hkl.ndim()-1)==3);
+  auto toxyz = lat.get_xyz_transform();
+  auto sh = hkl.shape();
+  brille::Array<S> xyz(sh);
+  sh.back() = 0;
+  for (auto x: SubIt(hkl.shape(), sh))
+    brille::utils::multiply_matrix_vector<S,double,T,3>(xyz.ptr(x), toxyz.data(), hkl.ptr(x));
   return xyz;
 }
 

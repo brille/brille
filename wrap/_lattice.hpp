@@ -23,9 +23,10 @@
 #include <pybind11/stl.h>
 #include <thread>
 
+#include "_array.hpp"
 #include "_c_to_python.hpp"
 #include "lattice.hpp"
-#include "arrayvector.hpp"
+#include "array.hpp"
 #include "utilities.hpp"
 
 
@@ -78,14 +79,18 @@ void declare_lattice_mat_basis_init(py::class_<T,Lattice> &pclass, const std::st
       throw std::runtime_error("Three three-vectors required.");
     T lattice((double *) info.ptr, info.strides, groupid);
     // pull in the basis information
-    info = pypos.request();
-    if ( info.ndim!=2 )
-      throw std::runtime_error("Basis vectors must be 2-D array");
-    if ( info.shape[1] != 3 )
-      throw std::runtime_error("Atom positions must be three-vectors");
-    ArrayVector<double> avpos((double*) info.ptr, info.shape, info.strides);
-    std::vector<std::array<double,3>> pos(avpos.size());
-    for (size_t i=0; i<avpos.size(); ++i) for (size_t j=0; j<avpos.numel(); ++j) pos[i][j] = avpos.getvalue(i,j);
+    brille::Array<double> avpos = brille::py2a(pypos);
+    std::vector<std::array<double,3>> pos;
+    brille::shape_t ij{0,0};
+    for (brille::ind_t i=0; i<avpos.size(0); ++i){
+      ij[0] = i;
+      std::array<double,3> one;
+      for (brille::ind_t j=0; j<3u; ++j){
+        ij[1] = j;
+        one[j] = avpos[ij];
+      }
+      pos.push_back(one);
+    }
     lattice.set_basis(pos,typ);
     return lattice;
   }), py::arg( "lattice vectors" ), py::arg("atom positions"), py::arg("atom types"), py::arg(argname.c_str())=defarg);

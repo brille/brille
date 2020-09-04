@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
+#include "_array.hpp"
 #include "_c_to_python.hpp"
 #include "polyhedron.hpp"
 #include "utilities.hpp"
@@ -24,26 +25,18 @@ void wrap_polyhedron(pybind11::module &m){
   pybind11::class_<Polyhedron> cls(m, "Polyhedron");
 
   cls.def(pybind11::init([](py::array_t<double> pyv){
-    pybind11::buffer_info bi = pyv.request();
-    if (bi.shape[bi.ndim-1] != 3)
-      throw std::runtime_error("Vertices must be three-vectors");
-    ArrayVector<double> verts((double*)bi.ptr, bi.shape, bi.strides);
-    return Polyhedron(verts);
+    return Polyhedron(brille::py2a(pyv));
   }),"vertices"_a);
 
   cls.def(pybind11::init([](py::array_t<double> pyv, const std::vector<std::vector<int>>& vpf){
-    pybind11::buffer_info bi = pyv.request();
-    if (bi.shape[bi.ndim-1] != 3)
-      throw std::runtime_error("Vertices must be three-vectors");
-    ArrayVector<double> verts((double*)bi.ptr, bi.shape, bi.strides);
-    return Polyhedron(verts, vpf);
+    return Polyhedron(brille::py2a(pyv), vpf);
   }),"vertices"_a, "vertices_per_face"_a);
 
-  cls.def_property_readonly("vertices",[](const Polyhedron& o){return av2np(o.get_vertices());});
+  cls.def_property_readonly("vertices",[](const Polyhedron& o){return brille::a2py(o.get_vertices());});
 
-  cls.def_property_readonly("points",[](const Polyhedron& o){return av2np(o.get_points());});
+  cls.def_property_readonly("points",[](const Polyhedron& o){return brille::a2py(o.get_points());});
 
-  cls.def_property_readonly("normals",[](const Polyhedron& o){return av2np(o.get_normals());});
+  cls.def_property_readonly("normals",[](const Polyhedron& o){return brille::a2py(o.get_normals());});
 
   cls.def_property_readonly("vertices_per_face",&Polyhedron::get_vertices_per_face);
 

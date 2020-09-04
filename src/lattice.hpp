@@ -85,10 +85,10 @@ protected:
       }
       if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
       // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
-      // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
-      au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+      // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
+      au = (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
     }
-    double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+    double conversion = (AngleUnit::radian == au) ? 1.0 : brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
     for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
   }
   // void set_len_scalars(const double, const double, const double);
@@ -143,7 +143,7 @@ public:
   //! Construct the Lattice from a vector of the basis vector lengths and a vector of the basis vector angles
   Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
-  Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
+  Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=brille::halfpi, const double bl=brille::halfpi, const double cl=brille::halfpi, const int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double *, const std::string&, const std::string& choice="");
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
@@ -196,6 +196,18 @@ public:
   @param[out] mt Pointer to memory which can store 9 doubles
   */
   void get_contravariant_metric_tensor(double *mt) const ;
+  /*! Calculate the metric tensor of the Lattice
+  @returns A std::vector of the row-ordered matrix
+  */
+  std::vector<double> get_metric_tensor() const ;
+  /*! Calculate the covariant metric tensor of the Lattice -- this is typically referred to as **the** metric tensor
+  @returns A std::vector of the row-ordered matrix
+  */
+  std::vector<double> get_covariant_metric_tensor() const ;
+  /*! Calculate the contravariant metric tensor of the Lattice -- the inverse of **the** metric tensor
+  @returns A std::vector of the row-ordered matrix
+  */
+  std::vector<double> get_contravariant_metric_tensor() const ;
   // some functions don't logically make sense for this base class, but
   // do for the derived classes. define them here for funsies
   //! Determine if the passed Lattice represents the same space-spanning lattice
@@ -296,10 +308,12 @@ public:
   void get_xyz_transform(double*) const;
   void get_xyz_transform(double*, const size_t, const size_t) const;
   template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+  std::vector<double> get_xyz_transform() const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
   void get_inverse_xyz_transform(double*) const;
   void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
   template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+  std::vector<double> get_inverse_xyz_transform() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
   void get_lattice_matrix(double*, const size_t, const size_t) const;
@@ -333,10 +347,12 @@ public:
   void get_xyz_transform(double*) const;
   void get_xyz_transform(double*, const size_t, const size_t) const;
   template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+  std::vector<double> get_xyz_transform() const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
   void get_inverse_xyz_transform(double*) const;
   void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
   template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+  std::vector<double> get_inverse_xyz_transform() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
   void get_lattice_matrix(double*, const size_t, const size_t) const;

@@ -4,7 +4,7 @@
 
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, PI/2, PI/2, PI/2, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
@@ -14,32 +14,35 @@ TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   BrillouinZoneNest3<double,double> bzn1(bz, max_volume, max_branchings);
 }
 TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
-  Direct d(10.75, 10.75, 10.75, PI/2, PI/2, PI/2, 525);
+  Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
   BrillouinZone bz(d.star());
   size_t number_rho = 1000;
   size_t max_branchings = 5;
   BrillouinZoneNest3<double,double> bzn(bz, number_rho, max_branchings);
 
-  SECTION("get_xyz"){auto verts = bzn.get_xyz(); REQUIRE(verts.size() > 0u);}
-  SECTION("get_hkl"){auto verts = bzn.get_hkl(); REQUIRE(verts.size() > 0u);}
-  SECTION("get_all_xyz"){auto verts = bzn.get_all_xyz(); REQUIRE(verts.size() > 0u);}
-  SECTION("get_all_hkl"){auto verts = bzn.get_all_hkl(); REQUIRE(verts.size() > 0u);}
+  SECTION("get_xyz"){auto verts = bzn.get_xyz(); REQUIRE(verts.size(0) > 0u);}
+  SECTION("get_hkl"){auto verts = bzn.get_hkl(); REQUIRE(verts.size(0) > 0u);}
+  SECTION("get_all_xyz"){auto verts = bzn.get_all_xyz(); REQUIRE(verts.size(0) > 0u);}
+  SECTION("get_all_hkl"){auto verts = bzn.get_all_hkl(); REQUIRE(verts.size(0) > 0u);}
 }
 
 TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, PI/2, PI/2, PI/2, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
   size_t max_branchings = 5;
   BrillouinZoneNest3<double,double> bzn(bz, max_volume, max_branchings);
 
-  ArrayVector<double> Qmap = bzn.get_hkl();
-  std::vector<size_t> shape{Qmap.size(), 3}; // was {Qmap.size(), 1, 3}
-  std::array<size_t,3> elements{0,3,0};
+  auto Qmap = bzn.get_hkl();
+  auto tostore = bzn.get_xyz().reshape({Qmap.size(0),1u,Qmap.size(1)});
+  std::array<unsigned,3> elements{0,3,0};
   RotatesLike rt = RotatesLike::Reciprocal;
-  bzn.replace_value_data( bzn.get_xyz(), shape, elements, rt );
+  bzn.replace_value_data( tostore, elements, rt );
+
+  // If branches ≠ 1 then the vector is not treated as a vector!
+  REQUIRE(bzn.data().branches() == 1u);
 
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
@@ -48,57 +51,56 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> distribution(0.,1.);
 
-  size_t nQmap = Qmap.size(), nQ = 10;//10000;
+  brille::ind_t nQmap = Qmap.size(0), nQ = 10;//10000;
   LQVec<double> Q(r,nQ);
   double rli;
   for (size_t i=0; i<nQ; ++i){
     rli = distribution(generator);
-    Q.set(i, rli*Qmap.extract(i%nQmap) + (1-rli)*Qmap.extract((i+1)%nQmap) );
+    Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
   }
 
-  ArrayVector<double> intres, dummy;
-  std::tie(intres, dummy) = bzn.ir_interpolate_at(Q,1);
-  ArrayVector<double> antres = Q.get_xyz();
+  auto [intres, dummy] =  bzn.ir_interpolate_at(Q,1);
+  brille::shape_t antshp{nQ, 1u, 3u};
+  brille::Array<double> QinvA = Q.get_xyz();
+  brille::Array<double> antres = QinvA.resize(antshp);
 
-  ArrayVector<double> diff = intres - antres;
+  brille::Array<double> diff = intres - antres;
 
-  if (!diff.round().all_zero()) for (size_t i = 0; i < nQ; ++i) {
-      info_update_if(!diff.extract(i).round().all_zero(),
-        "\nThe interpolation point Q = ", Q.to_string(i),
-        "\n            returned result ", intres.to_string(i),
-        "\n                 instead of ", antres.to_string(i), "\n");
+  if (!diff.round().all(brille::cmp::eq, 0.)) for (size_t i = 0; i < nQ; ++i) {
+      info_update_if(!diff.view(i).round().all(0.,0),
+        "The interpolation point Q = ", Q.to_string(i),
+        "            returned result ", intres.to_string(i),
+        "                 instead of ", antres.to_string(i));
   }
-  REQUIRE( diff.round().all_zero() ); // this is not a great test :(
-  for (size_t i=0; i<diff.size(); ++i)
-  for (size_t j=0; j<diff.numel(); ++j)
-  REQUIRE( abs(diff.getvalue(i,j))< 2E-14 );
+  REQUIRE( diff.round().all(brille::cmp::eq, 0.) ); // this is not a great test :(
+  for (auto i: brille::ArrayIt(diff))
+    REQUIRE(std::abs(i) < 2E-14);
 }
 
 TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, PI/2, PI/2, PI/2, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
   BrillouinZoneNest3<double,double> bzn(bz, max_volume);
 
-  ArrayVector<double> Qmap = bzn.get_hkl();
-  std::vector<size_t> shape{Qmap.size(), 3};
-  std::array<unsigned long,3> elements{0,3,0};
-  RotatesLike rl = RotatesLike::Reciprocal;
-  bzn.replace_value_data( bzn.get_xyz(), shape, elements, rl);
+  auto Qmap = bzn.get_hkl();
+  auto tostore = bzn.get_xyz().reshape({Qmap.size(0),1u,Qmap.size(1)});
+  std::array<unsigned,3> elements{0,3,0};
+  RotatesLike rt = RotatesLike::Reciprocal;
+  bzn.replace_value_data( tostore, elements, rt );
 
-  size_t nQ = 10;
+  // If branches ≠ 1 then the vector is not treated as a vector!
+  REQUIRE(bzn.data().branches() == 1u);
+
+  brille::ind_t nQ = 10;
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
   Polyhedron irp = bz.get_ir_polyhedron();
-  ArrayVector<double> Qxyz = irp.rand_rejection(nQ);
-  LQVec<double> Q(r, nQ);
-  double fromxyz[9];
-  r.get_inverse_xyz_transform(fromxyz);
-  for (size_t i=0; i<nQ; ++i)
-    multiply_matrix_vector<double,double,double,3>(Q.data(i), fromxyz, Qxyz.data(i));
+  auto Qxyz = irp.rand_rejection(nQ);
+  auto Q = LQVec<double>::from_invA(r, Qxyz);
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
   // We may run into problems if any of the points are too close to the irBz
@@ -108,21 +110,20 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // the components of Q to try and find an equivalent q and tau.
 
 
-  ArrayVector<double> intres, dummy, antres=Q.get_xyz();
-  std::tie(intres, dummy) = bzn.ir_interpolate_at(Q, 1 /*thread*/);
+  brille::Array<double> antres=Q.get_xyz().resize({nQ,1u,3u});
+  auto [intres, dummy] = bzn.ir_interpolate_at(Q, 1 /*thread*/);
 
-  ArrayVector<double> diff = intres - antres;
+  brille::Array<double> diff = intres - antres;
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
   // info_update("\nRounded difference:\n",diff.to_string());
 
-  if (!diff.round().all_zero()) for (size_t i = 0; i < nQ; ++i) {
-      info_update_if(!diff.extract(i).round().all_zero(),
+  if (!diff.round().all(0.,0)) for (size_t i = 0; i < nQ; ++i) {
+      info_update_if(!diff.view(i).round().all(0.,0),
         "\nThe interpolation point Q = ", Q.to_string(i),
         "\n            returned result ", intres.to_string(i),
         "\n                 instead of ", antres.to_string(i), "\n");
   }
-  REQUIRE( diff.round().all_zero() ); // this is not a great test :(
-  for (size_t i=0; i<diff.size(); ++i)
-  for (size_t j=0; j<diff.numel(); ++j)
-  REQUIRE( abs(diff.getvalue(i,j))< 2E-10 );
+  REQUIRE( diff.round().all(0.,0.) ); // this is not a great test :(
+  for (auto i: brille::ArrayIt(diff))
+    REQUIRE(std::abs(i) < 2E-10);
 }

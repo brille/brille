@@ -7,6 +7,7 @@
 #include <thread>
 #include <tuple>
 
+#include "_array.hpp"
 #include "_c_to_python.hpp"
 #include "_interpolation_data.hpp"
 
@@ -26,17 +27,16 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
     py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl,
     bool sort
   ){
-    ArrayVector<T> vals;
-    ArrayVector<R> vecs;
-    std::vector<size_t> val_sh, vec_sh;
-    std::array<element_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    brille::Array<T> vals;
+    brille::Array<R> vecs;
+    std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
     RotatesLike val_rl, vec_rl;
     size_t count = cobj.vertex_count();
-    std::tie(vals,val_sh,val_el,val_rl)=fill_check(pyvals,pyvalelrl,count);
-    std::tie(vecs,vec_sh,vec_el,vec_rl)=fill_check(pyvecs,pyvecelrl,count);
+    std::tie(vals,val_el,val_rl)=fill_check(pyvals,pyvalelrl,count);
+    std::tie(vecs,vec_el,vec_rl)=fill_check(pyvecs,pyvecelrl,count);
 
-    cobj.replace_value_data(vals, val_sh, val_el, val_rl);
-    cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
+    cobj.replace_value_data(vals, val_el, val_rl);
+    cobj.replace_vector_data(vecs, vec_el, vec_rl);
     if (sort) cobj.sort();
   },
   "values_data"_a, "values_elements"_a,
@@ -89,19 +89,18 @@ R"pbdoc(
     py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght,
     bool sort
   ){
-    ArrayVector<T> vals;
-    ArrayVector<R> vecs;
-    std::vector<size_t> val_sh, vec_sh;
-    std::array<element_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    brille::Array<T> vals;
+    brille::Array<R> vecs;
+    std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
     std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
     RotatesLike val_rl, vec_rl;
     int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
     size_t count = cobj.vertex_count();
-    std::tie(vals,val_sh,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
-    std::tie(vecs,vec_sh,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
+    std::tie(vals,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
+    std::tie(vecs,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
 
-    cobj.replace_value_data(vals, val_sh, val_el, val_rl);
-    cobj.replace_vector_data(vecs, vec_sh, vec_el, vec_rl);
+    cobj.replace_value_data(vals, val_el, val_rl);
+    cobj.replace_vector_data(vecs, vec_el, vec_rl);
     cobj.set_value_cost_info(val_sf, val_vf, val_wght);
     cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
     if (sort) cobj.sort();
@@ -154,9 +153,9 @@ R"pbdoc(
   Mapping of integers to scalar cost function:
     {0: magnitude(x-y), }
   Mapping of integers to vector cost function:
-    {0: sin(hermitian_angle(x, y)),  1: vector_distance(x, y),
-     2: 1-vector_product(x, y),      3: vector_angle(x, y),
-     4: hermitian_angle(x, y), }
+    {0: sin(brille::utils::hermitian_angle(x, y)),  1: brille::utils::vector_distance(x, y),
+     2: 1-brille::utils::vector_product(x, y),      3: brille::utils::vector_angle(x, y),
+     4:(brille::utils::hermitian_angle(x, y), }
   Integer values outside of the mapped range (or missing) are replaced by 0.
 )pbdoc");
 
@@ -165,15 +164,15 @@ R"pbdoc(
   )pbdoc");
 
   cls.def_property_readonly("values",[](Class& cobj){
-    const auto & v{cobj.data().values()};
-    return av2np_shape(v.data(), v.shape(), false);
+    brille::Array<T> out = cobj.data().values().data();
+    return a2py(out);
   },R"pbdoc(
     Return the stored eigenvalues
   )pbdoc");
 
   cls.def_property_readonly("vectors",[](Class& cobj){
-    const auto & v{cobj.data().vectors()};
-    return av2np_shape(v.data(), v.shape(), false);
+    brille::Array<R> out = cobj.data().vectors().data();
+    return a2py(out);
   },R"pbdoc(
     Return the stored eigenvectors
   )pbdoc");
@@ -187,26 +186,14 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R>>& cls){
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
-    py::buffer_info bi = pyX.request();
-    if ( bi.shape[bi.ndim-1] !=3 )
+    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    // store shape of X before three-vector dimension for shaping output
-    std::vector<ssize_t> preshape;
-    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
-    // copy the Python X array
-    BrillouinZone b = cobj.get_brillouinzone();
-    Reciprocal lat = b.get_lattice();
-    LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    ArrayVector<T> valres;
-    ArrayVector<R> vecres;
-    std::tie(valres, vecres) = cobj.ir_interpolate_at(qv, nthreads, no_move);
-    // copy results to Python arrays and return
-    py::array_t<T, py::array::c_style> valout = iid2np(valres, cobj.data().values(),  preshape);
-    py::array_t<R, py::array::c_style> vecout = iid2np(vecres, cobj.data().vectors(), preshape);
-    return std::make_tuple(valout, vecout);
+    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(
   Perform linear interpolation of the stored data at irreducible equivalent points
@@ -251,28 +238,16 @@ R"pbdoc(
                            py::array_t<double> pyM, double temp_k,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
-    py::buffer_info bi = pyX.request();
-    if ( bi.shape[bi.ndim-1] !=3 )
+    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    // store shape of X before three-vector dimension for shaping output
-    std::vector<ssize_t> preshape;
-    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
-    // copy the Python X array
-    BrillouinZone b = cobj.get_brillouinzone();
-    Reciprocal lat = b.get_lattice();
-    LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    ArrayVector<T> valres;
-    ArrayVector<R> vecres;
-    std::tie(valres, vecres) = cobj.ir_interpolate_at(qv, nthreads, no_move);
-    // copy results to Python arrays and return
-    py::array_t<T, py::array::c_style> valout = iid2np(valres, cobj.data().values(),  preshape);
-    py::array_t<R, py::array::c_style> vecout = iid2np(vecres, cobj.data().vectors(), preshape);
+    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
     // calculate the Debye-Waller factor
-    auto Wd = av2np_squeeze(cobj.debye_waller(qv, np2vec(pyM), temp_k));
-    return std::make_tuple(valout, vecout, Wd);
+    auto Wd = brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
+    return std::make_tuple(brille::a2py(val), brille::a2py(vec), Wd);
   },"Q"_a,"M/amu"_a,"temperature/K"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(
   Perform both the linear interpolation and Debye Waller calculation
@@ -320,26 +295,14 @@ void def_grid_interpolate(py::class_<Grid<T,R>>& cls){
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
-    py::buffer_info bi = pyX.request();
-    if ( bi.shape[bi.ndim-1] !=3 )
+    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    // store shape of X before three-vector dimension for shaping output
-    std::vector<ssize_t> preshape;
-    for (ssize_t i=0; i < bi.ndim-1; ++i) preshape.push_back(bi.shape[i]);
-    // copy the Python X array
-    BrillouinZone b = cobj.get_brillouinzone();
-    Reciprocal lat = b.get_lattice();
-    LQVec<double> qv(lat,(double*)bi.ptr, bi.shape, bi.strides); //memcopy
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    ArrayVector<T> valres;
-    ArrayVector<R> vecres;
-    std::tie(valres, vecres) = cobj.interpolate_at(qv, nthreads, no_move);
-    // copy the results to Python arrays and return
-    auto valout = iid2np(valres, cobj.data().values(),  preshape);
-    auto vecout = iid2np(vecres, cobj.data().vectors(), preshape);
-    return std::make_tuple(valout, vecout);
+    auto [val, vec] = cobj.interpolate_at(qv, nthreads, no_move);
+    return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(
   Perform linear interpolation of the stored data at equivalent points
@@ -435,9 +398,9 @@ void def_grid_sort(py::class_<Grid<T,R>>& cls){
   Mapping of integers to scalar cost function:
     {0: magnitude(x-y), }
   Mapping of integers to vector cost function:
-    {0: sin(hermitian_angle(x, y)),  1: vector_distance(x, y),
-     2: 1-vector_product(x, y),      3: vector_angle(x, y),
-     4: hermitian_angle(x, y), }
+    {0: sin(brille::utils::hermitian_angle(x, y)),  1: brille::utils::vector_distance(x, y),
+     2: 1-brille::utils::vector_product(x, y),      3: brille::utils::vector_angle(x, y),
+     4:(brille::utils::hermitian_angle(x, y), }
   Integer values outside of the mapped range (or missing) are replaced by 0.
   )pbdoc");
 }
@@ -447,15 +410,12 @@ void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
   using Class = Grid<T,R>;
 
-  cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyQ, py::array_t<double> pyM, double temp_k){
+  cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){
     // handle Q
-    py::buffer_info bi = pyQ.request();
-    if ( bi.shape[bi.ndim-1] !=3 )
-      throw std::runtime_error("debye_waller requires one or more 3-vectors");
-    BrillouinZone b = cobj.get_brillouinzone();
-    Reciprocal lat = b.get_lattice();
-    LQVec<double> cQ(lat, (double*)bi.ptr, bi.shape, bi.strides); //memcopy
-    return av2np_squeeze(cobj.debye_waller(cQ, np2vec(pyM), temp_k));
+    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    if (qv.size(qv.ndim()-1) != 3)
+      throw std::runtime_error("Interpolation requires one or more 3-vectors");
+    return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
   }, "Q"_a, "masses"_a, "Temperature_in_K"_a);
 }
 

@@ -32,12 +32,13 @@
 
 
 template<class T, class S> class Mesh3{
+  using ind_t = brille::ind_t;
 protected:
   TetTri mesh;
   InterpolationData<T,S> data_;
 public:
   //constructors
-  Mesh3(const ArrayVector<double>& verts,
+  Mesh3(const brille::Array<double>& verts,
         const std::vector<std::vector<int>>& facets,
         const double max_volume=-1.0,
         const int num_levels=3,
@@ -57,13 +58,13 @@ public:
     return *this;
   }
   //! Return the number of mesh vertices
-  size_t size() const { return this->mesh.number_of_vertices(); }
+  ind_t size() const { return this->mesh.number_of_vertices(); }
   //! Return the number of mesh vertices
-  size_t vertex_count() const { return this->mesh.number_of_vertices(); }
+  ind_t vertex_count() const { return this->mesh.number_of_vertices(); }
   //! Return the positions of all vertices in the mesh
-  const ArrayVector<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
+  const brille::Array<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
   //! Return the tetrahedron indices of the mesh
-  const ArrayVector<size_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
+  const brille::Array<ind_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
   // Get a constant reference to the stored data
   const InterpolationData<T,S>& data(void) const {return data_;}
   // Replace the data stored in the object
@@ -76,25 +77,25 @@ public:
   size_t bytes_per_point() const {return data_.bytes_per_point(); }
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   template<template<class> class A>
-  ArrayVector<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
+  brille::Array<double> debye_waller(const A<double>& Q, const std::vector<double>& M, const double t_K) const{
     return data_.debye_waller(Q,M,t_K);
   }
 
   //! Perform sanity checks before attempting to interpolate
-  template<typename R> unsigned int check_before_interpolating(const ArrayVector<R>& x) const;
+  template<typename R> unsigned int check_before_interpolating(const brille::Array<R>& x) const;
   //! Perform linear interpolation at the specified Reciprocal lattice points
   template<typename R>
-  std::tuple<ArrayVector<T>,ArrayVector<S>>
+  std::tuple<brille::Array<T>,brille::Array<S>>
   interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());}
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
   template<typename R>
-  std::tuple<ArrayVector<T>,ArrayVector<S>>
-  interpolate_at(const ArrayVector<R>& x) const;
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  interpolate_at(const brille::Array<R>& x) const;
   template<typename R>
-  std::tuple<ArrayVector<T>,ArrayVector<S>>
-  parallel_interpolate_at(const ArrayVector<R>& x, const int nthreads) const;
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  parallel_interpolate_at(const brille::Array<R>& x, const int nthreads) const;
   //! Return the neighbours for which a passed boolean array holds true
-  template<typename R> std::vector<size_t> which_neighbours(const std::vector<R>& t, const R value, const size_t idx) const;
+  // template<typename R> std::vector<ind_t> which_neighbours(const std::vector<R>& t, const R value, const ind_t idx) const;
   std::string to_string(void) const {
     std::string str= data_.to_string();
     str += " for the points of a TetTri[" + mesh.to_string() + "]";

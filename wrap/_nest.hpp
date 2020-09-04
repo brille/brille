@@ -17,6 +17,7 @@
 
 #include <pybind11/pybind11.h>
 
+#include "_array.hpp"
 #include "_common_grid.hpp"
 
 #include "nest.hpp"
@@ -41,13 +42,27 @@ void declare_bznestq(py::module &m, const std::string &typestr){
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 
-  cls.def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_xyz());});
-  cls.def_property_readonly("all_invA",[](const Class& cobj){return av2np(cobj.get_all_xyz());});
+  cls.def_property_readonly("invA",[](const Class& cobj){
+    brille::Array<double> xyz = cobj.get_xyz();
+    return brille::a2py(xyz);
+  });
+  cls.def_property_readonly("all_invA",[](const Class& cobj){
+    brille::Array<double> xyz = cobj.get_all_xyz();
+    return brille::a2py(xyz);
+  });
 
-  cls.def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_hkl());});
-  cls.def_property_readonly("all_rlu",[](const Class& cobj){return av2np(cobj.get_all_hkl());});
+  cls.def_property_readonly("rlu",[](const Class& cobj){
+    brille::Array<double> hkl = cobj.get_hkl();
+    return brille::a2py(hkl);
+  });
+  cls.def_property_readonly("all_rlu",[](const Class& cobj){
+    brille::Array<double> hkl = cobj.get_all_hkl();
+    return brille::a2py(hkl);
+  });
 
-  cls.def_property_readonly("tetrahedra",[](const Class& cobj){return cobj.tetrahedra();});
+  cls.def_property_readonly("tetrahedra",[](const Class& cobj){
+    return cobj.tetrahedra();
+  });
 
   cls.def_property_readonly("bytes_per_point", &Class::bytes_per_point);
 

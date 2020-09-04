@@ -3,7 +3,10 @@ cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
 project(brille)
 set(BRILLE_PYTHON_MODULE _brille)
+set(TESTING_TARGET run_tests)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 # Make the availability of testing optional
 option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
@@ -15,7 +18,7 @@ option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
 
 # Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.4.3)
+set(MINIMUM_PYBIND11_VERSION 2.5.0)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 set(MINIMUM_CATCH2_VERSION 2.11.3)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
@@ -71,6 +74,9 @@ if(BRILLE_BUILD_TESTING)
     find_package(Catch2 ${MINIMUM_CATCH2_VERSION} REQUIRED)
   else()
     find_package(Catch2 ${MINIMUM_CATCH2_VERSION} QUIET)
+    if (pybind11_FOUND)
+      message(STATUS "catch2 >= ${MINIMUM_CATCH2_VERSION} found")
+    endif()
   endif()
 else()
   # Since no testing is to be built, fake that we've found Catch2.
@@ -81,6 +87,9 @@ if(REQUIRE_SYSTEM_PYBIND11)
   find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} REQUIRED)
 else()
   find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} QUIET)
+  if (pybind11_FOUND)
+    message(STATUS "pybind11 >= ${MINIMUM_PYBIND11_VERSION} found")
+  endif()
 endif()
 
 # Load the FetchContent module only if necessary
@@ -124,7 +133,7 @@ message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
 
 if(BRILLE_BUILD_TESTING)
-  list(APPEND CXX_TARGETS test_brille) # Include the C++ test target
+  list(APPEND CXX_TARGETS ${TESTING_TARGET}) # Include the C++ test target
   enable_testing() # allows registration of Python tests in wrap/
 endif()
 
@@ -134,11 +143,11 @@ add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)
   # target for Catch2 based tests
-  add_executable(test_brille)
-  target_link_libraries(test_brille PUBLIC Catch2::Catch2)
+  add_executable(${TESTING_TARGET})
+  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
   include(CTest)
   include(Catch)
-  catch_discover_tests(test_brille)
+  catch_discover_tests(${TESTING_TARGET})
 endif()
 add_subdirectory(lib)
 
@@ -168,7 +177,9 @@ endif()
 
 # first we can indicate the documentation build as an option (default OFF)
 option(BUILD_DOC "Build documentation" OFF)
+option(USE_DOXYGEN "Look for and use Doxygen to build documentation" OFF)
 # check if Doxygen is installed
+if (USE_DOXYGEN)
 find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND)
   # set input and output files
@@ -192,3 +203,4 @@ if (DOXYGEN_FOUND)
 else (DOXYGEN_FOUND)
   message(STATUS "Install Doxygen to build documentation")
 endif (DOXYGEN_FOUND)
+endif()

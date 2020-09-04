@@ -17,6 +17,7 @@
 #include <pybind11/pybind11.h>
 #include "bz.hpp"
 #include "_c_to_python.hpp"
+#include "_array.hpp"
 
 namespace py = pybind11;
 
@@ -37,57 +38,45 @@ void wrap_brillouinzone(py::module & m){
   cls.def_property_readonly("ir_polyhedron_generated",[](const CLS &b){return b.get_ir_polyhedron(false);});
 
   // first Brillouin zone polyhedron
-  cls.def_property_readonly("normals",                  [](const CLS &b){return av2np(b.get_normals().get_hkl());});
-  cls.def_property_readonly("normals_invA",             [](const CLS &b){return av2np(b.get_normals().get_xyz());});
-  cls.def_property_readonly("normals_primitive",        [](const CLS &b){return av2np(b.get_primitive_normals().get_hkl());});
-  cls.def_property_readonly("points",                   [](const CLS &b){return av2np(b.get_points().get_hkl());});
-  cls.def_property_readonly("points_invA",              [](const CLS &b){return av2np(b.get_points().get_xyz());});
-  cls.def_property_readonly("points_primitive",         [](const CLS &b){return av2np(b.get_primitive_points().get_hkl());});
-  cls.def_property_readonly("vertices",                 [](const CLS &b){return av2np(b.get_vertices().get_hkl());});
-  cls.def_property_readonly("vertices_invA",            [](const CLS &b){return av2np(b.get_vertices().get_xyz());});
-  cls.def_property_readonly("half_edge_points",         [](const CLS &b){return av2np(b.get_half_edges().get_hkl());});
-  cls.def_property_readonly("half_edge_points_invA",    [](const CLS &b){return av2np(b.get_half_edges().get_xyz());});
-  cls.def_property_readonly("vertices_primitive",       [](const CLS &b){return av2np(b.get_primitive_vertices().get_hkl());});
+  cls.def_property_readonly("normals",                  [](const CLS &b){return brille::a2py(b.get_normals().get_hkl());});
+  cls.def_property_readonly("normals_invA",             [](const CLS &b){return brille::a2py(b.get_normals().get_xyz());});
+  cls.def_property_readonly("normals_primitive",        [](const CLS &b){return brille::a2py(b.get_primitive_normals().get_hkl());});
+  cls.def_property_readonly("points",                   [](const CLS &b){return brille::a2py(b.get_points().get_hkl());});
+  cls.def_property_readonly("points_invA",              [](const CLS &b){return brille::a2py(b.get_points().get_xyz());});
+  cls.def_property_readonly("points_primitive",         [](const CLS &b){return brille::a2py(b.get_primitive_points().get_hkl());});
+  cls.def_property_readonly("vertices",                 [](const CLS &b){return brille::a2py(b.get_vertices().get_hkl());});
+  cls.def_property_readonly("vertices_invA",            [](const CLS &b){return brille::a2py(b.get_vertices().get_xyz());});
+  cls.def_property_readonly("half_edge_points",         [](const CLS &b){return brille::a2py(b.get_half_edges().get_hkl());});
+  cls.def_property_readonly("half_edge_points_invA",    [](const CLS &b){return brille::a2py(b.get_half_edges().get_xyz());});
+  cls.def_property_readonly("vertices_primitive",       [](const CLS &b){return brille::a2py(b.get_primitive_vertices().get_hkl());});
   cls.def_property_readonly("faces_per_vertex",  &CLS::get_faces_per_vertex);
   cls.def_property_readonly("vertices_per_face", &CLS::get_vertices_per_face);
 
   // irreducible first Brillouin zone polyhedron
-  cls.def_property_readonly("ir_normals",                  [](const CLS &b){return av2np(b.get_ir_normals().get_hkl());});
-  cls.def_property_readonly("ir_normals_invA",             [](const CLS &b){return av2np(b.get_ir_normals().get_xyz());});
-  cls.def_property_readonly("ir_normals_primitive",        [](const CLS &b){return av2np(b.get_ir_primitive_normals().get_hkl());});
-  cls.def_property_readonly("ir_points",                   [](const CLS &b){return av2np(b.get_ir_points().get_hkl());});
-  cls.def_property_readonly("ir_points_invA",              [](const CLS &b){return av2np(b.get_ir_points().get_xyz());});
-  cls.def_property_readonly("ir_points_primitive",         [](const CLS &b){return av2np(b.get_ir_primitive_points().get_hkl());});
-  cls.def_property_readonly("ir_vertices",                 [](const CLS &b){return av2np(b.get_ir_vertices().get_hkl());});
-  cls.def_property_readonly("ir_vertices_invA",            [](const CLS &b){return av2np(b.get_ir_vertices().get_xyz());});
-  cls.def_property_readonly("ir_vertices_primitive",       [](const CLS &b){return av2np(b.get_ir_primitive_vertices().get_hkl());});
+  cls.def_property_readonly("ir_normals",                  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_hkl());});
+  cls.def_property_readonly("ir_normals_invA",             [](const CLS &b){return brille::a2py(b.get_ir_normals().get_xyz());});
+  cls.def_property_readonly("ir_normals_primitive",        [](const CLS &b){return brille::a2py(b.get_ir_primitive_normals().get_hkl());});
+  cls.def_property_readonly("ir_points",                   [](const CLS &b){return brille::a2py(b.get_ir_points().get_hkl());});
+  cls.def_property_readonly("ir_points_invA",              [](const CLS &b){return brille::a2py(b.get_ir_points().get_xyz());});
+  cls.def_property_readonly("ir_points_primitive",         [](const CLS &b){return brille::a2py(b.get_ir_primitive_points().get_hkl());});
+  cls.def_property_readonly("ir_vertices",                 [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_hkl());});
+  cls.def_property_readonly("ir_vertices_invA",            [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_xyz());});
+  cls.def_property_readonly("ir_vertices_primitive",       [](const CLS &b){return brille::a2py(b.get_ir_primitive_vertices().get_hkl());});
   cls.def_property_readonly("ir_faces_per_vertex",  &CLS::get_ir_faces_per_vertex);
   cls.def_property_readonly("ir_vertices_per_face", &CLS::get_ir_vertices_per_face);
 
   // irreducible reciprocal space wedge
-  cls.def_property_readonly("wedge_normals",            [](const CLS &b){return av2np(b.get_ir_wedge_normals().get_hkl());});
-  cls.def_property_readonly("wedge_normals_invA",       [](const CLS &b){return av2np(b.get_ir_wedge_normals().get_xyz());});
-  cls.def_property_readonly("wedge_normals_primitive",  [](const CLS &b){return av2np(b.get_primitive_ir_wedge_normals().get_hkl());});
+  cls.def_property_readonly("wedge_normals",            [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_hkl());});
+  cls.def_property_readonly("wedge_normals_invA",       [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_xyz());});
+  cls.def_property_readonly("wedge_normals_primitive",  [](const CLS &b){return brille::a2py(b.get_primitive_ir_wedge_normals().get_hkl());});
 
   // check whether one or more points are inside
   cls.def("isinside",[](CLS &b, py::array_t<double> p){
-    py::buffer_info bi = p.request();
-    ssize_t ndim = bi.ndim;
-    if ( bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional points is required");
-    ssize_t npts = 1;
-    if (ndim > 1)  for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
-    LQVec<double> pv( b.get_lattice(), (double*) bi.ptr, bi.shape, bi.strides); // this is a copy :(
-    ArrayVector<bool> resultv = b.isinside(pv);
-    std::vector<ssize_t> outshape(ndim>1 ? ndim-1 : 1);
-    if (ndim > 1){
-      for (ssize_t i=0; i<ndim-1; i++) outshape[i] = bi.shape[i];
-    } else {
-      outshape[0] = 1;
-    }
-    auto result = py::array_t<bool, py::array::c_style>(outshape);
-    bool *rptr = (bool *) result.request().ptr;
-    for (ssize_t i=0; i<npts; i++) rptr[i] = resultv.getvalue(i);
-    return result;
+    brille::Array<double> sp = brille::py2a(p);
+    if (sp.size(sp.ndim()-1) != 3)
+      throw std::runtime_error("The last dimension must have size 3");
+    LQVec<double> pv( b.get_lattice(), sp); // no copy :)
+    return b.isinside(pv);
   },"points"_a, R"pbdoc(
     Determine whether each of the provided reciprocal lattice points is located
     within the first Brillouin zone
@@ -105,27 +94,15 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    py::buffer_info bi = Q.request();
-    ssize_t ndim=bi.ndim;
-    if (bi.shape[ndim-1] !=3) throw std::runtime_error("one or more 3-dimensional Q points is required");
-    ssize_t npts = 1;
-    if (ndim > 1) for (ssize_t i=0; i<ndim-1; i++) npts *= bi.shape[i];
-    LQVec<double> Qv( b.get_lattice(),(double*) bi.ptr, bi.shape, bi.strides); // memcopy
-    LQVec<double> qv(b.get_lattice(), npts); // output
-    LQVec<int>  tauv(b.get_lattice(), npts); // output
+    brille::Array<double> sp = brille::py2a(Q);
+    if (sp.size(sp.ndim()-1) != 3)
+      throw std::runtime_error("The last dimension must have size 3");
+    LQVec<double> Qv( b.get_lattice(),  sp); // view
+    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
     bool success = b.moveinto(Qv,qv,tauv,threads);
     if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
-    auto qout = py::array_t<double, py::array::c_style>(bi.shape);
-    auto tout = py::array_t<int, py::array::c_style>(bi.shape);
-    double *qptr = (double *) qout.request().ptr;
-    int *tptr = (int *) tout.request().ptr;
-    for (ssize_t i=0; i<npts; ++i){
-      for (size_t j=0; j<3u; ++j){
-        qptr[3u*i+j] = qv.getvalue(i,j);
-        tptr[3u*i+j] = tauv.getvalue(i,j);
-      }
-    }
-    return py::make_tuple(qout,tout);
+    return py::make_tuple(brille::a2py(qv), brille::a2py(tauv));
   }, "Q"_a, "threads"_a=0, R"pbdoc(
     Find points equivalent to those provided within the first Brillouin zone.
 
@@ -147,43 +124,33 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    py::buffer_info bi = Q.request();
-    ssize_t ndim = bi.ndim;
-    if (bi.shape[ndim-1] != 3)
-      throw std::runtime_error("One or more 3-dimensional Q points are required.");
-    ssize_t npts = 1;
-    if (ndim > 1) for (ssize_t i=0; i<ndim-1; ++i) npts *= bi.shape[i];
-    LQVec<double> Qv(b.get_lattice(), (double*) bi.ptr, bi.shape, bi.strides);
+    brille::Array<double> sp = brille::py2a(Q);
+    if (sp.size(sp.ndim()-1) != 3)
+      throw std::runtime_error("The last dimension must have size 3");
+    LQVec<double> Qv( b.get_lattice(),  sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), npts);
-    LQVec<int>  tauv(b.get_lattice(), npts);
-    std::vector<size_t> rotidx(npts), invrotidx(npts);
+    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    std::vector<size_t> rotidx(Qv.numel()/3), invrotidx(Qv.numel()/3);
     if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // get the pointgroup symmetry operations indexed by rotidx and invrotidx
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // prepare Python outputs
-    auto qout = py::array_t<double, py::array::c_style>(bi.shape);
-    auto tout = py::array_t<int,    py::array::c_style>(bi.shape);
     // The rotations array has an extra dimension compared to q and tau
-    bi.shape.push_back(3);
-    auto rout = py::array_t<int,    py::array::c_style>(bi.shape);
-    auto invrout = py::array_t<int, py::array::c_style>(bi.shape);
+    auto sh = Qv.shape();
+    sh.push_back(3);
+    auto rout = py::array_t<int,    py::array::c_style>(sh);
+    auto invrout = py::array_t<int, py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
-    double *qptr = (double *) qout.request().ptr;
-    int *tptr = (int *) tout.request().ptr;
     int *rptr = (int *) rout.request().ptr;
     int *iptr = (int *) invrout.request().ptr;
-    for (ssize_t i=0; i<npts; ++i)
-    for (size_t j=0; j<3u; ++j){
-      qptr[3u*i+j] = qv.getvalue(i,j);
-      tptr[3u*i+j] = tauv.getvalue(i,j);
-      for (size_t k=0; k<3u; ++k) {
-        rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
-        iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
-      }
+    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k) {
+      rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
+      iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
     }
-    return py::make_tuple(qout, tout, rout, invrout);
+    return py::make_tuple(brille::a2py(qv), brille::a2py(tauv), rout, invrout);
   }, "Q"_a, "threads"_a=0, R"pbdoc(
     Find points equivalent to those provided within the irreducible Brillouin zone.
 
@@ -210,32 +177,26 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
-    py::buffer_info bi = Q.request();
-    ssize_t ndim = bi.ndim;
-    if (bi.shape[ndim-1] != 3)
-      throw std::runtime_error("One or more 3-dimensional Q points are required.");
-    ssize_t npts = 1;
-    if (ndim > 1) for (ssize_t i=0; i<ndim-1; ++i) npts *= bi.shape[i];
-    LQVec<double> Qv(b.get_lattice(), (double*) bi.ptr, bi.shape, bi.strides);
+    brille::Array<double> sp = brille::py2a(Q);
+    if (sp.size(sp.ndim()-1) != 3)
+      throw std::runtime_error("The last dimension must have size 3");
+    LQVec<double> Qv( b.get_lattice(),  sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), npts);
-    std::vector<std::array<int,9>> rots(npts);
+    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    std::vector<std::array<int,9>> rots(Qv.numel()/3);
     if (!b.ir_moveinto_wedge(Qv, qv, rots, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
-    auto qout = py::array_t<double, py::array::c_style>(bi.shape);
     // The rotations array has an extra dimension compared to q and tau
-    bi.shape.push_back(3);
-    auto rout = py::array_t<int,    py::array::c_style>(bi.shape);
+    auto sh = Qv.shape();
+    sh.push_back(3);
+    auto rout = py::array_t<int,    py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
-    double *qptr = (double *) qout.request().ptr;
     int *rptr = (int *) rout.request().ptr;
-    for (ssize_t i=0; i<npts; ++i)
-    for (size_t j=0; j<3u; ++j){
-      qptr[3u*i+j] = qv.getvalue(i,j);
-      for (size_t k=0; k<3u; ++k) rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
-    }
-    return py::make_tuple(qout, rout);
+    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k)
+      rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
+    return py::make_tuple(brille::a2py(qv), rout);
   }, "Q"_a, "threads"_a=0, R"pbdoc(
     Find points equivalent to those provided within the irreducible wedge.
 

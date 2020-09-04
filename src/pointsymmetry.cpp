@@ -21,6 +21,7 @@
 #include <iostream>
 #include "pointgroup.hpp"
 #include <algorithm>
+#include "approx.hpp"
 /*****************************************************************************\
 | PointSymmetry class Member functions:                                       |
 \*****************************************************************************/
@@ -120,8 +121,8 @@ Matrix<int> PointSymmetry::get_inverse(const size_t i) const {
   // We know that there must be an element of R for which RᵢRⱼ=E,
   // the identity element. Let's look for Rⱼ instead.
   for (size_t j=0; j<this->size(); ++j){
-    multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
-    if (approx_matrix(3, identity.data(), result.data())) return this->R[j];
+    brille::utils::multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
+    if (brille::approx::matrix(3, identity.data(), result.data())) return this->R[j];
   }
   throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
 }
@@ -132,13 +133,13 @@ size_t PointSymmetry::get_inverse_index(const size_t i) const {
   // We know that there must be an element of R for which RᵢRⱼ=E,
   // the identity element. Let's look for Rⱼ instead.
   for (size_t j=0; j<this->size(); ++j){
-    multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
-    if (approx_matrix(3, identity.data(), result.data())) return j;
+    brille::utils::multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
+    if (brille::approx::matrix(3, identity.data(), result.data())) return j;
   }
   throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
 }
 size_t PointSymmetry::find_index(const Matrix<int>& a) const {
-  auto iseq = [ap=a.data()](const Matrix<int>& r){ return approx_matrix(3,ap,r.data());};
+  auto iseq = [ap=a.data()](const Matrix<int>& r){ return brille::approx::matrix(3,ap,r.data());};
   auto itr = std::find_if(this->R.begin(), this->R.end(), iseq);
   return std::distance(this->R.begin(), itr);
 }
@@ -239,7 +240,7 @@ bool PointSymmetry::has_space_inversion() const {
 }
 
 bool PointSymmetry::has(const Matrix<int>& m) const {
-  for (auto r: R) if (approx_matrix(m.data(), r.data())) return true;
+  for (auto r: R) if (brille::approx::matrix(m.data(), r.data())) return true;
   return false;
 }
 Matrix<int> PointSymmetry::pop(const size_t i) {
@@ -287,12 +288,12 @@ PointSymmetry PointSymmetry::generate(void) const {
     x = E;
     // for each of R, R¹,…, Rⁿ⁻¹
     for (int count=this->order(i); count--;){ // post-decrimate to run the loop count times
-      multiply_matrix_matrix(y.data(), this->data(i), x.data());
+      brille::utils::multiply_matrix_matrix(y.data(), this->data(i), x.data());
       x = y;
       // multiply Rⁱ by the operators in gen
       gensize = gen.size(); // only multiply against pre-existing operations
       for (size_t j=0; j<gensize; ++j){
-        multiply_matrix_matrix(y.data(), x.data(), gen.data(j));
+        brille::utils::multiply_matrix_matrix(y.data(), x.data(), gen.data(j));
         // and add them to gen if they are not already present
         if (!gen.has(y)) gen.add(y);
       }
@@ -330,7 +331,7 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   Vectors<int> unq_axis;
   for (size_t i=0; i<this->size(); ++i){
     bool isunique = true;
-    for (auto j: unq_idx) if (approx_vector(all_axis[j].data(), all_axis[i].data())){
+    for (auto j: unq_idx) if (brille::approx::vector(all_axis[j].data(), all_axis[i].data())){
       eqv_idx[i] = j;
       isunique = false;
       break;
@@ -361,7 +362,7 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   if (this->order(i) > min_order){
     out.add(this->get(i));
     if (this->isometry(i) < 0)
-      multiply_matrix_matrix(out.data(out.size()-1), onebar, this->data(i));
+      brille::utils::multiply_matrix_matrix(out.data(out.size()-1), onebar, this->data(i));
   }
   out.sort(); // double-check that the orders are sorted
   return out;

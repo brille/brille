@@ -27,6 +27,7 @@
 #include "polyhedron.hpp"
 // #include "debug.hpp"
 #include "phonon.hpp"
+#include "approx.hpp"
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
@@ -43,7 +44,7 @@ class BrillouinZone {
   Reciprocal outerlattice;          //!< The lattice passed in at construction
   Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
   Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
-  ArrayVector<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
+  brille::Array<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
   bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
   bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
@@ -70,15 +71,14 @@ public:
     double old_volume = -1.0, new_volume=0.0;
     int test_extent = extent-1;
     // initial test_extent based on spacegroup or pointgroup?
-    while (!approx_scalar(new_volume, old_volume)){
+    while (!brille::approx::scalar(new_volume, old_volume)){
       old_volume = new_volume;
       this->voro_search(++test_extent);
       new_volume = this->polyhedron.get_volume();
     }
     // fallback in case voro_search fails for some reason?!?
-    if (approx_scalar(new_volume, 0.)){
-      info_update("voro_search failed to produce a non-null first Brillouin zone.");
-      this->vertex_search(extent);
+    if (brille::approx::scalar(new_volume, 0.)){
+      throw std::runtime_error("voro_search failed to produce a non-null first Brillouin zone.");
     } else {
       verbose_update("New polyhedron volume ", this->polyhedron.get_volume());
       verbose_update("First Brillouin zone found using extent ",test_extent,", a ",this->polyhedron.string_repr());
@@ -104,7 +104,7 @@ public:
       PointSymmetry ps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
       double goal = this->polyhedron.get_volume() / static_cast<double>(ps.size());
       double found = this->ir_polyhedron.get_volume();
-      if (approx_scalar(goal, 2.0*found)){
+      if (brille::approx::scalar(goal, 2.0*found)){
         /*The current Polyhedron at this->ir_polyhedron has half the anticipated
         volume. We can 'fix' this the easy way by mirroring the Polyhedron and
         gluing it onto the current version; the resultant polyhedron will come
@@ -130,7 +130,7 @@ public:
         // created a convex polyhedron such that the convex hull of its points
         // gives the same polyhedron back:
         Polyhedron mvu_convex_hull(min_vert_union->get_vertices());
-        if (approx_scalar(goal, mvu_convex_hull.get_volume())){
+        if (brille::approx::scalar(goal, mvu_convex_hull.get_volume())){
           // we found a polyhedron with the right volume which is convex!
           // so we can keep this as *the* ir_polyhedron
           this->ir_polyhedron = mvu_convex_hull;
@@ -140,7 +140,7 @@ public:
       }
       // if found == goal no mirroring is required.
       // if found == goal/2, mirroring is required.
-      this->no_ir_mirroring = approx_scalar(goal, found);
+      this->no_ir_mirroring = brille::approx::scalar(goal, found);
     }
   }
 
@@ -152,9 +152,9 @@ public:
   //! which may be a primitive lattice depending on the flag at creation
   const Reciprocal get_primitive_lattice() const { return this->lattice;};
   //! Returns the number of vertices defining the first Brillouin zone
-  size_t vertices_count() const { return this->get_vertices().size();};
+  size_t vertices_count() const { return this->get_vertices().size(0);};
   //! Returns the number of reciprocal lattice points defining the first Brillouin zone
-  size_t faces_count() const { return this->get_points().size();};
+  size_t faces_count() const { return this->get_points().size(0);};
   // irreducible reciprocal space wedge
   void set_ir_wedge_normals(const LQVec<double>&);
   LQVec<double> get_ir_wedge_normals() const;
@@ -166,7 +166,7 @@ public:
   form a corner of each facet plane polygon.
   @param vertices All vertices in the polyhedron
   @param points All (τ/2) plane points which define the facets of the polyhedron
-  @param fpv An ArrayVector<int> with three facet-plane indices for each vertex
+  @param fpv An Array<int> with three facet-plane indices for each vertex
   @param fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
   @param vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
   */
@@ -269,26 +269,22 @@ public:
     record their locations, contributing intersecting-planes, and all planes
     which contribute to one or more vertex in the object.
   */
-  void vertex_search(const int extent=1);
   void voro_search(const int extent=1);
-  // void vertex_search_xyz(const int extent=1);
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
   bool isprimitive(void) const {return this->is_primitive;};
 
   /*! \brief Determine whether points are inside of the first Brillouin zone
     @param p A reference to a LQVec list of Q points to be checked
-    @returns An ArrayVector<bool> with each 1-element array indicating if the
+    @returns A std::vector<bool> with each element indicating if the
              associated Q point is inside of the Brillouin zone.
   */
-  template<typename T> ArrayVector<bool> isinside(const LQVec<T>& p) const ;
-  template<typename T> std::vector<bool> isinside_std(const LQVec<T>& p) const ;
+  template<typename T> std::vector<bool> isinside(const LQVec<T>& p) const ;
   /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
   @param p A reference to a LQVec list of Q points to be checked
-  @returns An ArrayVector<bool> with each 1-element array indicating if the
+  @returns An std::vector<bool> with each element indicating if the
            associated Q point is inside our irreducible reciprocal space.
   */
-  template<typename T> ArrayVector<bool> isinside_wedge(const LQVec<T> &p, const bool constructing=false) const;
-  template<typename T> std::vector<bool> isinside_wedge_std(const LQVec<T> &p, const bool constructing=false) const;
+  template<typename T> std::vector<bool> isinside_wedge(const LQVec<T> &p, const bool constructing=false) const;
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
     @param[in] Q A reference to LQVec list of Q points
     @param[out] q The reduced reciprocal lattice vectors
@@ -317,59 +313,13 @@ public:
     return this->time_reversal ? 1 : 0;
   }
 private:
-  void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, ArrayVector<int>& ijk) const;
+  void shrink_and_prune_outside(const size_t cnt, LQVec<double>& vrt, brille::Array<int>& ijk) const;
   bool wedge_normal_check(const LQVec<double>& n, LQVec<double>& normals, size_t& num);
   bool wedge_normal_check(const LQVec<double>& n0, const LQVec<double>& n1, LQVec<double>& normals, size_t& num);
   bool ir_wedge_is_ok(const LQVec<double>& normals);
   LQVec<double> get_ir_polyhedron_wedge_normals(void) const;
 };
 
-/*! \brief Determine whether a given point is between a plane and the origin
-
-For a given list of plane-defining points, which are also their normal vectors,
-find whether an indicated vertex is closer to the origin than all planes which
-did not define it.
-The additional input complexity is to avoid memory copies in the calling code.
-@param p A pointer to the LQVec array of all plane-defining centre points
-@param v A pointer to a LQVec array of vertices, of which one is checked
-@param ijk A pointer to an ArrayVector of the plane-indices for each vertex in v
-@param idx The one index of v (and ijk) which will be checked
-@param[out] inv A pointer to an LQVec where v[idx] should be stored, if it is found closer to the origin
-@param store_at The index into inv where v[idx] should be stored
-@param tol An additional absolute tolerance to determine closer-to-originness
-@note The function compares `dot(v[idx],p)-dot(p,p)` with zero for all plane
-      centres in `p`. If the difference is greater than tol then the plane is
-      closer to the origin than the vertex. Rather than relying on solely the
-      passed value of `tol` the function also compares the difference to machine
-      precision and errs on the side of claiming a vertex is closer than a plane
-      when the difference is smaller than the sum of the dot products times epsilon
-      or just epsilon, whichever is greater.
-*/
-bool between_origin_and_plane(const LQVec<double> *p,
-                              const LQVec<double> *v,
-                              const ArrayVector<int> *ijk,
-                              const int idx,
-                                    LQVec<double> *inv,
-                              const int store_at=0,
-                              const double tol=0*1e-15);
-/*! \brief Find the intersection point of three planes if it exists
-
-  From vectors to points on three planes and their normals
-  determine if an intersection point exists and is not too large.
-  @param n A pointer to the plane normal vectors
-  @param p A pointer to the points on each plane
-  @param xyz A pointer to the plane normals in orthonormal units
-  @param i index into `n`, `p`, and `xyz` for the first plane
-  @param j index into `n`, `p`, and `xyz` for the second plane
-  @param k index into `n`, `p`, and `xyz` for the third plane
-  @param[out] iat A LQVec to hold the intersection point, if it exists
-  @param idx Where the intersection point should be stored in `iat`
-*/
-bool three_plane_intersection(const LQVec<double>& n,
-                              const LQVec<double>& p,
-                              const ArrayVector<double>& xyz,
-                              const int i, const int j, const int k,
-                              LQVec<double>& iat, const int idx=0);
 /*! \brief Find the intersection point of three planes, if it exists.
 
 From the normal vector and on-plane point describing three planes, determine

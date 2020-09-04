@@ -46,23 +46,29 @@ public:
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
-  ArrayVector<double> get_mesh_hkl(void) const {
-    ArrayVector<double> xyz = this->get_mesh_xyz();
+  brille::Array<double> get_mesh_hkl(void) const {
+    brille::Array<double> xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
-    if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-    ArrayVector<double> hkl(3,xyz.size());
-    for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
+    if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
+    auto shape = xyz.shape();
+    brille::Array<double> hkl(shape);
+    std::vector<double> tmp(3);
+    for (size_t i=0; i<shape[0]; ++i){
+      auto vxyz = xyz.view(i).to_std();
+      brille::utils::multiply_matrix_vector<double,double,double,3>(tmp.data(), fromxyz, vxyz.data());
+      hkl.set(i, tmp);
+    }
     return hkl;
   }
 
   template<typename R>
-  std::tuple<ArrayVector<T>,ArrayVector<S>>
+  std::tuple<brille::Array<T>,brille::Array<S>>
   ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {
-    LQVec<R> ir_q(x.get_lattice(), x.size());
-    LQVec<int> tau(x.get_lattice(), x.size());
-    std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);
+    LQVec<R> ir_q(x.get_lattice(), x.size(0));
+    LQVec<int> tau(x.get_lattice(), x.size(0));
+    std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       ir_q = x;
     } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nthreads)){
@@ -71,9 +77,7 @@ public:
       throw std::runtime_error(msg);
     }
     // perform the interpolation within the irreducible Brillouin zone
-    ArrayVector<T> vals;
-    ArrayVector<S> vecs;
-    std::tie(vals,vecs) = (nthreads > 1)
+    auto [vals, vecs] = (nthreads > 1)
         ? this->Mesh3<T,S>::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
         : this->Mesh3<T,S>::interpolate_at(ir_q.get_xyz());
     // we always need the pointgroup operations to 'rotate'

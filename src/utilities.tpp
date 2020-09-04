@@ -1,4 +1,4 @@
-/* Copyright 2019 Greg Tucker
+/* Copyright 2019-2020 Greg Tucker
 //
 // This file is part of brille.
 //
@@ -14,11 +14,6 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
-// // 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
-// // but setting it any lower (9000 tried) causes other test lattices, namely,
-// // (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
-// const int TOL_MULT=10000;
 
 template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
 
@@ -42,116 +37,6 @@ template<typename T, int N, int M> bool equal_array(const T *A, const T *B, cons
 template<typename T, int N> bool equal_matrix(const T *A, const T *B, const T tol){ return equal_array<T,N,N>(A,B,tol); }
 template<typename T, int N> bool equal_vector(const T *A, const T *B, const T tol){ return equal_array<T,N,1>(A,B,tol); }
 
-/* isfpT | isfpR | which? | why?
-   ------|-------|--------|-----
-     0       0     either    both Ttol and Rtol are 0
-     1       1      Ttol     R is convertible to T
-     0       1      Rtol     Ttol is 0, so use Rtol
-     1       0      Ttol     Rtol is 0, so use Ttol
-*/
-
-/*! \brief Returns tuple of tolerance information for approximate comparisons for two datatypes, T and R
-
-The tuple contains four elements, the first is true if either T or R is an integer or if R can be converted to T.
-The second is true if T is a floating point datatype.
-The third is proportional to epsilon of the datatype T.
-The fourth is proportional to epsilon of the datatype R.
-*/
-template<typename T, typename R>
-std::tuple<bool,bool,T,R> determine_tols(const int tol){
-  T Ttol = std::numeric_limits<T>::epsilon(); // zero for integer-type T
-  R Rtol = std::numeric_limits<R>::epsilon(); // zero for integer-type R
-  return std::make_tuple(Ttol * Rtol == 0 || std::is_convertible<T, R>::value, Ttol>0, Ttol*static_cast<T>(tol)*static_cast<T>(TOL_MULT), Rtol*static_cast<R>(tol)*static_cast<R>(TOL_MULT));
-
-}
-
-
-/* If both inputs provided to approx_scalar are unsigned then the calls to
-   std::abs() {a, b, a-b, a+b} are all undefined
-*/
-/* \NOTE For future Greg:
-The following _approx* templates *CAN NOT BE PREDECLARED* in the hpp file.
-Doing so may not upset the compiler -- after all, it finds a suitable
-definition of _approx* for every call -- but will anger the linker since the
-actual definitions get overlooked entirely and the symbols never get built.
-
-Leave these templates alone if you can. If you can't try not to be clever.
-*/
-template<typename T, typename R>
-typename std::enable_if_t<std::is_integral<T>::value && std::is_integral<R>::value, bool>
-_approx_scalar(const T a, const R b, const bool, const T, const R){
-  return a==b;
-}
-template<typename T, typename R>
-typename std::enable_if_t<std::is_integral<T>::value && (!std::is_integral<R>::value&&std::is_floating_point<R>::value), bool>
-_approx_scalar(const T a, const R b, const bool, const T, const R Rtol){
-  if ( a == T(0) && std::abs(b) <= Rtol )
-    return true;
-  else
-    return std::abs(a-b) <= Rtol*std::abs(a+b);
-}
-template<typename T, typename R>
-typename std::enable_if_t<(!std::is_integral<T>::value&&std::is_floating_point<T>::value) && std::is_integral<R>::value, bool>
-_approx_scalar(const T a, const R b, const bool, const T Ttol, const R){
-  if ( std::abs(a) <= Ttol && b == R(0) )
-    return true;
-  else
-    return std::abs(a-b) <= Ttol*std::abs(a+b);
-}
-template<typename T, typename R>
-typename std::enable_if_t<(!std::is_integral<T>::value&&std::is_floating_point<T>::value) && (!std::is_integral<R>::value&&std::is_floating_point<R>::value), bool>
-_approx_scalar(const T a, const R b, const bool useTtol, const T Ttol, const R Rtol){
-  // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-  if ( std::abs(a) <= Ttol && std::abs(b) <= Rtol )
-    return std::abs(a-b) <= (useTtol ? Ttol :Rtol);
-  else
-    return std::abs(a-b) <= (useTtol ? Ttol :Rtol)*std::abs(a+b);
-}
-template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol){
-  T Ttol;
-  R Rtol;
-  bool convertible, useTtol;
-  std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
-  return convertible && _approx_scalar(a,b,useTtol,Ttol,Rtol);
-}
-
-template<typename T, typename R> bool _approx_array(const size_t NM, const T* a, const R* b, const bool useTtol, const T Ttol, const R Rtol){
-  bool answer=true;
-  // we need <= in case T and R are integer, otherwise this is *always* false since 0 !< 0
-  if (useTtol){
-    for (size_t i=0; i<NM; ++i){
-      // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-      if ( std::abs(a[i]) <= Ttol && std::abs(b[i]) <= Rtol )
-      answer &= std::abs(a[i]-b[i]) <= Ttol;
-      else
-      answer &= std::abs(a[i]-b[i]) <= Ttol*std::abs(a[i]+b[i]);
-    }
-  } else {
-    for (size_t i=0; i<NM; ++i){
-      // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-      if ( std::abs(a[i]) <= Ttol && std::abs(b[i]) <= Rtol )
-      answer &= std::abs(a[i]-b[i]) <= Rtol;
-      else
-      answer &= std::abs(a[i]-b[i]) <= Rtol*std::abs(a[i]+b[i]);
-    }
-  }
-  return answer;
-}
-template<typename T, typename R> bool approx_array(const size_t N, const size_t M, const T *a, const R *b, const int tol){
-  T Ttol;
-  R Rtol;
-  bool convertible, useTtol;
-  std::tie(convertible, useTtol, Ttol, Rtol) = determine_tols<T,R>(tol);
-  return convertible && _approx_array(N*M,a,b,useTtol,Ttol,Rtol);
-}
-template<typename T, typename R> bool approx_matrix(const size_t N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
-template<typename T, typename R> bool approx_vector(const size_t N, const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
-
-template<typename T, typename R, size_t N, size_t M> bool approx_array(const T *A, const R *B, const int tol){return approx_array<T,R>(N,M,A,B,tol);}
-template<typename T, typename R, size_t N> bool approx_matrix(const T *A, const R *B, const int tol){return approx_array<T,R>(N,N,A,B,tol);}
-template<typename T, typename R, size_t N> bool approx_vector(const T *A, const R *B, const int tol){return approx_array<T,R>(N,1,A,B,tol);}
-
-
 // array multiplication C = A * B -- where C is (N,M), A is (N,I) and B is (I,M)
 template<typename T, typename R, typename S, size_t N, size_t I, size_t M> void multiply_arrays(T *C, const R *A, const S *B){
   for (size_t i=0;i<N*M;i++) C[i]=T(0);
@@ -163,25 +48,33 @@ template<typename T, typename R, typename S, size_t N> void multiply_vector_matr
 
 
 // array multiplication specialization for non-complex * complex arrays.
-template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B){
-  size_t i,j,k;
-  for (i=0;i<n*m;i++) C[i]=T(0);
-  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += static_cast<T>(A[i*l+k]*B[k*m+j]);
+template<class T, class R, class S, class I>
+// std::enable_if_t<std::is_unsigned_v<I>>
+void
+mul_arrays(T* C, const I n, const I l, const I m, const R* A, const S* B){
+  for (I i=0;i<n*m;i++) C[i]=T(0);
+  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += static_cast<T>(A[i*l+k]*B[k*m+j]);
 }
-template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const R* A, const std::complex<S>* B){
-  size_t i,j,k;
-  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
-  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += static_cast<S>(A[i*l+k])*B[k*m+j];
+template<class T, class R, class S, class I>
+// std::enable_if_t<std::is_unsigned_v<I>>
+void
+mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const R* A, const std::complex<S>* B){
+  for (I i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += static_cast<S>(A[i*l+k])*B[k*m+j];
 }
-template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const S* B){
-  size_t i,j,k;
-  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
-  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*static_cast<R>(B[k*m+j]);
+template<class T, class R, class S, class I>
+// std::enable_if_t<std::is_unsigned_v<I>>
+void
+mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const std::complex<R>* A, const S* B){
+  for (I i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += A[i*l+k]*static_cast<R>(B[k*m+j]);
 }
-template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const std::complex<S>* B){
-  size_t i,j,k;
-  for (i=0;i<n*m;i++) C[i]=std::complex<T>(0);
-  for (i=0;i<n;i++) for (j=0;j<m;j++) for (k=0;k<l;k++) C[i*m+j] += A[i*l+k]*B[k*m+j];
+template<class T, class R, class S, class I>
+// std::enable_if_t<std::is_unsigned_v<I>>
+void
+mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const std::complex<R>* A, const std::complex<S>* B){
+  for (I i=0;i<n*m;i++) C[i]=std::complex<T>(0);
+  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += A[i*l+k]*B[k*m+j];
 }
 
 
@@ -320,6 +213,13 @@ template<typename R, int N> R vector_norm_squared(const R *v){
 //  c[1] = static_cast<T>(a[2])*static_cast<T>(b[0]) - static_cast<T>(a[0])*static_cast<T>(b[2]);
 //  c[2] = static_cast<T>(a[0])*static_cast<T>(b[1]) - static_cast<T>(a[1])*static_cast<T>(b[0]);
 //}
+template<typename S, typename T, typename R>
+S vector_dot(const size_t n, const T* a, const R* b){
+  S out = 0;
+  for (size_t i=0; i<n; ++i) out += static_cast<S>(a[i])*static_cast<S>(b[i]);
+  return out;
+}
+
 template<typename R, int N> R vector_dot(const R *a, const R *b){
   R out = 0;
   for (int i=0; i<N; i++) out += a[i]*b[i];
@@ -404,7 +304,7 @@ template<typename T> T vector_angle(const size_t n, const T* A, const T* B){
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (approx_scalar(act, 1.0) && act>1){
+  if (brille::approx::scalar(act, 1.0) && act>1){
     c_t /= act;
     act = std::abs(c_t);
   }
@@ -440,7 +340,7 @@ template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A,
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (approx_scalar(act, 1.0) && act>1){
+  if (brille::approx::scalar(act, 1.0) && act>1){
     c_t /= act;
     act = std::abs(c_t);
   }
@@ -497,7 +397,7 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (approx_scalar(act,1.0) && act>1){
+  if (brille::approx::scalar(act,1.0) && act>1){
     c_t/=act; // force close-to-one values to one, maintaining the sign
     act = std::abs(c_t);
   }
@@ -756,7 +656,7 @@ binomial_coefficient(const T n, const R k){
 
 
 template<typename S,typename U>
-S unsigned_to_signed(const U u){
+S u2s(const U u){
   if (u > static_cast<U>((std::numeric_limits<S>::max)())){
     std::string msg = "unsigned_to_signed:: Value " + std::to_string(u)
                     + " can not be stored in requested signed type"
@@ -767,7 +667,7 @@ S unsigned_to_signed(const U u){
 }
 
 template<typename U,typename S>
-U signed_to_unsigned(const S s){
+U s2u(const S s){
   if (s < 0
     //|| static_cast<U>((std::numeric_limits<S>::max)()) > (std::numeric_limits<U>::max)() // the largest element of type S is too big for U
     //|| s > static_cast<S>((std::numeric_limits<U>::max)()) // s, specifically is too big to be expressed in type U

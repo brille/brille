@@ -17,7 +17,6 @@
 #ifndef PHONON_HPP
 #define PHONON_HPP
 
-#include <map>
 #include <array>
 #include <tuple>
 #include "latvec.hpp"
@@ -72,15 +71,18 @@ The LDVec *could* contain only unique (R⁻¹ ⃗rₗ - ⃗rₖ) values, but thi
 a future exercise if it becomes necessary.
 */
 class GammaTable: public RotateTable {
-  std::vector<size_t> point2space_; //! maps Rᵣ to Sᵣ
+public:
+  using ind_t = unsigned;
+private:
+  std::vector<ind_t> point2space_; //! maps Rᵣ to Sᵣ
   // use std::vectors instead of std::map for the mapping since we know the
   // total number of keys and how to calculate their positions in the vector
-  size_t n_atoms;
-  size_t n_sym_ops;
-  std::vector<size_t> l_mapping; //! maps (κ,r) to l=Nₒ(κ,Sᵣ)
-  std::vector<size_t> v_mapping; //! maps (κ,r) to v
+  ind_t n_atoms;
+  ind_t n_sym_ops;
+  std::vector<ind_t> l_mapping; //! maps (κ,r) to l=Nₒ(κ,Sᵣ)
+  std::vector<ind_t> v_mapping; //! maps (κ,r) to v
   Direct lattice_;
-  ArrayVector<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
+  brille::Array<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
   explicit GammaTable(): n_atoms(0), n_sym_ops(0) {
     l_mapping.resize(0);
@@ -100,22 +102,22 @@ public:
     point2space_.resize(n_sym_ops);
     l_mapping.resize(n_atoms*n_sym_ops);
     v_mapping.resize(n_atoms*n_sym_ops);
-    vectors_ = ArrayVector<double>(3u, n_atoms*n_sym_ops+1u, 0.); // always put (0,0,0) first
+    vectors_ = brille::Array<double>({n_atoms*n_sym_ops+1u, 3u}, 0.); // always put (0,0,0) first
     // construct a mapping of pointgroup indices to spacegroup indices
     // -- this mapping is likely not invertable, but it shouldn't (doesn't?)
     //    matter. I think.
-    for (size_t i=0; i<ps.size(); ++i){
+    for (ind_t i=0; i<ps.size(); ++i){
       point2space_[i] = spgsym.find_matrix_index(ps.get(i));
       if (point2space_[i]>=spgsym.size()){
         info_update("The point group operation\n",ps.get(i),"was not found in the spacegroup!");
         throw std::runtime_error("Something has gone wrong with the correspondence of spacegroup to pointgroup");
       }
     }
-    size_t count{1u}; // for (0,0,0)
+    ind_t count{1u}; // for (0,0,0)
     // fill in the mappings
-    for (size_t k=0; k<bs.size(); ++k) for (size_t r=0; r<ps.size(); ++r){
+    for (ind_t k=0; k<bs.size(); ++k) for (ind_t r=0; r<ps.size(); ++r){
       bool found;
-      size_t l;
+      ind_t l;
       auto motion = spgsym.getm(point2space_[r]);
       std::tie(found,l) = bs.equivalent_after_operation(k, motion);
       if (!found){
@@ -128,10 +130,11 @@ public:
       for (int i=0; i<3; ++i) vec[i] -= rk[i];
       // check if this vector is in vectors_
       // look for an equal vector within the first count vectors_ -- return its index, or count if none match
-      size_t v = norm(vectors_.first(count) - vec).is_approx(Comp::eq, 0.).first_true();
+      // count >= 1, so view is fine:
+      ind_t v = norm(vectors_.view(0,count) - vec).is(brille::cmp::eq, 0.).first();
       // store the vector if its not already present
       if (count == v) vectors_.set(count++, vec);
-      size_t key = this->calc_key(k, r);
+      ind_t key = this->calc_key(k, r);
       l_mapping[key] = l;
       v_mapping[key] = v;
     }
@@ -139,17 +142,19 @@ public:
     return true;
   }
   template<class Ik, class Ir>
-  size_t F0(Ik k, Ir r) const {
+  ind_t F0(Ik k, Ir r) const {
     return l_mapping[this->calc_key(k,r)];
   }
-  const ArrayVector<double>& vectors() const {return vectors_;}
+  const brille::Array<double>& vectors() const {return vectors_;}
   template<class Ik, class Ir>
-  size_t vector_index(Ik k, Ir r) const {
+  ind_t vector_index(Ik k, Ir r) const {
     return v_mapping[this->calc_key(k,r)];
   }
   template<class Ik, class Ir>
-  ArrayVector<double> vector(Ik k, Ir r) const {
+  brille::Array<double> vector(Ik k, Ir r) const {
     return vectors_.extract(this->vector_index(k,r));
+    // aternatively
+    // return vectors_.view(this->vector_index(k,r));
   }
   template<class Ik, class Ir>
   LDVec<double> ldvector(Ik k, Ir r) const {
@@ -157,9 +162,9 @@ public:
   }
   const Direct& lattice() const {return lattice_;}
 private:
-  template<class Ik, class Ir> size_t calc_key(Ik k, Ir r) const {
+  template<class Ik, class Ir> ind_t calc_key(Ik k, Ir r) const {
     if (k<n_atoms && r<n_sym_ops)
-      return static_cast<size_t>(k)*n_sym_ops + static_cast<size_t>(r);
+      return static_cast<ind_t>(k)*n_sym_ops + static_cast<ind_t>(r);
     throw std::runtime_error("Attempting to access out of bounds mapping!");
   }
 };

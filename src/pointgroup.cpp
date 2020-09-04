@@ -64,8 +64,6 @@
 #include "utilities.hpp"
 #include "spg_database.hpp"
 
-#include "arrayvector.hpp"
-
 #define NUM_ROT_AXES 73
 #define ZERO_PREC 1e-10
 
@@ -230,7 +228,7 @@ PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotation
   for (int i = 1; i < num_rotations; i++) {
     bool isunique = true;
     for (int j = 0; j < num_rotations; j++)
-      if ( equal_matrix(rotations+i*9, pointsym.data(j)) ){
+      if ( brille::utils::equal_matrix(rotations+i*9, pointsym.data(j)) ){
        isunique = false;
        break;
 	  }
@@ -307,8 +305,8 @@ static int get_pointgroup_class_table(int table[10], const PointSymmetry & point
 	*/
 static int isometry_type(const int *rot){
   int rot_type=-1; // error value
-	int tr = trace(rot);
-  if ( matrix_determinant(rot) == -1) {
+	int tr = brille::utils::trace(rot);
+  if ( brille::utils::matrix_determinant(rot) == -1) {
     switch (tr) {
     case -2: /* -6 */ rot_type = 0; break;
     case -1: /* -4 */ rot_type = 1; break;
@@ -368,7 +366,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
     get_proper_rotation(prop_rot, pointsym.data(i));
     // Find the first two-fold rotation
 		// det(prop_rot)==1, so two-fold has tr==-1 for 2 and ̄2.
-		if (trace(prop_rot)==-1){
+		if (brille::utils::trace(prop_rot)==-1){
 			// It's rotation-invariant axis is axes[1]
 	    axes[1] = get_rotation_axis(prop_rot);
 	    break;
@@ -385,7 +383,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
 	const int max_norm=8;
 	int below_count = 0;
 	for (int i=0; i<num_ortho_axis; ++i){
-		norm_squared[i] = vector_norm_squared(rot_axes[ortho_axes[i]]);
+		norm_squared[i] = brille::utils::vector_norm_squared(rot_axes[ortho_axes[i]]);
 		if (norm_squared[i] < max_norm - ZERO_PREC) ++below_count;
 	}
 	if (below_count < 2) return 0;
@@ -416,7 +414,7 @@ static int laue2m(int axes[3], const PointSymmetry & pointsym)
 	delete[] norm_squared;
 
   set_transformation_matrix(t_mat, axes);
-  if (matrix_determinant(t_mat) < 0) {
+  if (brille::utils::matrix_determinant(t_mat) < 0) {
     int tmpval = axes[0];
     axes[0] = axes[2];
     axes[2] = tmpval;
@@ -434,12 +432,12 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
   for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
     /* For order=4, look for a four-fold rotation, which has tr(W)==1 */
-    if (rot_order == 4 && trace(prop_rot)==1) {
+    if (rot_order == 4 && brille::utils::trace(prop_rot)==1) {
       axes[2] = get_rotation_axis(prop_rot);
       break;
     }
     /* For order=3, look for a three-fold rotation, which has tr(W)=0 */
-    if (rot_order == 3 && trace(prop_rot) == 0) {
+    if (rot_order == 3 && brille::utils::trace(prop_rot) == 0) {
       axes[2] = get_rotation_axis(prop_rot);
       break;
     }
@@ -456,14 +454,14 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
 	bool axes_found=false;
   for (int i = 0; i < num_ortho_axis; i++) {
     axes[0] = ortho_axes[i];
-    multiply_matrix_vector(axis_vec, prop_rot, rot_axes[axes[0]]);
+    brille::utils::multiply_matrix_vector(axis_vec, prop_rot, rot_axes[axes[0]]);
     for (int j = 0; j < num_ortho_axis; j++) {
-			if (equal_vector<int,3>(axis_vec, rot_axes[ortho_axes[j]]))
+			if (brille::utils::equal_vector<int,3>(axis_vec, rot_axes[ortho_axes[j]]))
 				is_found = 1;
 			if (!is_found){
 				for (int k=0; k<3; ++k)
 					axis_vec[k] *= -1;
-				if (equal_vector<int,3>(axis_vec, rot_axes[ortho_axes[j]]))
+				if (brille::utils::equal_vector<int,3>(axis_vec, rot_axes[ortho_axes[j]]))
 					is_found = -1;
 			}
 			if (is_found){
@@ -475,14 +473,14 @@ static int laue_one_axis(int axes[3], const PointSymmetry & pointsym, const int 
 		if (axes_found){
 	    set_transformation_matrix(t_mat, axes);
 			/* to avoid F-center choice which has det=4 */
-			if (abs(matrix_determinant(t_mat)) > 3) axes_found = false;
+			if (abs(brille::utils::matrix_determinant(t_mat)) > 3) axes_found = false;
 		}
 		if (axes_found) break;
   }
 	/* axes are not correctly found. */
 	if (!axes_found) return 0;
   set_transformation_matrix(t_mat, axes);
-  if (matrix_determinant(t_mat) < 0) {
+  if (brille::utils::matrix_determinant(t_mat) < 0) {
     int tmpval = axes[0];
     axes[0] = axes[1];
     axes[1] = tmpval;
@@ -498,7 +496,7 @@ static int lauennn(int axes[3], const PointSymmetry & pointsym, const int rot_or
 	// look for three two-fold or four-fold axes
   for (size_t i = 0; i < pointsym.size(); i++) {
     get_proper_rotation(prop_rot, pointsym.data(i));
-		int tr = trace(prop_rot);
+		int tr = brille::utils::trace(prop_rot);
 		// two-fold rotations have tr(W)==-1, four-fold have tr(W)==1
 		if ((tr == -1 && rot_order == 2) || (tr==1 && rot_order==4)){
 			axis = get_rotation_axis(prop_rot);
@@ -519,7 +517,7 @@ static int lauennn(int axes[3], const PointSymmetry & pointsym, const int rot_or
 		axis = axes[1]; axes[1]=axes[2]; axes[2] = axis;
 	}
 	set_transformation_matrix(prop_rot, axes);
-	if (matrix_determinant(prop_rot) < 0){
+	if (brille::utils::matrix_determinant(prop_rot) < 0){
 		axis = axes[1]; axes[1]=axes[2]; axes[2] = axis;
 	}
   return 1;
@@ -529,15 +527,15 @@ static int get_rotation_axis(const int *proper_rot)
 {
   int axis = -1;
   // 1 and ̄1 have no associated rotation axis, so skip them.
-  if (!equal_matrix(proper_rot, identity)){
+  if (!brille::utils::equal_matrix(proper_rot, identity)){
 		int vec[3];
 	  // The rotation axis for any other isometry is the one which solves the
 		// eigenvalue problem (R-I) ⃗u = 0. Since the unique rotation vectors of
 		// crystallographic pointgroup operations is limited, it's easier to just
 		// check which of the axes is stationary under R ( ⃗u = R ⃗u )
 	  for (int i = 0; i < NUM_ROT_AXES; i++) {
-	    multiply_matrix_vector(vec, proper_rot, rot_axes[i]);
-			if (equal_vector<int,3>(vec, rot_axes[i])){
+	    brille::utils::multiply_matrix_vector(vec, proper_rot, rot_axes[i]);
+			if (brille::utils::equal_vector<int,3>(vec, rot_axes[i])){
 				axis = i;
 				break;
 			}
@@ -570,11 +568,11 @@ static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const in
   int vec[3];
   int sum_rot[9]={0,0,0, 0,0,0, 0,0,0}, rot[9]={1,0,0, 0,1,0, 0,0,1};
   for (i = 0; i < rot_order; i++) {
-    multiply_matrix_matrix(rot, proper_rot, rot);
-    add_matrix(sum_rot, rot, sum_rot);
+    brille::utils::multiply_matrix_matrix(rot, proper_rot, rot);
+    brille::utils::add_matrix(sum_rot, rot, sum_rot);
   }
   for (i = 0; i < NUM_ROT_AXES; i++) {
-    multiply_matrix_vector(vec, sum_rot, rot_axes[i]);
+    brille::utils::multiply_matrix_vector(vec, sum_rot, rot_axes[i]);
     if (vec[0] == 0 && vec[1] == 0 && vec[2] == 0) ortho_axes[num_ortho_axis++] = i;
   }
   return num_ortho_axis;
@@ -582,10 +580,10 @@ static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const in
 
 static void get_proper_rotation(int *prop_rot, const int *rot)
 {
-  if (matrix_determinant(rot) == -1) {
-    multiply_matrix_matrix(prop_rot, inversion, rot);
+  if (brille::utils::matrix_determinant(rot) == -1) {
+    brille::utils::multiply_matrix_matrix(prop_rot, inversion, rot);
   } else {
-    copy_matrix(prop_rot, rot);
+    brille::utils::copy_matrix(prop_rot, rot);
   }
 }
 
@@ -611,7 +609,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 	if (is_time_reversal){
 		rot_tmp.resize(2*N);
 		for (size_t i=0; i<N; ++i)
-			multiply_matrix_matrix(rot_tmp[i+N].data(), inversion, rot_tmp[i].data());
+		 brille::utils::multiply_matrix_matrix(rot_tmp[i+N].data(), inversion, rot_tmp[i].data());
 	}
 	// check for uniqueness of the rotations
   bool i_is_not_unique = false;
@@ -619,7 +617,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
   for (size_t i=1; i<rot_tmp.size(); ++i) {
 		// check all rotations against the already established-to-be-unique rotations
 		for (int j: unique_rot){
-			i_is_not_unique = equal_matrix(rot_tmp[j].data(), rot_tmp[i].data());
+			i_is_not_unique = brille::utils::equal_matrix(rot_tmp[j].data(), rot_tmp[i].data());
 			if (i_is_not_unique) break;
 		}
 		// if i is unique, add it to the vector of unique rotation indices
@@ -667,7 +665,7 @@ std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const in
 	out[0] = {rot_axes[axis][0], rot_axes[axis][1], rot_axes[axis][2]};
 	int ortho[NUM_ROT_AXES], norm[NUM_ROT_AXES];
 	int northo = orthogonal_to_axis(ortho, axis);
-	for (int i=0; i<northo; ++i) norm[i] = vector_norm_squared(rot_axes[ortho[i]]);
+	for (int i=0; i<northo; ++i) norm[i] = brille::utils::vector_norm_squared(rot_axes[ortho[i]]);
 
 	int idx=0;
 	for (int j=1; j<3; ++j){

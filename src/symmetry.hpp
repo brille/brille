@@ -25,6 +25,7 @@
 // #include <numeric>
 #include "utilities.hpp"
 #include "bravais.hpp"
+#include "approx.hpp"
 
 template<class T> using Matrix = std::array<T,9>;
 template<class T> using Vector = std::array<T,3>;
@@ -45,9 +46,9 @@ public:
     Matrix<R> outW;
     Vector<T> outw;
     // output rotation-part is W0*W1
-    multiply_matrix_matrix(outW.data(), this->W.data(), m.getr().data());
+    brille::utils::multiply_matrix_matrix(outW.data(), this->W.data(), m.getr().data());
     // ouput translation-part is W0*w1
-    multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
+    brille::utils::multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
     // *plus* w0
     for (int i=0; i<3; ++i) outw[i] += this->w[i];
     // we want the output translation elements to be ∈ [0,1)
@@ -58,9 +59,9 @@ public:
     Matrix<R> outW;
     Vector<T> outw;
     // output rotation part is W⁻¹
-    matrix_inverse(outW.data(), this->W.data());
+    brille::utils::matrix_inverse(outW.data(), this->W.data());
     // output translation part is -W⁻¹*w
-    multiply_matrix_vector(outw.data(), outW.data(), this->w.data());
+    brille::utils::multiply_matrix_vector(outw.data(), outW.data(), this->w.data());
     for (int i=0; i<3; ++i) outw[i] *= -1;
     // we want the output translation elements to be ∈ [0,1)
     for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
@@ -70,20 +71,20 @@ public:
   Vector<S> move_point(const Vector<S>& point) const {
     Vector<S> outp;
     // (W,w) * ⃗p  = W * ⃗p + w
-    multiply_matrix_vector(outp.data(), this->W.data(), point.data());
+    brille::utils::multiply_matrix_vector(outp.data(), this->W.data(), point.data());
     for (int i=0; i<3; ++i) outp[i] += this->w[i];
     return outp;
   }
   template<class S>
   Vector<S> move_vector(const Vector<S>& v) const {
     Vector<S> outv;
-    multiply_matrix_vector(outv.data(), this->W.data(), v.data());
+    brille::utils::multiply_matrix_vector(outv.data(), this->W.data(), v.data());
     return outv;
   }
   template<class S>
   Vector<S> move_axial(const Vector<S>& a) const {
     Vector<S> outa = this->move_vector(a);
-    R det = matrix_determinant(this->W.data());
+    R det = brille::utils::matrix_determinant(this->W.data());
     if (1 != det) for (int i=0; i<3; ++i) outa[i] *= det;
     return outa;
   }
@@ -100,11 +101,11 @@ public:
     for (int i=0; i<3; ++i) d[i] = T(0.5) - std::abs(d[i] - std::floor(d[i]) - T(0.5));
     // so if the difference vector is ~ ⃗0 or ~ ⃗1 and the matrix parts match
     // then the Motions are equivalent
-    return approx_vector(d.data(), z.data()) && approx_matrix(W.data(), mW.data());
+    return brille::approx::vector(d.data(), z.data()) && brille::approx::matrix(W.data(), mW.data());
   }
   template<class S>
   bool equal_matrix(const Matrix<S>& m) const {
-    return approx_matrix(W.data(), m.data());
+    return brille::approx::matrix(W.data(), m.data());
   }
   // Some compiler documentation (GCC,+?) claims that operator!= will be
   // automatically constructed if operator== is defined. This is apparently not
@@ -113,11 +114,11 @@ public:
   bool operator!=(const Motion<R,T>& m) const { return !this->operator==(m); }
   bool has_identity_rotation() const {
     Matrix<R> i{{1,0,0, 0,1,0, 0,0,1}};
-    return approx_matrix(W.data(), i.data());
+    return brille::approx::matrix(W.data(), i.data());
   }
   bool has_identity_translation() const {
     Vector<T> i{{0,0,0}};
-    return approx_vector(w.data(), i.data());
+    return brille::approx::vector(w.data(), i.data());
   }
   size_t from_ascii(const std::string& x, const bool cob=false);
 };

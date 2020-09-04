@@ -543,7 +543,9 @@ int test_double(int verbose)
 /*  Don't change this routine unless you fully understand it.                */
 /*                                                                           */
 /*****************************************************************************/
+#ifdef LINUX
 static int previous_cword;
+#endif
 void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy,
                REAL maxz)
 {
@@ -1782,7 +1784,7 @@ REAL orient3dslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
   return deter[deterlen - 1];
 }
 
-REAL orient3dadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
+REAL orient3dadapt(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, REAL permanent)
 {
   INEXACT REAL adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
   REAL det, errbound;
@@ -2186,7 +2188,7 @@ REAL orient3dadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
 
 #ifdef USE_CGAL_PREDICATES
 
-REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
 {
   return (REAL)
     - cgal_pred_obj.orientation_3_object()
@@ -2198,7 +2200,7 @@ REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 
 #else
 
-REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
 {
   REAL adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
   REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
