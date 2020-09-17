@@ -366,16 +366,16 @@ private:
     stopwatch.tic();
     TetMap map(layers[high].number_of_tetrahedra());
     long mapsize = brille::utils::u2s<long, ind_t>(map.size());
-    #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-    // this version is necessary with g++ <= 8.3.0
-    #pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)
-    #else
-    // this version is necessary with g++ == 9.2.0
-    #pragma omp parallel for default(none) shared(map, mapsize, high, low) schedule(dynamic)
-    #endif
+    shape_t jk{0,0};
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+// this version is necessary with g++ <= 8.3.0
+#pragma omp parallel for default(none) shared(map, mapsize) firstprivate(jk) schedule(dynamic)
+#else
+// this version is necessary with g++ == 9.2.0
+#pragma omp parallel for default(none) shared(map, mapsize, high, low) firstprivate(jk) schedule(dynamic)
+#endif
     for (long ui=0; ui<mapsize; ++ui){
       ind_t i = brille::utils::s2u<ind_t, long>(ui);
-      shape_t jk{0,0};
       // initialize the map
       map[i] = TetSet();
       brille::Array<double> cchi = layers[high].get_circum_centres().view(i);

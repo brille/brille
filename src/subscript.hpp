@@ -215,8 +215,13 @@ std::vector<I> lin2sub(I l, const std::vector<I>& stride){
 template <class I>
 I sub2lin(const std::vector<I>& sub, const std::vector<I>& stride){
   assert(sub.size() == stride.size());
+#if defined(__GNUC__) && (__GNUC__ < 9 || (__GNUC__ == 9 && __GNUC_MINOR <= 2))
+  // serial inner_product
+  return std::inner_product(sub.begin(), sub.end(), stride.begin(), I(0));
+#else
   // parallelized inner_product
   return std::transform_reduce(sub.begin(), sub.end(), stride.begin(), I(0));
+#endif
 }
 
 

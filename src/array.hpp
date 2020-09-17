@@ -287,7 +287,10 @@ protected: // so inherited classes can calculate subscript indexes into their da
   }
 private:
   ind_t size_from_shape(const shape_t& s) const {
-    size_t sz = std::reduce(s.begin(), s.end(), ind_t(1), std::multiplies<ind_t>());
+    // std::reduce can perform the same operation in parallel, but isn't implemented
+    // in the gcc libraries until v9.3. Since the number of dimensions is (probably)
+    // small a serial algorithm is not a giant speed hit.
+    size_t sz = std::accumulate(s.begin(), s.end(), ind_t(1), std::multiplies<ind_t>());
     return static_cast<ind_t>(sz);
   }
   ind_t size_from_shape() const {return this->size_from_shape(_shape);}

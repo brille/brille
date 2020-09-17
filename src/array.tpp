@@ -798,7 +798,9 @@ T Array<T>::dot(ind_t i, ind_t j) const {
   brille::RawBinaryOperator<T> prod(brille::ops::times);
   // perform elementwise multiplication on the views of i and j
   prod(sz, prods.data(), 1u, this->ptr(i), st, this->ptr(j), st);
-  return std::reduce(prods.begin(), prods.end(), T(0));
+  // find the sum of the products
+  // std::reduce can do this in parallel but gcc<v9.3 does not implement all of C++17
+  return std::accumulate(prods.begin(), prods.end(), T(0));
 
   // auto vi = ArrayIt(this->view(i));
   // auto vj = ArrayIt(this->view(j));

@@ -127,7 +127,7 @@ public:
   ind_t branches(void) const {
     ind_t num = data_.size(1);
     if (data_.ndim()==2){
-      ind_t el_per_branch = std::reduce(elements_.begin(), elements_.end(), ind_t(0));
+      ind_t el_per_branch = std::accumulate(elements_.begin(), elements_.end(), ind_t(0));
       // zero-elements is the special (initial) case
       // otherwise we can safely divide *AND* n_branches*el_per_branch ≡ num
       if (el_per_branch > 0) num /= el_per_branch;
@@ -445,7 +445,12 @@ bool InnerInterpolationData<T>::rip_recip(
   std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v, tmp_m) firstprivate(xidx, ident, no, xsize) schedule(static)
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+// otherwise gcc complains that const b_ and s_ are *already* shared
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#else
+#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#endif
   for (long long si=0; si<xsize; ++si){
     T* xptr;
     xidx[0] = brille::utils::s2u<ind_t, long long>(si);
@@ -492,7 +497,11 @@ bool InnerInterpolationData<T>::rip_real(
   std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v, tmp_m) firstprivate(xidx, ident, no, xsize) schedule(static)
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#else
+#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#endif
   for (long long si=0; si<xsize; ++si){
     xidx[0] = brille::utils::s2u<ind_t, long long>(si);
     T* xptr;
@@ -543,7 +552,11 @@ bool InnerInterpolationData<T>::rip_axial(
   std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR,detR) private(tmp_v, tmp_m) firstprivate(xidx, ident, no, xsize) schedule(static)
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR,detR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#else
+#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR,detR) private(tmp_v,tmp_m) firstprivate(xidx,ident,no,xsize) schedule(static)
+#endif
   for (long long si = 0; si < xsize; ++si) {
     xidx[0]= brille::utils::s2u<ind_t, long long>(si);
     T* xptr;
@@ -630,10 +643,11 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
   if (data_.ndim() > 2) xidx.resize(3);
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) \
-                         shared(b_, s_, x, q, pgt, ptsym, ridx, invRidx, e_iqd_gt) \
-                         firstprivate(xidx, no, Nmat, xsize) \
-                         schedule(static)
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) firstprivate(xidx,no,Nmat,xsize) schedule(static)
+#else
+#pragma omp parallel for default(none) shared(b_,s_,x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) firstprivate(xidx,no,Nmat,xsize) schedule(static)
+#endif
   for (long long si=0; si<xsize; ++si){
     xidx[0] = brille::utils::s2u<ind_t, long long>(si);
     ind_t offset{0};
