@@ -27,6 +27,7 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
     py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl,
     bool sort
   ){
+    profile_update("Start of 'fill' operation");
     brille::Array<T> vals;
     brille::Array<R> vecs;
     std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
@@ -37,7 +38,12 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
 
     cobj.replace_value_data(vals, val_el, val_rl);
     cobj.replace_vector_data(vecs, vec_el, vec_rl);
-    if (sort) cobj.sort();
+    profile_update("  End of 'fill' operation");
+    if (sort){
+      profile_update("Start of 'sort' operation");
+      cobj.sort();
+      profile_update("  End of 'sort' operation");
+    }
   },
   "values_data"_a, "values_elements"_a,
   "vectors_data"_a, "vectors_elements"_a,
@@ -89,6 +95,7 @@ R"pbdoc(
     py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght,
     bool sort
   ){
+    profile_update("Start of 'fill' operation with cost information");
     brille::Array<T> vals;
     brille::Array<R> vecs;
     std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
@@ -103,7 +110,12 @@ R"pbdoc(
     cobj.replace_vector_data(vecs, vec_el, vec_rl);
     cobj.set_value_cost_info(val_sf, val_vf, val_wght);
     cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
-    if (sort) cobj.sort();
+    profile_update("  End of 'fill' operation with cost information");
+    if (sort){
+      profile_update("Start of 'sort' operation");
+      cobj.sort();
+      profile_update("  End of 'sort' operation");
+    }
   },
   "values_data"_a, "values_elements"_a, "values_weights"_a,
   "vectors_data"_a, "vectors_elements"_a, "vectors_weights"_a,
@@ -186,13 +198,16 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R>>& cls){
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
+    profile_update("Start of 'ir_interpolate_at' operation");
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    profile_update("  End of 'ir_interpolate_at' operation");
     return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(
@@ -238,15 +253,19 @@ R"pbdoc(
                            py::array_t<double> pyM, double temp_k,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
+    profile_update("Start of 'ir_interpolate_at_dw' operation");
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    profile_update("Interpolated values found");
     // calculate the Debye-Waller factor
     auto Wd = brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
+    profile_update("  End of 'ir_interpolate_at_dw' operation");
     return std::make_tuple(brille::a2py(val), brille::a2py(vec), Wd);
   },"Q"_a,"M/amu"_a,"temperature/K"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(
@@ -295,13 +314,16 @@ void def_grid_interpolate(py::class_<Grid<T,R>>& cls){
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
+    profile_update("Start of 'interpolate_at' operation");
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     auto [val, vec] = cobj.interpolate_at(qv, nthreads, no_move);
+    profile_update("  End of 'interpolate_at' operation");
     return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
 R"pbdoc(

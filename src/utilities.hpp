@@ -267,7 +267,7 @@ binomial_coefficient(const T n, const R k);
 //! Convert unsigned integers to signed integers
 template<typename S,typename U> S u2s(const U u);
 //! Convert signed integers to unsigned integers
-template<typename U,typename S> U signed_to_unsigned(const S s);
+template<typename U,typename S> U s2u(const S s);
 
 #include "utilities.tpp"
 

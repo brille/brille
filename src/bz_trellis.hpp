@@ -51,6 +51,7 @@ public:
   template<typename S>
   std::tuple<brille::Array<T>,brille::Array<R>>
   interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
+    profile_update("Start BrillouinZoneTrellis3::interpolate_at");
     LQVec<S> q(x.get_lattice(), x.size(0));
     LQVec<int> tau(x.get_lattice(), x.size(0));
     if (no_move){
@@ -72,6 +73,7 @@ public:
   std::tuple<brille::Array<T>,brille::Array<R>>
   ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
     verbose_update("BZTrellisQ::ir_interpoalte_at called with ",nth," threads");
+    profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
     LQVec<S> ir_q(x.get_lattice(), x.size(0));
     LQVec<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
@@ -88,6 +90,7 @@ public:
     auto [vals, vecs] = (nth>1)
         ? this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz(), nth)
         : this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz());
+    profile_update("Apply rotations/permutations to interpolated results");
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
@@ -99,6 +102,7 @@ public:
     this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nth);
     this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nth);
     // we're done so bundle the output
+    profile_update("  End BrillouinZoneTrellis3::ir_interpolate_at");
     return std::make_tuple(vals, vecs);
   }
 };

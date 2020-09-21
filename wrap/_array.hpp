@@ -26,34 +26,6 @@
 #include "array.hpp"
 
 namespace brille {
-  // template<class T>
-  // pybind11::buffer_info a2bi(const Array<T>& a){
-  //   const T* ptr = a.data();
-  //   brille::shape_t shape = a.shape();
-  //   brille::shape_t stride = a.cstride();
-  //   bool readonly = a.ismutable();
-  //   return pybind11::buffer_info(ptr, shape, stride, readonly);
-  //   // return pybind11::buffer_info(a.data(), a.shape(), a.cstride(), a.ismutable());
-  // }
-  // template<class T>
-  // pybind11::buffer_info a2bi(Array<T>& a){
-  //   T* ptr = a.data();
-  //   brille::shape_t shape = a.shape();
-  //   brille::shape_t stride = a.cstride();
-  //   bool readonly = a.ismutable();
-  //   return pybind11::buffer_info(ptr, shape, stride, readonly);
-  //   // return pybind11::buffer_info(a.data(), a.shape(), a.cstride(), a.ismutable());
-  // }
-  // template<class T>
-  // pybind11::buffer_info a2bi(Array<T>&& a){
-  //   T* ptr = a.data();
-  //   brille::shape_t shape = a.shape();
-  //   brille::shape_t stride = a.cstride();
-  //   bool readonly = a.ismutable();
-  //   return pybind11::buffer_info(ptr, shape, stride, readonly);
-  //   // return pybind11::buffer_info(a.data(), a.shape(), a.cstride(), a.ismutable());
-  // }
-
   template<class T>
   pybind11::array_t<T> a2py(brille::Array<T>& a){
     // share an Array with Python
@@ -61,7 +33,7 @@ namespace brille {
     std::unique_ptr<brille::Array<T>> aptr = std::make_unique<brille::Array<T>>(brille::Array<T>(a));
     auto capsule = pybind11::capsule(aptr.get(), [](void *p) { std::unique_ptr<brille::Array<T>>(reinterpret_cast<brille::Array<T>*>(p)); });
     aptr.release();
-    return pybind11::array_t<T>(a.shape(), a.cstride(), capsule);
+    return pybind11::array_t<T>(a.shape(), a.cstride(), a.data(), capsule);
   }
 
   // inspired by https://github.com/pybind/pybind11/issues/1042#issuecomment-647147819

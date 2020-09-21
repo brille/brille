@@ -60,7 +60,7 @@ TEST_CASE("Auto broadcasting","[subscript]"){
     // for(auto i: outer) std::cout << i << " ";
     // std::cout << "} <- { ";
     // for(auto i: ax) std::cout << i << " ";
-    // std::cout << "} & {";
+    // std::cout << "} & { ";
     // for(auto i: bx) std::cout << i << " ";
     // std::cout << "}" << std::endl;
     //

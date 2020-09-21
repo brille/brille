@@ -433,6 +433,7 @@ template<typename T>
 bool InnerInterpolationData<T>::rip_recip(
   brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
+  profile_update("Start InnerInterpolationData::rip_recip method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
   ElementsType no = this->count_scalars_vectors_matrices();
   if (!std::any_of(no.begin()+1, no.end(), [](ind_t n){return n>0;}))
@@ -478,6 +479,7 @@ bool InnerInterpolationData<T>::rip_recip(
       }
     }
   }
+  profile_update("  End InnerInterpolationData::rip_recip method");
   return true;
 }
 
@@ -485,6 +487,7 @@ template<typename T>
 bool InnerInterpolationData<T>::rip_real(
   brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
+  profile_update("Start InnerInterpolationData::rip_real method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
   ElementsType no = this->count_scalars_vectors_matrices();
   if (!std::any_of(no.begin()+1, no.end(), [](ind_t n){return n>0;}))
@@ -529,6 +532,7 @@ bool InnerInterpolationData<T>::rip_real(
       }
     }
   }
+  profile_update("  End InnerInterpolationData::rip_real method");
   return true;
 }
 
@@ -536,6 +540,7 @@ template<typename T>
 bool InnerInterpolationData<T>::rip_axial(
   brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
+  profile_update("Start InnerInterpolationData::rip_axial method");
   omp_set_num_threads((nthreads > 0) ? nthreads : omp_get_max_threads());
   ElementsType no = this->count_scalars_vectors_matrices();
   if (!std::any_of(no.begin() + 1, no.end(), [](ind_t n) {return n > 0; }))
@@ -584,6 +589,7 @@ bool InnerInterpolationData<T>::rip_axial(
       }
     }
   }
+  profile_update("  End InnerInterpolationData::rip_axial method");
   return true;
 }
 
@@ -612,6 +618,7 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
+  profile_update("Start InnerInterpolationData::rip_gamma_complex method");
   // construct a lambda to calculate the phase for qᵢ, and [R⁻¹xₖ - xᵥ]
   auto e_iqd_gt = [q,pgt](ind_t i, ind_t k, size_t r){
     return e_iqd(q, i, pgt.vectors(), pgt.vector_index(k,r));
@@ -713,6 +720,7 @@ bool InnerInterpolationData<T>::rip_gamma_complex(
       }
     }
   }
+  profile_update("  End InnerInterpolationData::rip_gamma_complex method");
   return true;
 }
 

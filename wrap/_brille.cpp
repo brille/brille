@@ -20,6 +20,7 @@
 
 void wrap_bravais(pybind11::module &);
 void wrap_brillouinzone(pybind11::module &);
+void wrap_debug(pybind11::module &);
 void wrap_hallsymbol(pybind11::module &);
 //void wrap_interpolationdata(pybind11::module &);
 void wrap_lattice(pybind11::module &);
@@ -80,4 +81,5 @@ PYBIND11_MODULE(_brille, m){
   wrap_hallsymbol(m);
   //wrap_interpolationdata(m);
   wrap_bravais(m);
+  wrap_debug(m);
 }

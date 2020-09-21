@@ -201,6 +201,7 @@ brille::Array<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& p
 }
 
 void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length){
+  profile_update("Start BrillouinZone::wedge_brute_force ", (special_2_folds ? "with" : "without"), " special two-fold axes ", (special_mirrors ? "with" : "without"), " special mirrors");
   debug_exec(std::string msg;)
   // Grab the pointgroup symmetry operations
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
@@ -497,7 +498,7 @@ void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       }
     }
   }
-
+  profile_update("  End BrillouinZone::wedge_brute_force ", (special_2_folds ? "with" : "without"), " special two-fold axes ", (special_mirrors ? "with" : "without"), " special mirrors");
 }
 
 

@@ -363,16 +363,42 @@ template<typename T> std::complex<T> hermitian_product(const size_t n, const T* 
   for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
+template<typename T> std::complex<T> complex_prod(const std::complex<T>& x, T y){
+  return std::conj(x)*y;
+}
+template<typename T> std::complex<T> complex_prod(const std::complex<T>& x, const std::complex<T>& y){
+  T xr{x.real()}, xi{x.imag()}, yr{y.real()}, yi{y.imag()};
+  // a*×b = (a'+ia")*×(b'+ib") = (a'-ia")×(b'+ib") = a'b' + a"b" + i(a'b" -a"b')
+  return std::complex<T>(xr*yr+xi*yi, xr*yi-xi*yr);
+}
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b){
   std::complex<T> h_dot{0,0};
-  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  // for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  for (size_t i=0; i<n; ++i) h_dot += complex_prod(a[i], b[i]);
   return h_dot;
 }
 template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
-  std::complex<T> h_dot{0,0};
-  for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
-  return h_dot;
+  T hr{0}, hi{0};
+  long long sn = u2s<long long>(n);
+  #pragma omp parallel for shared(a,b) reduction(+: hr,hi)
+  for (long long si=0; si<sn; ++si){
+    size_t i = s2u<size_t>(si);
+    // std::complex<T> h = complex_prod(a[i], b[i]);
+    std::complex<T> h = std::conj(a[i])*b[i];
+    hr += h.real();
+    hi += h.imag();
+  }
+  // for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
+  return std::complex<T>(hr,hi);
 }
+
+// template <class I>
+// I sub2lin(const std::vector<I>& sub, const std::vector<I>& stride){
+//   assert(sub.size() == stride.size());
+
+// }
+
+
 template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B){
   return vector_angle(n,A,B);
 }
@@ -657,10 +683,12 @@ binomial_coefficient(const T n, const R k){
 
 template<typename S,typename U>
 S u2s(const U u){
-  if (u > static_cast<U>((std::numeric_limits<S>::max)())){
+  S smax = (std::numeric_limits<S>::max)();
+  U usmax = static_cast<U>(smax);
+  if (u > usmax){
     std::string msg = "unsigned_to_signed:: Value " + std::to_string(u)
                     + " can not be stored in requested signed type"
-                    + " (max value "+ std::to_string((std::numeric_limits<S>::max)()) + ")";
+                    + " (max value "+ std::to_string(smax) + ")";
     throw std::overflow_error(msg);
   }
   return static_cast<S>(u);

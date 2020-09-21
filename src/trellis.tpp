@@ -20,6 +20,7 @@ template<class T, class R>
 PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
 : polyhedron_(poly), vertices_(0,3)
 {
+  profile_update("Start of PolyhedronTrellis construction");
   assert(poly.num_vertices() > 3 && poly.get_volume() > 0);
   // find the extents of the polyhedron
   std::array<std::array<double,2>,3> minmax;
@@ -58,7 +59,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
     boundaries_[i].push_back(minmax[i][0]);
     while (boundaries_[i].back() < minmax[i][1])
       boundaries_[i].push_back(boundaries_[i].back()+node_length[i]);
-    verbose_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
+    debug_update("PolyhedronTrellis has ",boundaries_[i].size()-1," bins along axis ",i,", with boundaries ",boundaries_[i]);
   }
   ind_t nNodes = this->node_count();
 
@@ -278,13 +279,14 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
     }
   }
   // Now all non-null nodes have been populated with the indices of their vertices
-
+  profile_update("  End of PolyhedronTrellis Construction");
   // the InterpolationData PermutationTable should be initialised now:
   data_.initialize_permutation_table(vertices_.size(0), this->collect_keys());
 }
 
 template<class T,class S>
 std::set<size_t> PolyhedronTrellis<T,S>::collect_keys() {
+  profile_update("Start of PolyhedronTrellis permutation key collection");
   std::set<size_t> keys;
   long long nnodes = brille::utils::u2s<long long, size_t>(nodes_.size());
   #pragma omp parallel for default(none) shared(keys, nnodes)
@@ -298,6 +300,7 @@ std::set<size_t> PolyhedronTrellis<T,S>::collect_keys() {
       }
     }
   }
+  profile_update("  End of PolyhedronTrellis permutation key collection");
   return keys;
 }
 

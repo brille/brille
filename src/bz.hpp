@@ -65,6 +65,7 @@ public:
                ):
   lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr)
   {
+    profile_update("Start of BrillouinZone construction");
     this->is_primitive = !(this->lattice.issame(this->outerlattice));
     this->has_inversion = this->time_reversal || lat.has_space_inversion();
     this->no_ir_mirroring = true;
@@ -97,6 +98,7 @@ public:
       if (!this->check_ir_polyhedron())
         info_update("Failed to find an irreducible Brillouin zone.");
     }
+    profile_update("  End of BrillouinZone construction");
   }
   void check_if_mirroring_needed(void){
     this->no_ir_mirroring = true;

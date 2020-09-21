@@ -17,6 +17,9 @@ mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
 option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
 
+# Special option for profiling runs
+option(PROFILING "Emit profiling output to standard out" OFF)
+
 # Define the minimum version of libraries needed
 set(MINIMUM_PYBIND11_VERSION 2.5.0)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
@@ -47,6 +50,14 @@ set(CMAKE_MACOSX_RPATH 1)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
+
+if (CMAKE_BUILD_TYPE EQUAL "Debug")
+  set(PROFILING ON)
+endif (CMAKE_BUILD_TYPE EQUAL "Debug")
+
+# if (PROFILING)
+  add_definitions(-DPROFILING)
+# endif (PROFILING)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

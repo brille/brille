@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <vector>
 #include <cassert>
 #include <iostream>
 #include <tuple>
@@ -30,12 +31,19 @@ public:
   std::vector<bool> _fixed;
   size_t _first;
 private:
+  // void find_first() {
+  //   // find the first non-fixed index (or the length of the _fixed vector)
+  //   auto fitr = std::find(_fixed.begin(), _fixed.end(), false);
+  //   if (fitr == _fixed.end())
+  //     throw std::runtime_error("The input subscripts have fixed all dimensions!");
+  //   _first = std::distance(_fixed.begin(), fitr);
+  // }
   void find_first() {
-    // find the first non-fixed index (or the length of the _fixed vector)
-    auto fitr = std::find(_fixed.begin(), _fixed.end(), false);
-    if (fitr == _fixed.end())
+    // find the first non-fixed index or the length of the _fixed vector
+    _first = _fixed.size();
+    for (size_t i=_first; i-- > 0;) if (!_fixed[i]) _first=i;
+    if (_first == _fixed.size())
       throw std::runtime_error("The input subscripts have fixed all dimensions!");
-    _first = std::distance(_fixed.begin(), fitr);
   }
 public:
   explicit SubIt()
@@ -132,13 +140,17 @@ public:
 private:
   holder _shape0;
   holder _shape1;
-  SubIt<T> _itr;
+  holder _shapeO;
+  holder _sub0;
+  holder _sub1;
+  holder _subO;
 public:
   //
-  BroadcastIt(const holder& a, const holder& b): _shape0(a), _shape1(b) {
+  BroadcastIt(const holder& a, const holder& b)
+  : _shape0(a), _shape1(b), _shapeO(a.size(),0), _sub0(a.size(),0), _sub1(a.size(),0), _subO(a.size(),0)
+  {
     assert(_shape0.size() == _shape1.size());
     size_t nd = _shape0.size();
-    holder outer(nd, 0);
     for (size_t i=0; i<nd; ++i)
       if (_shape0[i]!=_shape1[i] && _shape0[i]!=1 && _shape1[i]!=1){
         std::string msg = "Can not broadcast { ";
@@ -148,47 +160,75 @@ public:
         msg += "} to a common shape";
         throw std::runtime_error(msg);
       } else {
-        outer[i] = _shape0[i] < _shape1[i] ? _shape1[i] : _shape0[i];
+        _shapeO[i] = _shape0[i] < _shape1[i] ? _shape1[i] : _shape0[i];
       }
-    _itr = SubIt<T>(outer);
   }
-  BroadcastIt(const holder& shape0, const holder& shape1, const SubIt<T>& i)
-  : _shape0(shape0), _shape1(shape1), _itr(i)
+  BroadcastIt(const holder& s0, const holder& s1, const holder & sO, const holder& i0, const holder& i1, const holder& iO)
+  : _shape0(s0), _shape1(s1), _shapeO(sO), _sub0(i0), _sub1(i1), _subO(iO)
   {
   }
 
-  const holder& shape() const {return _itr.shape();}
-  const SubIt<T>& itr() const {return _itr;}
-  bool operator==(const BroadcastIt<T>& other) const {
-    return _itr == other.itr();
-  }
-  bool operator!=(const BroadcastIt<T>& other) const {return !(*this==other);}
+  const holder& shape() const {return _shapeO;}
+  const size_t ndim() const {return _shapeO.size();}
+  //const SubIt<T>& itr() const {return _itr;}
+
   BroadcastIt<T>& operator++(){
-    ++_itr;
+    size_t n = this->ndim();
+    for (size_t dim=n; dim-->0; ){
+      if (dim > 0 && _subO[dim]+1 == _shapeO[dim]){
+        _sub1[dim] = _sub0[dim] = _subO[dim] = 0u;
+      } else {
+        ++_subO[dim];
+        if (_shape0[dim] > 1) _sub0[dim] = _subO[dim];
+        if (_shape1[dim] > 1) _sub1[dim] = _subO[dim];
+        break;
+      }
+    }
     return *this;
   }
+  bool operator==(const BroadcastIt<T>& other) const {
+    size_t n = this->ndim();
+    if (other.ndim() != n) return false;
+    bool equal{true};
+    const holder& oO{other.outer()};
+    for (size_t i=0; i<n; ++i) equal &= _subO[i] == oO[i];
+    return equal;
+  }
+  bool operator!=(const BroadcastIt<T>& other) const {return !(*this==other);}
+
   // const subs_t& operator*() const {return subs;}
   // const subs_t* operator->() const {return &subs;}
   // subs_t& operator*() {return subs;}
   // subs_t* operator->() {return &subs;}
   std::tuple<holder,holder,holder> operator*() const {return triple_subscripts();}
   BroadcastIt<T> begin() const {
-    auto itr = _itr.begin();
-    return BroadcastIt<T>(_shape0, _shape1, itr);
+    size_t n = this->ndim();
+    holder s0(n,0), s1(n,0), sO(n,0);
+    return BroadcastIt<T>(_shape0, _shape1, _shapeO, s0, s1, sO);
   }
   BroadcastIt<T> end() const {
-    return BroadcastIt<T>(_shape0, _shape1, _itr.end());
+    size_t n = this->ndim();
+    holder s0(n,0), s1(n,0), sO(n,0);
+    sO[0] = _shapeO[0];
+    if (_shape0[0] > 1) s0[0] = sO[0]; // not used in ==
+    if (_shape1[0] > 1) s1[0] = sO[0]; // not used in ==
+    return BroadcastIt<T>(_shape0, _shape1, _shapeO, s0, s1, sO);
   }
 private:
+  // std::tuple<holder,holder,holder> triple_subscripts() const {
+  //   holder o{*_itr};
+  //   holder a(o), b(o);
+  //   for (size_t i=0; i<o.size(); ++i) if (o[i]>0) {
+  //     if (1==_shape0[i]) a[i] = 0;
+  //     if (1==_shape1[i]) b[i] = 0;
+  //   }
+  //   return std::make_tuple(o,a,b);
+  // }
   std::tuple<holder,holder,holder> triple_subscripts() const {
-    holder o(*_itr);
-    holder a(o), b(o);
-    for (size_t i=0; i<o.size(); ++i) if (o[i]>0) {
-      if (1==_shape0[i]) a[i] = 0;
-      if (1==_shape1[i]) b[i] = 0;
-    }
-    return std::make_tuple(o,a,b);
+    return std::make_tuple(_subO, _sub0, _sub1);
   }
+protected:
+  const holder& outer() const {return _subO;}
 };
 
 template <class I>
@@ -212,17 +252,30 @@ std::vector<I> lin2sub(I l, const std::vector<I>& stride){
   return sub;
 }
 
+// template <class I>
+// I sub2lin(const std::vector<I>& sub, const std::vector<I>& stride){
+//   assert(sub.size() == stride.size());
+// #if defined(__GNUC__) && (__GNUC__ < 9 || (__GNUC__ == 9 && __GNUC_MINOR__ <= 2))
+//   // serial inner_product
+//   return std::inner_product(sub.begin(), sub.end(), stride.begin(), I(0));
+// #else
+//   // parallelized inner_product
+//   return std::transform_reduce(sub.begin(), sub.end(), stride.begin(), I(0));
+// #endif
+// }
+
 template <class I>
-I sub2lin(const std::vector<I>& sub, const std::vector<I>& stride){
-  assert(sub.size() == stride.size());
-#if defined(__GNUC__) && (__GNUC__ < 9 || (__GNUC__ == 9 && __GNUC_MINOR <= 2))
-  // serial inner_product
-  return std::inner_product(sub.begin(), sub.end(), stride.begin(), I(0));
-#else
-  // parallelized inner_product
-  return std::transform_reduce(sub.begin(), sub.end(), stride.begin(), I(0));
-#endif
+I sub2lin(const std::vector<I>& sub, const std::vector<I>& str){
+  I lin{0};
+  for (size_t i=0; i<sub.size(); ++i) lin += sub[i]*str[i];
+  return lin;
 }
 
+template <class I>
+I offset_sub2lin(const std::vector<I>& off, const std::vector<I>& sub, const std::vector<I>& str){
+  I lin{0};
+  for (size_t i=0; i<sub.size(); ++i) lin += (off[i]+sub[i])*str[i];
+  return lin;
+}
 
 #endif

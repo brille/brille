@@ -378,7 +378,7 @@ public:
   }
   std::tuple<brille::Array<T>, brille::Array<R>>
   interpolate_at(const brille::Array<double>& x) const {
-    verbose_update("Single thread interpolation at ",x.size(0)," points");
+    profile_update("Single thread interpolation at ",x.size(0)," points");
     this->check_before_interpolating(x);
     auto valsh = data_.values().data().shape();
     auto vecsh = data_.vectors().data().shape();
@@ -400,7 +400,7 @@ public:
   interpolate_at(const brille::Array<double>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
-    verbose_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
+    profile_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
     auto valsh = data_.values().data().shape();
     auto vecsh = data_.vectors().data().shape();
     valsh[0] = vecsh[0] = x.size(0);

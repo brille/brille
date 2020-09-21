@@ -125,6 +125,7 @@ Polyhedron BrillouinZone::get_ir_polyhedron(const bool true_ir) const {
   return this->ir_polyhedron + this->ir_polyhedron.mirror();
 }
 bool BrillouinZone::check_ir_polyhedron(void){
+  profile_update("Start BrillouinZone::check_ir_polyhedron");
   this->check_if_mirroring_needed(); // move this to end of wedge_brute_force?
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
   double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
@@ -172,6 +173,7 @@ bool BrillouinZone::check_ir_polyhedron(void){
     }
   }
   // volume is right and no intersections
+  profile_update("  End BrillouinZone::check_ir_polyhedron");
   return true;
 }
 
@@ -643,6 +645,7 @@ void BrillouinZone::irreducible_vertex_search(){
 }
 
 void BrillouinZone::voro_search(const int extent){
+  profile_update("Start BrillouinZone::voro_search with ",extent," extent");
   using namespace brille;
   std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
   LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
@@ -677,6 +680,7 @@ void BrillouinZone::voro_search(const int extent){
   // only the first Brillouin zone is left:
   Polyhedron firstbz = Polyhedron::bisect(voronoi, tau/norm(tau), tau/2.0);
   this->polyhedron = firstbz;
+  profile_update("  End BrillouinZone::voro_search with ",extent," extent");
 }
 
 template<typename T> std::vector<bool> BrillouinZone::isinside(const LQVec<T>& p) const {
@@ -736,7 +740,7 @@ template<typename T> std::vector<bool> BrillouinZone::isinside_wedge(const LQVec
 }
 
 bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
-  verbose_update("BrillouinZone::moveinto called with ",threads," threads");
+  profile_update("BrillouinZone::moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   bool already_same = this->lattice.issame(Q.get_lattice());
   LQVec<double> Qprim(this->lattice), qprim(this->lattice);
@@ -810,7 +814,7 @@ bool BrillouinZone::ir_moveinto(
   const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau,
   std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads
 ) const {
-  verbose_update("BrillouinZone::ir_moveinto called with ",threads," threads");
+  profile_update("BrillouinZone::ir_moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
