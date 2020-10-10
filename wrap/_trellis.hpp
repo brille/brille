@@ -35,7 +35,7 @@ typedef unsigned long element_t;
 template<class T,class R>
 void declare_bztrellisq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
-  using Class = BrillouinZoneTrellis3<T,R>;
+  using Class = BrillouinZoneTrellis3<T,R,py::buffer_info,py::buffer_info>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
@@ -44,29 +44,23 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 
   cls.def_property_readonly("invA",[](const Class& cobj){
-    brille::Array<double> xyz = cobj.get_xyz();
-    return brille::a2py(xyz);
+    return brille::a2py(cobj.get_xyz());
   });
   cls.def_property_readonly("inner_invA",[](const Class& cobj){
-    brille::Array<double> xyz = cobj.get_inner_xyz();
-    return brille::a2py(xyz);
+    return brille::a2py(cobj.get_inner_xyz());
   });
   cls.def_property_readonly("outer_invA",[](const Class& cobj){
-    brille::Array<double> xyz = cobj.get_outer_xyz();
-    return brille::a2py(xyz);
+    return brille::a2py(cobj.get_outer_xyz());
   });
 
   cls.def_property_readonly("rlu",[](const Class& cobj){
-    brille::Array<double> hkl = cobj.get_hkl();
-    return brille::a2py(hkl);
+    return brille::a2py(cobj.get_hkl());
   });
   cls.def_property_readonly("inner_rlu",[](const Class& cobj){
-    brille::Array<double> hkl = cobj.get_inner_hkl();
-    return brille::a2py(hkl);
+    return brille::a2py(cobj.get_inner_hkl());
   });
   cls.def_property_readonly("outer_rlu",[](const Class& cobj){
-    brille::Array<double> hkl = cobj.get_outer_hkl();
-    return brille::a2py(hkl);
+    return brille::a2py(cobj.get_outer_hkl());
   });
 
   cls.def_property_readonly("tetrahedra",[](const Class& cobj){

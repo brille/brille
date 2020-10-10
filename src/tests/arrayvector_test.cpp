@@ -188,7 +188,13 @@ TEST_CASE("Append Array(s)","[array]"){
   brille::Array<double> x(values, 9, /*owns*/ false, {3,3}, {3,1});
   double extra[3] = {3,7,11};
   brille::Array<double> y(extra, 3, /*owns*/ false, {3,1}, {1,0});
+  // std::cout << "x = " << std::endl << x.to_string() << "y = " << std::endl << y.to_string() << std::endl;
   auto z = cat(1,x,y);
+  // std::cout << "cat(1,x,y)" << std::endl << z.to_string() << std::endl;
+  brille::shape_t expected{3,4};
+  REQUIRE(z.ndim() == 2);
+  REQUIRE(z.size(0) == expected[0]);
+  REQUIRE(z.size(1) == expected[1]);
   for (brille::ind_t i=0; i<12; ++i)
     REQUIRE(z[i] == Approx(static_cast<double>(i)));
 }

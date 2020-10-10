@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-template<class T, class S>
-void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, const double max_volume){
+template<class T, class S, class U, class V>
+void Nest<T,S,U,V>::construct(const Polyhedron& poly, const size_t max_branchings, const double max_volume){
   SimpleTet root_tet(poly);
   double exponent;
   exponent = std::log(root_tet.maximum_volume()/max_volume)/std::log(static_cast<double>(max_branchings));
@@ -56,8 +56,8 @@ void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, c
   if (vertices_.size(0) > nVerts) vertices_.resize(nVerts);
 }
 
-template<class T,class S>
-void Nest<T,S>::subdivide(
+template<class T,class S, class U, class V>
+void Nest<T,S,U,V>::subdivide(
   NestNode& node, const size_t nBr, const size_t maxBr,
   const double max_volume, const double exp, size_t& nVerts
 ){
@@ -67,9 +67,9 @@ void Nest<T,S>::subdivide(
   SimpleTet node_tet(poly, max_volume*mult);
   // add any new vertices to the object's array, keep a mapping for all:
   std::vector<size_t> map;
-  const brille::Array<double>& ntv{node_tet.get_vertices()};
+  const auto& ntv{node_tet.get_vertices()};
   for (size_t i=0; i<ntv.size(0); ++i){
-    const brille::Array<double> vi{ntv.view(i)};
+    const auto vi{ntv.view(i)};
     // If we're clever we can possibly simplify this
     bool notfound{true};
     if (nVerts > 0){

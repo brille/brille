@@ -39,7 +39,8 @@ public:
   size_t index() const { return _index; }
   double radius() const { return std::sqrt(_squared_radius); }
   const std::array<double,3>& centre() const {return _centre; }
-  bool fuzzy_contains(const brille::Array<double>& x) const {
+  template<class P>
+  bool fuzzy_contains(const brille::Array<double,P>& x) const {
     assert(x.size() == 3u);
     double d=0;
     for (size_t i=0; i<3u; ++i){
@@ -149,7 +150,8 @@ public:
     }
     return sub;
   }
-  std::array<size_t,3> node_subscript(const brille::Array<double>& p) const {
+  template<class P>
+  std::array<size_t,3> node_subscript(const brille::Array<double,P>& p) const {
     assert(p.size() == 3u);
     std::array<size_t,3> sub{{0,0,0}}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
@@ -190,7 +192,8 @@ public:
   const std::vector<TrellisLeaf>& node_leaves(const std::array<double,3>& p) const {
     return this->node_leaves(this->node_index(p));
   }
-  const std::vector<TrellisLeaf>& node_leaves(const brille::Array<double>& p) const {
+  template<class P>
+  const std::vector<TrellisLeaf>& node_leaves(const brille::Array<double,P>& p) const {
     return this->node_leaves(this->node_index(p));
   }
   // add a leaf to the trellis:

@@ -14,20 +14,26 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-template<typename T> template<typename... A>
-LDVec<T> LDVec<T>::view(A... args) const {
-  return LDVec<T>(this->get_lattice(), this->brille::Array<T>::view(args...));
+template<class T, class P> template<typename... A>
+LDVec<T,P>
+LDVec<T,P>::view(A... args) const {
+  return LDVec<T,P>(this->get_lattice(), this->brille::Array<T,P>::view(args...));
 }
-template<typename T> template<typename... A>
-LDVec<T> LDVec<T>::extract(A... args) const {
-  return LDVec<T>(this->get_lattice(), this->brille::Array<T>::extract(args...));
+template<class T, class P> template<typename... A>
+LDVec<T,brille::ref_ptr_t>
+LDVec<T,P>::extract(A... args) const {
+  return LDVec<T,brille::ref_ptr_t>(this->get_lattice(), this->brille::Array<T,P>::extract(args...));
 }
-template<typename T> brille::Array<T> LDVec<T>::get_hkl() const {
-  return brille::Array<T>(*this); // strip off the Lattice information
+template<class T, class P>
+brille::Array<T,P>
+LDVec<T,P>::get_hkl() const {
+  return brille::Array<T,P>(*this); // strip off the Lattice information
 }
-template<typename T> brille::Array<double> LDVec<T>::get_xyz() const {
+template<class T, class P>
+brille::Array<double,brille::ref_ptr_t>
+LDVec<T,P>::get_xyz() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
-  brille::Array<double> xyz(this->shape(), this->stride());
+  brille::Array<double,brille::ref_ptr_t> xyz(this->shape(), this->stride());
   std::vector<double> toxyz = this->get_lattice().get_xyz_transform();
   auto tshape = this->shape();
   tshape.back() = 0u;
@@ -35,23 +41,27 @@ template<typename T> brille::Array<double> LDVec<T>::get_xyz() const {
     brille::utils::multiply_matrix_vector(xyz.ptr(x), toxyz.data(), this->ptr(x));
   return xyz;
 }
-template<typename T> LQVec<double> LDVec<T>::star() const {
+template<class T, class P>
+LQVec<double,brille::ref_ptr_t>
+LDVec<T,P>::star() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
   std::vector<double> cvmt = this->get_lattice().get_covariant_metric_tensor();
   // shape_t ost(this->ndim(), 0);
-  LQVec<double> slv(this->get_lattice().star(), this->shape(), this->stride());
+  LQVec<double,brille::ref_ptr_t> slv(this->get_lattice().star(), this->shape(), this->stride());
   auto fx = this->shape(); fx.back() = 0;
   for (auto x: SubIt(this->shape(), fx)) brille::utils::multiply_matrix_vector(slv.ptr(x), cvmt.data(), this->ptr(x));
   slv /= 2.0*brille::pi; // ai= gij/2/pi * ai_star
   return slv;
 }
-template<typename T> LDVec<double> LDVec<T>::cross(const size_t i, const size_t j) const {
+template<class T, class P>
+LDVec<double,brille::ref_ptr_t>
+LDVec<T,P>::cross(const size_t i, const size_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   bool bothok = (i<this->size(0) && j<this->size(0));
-  LDVec<double> out(this->get_lattice(), bothok? 1u : 0u, 3u);
+  LDVec<double,brille::ref_ptr_t> out(this->get_lattice(), bothok? 1u : 0u, 3u);
   if (bothok){
     Direct dlat = this->get_lattice();
-    LQVec<double> lqv(dlat.star(), 1u);
+    LQVec<double,brille::ref_ptr_t> lqv(dlat.star(), 1u);
     brille::utils::vector_cross<double,T,T,3>(lqv.ptr(0), this->ptr(i), this->ptr(j));
     lqv *= dlat.get_volume()/2.0/brille::pi;
     out =  lqv.star();
@@ -59,7 +69,9 @@ template<typename T> LDVec<double> LDVec<T>::cross(const size_t i, const size_t 
   return out;
 }
 
-template<typename T> double LDVec<T>::dot(const size_t i, const size_t j) const {
+template<class T, class P>
+double
+LDVec<T,P>::dot(const size_t i, const size_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   if (i>=this->size(0) || j>=this->size(0))
     throw std::out_of_range("attempted out of bounds access by dot");
@@ -69,7 +81,9 @@ template<typename T> double LDVec<T>::dot(const size_t i, const size_t j) const 
   return same_lattice_dot(this->view(i),this->view(j),len,ang);
 }
 
-template<typename T> void LDVec<T>::check_array(){
+template<class T, class P>
+void
+LDVec<T,P>::check_array(){
   auto last = this->ndim()-1;
   // the last dimension must cover 3-vectors
   if(this->size(last) != 3) throw std::runtime_error("LDVec objects must have a last dimension of size 3");

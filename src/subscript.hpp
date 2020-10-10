@@ -168,8 +168,8 @@ public:
   {
   }
 
-  const holder& shape() const {return _shapeO;}
-  const size_t ndim() const {return _shapeO.size();}
+  holder shape() const {return _shapeO;}
+  size_t ndim() const {return _shapeO.size();}
   //const SubIt<T>& itr() const {return _itr;}
 
   BroadcastIt<T>& operator++(){

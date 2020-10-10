@@ -25,12 +25,12 @@ combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
 Typically `extent`=1 and the returned brille::Array is
 [(-1,-1,-1,),(-1,-1,0),(-1,-1,1),(-1,0,-1),…,(0,0,-1),(0,0,1),…,(1,0,1),(1,1,-1),(1,1,0),(1,1,1)]
 */
-brille::Array<int> make_relative_neighbour_indices(const int extent=1);
+brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices(const int extent=1);
 /*! Construct an brille::Array with 4 elements per array of all (2N+1)⁴-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0,0).
 */
-brille::Array<int> make_relative_neighbour_indices4(const int extent=1);
+brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices4(const int extent=1);
 
-brille::Array<int> make_relative_neighbour_indices_prime(const int extent=1);
+brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int extent=1);
 
 #endif

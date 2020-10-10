@@ -32,8 +32,8 @@ shared superclass on which to enable templates. Thus LatVec is a superclass used
 for logic only which has no properties and defines no methods.
 */
 class LatVec{};
-template<typename T> class LDVec;
-template<typename T> class LQVec;
+template<class T, class P> class LDVec;
+template<class T, class P> class LQVec;
 
 
 template<class... T> struct ArrayTraits{
@@ -41,34 +41,34 @@ template<class... T> struct ArrayTraits{
   static constexpr bool latvec = false;
 };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-template<class T> struct ArrayTraits<brille::Array<T>>{
+template<class T, class P> struct ArrayTraits<brille::Array<T,P>>{
   static constexpr bool array = true;
   static constexpr bool latvec = false;
 };
-template<class T> struct ArrayTraits<LDVec<T>>{
+template<class T, class P> struct ArrayTraits<LDVec<T,P>>{
   static constexpr bool array = true;
   static constexpr bool latvec = true;
 };
-template<class T> struct ArrayTraits<LQVec<T>>{
+template<class T, class P> struct ArrayTraits<LQVec<T,P>>{
   static constexpr bool array = true;
   static constexpr bool latvec = true;
 };
 #endif
 
 
-template<class T, template<class> class A>
-inline constexpr bool isArray = ArrayTraits<A<T>>::array;
-template<class T, template<class> class A>
-inline constexpr bool isLatVec = ArrayTraits<A<T>>::latvec;
-template<class T, template<class> class A>
-inline constexpr bool isBareArray = isArray<T,A> && !isLatVec<T,A>;
+template<class T, class P, template<class, class> class A>
+inline constexpr bool isArray = ArrayTraits<A<T,P>>::array;
+template<class T, class P, template<class, class> class A>
+inline constexpr bool isLatVec = ArrayTraits<A<T,P>>::latvec;
+template<class T, class P, template<class, class> class A>
+inline constexpr bool isBareArray = isArray<T,P,A> && !isLatVec<T,P,A>;
 
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bothArrays = isArray<T,A> && isArray<R,B>;
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bareArrays = isBareArray<T,A> && isBareArray<R,B>;
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bothLatVecs = isLatVec<T,A> && isLatVec<R,B>;
+template<class T, class P, template<class,class> class A, class R, class Q, template<class,class> class B>
+inline constexpr bool bothArrays = isArray<T,P,A> && isArray<R,Q,B>;
+template<class T, class P, template<class,class> class A, class R, class Q, template<class,class> class B>
+inline constexpr bool bareArrays = isBareArray<T,P,A> && isBareArray<R,Q,B>;
+template<class T, class P, template<class,class> class A, class R, class Q, template<class,class> class B>
+inline constexpr bool bothLatVecs = isLatVec<T,P,A> && isLatVec<R,Q,B>;
 
 template<class T>
 bool equal_shapes(const std::vector<T>& a, const std::vector<T>&b){
@@ -78,15 +78,15 @@ bool equal_shapes(const std::vector<T>& a, const std::vector<T>&b){
 }
 
 #define LVEC_SCALAR_INPLACE_OP_DEF(L,X) \
-L <T>&\
+L <T,P>&\
 operator X (const T& v){\
   for (auto x: SubIt(this->shape())) this->_data[this->s2l_d(x)] X v;\
   return *this;\
 }
 #define LVEC_ARRAY_INPLACE_OP_DEF(L,X) \
-template<template<class> class A>\
-std::enable_if_t<isArray<T,A>, L <T>>&\
-operator X (const A<T>& b){\
+template<class Q, template<class,class> class A>\
+std::enable_if_t<isArray<T,Q,A>, L <T,P>>&\
+operator X (const A<T,Q>& b){\
   auto itr = BroadcastIt(this->shape(), b.shape());\
   if (!equal_shapes(itr.shape(), this->shape())) throw std::runtime_error("Incompatible shaped Array for binary operation");\
   for (auto [ox, ax, bx]: itr) this->_data[this->s2l_d(ax)] X b[bx];\
@@ -94,7 +94,7 @@ operator X (const A<T>& b){\
 }
 
 #define LVEC_INIT_INT(N,L,X) N(const L &lat, const X &n)\
-: brille::Array<T>(static_cast<brille::ind_t>(n),3), lattice(lat)\
+: brille::Array<T,P>(static_cast<brille::ind_t>(n),3), lattice(lat)\
 {}
 
 /*! \brief 3-vector(s) expressed in units of a Direct lattice
@@ -102,12 +102,13 @@ operator X (const A<T>& b){\
 By adding a Direct lattice to a 3-element brille::Array this class represents one
 or more 3-vector in units of a real-space-spanning lattice.
 */
-template<typename T> class LDVec: public LatVec, public brille::Array<T>{
+template<class T, class P=char>
+class LDVec: public LatVec, public brille::Array<T,P>{
   Direct lattice;
 public:
   // default constructor for zero three-vectors:
   explicit LDVec(const Direct& lat=Direct())
-  : brille::Array<T>(0,3), lattice(lat)
+  : brille::Array<T,P>(0,3), lattice(lat)
   {
   }
   //! integer number of three-vector constructor (macroed as templates can't be distinguished)
@@ -119,46 +120,47 @@ public:
   LVEC_INIT_INT(LDVec,Direct,unsigned long long)
   //! Fowarding constructor to let brille::Array deal with everything else
   template<typename... Args> LDVec(const Direct& lat, Args... args)
-  : brille::Array<T>(args...), lattice(lat)
+  : brille::Array<T,P>(args...), lattice(lat)
   {
     this->check_array();
   }
-  template<class R> LDVec(const LDVec<R>& other)
-  : brille::Array<T>(other.get_hkl()), lattice(other.get_lattice())
+  template<class R, class Q>
+  LDVec(const LDVec<R,Q>& other)
+  : brille::Array<T,P>(other.get_hkl()), lattice(other.get_lattice())
   {
   }
 
 
   Direct get_lattice() const { return lattice; }
-  template<typename R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
-  template<typename R> bool samelattice(const LQVec<R> *)    const { return false; }
-  template<typename R> bool starlattice(const LDVec<R> *)    const { return false; }
-  template<typename R> bool starlattice(const LQVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
-  template<typename R> bool samelattice(const LDVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
-  template<typename R> bool samelattice(const LQVec<R> &)    const { return false; }
-  template<typename R> bool starlattice(const LDVec<R> &)    const { return false; }
-  template<typename R> bool starlattice(const LQVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
+  template<class R, class Q> bool samelattice(const LDVec<R,Q> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<class R, class Q> bool samelattice(const LQVec<R,Q> *)    const { return false; }
+  template<class R, class Q> bool starlattice(const LDVec<R,Q> *)    const { return false; }
+  template<class R, class Q> bool starlattice(const LQVec<R,Q> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<class R, class Q> bool samelattice(const LDVec<R,Q> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<class R, class Q> bool samelattice(const LQVec<R,Q> &)    const { return false; }
+  template<class R, class Q> bool starlattice(const LDVec<R,Q> &)    const { return false; }
+  template<class R, class Q> bool starlattice(const LQVec<R,Q> &vec) const { return lattice.isstar(vec.get_lattice()); }
   // extract overloads preserving lattice information
   //! Return a non-copying view into the  LDVec
-  template<typename... A> LDVec<T> view(A... args) const;
+  template<typename... A> LDVec<T,P> view(A... args) const;
   //! Return a copied subset of the LDVec
-  template<typename... A> LDVec<T> extract(A... args) const;
+  template<typename... A> LDVec<T,brille::ref_ptr_t> extract(A... args) const;
   //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
-  brille::Array<T> get_hkl() const;
+  brille::Array<T,P> get_hkl() const;
   //! Extract the coordinates in *an* orthonormal frame
-  brille::Array<double> get_xyz() const;
+  brille::Array<double,brille::ref_ptr_t> get_xyz() const;
   //! Return the vector(s) expressed in units of the Reciprocal lattice
-  LQVec<double> star() const;
+  LQVec<double,brille::ref_ptr_t> star() const;
 
   //! Determine the scalar product between two vectors in the object
   double dot(const size_t i, const size_t j) const;
   //! Determine the absolute length of a vector in the object
   double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object
-  LDVec<double> cross(const size_t i, const size_t j) const;
+  LDVec<double,brille::ref_ptr_t> cross(const size_t i, const size_t j) const;
 
-  // LDVec<T>& operator-=(const LDVec<T>& av);
-  // LDVec<T>& operator+=(const LDVec<T>& av);
+  // LDVec<T,P>& operator-=(const LDVec<T,P>& av);
+  // LDVec<T,P>& operator+=(const LDVec<T,P>& av);
 
   LVEC_SCALAR_INPLACE_OP_DEF(LDVec,+=)
   LVEC_SCALAR_INPLACE_OP_DEF(LDVec,-=)
@@ -171,31 +173,38 @@ public:
   LVEC_ARRAY_INPLACE_OP_DEF(LDVec,/=)
 
 
-  template<class R> void binary_operation_check(const LDVec<R>& b) const{
+  template<class R, class Q>
+  void binary_operation_check(const LDVec<R,Q>& b) const{
     assert(this->samelattice(b));
   }
-  template<class R> void binary_operation_check(const LQVec<R>& b) const{
+  template<class R, class Q>
+  void binary_operation_check(const LQVec<R,Q>& b) const{
     assert(this->starlattice(b));
   }
-  template<class R, template<class> class A,
-  typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value>::type>
-  void binary_operation_check(const A<R>&) const {}
+  template<class R, class Q, template<class,class> class A,
+  typename=typename std::enable_if<!std::is_base_of<LatVec,A<R,Q>>::value>::type>
+  void binary_operation_check(const A<R,Q>&) const {}
 
   //! Check whether a second LDVec is approximately the same as this object
-  template<typename R>
-  bool is(const LDVec<R>& that){
-    return (this->samelattice(that) && this->brille::Array<T>::is(that));
+  template<class R, class Q>
+  bool is(const LDVec<R,Q>& that){
+    return (this->samelattice(that) && this->brille::Array<T,P>::is(that));
   }
   //! Round all elements using std::round
-  LDVec<int> round() const {return LDVec<int>(this->lattice, this->brille::Array<T>::round()); }
+  LDVec<int,brille::ref_ptr_t> round() const {
+    return LDVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::round());
+  }
   //! Find the floor of all elements using std::floor
-  LDVec<int> floor() const {return LDVec<int>(this->lattice, this->brille::Array<T>::floor()); }
+  LDVec<int,brille::ref_ptr_t> floor() const {
+    return LDVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::floor());
+  }
   //! Find the ceiling of all elements using std::ceil
-  LDVec<int> ceil() const {return LDVec<int>(this->lattice, this->brille::Array<T>::ceil()); }
+  LDVec<int,brille::ref_ptr_t> ceil() const {
+    return LDVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::ceil());
+  }
 
-  LDVec<T>& decouple() {
-    this->brille::Array<T>::decouple();
-    return *this;
+  LDVec<T,brille::ref_ptr_t> decouple() {
+    return LDVec<T,brille::ref_ptr_t>(lattice, this->brille::Array<T,P>::decouple());
   }
 protected:
   void check_array();
@@ -207,12 +216,13 @@ protected:
 By adding a Reciprocal lattice to a 3-element brille::Array this class represents one
 or more 3-vector in units of a reciprocal-space-spanning lattice.
 */
-template<typename T> class LQVec:  public LatVec, public brille::Array<T>{
+template<class T, class P=char>
+class LQVec:  public LatVec, public brille::Array<T,P>{
   Reciprocal lattice;
 public:
   // default constructor for zero three-vectors:
   explicit LQVec(const Reciprocal& lat=Reciprocal())
-  : brille::Array<T>(0,3), lattice(lat)
+  : brille::Array<T,P>(0,3), lattice(lat)
   {
   }
   //! integer number of three-vector constructor (macroed as templates can't be distinguished)
@@ -223,69 +233,71 @@ public:
   LVEC_INIT_INT(LQVec,Reciprocal,unsigned long)
   LVEC_INIT_INT(LQVec,Reciprocal,unsigned long long)
   //! Fowarding constructor to let brille::Array deal with everything else
-  template<typename... Args> LQVec(const Reciprocal& lat, Args... args)
-  : brille::Array<T>(args...), lattice(lat)
+  template<typename... Args>
+  LQVec(const Reciprocal& lat, Args... args)
+  : brille::Array<T,P>(args...), lattice(lat)
   {
     this->check_array();
   }
 
-  template<class R> LQVec(const LQVec<R>& other)
-  : brille::Array<T>(other.get_hkl()), lattice(other.get_lattice())
+  template<class R, class Q>
+  LQVec(const LQVec<R,Q>& other)
+  : brille::Array<T,P>(other.get_hkl()), lattice(other.get_lattice())
   {
   }
 
   //! Explicit copy constructor: required in gcc 9+ since we define our own operator= below:
-  // LQVec(const LQVec<T>& other, const bool m, const bool d): brille::Array<T>(other.get_hkl(), m, d), lattice{other.get_lattice()} {}
-  // LQVec(const LQVec<T>& other, const bool m=false, const bool d=false): brille::Array<T>(other.get_hkl(),m,d), lattice(other.get_lattice()) {}
+  // LQVec(const LQVec<T,P>& other, const bool m, const bool d): brille::Array<T,P>(other.get_hkl(), m, d), lattice{other.get_lattice()} {}
+  // LQVec(const LQVec<T,P>& other, const bool m=false, const bool d=false): brille::Array<T,P>(other.get_hkl(),m,d), lattice(other.get_lattice()) {}
 
   // //! Type conversion assignment:
-  // template<class R> LQVec<T>& operator=(const LQVec<R>& other){
+  // template<class R> LQVec<T,P>& operator=(const LQVec<R,P>& other){
   //   this->lattice = other.get_lattice();
-  //   *this = brille::Array<T>(other.get_hkl());
+  //   *this = brille::Array<T,P>(other.get_hkl());
   //   return *this;
   // }
   //! Assignment operator reusing data if we can
-  // LQVec<T>& operator=(const LQVec<T>& other){
+  // LQVec<T,P>& operator=(const LQVec<T,P>& other){
   //   if (this != &other){ // do nothing if called by, e.g., a = a;
   //     this->lattice = other.get_lattice();
-  //     this->brille::Array<T>::operator=(other);
+  //     this->brille::Array<T,P>::operator=(other);
   //   }
   //   return *this;
   // }
-  // LQVec<T>& operator=(LQVec<T>&& other) noexcept {
+  // LQVec<T,P>& operator=(LQVec<T,P>&& other) noexcept {
   //
   // }
 
   Reciprocal get_lattice() const { return lattice; }
-  template<typename R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
-  template<typename R> bool samelattice(const LDVec<R> *)    const { return false; }
-  template<typename R> bool starlattice(const LQVec<R> *)    const { return false; }
-  template<typename R> bool starlattice(const LDVec<R> *vec) const { return lattice.isstar(vec->get_lattice()); }
-  template<typename R> bool samelattice(const LQVec<R> &vec) const { return lattice.issame(vec.get_lattice()); }
-  template<typename R> bool samelattice(const LDVec<R> &)    const { return false; }
-  template<typename R> bool starlattice(const LQVec<R> &)    const { return false; }
-  template<typename R> bool starlattice(const LDVec<R> &vec) const { return lattice.isstar(vec.get_lattice()); }
+  template<class R, class Q> bool samelattice(const LQVec<R,Q> *vec) const { return lattice.issame(vec->get_lattice()); }
+  template<class R, class Q> bool samelattice(const LDVec<R,Q> *)    const { return false; }
+  template<class R, class Q> bool starlattice(const LQVec<R,Q> *)    const { return false; }
+  template<class R, class Q> bool starlattice(const LDVec<R,Q> *vec) const { return lattice.isstar(vec->get_lattice()); }
+  template<class R, class Q> bool samelattice(const LQVec<R,Q> &vec) const { return lattice.issame(vec.get_lattice()); }
+  template<class R, class Q> bool samelattice(const LDVec<R,Q> &)    const { return false; }
+  template<class R, class Q> bool starlattice(const LQVec<R,Q> &)    const { return false; }
+  template<class R, class Q> bool starlattice(const LDVec<R,Q> &vec) const { return lattice.isstar(vec.get_lattice()); }
   // extract overloads preserving lattice information
   //! Return a non-copying view into the  LQVec
-  template<typename... A> LQVec<T> view(A... args) const;
+  template<typename... A> LQVec<T,P> view(A... args) const;
   //! Return a copied subset of the LQVec
-  template<typename... A> LQVec<T> extract(A... args) const;
+  template<typename... A> LQVec<T,brille::ref_ptr_t> extract(A... args) const;
   //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)
-  brille::Array<T> get_hkl() const;
+  brille::Array<T,P> get_hkl() const;
   /*! Extract the coordinates in an orthonormal frame with its first axis, x,
   along a*, its second, y, perpendicular with y⋅b*>0 , and it's third forming
   the right-handed set z=x×y.
   */
-  brille::Array<double> get_xyz() const;
+  brille::Array<double,brille::ref_ptr_t> get_xyz() const;
   //! Return the vector(s) expressed in units of the Direct lattice
-  LDVec<double> star() const;
+  LDVec<double,brille::ref_ptr_t> star() const;
 
   //! Determine the scalar product between two vectors in the object.
   double dot(const size_t i, const size_t j) const;
   //! Determine the absolute length of a vector in the object.
   double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object.
-  LQVec<double> cross(const size_t i, const size_t j) const;
+  LQVec<double,brille::ref_ptr_t> cross(const size_t i, const size_t j) const;
 
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,+=)
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,-=)
@@ -296,34 +308,42 @@ public:
   LVEC_ARRAY_INPLACE_OP_DEF(LQVec,-=)
   LVEC_ARRAY_INPLACE_OP_DEF(LQVec,*=)
   LVEC_ARRAY_INPLACE_OP_DEF(LQVec,/=)
-  // LQVec<T> operator -();
+  // LQVec<T,P> operator -();
 
-  template<class R> void binary_operation_check(const LQVec<R>& b) const{
+  template<class R, class Q>
+  void binary_operation_check(const LQVec<R,Q>& b) const{
     assert(this->samelattice(b));
   }
-  template<class R> void binary_operation_check(const LDVec<R>& b) const{
+  template<class R, class Q>
+  void binary_operation_check(const LDVec<R,Q>& b) const{
     assert(this->starlattice(b));
   }
-  template<class R, template<class> class A,
-  typename=typename std::enable_if<!std::is_base_of<LatVec,A<R>>::value>::type>
-  void binary_operation_check(const A<R>&) const {}
+  template<class R, class Q, template<class,class> class A,
+  typename=typename std::enable_if<!std::is_base_of<LatVec,A<R,Q>>::value>::type>
+  void binary_operation_check(const A<R,Q>&) const {}
 
   //! Check whether a second LQVec is approximately the same as this object
-  template<typename R>
-  bool is(const LQVec<R>& that) const {
-    return (this->samelattice(that) && this->brille::Array<T>::is(that));
+  template<class R, class Q>
+  bool is(const LQVec<R,Q>& that) const {
+    return (this->samelattice(that) && this->brille::Array<T,P>::is(that));
   }
   //! Round all elements using std::round
-  LQVec<int> round() const {return LQVec<int>(this->lattice, this->brille::Array<T>::round()); }
+  LQVec<int,brille::ref_ptr_t> round() const {
+    return LQVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::round());
+  }
   //! Find the floor of all elements using std::floor
-  LQVec<int> floor() const {return LQVec<int>(this->lattice, this->brille::Array<T>::floor()); }
+  LQVec<int,brille::ref_ptr_t> floor() const {
+    return LQVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::floor());
+  }
   //! Find the ceiling of all elements using std::ceil
-  LQVec<int> ceil() const {return LQVec<int>(this->lattice, this->brille::Array<T>::ceil()); }
+  LQVec<int,brille::ref_ptr_t> ceil() const {
+    return LQVec<int,brille::ref_ptr_t>(this->lattice, this->brille::Array<T,P>::ceil());
+  }
   //
-  static LQVec<T> from_invA(const Reciprocal& lat, const brille::Array<T>& vec, const int=1){
+  static LQVec<T,brille::ref_ptr_t> from_invA(const Reciprocal& lat, const brille::Array<T,P>& vec, const int=1){
     assert(vec.is_row_ordered() && vec.is_contiguous() && vec.size(vec.ndim()-1)==3);
     // initialise an empy array for the relative lattice unit components
-    brille::Array<T> rlu(vec.shape(), vec.stride());
+    brille::Array<T,brille::ref_ptr_t> rlu(vec.shape(), vec.stride());
     auto vsh = vec.shape();
     vsh.back() = 0;
     // grab the transformation matric from the lattice
@@ -331,12 +351,11 @@ public:
     for (auto i: SubIt(vec.shape(), vsh))
       brille::utils::multiply_matrix_vector(rlu.ptr(i), fromxyz.data(), vec.ptr(i));
     // finally make the vector(s) with lattice and components:
-    return LQVec<T>(lat, rlu);
+    return LQVec<T,brille::ref_ptr_t>(lat, rlu);
   }
 
-  LQVec<T>& decouple() {
-    this->brille::Array<T>::decouple();
-    return *this;
+  LQVec<T,brille::ref_ptr_t> decouple() {
+    return LQVec<T,brille::ref_ptr_t>(lattice, this->brille::Array<T,P>::decouple());
   }
 protected:
   void check_array();
@@ -348,11 +367,11 @@ protected:
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // extend the lattice traits structs
-template<class T> struct LatticeTraits<LDVec<T>>{
+template<class T, class P> struct LatticeTraits<LDVec<T,P>>{
   using type = Direct;
   using star = Reciprocal;
 };
-template<class T> struct LatticeTraits<LQVec<T>>{
+template<class T, class P> struct LatticeTraits<LQVec<T,P>>{
   using type = Reciprocal;
   using star = Direct;
 };
@@ -370,31 +389,32 @@ typename as
 
 | templated typename | type | star |
 | --- | --- | --- |
-| Direct | LDVec<R> | LQVec<R> |
-| Reciprocal | LQVec<R> | LDVec<R> |
-| LDVec | LDVec<R> | LQVec<R> |
-| LQVec | LQVec<R> | LDVec<R> |
+| Direct | LDVec<R,P> | LQVec<R,P> |
+| Reciprocal | LQVec<R,P> | LDVec<R,P> |
+| LDVec | LDVec<R,P> | LQVec<R,P> |
+| LQVec | LQVec<R,P> | LDVec<R,P> |
 */
 template<class T, class R> struct LatVecTraits{
-  using type = void; //< LDVec<R> or LQVec<R>
-  using star = void; //< LQVec<R> or LDVec<R>
+  using type = void; //< LDVec<R,P> or LQVec<R,P>
+  using star = void; //< LQVec<R,P> or LDVec<R,P>
 };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-template <class R, class S> struct LatVecTraits<LDVec<R>,S>{
-  using type = LDVec<S>;
-  using star = LQVec<S>;
+// the star types *always* require creating a new Array and so will always have brille::ref_ptr_t
+template <class R, class Q, class S> struct LatVecTraits<LDVec<R,Q>,S>{
+  using type = LDVec<S,Q>;
+  using star = LQVec<S,brille::ref_ptr_t>;
 };
-template <class R, class S> struct LatVecTraits<LQVec<R>,S>{
-  using type = LQVec<S>;
-  using star = LDVec<S>;
+template <class R, class Q, class S> struct LatVecTraits<LQVec<R,Q>,S>{
+  using type = LQVec<S,Q>;
+  using star = LDVec<S,brille::ref_ptr_t>;
 };
 template <class S> struct LatVecTraits<Direct,S>{
-  using type = LDVec<S>;
-  using star = LQVec<S>;
+  using type = LDVec<S,brille::ref_ptr_t>;
+  using star = LQVec<S,brille::ref_ptr_t>;
 };
 template <class S> struct LatVecTraits<Reciprocal,S>{
-  using type = LQVec<S>;
-  using star = LDVec<S>;
+  using type = LQVec<S,brille::ref_ptr_t>;
+  using star = LDVec<S,brille::ref_ptr_t>;
 };
 #endif
 

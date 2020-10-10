@@ -211,7 +211,9 @@ int floor_corners_and_weights(const T<R,S>* that, const double* zero, const doub
     return oob;
 }
 
-template<typename T> T triangle_area(const brille::Array<T>& a, const brille::Array<T>& b, const brille::Array<T>& c){
+template<class T, class Pa, class Pb, class Pc>
+T
+triangle_area(const brille::Array<T,Pa>& a, const brille::Array<T,Pb>& b, const brille::Array<T,Pc>& c){
   T ab, bc, ac, s;
   ab = (a-b).norm(0);
   bc = (b-c).norm(0);
@@ -219,8 +221,10 @@ template<typename T> T triangle_area(const brille::Array<T>& a, const brille::Ar
   s = (ab+bc+ac)/2.0;
   return std::sqrt(s*(s-ab)*(s-bc)*(s-ac)); // Heron's formula
 }
-template<typename T> T tetrahedron_volume(const brille::Array<T>& a, const brille::Array<T>& b, const brille::Array<T>& c, const brille::Array<T>& d){
-  brille::Array<T> dumb({4,3});
+template<class T, class Pa, class Pb, class Pc, class Pd>
+T
+tetrahedron_volume(const brille::Array<T,Pa>& a, const brille::Array<T,Pb>& b, const brille::Array<T,Pc>& c, const brille::Array<T,Pd>& d){
+  brille::Array<T,brille::ref_ptr_t> dumb({4,3});
   dumb.set(0, b-a);
   dumb.set(1, c-a);
   dumb.set(2, d-a);
@@ -239,7 +243,9 @@ template<typename T> T tetrahedron_volume(const brille::Array<T>& a, const brill
        3        p must lie within the triangle formed by v[0], v[1], and v[2]
        4        p must lie within the volume of the tetrahedron
 */
-template<typename T> std::vector<double> tetrahedron_weights(const brille::Array<T>& p, const brille::Array<T>& v){
+template<class T, class Pp, class Pv>
+std::vector<double>
+tetrahedron_weights(const brille::Array<T,Pp>& p, const brille::Array<T,Pv>& v){
   std::vector<double> weights(v.size(0));
   switch (v.size(0)){
     case 1:{

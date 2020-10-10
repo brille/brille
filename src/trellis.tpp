@@ -16,8 +16,8 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <cassert>
 
-template<class T, class R>
-PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
+template<class T, class R, class U, class V>
+PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
 : polyhedron_(poly), vertices_(0,3)
 {
   profile_update("Start of PolyhedronTrellis construction");
@@ -28,7 +28,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
     minmax[i][0] = (std::numeric_limits<double>::max)();
     minmax[i][1] = std::numeric_limits<double>::lowest();
   }
-  const brille::Array<double>& pv{poly.get_vertices()};
+  const auto& pv{poly.get_vertices()};
   // auto pvsh = pv.shape();
   // pvsh.back() = 0;
   // for (auto x: SubIt(pv.shape(), pvsh)) for (unsigned j=0; j<3u; ++j){
@@ -63,11 +63,11 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   }
   ind_t nNodes = this->node_count();
 
-  auto node_centres = brille::Array<double>::from_std(this->trellis_centres());
+  auto node_centres = brille::Array<double,brille::ref_ptr_t>::from_std(this->trellis_centres());
   double max_dist = this->trellis_node_circumsphere_radius() + poly.get_circumsphere_radius();
   std::vector<bool> node_is_null = norm(node_centres-poly.get_centroid()).is(brille::cmp::gt, max_dist).to_std();
 
-  auto all_intersections = brille::Array<double>::from_std(this->trellis_intersections());
+  auto all_intersections = brille::Array<double,brille::ref_ptr_t>::from_std(this->trellis_intersections());
   auto intersections_span = this->trellis_intersections_span();
   auto node_intersections = this->trellis_local_cube_indices();
   /*
@@ -78,12 +78,12 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   the polyhedron.
   */
   ind_t n_kept{0}, n_extra{0}, n_intersections{all_intersections.size(0)};
-  brille::Array<double> extra_intersections(n_intersections>>1u, 3u);
+  brille::Array<double,brille::ref_ptr_t> extra_intersections(n_intersections>>1u, 3u);
   std::vector<ind_t> map_idx(n_intersections, n_intersections+1);
   std::vector<std::vector<ind_t>> node_index_map(n_intersections);
   std::vector<bool> node_is_cube(nNodes, false);
   brille::shape_t one_by_three{1,3};
-  brille::Array<double> Gamma(one_by_three, 0.);
+  brille::Array<double,brille::ref_ptr_t> Gamma(one_by_three, 0.);
   std::map<size_t, Polyhedron> poly_stash;
   Polyhedron node_zero = this->trellis_local_cube();
   for (ind_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
@@ -95,7 +95,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
         intersection_idx += (node_ijk[j]+ni[j])*intersections_span[j];
       this_node_idx.push_back(intersection_idx);
     }
-    brille::Array<double> this_node_int = all_intersections.extract(this_node_idx);
+    auto this_node_int = all_intersections.extract(this_node_idx);
 
     if (!always_triangulate){
       auto in = poly.contains(this_node_int);
@@ -119,9 +119,9 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       }
       // find which of the vertices of the this_node polyhedron are intersection
       // vertices as well.
-      const brille::Array<double>& this_node_verts{this_node.get_vertices()};
+      const auto& this_node_verts{this_node.get_vertices()};
       for (size_t j=0; j<this_node_verts.size(0); ++j){
-        const brille::Array<double> tnvj{this_node_verts.view(j)};
+        const auto tnvj{this_node_verts.view(j)};
         verbose_update("checking vertex ", tnvj.to_string());
         auto cube_idx = norm(this_node_int-tnvj).find(brille::cmp::eq,0.);
         if (cube_idx.size()>1) throw std::logic_error("Too many matching vertices");
@@ -229,9 +229,9 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       // make sure we can match-up the triangualted polyhedron vertices to the
       // known ones:
       std::vector<ind_t> local_map;
-      const brille::Array<double>& triverts{tri_cut.get_vertices()};
+      const auto& triverts{tri_cut.get_vertices()};
       for (ind_t j=0; j<triverts.size(0); ++j){
-        const brille::Array<double> trij{triverts.view(j)};
+        const auto trij{triverts.view(j)};
         auto known_idx = norm(node_verts - trij).find(brille::cmp::eq, 0.);
         if (known_idx.size() > 1){
           info_update("For node ",i,":\n","Multiple matches of ",trij.to_string(0)," to known vertices\n",node_verts.to_string());
@@ -254,7 +254,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       // find the indices per tetrahedron, the tetrahedron circumsphere info,
       // and the tetrahedron volumes
       std::vector<std::array<ind_t,4>> idx_per_tet;
-      const brille::Array<size_t>& local_ipt{tri_cut.get_vertices_per_tetrahedron()};
+      const auto& local_ipt{tri_cut.get_vertices_per_tetrahedron()};
       brille::shape_t jk{0,0};
       for (ind_t j=0; j<local_ipt.size(0); ++j){
         jk[0] = j;
@@ -284,8 +284,9 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
   data_.initialize_permutation_table(vertices_.size(0), this->collect_keys());
 }
 
-template<class T,class S>
-std::set<size_t> PolyhedronTrellis<T,S>::collect_keys() {
+template<class T, class S, class U, class V>
+std::set<size_t>
+PolyhedronTrellis<T,S,U,V>::collect_keys() {
   profile_update("Start of PolyhedronTrellis permutation key collection");
   std::set<size_t> keys;
   long long nnodes = brille::utils::u2s<long long, size_t>(nodes_.size());
@@ -304,9 +305,9 @@ std::set<size_t> PolyhedronTrellis<T,S>::collect_keys() {
   return keys;
 }
 
-template<class T, class S>
+template<class T, class S, class U, class V>
 std::set<size_t>
-PolyhedronTrellis<T,S>::collect_keys_node(const ind_t node){
+PolyhedronTrellis<T,S,U,V>::collect_keys_node(const ind_t node){
   std::set<size_t> keys;
   if (!nodes_.is_null(node)){
     if (nodes_.is_poly(node)){

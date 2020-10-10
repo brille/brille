@@ -105,13 +105,13 @@ two matrices.
                       3 --> `abs(sin(brille::utils::hermitian_angle))`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I,
+template<class T, class R, class I, class P,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool munkres_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                          const R Wscl, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
-                         brille::Array<size_t>& permutations,
+                         brille::Array<size_t,P>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
                          const int vec_cost_func = 0
                        ){
@@ -260,13 +260,13 @@ two matrices.
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I,
+template<class T, class R, class I, class P,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool jv_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    brille::Array<size_t>& permutations,
+                    brille::Array<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -354,7 +354,7 @@ delete[] colsol;
 return true;
 }
 
-template<class S, class T, class R, class I,
+template<class S, class T, class R, class I, class P,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool jv_permutation(const S* centre_vals, const T* centre_vecs,
@@ -362,7 +362,7 @@ bool jv_permutation(const S* centre_vals, const T* centre_vecs,
                     const std::array<I,3>& vals_Nel, const std::array<I,3>& vecs_Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t vals_span, const size_t vecs_span, const size_t Nobj,
-                    brille::Array<size_t>& permutations,
+                    brille::Array<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -572,13 +572,13 @@ two matrices.
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I,
+template<class T, class R, class I, class P,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool sm_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    brille::Array<size_t>& permutations,
+                    brille::Array<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){

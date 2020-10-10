@@ -72,10 +72,10 @@ void wrap_brillouinzone(py::module & m){
 
   // check whether one or more points are inside
   cls.def("isinside",[](CLS &b, py::array_t<double> p){
-    brille::Array<double> sp = brille::py2a(p);
+    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(p);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> pv( b.get_lattice(), sp); // no copy :)
+    LQVec<double,pybind11::buffer_info> pv( b.get_lattice(), sp); // no copy :)
     return b.isinside(pv);
   },"points"_a, R"pbdoc(
     Determine whether each of the provided reciprocal lattice points is located
@@ -94,12 +94,12 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double> sp = brille::py2a(Q);
+    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
-    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
+    LQVec<double,brille::ref_ptr_t> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<int,brille::ref_ptr_t>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
     bool success = b.moveinto(Qv,qv,tauv,threads);
     if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
     return py::make_tuple(brille::a2py(qv), brille::a2py(tauv));
@@ -124,13 +124,13 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double> sp = brille::py2a(Q);
+    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
+    LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
-    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<double,brille::ref_ptr_t> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<int,brille::ref_ptr_t>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<size_t> rotidx(Qv.numel()/3), invrotidx(Qv.numel()/3);
     if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
@@ -177,12 +177,12 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double> sp = brille::py2a(Q);
+    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
+    LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    LQVec<double,brille::ref_ptr_t> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<std::array<int,9>> rots(Qv.numel()/3);
     if (!b.ir_moveinto_wedge(Qv, qv, rots, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");

@@ -10,14 +10,19 @@
 namespace py = pybind11;
 
 template<class T>
-std::tuple< brille::Array<T>, std::array<brille::ind_t,3>, RotatesLike >
+std::tuple< brille::Array<T,py::buffer_info>, std::array<brille::ind_t,3>, RotatesLike >
 fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   // this will probably be a problem if I don't figure out a way to add to the python reference count
-  brille::Array<T> data = brille::py2a(pyarray);
+  brille::Array<T,py::buffer_info> data = brille::py2a(pyarray);
   if (count != data.size(0)){
     std::string msg;
     msg = "Provided " + std::to_string(data.size(0)) + " arrays but ";
     msg += std::to_string(count) + " were expected!";
+  }
+  // InnerInterpolationData requires data arrays of atleast 2D:
+  if (data.ndim() < 2){
+    if (!data.is_contiguous()) data = data.contiguous_copy();
+    data.reshape(brille::shape_t{data.size(0),1});
   }
   // copy-over the element specification
   std::array<brille::ind_t,3> el{{0,0,0}};
@@ -40,15 +45,20 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
 }
 
 template<class T>
-std::tuple< brille::Array<T>, std::array<brille::ind_t,3>, RotatesLike, int, int, std::array<double,3> >
+std::tuple< brille::Array<T,py::buffer_info>, std::array<brille::ind_t,3>, RotatesLike, int, int, std::array<double,3> >
 fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> pywght, const size_t count){
   // copy-over the N-D array information
   // this will probably be a problem if I don't figure out a way to add to the python reference count
-  brille::Array<T> data = brille::py2a(pyarray);
+  brille::Array<T,py::buffer_info> data = brille::py2a(pyarray);
   if (count != data.size(0)){
     std::string msg;
     msg = "Provided " + std::to_string(data.size(0)) + " arrays but ";
     msg += std::to_string(count) + " were expected!";
+  }
+  // InnerInterpolationData requires data arrays of atleast 2D:
+  if (data.ndim() < 2){
+    if (!data.is_contiguous()) data = data.contiguous_copy();
+    data.reshape(brille::shape_t{data.size(0),1});
   }
   // copy-over the element specification
   std::array<brille::ind_t,3> el{{0,0,0}};

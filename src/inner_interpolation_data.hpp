@@ -46,14 +46,15 @@ enum class RotatesLike {
   Real, Reciprocal, Axial, Gamma
 };
 
-template<class T> class InnerInterpolationData{
+template<class T, class P>
+class InnerInterpolationData{
 public:
   using ind_t = brille::ind_t;
   using shape_t = brille::shape_t;
   using ElementsType = std::array<brille::ind_t,3>;
   using ElementsCost = std::array<double,3>;
 private:
-  brille::Array<T> data_;   //!< The stored eigenvalue-like Array indexed like the holding-Object's vertices
+  brille::Array<T,P> data_;   //!< The stored eigenvalue-like Array indexed like the holding-Object's vertices
   ElementsType elements_; //!< The number of scalars, vector elements, and matrix elements per `data_` array
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
   ElementsCost costs_;    //!< The cost assigned to each type for equivalent mode assignment
@@ -71,7 +72,7 @@ public:
   {}
   //
   void setup_fake(const ind_t sz, const ind_t br){
-    data_ = brille::Array<T>(sz, br);
+    data_ = brille::Array<T,P>(sz, br);
     elements_ = {1u,0u,0u};
   }
   //
@@ -125,8 +126,11 @@ public:
   //
   ind_t size(void) const {return data_.size(0);}
   ind_t branches(void) const {
+    ind_t nd = data_.ndim();
+    if (nd < 2)
+      throw std::runtime_error("data must have size (nPts, nBranches) or (nPts, nBranches, nElements), not (nPts,)");
     ind_t num = data_.size(1);
-    if (data_.ndim()==2){
+    if (2 == nd){
       ind_t el_per_branch = std::accumulate(elements_.begin(), elements_.end(), ind_t(0));
       // zero-elements is the special (initial) case
       // otherwise we can safely divide *AND* n_branches*el_per_branch ≡ num
@@ -134,16 +138,18 @@ public:
     }
     return num;
   }
-  const brille::Array<T>& data(void) const {return data_;}
+  const brille::Array<T,P>& data(void) const {return data_;}
   const ElementsType& elements(void) const {return elements_;}
   //
-  void interpolate_at(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, brille::Array<T>&, const ind_t, const bool) const;
+  template<class S>
+  void interpolate_at(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, brille::Array<T,S>&, const ind_t, const bool) const;
   //
-  void interpolate_at(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, brille::Array<T>&, const ind_t, const bool) const;
+  template<class S>
+  void interpolate_at(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, brille::Array<T,S>&, const ind_t, const bool) const;
   //
-  template<class R, class RotT>
-  bool rotate_in_place(brille::Array<T>& x,
-                       const LQVec<R>& q,
+  template<class S, class R, class Q, class RotT>
+  bool rotate_in_place(brille::Array<T,S>& x,
+                       const LQVec<R,Q>& q,
                        const RotT& rt,
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
@@ -165,9 +171,9 @@ public:
     return rotlike_;
   }
   // Replace the data within this object.
-  template<typename I>
+  template<class S, class I>
   void replace_data(
-      const brille::Array<T>& nd,
+      const brille::Array<T,S>& nd,
       const std::array<I,3>& ne,
       const RotatesLike rl = RotatesLike::Real)
   {
@@ -210,7 +216,7 @@ public:
   }
   // Replace the data in this object without specifying the data shape or its elements
   // this variant is necessary since the template specialization above can not have a default value for the elements
-  void replace_data(const brille::Array<T>& nd){
+  void replace_data(const brille::Array<T,P>& nd){
     return this->replace_data(nd, ElementsType({{0,0,0}}));
   }
   ind_t branch_span() const { return this->branch_span(elements_);}
@@ -326,29 +332,32 @@ private:
     ElementsType no{elements_[0], elements_[1]/3u, elements_[2]/9u};
     return no;
   }
-  bool rip_real(brille::Array<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  bool rip_recip(brille::Array<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  bool rip_axial(brille::Array<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R>
-  bool rip_gamma_complex(brille::Array<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R, class S=T>
+  template<class S>
+  bool rip_real(brille::Array<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class S>
+  bool rip_recip(brille::Array<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class S>
+  bool rip_axial(brille::Array<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class S, class R, class Q>
+  bool rip_gamma_complex(brille::Array<T,S>&, const LQVec<R,Q>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class P0, class R, class P1, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(brille::Array<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma(brille::Array<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
   }
-  template<class R, class S=T>
+  template<class P0, class R, class P1, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(brille::Array<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(brille::Array<T,P0>&, const LQVec<R,P1>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 };
 
-template<typename T>
-void InnerInterpolationData<T>::interpolate_at(
+template<class T, class P> template<class Q>
+void InnerInterpolationData<T,P>::interpolate_at(
   const std::vector<std::vector<ind_t>>& permutations,
   const std::vector<ind_t>& indices,
   const std::vector<double>& weights,
-  brille::Array<T>& out,
+  brille::Array<T,Q>& out,
   const ind_t to,
   const bool arbitrary_phase_allowed
 ) const {
@@ -386,11 +395,11 @@ void InnerInterpolationData<T>::interpolate_at(
   }
 }
 
-template<typename T>
-void InnerInterpolationData<T>::interpolate_at(
+template<class T, class P> template<class Q>
+void InnerInterpolationData<T,P>::interpolate_at(
   const std::vector<std::vector<ind_t>>& permutations,
   const std::vector<std::pair<ind_t,double>>& indices_weights,
-  brille::Array<T>& out,
+  brille::Array<T,Q>& out,
   const ind_t to,
   const bool arbitrary_phase_allowed
 ) const {
@@ -429,9 +438,9 @@ void InnerInterpolationData<T>::interpolate_at(
   }
 }
 
-template<typename T>
-bool InnerInterpolationData<T>::rip_recip(
-  brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+template<class T, class P> template<class Q>
+bool InnerInterpolationData<T,P>::rip_recip(
+  brille::Array<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
   profile_update("Start InnerInterpolationData::rip_recip method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
@@ -483,9 +492,9 @@ bool InnerInterpolationData<T>::rip_recip(
   return true;
 }
 
-template<typename T>
-bool InnerInterpolationData<T>::rip_real(
-  brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+template<class T, class P> template<class Q>
+bool InnerInterpolationData<T,P>::rip_real(
+  brille::Array<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
   profile_update("Start InnerInterpolationData::rip_real method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
@@ -536,9 +545,9 @@ bool InnerInterpolationData<T>::rip_real(
   return true;
 }
 
-template<typename T>
-bool InnerInterpolationData<T>::rip_axial(
-  brille::Array<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+template<class T, class P> template<class Q>
+bool InnerInterpolationData<T,P>::rip_axial(
+  brille::Array<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
   profile_update("Start InnerInterpolationData::rip_axial method");
   omp_set_num_threads((nthreads > 0) ? nthreads : omp_get_max_threads());
@@ -593,12 +602,12 @@ bool InnerInterpolationData<T>::rip_axial(
   return true;
 }
 
-template<class T, class R,
+template<class T, class P, class R, class Q,
 class S = typename std::common_type<T,R>::type,
 class I = typename brille::ind_t
 >
 static std::complex<S>
-e_iqd(const LQVec<T>& q, const I i, const brille::Array<R>& d, const size_t j)
+e_iqd(const LQVec<T,P>& q, const I i, const brille::Array<R,Q>& d, const size_t j)
 {
   // const double pi = 3.14159265358979323846;
   S dotqd{0};
@@ -612,9 +621,10 @@ e_iqd(const LQVec<T>& q, const I i, const brille::Array<R>& d, const size_t j)
   return std::exp(i_2pi_x);
 }
 
-template<typename T> template<typename R>
-bool InnerInterpolationData<T>::rip_gamma_complex(
-  brille::Array<T>& x, const LQVec<R>& q, const GammaTable& pgt,
+template<class T, class P>
+template<class P0, class R, class P1>
+bool InnerInterpolationData<T,P>::rip_gamma_complex(
+  brille::Array<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {

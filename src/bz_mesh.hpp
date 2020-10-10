@@ -23,7 +23,9 @@ typedef long slong;
 #include "bz.hpp"
 #include "mesh.hpp"
 
-template<class T, class S> class BrillouinZoneMesh3: public Mesh3<T,S>{
+template<class T, class S, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
+class BrillouinZoneMesh3: public Mesh3<T,S,U,V>{
+  using SuperClass = Mesh3<T,S,U,V>;
 protected:
   BrillouinZone brillouinzone;
 public:
@@ -41,19 +43,19 @@ public:
   // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
   template<typename... A>
   BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
-    Mesh3<T,S>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
+    SuperClass(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
     brillouinzone(bz) {}
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
-  brille::Array<double> get_mesh_hkl(void) const {
-    brille::Array<double> xyz = this->get_mesh_xyz();
+  brille::Array<double,brille::ref_ptr_t> get_mesh_hkl(void) const {
+    auto xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     auto shape = xyz.shape();
-    brille::Array<double> hkl(shape);
+    brille::Array<double,brille::ref_ptr_t> hkl(shape);
     std::vector<double> tmp(3);
     for (size_t i=0; i<shape[0]; ++i){
       auto vxyz = xyz.view(i).to_std();
@@ -63,11 +65,11 @@ public:
     return hkl;
   }
 
-  template<typename R>
-  std::tuple<brille::Array<T>,brille::Array<S>>
-  ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {
-    LQVec<R> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+  template<class R, class P>
+  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
+  ir_interpolate_at(const LQVec<R,P>& x, const int nthreads, const bool no_move=false) const {
+    LQVec<R,brille::ref_ptr_t> ir_q(x.get_lattice(), x.size(0));
+    LQVec<int,brille::ref_ptr_t> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       ir_q = x;
@@ -78,8 +80,8 @@ public:
     }
     // perform the interpolation within the irreducible Brillouin zone
     auto [vals, vecs] = (nthreads > 1)
-        ? this->Mesh3<T,S>::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
-        : this->Mesh3<T,S>::interpolate_at(ir_q.get_xyz());
+        ? this->SuperClass::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
+        : this->SuperClass::interpolate_at(ir_q.get_xyz());
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table

@@ -24,36 +24,38 @@ typedef long slong;
 #include "trellis.hpp"
 #include "phonon.hpp"
 
-template<class T, class R> class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
+template<class T, class R, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
+class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R,U,V>{
+  using SuperClass = PolyhedronTrellis<T,R,U,V>;
   BrillouinZone brillouinzone;
 public:
   template<typename... A>
   BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
-    PolyhedronTrellis<T,R>(bz.get_ir_polyhedron(), args...),
+    SuperClass(bz.get_ir_polyhedron(), args...),
     brillouinzone(bz) {}
   //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   //! get the vertices of the trellis in absolute units
-  brille::Array<double> get_xyz(void) const {return this->vertices();}
+  brille::Array<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
   //! get the vertices of the inner (cubic) nodes in absolute units
-  brille::Array<double> get_inner_xyz(void) const {return this->cube_vertices(); }
+  brille::Array<double,brille::ref_ptr_t> get_inner_xyz(void) const {return this->cube_vertices(); }
   //! get the vertices of the outer (polyhedron) nodes in absolute units
-  brille::Array<double> get_outer_xyz(void) const {return this->poly_vertices(); }
+  brille::Array<double,brille::ref_ptr_t> get_outer_xyz(void) const {return this->poly_vertices(); }
   //! get the vertices of the trellis in relative lattice units
-  brille::Array<double> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  brille::Array<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  brille::Array<double> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
+  brille::Array<double,brille::ref_ptr_t> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-  brille::Array<double> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
+  brille::Array<double,brille::ref_ptr_t> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
   //! get the indices forming the faces of the tetrahedra
   std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 
-  template<typename S>
-  std::tuple<brille::Array<T>,brille::Array<R>>
-  interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
+  template<class S, class P>
+  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<R,brille::ref_ptr_t>>
+  interpolate_at(const LQVec<S,P>& x, const int nth, const bool no_move=false) const {
     profile_update("Start BrillouinZoneTrellis3::interpolate_at");
-    LQVec<S> q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+    LQVec<S,brille::ref_ptr_t> q(x.get_lattice(), x.size(0));
+    LQVec<int,brille::ref_ptr_t> tau(x.get_lattice(), x.size(0));
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
@@ -65,17 +67,17 @@ public:
       throw std::runtime_error(msg);
     }
     if (nth < 2)
-      return this->PolyhedronTrellis<T,R>::interpolate_at(q.get_xyz());
-    return this->PolyhedronTrellis<T,R>::interpolate_at(q.get_xyz(), nth);
+      return this->SuperClass::interpolate_at(q.get_xyz());
+    return this->SuperClass::interpolate_at(q.get_xyz(), nth);
   }
 
-  template<typename S>
-  std::tuple<brille::Array<T>,brille::Array<R>>
-  ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
+  template<class S, class P>
+  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<R,brille::ref_ptr_t>>
+  ir_interpolate_at(const LQVec<S,P>& x, const int nth, const bool no_move=false) const {
     verbose_update("BZTrellisQ::ir_interpoalte_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
-    LQVec<S> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+    LQVec<S,brille::ref_ptr_t> ir_q(x.get_lattice(), x.size(0));
+    LQVec<int,brille::ref_ptr_t> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       // Special mode for testing where no specified points are moved
@@ -88,8 +90,8 @@ public:
       throw std::runtime_error(msg);
     }
     auto [vals, vecs] = (nth>1)
-        ? this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz(), nth)
-        : this->PolyhedronTrellis<T,R>::interpolate_at(ir_q.get_xyz());
+        ? this->SuperClass::interpolate_at(ir_q.get_xyz(), nth)
+        : this->SuperClass::interpolate_at(ir_q.get_xyz());
     profile_update("Apply rotations/permutations to interpolated results");
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();

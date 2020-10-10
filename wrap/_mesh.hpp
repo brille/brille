@@ -31,23 +31,20 @@ typedef long slong; // ssize_t is only defined for gcc?
 template<class T,class R>
 void declare_bzmeshq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
-  using Class = BrillouinZoneMesh3<T,R>;
+  using Class = BrillouinZoneMesh3<T,R,py::buffer_info,py::buffer_info>;
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
   cls.def(py::init<BrillouinZone,double,int,int>(), "brillouinzone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
   cls.def_property_readonly("rlu",[](const Class& cobj){
-    brille::Array<double> hkl = cobj.get_mesh_hkl();
-    return brille::a2py(hkl);
+    return brille::a2py(cobj.get_mesh_hkl());
   });
   cls.def_property_readonly("invA",[](const Class& cobj){
-    brille::Array<double> xyz = cobj.get_mesh_xyz();
-    return brille::a2py(xyz);
+    return brille::a2py(cobj.get_mesh_xyz());
   });
   cls.def_property_readonly("tetrahedra",[](const Class& cobj){
-    brille::Array<brille::ind_t> tets = cobj.get_mesh_tetrehedra();
-    return brille::a2py(tets);
+    return brille::a2py(cobj.get_mesh_tetrehedra());
   });
   cls.def("__repr__",&Class::to_string);
 

@@ -28,8 +28,8 @@
 class SimpleTet{
   using ind_t = brille::ind_t;
   using shape_t = brille::shape_t;
-  brille::Array<double> vertex_positions; // (nVertices, 3)
-  brille::Array<ind_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  brille::Array<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
+  brille::Array<ind_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
 public:
   explicit SimpleTet(void)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
@@ -37,8 +37,8 @@ public:
   SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {
-    const brille::Array<double>& verts{poly.get_vertices()};
-    const std::vector<std::vector<int>>& vpf{poly.get_vertices_per_face()};
+    const auto& verts{poly.get_vertices()};
+    const auto& vpf{poly.get_vertices_per_face()};
     // create the tetgenbehavior object which contains all options/switches for tetrahedralize
     verbose_update("Creating `tetgenbehavior` object");
     tetgenbehavior tgb;
@@ -168,9 +168,9 @@ public:
   }
   ind_t number_of_vertices(void) const {return vertex_positions.size(0);}
   ind_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size(0);}
-  const brille::Array<double>& get_vertices(void) const {return vertex_positions;}
-  const brille::Array<double>& get_vertex_positions(void) const {return vertex_positions;}
-  const brille::Array<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  const brille::Array<double,brille::ref_ptr_t>& get_vertices(void) const {return vertex_positions;}
+  const brille::Array<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
+  const brille::Array<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
   std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron(void) const {
     shape_t i0{0,0}, i1{0,1}, i2{0,2}, i3{0,3};
     std::vector<std::array<ind_t,4>> stdvpt;

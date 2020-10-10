@@ -62,7 +62,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   auto [intres, dummy] =  bzn.ir_interpolate_at(Q,1);
   brille::shape_t antshp{nQ, 1u, 3u};
   brille::Array<double> QinvA = Q.get_xyz();
-  brille::Array<double> antres = QinvA.resize(antshp);
+  brille::Array<double> antres = QinvA.reshape(antshp);
 
   brille::Array<double> diff = intres - antres;
 
@@ -110,7 +110,7 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // the components of Q to try and find an equivalent q and tau.
 
 
-  brille::Array<double> antres=Q.get_xyz().resize({nQ,1u,3u});
+  brille::Array<double> antres=Q.get_xyz().reshape({nQ,1u,3u});
   auto [intres, dummy] = bzn.ir_interpolate_at(Q, 1 /*thread*/);
 
   brille::Array<double> diff = intres - antres;

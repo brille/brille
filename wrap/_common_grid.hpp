@@ -17,10 +17,10 @@
 namespace py = pybind11;
 typedef long slong;
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_fill(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class, class> class Grid, class T, class R>
+void def_grid_fill(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,py::buffer_info,py::buffer_info>;
 
   cls.def("fill",[](Class& cobj,
     py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
@@ -28,8 +28,8 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
     bool sort
   ){
     profile_update("Start of 'fill' operation");
-    brille::Array<T> vals;
-    brille::Array<R> vecs;
+    brille::Array<T,py::buffer_info> vals;
+    brille::Array<R,py::buffer_info> vecs;
     std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
     RotatesLike val_rl, vec_rl;
     size_t count = cobj.vertex_count();
@@ -96,8 +96,8 @@ R"pbdoc(
     bool sort
   ){
     profile_update("Start of 'fill' operation with cost information");
-    brille::Array<T> vals;
-    brille::Array<R> vecs;
+    brille::Array<T,py::buffer_info> vals;
+    brille::Array<R,py::buffer_info> vecs;
     std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
     std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
     RotatesLike val_rl, vec_rl;
@@ -176,30 +176,28 @@ R"pbdoc(
   )pbdoc");
 
   cls.def_property_readonly("values",[](Class& cobj){
-    brille::Array<T> out = cobj.data().values().data();
-    return a2py(out);
+    return a2py(cobj.data().values().data());
   },R"pbdoc(
     Return the stored eigenvalues
   )pbdoc");
 
   cls.def_property_readonly("vectors",[](Class& cobj){
-    brille::Array<R> out = cobj.data().vectors().data();
-    return a2py(out);
+    return a2py(cobj.data().vectors().data());
   },R"pbdoc(
     Return the stored eigenvectors
   )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_ir_interpolate(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class, class> class Grid, class T, class R>
+void def_grid_ir_interpolate(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,py::buffer_info,py::buffer_info>;
   cls.def("ir_interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'ir_interpolate_at' operation");
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -254,7 +252,7 @@ R"pbdoc(
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'ir_interpolate_at_dw' operation");
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -306,16 +304,16 @@ R"pbdoc(
 )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_interpolate(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class, class> class Grid, class T, class R>
+void def_grid_interpolate(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,py::buffer_info,py::buffer_info>;
   cls.def("interpolate_at",[](Class& cobj,
                            py::array_t<double> pyX,
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'interpolate_at' operation");
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -364,10 +362,10 @@ R"pbdoc(
 )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_sort(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class, class> class Grid, class T, class R>
+void def_grid_sort(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,py::buffer_info,py::buffer_info>;
 
   cls.def("sort",&Class::sort);
 
@@ -427,14 +425,14 @@ void def_grid_sort(py::class_<Grid<T,R>>& cls){
   )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class, class> class Grid, class T, class R>
+void def_grid_debye_waller(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,py::buffer_info,py::buffer_info>;
 
   cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){
     // handle Q
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
