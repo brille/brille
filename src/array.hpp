@@ -363,7 +363,7 @@ private:
   }
   void reset_stride(){
     if (!this->is_contiguous())
-      throw std::runtime_error("Re-calculating non-contigous strides is not yet working");
+      throw std::runtime_error("Re-calculating non-contiguous strides is not yet working");
     _stride = this->calculate_stride(_shape);
   }
   Array<T,ref_ptr_t> _decouple() const {

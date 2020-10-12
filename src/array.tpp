@@ -286,9 +286,11 @@ Array<T,P>::reshape(const shape_t& ns){
   ind_t num = this->size_from_shape(ns);
   info_update_if(num > _num, "Array::reshape only intended for equal-element number changes.");
   // assert( num <= _num );
+  if (!this->is_contiguous())
+    throw std::runtime_error("Array::reshape does not work for strided arrays");
   _shape = ns;
   ind_t linoffset = sub2lin(_offset, _stride);
-  this->reset_stride();
+  _stride = this->calculate_stride(ns);
   _offset = lin2sub(linoffset, _stride);
   return *this;
 }
