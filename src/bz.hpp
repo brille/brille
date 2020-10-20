@@ -45,7 +45,7 @@ class BrillouinZone {
   Reciprocal outerlattice;          //!< The lattice passed in at construction
   Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
   Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
-  brille::Array<double,brille::ref_ptr_t> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
+  bArray<double,brille::ref_ptr_t> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
   bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
   bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
@@ -89,14 +89,14 @@ public:
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){
-      this->wedge_brute_force();
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,false); // no special 2-fold or mirror handling
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(false,true); // no special 2-fold handling (but special mirror handling)
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, false); // no special mirror handling (maybe not useful)
-      if (!this->check_ir_polyhedron()) this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
+      bool success = this->wedge_brute_force()
+                  || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
+                  || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
+                  || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
+                  || this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
       // other combinations of special_2_folds, special_mirrors,
       // and sort_by_length are possible but not necessarily useful.
-      if (!this->check_ir_polyhedron())
+      if (!success)
         info_update("Failed to find an irreducible Brillouin zone.");
     }
     profile_update("  End of BrillouinZone construction");
@@ -321,7 +321,7 @@ public:
   the irreducible wedge.
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
-  void wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true);
+  bool wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true);
   void wedge_triclinic(void);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
@@ -741,7 +741,7 @@ private:
   }
   template<class P, class Q>
   void
-  shrink_and_prune_outside(const size_t cnt, LQVec<double,P>& vrt, brille::Array<int,Q>& ijk) const {
+  shrink_and_prune_outside(const size_t cnt, LQVec<double,P>& vrt, bArray<int,Q>& ijk) const {
     verbose_update("shrinking to ",cnt);
     if(vrt.size(0) && ijk.size(0)){
       vrt.resize(cnt);

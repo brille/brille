@@ -25,11 +25,11 @@ void wrap_polyhedron(pybind11::module &m){
   pybind11::class_<Polyhedron> cls(m, "Polyhedron");
 
   cls.def(pybind11::init([](py::array_t<double> pyv){
-    return Polyhedron(brille::py2a(pyv));
+    return Polyhedron(brille::py2a2(pyv));
   }),"vertices"_a);
 
   cls.def(pybind11::init([](py::array_t<double> pyv, const std::vector<std::vector<int>>& vpf){
-    return Polyhedron(brille::py2a(pyv), vpf);
+    return Polyhedron(brille::py2a2(pyv), vpf);
   }),"vertices"_a, "vertices_per_face"_a);
 
   cls.def_property_readonly("vertices",[](const Polyhedron& o){return brille::a2py(o.get_vertices());});

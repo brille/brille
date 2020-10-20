@@ -21,15 +21,15 @@
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include "array_latvec.hpp" // defines bArray
 #include "tetgen.h"
 #include "debug.hpp"
 #include "approx.hpp"
 
 class SimpleTet{
   using ind_t = brille::ind_t;
-  using shape_t = brille::shape_t;
-  brille::Array<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
-  brille::Array<ind_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  bArray<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
+  bArray<ind_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
 public:
   explicit SimpleTet(void)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
@@ -67,11 +67,10 @@ public:
     tgi.pointlist = new double[3*tgi.numberofpoints];
     tgi.pointmarkerlist = new int[tgi.numberofpoints];
     ind_t numel = verts.size(1);
-    shape_t ij{0,0};
-    for (ij[0]=0; ij[0]<verts.size(0); ++ij[0]){
-      tgi.pointmarkerlist[ij[0]] = static_cast<int>(ij[0]);
-      for (ij[1]=0; ij[1]<numel; ++ij[1])
-        tgi.pointlist[ij[0]*numel+ij[1]] = verts[ij];
+    for (ind_t i=0; i<verts.size(0); ++i){
+      tgi.pointmarkerlist[i] = static_cast<int>(i);
+      for (ind_t j=0; j<numel; ++j)
+        tgi.pointlist[i*numel+j] = verts.val(i,j);
     }
     verbose_update_if(addGamma,"Check whether the Gamma point is present");
     bool gammaPresent{false};
@@ -126,36 +125,24 @@ public:
     verbose_update("Copy generated tetgen vertices to SimpleTet object");
     vertex_positions.resize(tgo.numberofpoints);
     for (ind_t i=0; i<vertex_positions.size(0); ++i)
-    {
-      ij[0] = i;
       for (ind_t j=0; j<3u; ++j)
-      {
-        ij[1] = j;
-        vertex_positions[ij] = tgo.pointlist[3*i+j];
-      }
-    }
+        vertex_positions.val(i,j) = tgo.pointlist[3*i+j];
     verbose_update("Copy generated tetgen indices to SimpleTet object");
     vertices_per_tetrahedron.resize(tgo.numberoftetrahedra);
     for (ind_t i=0; i<vertices_per_tetrahedron.size(0); ++i)
-    {
-      ij[0] = i;
       for (ind_t j=0; j<4u; ++j)
-      {
-        ij[1] = j;
-        vertices_per_tetrahedron[ij] = static_cast<ind_t>(tgo.tetrahedronlist[i*tgo.numberofcorners+j]);
-      }
-    }
+        vertices_per_tetrahedron.val(i,j) = static_cast<ind_t>(tgo.tetrahedronlist[i*tgo.numberofcorners+j]);
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
   }
   double volume(const ind_t tet) const {
-    shape_t t0{tet,0}, t1{tet,1}, t2{tet,2}, t3{tet,3};
     double v;
+    const ind_t* i = vertices_per_tetrahedron.ptr(tet);
     v = orient3d(
-      vertex_positions.ptr(vertices_per_tetrahedron[t0]),
-      vertex_positions.ptr(vertices_per_tetrahedron[t1]),
-      vertex_positions.ptr(vertices_per_tetrahedron[t2]),
-      vertex_positions.ptr(vertices_per_tetrahedron[t3]) )/6.0;
+      vertex_positions.ptr(i[0]),
+      vertex_positions.ptr(i[1]),
+      vertex_positions.ptr(i[2]),
+      vertex_positions.ptr(i[3]) )/6.0;
     return v;
   }
   double maximum_volume(void) const {
@@ -168,29 +155,25 @@ public:
   }
   ind_t number_of_vertices(void) const {return vertex_positions.size(0);}
   ind_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size(0);}
-  const brille::Array<double,brille::ref_ptr_t>& get_vertices(void) const {return vertex_positions;}
-  const brille::Array<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
-  const brille::Array<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  const bArray<double,brille::ref_ptr_t>& get_vertices(void) const {return vertex_positions;}
+  const bArray<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
+  const bArray<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
   std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron(void) const {
-    shape_t i0{0,0}, i1{0,1}, i2{0,2}, i3{0,3};
     std::vector<std::array<ind_t,4>> stdvpt;
-    const auto& vpt{vertices_per_tetrahedron};
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){
-      i0[0] = i1[0] = i2[0] = i3[0] = i;
-      stdvpt.push_back({{vpt[i0], vpt[i1], vpt[i2], vpt[i3]}});
+      const ind_t* v = vertices_per_tetrahedron.ptr(i);
+      stdvpt.push_back({{v[0], v[1], v[2], v[3]}});
     }
     return stdvpt;
   }
   std::array<double,4> circumsphere_info(const ind_t tet) const {
     if (tet < vertices_per_tetrahedron.size(0)){
-      shape_t t0{tet,0}, t1{tet,1}, t2{tet,2}, t3{tet,3};
+      const ind_t* i = vertices_per_tetrahedron.ptr(tet);
       std::array<double,4> centre_radius;
       tetgenmesh tgm; // to get access to circumsphere
       tgm.circumsphere(
-        vertex_positions.ptr(vertices_per_tetrahedron[t0]),
-        vertex_positions.ptr(vertices_per_tetrahedron[t1]),
-        vertex_positions.ptr(vertices_per_tetrahedron[t2]),
-        vertex_positions.ptr(vertices_per_tetrahedron[t3]),
+        vertex_positions.ptr(i[0]), vertex_positions.ptr(i[1]),
+        vertex_positions.ptr(i[2]), vertex_positions.ptr(i[3]),
         centre_radius.data(),centre_radius.data()+3);
         return centre_radius;
     }

@@ -19,7 +19,7 @@
 #ifndef _TRANSFORM_H
 #define _TRANSFORM_H
 
-#include "latvec.hpp"
+#include "array_latvec.hpp" // defines bArray
 
 using Ptype = PrimitiveTraits::P;
 using invPtype = PrimitiveTraits::invP;
@@ -45,7 +45,7 @@ LQVec<S,brille::ref_ptr_t> transform_to_primitive(const Reciprocal& lat, const L
   auto sh = a.shape();
   LQVec<S,brille::ref_ptr_t> out(lat.primitive(), sh);
   sh.back() = 0;
-  for (auto x: SubIt(a.shape(), sh))
+  for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
   return out;
 }
@@ -69,7 +69,7 @@ LQVec<S,brille::ref_ptr_t> transform_from_primitive(const Reciprocal& lat, const
   auto sh = a.shape();
   LQVec<S,brille::ref_ptr_t> out(lat, sh);
   sh.back() = 0;
-  for (auto x: SubIt(a.shape(), sh))
+  for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
   return out;
 }
@@ -95,7 +95,7 @@ LDVec<S,brille::ref_ptr_t> transform_to_primitive(const Direct& lat, const LDVec
   auto sh = a.shape();
   LDVec<S,brille::ref_ptr_t> out(lat.primitive(), sh);
   sh.back() = 0;
-  for (auto x: SubIt(a.shape(), sh))
+  for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
   return out;
 }
@@ -119,31 +119,31 @@ LDVec<S,brille::ref_ptr_t> transform_from_primitive(const Direct& lat, const LDV
   auto sh = a.shape();
   LDVec<S,brille::ref_ptr_t> out(lat, sh);
   sh.back() = 0;
-  for (auto x: SubIt(a.shape(), sh))
+  for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
   return out;
 }
 
 // utility functions for conversion of lattice vectors where only their components are stored
 template<class T, class P,typename S=typename std::common_type<T,double>::type>
-brille::Array<S,brille::ref_ptr_t> xyz_to_hkl(const Reciprocal& lat, const brille::Array<T,P>& xyz){
+bArray<S,brille::ref_ptr_t> xyz_to_hkl(const Reciprocal& lat, const bArray<T,P>& xyz){
   assert(xyz.stride().back() == 1u && xyz.size(xyz.ndim()-1)==3);
   auto fromxyz = lat.get_inverse_xyz_transform();
   auto sh = xyz.shape();
-  brille::Array<S,brille::ref_ptr_t> hkl(sh);
+  bArray<S,brille::ref_ptr_t> hkl(sh);
   sh.back() = 0;
-  for (auto x: SubIt(xyz.shape(), sh))
+  for (auto x: xyz.subItr(sh))
     brille::utils::multiply_matrix_vector<S,double,T,3>(hkl.ptr(x), fromxyz.data(), xyz.ptr(x));
   return hkl;
 }
 template<class T, class P,typename S=typename std::common_type<T,double>::type>
-brille::Array<S,brille::ref_ptr_t> hkl_to_xyz(const Reciprocal& lat, const brille::Array<T,P>& hkl){
+bArray<S,brille::ref_ptr_t> hkl_to_xyz(const Reciprocal& lat, const bArray<T,P>& hkl){
   assert(hkl.stride().back() == 1u && hkl.size(hkl.ndim()-1)==3);
   auto toxyz = lat.get_xyz_transform();
   auto sh = hkl.shape();
-  brille::Array<S,brille::ref_ptr_t> xyz(sh);
+  bArray<S,brille::ref_ptr_t> xyz(sh);
   sh.back() = 0;
-  for (auto x: SubIt(hkl.shape(), sh))
+  for (auto x: hkl.subItr(sh))
     brille::utils::multiply_matrix_vector<S,double,T,3>(xyz.ptr(x), toxyz.data(), hkl.ptr(x));
   return xyz;
 }

@@ -1,11 +1,11 @@
 #include <catch2/catch.hpp>
 
-#include "array.hpp"
+#include "array_latvec.hpp" // defines bArray<T,P> as Array2<T,P> or Array<T,P>
 #include "polyhedron.hpp"
 
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
-  auto verts = brille::Array<double>::from_std(va_verts);
+  auto verts = bArray<double>::from_std(va_verts);
   std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
   Polyhedron poly;
   SECTION("Convex Hull creation"){
@@ -32,7 +32,7 @@ TEST_CASE("Polyhedron instantiation","[polyhedron]"){
 TEST_CASE("Polyhedron intersection","[polyhedron]"){
   double a = 0.96373785;
   std::vector<std::array<double,3>> verts{{a,a,0},{2*a,0,0},{a,a,a},{0,0,0}};
-  Polyhedron poly = Polyhedron(brille::Array<double>::from_std(verts));
+  Polyhedron poly = Polyhedron(bArray<double>::from_std(verts));
   REQUIRE(poly.get_volume() == Approx(2.*a*a*a/6.));
   double x = 0.143963;
   std::array<double,3> boxmin{2*x,0,0}, boxmax{3*x,x,x};
@@ -46,21 +46,18 @@ TEST_CASE("Polyhedron intersection","[polyhedron]"){
 TEST_CASE("Polyhedron bisect","[polyhedron]"){
   double a{0.457225}, c{0.753723};
   std::vector<std::array<double,3>> v{{a,0,0},{0,0,c},{a,a,c},{a,0,c},{a,a,0},{0,0,0}};
-  auto poly = Polyhedron(brille::Array<double>::from_std(v));
+  auto poly = Polyhedron(bArray<double>::from_std(v));
   auto doubled_poly = poly + poly.mirror();
-  brille::Array<double> n({1,3}, 0.), p({1,3}, 0.);
-  brille::shape_t idx{0,0};
+  bArray<double> n({1,3}, 0.), p({1,3}, 0.);
   SECTION("Hanging line"){
-    n[idx] = -1;
+    n.val(0,0) = -1;
   }
   SECTION("Hanging triangular face"){
-    idx[1] = 2;
-    n[idx] = -1;
+    n.val(0,2) = -1;
   }
   SECTION("Hanging rectangular face"){
-    n[idx] = -1;
-    idx[1] = 1;
-    n[idx] = 1;
+    n.val(0,0) = -1;
+    n.val(0,1) = 1;
   }
   auto cut = Polyhedron::bisect(doubled_poly, n, p);
   REQUIRE(cut.get_volume() == Approx(poly.get_volume()));
@@ -69,7 +66,7 @@ TEST_CASE("Polyhedron bisect","[polyhedron]"){
 
 TEST_CASE("Polyhedron random point distribution","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
-  auto verts = brille::Array<double>::from_std(va_verts);
+  auto verts = bArray<double>::from_std(va_verts);
   Polyhedron poly(verts);
 
   size_t seed=10, npoints=1000;
@@ -98,7 +95,7 @@ TEST_CASE("Polyhedron intersection La2Zr2O7","[polyhedron][intersection]"){
     {0.16911452700828469,     0.23916405768938562,     0.41424429926267342},
     {0.33822905401644060,    -0.23916405768994600,     0.41424429926267337}
   };
-  auto verts = brille::Array<double>::from_std(va_verts);
+  auto verts = bArray<double>::from_std(va_verts);
   std::vector<std::vector<int>> verts_per_face{
     {2,0,3,4},
     {0,5,3},
@@ -126,7 +123,7 @@ TEST_CASE("Small face polyhedron convex hull","[!shouldfail][polyhedron][convexh
    {0.101 , 0.0217, 0.1775},
    {0.0846, 0.0652, 0.1757},
    {0.0857, 0.0652, 0.1775}};
-  auto verts = brille::Array<double>::from_std(va_verts);
+  auto verts = bArray<double>::from_std(va_verts);
   Polyhedron cv_poly(verts);
 
   std::vector<std::vector<int>> vpf

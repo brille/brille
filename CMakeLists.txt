@@ -56,7 +56,7 @@ if (CMAKE_BUILD_TYPE EQUAL "Debug")
 endif (CMAKE_BUILD_TYPE EQUAL "Debug")
 
 # if (PROFILING)
-  add_definitions(-DPROFILING)
+  # add_definitions(-DPROFILING)
 # endif (PROFILING)
 
 

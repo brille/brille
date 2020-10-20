@@ -6,7 +6,7 @@
 #include "spg_database.hpp"
 #include "utilities.hpp"
 #include "lattice.hpp"
-#include "latvec.hpp"
+#include "array_latvec.hpp"
 #include "transform.hpp"
 #include "approx.hpp"
 
@@ -42,8 +42,8 @@ TEST_CASE("primitive vector transforms","[transform]"){
   int nQ = 33;
   std::vector<std::array<double,3>> rawQ;
   for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
-  LDVec<double> V(d,brille::Array<double>::from_std(rawQ));
-  LQVec<double> Q(r,brille::Array<double>::from_std(rawQ));
+  LDVec<double> V(d,bArray<double>::from_std(rawQ));
+  LQVec<double> Q(r,bArray<double>::from_std(rawQ));
 
   // int nQ = 7;
   // double rawQ[] = {1.,0.,0., 0.,1.,0., 0.,0.,1., 1.,1.,0., 1.,0.,1., 0.,1.,1., 1.,1.,1.};
@@ -55,8 +55,8 @@ TEST_CASE("primitive vector transforms","[transform]"){
   for (int i=0; i<nQ; ++i)
     REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
   // Test 2: Check compoments, expressed in inverse Angstrom:
-  brille::Array<double> Vxyz = V.get_xyz();
-  brille::Array<double> Vpxyz = Vp.get_xyz();
+  bArray<double> Vxyz = V.get_xyz();
+  bArray<double> Vpxyz = Vp.get_xyz();
   for (int i=0; i<nQ; ++i)
     REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
   // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
@@ -65,15 +65,15 @@ TEST_CASE("primitive vector transforms","[transform]"){
   // for (auto i: SubIt(V.shape())) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
   // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
   LDVec<double> pVp = transform_from_primitive(d,Vp);
-  for (auto i: SubIt(V.shape())) REQUIRE(pVp[i] == Approx(V[i]));
+  for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
 
   LQVec<double> Qp = transform_to_primitive(r,Q);
   // Test 1: make sure that |Qᵢ|==|Qpᵢ|
   for (int i=0; i<nQ; ++i)
     REQUIRE( Qp.norm(i) == Approx(Q.norm(i)) );
   // Test 2: Check compoments, expressed in inverse Angstrom:
-  brille::Array<double> Qxyz = Q.get_xyz();
-  brille::Array<double> Qpxyz = Qp.get_xyz();
+  bArray<double> Qxyz = Q.get_xyz();
+  bArray<double> Qpxyz = Qp.get_xyz();
   for (int i=0; i<nQ; ++i)
     REQUIRE( Qxyz.norm(i) == Approx(Qpxyz.norm(i)) );
   // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
@@ -82,5 +82,5 @@ TEST_CASE("primitive vector transforms","[transform]"){
   // for (auto i: SubIt(Q.shape())) REQUIRE(Qpxyz[i] == Approx(Qxyz[i]));
   // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
   LQVec<double> pQp = transform_from_primitive(r,Qp);
-  for (auto i: SubIt(Q.shape())) REQUIRE(pQp[i] == Approx(Q[i]));
+  for (auto i: Q.subItr()) REQUIRE(pQp[i] == Approx(Q[i]));
 }

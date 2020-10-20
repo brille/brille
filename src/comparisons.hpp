@@ -24,55 +24,57 @@ template<class T, class R>
 class Comparer{
 private:
   bool useT;
-  T tolT;
-  R tolR;
+  T relT;
+  R relR;
+  T absT;
+  R absR;
   std::function<bool(const T&,const R&)> scalar;
   std::function<bool(const size_t&,const T*,const size_t&,const R*,const size_t&)> vector;
 public:
   Comparer(const cmp op){
     // predetermine tolerances and which we should use:
     bool c;
-    std::tie(c, this->useT, this->tolT, this->tolR) = brille::approx::tols<T,R>();
+    std::tie(c, this->useT, this->relT, this->relR, this->absT, this->absR) = brille::approx::tols<T,R>();
     // set the comparison function
     switch(op){
       case cmp::lt:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,tolT,tolR) && a<b;
+        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
       };
       break;
       case cmp::gt:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,tolT,tolR) && a>b;
+        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
       };
       break;
       case cmp::le:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,tolT,tolR) || a<b;
+        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) || a<b;
       };
       break;
       case cmp::ge:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,tolT,tolR) || a>b;
+        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) || a>b;
       };
       break;
       case cmp::eq:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,tolT,tolR);
+        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR);
       };
       break;
       case cmp::nle:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,tolT,tolR) && a>b;
+        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
       };
       break;
       case cmp::nge:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,tolT,tolR) && a<b;
+        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
       };
       break;
       case cmp::neq:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,tolT,tolR);
+        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR);
       };
       break;
       default:

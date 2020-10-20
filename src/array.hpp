@@ -26,6 +26,7 @@ namespace brille {
 // using ref_ptr_t = typename ref_ptr::type; // use char by default since it's small
 
 using ref_ptr_t = char;
+template<class T,class P> class ArrayIt;
 
 /*! \brief A multidimensional shared data array with operator overloads
 
@@ -41,13 +42,18 @@ template<class T, class P=ref_ptr_t>
 class Array{
 public:
   using ref_t = std::shared_ptr<P>;
+  using shape_t = brille::shape_t;
+  using bItr = BroadcastIt<ind_t>;
+  using sItr = SubIt<ind_t>;
+  using aItr = ArrayIt<T,P>;
 protected:
   T*    _data;     //! A (possilby shared) raw pointer
   ind_t _num;      //! The number of elements stored under the raw pointer
+  ind_t _shift;    //! A linear shift to where our subscript indexing begins (_data+shift)[subscript]
   bool  _own;      //! Whether we need to worry about memory management of the pointer
   ref_t _ref;      //! A shared_ptr for reference counting an owned raw pointer
   bool  _mutable;  //! Whether we are allowed to modify the memory under the pointer
-  shape_t _offset; //! A multidimensional offset different from {0,…,0} if a view
+  // shape_t _offset; //! A multidimensional offset different from {0,…,0} if a view
   shape_t _shape;  //! The multidimensional shape of this view, prod(_shape) ≤ _num
   shape_t _stride; //! The stride of our multidimensional view
 public:
@@ -59,6 +65,7 @@ public:
   const T* data(const ind_t& idx) const {return _data + this->l2l_d(idx);}
   const T* data(const shape_t& idx) const {return _data + this->s2l_d(idx);}
   ind_t raw_size() const {return _num;}
+  ind_t raw_shift() const {return _shift;}
   bool own() const {return _own;}
   ref_t ref() const {return _ref;}
   bool  ismutable(void) const {return _mutable;}
@@ -68,7 +75,7 @@ public:
     auto nel = std::accumulate(_shape.begin(), _shape.end(), 1, std::multiplies<>());
     return this->ndim() ? static_cast<ind_t>(nel) : 0u;
   }
-  shape_t offset(void) const {return _offset;}
+  // shape_t offset(void) const {return _offset;}
   ind_t size(const ind_t dim) const {
     assert(dim < _shape.size());
     return _shape[dim];
@@ -80,6 +87,12 @@ public:
     for (auto& s: cs) s *= sizeof(T);
     return cs;
   }
+  sItr subItr() const { return sItr(_shape); }
+  sItr subItr(const shape_t& fix) const { return sItr(_shape, fix); }
+  aItr valItr() const { return aItr(*this); }
+  bItr broadcastItr(const shape_t& other) const { return bItr(_shape, other); }
+  template<class R, class Q>
+  bItr broadcastItr(const Array<R,Q>& other) const {return bItr(_shape, other.shape());}
   bool is_column_ordered() const { // stride {1,2,4,8} is column ordered
     //return std::is_sorted(_stride.begin(), _stride.end(), [](ind_t a, ind_t b){return a <= b;});
     for (size_t i=1; i<_stride.size(); ++i) if (_stride[i] < _stride[i-1]) return false;
@@ -108,57 +121,72 @@ public:
   }
   // empty initializer
   explicit Array()
-  : _data(nullptr), _num(0), _own(false), _ref(std::make_shared<P>()),
-  _mutable(false), _offset({0}), _shape({0}), _stride({1})
+  // : _data(nullptr), _num(0), _own(false), _ref(std::make_shared<P>()),
+  // _mutable(false), _offset({0}), _shape({0}), _stride({1})
+  : _data(nullptr), _num(0), _shift(0), _own(false), _ref(std::make_shared<P>()),
+  _mutable(false), _shape({0}), _stride({1})
   {}
   // 1D initializer
   Array(T* data, const ind_t num, const bool own, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
-    _mutable(mut), _offset({0}), _shape({num}), _stride({1})
+  // : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
+  //   _mutable(mut), _offset({0}), _shape({num}), _stride({1})
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<P>()),
+    _mutable(mut), _shape({num}), _stride({1})
   {
     this->init_check();
   }
   // ND initializer
   Array(T* data, const ind_t num, const bool own,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
-    _mutable(mut), _offset(shape.size(),0), _shape(shape), _stride(stride)
+  // : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
+  //   _mutable(mut), _offset(shape.size(),0), _shape(shape), _stride(stride)
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<P>()),
+    _mutable(mut), _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // ND initializer with reference-counter specified (used in pybind11 wrapper)
   Array(T* data, const ind_t num, const bool own, ref_t ref,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(ref),
-    _mutable(mut), _offset(shape.size(),0), _shape(shape), _stride(stride)
+  // : _data(data), _num(num), _own(own), _ref(ref),
+  //   _mutable(mut), _offset(shape.size(),0), _shape(shape), _stride(stride)
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(ref),
+    _mutable(mut), _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // ND view constructor
-  Array(T* data, const ind_t num, const bool own, const ref_t& ref,
-    const shape_t& offset, const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(ref), _mutable(mut), _offset(offset),
+  // Array(T* data, const ind_t num, const bool own, const ref_t& ref,
+  //   const shape_t& offset, const shape_t& shape, const shape_t& stride, const bool mut=true)
+  // : _data(data), _num(num), _own(own), _ref(ref), _mutable(mut), _offset(offset),
+  //   _shape(shape), _stride(stride)
+  Array(T* data, const ind_t num, const ind_t shift, const bool own, const ref_t& ref,
+    const shape_t& shape, const shape_t& stride, const bool mut=true)
+  : _data(data), _num(num), _shift(shift), _own(own), _ref(ref), _mutable(mut),
     _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // 2D allocate new memory constructor
   Array(const ind_t s0, const ind_t s1)
-  : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  // : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  : _shift(0u), _mutable(true), _shape({s0,s1}), _stride({s1,1})
   {
     this->construct();
     this->init_check();
   }
   // 2D initialize new memory constructor
   Array(const ind_t s0, const ind_t s1, const T init)
-  : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  // : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  : _shift(0u), _mutable(true), _shape({s0,s1}), _stride({s1,1})
   {
     this->construct(init);
     this->init_check();
   }
   // ND allocate new memory constructor
   Array(const shape_t& shape)
-  : _mutable(true), _offset(shape.size(), 0), _shape(shape)
+  // : _mutable(true), _offset(shape.size(), 0), _shape(shape)
+  : _shift(0u), _mutable(true), _shape(shape)
   {
     this->set_stride();
     this->construct();
@@ -166,7 +194,8 @@ public:
   }
   // ND initialize new memory constructor
   Array(const shape_t& shape, const T init)
-  : _mutable(true), _offset(shape.size(), 0), _shape(shape)
+  // : _mutable(true), _offset(shape.size(), 0), _shape(shape)
+  : _shift(0u), _mutable(true), _shape(shape)
   {
     this->set_stride();
     this->construct(init);
@@ -174,14 +203,16 @@ public:
   }
   // ND allocate new memory with specified stride constructor
   Array(const shape_t& shape, const shape_t& stride)
-  : _mutable(true), _offset(shape.size(), 0), _shape(shape), _stride(stride)
+  // : _mutable(true), _offset(shape.size(), 0), _shape(shape), _stride(stride)
+  : _shift(0u), _mutable(true), _shape(shape), _stride(stride)
   {
     this->construct();
     this->init_check();
   }
   // ND initialize new memory with specified stride constructor
   Array(const shape_t& shape, const shape_t& stride, const T init)
-  : _mutable(true), _offset(shape.size(), 0), _shape(shape), _stride(stride)
+  // : _mutable(true), _offset(shape.size(), 0), _shape(shape), _stride(stride)
+  : _shift(0u), _mutable(true), _shape(shape), _stride(stride)
   {
     this->construct(init);
     this->init_check();
@@ -208,8 +239,10 @@ public:
 
   // Rule-of-five definitions since we may not own the associated raw array:
   Array(const Array<T,P>& o)
-  : _data(o._data), _num(o._num), _own(o._own), _ref(o._ref),
-    _mutable(o._mutable), _offset(o._offset), _shape(o._shape), _stride(o._stride)
+  // : _data(o._data), _num(o._num), _own(o._own), _ref(o._ref),
+  //   _mutable(o._mutable), _offset(o._offset), _shape(o._shape), _stride(o._stride)
+  : _data(o._data), _num(o._num), _shift(o._shift), _own(o._own), _ref(o._ref),
+    _mutable(o._mutable), _shape(o._shape), _stride(o._stride)
   {}
   ~Array(){
     if (_own && _ref.use_count()==1 && _data != nullptr) delete[] _data;
@@ -228,35 +261,14 @@ public:
       }
       _own = other.own();
       _num = other.raw_size();
+      _shift = other.raw_shift();
       _mutable = other.ismutable();
-      _offset = other.offset();
+      // _offset = other.offset();
       _shape = other.shape();
       _stride = other.stride();
     }
     return *this;
   }
-  // Array(Array<T,P>&& other) noexcept
-  // : _data(std::exchange(other._data, nullptr))
-  // {
-  //   std::swap(_num, other._num);
-  //   std::swap(_own, other._own);
-  //   std::swap(_ref, other._ref);
-  //   std::swap(_mutable, other._mutable);
-  //   std::swap(_offset, other._offset);
-  //   std::swap(_shape, other._shape);
-  //   std::swap(_stride, other._stride);
-  // }
-  // Array<T,P>& operator=(Array<T,P>&& other) noexcept {
-  //   std::swap(_data, other._data);
-  //   std::swap(_num, other._num);
-  //   std::swap(_own, other._own);
-  //   std::swap(_ref, other._ref);
-  //   std::swap(_mutable, other._mutable);
-  //   std::swap(_offset, other._offset);
-  //   std::swap(_shape, other._shape);
-  //   std::swap(_stride, other._stride);
-  //   return *this;
-  // }
 
 
   // type casting requires a copy
@@ -264,7 +276,8 @@ public:
   // handles also Array<T,P>(Array<T,Q>&) reference type conversion
   template<class R, class RP>
   Array(const Array<R,RP>& other)
-  : _mutable(true), _offset(other.ndim(),0), _shape(other.shape())
+  // : _mutable(true), _offset(other.ndim(),0), _shape(other.shape())
+  : _shift(0u), _mutable(true), _shape(other.shape())
   {
     this->set_stride();
     this->construct();
@@ -274,7 +287,8 @@ public:
   Array<T,P>& operator=(const Array<R,RP>& other){
     _mutable = true;
     _shape = other.shape();
-    _offset = shape_t(_shape.size(), 0);
+    // _offset = shape_t(_shape.size(), 0);
+    _shift = 0u;
     this->set_stride();
     this->construct();
     for (auto x: SubIt(_shape)) _data[s2l_d(x)] = static_cast<T>(other[x]);
@@ -285,7 +299,7 @@ public:
   bool make_mutable() {_mutable = true; return _mutable;}
   bool make_immutable() {_mutable = false; return _mutable;}
   Array<T,ref_ptr_t> decouple() const {
-    if (!_own || _ref.use_count() > 1) return this->_decouple();
+    if (!_own || !_mutable || _ref.use_count() > 1) return this->_decouple();
     return *this;
   }
 
@@ -296,13 +310,19 @@ public:
         T& operator[](shape_t& sub)       {return _data[this->s2l_d(sub)];}
   const T& operator[](shape_t& sub) const {return _data[this->s2l_d(sub)];}
 protected: // so inherited classes can calculate subscript indexes into their data
+  // ind_t l2l_d(const ind_t l) const {
+  //   shape_t sub = lin2sub(l, _stride);
+  //   return offset_sub2lin(_offset, sub, _stride);
+  // }
+  // ind_t s2l_d(const shape_t& s) const {
+  //   assert(s.size() == _offset.size());
+  //   return offset_sub2lin(_offset, s, _stride);
+  // }
   ind_t l2l_d(const ind_t l) const {
-    shape_t sub = lin2sub(l, _stride);
-    return offset_sub2lin(_offset, sub, _stride);
+    return l + _shift;
   }
   ind_t s2l_d(const shape_t& s) const {
-    assert(s.size() == _offset.size());
-    return offset_sub2lin(_offset, s, _stride);
+    return sub2lin(s, _stride) + _shift;
   }
 private:
   ind_t size_from_shape(const shape_t& s) const {
@@ -337,14 +357,17 @@ private:
     std::reverse(_stride.begin(), _stride.end());
   }
   void init_check(void){
-    if (_shape.size() != _offset.size() || _shape.size() != _stride.size())
+    // if (_shape.size() != _offset.size() || _shape.size() != _stride.size())
+    if (_shape.size() != _stride.size())
     throw std::runtime_error("Attempting to construct Array with inconsistent offset, shape, and strides");
-    shape_t sh;
-    for (size_t i=0; i<_shape.size(); ++i) sh.push_back(_offset[i]+_shape[i]);
-    ind_t offset_size = this->size_from_shape(sh);
+    // shape_t sh;
+    // for (size_t i=0; i<_shape.size(); ++i) sh.push_back(_offset[i]+_shape[i]);
+    // ind_t offset_size = this->size_from_shape(sh);
+    ind_t offset_size = _shift + this->size_from_shape(_shape);
     if (_num < offset_size) {
-      std::string msg = "The offset { ";
-      for (auto x: _offset) msg += std::to_string(x) + " ";
+      // std::string msg = "The offset { ";
+      // for (auto x: _offset) msg += std::to_string(x) + " ";
+      std::string msg = "The shift {" + std::to_string(_shift);
       msg += "} and size { ";
       for (auto x: _shape) msg += std::to_string(x) + " ";
       msg += "} of an Array must not exceed the allocated pointer size ";
@@ -486,18 +509,36 @@ public:
   bool swap(ind_t a, ind_t b);
   bool swap(ind_t i, ind_t a, ind_t b);
   std::vector<T> to_std() const;
+  T* ptr();
   T* ptr(const ind_t i0);
+  template<class ... Subs, class=std::enable_if_t<brille::utils::are_same<ind_t,Subs...>::value, void>>
+  T* ptr(const ind_t i0, Subs... subscripts);
   T* ptr(const shape_t& partial_subscript);
+  const T* ptr() const;
   const T* ptr(const ind_t i0) const;
+  template<class ... Subs, class=std::enable_if_t<brille::utils::are_same<ind_t,Subs...>::value, void>>
+  const T* ptr(const ind_t i0, Subs... subscripts) const;
   const T* ptr(const shape_t& partial_subscript) const;
   T& val(const ind_t i0);
+  template<class ... Subs, class=std::enable_if_t<brille::utils::are_same<ind_t,Subs...>::value, void>>
+  T& val(const ind_t i0, Subs... subscripts);
   T& val(const shape_t& partial_subscript);
   template<typename I> T& val(std::initializer_list<I> l);
   const T& val(const ind_t i0) const;
+  template<class ... Subs, class=std::enable_if_t<brille::utils::are_same<ind_t,Subs...>::value, void>>
+  const T& val(const ind_t i0, Subs... subscripts) const;
   const T& val(const shape_t& partial_subscript) const;
   template<typename I> const T& val(std::initializer_list<I> l) const;
 
   Array<T,P> contiguous_copy() const;
+  Array<T,P> squeeze() const;
+  Array<T,P> squeeze(const ind_t dim) const;
+  Array<T,P> slice(const ind_t i0) const;
+  template<class Q>
+  bool shares_with(const Array<T,Q>& other) const {
+    // compare the base pointer to see if two arrays share heap memory
+    return other.data() == _data;
+  }
   // ^^^^^^^^^^ IMPLEMENTED  ^^^^^^^^^^^vvvvvvvvv TO IMPLEMENT vvvvvvvvvvvvvvvvv
 
 };

@@ -1,14 +1,14 @@
 #include <catch2/catch.hpp>
 
 #include "lattice.hpp"
-#include "latvec.hpp"
+#include "array_latvec.hpp"
 
 TEST_CASE("Lattice Vector tests","[latvec]"){
   Direct d(1.,1.,1.);
   Reciprocal r = d.star();
 
   std::vector<std::array<double,3>> values{{1,0,0},{0,1,0},{0,0,1}};
-  LQVec<double> q(r, brille::Array<double>::from_std(values));
+  LQVec<double> q(r, bArray<double>::from_std(values));
 
   SECTION("length via .norm(integer)"){
     for(size_t i=0; i<3; i++)

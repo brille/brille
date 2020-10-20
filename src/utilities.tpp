@@ -238,57 +238,24 @@ template<typename T, typename R, int N> bool is_int_matrix(const T * A, const R 
 template<typename R> bool is_int_matrix(const int *, const R){ return true; }
 
 
-template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B){
-  // A-B
-  T* AmB = nullptr;
-  AmB = new T[n*n]();
-  for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
-  // (A-B)'
-  T* AmBt = nullptr;
-  AmBt = new T[n*n]();
-  for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j) AmBt[i*n+j] = AmB[i+j*n];
-  // (A-B)x(A-B)'
-  T* mult = nullptr;
-  mult = new T[n*n]();
-  for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
-    mult[i*n+j] = T(0);
-    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmBt[k*n+j];
-  }
-  delete[] AmB; delete[] AmBt;
-  // tr( (A-B)x(A-B)')
-  T tr = T(0);
-  for (size_t i=0; i<n; i++) tr += mult[i*(1+n)];
-  delete[] mult;
-  // sqrt( tr( (A-B)x(A-B)') )
-  return std::sqrt(tr);
+template<class I, class T>
+T 
+frobenius_distance(const I n, const T* A, const T* B) {
+  // sqrt(tr([A-B]*[A-B]')) == sqrt(A00^2 + A01^2 + A02^2 ... Ann^2)
+    return vector_distance(n*n, A, B);
 }
 
-template<typename T> T frobenius_distance(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
-  // A-B
-  std::complex<T>* AmB = new std::complex<T>[n*n]();
-  for (size_t i=0; i<n*n; ++i) AmB[i] = A[i]-B[i];
-  // (A-B)'
-  std::complex<T>* AmBt = new std::complex<T>[n*n]();
-  for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j) AmBt[i*n+j] = std::conj(AmB[i+j*n]);
-  // (A-B)x(A-B)'
-  std::complex<T>* mult = new std::complex<T>[n*n]();
-  for (size_t i=0; i<n; ++i) for (size_t j=0; j<n; ++j){
-    mult[i*n+j] = std::complex<T>(0);
-    for (size_t k=0; k<n; ++k) mult[i*n+j] += AmB[i*n+k]*AmBt[k*n+j];
-  }
-  delete[] AmB; delete[] AmBt;
-  // tr( (A-B)x(A-B)'), which is guaranteed to be real
-  T tr{0};
-  for (size_t i=0; i<n; ++i) tr += std::real(mult[i*(1+n)]);
-  delete[] mult;
-  // sqrt( tr( (A-B)x(A-B)') )
-  return std::sqrt(tr);
+template<class I, class T>
+T
+frobenius_distance(const I n, const std::complex<T>* A, const std::complex<T>* B) {
+    // sqrt( tr( (A-B)x(A-B)') ) is identically the same as the vector distance of 9-vectors
+    return vector_distance(n*n, A, B);
 }
 
 
-template<typename T> T vector_angle(const size_t n, const T* A, const T* B){
+template<class I, class T> T vector_angle(const I n, const T* A, const T* B){
   T AA=0, BB=0, AB=0;
-  for (size_t i=0; i<n; ++i){
+  for (I i=0; i<n; ++i){
     AA += A[i]*A[i];
     BB += B[i]*B[i];
     AB += A[i]*B[i];
@@ -317,15 +284,15 @@ template<typename T> T vector_angle(const size_t n, const T* A, const T* B){
   return std::acos(c_t);
 }
 
-template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
+template<class I, class T> T vector_angle(const I n, const std::complex<T>* A, const std::complex<T>* B){
   // return hermitian_angle(n,A,B);
   return euclidean_angle(n,A,B);
 }
 
-template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
+template<class I, class T> T euclidean_angle(const I n, const std::complex<T>* A, const std::complex<T>* B){
   T AB{0}, nA{0}, nB{0}, c_t;
   // Compute the products of complex n-vectors as if they were real 2n-vectors
-  for (size_t i=0; i<n; ++i){
+  for (I i=0; i<n; ++i){
     AB += std::real(A[i])*std::real(B[i]) + std::imag(A[i])*std::imag(B[i]);
     nA += std::real(A[i])*std::real(A[i]) + std::imag(A[i])*std::imag(A[i]);
     nB += std::real(B[i])*std::real(B[i]) + std::imag(B[i])*std::imag(B[i]);
@@ -353,14 +320,14 @@ template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A,
   return std::acos(c_t);
 }
 
-template<typename T> T hermitian_product(const size_t n, const T* a, const T* b){
+template<class I, class T> T hermitian_product(const I n, const T* a, const T* b){
   T h_dot{0};
-  for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
+  for (I i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
-template<typename T> std::complex<T> hermitian_product(const size_t n, const T* a, const std::complex<T>* b){
+template<class I, class T> std::complex<T> hermitian_product(const I n, const T* a, const std::complex<T>* b){
   std::complex<T> h_dot{0,0};
-  for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
+  for (I i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
 template<typename T> std::complex<T> complex_prod(const std::complex<T>& x, T y){
@@ -371,46 +338,30 @@ template<typename T> std::complex<T> complex_prod(const std::complex<T>& x, cons
   // a*×b = (a'+ia")*×(b'+ib") = (a'-ia")×(b'+ib") = a'b' + a"b" + i(a'b" -a"b')
   return std::complex<T>(xr*yr+xi*yi, xr*yi-xi*yr);
 }
-template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b){
+template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const T* b){
   std::complex<T> h_dot{0,0};
   // for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
-  for (size_t i=0; i<n; ++i) h_dot += complex_prod(a[i], b[i]);
+  for (I i=0; i<n; ++i) h_dot += complex_prod(a[i], b[i]);
   return h_dot;
 }
-template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const std::complex<T>* b){
   T hr{0}, hi{0};
   long long sn = u2s<long long>(n);
   #pragma omp parallel for shared(a,b) reduction(+: hr,hi)
   for (long long si=0; si<sn; ++si){
-    size_t i = s2u<size_t>(si);
-    // std::complex<T> h = complex_prod(a[i], b[i]);
-    std::complex<T> h = std::conj(a[i])*b[i];
+    std::complex<T> h = std::conj(a[si])*b[si];
     hr += h.real();
     hi += h.imag();
   }
-  // for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
   return std::complex<T>(hr,hi);
 }
 
-// template <class I>
-// I sub2lin(const std::vector<I>& sub, const std::vector<I>& stride){
-//   assert(sub.size() == stride.size());
-
-// }
 
 
-template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B){
+template<class I, class T> T hermitian_angle(const I n, const T* A, const T* B){
   return vector_angle(n,A,B);
 }
-template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B){
-  // std::complex<T> AA=hermitian_product(n,A,A);
-  // std::complex<T> BB=hermitian_product(n,B,B);
-  // std::complex<T> AB=hermitian_product(n,A,B);
-  //
-  // T nAB, nA, nB, c_t;
-  // nAB = std::sqrt(std::real(AB*std::conj(AB)));
-  // nA = std::sqrt(std::real(AA));
-  // nB = std::sqrt(std::real(BB));
+template<class I, class T> T hermitian_angle(const I n, const std::complex<T>* A, const std::complex<T>* B){
   T nAB, nA, nB, c_t;
   nAB = std::sqrt(vector_product(n,A,B));
   nA  = std::sqrt(std::real(hermitian_product(n,A,A)));
@@ -436,48 +387,48 @@ template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A,
   return std::acos(c_t);
 }
 
-template<typename T> T vector_distance(const size_t n, const T* a, const T* b){
+template<class I, class T> T vector_distance(const I n, const T* a, const T* b){
   T d, s=0;
-  for (size_t i=0; i<n; ++i){
+  for (I i=0; i<n; ++i){
     d = a[i]-b[i];
     s += d*d;
   }
   return std::sqrt(s);
 }
-template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+template<class I, class T> T vector_distance(const I n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> d;
   T s=0;
-  for (size_t i=0; i<n; ++i){
+  for (I i=0; i<n; ++i){
     d = a[i]-b[i];
     s += std::real(d*std::conj(d));
   }
   return std::sqrt(s);
 }
 
-template<typename T> T vector_product(const size_t n, const T* a, const T* b){
+template<class I, class T> T vector_product(const I n, const T* a, const T* b){
   T h_dot{0};
   for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
-template<typename T> T vector_product(const size_t n, const T* a, const std::complex<T>* b){
+template<class I, class T> T vector_product(const I n, const T* a, const std::complex<T>* b){
   std::complex<T> h_dot = hermitian_product(n,a,b);
   return std::real(h_dot*std::conj(h_dot));
 }
-template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const T* b){
+template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const T* b){
   std::complex<T> h_dot = hermitian_product(n,a,b);
   return std::real(h_dot*std::conj(h_dot));
 }
-template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> h_dot = hermitian_product(n,a,b);
   return std::real(h_dot*std::conj(h_dot));
 }
 
-template<typename T> T inner_product(const size_t n, const T* a, const T* b){
+template<class I, class T> T inner_product(const I n, const T* a, const T* b){
   T h_dot{0};
-  for (size_t i=0; i<n; ++i) h_dot += a[i]*b[i];
+  for (I i=0; i<n; ++i) h_dot += a[i]*b[i];
   return h_dot;
 }
-template<typename T> T inner_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+template<class I, class T> T inner_product(const I n, const std::complex<T>* a, const std::complex<T>* b){
   std::complex<T> h_dot = hermitian_product(n,a,b);
   return std::real(h_dot);
 }
@@ -599,20 +550,50 @@ template<class T> std::complex<T> antiphase(const std::complex<T> z){
   return std::polar(T(1),-std::arg(z));
 }
 
-template<typename T> T antiphase(const size_t, const T*, const T*){
+template<class I, class T>
+T
+antiphase(const I, const T*, const T*){
   return T(1);
 }
-// template<typename T> std::complex<T> antiphase(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
-//   std::complex<T> h_dot{0,0};
-//   for (size_t i=0; i<n; ++i) h_dot += std::conj(a[i])*b[i];
-//   return std::polar(T(1),-std::arg(h_dot));
-// }
-template<typename T> std::complex<T> antiphase(const size_t n, const std::complex<T>* a, const std::complex<T>* b){
+template<class I, class T>
+std::complex<T> antiphase(const I n, const std::complex<T>* a, const std::complex<T>* b){
   T real_dot{0}, imag_dot{0};
-  for (size_t i=0; i<n; ++i){
+  for (I i=0; i<n; ++i){
     T areal{a[i].real()}, aimag{a[i].imag()}, breal{b[i].real()}, bimag{b[i].imag()};
     real_dot += areal * breal + aimag * bimag;
     imag_dot += areal * bimag - aimag * breal;
+  }
+  return std::polar(T(1), T(-1)*std::atan2(imag_dot, real_dot));
+}
+
+template<class I, class T>
+void
+inplace_antiphase(const I, const T*, const T*, T*)
+{}
+template<class I, class T>
+void
+inplace_antiphase(const I n, const std::complex<T>* a, const std::complex<T>* b, std::complex<T>* phased)
+{
+  std::complex<T> eith = antiphase(n, a, b);
+  for (I i=0; i<n; ++i) phased[i] = eith*b[i];
+}
+
+template<class T, class R, template<class, class> class A>
+T
+unsafe_antiphase(const A<T,R>& a, const A<T,R>& b){
+  return T(1);
+}
+
+template<class T, class R, template<class, class> class A>
+std::complex<T>
+unsafe_antiphase(const A<std::complex<T>,R>& a, const A<std::complex<T>,R>& b){
+  T real_dot{0}, imag_dot{0};
+  // a safe version of this would first ensure that a and b are the same shape
+  for (auto [ox, ax, bx]: a.broadcastItr(b)){
+    std::complex<T> av{a[ax]}, bv{b[bx]};
+    T ar{av.real()}, ai{av.imag()}, br{bv.real()}, bi{bv.imag()};
+    real_dot += ar*br + ai*bi;
+    imag_dot += ar*bi - ai*br;
   }
   return std::polar(T(1), T(-1)*std::atan2(imag_dot, real_dot));
 }
@@ -707,3 +688,22 @@ U s2u(const S s){
   }
   return static_cast<U>(s);
 }
+
+
+// from https://en.cppreference.com/w/cpp/language/sizeof...
+template<typename... Ts>
+constexpr auto make_array(Ts&&... ts)
+    -> std::array<std::common_type_t<Ts...>,sizeof...(Ts)>
+{
+    return { std::forward<Ts>(ts)... };
+}
+
+template<typename... Ts>
+constexpr auto make_vector(Ts&&... ts)
+    -> std::vector<std::common_type_t<Ts...>>
+{
+    return { std::forward<Ts>(ts)... };
+}
+
+template<class Head, class... Tail>
+using are_same = std::conjunction<std::is_same<Head, Tail>...>;

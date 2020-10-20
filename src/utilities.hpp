@@ -95,7 +95,8 @@ std::enable_if_t<std::is_unsigned_v<I>>
 mul_mat_vec_inplace(const I n, const T* A, R* B){
   S* C = new S[n]();
   mul_arrays(C, n, n, I(1), A, B);
-  for (I i=0; i<n; ++i) B[n] = C[n];
+  //for (I i=0; i<n; ++i) B[n] = C[n];
+  std::copy(C,C+n,B);
   delete[] C;
 }
 
@@ -182,8 +183,8 @@ This function calculates the Frobenius norm of the matrix A-B.
 @param B A n×n square matrix
 @returns |A|ᶠ
 */
-template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B);
-template<typename T> T frobenius_distance(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+template<class I, class T> T frobenius_distance(const I n, const T* A, const T* B);
+template<class I, class T> T frobenius_distance(const I n, const std::complex<T>* A, const std::complex<T>* B);
 
 /*! \brief The general n-dimensional angle between two real-valued vectors
 
@@ -196,9 +197,9 @@ Calculate and return the angle θ between two vectors given by
 @param B A pointer to the second vector
 @returns θ
 */
-template<typename T> T vector_angle(const size_t n, const T* A, const T* B);
+template<class I, class T> T vector_angle(const I n, const T* A, const T* B);
 //! A convenience function calling euclidean_angle
-template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+template<class I, class T> T vector_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
 /*! \brief The general n-dimensional Euclidean angle between two complex-valued vectors
 
 Calculate and return the Euclidean angle between to vectors in a complex vector
@@ -214,7 +215,7 @@ real vector space Vʳ (≃R₂ₙ) isometric to Vᶜ.
 @param B A pointer to the second complex vector
 @returns θᵣ
 */
-template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+template<class I, class T> T euclidean_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
 /*! \brief The general n-dimensional Hermitian angle between two complex-valued vectors
 
 Calculate and return the Hermitian angle between to vectors given by
@@ -230,24 +231,22 @@ where the inner product of two complex-valued vectors is
 @param B A pointer to the second complex vector
 @returns θₕ
 */
-template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
-template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B);
+template<class I, class T> T hermitian_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
+template<class I, class T> T hermitian_angle(const I n, const T* A, const T* B);
+template<class I, class T> T hermitian_product(const I n, const T* a, const T* b);
+template<class I, class T> std::complex<T> hermitian_product(const I n, const T* a, const std::complex<T>* b);
+template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const T* b);
+template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
 
-template<typename T> T hermitian_product(const size_t n, const T* a, const T* b);
-template<typename T> std::complex<T> hermitian_product(const size_t n, const T* a, const std::complex<T>* b);
-template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b);
-template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
+template<class I, class T> T vector_distance(const I n, const T* a, const T* b);
+template<class I, class T> T vector_distance(const I n, const std::complex<T>* a, const std::complex<T>* b);
+template<class I, class T> T vector_product(const I n, const T* a, const T* b);
+template<class I, class T> T vector_product(const I n, const T* a, const std::complex<T>* b);
+template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const T* b);
+template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
 
-template<typename T> T vector_distance(const size_t n, const T* a, const T* b);
-template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
-
-template<typename T> T vector_product(const size_t n, const T* a, const T* b);
-template<typename T> T vector_product(const size_t n, const T* a, const std::complex<T>* b);
-template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const T* b);
-template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
-
-template<typename T> T inner_product(const size_t n, const T* a, const T* b);
-template<typename T> T inner_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
+template<class I, class T> T inner_product(const I n, const T* a, const T* b);
+template<class I, class T> T inner_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
 
 template<class T> T squared_distance(const T&A, const T& B);
 template<class T> T squared_distance(const std::complex<T>& A, const std::complex<T>& B);

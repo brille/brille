@@ -34,16 +34,11 @@ void Nest<T,S,U,V>::construct(const Polyhedron& poly, const size_t max_branching
   vertices_.resize(number_density + nVerts);
   // copy over the per-tetrahedron vertex indices to the root's branches
   const auto& tvi{root_tet.get_vertices_per_tetrahedron()};
-  brille::shape_t ij{0,0};
   for (brille::ind_t i=0; i<tvi.size(0); ++i)
   {
-    ij[0] = i;
     std::array<brille::ind_t,4> single;
     for (brille::ind_t j=0; j<4u; ++j)
-    {
-      ij[1] = j;
-      single[j] = tvi[ij]; // no need to adjust indices at this stage
-    }
+      single[j] = tvi.val(i,j); // no need to adjust indices at this stage
     // create a branch for this tetrahedron
     NestNode branch(single, root_tet.circumsphere_info(i), root_tet.volume(i));
     // and subdivide it if necessary
@@ -90,16 +85,11 @@ void Nest<T,S,U,V>::subdivide(
   }
   // copy over the per-tetrahedron vertex indices, applying the mapping as we go
   const auto& tvi{node_tet.get_vertices_per_tetrahedron()};
-  brille::shape_t ij{0,0};
   for (brille::ind_t i=0; i<tvi.size(0); ++i)
   {
-    ij[0] = i;
     std::array<brille::ind_t,4> single;
     for (brille::ind_t j=0; j<4u; ++j)
-    {
-      ij[1] = j;
-      single[j] = map[tvi[ij]];
-    }
+      single[j] = map[tvi.val(i,j)];
     // create a branch for this tetrahedron
     NestNode branch(single, node_tet.circumsphere_info(i), node_tet.volume(i));
     // and subdivide it if necessary

@@ -17,27 +17,27 @@
 template<class T, class P> template<typename... A>
 LDVec<T,P>
 LDVec<T,P>::view(A... args) const {
-  return LDVec<T,P>(this->get_lattice(), this->brille::Array<T,P>::view(args...));
+  return LDVec<T,P>(this->get_lattice(), this->bArray<T,P>::view(args...));
 }
 template<class T, class P> template<typename... A>
 LDVec<T,brille::ref_ptr_t>
 LDVec<T,P>::extract(A... args) const {
-  return LDVec<T,brille::ref_ptr_t>(this->get_lattice(), this->brille::Array<T,P>::extract(args...));
+  return LDVec<T,brille::ref_ptr_t>(this->get_lattice(), this->bArray<T,P>::extract(args...));
 }
 template<class T, class P>
-brille::Array<T,P>
+bArray<T,P>
 LDVec<T,P>::get_hkl() const {
-  return brille::Array<T,P>(*this); // strip off the Lattice information
+  return bArray<T,P>(*this); // strip off the Lattice information
 }
 template<class T, class P>
-brille::Array<double,brille::ref_ptr_t>
+bArray<double,brille::ref_ptr_t>
 LDVec<T,P>::get_xyz() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
-  brille::Array<double,brille::ref_ptr_t> xyz(this->shape(), this->stride());
+  bArray<double,brille::ref_ptr_t> xyz(this->shape(), this->stride());
   std::vector<double> toxyz = this->get_lattice().get_xyz_transform();
   auto tshape = this->shape();
   tshape.back() = 0u;
-  for (auto x: SubIt(this->shape(), tshape))
+  for (auto x: this->subItr(tshape))
     brille::utils::multiply_matrix_vector(xyz.ptr(x), toxyz.data(), this->ptr(x));
   return xyz;
 }
@@ -49,7 +49,8 @@ LDVec<T,P>::star() const {
   // shape_t ost(this->ndim(), 0);
   LQVec<double,brille::ref_ptr_t> slv(this->get_lattice().star(), this->shape(), this->stride());
   auto fx = this->shape(); fx.back() = 0;
-  for (auto x: SubIt(this->shape(), fx)) brille::utils::multiply_matrix_vector(slv.ptr(x), cvmt.data(), this->ptr(x));
+  for (auto x: this->subItr(fx))
+    brille::utils::multiply_matrix_vector(slv.ptr(x), cvmt.data(), this->ptr(x));
   slv /= 2.0*brille::pi; // ai= gij/2/pi * ai_star
   return slv;
 }

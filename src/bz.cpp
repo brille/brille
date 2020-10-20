@@ -25,6 +25,8 @@ LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_polyhedron_wedge_normals(v
   for (size_t i=0; i<bz_n.size(0); ++i){
     // check if the irBZ face point is on a first BZ zone face too
     auto not_bz = dot(bz_n.view(i), ir_p - bz_p.view(i)).is(brille::cmp::neq, 0.);
+    if (!not_bz.any())
+      throw std::runtime_error("Why are all of the points on the first BZ surface?!");
     ir_n = ir_n.extract(not_bz);
     ir_p = ir_p.extract(not_bz);
   }
@@ -87,20 +89,20 @@ bool BrillouinZone::check_ir_polyhedron(void){
   // double B[9], invB[9], RtinvB[8];
   std::array<double,9> B, invB, RtinvB, BRtinvB;
   this->outerlattice.get_B_matrix(B.data());
-  verbose_update("B\n",B);
+  verbose_update("B",B);
   brille::utils::matrix_inverse(invB.data(), B.data());
-  verbose_update("inverse(B)\n",invB);
+  verbose_update("inverse(B)",invB);
   std::array<int,9> Rt;
   // get the operations of the pointgroup which are not 1 or -1
   // keeping -1 would probably be ok, but hopefully it won't hurt to remove it now
   PointSymmetry ps = fullps.higher(1);
   for (size_t i=0; i<ps.size(); ++i){
     Rt = transpose(ps.get(i)); // Rᵀ
-    debug_update("\n\n\n\n\ntranspose(R)\n",Rt);
+    debug_update("\ntranspose(R)",Rt);
     brille::utils::multiply_matrix_matrix(RtinvB.data(), Rt.data(), invB.data()); // Rᵀ*B⁻¹
-    debug_update("transpose(R) inverse(B)\n",RtinvB);
+    debug_update("transpose(R) inverse(B)",RtinvB);
     brille::utils::multiply_matrix_matrix(BRtinvB.data(), B.data(), RtinvB.data()); // B*Rᵀ*B⁻¹
-    debug_update("Rotate the polyhedron by\n", BRtinvB);
+    debug_update("Rotate the polyhedron by", BRtinvB);
     rotated = irbz.rotate(BRtinvB);
     debug_update("Checking for intersection ",i);
     if (irbz.intersects(rotated)){
@@ -241,15 +243,14 @@ void BrillouinZone::irreducible_vertex_search(){
   auto vertices30 = this->get_vertices();
   std::vector<std::vector<int>> i30 = this->get_faces_per_vertex();
 
-  LQVec<double,brille::ref_ptr_t> vertices21(bznormals.get_lattice(), n21);
-  Array<int,brille::ref_ptr_t> i21(n21,3);
-  LQVec<double,brille::ref_ptr_t> vertices12(bznormals.get_lattice(), n12);
-  Array<int,brille::ref_ptr_t> i12(n12,3);
-  LQVec<double,brille::ref_ptr_t> vertices03(bznormals.get_lattice(), n03);
-  Array<int,brille::ref_ptr_t> i03(n03,3);
+  LQVec<double,ref_ptr_t> vertices21(bznormals.get_lattice(), n21);
+  LQVec<double,ref_ptr_t> vertices12(bznormals.get_lattice(), n12);
+  LQVec<double,ref_ptr_t> vertices03(bznormals.get_lattice(), n03);
+  bArray<int,ref_ptr_t> i21(n21,3);
+  bArray<int,ref_ptr_t> i12(n12,3);
+  bArray<int,ref_ptr_t> i03(n03,3);
 
   int c21=0, c12=0, c03=0;
-  shape_t isub({0,0});
   if (n21){ // protect against Nbz=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit
     for (ind_t i=0  ; i<(Nbz-1); ++i)
     for (ind_t j=i+1; j< Nbz   ; ++j)
@@ -257,8 +258,7 @@ void BrillouinZone::irreducible_vertex_search(){
     if (intersect_at(bznormals.view(i), bzpoints.view(i),
                      bznormals.view(j), bzpoints.view(j),
                      irnormals.view(k),                   vertices21, c21)){
-      isub[0]=c21++;
-      isub[1]=0; i21[isub]=i; isub[1]=1; i21[isub]=j; isub[1]=2; i21[isub]=k;
+      i21.val(c21,0)=i; i21.val(c21,1)=j; i21.val(c21++,2)=k;
     }
   }
   if (n12){ // protect against Nir=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit
@@ -268,8 +268,7 @@ void BrillouinZone::irreducible_vertex_search(){
     if (intersect_at(bznormals.view(i), bzpoints.view(i),
                      irnormals.view(j),
                      irnormals.view(k),                   vertices12, c12)){
-      isub[0]=c12++;
-      isub[1]=0; i12[isub]=i; isub[1]=1; i12[isub]=j; isub[1]=2; i12[isub]=k;
+      i12.val(c12,0)=i, i12.val(c12,1)=j, i12.val(c12++,2)=k;
     }
   }
   if (n03){
@@ -279,8 +278,7 @@ void BrillouinZone::irreducible_vertex_search(){
     if (intersect_at(irnormals.view(i),
                      irnormals.view(j),
                      irnormals.view(k),                   vertices03, c03)){
-      isub[0]=c03++;
-      isub[1]=0; i03[isub]=i; isub[1]=1; i03[isub]=j; isub[1]=2; i03[isub]=k;
+      i03.val(c03,0)=i; i03.val(c03,1)=j; i03.val(c03++,2)=k;
     }
   }
   verbose_update("Intersections found");
@@ -298,41 +296,33 @@ void BrillouinZone::irreducible_vertex_search(){
   int max_bz_idx=0, max_ir_idx=0;
   for (auto i: i30) for (int j: i) if (j > max_bz_idx) max_bz_idx = j;
   for (ind_t i=0; i<i21.size(0); ++i){
-    isub[0]=i;
-    isub[1]=0; if (i21[isub]>max_bz_idx) max_bz_idx = i21[isub];
-    isub[1]=1; if (i21[isub]>max_bz_idx) max_bz_idx = i21[isub];
-    isub[1]=2; if (i21[isub]>max_ir_idx) max_ir_idx = i21[isub];
+    if (i21.val(i,0)>max_bz_idx) max_bz_idx=i21.val(i,0);
+    if (i21.val(i,1)>max_bz_idx) max_bz_idx=i21.val(i,1);
+    if (i21.val(i,2)>max_ir_idx) max_ir_idx=i21.val(i,2);
   }
   for (ind_t i=0; i<i12.size(0); ++i){
-    isub[0]=i;
-    isub[1]=0; if (i12[isub]>max_bz_idx) max_bz_idx = i12[isub];
-    isub[1]=1; if (i12[isub]>max_ir_idx) max_ir_idx = i12[isub];
-    isub[1]=2; if (i12[isub]>max_ir_idx) max_ir_idx = i12[isub];
+    if (i12.val(i,0)>max_bz_idx) max_bz_idx=i12.val(i,0);
+    if (i12.val(i,1)>max_ir_idx) max_ir_idx=i12.val(i,1);
+    if (i12.val(i,2)>max_ir_idx) max_ir_idx=i12.val(i,2);
   }
-  for (ind_t i=0; i<i03.size(0); ++i){
-    isub[0]=i;
-    for (ind_t j=0; j<3u; ++j){
-      isub[1]=j; if (i03[isub]>max_ir_idx) max_ir_idx = i03[isub];
-    }
+  for (ind_t i=0; i<i03.size(0); ++i) for (ind_t j=0; j<3u; ++j){
+    if (i03.val(i,j)>max_ir_idx) max_ir_idx=i03.val(i,j);
   }
   max_bz_idx++; max_ir_idx++; // since we count from 0, and need one more element than the highest index.
   std::vector<bool> bz_face_present(max_bz_idx, false), ir_face_present(max_ir_idx, false);
   for (auto i: i30) for (int j: i) bz_face_present[j] = true;
-  for (ind_t i=0; i<i21.size(0); ++i){ isub[0]=i;
-    isub[1]=0; bz_face_present[i21[isub]] = true;
-    isub[1]=1; bz_face_present[i21[isub]] = true;
-    isub[1]=2; ir_face_present[i21[isub]] = true;
+  for (ind_t i=0; i<i21.size(0); ++i){
+    bz_face_present[i21.val(i,0)] = true;
+    bz_face_present[i21.val(i,1)] = true;
+    ir_face_present[i21.val(i,2)] = true;
   }
-  for (ind_t i=0; i<i12.size(0); ++i){ isub[0]=i;
-    isub[1]=0; bz_face_present[i12[isub]] = true;
-    isub[1]=1; ir_face_present[i12[isub]] = true;
-    isub[1]=2; ir_face_present[i12[isub]] = true;
+  for (ind_t i=0; i<i12.size(0); ++i){
+    bz_face_present[i12.val(i,0)] = true;
+    ir_face_present[i12.val(i,1)] = true;
+    ir_face_present[i12.val(i,2)] = true;
   }
-  for (ind_t i=0; i<i03.size(0); ++i){ isub[0]=1;
-    for (ind_t j=0; j<3u; ++j){ isub[1]=j;
-      ir_face_present[i03[isub]] = true;
-    }
-  }
+  for (ind_t i=0; i<i03.size(0); ++i) for (ind_t j=0; j<3u; ++j)
+    ir_face_present[i03.val(i,j)] = true;
   ind_t bz_faces = std::count(bz_face_present.begin(), bz_face_present.end(), true);
   ind_t ir_faces = std::count(ir_face_present.begin(), ir_face_present.end(), true);
 
@@ -340,10 +330,10 @@ void BrillouinZone::irreducible_vertex_search(){
   total_verts  = vertices30.size(0) + vertices12.size(0);
   total_verts += vertices21.size(0) + vertices03.size(0);
 
-  LQVec<double,brille::ref_ptr_t> all_verts(bznormals.get_lattice(), total_verts);
-  LQVec<double,brille::ref_ptr_t> all_norms(bznormals.get_lattice(), bz_faces+ir_faces);
-  LQVec<double,brille::ref_ptr_t> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
-  Array<int,brille::ref_ptr_t> all_ijk(total_verts,3);
+  LQVec<double, ref_ptr_t> all_verts(bznormals.get_lattice(), total_verts);
+  LQVec<double, ref_ptr_t> all_norms(bznormals.get_lattice(), bz_faces+ir_faces);
+  LQVec<double, ref_ptr_t> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
+  bArray<int, ref_ptr_t> all_ijk(total_verts,3);
 
   std::vector<size_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
 
@@ -356,96 +346,87 @@ void BrillouinZone::irreducible_vertex_search(){
       bz_face_mapped[j] = ++face_idx; // so that bz_face_mapped is the index+1
     }
   verbose_update("Combine ", i21.size(0), " 2:1 normals and plane-points");
+  ind_t jdx;
   for (ind_t i=0; i<i21.size(0); ++i){
-    isub[0]=i;
-    isub[1]=0;
-    if (0==bz_face_mapped[i21[isub]]){
-      all_norms.set(face_idx, bznormals.view(i21[isub]));
-      all_point.set(face_idx,  bzpoints.view(i21[isub]));
-      bz_face_mapped[i21[isub]] = ++face_idx;
+    jdx = i21.val(i,0);
+    if (0==bz_face_mapped[jdx]){
+      all_norms.set(face_idx, bznormals.view(jdx));
+      all_point.set(face_idx,  bzpoints.view(jdx));
+      bz_face_mapped[jdx] = ++face_idx;
     }
-    isub[1]=1;
-    if (0==bz_face_mapped[i21[isub]]){
-      all_norms.set(face_idx, bznormals.view(i21[isub]));
-      all_point.set(face_idx,  bzpoints.view(i21[isub]));
-      bz_face_mapped[i21[isub]] = ++face_idx;
+    jdx = i21.val(i,1);
+    if (0==bz_face_mapped[jdx]){
+      all_norms.set(face_idx, bznormals.view(jdx));
+      all_point.set(face_idx,  bzpoints.view(jdx));
+      bz_face_mapped[jdx] = ++face_idx;
     }
-    isub[1]=2;
-    if (0==ir_face_mapped[i21[isub]]){
-      all_norms.set(face_idx, irnormals.view(i21[isub]));
-      all_point.set(face_idx, 0.0*all_point.extract(i21[isub]));
-      ir_face_mapped[i21[isub]] = ++face_idx;
+    jdx = i21.val(i,2);
+    if (0==ir_face_mapped[jdx]){
+      all_norms.set(face_idx, irnormals.view(jdx));
+      all_point.view(face_idx) *= 0.0;
+      ir_face_mapped[jdx] = ++face_idx;
     }
   }
   verbose_update("Combine ", i12.size(0), " 1:2 normals and plane-points");
   for (ind_t i=0; i<i12.size(0); ++i){
-    isub[0]=i;
-    isub[1]=0;
-    if (0==bz_face_mapped[i12[isub]]){
-      all_norms.set(face_idx, bznormals.view(i12[isub]));
-      all_point.set(face_idx,  bzpoints.view(i12[isub]));
-      bz_face_mapped[i12[isub]] = ++face_idx;
+    jdx = i12.val(i,0);
+    if (0==bz_face_mapped[jdx]){
+      all_norms.set(face_idx, bznormals.view(jdx));
+      all_point.set(face_idx,  bzpoints.view(jdx));
+      bz_face_mapped[jdx] = ++face_idx;
     }
-    isub[1]=1;
-    if (0==ir_face_mapped[i12[isub]]){
-      all_norms.set(face_idx, irnormals.view(i12[isub]));
-      all_point.set(face_idx, 0.0*all_point.extract(i12[isub]));
-      ir_face_mapped[i12[isub]] = ++face_idx;
+    jdx = i12.val(i,1);
+    if (0==ir_face_mapped[jdx]){
+      all_norms.set(face_idx, irnormals.view(jdx));
+      all_point.view(face_idx) *= 0.0;
+      ir_face_mapped[jdx] = ++face_idx;
     }
-    isub[1]=2;
-    if (0==ir_face_mapped[i12[isub]]){
-      all_norms.set(face_idx, irnormals.view(i12[isub]));
-      all_point.set(face_idx, 0.0*all_point.extract(i12[isub]));
-      ir_face_mapped[i12[isub]] = ++face_idx;
+    jdx = i12.val(i,2);
+    if (0==ir_face_mapped[jdx]){
+      all_norms.set(face_idx, irnormals.view(jdx));
+      all_point.view(face_idx) *= 0.0;
+      ir_face_mapped[jdx] = ++face_idx;
     }
   }
   verbose_update("Combine ", i03.size(0), " 0:3 normals and plane-points");
-  for (ind_t i=0; i<i03.size(0); ++i){
-    isub[0]=i;
-    for (ind_t j=0; j<3u; ++j){
-      isub[1]=j;
-      if (0==ir_face_mapped[i03[isub]]){
-        all_norms.set(face_idx, irnormals.view(i03[isub]));
-        all_point.set(face_idx, 0.0*all_point.extract(i03[isub]));
-        ir_face_mapped[i03[isub]] = ++face_idx;
-      }
+  for (ind_t i=0; i<i03.size(0); ++i) for (ind_t j=0; j<3u; ++j){
+    jdx = i03.val(i,j);
+    if (0==ir_face_mapped[jdx]){
+      all_norms.set(face_idx, irnormals.view(jdx));
+      all_point.view(face_idx) *= 0.0;
+      ir_face_mapped[jdx] = ++face_idx;
     }
   }
   verbose_update("Normals and plane-points combined");
 
   ind_t vert_idx=0;
-  shape_t vsub({0,0});
   verbose_update("Combine ", i30.size(), " 3:0 vertices and planes-per-vertex");
   for (ind_t i=0; i<i30.size(); ++i){
-    all_verts.set(vert_idx, vertices30.view(i));
-    vsub[0] = vert_idx++;
-    vsub[1] = 0; all_ijk[vsub] = bz_face_mapped[i30[i][0]]-1;
-    vsub[1] = 1; all_ijk[vsub] = bz_face_mapped[i30[i][1]]-1;
-    vsub[1] = 2; all_ijk[vsub] = bz_face_mapped[i30[i][2]]-1;
+    all_ijk.val(vert_idx,0) = bz_face_mapped[i30[i][0]]-1;
+    all_ijk.val(vert_idx,1) = bz_face_mapped[i30[i][1]]-1;
+    all_ijk.val(vert_idx,2) = bz_face_mapped[i30[i][2]]-1;
+    all_verts.set(vert_idx++, vertices30.view(i));
   }
   verbose_update("Combine ", i21.size(0), " 2:1 vertices and planes-per-vertex");
   for (size_t i=0; i<i21.size(0); ++i){
-    all_verts.set(vert_idx, vertices21.view(i));
-    isub[0] = i; vsub[0] = vert_idx++;
-    isub[1] = vsub[1] = 0; all_ijk[vsub] = bz_face_mapped[i21[isub]]-1;
-    isub[1] = vsub[1] = 1; all_ijk[vsub] = bz_face_mapped[i21[isub]]-1;
-    isub[1] = vsub[1] = 2; all_ijk[vsub] = ir_face_mapped[i21[isub]]-1;
+    all_ijk.val(vert_idx,0) = bz_face_mapped[i21.val(i,0)]-1;
+    all_ijk.val(vert_idx,1) = bz_face_mapped[i21.val(i,1)]-1;
+    all_ijk.val(vert_idx,2) = ir_face_mapped[i21.val(i,2)]-1;
+    all_verts.set(vert_idx++, vertices21.view(i));
   }
   verbose_update("Combine ", i12.size(0), " 1:2 vertices and planes-per-vertex");
   for (size_t i=0; i<i12.size(0); ++i){
-    all_verts.set(vert_idx, vertices12.view(i));
-    isub[0] = i; vsub[0] = vert_idx++;
-    isub[1] = vsub[1] = 0; all_ijk[vsub] = bz_face_mapped[i12[isub]]-1;
-    isub[1] = vsub[1] = 1; all_ijk[vsub] = ir_face_mapped[i12[isub]]-1;
-    isub[1] = vsub[1] = 2; all_ijk[vsub] = ir_face_mapped[i12[isub]]-1;
+    all_ijk.val(vert_idx,0) = bz_face_mapped[i12.val(i,0)]-1;
+    all_ijk.val(vert_idx,1) = ir_face_mapped[i12.val(i,1)]-1;
+    all_ijk.val(vert_idx,2) = ir_face_mapped[i12.val(i,2)]-1;
+    all_verts.set(vert_idx++, vertices12.view(i));
   }
   verbose_update("Combine ", i03.size(0), " 0:3 vertices and planes-per-vertex");
   for (size_t i=0; i<i03.size(0); ++i){
-    all_verts.set(vert_idx, vertices03.view(i));
-    isub[0] = i; vsub[0] = vert_idx++;
-    isub[1] = vsub[1] = 0; all_ijk[vsub] = ir_face_mapped[i03[isub]]-1;
-    isub[1] = vsub[1] = 1; all_ijk[vsub] = ir_face_mapped[i03[isub]]-1;
-    isub[1] = vsub[1] = 2; all_ijk[vsub] = ir_face_mapped[i03[isub]]-1;
+    all_ijk.val(vert_idx,0) = ir_face_mapped[i03.val(i,0)]-1;
+    all_ijk.val(vert_idx,1) = ir_face_mapped[i03.val(i,1)]-1;
+    all_ijk.val(vert_idx,2) = ir_face_mapped[i03.val(i,2)]-1;
+    all_verts.set(vert_idx++, vertices03.view(i));
   }
   verbose_update("Vertices and planes-per-vertex combined");
   // four lists now combined into one.
@@ -477,7 +458,7 @@ void BrillouinZone::voro_search(const int extent){
   profile_update("Start BrillouinZone::voro_search with ",extent," extent");
   using namespace brille;
   std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
-  LQVec<int,brille::ref_ptr_t> primtau(this->lattice, make_relative_neighbour_indices(extent));
+  LQVec<int,ref_ptr_t> primtau(this->lattice, make_relative_neighbour_indices(extent));
   size_t ntau = primtau.size(0);
   std::vector<size_t> perm(ntau);
   std::iota(perm.begin(), perm.end(), 0u); // {0u, 1u, 2u, ..., ntau-1}
@@ -492,14 +473,9 @@ void BrillouinZone::voro_search(const int extent){
   // the first Brillouin zone polyhedron will be expressed in absolute units
   // in the xyz frame of the conventional reciprocal lattice
   auto tau = transform_from_primitive(this->outerlattice, primtau).get_xyz();
-  shape_t ij{0,0};
-  for (size_t i=0; i<ntau; ++i){
-    ij[0]=i;
-    for (size_t j=0; j<3u; ++j){
-      ij[1]=j;
-      if (tau[ij] < bbmin[j]) bbmin[j] = tau[ij];
-      if (tau[ij] > bbmax[j]) bbmax[j] = tau[ij];
-    }
+  for (size_t i=0; i<ntau; ++i) for (size_t j=0; j<3u; ++j){
+    if (tau.val(i,j) < bbmin[j]) bbmin[j] = tau.val(i,j);
+    if (tau.val(i,j) > bbmax[j]) bbmax[j] = tau.val(i,j);
   }
   // create an initialize the voro++ voronoicell object
   verbose_update("Construct the bounding polyhedron from ",bbmin," to ",bbmax);

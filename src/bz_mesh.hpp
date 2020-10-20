@@ -48,14 +48,14 @@ public:
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_mesh_hkl(void) const {
+  bArray<double,brille::ref_ptr_t> get_mesh_hkl(void) const {
     auto xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     auto shape = xyz.shape();
-    brille::Array<double,brille::ref_ptr_t> hkl(shape);
+    bArray<double,brille::ref_ptr_t> hkl(shape);
     std::vector<double> tmp(3);
     for (size_t i=0; i<shape[0]; ++i){
       auto vxyz = xyz.view(i).to_std();

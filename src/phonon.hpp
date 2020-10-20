@@ -19,7 +19,7 @@
 
 #include <array>
 #include <tuple>
-#include "latvec.hpp"
+#include "array_latvec.hpp" // defines bArray
 
 /*! \brief A superclass for all rotation-required tabulated information
 
@@ -82,7 +82,7 @@ private:
   std::vector<ind_t> l_mapping; //! maps (κ,r) to l=Nₒ(κ,Sᵣ)
   std::vector<ind_t> v_mapping; //! maps (κ,r) to v
   Direct lattice_;
-  brille::Array<double,brille::ref_ptr_t> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
+  bArray<double,brille::ref_ptr_t> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
   explicit GammaTable(): n_atoms(0), n_sym_ops(0) {
     l_mapping.resize(0);
@@ -102,7 +102,7 @@ public:
     point2space_.resize(n_sym_ops);
     l_mapping.resize(n_atoms*n_sym_ops);
     v_mapping.resize(n_atoms*n_sym_ops);
-    vectors_ = brille::Array<double,brille::ref_ptr_t>({n_atoms*n_sym_ops+1u, 3u}, 0.); // always put (0,0,0) first
+    vectors_ = bArray<double,brille::ref_ptr_t>({n_atoms*n_sym_ops+1u, 3u}, 0.); // always put (0,0,0) first
     // construct a mapping of pointgroup indices to spacegroup indices
     // -- this mapping is likely not invertable, but it shouldn't (doesn't?)
     //    matter. I think.
@@ -145,13 +145,13 @@ public:
   ind_t F0(Ik k, Ir r) const {
     return l_mapping[this->calc_key(k,r)];
   }
-  const brille::Array<double,brille::ref_ptr_t>& vectors() const {return vectors_;}
+  const bArray<double,brille::ref_ptr_t>& vectors() const {return vectors_;}
   template<class Ik, class Ir>
   ind_t vector_index(Ik k, Ir r) const {
     return v_mapping[this->calc_key(k,r)];
   }
   template<class Ik, class Ir>
-  brille::Array<double,brille::ref_ptr_t> vector(Ik k, Ir r) const {
+  bArray<double,brille::ref_ptr_t> vector(Ik k, Ir r) const {
     return vectors_.extract(this->vector_index(k,r));
     // aternatively
     // return vectors_.view(this->vector_index(k,r));

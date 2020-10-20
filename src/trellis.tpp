@@ -36,14 +36,9 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   //   if (pv[x] < minmax[j][0]) minmax[j][0] = pv[x];
   //   if (pv[x] > minmax[j][1]) minmax[j][1] = pv[x];
   // }
-  brille::shape_t ix{0,0};
-  for (ind_t i=0; i<pv.size(0); ++i){
-    ix[0] = i;
-    for (ind_t j=0; j<3; ++j) {
-      ix[1]=j;
-      if (pv[ix] < minmax[j][0]) minmax[j][0] = pv[ix];
-      if (pv[ix] > minmax[j][1]) minmax[j][1] = pv[ix];
-    }
+  for (ind_t i=0; i<pv.size(0); ++i) for (ind_t j=0; j<3; ++j) {
+    if (pv.val(i,j) < minmax[j][0]) minmax[j][0] = pv.val(i,j);
+    if (pv.val(i,j) > minmax[j][1]) minmax[j][1] = pv.val(i,j);
   }
   // try to make an integer number of nodes fit along each dimension
   // If the Polyhedron does not have a face perpendicular to the given direction
@@ -63,11 +58,11 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   }
   ind_t nNodes = this->node_count();
 
-  auto node_centres = brille::Array<double,brille::ref_ptr_t>::from_std(this->trellis_centres());
+  auto node_centres = bArray<double,brille::ref_ptr_t>::from_std(this->trellis_centres());
   double max_dist = this->trellis_node_circumsphere_radius() + poly.get_circumsphere_radius();
   std::vector<bool> node_is_null = norm(node_centres-poly.get_centroid()).is(brille::cmp::gt, max_dist).to_std();
 
-  auto all_intersections = brille::Array<double,brille::ref_ptr_t>::from_std(this->trellis_intersections());
+  auto all_intersections = bArray<double,brille::ref_ptr_t>::from_std(this->trellis_intersections());
   auto intersections_span = this->trellis_intersections_span();
   auto node_intersections = this->trellis_local_cube_indices();
   /*
@@ -78,12 +73,11 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   the polyhedron.
   */
   ind_t n_kept{0}, n_extra{0}, n_intersections{all_intersections.size(0)};
-  brille::Array<double,brille::ref_ptr_t> extra_intersections(n_intersections>>1u, 3u);
+  bArray<double,brille::ref_ptr_t> extra_intersections(n_intersections>>1u, 3u);
   std::vector<ind_t> map_idx(n_intersections, n_intersections+1);
   std::vector<std::vector<ind_t>> node_index_map(n_intersections);
   std::vector<bool> node_is_cube(nNodes, false);
-  brille::shape_t one_by_three{1,3};
-  brille::Array<double,brille::ref_ptr_t> Gamma(one_by_three, 0.);
+  bArray<double,brille::ref_ptr_t> Gamma(1u, 3u, 0.);
   std::map<size_t, Polyhedron> poly_stash;
   Polyhedron node_zero = this->trellis_local_cube();
   for (ind_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
@@ -255,14 +249,9 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
       // and the tetrahedron volumes
       std::vector<std::array<ind_t,4>> idx_per_tet;
       const auto& local_ipt{tri_cut.get_vertices_per_tetrahedron()};
-      brille::shape_t jk{0,0};
       for (ind_t j=0; j<local_ipt.size(0); ++j){
-        jk[0] = j;
         std::array<ind_t,4> one_tet{0,0,0,0};
-        for (ind_t k=0; k<4; ++k){
-          jk[1] = k;
-          one_tet[k] = local_map[local_ipt[jk]];
-        }
+        for (ind_t k=0; k<4; ++k) one_tet[k] = local_map[local_ipt.val(j,k)];
         idx_per_tet.push_back(one_tet);
       }
       std::vector<std::array<double,4>> cci_per_tet;
@@ -280,7 +269,7 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   }
   // Now all non-null nodes have been populated with the indices of their vertices
   profile_update("  End of PolyhedronTrellis Construction");
-  // the InterpolationData PermutationTable should be initialised now:
+  // the data_ PermutationTable should be initialised now:
   data_.initialize_permutation_table(vertices_.size(0), this->collect_keys());
 }
 

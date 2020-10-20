@@ -36,13 +36,13 @@ public:
   //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   //! get the vertices of the leaf vertices in inverse Angstrom
-  brille::Array<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
+  bArray<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
   //! get the vertices of all vertices in absolute units
-  const brille::Array<double,brille::ref_ptr_t>& get_all_xyz(void) const {return this->all_vertices(); }
+  const bArray<double,brille::ref_ptr_t>& get_all_xyz(void) const {return this->all_vertices(); }
   //! get the vertices of the leaf vertices in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  bArray<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_all_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->all_vertices()); }
+  bArray<double,brille::ref_ptr_t> get_all_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->all_vertices()); }
   // //! get the indices forming the faces of the tetrahedra
   // std::vector<std::array<size_t,4>> get_vertices_per_tetrahedron(void) const {return this->tetrahedra();}
 

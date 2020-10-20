@@ -36,17 +36,17 @@ public:
   //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   //! get the vertices of the trellis in absolute units
-  brille::Array<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
+  bArray<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
   //! get the vertices of the inner (cubic) nodes in absolute units
-  brille::Array<double,brille::ref_ptr_t> get_inner_xyz(void) const {return this->cube_vertices(); }
+  bArray<double,brille::ref_ptr_t> get_inner_xyz(void) const {return this->cube_vertices(); }
   //! get the vertices of the outer (polyhedron) nodes in absolute units
-  brille::Array<double,brille::ref_ptr_t> get_outer_xyz(void) const {return this->poly_vertices(); }
+  bArray<double,brille::ref_ptr_t> get_outer_xyz(void) const {return this->poly_vertices(); }
   //! get the vertices of the trellis in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  bArray<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
+  bArray<double,brille::ref_ptr_t> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-  brille::Array<double,brille::ref_ptr_t> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
+  bArray<double,brille::ref_ptr_t> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
   //! get the indices forming the faces of the tetrahedra
   std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 

@@ -19,12 +19,14 @@
 #define _MESH_H_
 
 #include <set>
-#include "latvec.hpp"
+#include "array.hpp"
+#include "array_latvec.hpp" // defines bArray
 #include <vector>
 #include <array>
 #include <omp.h>
 #include "interpolation.hpp"
-#include "interpolation_data.hpp"
+// #include "interpolation_data.hpp"
+#include "interpolatordual.hpp"
 #include "utilities.hpp"
 #include "permutation.hpp"
 #include <queue>
@@ -34,13 +36,14 @@
 template<class T, class S, class U, class V>
 class Mesh3{
   using ind_t = brille::ind_t;
+  using data_t = DualInterpolator<T,S,U,V>;
 protected:
   TetTri mesh;
-  InterpolationData<T,S,U,V> data_;
+  data_t data_;
 public:
   //constructors
   template<class Z>
-  Mesh3(const brille::Array<double,Z>& verts,
+  Mesh3(const bArray<double,Z>& verts,
         const std::vector<std::vector<int>>& facets,
         const double max_volume=-1.0,
         const int num_levels=3,
@@ -64,13 +67,13 @@ public:
   //! Return the number of mesh vertices
   ind_t vertex_count() const { return this->mesh.number_of_vertices(); }
   //! Return the positions of all vertices in the mesh
-  const brille::Array<double,brille::ref_ptr_t>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
+  const bArray<double,brille::ref_ptr_t>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
   //! Return the tetrahedron indices of the mesh
-  const brille::Array<ind_t,brille::ref_ptr_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
+  const bArray<ind_t,brille::ref_ptr_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
   // Get a constant reference to the stored data
-  const InterpolationData<T,S,U,V>& data(void) const {return data_;}
+  const data_t& data(void) const {return data_;}
   // Replace the data stored in the object
-  // template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
+  template<typename... A> void replace_data(A... args) { data_.replace_data(args...); }
   template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
   template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
   template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
@@ -84,7 +87,7 @@ public:
   }
 
   //! Perform sanity checks before attempting to interpolate
-  template<class R, class Z> unsigned int check_before_interpolating(const brille::Array<R,Z>& x) const;
+  template<class R, class Z> unsigned int check_before_interpolating(const bArray<R,Z>& x) const;
   //! Perform linear interpolation at the specified Reciprocal lattice points
   template<typename R, class Z>
   std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
@@ -92,10 +95,10 @@ public:
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
   template<typename R, class Z>
   std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const brille::Array<R,Z>& x) const;
+  interpolate_at(const bArray<R,Z>& x) const;
   template<typename R, class Z>
   std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  parallel_interpolate_at(const brille::Array<R,Z>& x, const int nthreads) const;
+  parallel_interpolate_at(const bArray<R,Z>& x, const int nthreads) const;
   //! Return the neighbours for which a passed boolean array holds true
   // template<typename R> std::vector<ind_t> which_neighbours(const std::vector<R>& t, const R value, const ind_t idx) const;
   std::string to_string(void) const {

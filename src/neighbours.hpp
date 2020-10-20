@@ -17,20 +17,20 @@
 
 #ifndef _NEIGHBOURS_H_
 #define _NEIGHBOURS_H_
-#include "array.hpp"
+#include "array_latvec.hpp" // defines bArray
 
-/*! Construct an brille::Array with 3 elements per array of all (2N+1)³-1
+/*! Construct an bArray with 3 elements per array of all (2N+1)³-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
 
-Typically `extent`=1 and the returned brille::Array is
+Typically `extent`=1 and the returned bArray is
 [(-1,-1,-1,),(-1,-1,0),(-1,-1,1),(-1,0,-1),…,(0,0,-1),(0,0,1),…,(1,0,1),(1,1,-1),(1,1,0),(1,1,1)]
 */
-brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices(const int extent=1);
-/*! Construct an brille::Array with 4 elements per array of all (2N+1)⁴-1
+bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices(const int extent=1);
+/*! Construct an bArray with 4 elements per array of all (2N+1)⁴-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0,0).
 */
-brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices4(const int extent=1);
+bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices4(const int extent=1);
 
-brille::Array<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int extent=1);
+bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int extent=1);
 
 #endif

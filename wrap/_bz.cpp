@@ -72,7 +72,8 @@ void wrap_brillouinzone(py::module & m){
 
   // check whether one or more points are inside
   cls.def("isinside",[](CLS &b, py::array_t<double> p){
-    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(p);
+    // brille::Array<double,pybind11::buffer_info> sp = brille::py2a(p);
+    brille::Array2<double,pybind11::buffer_info> sp = brille::py2a2(p);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
     LQVec<double,pybind11::buffer_info> pv( b.get_lattice(), sp); // no copy :)
@@ -94,7 +95,8 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    // brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    brille::Array2<double,pybind11::buffer_info> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
     LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
@@ -124,7 +126,8 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    // brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    brille::Array2<double,pybind11::buffer_info> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
     LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
@@ -138,7 +141,8 @@ void wrap_brillouinzone(py::module & m){
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    auto sh = Qv.shape();
+    std::vector<ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     auto invrout = py::array_t<int, py::array::c_style>(sh);
@@ -177,7 +181,8 @@ void wrap_brillouinzone(py::module & m){
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
-    brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    // brille::Array<double,pybind11::buffer_info> sp = brille::py2a(Q);
+    brille::Array2<double,pybind11::buffer_info> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
     LQVec<double,pybind11::buffer_info> Qv( b.get_lattice(),  sp); // view
@@ -188,7 +193,8 @@ void wrap_brillouinzone(py::module & m){
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    auto sh = Qv.shape();
+    std::vector<ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     // grab pointers to the underlying data blocks

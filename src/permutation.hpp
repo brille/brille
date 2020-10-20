@@ -23,10 +23,12 @@
 #include <complex>
 #include <cstdint>
 #include "array.hpp"
+#include "array_latvec.hpp" // defines bArray
 #include "sorting_status.hpp"
 #include "munkres.hpp"
 #include "lapjv.hpp"
 #include "smp.hpp"
+
 
 /*! \brief Type information for cost-matrix elements used by Linear Assignment
      Problem solvers.
@@ -111,7 +113,7 @@ template<class T, class R, class I, class P,
 bool munkres_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                          const R Wscl, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
-                         brille::Array<size_t,P>& permutations,
+                         bArray<size_t,P>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
                          const int vec_cost_func = 0
                        ){
@@ -266,7 +268,7 @@ template<class T, class R, class I, class P,
 bool jv_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    brille::Array<size_t,P>& permutations,
+                    bArray<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -362,7 +364,7 @@ bool jv_permutation(const S* centre_vals, const T* centre_vecs,
                     const std::array<I,3>& vals_Nel, const std::array<I,3>& vecs_Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t vals_span, const size_t vecs_span, const size_t Nobj,
-                    brille::Array<size_t,P>& permutations,
+                    bArray<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -578,7 +580,7 @@ template<class T, class R, class I, class P,
 bool sm_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    brille::Array<size_t,P>& permutations,
+                    bArray<size_t,P>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){

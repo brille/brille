@@ -36,11 +36,17 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   double max_volume = 0.0001;
   BrillouinZoneTrellis3<double,double> bzt(bz, max_volume);
 
-  brille::Array<double> Qmap = bzt.get_hkl();
+  auto Qmap = bzt.get_hkl();
+  auto Qxyz = bzt.get_xyz();
+  // At present converting from Array2 to Array is not possible, so the
+  // original reshape will not work. Instead we must copy data by hand
+  brille::shape_t tostoreshape{Qmap.size(0), 1u, Qmap.size(1)};
+  brille::Array<double> tostore(tostoreshape);
+  for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
+
   std::array<unsigned,3> elements{0,3,0};
   RotatesLike rl = RotatesLike::Reciprocal;
   // make sure we store an (nQ, 1, 3) array to have one mode per Q
-  auto tostore = bzt.get_xyz().reshape({Qmap.size(0),1u,Qmap.size(1)});
   bzt.replace_value_data(tostore , elements, rl);
 
   REQUIRE(bzt.data().branches() == 1u);
@@ -50,8 +56,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
   Polyhedron irp = bz.get_ir_polyhedron();
-  brille::Array<double> Qxyz = irp.rand_rejection(nQ);
-  LQVec<double> Q = LQVec<double>::from_invA(r, Qxyz);
+  LQVec<double> Q = LQVec<double>::from_invA(r, irp.rand_rejection(nQ));
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
   // We may run into problems if any of the points are too close to the irBz
@@ -61,10 +66,17 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // the components of Q to try and find an equivalent q and tau.
 
 
-  brille::Array<double> antres=Q.get_xyz().reshape({nQ,1u,3u});
+  auto QinvA = Q.get_xyz();
+  // QinvA is (at present) a brille::Array2<double,> and so can not be reshaped
+  // to 3D (maybe introducing conversion routines is a good idea?)
+  // Instead make a new brille::Array and copy the Q values by hand:
+  brille::shape_t antshp{nQ, 1u, 3u};
+  brille::Array<double> antres(antshp);
+  for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
+
   auto [intres, dummy] = bzt.ir_interpolate_at(Q, 1 /*thread*/);
 
-  brille::Array<double> diff = intres - antres;
+  auto diff = intres - antres;
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
   // info_update("\nRounded difference:\n",diff.to_string());
 
@@ -75,7 +87,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
         "\n                 instead of ", antres.to_string(i), "\n");
   }
   REQUIRE( diff.round().all(0.,0) ); // this is not a great test :(
-  for (auto i: brille::ArrayIt(diff)) REQUIRE(std::abs(i) < 2E-10);
+  for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-10);
 }
 
 TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
@@ -93,14 +105,14 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
   BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
-  brille::Array<double> Qmap = bzt.get_hkl();
+  auto Qmap = bzt.get_hkl();
 
   brille::ind_t n_modes{3u}, n_pt{Qmap.size(0)};
   brille::shape_t valsh{n_pt, n_modes, 1u}, vecsh{n_pt, n_modes, 3u};
   brille::Array<double> eigenvalues(valsh);
   brille::Array<std::complex<double>> eigenvectors(vecsh);
-  for (auto& i: brille::ArrayIt(eigenvalues)) i = distribution(generator);
-  for (auto& i: brille::ArrayIt(eigenvectors)) i = std::complex<double>(distribution(generator), distribution(generator));
+  for (auto& i: eigenvalues.valItr()) i = distribution(generator);
+  for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
   RotatesLike vecs_rt{RotatesLike::Reciprocal};
 
@@ -111,7 +123,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
 
   size_t nQ = 10000;//10000;
   LQVec<double> Q(r,nQ);
-  for (auto& i: brille::ArrayIt(Q)) i = distribution(generator);
+  for (auto& i: Q.valItr()) i = distribution(generator);
 
   brille::Array<double> intvals;
   brille::Array<std::complex<double>> intvecs;
@@ -143,14 +155,14 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
   BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
-  brille::Array<double> Qmap = bzt.get_hkl();
+  auto Qmap = bzt.get_hkl();
 
   brille::ind_t n_modes{3u}, n_pt{Qmap.size(0)};
   brille::shape_t valsh{n_pt, n_modes, 1u}, vecsh{n_pt, n_modes, 3u};
   brille::Array<double> eigenvalues(valsh);
   brille::Array<std::complex<double>> eigenvectors(vecsh);
-  for (auto& i: brille::ArrayIt(eigenvalues)) i = distribution(generator);
-  for (auto& i: brille::ArrayIt(eigenvectors)) i = std::complex<double>(distribution(generator), distribution(generator));
+  for (auto& i: eigenvalues.valItr()) i = distribution(generator);
+  for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
   RotatesLike vecs_rt{RotatesLike::Reciprocal};
 
@@ -161,7 +173,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
 
   size_t nQ = 100000;//10000;
   LQVec<double> Q(r,nQ);
-  for (auto& i: brille::ArrayIt(Q)) i = distribution(generator);
+  for (auto& i: Q.valItr()) i = distribution(generator);
 
   int threads = omp_get_max_threads();
   auto timer = Stopwatch<>();
@@ -211,7 +223,7 @@ TEST_CASE("PolyhedronTrellis creation","[polyhedron][trellis]"){
     {0.16911452700828469,     0.23916405768938562,     0.41424429926267342},
     {0.33822905401644060,    -0.23916405768994600,     0.41424429926267337}
   };
-  auto verts = brille::Array<double>::from_std(va_verts);
+  auto verts = bArray<double>::from_std(va_verts);
   std::vector<std::vector<int>> verts_per_face{
     {2,0,3,4},
     {0,5,3},

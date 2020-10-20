@@ -36,7 +36,12 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   BrillouinZoneNest3<double,double> bzn(bz, max_volume, max_branchings);
 
   auto Qmap = bzn.get_hkl();
-  auto tostore = bzn.get_xyz().reshape({Qmap.size(0),1u,Qmap.size(1)});
+  auto Qxyz = bzn.get_xyz();
+  // At present converting from Array2 to Array is not possible, so the
+  // original reshape will not work. Instead we must copy data by hand
+  brille::shape_t tostoreshape{Qmap.size(0), 1u, Qmap.size(1)};
+  brille::Array<double> tostore(tostoreshape);
+  for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
   std::array<unsigned,3> elements{0,3,0};
   RotatesLike rt = RotatesLike::Reciprocal;
   bzn.replace_value_data( tostore, elements, rt );
@@ -60,11 +65,15 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   }
 
   auto [intres, dummy] =  bzn.ir_interpolate_at(Q,1);
+  auto QinvA = Q.get_xyz();
+  // QinvA is (at present) a brille::Array2<double,> and so can not be reshaped
+  // to 3D (maybe introducing conversion routines is a good idea?)
+  // Instead make a new brille::Array and copy the Q values by hand:
   brille::shape_t antshp{nQ, 1u, 3u};
-  brille::Array<double> QinvA = Q.get_xyz();
-  brille::Array<double> antres = QinvA.reshape(antshp);
+  brille::Array<double> antres(antshp);
+  for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
 
-  brille::Array<double> diff = intres - antres;
+  auto diff = intres - antres;
 
   if (!diff.round().all(brille::cmp::eq, 0.)) for (size_t i = 0; i < nQ; ++i) {
       info_update_if(!diff.view(i).round().all(0.,0),
@@ -73,8 +82,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
         "                 instead of ", antres.to_string(i));
   }
   REQUIRE( diff.round().all(brille::cmp::eq, 0.) ); // this is not a great test :(
-  for (auto i: brille::ArrayIt(diff))
-    REQUIRE(std::abs(i) < 2E-14);
+  for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);
 }
 
 TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
@@ -86,7 +94,12 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   BrillouinZoneNest3<double,double> bzn(bz, max_volume);
 
   auto Qmap = bzn.get_hkl();
-  auto tostore = bzn.get_xyz().reshape({Qmap.size(0),1u,Qmap.size(1)});
+  auto Qxyz = bzn.get_xyz();
+  // At present converting from Array2 to Array is not possible, so the
+  // original reshape will not work. Instead we must copy data by hand
+  brille::shape_t tostoreshape{Qmap.size(0), 1u, Qmap.size(1)};
+  brille::Array<double> tostore(tostoreshape);
+  for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
   std::array<unsigned,3> elements{0,3,0};
   RotatesLike rt = RotatesLike::Reciprocal;
   bzn.replace_value_data( tostore, elements, rt );
@@ -99,8 +112,7 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
   Polyhedron irp = bz.get_ir_polyhedron();
-  auto Qxyz = irp.rand_rejection(nQ);
-  auto Q = LQVec<double>::from_invA(r, Qxyz);
+  auto Q = LQVec<double>::from_invA(r, irp.rand_rejection(nQ));
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
   // We may run into problems if any of the points are too close to the irBz
@@ -109,11 +121,17 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // If 0.5 is rounded to 1 this simple test *will* fail since bz.moveinto rounds
   // the components of Q to try and find an equivalent q and tau.
 
-
-  brille::Array<double> antres=Q.get_xyz().reshape({nQ,1u,3u});
   auto [intres, dummy] = bzn.ir_interpolate_at(Q, 1 /*thread*/);
 
-  brille::Array<double> diff = intres - antres;
+  auto QinvA = Q.get_xyz();
+  // QinvA is (at present) a brille::Array2<double,> and so can not be reshaped
+  // to 3D (maybe introducing conversion routines is a good idea?)
+  // Instead make a new brille::Array and copy the Q values by hand:
+  brille::shape_t antshp{nQ, 1u, 3u};
+  brille::Array<double> antres(antshp);
+  for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
+
+  auto diff = intres - antres;
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
   // info_update("\nRounded difference:\n",diff.to_string());
 
@@ -124,6 +142,5 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
         "\n                 instead of ", antres.to_string(i), "\n");
   }
   REQUIRE( diff.round().all(0.,0.) ); // this is not a great test :(
-  for (auto i: brille::ArrayIt(diff))
-    REQUIRE(std::abs(i) < 2E-10);
+  for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-10);
 }

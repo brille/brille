@@ -23,12 +23,13 @@
 #include <algorithm>
 #include <omp.h>
 #include "array.hpp"
-#include "latvec.hpp"
+#include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
 #include "utilities.hpp"
 #include "debug.hpp"
 #include "triangulation_simple.hpp"
-#include "interpolation_data.hpp"
+// #include "interpolation_data.hpp"
+#include "interpolatordual.hpp"
 #include "approx.hpp"
 
 #ifndef _NEST_H_
@@ -42,7 +43,6 @@ static bool none_negative(const std::array<T,N>& x){
 class NestLeaf{
 public:
   using ind_t = brille::ind_t;
-  using shape_t = brille::shape_t;
 private:
   std::array<ind_t,4> vi;
   std::array<double,4> centre_radius;
@@ -62,7 +62,7 @@ public:
   double volume(void) const {return volume_;}
   //
   template<class P, class Q>
-  std::array<double,4> weights(const brille::Array<double,P>& v, const brille::Array<double,Q>& x) const {
+  std::array<double,4> weights(const bArray<double,P>& v, const bArray<double,Q>& x) const {
     std::array<double,4> w{{-1,-1,-1,-1}};
     if (this->might_contain(x)){
       double vol6 = volume_*6.0;
@@ -75,8 +75,8 @@ public:
   }
   template<class P, class Q>
   bool contains(
-    const brille::Array<double,P>& v,
-    const brille::Array<double,Q>& x,
+    const bArray<double,P>& v,
+    const bArray<double,Q>& x,
     std::array<double,4>& w
   ) const {
     if (this->might_contain(x)){
@@ -98,12 +98,11 @@ public:
   }
 private:
   template<class Z>
-  bool might_contain(const brille::Array<double,Z>& x) const {
+  bool might_contain(const bArray<double,Z>& x) const {
     std::array<double,3> d;
-    shape_t i0{0,0}, i1{0,1}, i2{0,2};
-    d[0] = x[i0] - centre_radius[0];
-    d[1] = x[i1] - centre_radius[1];
-    d[2] = x[i2] - centre_radius[2];
+    d[0] = x.val(0,0) - centre_radius[0];
+    d[1] = x.val(0,1) - centre_radius[1];
+    d[2] = x.val(0,2) - centre_radius[2];
     double d2{0}, r2 = centre_radius[3]*centre_radius[3];
     for (size_t i=0; i<3u; ++i) d2 += d[i]*d[i];
     return ( d2 < r2 || brille::approx::scalar(d2,r2) );
@@ -114,7 +113,6 @@ private:
 class NestNode{
 public:
   using ind_t = brille::ind_t;
-  using shape_t = brille::shape_t;
 private:
   bool is_root_;
   NestLeaf boundary_;
@@ -137,7 +135,7 @@ public:
   template<typename... A> std::array<double,4> weights(A... args) {return boundary_.weights(args...);}
   template<class P, class Q>
   std::vector<std::pair<ind_t,double>> indices_weights(
-    const brille::Array<double,P>& v, const brille::Array<double,Q>& x
+    const bArray<double,P>& v, const bArray<double,Q>& x
   ) const
   {
     std::array<double,4> w;
@@ -174,7 +172,7 @@ public:
 protected:
   template<class P, class Q>
   std::vector<std::pair<ind_t,double>> __indices_weights(
-    const brille::Array<double,P>& v, const brille::Array<double,Q>& x, std::array<double,4>& w
+    const bArray<double,P>& v, const bArray<double,Q>& x, std::array<double,4>& w
   ) const
   {
     // This node is either the root (in which case it contains all tetrahedra)
@@ -200,11 +198,12 @@ template<class T, class S, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
 class Nest{
 public:
   using ind_t = brille::ind_t;
-  using shape_t = brille::ind_t;
+  using data_t = DualInterpolator<T,S,U,V>;
+  using vert_t = bArray<double,brille::ref_ptr_t>;
 private:
   NestNode root_;
-  brille::Array<double,brille::ref_ptr_t> vertices_;
-  InterpolationData<T,S,U,V> data_;
+  vert_t vertices_;
+  data_t data_;
   // std::vector<size_t> map_; // vertices holds *all* vertices but data_ only holds information for terminal vertices!
 public:
   std::string tree_string(void) const {
@@ -234,8 +233,8 @@ public:
     for (auto tet: root_.tetrahedra()) for (auto idx: tet) vert_is_term[idx]=true;
     return vert_is_term;
   }
-  const brille::Array<double,brille::ref_ptr_t>& all_vertices(void) const {return vertices_;}
-  brille::Array<double,brille::ref_ptr_t> vertices(void) const{ return vertices_; }
+  const vert_t& all_vertices(void) const {return vertices_;}
+  vert_t vertices(void) const{ return vertices_; }
   brille::ind_t vertex_count() const { return vertices_.size(0); }
   std::vector<std::array<ind_t,4>> tetrahedra(void) const {
     std::vector<std::array<ind_t,4>> all_tet = root_.tetrahedra();
@@ -245,14 +244,14 @@ public:
   }
   template<class Z>
   std::vector<std::pair<ind_t,double>>
-  indices_weights(const brille::Array<double,Z> &x) const {
+  indices_weights(const bArray<double,Z> &x) const {
     if (x.ndim()!=2 || x.size(0) != 1u || x.size(1) != 3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
     // return root_.indices_weights(vertices_, map_, x);
     return root_.indices_weights(vertices_, x);
   }
   template<class R, class Z>
-  unsigned check_before_interpolating(const brille::Array<R,Z>& x) const{
+  unsigned check_before_interpolating(const bArray<R,Z>& x) const{
     unsigned int mask = 0u;
     if (data_.size()==0)
       throw std::runtime_error("The interpolation data must be filled before interpolating.");
@@ -264,7 +263,7 @@ public:
   }
   template<class Z>
   std::tuple<brille::Array<T,brille::ref_ptr_t>, brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const brille::Array<double,Z>& x) const {
+  interpolate_at(const bArray<double,Z>& x) const {
     this->check_before_interpolating(x);
     auto valsh = data_.values().data().shape();
     auto vecsh = data_.values().data().shape();
@@ -281,7 +280,7 @@ public:
   }
   template<class Z>
   std::tuple<brille::Array<T,brille::ref_ptr_t>, brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const brille::Array<double,Z>& x, const int threads) const {
+  interpolate_at(const bArray<double,Z>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // not used in parallel region
@@ -312,7 +311,8 @@ public:
     }
     return std::make_tuple(vals, vecs);
   }
-  const InterpolationData<T,S,U,V>& data(void) const {return data_;}
+  const data_t& data(void) const {return data_;}
+  template<typename... A> void replace_data(A... args) {data_.replace_data(args...);}
   template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
   template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
   template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }

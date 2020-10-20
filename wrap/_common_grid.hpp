@@ -9,7 +9,8 @@
 
 #include "_array.hpp"
 #include "_c_to_python.hpp"
-#include "_interpolation_data.hpp"
+// #include "_interpolation_data.hpp"
+#include "_interpolator.hpp"
 
 #include "bz.hpp"
 #include "utilities.hpp"
@@ -28,16 +29,18 @@ void def_grid_fill(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>& cls){
     bool sort
   ){
     profile_update("Start of 'fill' operation");
-    brille::Array<T,py::buffer_info> vals;
-    brille::Array<R,py::buffer_info> vecs;
-    std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
-    RotatesLike val_rl, vec_rl;
+    // brille::Array<T,py::buffer_info> vals;
+    // brille::Array<R,py::buffer_info> vecs;
+    // std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    // RotatesLike val_rl, vec_rl;
     size_t count = cobj.vertex_count();
-    std::tie(vals,val_el,val_rl)=fill_check(pyvals,pyvalelrl,count);
-    std::tie(vecs,vec_el,vec_rl)=fill_check(pyvecs,pyvecelrl,count);
-
-    cobj.replace_value_data(vals, val_el, val_rl);
-    cobj.replace_vector_data(vecs, vec_el, vec_rl);
+    // std::tie(vals,val_el,val_rl)=fill_check(pyvals,pyvalelrl,count);
+    // std::tie(vecs,vec_el,vec_rl)=fill_check(pyvecs,pyvecelrl,count);
+    // cobj.replace_value_data(vals, val_el, val_rl);
+    // cobj.replace_vector_data(vecs, vec_el, vec_rl);
+    Interpolator<T,py::buffer_info> vals = fill_check(pyvals,pyvalelrl,count);
+    Interpolator<R,py::buffer_info> vecs = fill_check(pyvecs,pyvecelrl,count);
+    cobj.replace_data(vals, vecs);
     profile_update("  End of 'fill' operation");
     if (sort){
       profile_update("Start of 'sort' operation");
@@ -96,20 +99,22 @@ R"pbdoc(
     bool sort
   ){
     profile_update("Start of 'fill' operation with cost information");
-    brille::Array<T,py::buffer_info> vals;
-    brille::Array<R,py::buffer_info> vecs;
-    std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
-    std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
-    RotatesLike val_rl, vec_rl;
-    int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
+    // brille::Array<T,py::buffer_info> vals;
+    // brille::Array<R,py::buffer_info> vecs;
+    // std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
+    // std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
+    // RotatesLike val_rl, vec_rl;
+    // int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
     size_t count = cobj.vertex_count();
-    std::tie(vals,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
-    std::tie(vecs,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
-
-    cobj.replace_value_data(vals, val_el, val_rl);
-    cobj.replace_vector_data(vecs, vec_el, vec_rl);
-    cobj.set_value_cost_info(val_sf, val_vf, val_wght);
-    cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
+    // std::tie(vals,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
+    // std::tie(vecs,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
+    // cobj.replace_value_data(vals, val_el, val_rl);
+    // cobj.replace_vector_data(vecs, vec_el, vec_rl);
+    // cobj.set_value_cost_info(val_sf, val_vf, val_wght);
+    // cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
+    Interpolator<T,py::buffer_info> vals = fill_check(pyvals,pyvalel,pyvalwght,count);
+    Interpolator<R,py::buffer_info> vecs = fill_check(pyvecs,pyvecel,pyvecwght,count);
+    cobj.replace_data(vals, vecs);
     profile_update("  End of 'fill' operation with cost information");
     if (sort){
       profile_update("Start of 'sort' operation");
@@ -197,7 +202,8 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R,py::buffer_info,py::buffer_info
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'ir_interpolate_at' operation");
-    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    brille::Array2<double,pybind11::buffer_info> bX = brille::py2a2(pyX);
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), bX);
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -252,7 +258,8 @@ R"pbdoc(
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'ir_interpolate_at_dw' operation");
-    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    brille::Array2<double,pybind11::buffer_info> bX = brille::py2a2(pyX);
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), bX);
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -313,7 +320,8 @@ void def_grid_interpolate(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>&
                            const bool& useparallel,
                            const int& threads, const bool& no_move){
     profile_update("Start of 'interpolate_at' operation");
-    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    brille::Array2<double,pybind11::buffer_info> bX = brille::py2a2(pyX);
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), bX);
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -432,7 +440,8 @@ void def_grid_debye_waller(py::class_<Grid<T,R,py::buffer_info,py::buffer_info>>
 
   cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){
     // handle Q
-    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), brille::py2a(pyX));
+    brille::Array2<double,pybind11::buffer_info> bX = brille::py2a2(pyX);
+    LQVec<double,py::buffer_info> qv(cobj.get_brillouinzone().get_lattice(), bX);
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));

@@ -23,6 +23,7 @@
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include "array_latvec.hpp" // defines bArray
 #include "tetgen.h"
 #include "debug.hpp"
 #include "balltrellis.hpp"
@@ -36,7 +37,7 @@ template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, c
 
 // // In case we need to store the input polyhedron and mesh-refining parameters:
 // class TetgenInput{
-//   brille::Array<double,brille::ref_ptr_t> _vertices;
+//   bArray<double,brille::ref_ptr_t> _vertices;
 //   std::vector<std::vector<int>> _vertices_per_facet;
 //   double _max_cell_size;
 //   double _min_dihedral_angle;
@@ -45,13 +46,13 @@ template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, c
 //   int _max_mesh_points;
 // public:
 //   TetgenInput(
-//     const brille::Array<double,brille::ref_ptr_t>& v, const std::vector<std::vector<int>>& f,
+//     const bArray<double,brille::ref_ptr_t>& v, const std::vector<std::vector<int>>& f,
 //     const double mcs=-1.0, const double nda=-1.0, const double xda=-1.0,
 //     const double rer=-1.0, const int mmp=-1):
 //       _vertices(v), _vertices_per_facet(f), _max_cell_size(mcs),
 //       _min_dihedral_angle(nda), _max_dihedral_angle(xda),
 //       _radius_edge_ratio(rer), _max_mesh_points(mmp) {}
-//   const brille::Array<double,brille::ref_ptr_t>& vertices() const { return _vertices; }
+//   const bArray<double,brille::ref_ptr_t>& vertices() const { return _vertices; }
 //   const std::vector<std::vector<int>>& vertices_per_facet() const {return _vertices_per_facet; }
 //   double max_cell_size() const { return _max_cell_size; }
 //   double max_dihedral_angle() const { return _max_dihedral_angle; }
@@ -60,13 +61,13 @@ template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, c
 //   int max_mesh_points() const { return _max_mesh_points; }
 // };
 
-// template<class T, class P, template<class,class> class L, typename=typename std::enable_if<std::is_base_of<brille::Array<T,P>,L<T,P>>::value>::type>
+// template<class T, class P, template<class,class> class L, typename=typename std::enable_if<std::is_base_of<bArray<T,P>,L<T,P>>::value>::type>
 class TetTri{
-  // L<T,P> vertex_positions; // (nVertices, 3), brille::Array<T,P>, LQVec<T,P>, or LDVec<T,P>
+  // L<T,P> vertex_positions; // (nVertices, 3), bArray<T,P>, LQVec<T,P>, or LDVec<T,P>
   size_t nVertices;
   size_t nTetrahedra;
-  brille::Array<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
-  brille::Array<size_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  bArray<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
+  bArray<size_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
   std::vector<std::vector<size_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<size_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
   //tetgenio tgsource; // we need to store the output of tetgen so that we can refine the mesh
@@ -77,8 +78,8 @@ class TetTri{
 public:
   size_t number_of_vertices(void) const {return nVertices;}
   size_t number_of_tetrahedra(void) const {return nTetrahedra;}
-  const brille::Array<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
-  const brille::Array<size_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  const bArray<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
+  const bArray<size_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
 
   TetTri(void): nVertices(0), nTetrahedra(0), vertex_positions({0u,3u}), vertices_per_tetrahedron({0u,4u}){}
   TetTri(const tetgenio& tgio, const double fraction): vertex_positions({0u,3u}), vertices_per_tetrahedron({0u,4u}){ //, tgsource(tgio){
@@ -88,19 +89,19 @@ public:
     vertex_positions.resize(nVertices);
     for (size_t i=0; i<nVertices; ++i)
     for (size_t j=0; j<3u; ++j)
-    vertex_positions[{i,j}] = tgio.pointlist[3*i+j];
+    vertex_positions.val(i,j) = tgio.pointlist[3*i+j];
     // copy-over all tetrahedron vertex indices
     vertices_per_tetrahedron.resize(nTetrahedra);
     for (size_t i=0; i<nTetrahedra; ++i)
     for (size_t j=0; j<4u; ++j)
-    vertices_per_tetrahedron[{i,j}] = static_cast<size_t>(tgio.tetrahedronlist[i*tgio.numberofcorners+j]);
+    vertices_per_tetrahedron.val(i,j) = static_cast<size_t>(tgio.tetrahedronlist[i*tgio.numberofcorners+j]);
     // for (size_t i=0; i<nTetrahedra; ++i)
     // Construct the tetrahedra per vertex vector of vectors
     tetrahedra_per_vertex.resize(nVertices);
     for (size_t i=0; i<nVertices; ++i)
     for (size_t j=0; j<nTetrahedra; ++j)
     for (size_t k=0; k<4u; ++k)
-    if (vertices_per_tetrahedron[{j,k}]==i)
+    if (vertices_per_tetrahedron.val(j,k)==i)
       tetrahedra_per_vertex[i].push_back(j);
     // Construct the neighbours per tetrahedron vector of vectors
     neighbours_per_tetrahedron.resize(nTetrahedra);
@@ -176,7 +177,7 @@ public:
         only need to check 0.66% of all vertices.
   */
   template<class P>
-  size_t old_locate(const brille::Array<double,P>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
+  size_t old_locate(const bArray<double,P>& x, Locate_Type& type, size_t& v0, size_t& v1) const{
     std::vector<size_t> v;
     std::vector<double> w;
     size_t idx = this->locate(x, v, w);
@@ -196,7 +197,7 @@ public:
       case 3:
         type = FACET;
         for (size_t i=0; i<4u; ++i){
-          v0 = vertices_per_tetrahedron.getvalue(idx, i);
+          v0 = vertices_per_tetrahedron.val(idx, i);
           if (std::find(v.begin(), v.end(), v0) == v.end()) break;
         }
         break;
@@ -209,7 +210,7 @@ public:
     return idx;
   }
   // Make a new locator which slots into the interpolation routine more easily
-  // size_t locate(const brille::Array<double,brille::ref_ptr_t>& x, std::vector<size_t>& v, std::vector<double>& w) const {
+  // size_t locate(const bArray<double,brille::ref_ptr_t>& x, std::vector<size_t>& v, std::vector<double>& w) const {
   //   if (x.numel() != 3u || x.size() != 1u)
   //     throw std::runtime_error("locate requires a single 3-element vector.");
   //   std::array<double,4> ws;
@@ -231,7 +232,7 @@ public:
   //   return tet_idx;
   // }
   template<class P>
-  size_t locate(const brille::Array<double,P>& x, std::vector<size_t>& v, std::vector<double>& w) const {
+  size_t locate(const bArray<double,P>& x, std::vector<size_t>& v, std::vector<double>& w) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     std::array<double,4> ws;
@@ -250,7 +251,7 @@ public:
       // if all weights are greater or equal to ~zero, we can use this tetrahedron
       if (std::all_of(ws.begin(), ws.end(), [](double z){return z>0. || brille::approx::scalar(z,0.);})){
         for (size_t i=0; i<4u; ++i) if (!brille::approx::scalar(ws[i], 0.)){
-          v.push_back(vertices_per_tetrahedron[{leaf.index(), i}]);
+          v.push_back(vertices_per_tetrahedron[leaf.index(), i]);
           w.push_back(ws[i]);
         }
         return leaf.index();
@@ -261,7 +262,7 @@ public:
   }
   // and a special version which doesn't return the weights
   template<class P>
-  size_t locate(const brille::Array<double,P>& x, std::vector<size_t>& v) const{
+  size_t locate(const bArray<double,P>& x, std::vector<size_t>& v) const{
     std::vector<double> w;
     return this->locate(x, v, w);
   }
@@ -270,7 +271,7 @@ public:
   //    advantageous to replicate the above code in this function's for loop.
   //    Either way, this should probably be parallelised with OpenMP.
   // */
-  // std::vector<std::vector<size_t>> locate_all_for_interpolation(const brille::Array<double,>& x) const {
+  // std::vector<std::vector<size_t>> locate_all_for_interpolation(const bArray<double,>& x) const {
   //   if (x.numel()!=3u){
   //     std::string msg = "locate_all requires 3-element vector(s)";
   //     throw std::runtime_error(msg);
@@ -285,7 +286,7 @@ public:
      which it is connected.
   */
   template<class P>
-  std::vector<size_t> neighbours(const brille::Array<double,P>& x) const {
+  std::vector<size_t> neighbours(const bArray<double,P>& x) const {
     std::vector<size_t> v;
     this->locate(x, v);
     if (v.size() != 1u){
@@ -304,22 +305,20 @@ public:
     for (size_t t: this->tetrahedra_per_vertex[vert])
     // for (size_t v: this->vertices_per_tetrahedron[t]) // would work if vertices_per_tetrahedron was a vector<array<size_t,4>>
     for (size_t j=0; j<4u; ++j){
-      v = this->vertices_per_tetrahedron[{t, j}];
+      v = this->vertices_per_tetrahedron.val(t, j);
       if ( v!= vert && std::find(n.begin(), n.end(), v) == n.end() ) n.push_back(v);
     }
     return n;
   }
   double volume(const size_t tet) const {
     double v;
+    const ind_t* i = vertices_per_tetrahedron.ptr(tet);
     v = orient3d(
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet,0u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet,1u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet,2u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet,3u}]) )/6.0;
-    return v;
+      vertex_positions.ptr(i[0]), vertex_positions.ptr(i[1]),
+      vertex_positions.ptr(i[2]), vertex_positions.ptr(i[3]))/6.0;return v;
   }
   template<class P>
-  bool might_contain(const size_t tet, const brille::Array<double,P>& x) const {
+  bool might_contain(const size_t tet, const bArray<double,P>& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
@@ -327,47 +326,18 @@ public:
   }
 protected:
   template<class P>
-  bool unsafe_might_contain(const size_t tet, const brille::Array<double,P>& x) const {
-    // double is;
-    // // any tetrahedron can be circumscribed by a sphere. The tetgen/predicates
-    // // function insphere can be used to check whether a point is inside a
-    // // tetrahedron's circumsphere: it returns a positive if the point is inside,
-    // // a negative if it is outside, and zero if it is on the surface -- assuming
-    // // that the volume returned by orient3d is positive for the tetrahedron.
-    // is = insphere(
-    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 0u)),
-    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 1u)),
-    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 2u)),
-    //   vertex_positions.data(vertices_per_tetrahedron.getvalue(tet, 3u)),
-    //   x.data() );
-    // // since we only care if this tetrahedron *might* contain the point x, here
-    // // we just want to know if the insphere result is greater or ~equal to zero.
-    // return (is > 0. || brille::approx::scalar(is, 0.));
+  bool unsafe_might_contain(const size_t tet, const bArray<double,P>& x) const {
     return leaves[tet].fuzzy_contains(x);
   }
   template<class P>
-  void weights(const size_t tet, const brille::Array<double,P>& x, std::array<double,4>& w) const {
+  void weights(const size_t tet, const bArray<double,P>& x, std::array<double,4>& w) const {
     double vol6 = 6.0*this->volume(tet);
-    w[0] = orient3d(
-      x.ptr(0),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 1u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 2u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 3u}]) )/vol6;
-    w[1] = orient3d(
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 0u}]),
-      x.ptr(0),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 2u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 3u}]) )/vol6;
-    w[2] = orient3d(
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 0u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 1u}]),
-      x.ptr(0),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 3u}]) )/vol6;
-    w[3] = orient3d(
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 0u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 1u}]),
-      vertex_positions.ptr(vertices_per_tetrahedron[{tet, 2u}]),
-      x.ptr(0)                                                  )/vol6;
+    const ind_t* i = vertices_per_tetrahedron.ptr(tet);
+    const auto& p{vertex_positions};
+    w[0] = orient3d(x.ptr(0),    p.ptr(i[1]), p.ptr(i[2]), p.ptr(i[3]) )/vol6;
+    w[1] = orient3d(p.ptr(i[0]), x.ptr(0),    p.ptr(i[2]), p.ptr(i[3]) )/vol6;
+    w[2] = orient3d(p.ptr(i[0]), p.ptr(i[1]), x.ptr(0),    p.ptr(i[3]) )/vol6;
+    w[3] = orient3d(p.ptr(i[0]), p.ptr(i[1]), p.ptr(i[2]), x.ptr(0)    )/vol6;
   }
   void correct_tetrahedra_vertex_ordering(void){
     for (size_t i=0; i<nTetrahedra; ++i)
@@ -382,14 +352,11 @@ protected:
     double radius;
     verbose_update("Pull together the circumsphere information for all tetrahedra");
     tetgenmesh tgm; // to get access to circumsphere
+    const auto& p{vertex_positions};
     for (size_t i=0; i<nTetrahedra; ++i){
+      const ind_t* v = vertices_pertetrahedron.ptr(i);
       // use tetgen's circumsphere to find the centre and radius for each tetrahedra
-      tgm.circumsphere(
-        vertex_positions.ptr(vertices_per_tetrahedron[{i, 0u}]),
-        vertex_positions.ptr(vertices_per_tetrahedron[{i, 1u}]),
-        vertex_positions.ptr(vertices_per_tetrahedron[{i, 2u}]),
-        vertex_positions.ptr(vertices_per_tetrahedron[{i, 3u}]),
-        centre.data(), &radius);
+      tgm.circumsphere(p.ptr(v[0]), p.ptr(v[1]), p.ptr(v[2]), p.ptr(v[3]), centre.data(), &radius);
       // leaves.push_back(BallLeaf(centre, radius, i));
       leaves.push_back(TrellisLeaf(centre, radius, i));
     }
@@ -417,7 +384,7 @@ protected:
 template <class T, class P>
 TetTri
 triangulate(
-  const brille::Array<T,P>& verts,
+  const bArray<T,P>& verts,
   const std::vector<std::vector<int>>& vpf,
   const double max_cell_size=-1.0,
   const double min_dihedral=-1.0,
@@ -466,7 +433,7 @@ triangulate(
   for (size_t i=0; i<verts.size(0); ++i){
     tgi.pointmarkerlist[i] = static_cast<int>(i);
     for (size_t j=0; j<verts.size(1); ++j)
-      tgi.pointlist[idx++] = verts[{i,j}];
+      tgi.pointlist[idx++] = verts.val(i,j);
   }
   verbose_update("Initialize and fill the input object's facetlist parameter");
   tgi.numberoffacets = static_cast<int>(vpf.size());
