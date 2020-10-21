@@ -144,7 +144,6 @@ void Interpolator<T,P>::interpolate_at_vec(
 ) const {
   if (indices_weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
-  ind_t span = this->branch_span();
   std::vector<int> dummy;
   const ind_t b_{data_.size(1)}, v_{data_.size(2)};
   auto ox = out.slice(to);
@@ -237,7 +236,6 @@ void Interpolator<T,P>::interpolate_at_mat(
 ) const {
   if (indices_weights.size()==0)
     throw std::logic_error("Interpolation requires input data!");
-  ind_t span = this->branch_span();
   std::vector<int> dummy;
   const ind_t b_{data_.size(1)}, m_{data_.size(2)};
   auto ox = out.slice(to);

@@ -39,7 +39,6 @@ Mesh3<T,S,U,V>::interpolate_at(const bArray<R,Z>& x) const {
   vecsh[0] = x.size(0);
   brille::Array<T,brille::ref_ptr_t> vals(valsh);
   brille::Array<S,brille::ref_ptr_t> vecs(vecsh);
-  ind_t found_tet, max_valid_tet = this->mesh.number_of_tetrahedra()-1;
   for (ind_t i=0; i<x.size(0); ++i){
     verbose_update("Locating ",x.to_string(i));
     auto verts_weights = this->mesh.locate(x.view(i));

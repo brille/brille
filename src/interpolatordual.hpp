@@ -33,7 +33,7 @@ private:
 public:
   DualInterpolator(): values_(), vectors_(), permutation_table_(0,0) {};
   DualInterpolator(Interpolator<T,P>& val, Interpolator<R,Q>& vec)
-  : values_(val), vectors_(vec), permuatation_table_(0,0)
+  : values_(val), vectors_(vec), permutation_table_(0,0)
   {
     if (values_.size() != vectors_.size() || values_.branches() != vectors_.branches())
       throw std::runtime_error("Inconsistent values and vectors provided to DualInterpolator");

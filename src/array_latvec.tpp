@@ -383,15 +383,6 @@ norm(const L<T,P> &a){
   return out;
 }
 
-// [LatVec] cat
-template<class T, class P, class R, class Q, template<class,class> class L, class S = std::common_type_t<T,R>>
-std::enable_if_t<bothLatVecs<T,P,L,R,Q,L>, L<S,P>>
-cat(const brille::ind_t dim, const L<T,P>& a, const L<R,Q>& b){
-  if (!a.samelattice(b))
-    throw std::runtime_error("LatVec cat requires vectors in the same lattice.");
-  // use cat([Array],[Array]) to handle possible type-conversion
-  return L<S,P>(a.get_lattice(), cat(dim, a.get_hkl(), b.get_hkl()));
-}
 // [LatVec],[Array] cat
 template<class T, class P, class R, class Q, template<class,class> class LV, template<class,class> class BA, class S = std::common_type_t<T,R>>
 std::enable_if_t<(isLatVec<T,P,LV>&&isBareArray<R,Q,BA>), BA<S,P>>
@@ -405,11 +396,20 @@ std::enable_if_t<(isLatVec<T,P,LV>&&isBareArray<R,Q,BA>), BA<S,Q>>
 cat(const brille::ind_t dim, const BA<R,Q>& a, const LV<T,P>& b){
   return BA<S,Q>(a.decouple()).append(dim, b.get_hkl());
 }
-// [LatVec] cat
+// [bArray],[bArray] cat
 template<class T, class P, class R, class Q, template<class,class> class L, class S = std::common_type_t<T,R>>
 std::enable_if_t<bareArrays<T,P,L,R,Q,L>, L<S,P>>
 cat(const brille::ind_t dim, const L<T,P>& a, const L<R,Q>& b){
   return L<S,P>(a.decouple()).append(dim, b);
+}
+// [LatVec] cat
+template<class T, class P, class R, class Q, template<class,class> class L, class S = std::common_type_t<T,R>>
+std::enable_if_t<bothLatVecs<T,P,L,R,Q,L>, L<S,P>>
+cat(const brille::ind_t dim, const L<T,P>& a, const L<R,Q>& b){
+  if (!a.samelattice(b))
+    throw std::runtime_error("LatVec cat requires vectors in the same lattice.");
+  // use cat([Array],[Array]) to handle possible type-conversion
+  return L<S,P>(a.get_lattice(), cat(dim, a.get_hkl(), b.get_hkl()));
 }
 // poor-man's variadic Array concatenation
 template<class T, class P, class R, class Q, template<class,class> class A, class S=std::common_type_t<T,R>, class... Args>

@@ -974,48 +974,48 @@ static void mutable_check(const Array2<T,P>& a){
   throw std::runtime_error("Immutable Array2 objects can not be modified!");
 }
 
-// #define SCALAR_INPLACE_OP(X) template<class T, class P>\
-// Array2<T,P>& Array2<T,P>::operator X (const T& val){\
-//   mutable_check(*this);\
-//   for (auto& v: this->valItr()) v X val;\
-//   return *this;\
+#define SCALAR_INPLACE_OP(X) template<class T, class P>\
+Array2<T,P>& Array2<T,P>::operator X (const T& val){\
+  mutable_check(*this);\
+  for (auto& v: this->valItr()) v X val;\
+  return *this;\
+}
+SCALAR_INPLACE_OP(+=)
+SCALAR_INPLACE_OP(-=)
+SCALAR_INPLACE_OP(*=)
+SCALAR_INPLACE_OP(/=)
+#undef SCALAR_INPLACE_OP
+// template<class T, class P>
+// Array2<T,P>&
+// Array2<T,P>::operator+=(const T& val){
+//   mutable_check(*this);
+//   for (auto& v: this->valItr()) v += val;
+//   return *this;
 // }
-// SCALAR_INPLACE_OP(+=)
-// SCALAR_INPLACE_OP(-=)
-// SCALAR_INPLACE_OP(*=)
-// SCALAR_INPLACE_OP(/=)
-// #undef SCALAR_INPLACE_OP
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::operator+=(const T& val){
-  mutable_check(*this);
-  for (auto& v: this->valItr()) v += val;
-  return *this;
-}
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::operator-=(const T& val){
-  mutable_check(*this);
-  for (auto& v: this->valItr()) v -= val;
-  return *this;
-}
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::operator*=(const T& val){
-  mutable_check(*this);
-  auto itr = this->valItr();
-  for (auto & v: itr){
-    v *= val;
-  }
-  return *this;
-}
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::operator/=(const T& val){
-  mutable_check(*this);
-  for (auto& v: this->valItr()) v /= val;
-  return *this;
-}
+// template<class T, class P>
+// Array2<T,P>&
+// Array2<T,P>::operator-=(const T& val){
+//   mutable_check(*this);
+//   for (auto& v: this->valItr()) v -= val;
+//   return *this;
+// }
+// template<class T, class P>
+// Array2<T,P>&
+// Array2<T,P>::operator*=(const T& val){
+//   mutable_check(*this);
+//   auto itr = this->valItr();
+//   for (auto & v: itr){
+//     v *= val;
+//   }
+//   return *this;
+// }
+// template<class T, class P>
+// Array2<T,P>&
+// Array2<T,P>::operator/=(const T& val){
+//   mutable_check(*this);
+//   for (auto& v: this->valItr()) v /= val;
+//   return *this;
+// }
 
 template<class T>
 bool broadcast_shape_check(const std::array<T,2>& a, const std::array<T,2>&b){

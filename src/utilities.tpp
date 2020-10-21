@@ -239,7 +239,7 @@ template<typename R> bool is_int_matrix(const int *, const R){ return true; }
 
 
 template<class I, class T>
-T 
+T
 frobenius_distance(const I n, const T* A, const T* B) {
   // sqrt(tr([A-B]*[A-B]')) == sqrt(A00^2 + A01^2 + A02^2 ... Ann^2)
     return vector_distance(n*n, A, B);
@@ -580,7 +580,7 @@ inplace_antiphase(const I n, const std::complex<T>* a, const std::complex<T>* b,
 
 template<class T, class R, template<class, class> class A>
 T
-unsafe_antiphase(const A<T,R>& a, const A<T,R>& b){
+unsafe_antiphase(const A<T,R>&, const A<T,R>&){
   return T(1);
 }
 

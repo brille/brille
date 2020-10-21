@@ -127,7 +127,7 @@ template<class T, class P>
 template<class P0, class R, class P1>
 bool Interpolator<T,P>::rip_gamma_vec_complex(
   data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
-  const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
+  const PointSymmetry& ptsym, const std::vector<size_t>&, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
   profile_update("Start Interpolator::rip_gamma_vec_complex method");
@@ -146,14 +146,15 @@ bool Interpolator<T,P>::rip_gamma_vec_complex(
   T tmp_v[3];
   std::vector<T> tmpvecs(v_*3u);
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
+#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
 #else
-#pragma omp parallel for default(none) shared(b_,v_,x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
+#pragma omp parallel for default(none) shared(b_,v_,x,q,pgt,ptsym,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
 #endif
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
     auto xi = x.slice(i); // (B,V,3)
-    size_t Rii = ridx[i], iRii = invRidx[i];
+    // size_t Rii = ridx[i], iRii = invRidx[i]; // ridx[i] is only used with the matrix form:
+    auto iRii = invRidx[i];
     for (ind_t b=0; b<b_; ++b){
       auto xib = xi.slice(b); // (V,3)
       // the *full 3N* eigenvector for mode j transforms as

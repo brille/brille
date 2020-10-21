@@ -54,14 +54,13 @@ public:
   template<class R, class S> using data_t = brille::Array<R,S>;
   using shape_t = typename data_t<T,P>::shape_t;
 private:
-  ind_t _modes;
+  data_t<T,P> data_;      //!< The stored Array of points indexed like the holding-Object's vertices
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
+  RotatesLike rotlike_;   //!< How the elements of `data_` rotate
   element_t<double> _costmult; //!< The relative (multiplicative) cost for differences in each element type
   costfun_t _scalarfun; //!< A function to calculate differences between the scalars at two stored points
   costfun_t _vectorfun; //!< A function to calculate differences between the vectors at two stored points
   //costfun_t _matrixfun; //!< A function to calculate the differences between matrices at two stored points
-  data_t<T,P> data_;      //!< The stored Array of points indexed like the holding-Object's vertices
-  RotatesLike rotlike_;   //!< How the elements of `data_` rotate
 public:
   explicit Interpolator(size_t scf_type=0, size_t vcf_type=0)
   : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real}, _costmult({{1,1,1}})
@@ -297,11 +296,9 @@ public:
   template<typename I>
   bool any_equal_modes(const I idx) const {
     ind_t i = static_cast<ind_t>(idx);
-    if (this->only_vector_or_matrix()){
-      this->any_equal_modes_(i, data_.size(2), data_.size(3)*(data_.ndim()>4u?9u:3u));
-    } else {
-      this->any_equal_modes_(i, this->branches(), this->branch_span());
-    }
+    if (this->only_vector_or_matrix())
+      return this->any_equal_modes_(i, data_.size(2), data_.size(3)*(data_.ndim()>4u?9u:3u));
+    return this->any_equal_modes_(i, this->branches(), this->branch_span());
   }
   size_t bytes_per_point() const {
     size_t n_elements = data_.numel()/data_.size(0);
