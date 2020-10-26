@@ -193,7 +193,7 @@ private:
   template<typename T, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<T>& x, L... args){
     size_t l = max_element_length(x);
-    size_t n = std::sqrt(x.size());
+    // size_t n = std::sqrt(x.size());
     int w = terminal_width();
     if (static_cast<int>(_before) < w) w -= static_cast<int>(_before);
     if (l) w /= static_cast<int>(l)+1;

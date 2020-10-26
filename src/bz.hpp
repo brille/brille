@@ -93,7 +93,9 @@ public:
                   || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
                   || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
                   || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
-                  || this->wedge_brute_force(true, true, false); // last ditch effort, handle non order(2) operations in decreasing order
+                  || this->wedge_brute_force(true, true, false) // last ditch effort, handle non order(2) operations in decreasing order
+                  || this->wedge_brute_force(true, false, true, false)
+                  ;
       // other combinations of special_2_folds, special_mirrors,
       // and sort_by_length are possible but not necessarily useful.
       if (!success)
@@ -321,7 +323,7 @@ public:
   the irreducible wedge.
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
-  bool wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true);
+  bool wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true, bool sort_one_sym=true);
   void wedge_triclinic(void);
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space

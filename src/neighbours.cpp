@@ -41,7 +41,7 @@ bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int ex
   size_t num = vec.size();
   size_t n{0};
   std::vector<std::array<int,3>> o(num*num*num-1);
-  for (size_t i=0; i<3*num+3*num*num; ++i) o[i] = {{0,0,0}};
+  for (size_t i=0; i<num*num*num-1; ++i) o[i] = {{0,0,0}};
   // first follow each axis:
   for (int e=0; e<3; ++e) for (auto j: vec) if (j) o[n++][e] = j;
   // next the ab, bc, and ac planes:

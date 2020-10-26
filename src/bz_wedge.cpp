@@ -200,7 +200,7 @@ bArray<bool,brille::ref_ptr_t> keep_if(const LQVec<double,P>& normals, const LQV
   return keep;
 }
 
-bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length){
+bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length, const bool sort_one_sym){
   std::string pmsg = "BrillouinZone::wedge_brute_force(";
   if (special_2_folds) pmsg += "2-folds";
   if (special_2_folds && special_mirrors) pmsg += ",";
@@ -367,13 +367,15 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       one_sym.push_back(type_order);
     }
     // sort one_sym by the number of valid (indexable) equivalent points
-    std::sort(one_sym.begin(), one_sym.end(),
-      [&](std::vector<size_t>& a, std::vector<size_t>& b){
-        size_t as = a.size() - std::count(a.begin(), a.end(), special.size(0));
-        size_t bs = b.size() - std::count(b.begin(), b.end(), special.size(0));
-        return as > bs;
-      }
-    );
+    if (sort_one_sym){
+      std::sort(one_sym.begin(), one_sym.end(),
+        [&](std::vector<size_t>& a, std::vector<size_t>& b){
+          size_t as = a.size() - std::count(a.begin(), a.end(), special.size(0));
+          size_t bs = b.size() - std::count(b.begin(), b.end(), special.size(0));
+          return as > bs;
+        }
+      );
+    }
     size_t keep_count;
     LQVec<double,brille::ref_ptr_t> pt0(this->outerlattice, 1u), pt1(this->outerlattice, 1u);
     for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]/*always true?*/){
