@@ -143,13 +143,13 @@ bool Interpolator<T,P>::rip_gamma_vec_complex(
   const ind_t b_{data_.size(1)}, v_{data_.size(2)};
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-  T tmp_v[3];
-  std::vector<T> tmpvecs(v_*3u);
-#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
-#else
-#pragma omp parallel for default(none) shared(b_,v_,x,q,pgt,ptsym,invRidx,e_iqd_gt) private(tmp_v,tmpvecs) firstprivate(xsize) schedule(static)
-#endif
+  T tmp_v[3]; // allocated private variable possible as it's statically sized
+  std::vector<T> tmpvecs(v_*3u); // private possible but will not be pre-allocated in workers unless *first*private
+  #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+  #pragma omp parallel for default(none) shared(x,q,pgt,ptsym,invRidx,e_iqd_gt) firstprivate(xsize,tmp_v,tmpvecs) schedule(static)
+  #else
+  #pragma omp parallel for default(none) shared(b_,v_,x,q,pgt,ptsym,invRidx,e_iqd_gt) firstprivate(xsize,tmp_v,tmpvecs) schedule(static)
+  #endif
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
     auto xi = x.slice(i); // (B,V,3)
@@ -211,13 +211,13 @@ bool Interpolator<T,P>::rip_gamma_mat_complex(
     return false;
   }
   T tmp_m[9], tmp_m2[9];
-  std::vector<T> tmpmats(m_*9u);
+  std::vector<T> tmpmats(m_*9u); // these won't be allocated in the different threads :(
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(tmp_m,tmp_m2,tmpmats) firstprivate(Nmat,xsize) schedule(static)
+#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) firstprivate(Nmat,xsize,tmp_m,tmp_m2,tmpmats) schedule(static)
 #else
-#pragma omp parallel for default(none) shared(b_,m_,x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(tmp_m,tmp_m2,tmpmats) firstprivate(Nmat,xsize) schedule(static)
+#pragma omp parallel for default(none) shared(b_,m_,x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) firstprivate(Nmat,xsize,tmp_m,tmp_m2,tmpmats) schedule(static)
 #endif
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
