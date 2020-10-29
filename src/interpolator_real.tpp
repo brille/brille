@@ -1,6 +1,6 @@
-template<class T, class P> template<class Q>
-bool Interpolator<T,P>::rip_real(
-  data_t<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
+template<class T>
+bool Interpolator<T>::rip_real(
+  data_t<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads
 ) const {
   profile_update("Start Interpolator::rip_real method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
@@ -53,9 +53,9 @@ bool Interpolator<T,P>::rip_real(
   return true;
 }
 
-template<class T, class P> template<class Q>
+template<class T>
 bool
-Interpolator<T,P>::rip_real_vec(data_t<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads) const {
+Interpolator<T>::rip_real_vec(data_t<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads) const {
   profile_update("Start Interpolator::rip_real_vec method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
   if (data_.ndim() != 4) return false;
@@ -89,9 +89,9 @@ Interpolator<T,P>::rip_real_vec(data_t<T,Q>& x, const PointSymmetry& ptsym, cons
   return true;
 }
 
-template<class T, class P> template<class Q>
+template<class T>
 bool
-Interpolator<T,P>::rip_real_mat(data_t<T,Q>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads) const {
+Interpolator<T>::rip_real_mat(data_t<T>& x, const PointSymmetry& ptsym, const std::vector<size_t>& r, const std::vector<size_t>& invR, const int nthreads) const {
   profile_update("Start Interpolator::rip_real_mat method");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );
   if (data_.ndim() != 5u) return false;

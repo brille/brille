@@ -19,20 +19,20 @@
 #ifndef _DUALINTERPOLATOR_H_
 #define _DUALINTERPOLATOR_H_
 
-template<class T, class R, class P, class Q>
+template<class T, class R>
 class DualInterpolator{
 public:
   using ind_t = brille::ind_t;
-  template<class Y, class Z> using data_t = brille::Array<Y,Z>;
+  template<class Y> using data_t = brille::Array<Y>;
   template<class Z> using element_t = std::array<Z,3>;
-  using shape_t = typename data_t<T,P>::shape_t;
+  using shape_t = typename data_t<T>::shape_t;
 private:
-  Interpolator<T,P> values_;
-  Interpolator<R,Q> vectors_;
+  Interpolator<T> values_;
+  Interpolator<R> vectors_;
   PermutationTable permutation_table_;
 public:
   DualInterpolator(): values_(), vectors_(), permutation_table_(0,0) {};
-  DualInterpolator(Interpolator<T,P>& val, Interpolator<R,Q>& vec)
+  DualInterpolator(Interpolator<T>& val, Interpolator<R>& vec)
   : values_(val), vectors_(vec), permutation_table_(0,0)
   {
     if (values_.size() != vectors_.size() || values_.branches() != vectors_.branches())
@@ -52,8 +52,8 @@ public:
     assert(values_.size() == vectors_.size());
     return values_.size();
   }
-  const Interpolator<T,P>& values() const {return this->values_;}
-  const Interpolator<R,Q>& vectors() const {return this->vectors_;}
+  const Interpolator<T>& values() const {return this->values_;}
+  const Interpolator<R>& vectors() const {return this->vectors_;}
   ind_t branches() const {
     assert(values_.branches() == vectors_.branches());
     return values_.branches();
@@ -72,9 +72,8 @@ public:
   //   values_.interpolate_at(permutations, indices, weights, values_out, to, false);
   //   vectors_.interpolate_at(permutations, indices, weights, vectors_out, to, true);
   // }
-  template<class TRef, class RRef>
   void
-  interpolate_at(const std::vector<std::pair<ind_t,double>>& indices_weights, data_t<T,TRef>& values_out, data_t<R,RRef>& vectors_out, const ind_t to) const {
+  interpolate_at(const std::vector<std::pair<ind_t,double>>& indices_weights, data_t<T>& values_out, data_t<R>& vectors_out, const ind_t to) const {
     auto permutations = this->get_permutations(indices_weights);
     values_.interpolate_at(permutations, indices_weights, values_out, to, false);
     vectors_.interpolate_at(permutations, indices_weights, vectors_out, to, true);
@@ -90,15 +89,15 @@ public:
   std::vector<std::vector<typename PermutationTable::ind_t>>
   get_permutations(const std::vector<std::pair<I,double>>&) const;
   //
-//  bool rotate_in_place(data_t<T,brille::ref_ptr_t>& vals, data_t<R,brille::ref_ptr_t>& vecs, const std::vector<std::array<int,9>>& r) const {
+//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r) const {
 //    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
 //  }
-//  bool rotate_in_place(data_t<T,brille::ref_ptr_t>& vals, data_t<R,brille::ref_ptr_t>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
+//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
 //    return values_.rotate_in_place(vals, r, n) && vectors_.rotate_in_place(vecs, r, n);
 //  }
   //
   // Replace the data within this object.
-  void replace_data(Interpolator<T,P>& val, Interpolator<R,Q>& vec){
+  void replace_data(Interpolator<T>& val, Interpolator<R>& vec){
     if (vec.size() != val.size() || vec.branches() != val.branches())
       throw std::runtime_error("The values and vectors must have matching number of points and branches");
     values_ = val;
@@ -137,8 +136,8 @@ public:
   }
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   // This returns a 1-D brille::Array (so it can't be a brille::Array2)
-  template<class Z, template<class,class> class A>
-  brille::Array<double,brille::ref_ptr_t> debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const;
+  template<template<class> class A>
+  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const;
   //
   template<typename I, typename S=typename CostTraits<T>::type, typename=std::enable_if_t<std::is_integral<I>::value> >
   std::vector<S> cost_matrix(const I i0, const I i1) const;
@@ -164,23 +163,20 @@ public:
     return values_.bytes_per_point() + vectors_.bytes_per_point();
   }
 private:
-  template<class Z>
-  bArray<double,brille::ref_ptr_t> debye_waller_sum(const bArray<double,Z>& Qpts, const double t_K) const;
-  template<class Z>
-  bArray<double,brille::ref_ptr_t> debye_waller_sum(const LQVec<double,Z>& Qpts, const double beta) const{ return this->debye_waller_sum(Qpts.get_xyz(), beta); }
+  bArray<double> debye_waller_sum(const bArray<double>& Qpts, const double t_K) const;
+  bArray<double> debye_waller_sum(const LQVec<double>& Qpts, const double beta) const{ return this->debye_waller_sum(Qpts.get_xyz(), beta); }
 };
 
 
-template<class T, class R, class P, class Q>
-template<class Z>
-bArray<double,brille::ref_ptr_t>
-DualInterpolator<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const double t_K) const {
+template<class T, class R>
+bArray<double>
+DualInterpolator<T,R>::debye_waller_sum(const bArray<double>& Qpts, const double t_K) const {
   const double hbar = 6.582119569E-13; // meV⋅s
   const double kB   = 8.617333252E-2; // meV⋅K⁻¹
   size_t nQ = Qpts.size(0);
   element_t<ind_t> vector_elements = vectors_.elements();
   size_t nIons = vector_elements[1] / 3u; // already checked to be correct
-  bArray<double,brille::ref_ptr_t> WdQ(nQ,nIons); // Wᵈ(Q) has nIons entries per Q point
+  bArray<double> WdQ(nQ,nIons); // Wᵈ(Q) has nIons entries per Q point
   double coth_en, Q_dot_e_2;
   size_t vector_nq = vectors_.size();
   ind_t nbr = vectors_.branches();
@@ -189,9 +185,9 @@ DualInterpolator<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const 
   const auto& val{ values_.data()};
   const auto& vec{vectors_.data()};
   // indexing vectors for value and vector Arrays
-  typename DualInterpolator<T,R,P,Q>::shape_t qj{0,0}, qjd{0,0,0};
+  typename DualInterpolator<T,R>::shape_t qj{0,0}, qjd{0,0,0};
   // indexing array for ouput Array2
-  typename bArray<double,brille::ref_ptr_t>::shape_t Qd{{0,0}};
+  typename bArray<double>::shape_t Qd{{0,0}};
   // for each input Q point
   for (size_t Qidx=0; Qidx<nQ; ++Qidx){
     Qd[0] = Qidx;
@@ -222,10 +218,10 @@ DualInterpolator<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const 
   return WdQ;
 }
 
-template<class T, class R, class P, class Q>
-template<class Z, template<class,class> class A>
-brille::Array<double,brille::ref_ptr_t>
-DualInterpolator<T,R,P,Q>::debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const {
+template<class T, class R>
+template<template<class> class A>
+brille::Array<double>
+DualInterpolator<T,R>::debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const {
   element_t<ind_t> vector_elements = vectors_.elements();
   size_t nIons = vector_elements[1] / 3u;
   if (0 == nIons || vector_elements[1] != nIons*3u)
@@ -234,7 +230,7 @@ DualInterpolator<T,R,P,Q>::debye_waller(const A<double,Z>& Qpts, const std::vect
     throw std::runtime_error("Debye-Waller factor requires an equal number of ions and masses.");
   auto WdQ = this->debye_waller_sum(Qpts, t_K); // {nQ, nAtoms}
   brille::shape_t fshape{Qpts.size(0)}; // (nQ,)
-  brille::Array<double,brille::ref_ptr_t> factor(fshape); // we don't want an Array2 here!
+  brille::Array<double> factor(fshape); // we don't want an Array2 here!
   double d_sum;
   for (size_t Qidx=0; Qidx<Qpts.size(0); ++Qidx){
     d_sum = double(0);
@@ -272,15 +268,15 @@ DualInterpolator<T,R,P,Q>::debye_waller(const A<double,Z>& Qpts, const std::vect
 //   // and return it
 //   return perm;
 // }
-template<class T, class R, class P, class Q> template<typename I, typename>
+template<class T, class R> template<typename I, typename>
 std::vector<typename PermutationTable::ind_t>
-DualInterpolator<T,R,P,Q>::get_permutation(const I i, const I j) const {
+DualInterpolator<T,R>::get_permutation(const I i, const I j) const {
   return permutation_table_.safe_get(i, j);
 }
 
-template<class T, class R, class P, class Q> template<typename I, typename>
+template<class T, class R> template<typename I, typename>
 std::vector<std::vector<typename PermutationTable::ind_t>>
-DualInterpolator<T,R,P,Q>::get_permutations(const std::vector<I>& indices) const {
+DualInterpolator<T,R>::get_permutations(const std::vector<I>& indices) const {
   std::vector<std::vector<PermutationTable::ind_t>> perms;
   // find the minimum index so that permutation(pvt,idx) is always ordered
   I pvt{indices[0]};
@@ -288,9 +284,9 @@ DualInterpolator<T,R,P,Q>::get_permutations(const std::vector<I>& indices) const
   for (const I idx: indices) perms.push_back(this->get_permutation(pvt, idx));
   return perms;
 }
-template<class T, class R, class P, class Q> template<typename I, typename>
+template<class T, class R> template<typename I, typename>
 std::vector<std::vector<typename PermutationTable::ind_t>>
-DualInterpolator<T,R,P,Q>::get_permutations(const std::vector<std::pair<I,double>>& iw) const {
+DualInterpolator<T,R>::get_permutations(const std::vector<std::pair<I,double>>& iw) const {
   std::vector<std::vector<typename PermutationTable::ind_t>> perms;
   I pvt{iw[0].first};
   //for (const auto piw: iw) if (piw.first < pvt) pvt = piw.first;
@@ -298,9 +294,9 @@ DualInterpolator<T,R,P,Q>::get_permutations(const std::vector<std::pair<I,double
   return perms;
 }
 
-template<class T, class R, class P, class Q> template<typename I, typename S, typename>
+template<class T, class R> template<typename I, typename S, typename>
 std::vector<S>
-DualInterpolator<T,R,P,Q>::cost_matrix(const I i0, const I i1) const {
+DualInterpolator<T,R>::cost_matrix(const I i0, const I i1) const {
   ind_t Nbr{this->branches()};
   std::vector<S> cost(Nbr*Nbr, S(0));
   if (i0==i1){
@@ -312,9 +308,9 @@ DualInterpolator<T,R,P,Q>::cost_matrix(const I i0, const I i1) const {
   return cost;
 }
 
-template<class T, class R, class P, class Q>
+template<class T, class R>
 void
-DualInterpolator<T,R,P,Q>::sort(void){
+DualInterpolator<T,R>::sort(void){
   std::set<size_t> keys = permutation_table_.keys();
   // find the keys corresponding to one triangular part of the matrix (i<j)
   std::vector<std::array<size_t,2>> tri_ij;
@@ -336,9 +332,9 @@ DualInterpolator<T,R,P,Q>::sort(void){
   debug_update("Done");
 }
 
-template<class T, class R, class P, class Q> template<typename I, typename>
+template<class T, class R> template<typename I, typename>
 bool
-DualInterpolator<T,R,P,Q>::determine_permutation_ij(const I i, const I j, std::mutex& map_mutex){
+DualInterpolator<T,R>::determine_permutation_ij(const I i, const I j, std::mutex& map_mutex){
   // if (!permutation_table_.value_needed(i,j)) return false;
   std::vector<int> row, col; // jv_permutation has difficulty with unsigned integers
   jv_permutation_fill(this->cost_matrix(i,j), row, col);

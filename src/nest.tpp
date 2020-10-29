@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-template<class T, class S, class U, class V>
-void Nest<T,S,U,V>::construct(const Polyhedron& poly, const size_t max_branchings, const double max_volume){
+template<class T, class S>
+void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, const double max_volume){
   SimpleTet root_tet(poly);
   double exponent;
   exponent = std::log(root_tet.maximum_volume()/max_volume)/std::log(static_cast<double>(max_branchings));
@@ -51,8 +51,8 @@ void Nest<T,S,U,V>::construct(const Polyhedron& poly, const size_t max_branching
   if (vertices_.size(0) > nVerts) vertices_.resize(nVerts);
 }
 
-template<class T,class S, class U, class V>
-void Nest<T,S,U,V>::subdivide(
+template<class T,class S>
+void Nest<T,S>::subdivide(
   NestNode& node, const size_t nBr, const size_t maxBr,
   const double max_volume, const double exp, size_t& nVerts
 ){

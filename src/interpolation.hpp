@@ -55,8 +55,8 @@ and determines the appropriate normalized weights for each of the 2ᴰ points.
       extending it to higher-dimensional interpolation should be possible
       if ever desired.
 */
-template <class R,class S, template<class,class> class T>
-int corners_and_weights(const T<R,S>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
+template <class R, template<class> class T>
+int corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
     std::vector<int> d(ndims);
@@ -153,8 +153,8 @@ and determines the appropriate normalized weights for each of the 2ᴰ points.
         zero + ijk*step <= x < zero+(ijk+1)*step
       for all indices in dirs.
 */
-template <class R, class S, template<class,class> class T>
-int floor_corners_and_weights(const T<R,S>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
+template <class R, template<class> class T>
+int floor_corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
     size_t ndims = dirs.size();
     std::vector<double> p(ndims), m(ndims);
     for (size_t i=0; i<ndims; ++i){
@@ -211,9 +211,9 @@ int floor_corners_and_weights(const T<R,S>* that, const double* zero, const doub
     return oob;
 }
 
-template<class T, class Pa, class Pb, class Pc, template<class,class> class A>
+template<class T, template<class> class A>
 T
-triangle_area(const A<T,Pa>& a, const A<T,Pb>& b, const A<T,Pc>& c){
+triangle_area(const A<T>& a, const A<T>& b, const A<T>& c){
   T ab, bc, ac, s;
   ab = (a-b).norm(0);
   bc = (b-c).norm(0);
@@ -221,10 +221,10 @@ triangle_area(const A<T,Pa>& a, const A<T,Pb>& b, const A<T,Pc>& c){
   s = (ab+bc+ac)/2.0;
   return std::sqrt(s*(s-ab)*(s-bc)*(s-ac)); // Heron's formula
 }
-template<class T, class Pa, class Pb, class Pc, class Pd, template<class,class> class A>
+template<class T, template<class> class A>
 T
-tetrahedron_volume(const A<T,Pa>& a, const A<T,Pb>& b, const A<T,Pc>& c, const A<T,Pd>& d){
-  A<T,brille::ref_ptr_t> dumb({4,3});
+tetrahedron_volume(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+  A<T> dumb({4,3});
   dumb.set(0, b-a);
   dumb.set(1, c-a);
   dumb.set(2, d-a);
@@ -243,9 +243,9 @@ tetrahedron_volume(const A<T,Pa>& a, const A<T,Pb>& b, const A<T,Pc>& c, const A
        3        p must lie within the triangle formed by v[0], v[1], and v[2]
        4        p must lie within the volume of the tetrahedron
 */
-template<class T, class Pp, class Pv, template<class,class> class A>
+template<class T, template<class> class A>
 std::vector<double>
-tetrahedron_weights(const A<T,Pp>& p, const A<T,Pv>& v){
+tetrahedron_weights(const A<T>& p, const A<T>& v){
   std::vector<double> weights(v.size(0));
   switch (v.size(0)){
     case 1:{

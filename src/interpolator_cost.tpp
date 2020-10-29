@@ -1,7 +1,7 @@
-template<class T, class P>
+template<class T>
 template<typename S>
 void
-Interpolator<T,P>::add_cost_mix(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
+Interpolator<T>::add_cost_mix(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
   auto x0 = data_.slice(i0); // → (1,), (B,), (Y,), or (B,Y)
   auto x1 = data_.slice(i1);
   // can this be extended to account for the arbitrary phase too?
@@ -49,10 +49,10 @@ Interpolator<T,P>::add_cost_mix(const ind_t i0, const ind_t i1, std::vector<S>& 
   }
 }
 
-template<class T, class P>
+template<class T>
 template<typename S>
 void
-Interpolator<T,P>::add_cost_vec(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
+Interpolator<T>::add_cost_vec(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
   auto x0 = data_.slice(i0); // → (B, V, 3) Array
   auto x1 = data_.slice(i1); // → (B, V, 3) Array
   ind_t b_ = x0.size(1);
@@ -78,10 +78,10 @@ Interpolator<T,P>::add_cost_vec(const ind_t i0, const ind_t i1, std::vector<S>& 
   }
 }
 
-template<class T, class P>
+template<class T>
 template<typename S>
 void
-Interpolator<T,P>::add_cost_mat(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
+Interpolator<T>::add_cost_mat(const ind_t i0, const ind_t i1, std::vector<S>& cost, const bool arbitrary_phase_allowed) const {
   auto x0 = data_.slice(i0); // → (B, M, 3, 3) Array
   auto x1 = data_.slice(i1); // → (B, M, 3, 3) Array
   ind_t b_ = x0.size(1);
@@ -96,7 +96,7 @@ Interpolator<T,P>::add_cost_mat(const ind_t i0, const ind_t i1, std::vector<S>& 
         brille::utils::inplace_antiphase(allm, b0i.ptr(), b1j.ptr(), phased);
         // the Frobenius distance for a N by M matrix is the same as the vector distance
         // of the N*M array treated as a single vector.
-        // This means we can skip-over 
+        // This means we can skip-over
         S fd{0};
         for (ind_t m = 0; m < m_; ++m)
           fd += brille::utils::frobenius_distance(3u, b0i.ptr()+9u*m, phased+9u*m);

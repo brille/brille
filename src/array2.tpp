@@ -1,87 +1,87 @@
-template<class T, class P>
-Array2<T,P> Array2<T,P>::view() const{
-  return Array2<T,P>(_data,_num,_own,_ref,_offset,_shape,_stride,false);
+template<class T>
+Array2<T> Array2<T>::view() const{
+  return Array2<T>(_data,_num,_own,_ref,_offset,_shape,_stride,false);
 }
-template<class T, class P>
-Array2<T,P> Array2<T,P>::view(const ind_t i) const {
+template<class T>
+Array2<T> Array2<T>::view(const ind_t i) const {
   if (i<_shape[0]){
     shape_t osize{_shape};
     shape_t oofst{_offset};
     oofst[0] += i;
     osize[0] = 1;
-    return Array2<T,P>(_data, _num, _own, _ref, oofst, osize, _stride, false);
+    return Array2<T>(_data, _num, _own, _ref, oofst, osize, _stride, false);
   }
   throw std::runtime_error("Array2 index too large");
 }
 
-template<class T, class P>
-Array2<T,P> Array2<T,P>::view(const ind_t i, const ind_t j) const {
+template<class T>
+Array2<T> Array2<T>::view(const ind_t i, const ind_t j) const {
   if (i<j && i<_shape[0] && j<=_shape[0]){
     shape_t osize{_shape};
     shape_t oofst{_offset};
     oofst[0] += i;
     osize[0] = j-i;
-    return Array2<T,P>(_data, _num, _own, _ref, oofst, osize, _stride, false);
+    return Array2<T>(_data, _num, _own, _ref, oofst, osize, _stride, false);
   }
   throw std::runtime_error("Array2 view indexing error");
 }
 
-template<class T, class P>
-Array2<T,P> Array2<T,P>::view(const shape_t& v) const {
+template<class T>
+Array2<T> Array2<T>::view(const shape_t& v) const {
   shape_t osize{_shape};
   shape_t oofst{_offset};
   for (size_t i=0; i<_shape.size(); ++i) if (v[i] < _shape[i]) {
     oofst[i] += v[i];
     osize[i] -= v[i];
   }
-  return Array2<T,P>(_data, _num, _own, _ref,oofst, osize, _stride, false);
+  return Array2<T>(_data, _num, _own, _ref,oofst, osize, _stride, false);
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::extract(const ind_t i) const{
+template<class T>
+Array2<T>
+Array2<T>::extract(const ind_t i) const{
   return this->view(i).decouple();
 }
 
-template<class T, class P>
-template<class I, class IP>
-std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-Array2<T,P>::extract(const Array2<I,IP>& i) const {
+template<class T>
+template<class I>
+std::enable_if_t<std::is_integral_v<I>, Array2<T>>
+Array2<T>::extract(const Array2<I>& i) const {
   if (i.numel() != i.size(0))
     throw std::runtime_error("Array2 extraction requires (N,{1,...,1}) shape");
   for (auto x: i.valItr()) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
     throw std::runtime_error("Array2 extract index must be in range");
   shape_t osize{_shape};
   osize[0] = i.size(0);
-  Array2<T,P> out(osize);
+  Array2<T> out(osize);
   ind_t j{0};
   for (auto v: i.valItr()) out.set(j++, this->view(static_cast<ind_t>(v)));
   return out;
 }
 
-template<class T, class P>
+template<class T>
 template<class I>
-std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-Array2<T,P>::extract(const std::vector<I>& i) const {
+std::enable_if_t<std::is_integral_v<I>, Array2<T>>
+Array2<T>::extract(const std::vector<I>& i) const {
   for (auto x: i) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
     throw std::runtime_error("Array2 extract index must be in range");
   shape_t osize{_shape};
   osize[0] = static_cast<ind_t>(i.size());
-  Array2<T,P> out(osize);
+  Array2<T> out(osize);
   for (ind_t j=0; j<osize[0]; ++j) out.set(j, this->view(static_cast<ind_t>(i[j])));
   return out;
 }
 
-template<class T, class P>
-template<typename I, size_t Nel>
-std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-Array2<T,P>::extract(const std::array<I,Nel>& i) const
+template<class T>
+template<class I, size_t Nel>
+std::enable_if_t<std::is_integral_v<I>, Array2<T>>
+Array2<T>::extract(const std::array<I,Nel>& i) const
 {
   for (auto x: i) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
     throw std::runtime_error("Array2 extract index must be in range");
   shape_t osize{_shape};
   osize[0] = static_cast<ind_t>(Nel);
-  Array2<T,P> out(osize);
+  Array2<T> out(osize);
   for (ind_t j=0; j<osize[0]; ++j)
   {
     out.set(j, this->view(static_cast<ind_t>(i[j])));
@@ -89,17 +89,17 @@ Array2<T,P>::extract(const std::array<I,Nel>& i) const
   return out;
 }
 
-// template<class T, class P>
-// template<typename I, size_t Nel>
-// std::enable_if_t<std::is_integral_v<I>, Array<T,ref_ptr_t>>
-// Array2<T,P>::extract(const std::vector<std::array<I,Nel>>& i) const
+// template<class T>
+// template<class I, size_t Nel>
+// std::enable_if_t<std::is_integral_v<I>, Array<T>>
+// Array2<T>::extract(const std::vector<std::array<I,Nel>>& i) const
 // {
 //   for (auto a: i) for (auto x: a) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
 //     throw std::runtime_error("Array2 extract index must be in range");
 //   brille::shape_t osh{static_cast<ind_t>(i.size()), static_cast<ind_t>(Nel)};
 //   for (ind_t i=1; i<this->ndim(); ++i)
 //     osh.push_back(_shape[i]);
-//   Array<T,P> out(osh);
+//   Array<T> out(osh);
 //   shape_t xi{_shape};
 //   for (ind_t a=0; a<i.size(); ++a)
 //   {
@@ -118,40 +118,38 @@ Array2<T,P>::extract(const std::array<I,Nel>& i) const
 //   return out;
 // }
 
-template<class T, class P>
-template<class RP>
-Array2<T,ref_ptr_t>
-Array2<T,P>::extract(const Array2<bool,RP>& i) const {
+template<class T>
+Array2<T>
+Array2<T>::extract(const Array2<bool>& i) const {
   shape_t isize = i.shape();
   if (isize[0] > _shape[0])
     throw std::runtime_error("Boolean Array2 extraction requires no more bools than the first Array2 dimension");
   shape_t osize{_shape};
   osize[0] = i.count();
-  Array2<T,P> out(osize);
+  Array2<T> out(osize);
   ind_t n = isize[0] < _shape[0] ? isize[0] : _shape[0];
   ind_t idx{0};
   for (ind_t j=0; j<n; ++j) if (i[j]) out.set(idx++, this->view(j));
   return out;
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::extract(const std::vector<bool>& i) const {
+template<class T>
+Array2<T>
+Array2<T>::extract(const std::vector<bool>& i) const {
   if (i.size() > _shape[0])
     throw std::runtime_error("Boolean Array2 extraction requires no more bools than the first Array2 dimension");
   shape_t osize{_shape};
   auto count = std::count(i.begin(), i.end(), true);
   osize[0] = static_cast<ind_t>(count);
-  Array2<T,P> out(osize);
+  Array2<T> out(osize);
   ind_t n = i.size() < _shape[0] ? i.size() : _shape[0];
   ind_t idx{0};
   for (ind_t j=0; j<n; ++j) if (i[j]) out.set(idx++, this->view(j));
   return out;
 }
 
-template<class T, class P>
-template<class RP>
-bool Array2<T,P>::set(const ind_t i, const Array2<T,RP>& in){
+template<class T>
+bool Array2<T>::set(const ind_t i, const Array2<T>& in){
   // we might be able to do this better/faster if we both *this and in
   // have the same strides_ and we account for any offset. For now calculate
   // the 'hard' way no matter what:
@@ -167,9 +165,9 @@ bool Array2<T,P>::set(const ind_t i, const Array2<T,RP>& in){
   return true;
 }
 
-template<class T, class P>
-template<class R, class RP>
-bool Array2<T,P>::set(const ind_t i, const Array2<R,RP>& in){
+template<class T>
+template<class R>
+bool Array2<T>::set(const ind_t i, const Array2<R>& in){
   // we might be able to do this better/faster if we both *this and in
   // have the same strides_ and we account for any offset. For now calculate
   // the 'hard' way no matter what:
@@ -185,8 +183,8 @@ bool Array2<T,P>::set(const ind_t i, const Array2<R,RP>& in){
   return true;
 }
 
-template<class T, class P>
-bool Array2<T,P>::set(const ind_t i, const std::vector<T>& in){
+template<class T>
+bool Array2<T>::set(const ind_t i, const std::vector<T>& in){
   if (this->numel() != _shape[0]*in.size())
     throw std::runtime_error("Set requires the correct number of elements");
   shape_t tsize = this->shape();
@@ -200,9 +198,9 @@ bool Array2<T,P>::set(const ind_t i, const std::vector<T>& in){
   return true;
 }
 
-template<class T, class P>
+template<class T>
 template<size_t Nel>
-bool Array2<T,P>::set(const ind_t i, const std::array<T, Nel>& in){
+bool Array2<T>::set(const ind_t i, const std::array<T, Nel>& in){
   if (this->numel() != _shape[0]*Nel)
     throw std::runtime_error("Set requires the correct number of elements");
   shape_t tsize = this->shape();
@@ -216,15 +214,15 @@ bool Array2<T,P>::set(const ind_t i, const std::array<T, Nel>& in){
   return true;
 }
 
-template<class T, class P>
-T Array2<T,P>::set(const shape_t& sub, const T in){
+template<class T>
+T Array2<T>::set(const shape_t& sub, const T in){
   auto ind = this->s2l_d(sub);
   _data[ind] = in;
   return _data[ind];
 }
 
-template<class T, class P>
-std::string Array2<T,P>::to_string() const{
+template<class T>
+std::string Array2<T>::to_string() const{
   if (this->_num == 0) return std::string("Unallocated Array2");
   size_t width{0};
   for (ind_t i=0; i<_num; ++i){
@@ -273,16 +271,16 @@ std::string Array2<T,P>::to_string() const{
   return out;
 }
 
-template<class T, class P>
-std::string Array2<T,P>::to_string(const ind_t i) const {
+template<class T>
+std::string Array2<T>::to_string(const ind_t i) const {
   auto out = this->view(i).to_string();
   out.pop_back(); // remove the trailing \n
   return out;
 }
 
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::reshape(const shape_t& ns){
+template<class T>
+Array2<T>&
+Array2<T>::reshape(const shape_t& ns){
   ind_t num = this->size_from_shape(ns);
   info_update_if(num > _num, "Array2::reshape only intended for equal-element number changes.");
   // assert( num <= _num );
@@ -306,9 +304,9 @@ underlying data. Such an operation should not be taken lightly.
 @param ns the new shape
 @param init an optional initialization value for any non-overlapping region
 */
-template<class T, class P>
-Array2<T,P>&
-Array2<T,P>::resize(const shape_t& ns, const T init) {
+template<class T>
+Array2<T>&
+Array2<T>::resize(const shape_t& ns, const T init) {
   ind_t nnum = this->size_from_shape(ns);
   // determine which axes are changing and how
   std::vector<bool> shrinking, growing;
@@ -347,7 +345,7 @@ Array2<T,P>::resize(const shape_t& ns, const T init) {
   _data = nd;
   _num = nnum;
   _own = true;
-  _ref = std::make_shared<P>(); // resizing in place can not change the template parameter
+  _ref = std::make_shared<char>(); // resizing in place can not change the template parameter
   _offset = shape_t({0,0});
   _shape = ns;
   _stride = nt;
@@ -355,9 +353,9 @@ Array2<T,P>::resize(const shape_t& ns, const T init) {
   // pass back a reference to this object
   return *this;
 }
-template<class T, class P> template<class I>
-Array2<T,P>&
-Array2<T,P>::resize(const I ns, const T init) {
+template<class T> template<class I>
+Array2<T>&
+Array2<T>::resize(const I ns, const T init) {
   shape_t nshape{_shape};
   if (nshape.size()>0)
     nshape[0] = static_cast<ind_t>(ns);
@@ -368,10 +366,9 @@ Array2<T,P>::resize(const I ns, const T init) {
   return this->resize(nshape, init);
 }
 
-template<class T, class P>
-template<class RP>
-Array2<T,P>&
-Array2<T,P>::append(const ind_t dim, const Array2<T,RP>& extra) {
+template<class T>
+Array2<T>&
+Array2<T>::append(const ind_t dim, const Array2<T>& extra) {
   assert(this != &extra);
   ind_t ndim = this->ndim();
   assert(dim<ndim);
@@ -395,47 +392,47 @@ Array2<T,P>::append(const ind_t dim, const Array2<T,RP>& extra) {
   return *this;
 }
 
-template<class T, class P>
-bool Array2<T,P>::all(const ind_t n) const{
+template<class T>
+bool Array2<T>::all(const ind_t n) const{
   ind_t nml = this->numel();
   ind_t count = (n > 0 && n < nml) ? n : nml;
   for (ind_t i=0; i<count; ++i) if (!_data[this->l2l_d(i)]) return false;
   return true;
 }
-template<class T, class P>
-bool Array2<T,P>::any(const ind_t n) const{
+template<class T>
+bool Array2<T>::any(const ind_t n) const{
   ind_t nml = this->numel();
   ind_t count = (n > 0 && n < nml) ? n : nml;
   for (ind_t i=0; i<count; ++i) if (_data[this->l2l_d(i)]) return true;
   return false;
 }
-template<class T, class P>
-bool Array2<T,P>::all(const T val, const ind_t n) const{
+template<class T>
+bool Array2<T>::all(const T val, const ind_t n) const{
   ind_t nml = this->numel();
   ind_t count = (n > 0 && n < nml) ? n : nml;
   for (ind_t i=0; i<count; ++i) if (val != _data[this->l2l_d(i)]) return false;
   return true;
 }
-template<class T, class P>
-bool Array2<T,P>::any(const T val, const ind_t n) const{
+template<class T>
+bool Array2<T>::any(const T val, const ind_t n) const{
   ind_t nml = this->numel();
   ind_t count = (n > 0 && n < nml) ? n : nml;
   for (ind_t i=0; i<count; ++i) if (val == _data[this->l2l_d(i)]) return true;
   return false;
 }
 
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::count(const ind_t n) const{
+Array2<T>::count(const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   ind_t count{0};
   for (ind_t i=0; i<no; ++i) if (_data[this->l2l_d(i)]) ++count;
   return count;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::count(const T val, const ind_t n) const{
+Array2<T>::count(const T val, const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   ind_t count{0};
@@ -443,43 +440,43 @@ Array2<T,P>::count(const T val, const ind_t n) const{
   return count;
 }
 
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::first(const ind_t n) const{
+Array2<T>::first(const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   for (ind_t i=0; i<no; ++i) if (_data[this->l2l_d(i)]) return i;
   return no;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::first(const T val, const ind_t n) const{
+Array2<T>::first(const T val, const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   for (ind_t i=0; i<no; ++i) if (val == _data[this->l2l_d(i)]) return i;
   return no;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::last(const ind_t n) const{
+Array2<T>::last(const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   for (ind_t i=no; i--;) if (_data[this->l2l_d(i)]) return i;
   return no;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::last(const T val, const ind_t n) const{
+Array2<T>::last(const T val, const ind_t n) const{
   ind_t el = this->numel();
   ind_t no = (n > 0 && n < el) ? n : el;
   for (ind_t i=no; i--;) if (val == _data[this->l2l_d(i)]) return i;
   return no;
 }
 
-#define ARRAY_ELEMENTWISE_INT_TRANSFORM(X) template<class T, class P>\
-Array2<int,ref_ptr_t>\
-Array2<T,P>:: X () const {\
-  Array2<int,ref_ptr_t> out(_shape, _stride);\
+#define ARRAY_ELEMENTWISE_INT_TRANSFORM(X) template<class T>\
+Array2<int>\
+Array2<T>:: X () const {\
+  Array2<int> out(_shape, _stride);\
   for (auto x: out.subItr())\
     out[x] = static_cast<int>(std:: X (_data[this->s2l_d(x)]));\
   return out;\
@@ -489,15 +486,15 @@ ARRAY_ELEMENTWISE_INT_TRANSFORM(floor)
 ARRAY_ELEMENTWISE_INT_TRANSFORM(ceil)
 #undef ARRAY_ELEMENTWISE_INT_TRANSFORM
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::sum(const ind_t dim) const{
+template<class T>
+Array2<T>
+Array2<T>::sum(const ind_t dim) const{
   size_t ndim = _shape.size();
   assert(dim < ndim);
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
-  Array2<T,ref_ptr_t> out(osize, ostride);
+  Array2<T> out(osize, ostride);
   for (auto oidx: out.subItr()) {
     T tmp{0};
     auto idx = oidx;
@@ -510,15 +507,15 @@ Array2<T,P>::sum(const ind_t dim) const{
   return out;
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::prod(const ind_t dim) const{
+template<class T>
+Array2<T>
+Array2<T>::prod(const ind_t dim) const{
   size_t ndim = _shape.size();
   assert(dim < ndim);
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
-  Array2<T,ref_ptr_t> out(osize, ostride);
+  Array2<T> out(osize, ostride);
   for (auto oidx: out.subItr()) {
     T tmp{1};
     auto idx = oidx;
@@ -531,15 +528,15 @@ Array2<T,P>::prod(const ind_t dim) const{
   return out;
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::min(const ind_t dim) const{
+template<class T>
+Array2<T>
+Array2<T>::min(const ind_t dim) const{
   size_t ndim = _shape.size();
   assert(dim < ndim);
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
-  Array2<T,ref_ptr_t> out(osize, ostride);
+  Array2<T> out(osize, ostride);
   for (auto oidx: out.subItr()) {
     T tmp{(std::numeric_limits<T>::max)()};
     auto idx = oidx;
@@ -553,9 +550,9 @@ Array2<T,P>::min(const ind_t dim) const{
   return out;
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::max(const ind_t dim) const{
+template<class T>
+Array2<T>
+Array2<T>::max(const ind_t dim) const{
   size_t ndim = _shape.size();
   assert(dim < ndim);
   shape_t osize = this->shape();
@@ -564,7 +561,7 @@ Array2<T,P>::max(const ind_t dim) const{
   // the stride along any dimension can not be zero. protect against it:
   for (ind_t i=0; i<ndim; ++i) if (ostride[i] < 1u) ostride[i] = 1u;
 
-  Array2<T,ref_ptr_t> out(osize, ostride);
+  Array2<T> out(osize, ostride);
   for (auto oidx: out.subItr()) {
     T tmp{std::numeric_limits<T>::lowest()};
     auto idx = oidx;
@@ -578,23 +575,23 @@ Array2<T,P>::max(const ind_t dim) const{
   return out;
 }
 
-template<class T, class P>
-T Array2<T,P>::sum() const{
+template<class T>
+T Array2<T>::sum() const{
   T out{0};
   for (auto x : this->subItr()) out += _data[this->s2l_d(x)];
   return out;
 }
 
-template<class T, class P>
-T Array2<T,P>::prod() const{
+template<class T>
+T Array2<T>::prod() const{
   T out{1};
   for (auto x : this->subItr()) out *= _data[this->s2l_d(x)];
   return out;
 }
 
-template<class T, class P>
+template<class T>
 template<class R, size_t Nel>
-bool Array2<T,P>::match(const ind_t i, const ind_t j, const std::array<R,Nel>& rot, const int order) const {
+bool Array2<T>::match(const ind_t i, const ind_t j, const std::array<R,Nel>& rot, const int order) const {
   assert(this->ndim() == 2u); // only defined for 2-D Array2s
   assert(Nel == _shape[1]*_shape[1]);
   ind_t n = _shape[1];
@@ -618,8 +615,8 @@ bool Array2<T,P>::match(const ind_t i, const ind_t j, const std::array<R,Nel>& r
   }
 }
 
-template<class T, class P>
-bool Array2<T,P>::match(const ind_t i, const ind_t j, brille::ops op, T val) const {
+template<class T>
+bool Array2<T>::match(const ind_t i, const ind_t j, brille::ops op, T val) const {
   auto ai= this->view(i);
   auto aj= this->view(j);
   brille::Comparer<T,T> neq(brille::cmp::neq);
@@ -646,8 +643,8 @@ bool Array2<T,P>::match(const ind_t i, const ind_t j, brille::ops op, T val) con
   return true;
 }
 
-template<class T, class P>
-bool Array2<T,P>::all(const brille::cmp expr, const T val) const {
+template<class T>
+bool Array2<T>::all(const brille::cmp expr, const T val) const {
   if (brille::cmp::le_ge == expr)
     return this->all(brille::cmp::le, val) || this->all(brille::cmp::ge, val);
   ind_t no = this->numel();
@@ -655,29 +652,29 @@ bool Array2<T,P>::all(const brille::cmp expr, const T val) const {
   for (ind_t k=0; k<no; ++k) if(!op(_data[this->l2l_d(k)], val)) return false;
   return true;
 }
-template<class T, class P>
-bool Array2<T,P>::any(const brille::cmp expr, const T val) const {
+template<class T>
+bool Array2<T>::any(const brille::cmp expr, const T val) const {
   return this->first(expr, val) < this->numel();
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::first(const brille::cmp expr, const T val) const {
+Array2<T>::first(const brille::cmp expr, const T val) const {
   ind_t no = this->numel();
   brille::Comparer<T,T> op(expr);
   for (ind_t k=0; k<no; ++k) if(op(_data[this->l2l_d(k)], val)) return k;
   return no;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::last(const brille::cmp expr, const T val) const {
+Array2<T>::last(const brille::cmp expr, const T val) const {
   ind_t no = this->numel();
   brille::Comparer<T,T> op(expr);
   for (ind_t k=no; k--;) if(op(_data[this->l2l_d(k)], val)) return k;
   return no;
 }
-template<class T, class P>
+template<class T>
 ind_t
-Array2<T,P>::count(const brille::cmp expr, const T val) const {
+Array2<T>::count(const brille::cmp expr, const T val) const {
   ind_t no = this->numel();
   brille::Comparer<T,T> op(expr);
   ind_t cnt{0};
@@ -685,29 +682,30 @@ Array2<T,P>::count(const brille::cmp expr, const T val) const {
   return cnt;
 }
 
-template<class T, class P>
-Array2<bool,ref_ptr_t>
-Array2<T,P>::is(const brille::cmp expr, const T val) const {
-  Array2<bool,ref_ptr_t> out(_shape, _stride, true);
+template<class T>
+Array2<bool>
+Array2<T>::is(const brille::cmp expr, const T val) const {
+  Array2<bool> out(_shape, _stride, true);
   ind_t no = this->numel();
   brille::Comparer<T,T> op(expr);
   for (ind_t k=0; k<no; ++k) out[k] = op(_data[this->l2l_d(k)], val);
   return out;
 }
 
-template<class T, class P>
+template<class T>
 std::vector<ind_t>
-Array2<T,P>::find(const brille::cmp expr, const T val) const {
-  Array2<bool,P> this_is = this->is(expr, val);
+Array2<T>::find(const brille::cmp expr, const T val) const {
+  Array2<bool> this_is = this->is(expr, val);
   ind_t no = this->numel();
   std::vector<ind_t> out;
   for (ind_t k=0; k<no; ++k) if (this_is[k]) out.push_back(k);
   return out;
 }
 
-template<class T, class P> template<class R, class RP>
-Array2<bool,ref_ptr_t>
-Array2<T,P>::is(const brille::cmp expr, const Array2<R,RP>& that) const {
+template<class T>
+template<class R>
+Array2<bool>
+Array2<T>::is(const brille::cmp expr, const Array2<R>& that) const {
   // To handle singleton-dimension broadcasting, this function needs to be split
   auto tsize = that.shape();
   if (!std::equal(_shape.begin(), _shape.end(), tsize.begin(),
@@ -719,7 +717,7 @@ Array2<T,P>::is(const brille::cmp expr, const Array2<R,RP>& that) const {
     msg += ").";
     throw std::runtime_error(msg);
   }
-  Array2<bool,ref_ptr_t> out(_shape, _stride, true);
+  Array2<bool> out(_shape, _stride, true);
   if (std::equal(_shape.begin(), _shape.end(), tsize.begin())){
     // No broadcast
     brille::Comparer<T,R> op(expr);
@@ -736,9 +734,10 @@ Array2<T,P>::is(const brille::cmp expr, const Array2<R,RP>& that) const {
   return out;
 }
 
-template<class T, class P> template<class R>
+template<class T>
+template<class R>
 std::vector<bool>
-Array2<T,P>::is(const brille::cmp expr, const std::vector<R>& val) const{
+Array2<T>::is(const brille::cmp expr, const std::vector<R>& val) const{
   assert(val.size() == _shape[1]);
   std::vector<bool> out;
   out.reserve(_shape[0]);
@@ -748,14 +747,15 @@ Array2<T,P>::is(const brille::cmp expr, const std::vector<R>& val) const{
   return out;
 }
 
-template<class T, class P> template<class R, class RP>
-bool Array2<T,P>::is(const Array2<R,RP>& that) const {
+template<class T>
+template<class R>
+bool Array2<T>::is(const Array2<R>& that) const {
   return this->is(brille::cmp::eq, that).all(true);
 }
 
-template<class T, class P>
+template<class T>
 std::vector<bool>
-Array2<T,P>::is_unique() const{
+Array2<T>::is_unique() const{
   if (_shape[0] < 1u) return std::vector<bool>();
   std::vector<bool> out(1u, true);
   out.reserve(_shape[0]);
@@ -771,9 +771,9 @@ Array2<T,P>::is_unique() const{
   }
   return out;
 }
-template<class T, class P>
+template<class T>
 std::vector<ind_t>
-Array2<T,P>::unique_idx() const{
+Array2<T>::unique_idx() const{
   if (_shape[0] < 1u) return std::vector<ind_t>();
   std::vector<ind_t> out(1u, 0u);
   out.reserve(_shape[0]);
@@ -790,19 +790,19 @@ Array2<T,P>::unique_idx() const{
   }
   return out;
 }
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::unique() const {
+template<class T>
+Array2<T>
+Array2<T>::unique() const {
   std::vector<bool> isu = this->is_unique();
   size_t u_count = std::count(isu.begin(), isu.end(), true);
   shape_t osize{_shape};
   osize[0] = static_cast<ind_t>(u_count);
-  Array2<T,ref_ptr_t> out(osize, _stride);
+  Array2<T> out(osize, _stride);
   for (ind_t i=0,u=0; i<_shape[0]; ++i) if (isu[i]) out.set(u++, this->view(i));
   return out;
 }
-template<class T, class P>
-T Array2<T,P>::dot(ind_t i, ind_t j) const {
+template<class T>
+T Array2<T>::dot(ind_t i, ind_t j) const {
   assert(i<_shape[0]);
   assert(j<_shape[0]);
   ind_t sz{_shape[1]}, st{_stride[1]};
@@ -814,23 +814,23 @@ T Array2<T,P>::dot(ind_t i, ind_t j) const {
   // std::reduce can do this in parallel but gcc<v9.3 does not implement all of C++17
   return std::accumulate(prods.begin(), prods.end(), T(0));
 }
-template<class T, class P>
-T Array2<T,P>::norm(ind_t i) const {
+template<class T>
+T Array2<T>::norm(ind_t i) const {
   return std::sqrt(this->dot(i,i));
 }
 
-template<class T, class P>
-Array2<T,ref_ptr_t>
-Array2<T,P>::operator-() const{
-  Array2<T,ref_ptr_t> neg(_shape, _stride);
+template<class T>
+Array2<T>
+Array2<T>::operator-() const{
+  Array2<T> neg(_shape, _stride);
   for (auto s: this->subItr()) neg[s] = -_data[this->s2l_d(s)];
   return neg;
 }
 
 
-template<class T, class P>
-template<typename I, typename>
-void Array2<T,P>::permute(std::vector<I>& p){
+template<class T>
+template<class I, typename>
+void Array2<T>::permute(std::vector<I>& p){
   std::vector<I> s=p, o(_shape[0]);
   std::iota(o.begin(), o.end(), 0u);
   std::sort(s.begin(), s.end());
@@ -849,8 +849,8 @@ void Array2<T,P>::permute(std::vector<I>& p){
   debug_update_if(!std::is_sorted(s.begin(),s.end()), "Undoing the permutation ",p," failed. End result is ",s);
 }
 
-template<class T, class P>
-bool Array2<T,P>::swap(const ind_t a, const ind_t b){
+template<class T>
+bool Array2<T>::swap(const ind_t a, const ind_t b){
   assert(a<_shape[0] && b<_shape[0]);
   shape_t sub{_shape};
   sub[0] = a; // fix the 0th index to 'a' in the iterator
@@ -868,8 +868,8 @@ bool Array2<T,P>::swap(const ind_t a, const ind_t b){
   }
   return true;
 }
-template<class T, class P>
-bool Array2<T,P>::swap(ind_t i, ind_t a, ind_t b){
+template<class T>
+bool Array2<T>::swap(ind_t i, ind_t a, ind_t b){
   assert(i < _shape[0] && a < _shape[1] && b < _shape[1]);
   auto la{this->ij2l_d(i,a)}, lb{this->ij2l_d(i,b)};
   T _store_ = _data[la];
@@ -878,104 +878,106 @@ bool Array2<T,P>::swap(ind_t i, ind_t a, ind_t b){
   return true;
 }
 
-template<class T, class P>
-std::vector<T> Array2<T,P>::to_std() const {
+template<class T>
+std::vector<T> Array2<T>::to_std() const {
   std::vector<T> out;
   for (auto x: this->valItr()) out.push_back(x);
   return out;
 }
 
-template<class T, class P>
-T* Array2<T,P>::ptr(const ind_t i0){
+template<class T>
+T* Array2<T>::ptr(const ind_t i0){
   assert(i0 < _shape[0]);
   return _data + ij2l_d(i0, 0u);
 }
-template<class T, class P>
-T* Array2<T,P>::ptr(const ind_t i0, const ind_t j0){
+template<class T>
+T* Array2<T>::ptr(const ind_t i0, const ind_t j0){
   assert(i0 < _shape[0] && j0 < _shape[1]);
   return _data + ij2l_d(i0, j0);
 }
-template<class T, class P>
-T* Array2<T,P>::ptr(const shape_t& p){
+template<class T>
+T* Array2<T>::ptr(const shape_t& p){
   assert(p[0]<_shape[0] && p[1]<_shape[1]);
   return _data + s2l_d(p);
 }
 
-template<class T, class P>
-const T* Array2<T,P>::ptr(const ind_t i0) const {
+template<class T>
+const T* Array2<T>::ptr(const ind_t i0) const {
   assert(i0 < _shape[0]);
   return _data + ij2l_d(i0, 0u);
 }
-template<class T, class P>
-const T* Array2<T,P>::ptr(const ind_t i0, const ind_t j0) const {
+template<class T>
+const T* Array2<T>::ptr(const ind_t i0, const ind_t j0) const {
   assert(i0 < _shape[0] && j0 < _shape[1]);
   return _data + ij2l_d(i0, j0);
 }
-template<class T, class P>
-const T* Array2<T,P>::ptr(const shape_t& p) const {
+template<class T>
+const T* Array2<T>::ptr(const shape_t& p) const {
   assert(p[0]<_shape[0] && p[1]<_shape[1]);
   return _data + s2l_d(p);
 }
 
 
-template<class T, class P>
-T& Array2<T,P>::val(const ind_t i0){
+template<class T>
+T& Array2<T>::val(const ind_t i0){
   assert(i0 < _shape[0]);
   return _data[ij2l_d(i0, 0u)];
 }
-template<class T, class P>
-T& Array2<T,P>::val(const ind_t i0, const ind_t j0){
+template<class T>
+T& Array2<T>::val(const ind_t i0, const ind_t j0){
   assert(i0 < _shape[0] && j0 < _shape[1]);
   return _data[ij2l_d(i0, j0)];
 }
-template<class T, class P>
-T& Array2<T,P>::val(const shape_t& p){
+template<class T>
+T& Array2<T>::val(const shape_t& p){
   assert(p[0]<_shape[0] && p[1]<_shape[1]);
   return _data[s2l_d(p)];
 }
-template<class T, class P> template<typename I>
-T& Array2<T,P>::val(std::initializer_list<I> l){
+template<class T>
+template<class I>
+T& Array2<T>::val(std::initializer_list<I> l){
   shape_t idx{l};
   return this->val(idx);
 }
 
-template<class T, class P>
-const T& Array2<T,P>::val(const ind_t i0) const {
+template<class T>
+const T& Array2<T>::val(const ind_t i0) const {
   assert(i0 < _shape[0]);
   return _data[ij2l_d(i0, 0u)];
 }
-template<class T, class P>
-const T& Array2<T,P>::val(const ind_t i0, const ind_t j0) const {
+template<class T>
+const T& Array2<T>::val(const ind_t i0, const ind_t j0) const {
   assert(i0 < _shape[0] && j0 < _shape[1]);
   return _data[ij2l_d(i0, j0)];
 }
-template<class T, class P>
-const T& Array2<T,P>::val(const shape_t& p) const {
+template<class T>
+const T& Array2<T>::val(const shape_t& p) const {
   assert(p[0]<_shape[0] && p[1]<_shape[1]);
   return _data[s2l_d(p)];
 }
-template<class T, class P> template<typename I>
-const T& Array2<T,P>::val(std::initializer_list<I> l) const {
+template<class T>
+template<class I>
+const T& Array2<T>::val(std::initializer_list<I> l) const {
   shape_t idx{l};
   return this->val(idx);
 }
 
-template<class T, class P>
-Array2<T,P> Array2<T,P>::contiguous_copy() const {
-  if (this->is_contiguous()) return Array2<T,P>(*this);
-  Array2<T,P> out(_shape, this->calculate_stride(_shape));
+template<class T>
+Array2<T> Array2<T>::contiguous_copy() const {
+  if (this->is_contiguous()) return Array2<T>(*this);
+  Array2<T> out(_shape, this->calculate_stride(_shape));
   for (auto x : this->subItr()) out[x] = (*this)[x];
   return out;
 }
 
-template<class T, class P>
-static void mutable_check(const Array2<T,P>& a){
+template<class T>
+static void mutable_check(const Array2<T>& a){
   if (!a.ismutable())
   throw std::runtime_error("Immutable Array2 objects can not be modified!");
 }
 
-#define SCALAR_INPLACE_OP(X) template<class T, class P>\
-Array2<T,P>& Array2<T,P>::operator X (const T& val){\
+#define SCALAR_INPLACE_OP(X) template<class T>\
+Array2<T>& Array2<T>::operator X (const T& val){\
   mutable_check(*this);\
   for (auto& v: this->valItr()) v X val;\
   return *this;\
@@ -985,23 +987,23 @@ SCALAR_INPLACE_OP(-=)
 SCALAR_INPLACE_OP(*=)
 SCALAR_INPLACE_OP(/=)
 #undef SCALAR_INPLACE_OP
-// template<class T, class P>
-// Array2<T,P>&
-// Array2<T,P>::operator+=(const T& val){
+// template<class T>
+// Array2<T>&
+// Array2<T>::operator+=(const T& val){
 //   mutable_check(*this);
 //   for (auto& v: this->valItr()) v += val;
 //   return *this;
 // }
-// template<class T, class P>
-// Array2<T,P>&
-// Array2<T,P>::operator-=(const T& val){
+// template<class T>
+// Array2<T>&
+// Array2<T>::operator-=(const T& val){
 //   mutable_check(*this);
 //   for (auto& v: this->valItr()) v -= val;
 //   return *this;
 // }
-// template<class T, class P>
-// Array2<T,P>&
-// Array2<T,P>::operator*=(const T& val){
+// template<class T>
+// Array2<T>&
+// Array2<T>::operator*=(const T& val){
 //   mutable_check(*this);
 //   auto itr = this->valItr();
 //   for (auto & v: itr){
@@ -1009,9 +1011,9 @@ SCALAR_INPLACE_OP(/=)
 //   }
 //   return *this;
 // }
-// template<class T, class P>
-// Array2<T,P>&
-// Array2<T,P>::operator/=(const T& val){
+// template<class T>
+// Array2<T>&
+// Array2<T>::operator/=(const T& val){
 //   mutable_check(*this);
 //   for (auto& v: this->valItr()) v /= val;
 //   return *this;
@@ -1031,8 +1033,8 @@ bool broadcast_shape_check(const std::array<T,2>& a, const std::array<T,2>&b){
   return ok;
 }
 
-#define ARRAY_INPLACE_OP(X) template<class T, class P> template<class R, class RP>\
-Array2<T,P>& Array2<T,P>::operator X (const Array2<R,RP>& val){\
+#define ARRAY_INPLACE_OP(X) template<class T> template<class R>\
+Array2<T>& Array2<T>::operator X (const Array2<R>& val){\
   mutable_check(*this);\
   auto itr = this->broadcastItr(val);\
   broadcast_shape_check(_shape, itr.shape());\

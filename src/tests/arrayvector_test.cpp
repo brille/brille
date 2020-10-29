@@ -3,7 +3,7 @@
 
 #include <catch2/catch.hpp>
 // for now we want to be able to switch between Array and Array2
-// array_latvec.hpp defines a bArray<T,P> as one or the other:
+// array_latvec.hpp defines a bArray<T> as one or the other:
 #include "array_latvec.hpp"
 
 

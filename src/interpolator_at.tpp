@@ -1,9 +1,9 @@
-// template<class T, class P> template<class Q>
-// void Interpolator<T,P>::interpolate_at_mix(
+// template<class T>
+// void Interpolator<T>::interpolate_at_mix(
 //   const std::vector<std::vector<ind_t>>& permutations,
 //   const std::vector<ind_t>& indices,
 //   const std::vector<double>& weights,
-//   data_t<T,Q>& out,
+//   data_t<T>& out,
 //   const ind_t to,
 //   const bool arbitrary_phase_allowed
 // ) const {
@@ -42,11 +42,11 @@
 // }
 
 
-template<class T, class P> template<class Q>
-void Interpolator<T,P>::interpolate_at_mix(
+template<class T>
+void Interpolator<T>::interpolate_at_mix(
   const std::vector<std::vector<ind_t>>& permutations,
   const std::vector<std::pair<ind_t,double>>& indices_weights,
-  data_t<T,Q>& out,
+  data_t<T>& out,
   const ind_t to,
   const bool arbitrary_phase_allowed
 ) const {
@@ -89,12 +89,12 @@ void Interpolator<T,P>::interpolate_at_mix(
 }
 
 
-// template<class T, class P> template<class Q>
-// void Interpolator<T,P>::interpolate_at_vec(
+// template<class T>
+// void Interpolator<T>::interpolate_at_vec(
 //   const std::vector<std::vector<ind_t>>& permutations,
 //   const std::vector<ind_t>& indices,
 //   const std::vector<double>& weights,
-//   data_t<T,Q>& out,
+//   data_t<T>& out,
 //   const ind_t to,
 //   const bool arbitrary_phase_allowed
 // ) const {
@@ -134,11 +134,11 @@ void Interpolator<T,P>::interpolate_at_mix(
 // }
 
 
-template<class T, class P> template<class Q>
-void Interpolator<T,P>::interpolate_at_vec(
+template<class T>
+void Interpolator<T>::interpolate_at_vec(
   const std::vector<std::vector<ind_t>>& permutations,
   const std::vector<std::pair<ind_t,double>>& indices_weights,
-  data_t<T,Q>& out,
+  data_t<T>& out,
   const ind_t to,
   const bool arbitrary_phase_allowed
 ) const {
@@ -181,12 +181,12 @@ void Interpolator<T,P>::interpolate_at_vec(
   }
 }
 
-// template<class T, class P> template<class Q>
-// void Interpolator<T,P>::interpolate_at_mat(
+// template<class T>
+// void Interpolator<T>::interpolate_at_mat(
 //   const std::vector<std::vector<ind_t>>& permutations,
 //   const std::vector<ind_t>& indices,
 //   const std::vector<double>& weights,
-//   data_t<T,Q>& out,
+//   data_t<T>& out,
 //   const ind_t to,
 //   const bool arbitrary_phase_allowed
 // ) const {
@@ -226,11 +226,11 @@ void Interpolator<T,P>::interpolate_at_vec(
 // }
 
 
-template<class T, class P> template<class Q>
-void Interpolator<T,P>::interpolate_at_mat(
+template<class T>
+void Interpolator<T>::interpolate_at_mat(
   const std::vector<std::vector<ind_t>>& permutations,
   const std::vector<std::pair<ind_t,double>>& indices_weights,
-  data_t<T,Q>& out,
+  data_t<T>& out,
   const ind_t to,
   const bool arbitrary_phase_allowed
 ) const {

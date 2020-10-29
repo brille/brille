@@ -26,17 +26,17 @@ static std::vector<int> all_from_extent(const int extent){
   return vec;
 }
 
-bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices(const int extent){
+bArray<int> make_relative_neighbour_indices(const int extent){
   auto vec = all_from_extent(extent);
   size_t num = vec.size();
   size_t n{0};
   std::vector<std::array<int,3>> o(num*num*num-1);  //-1 because we're skipping the origin)
   for (auto i: vec) for (auto j: vec) for (auto k: vec) if (i||j||k)
     o[n++] = {{i,j,k}};
-  return bArray<int,brille::ref_ptr_t>::from_std(o);
+  return bArray<int>::from_std(o);
 }
 
-bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int extent){
+bArray<int> make_relative_neighbour_indices_prime(const int extent){
   auto vec = all_from_extent(extent);
   size_t num = vec.size();
   size_t n{0};
@@ -52,13 +52,13 @@ bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices_prime(const int ex
   // then fill in everything else
   for (auto i: vec) for (auto j: vec) for (auto k: vec) if (i&&j&&k)
     o[n++] = {{i,j,k}};
-  return bArray<int,brille::ref_ptr_t>::from_std(o);
+  return bArray<int>::from_std(o);
 }
 
-bArray<int,brille::ref_ptr_t> make_relative_neighbour_indices4(const int extent){
+bArray<int> make_relative_neighbour_indices4(const int extent){
   auto v = all_from_extent(extent);
   std::vector<std::array<int,4>> o;
   for (auto i: v) for (auto j: v) for (auto k: v) for (auto l: v)
   if (i||j||k||l) o.push_back({{i,j,k,l}});
-  return bArray<int,brille::ref_ptr_t>::from_std(o);
+  return bArray<int>::from_std(o);
 }

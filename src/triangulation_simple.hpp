@@ -28,8 +28,8 @@
 
 class SimpleTet{
   using ind_t = brille::ind_t;
-  bArray<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
-  bArray<ind_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  bArray<double> vertex_positions; // (nVertices, 3)
+  bArray<ind_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
 public:
   explicit SimpleTet(void)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
@@ -155,9 +155,9 @@ public:
   }
   ind_t number_of_vertices(void) const {return vertex_positions.size(0);}
   ind_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size(0);}
-  const bArray<double,brille::ref_ptr_t>& get_vertices(void) const {return vertex_positions;}
-  const bArray<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
-  const bArray<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  const bArray<double>& get_vertices(void) const {return vertex_positions;}
+  const bArray<double>& get_vertex_positions(void) const {return vertex_positions;}
+  const bArray<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
   std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron(void) const {
     std::vector<std::array<ind_t,4>> stdvpt;
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){

@@ -33,7 +33,7 @@ typedef unsigned long element_t;
 template<class T, class R>
 void declare_bznestq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
-  using Class = BrillouinZoneNest3<T,R,py::buffer_info,py::buffer_info>;
+  using Class = BrillouinZoneNest3<T,R>;
   std::string pyclass_name = std::string("BZNestQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction)

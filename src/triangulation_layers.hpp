@@ -39,18 +39,18 @@ class TetTriLayer{
   using ind_t = brille::ind_t;
   ind_t nVertices;
   ind_t nTetrahedra;
-  bArray<double,brille::ref_ptr_t> vertex_positions; // (nVertices, 3)
-  bArray<ind_t,brille::ref_ptr_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  bArray<double> vertex_positions; // (nVertices, 3)
+  bArray<ind_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
   std::vector<std::vector<ind_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
   std::vector<std::vector<ind_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
-  bArray<double,brille::ref_ptr_t> circum_centres; // (nTetrahedra, 3);
+  bArray<double> circum_centres; // (nTetrahedra, 3);
   std::vector<double> circum_radii; // (nTetrahedra,)
 public:
   ind_t number_of_vertices(void) const {return nVertices;}
   ind_t number_of_tetrahedra(void) const {return nTetrahedra;}
-  const bArray<double,brille::ref_ptr_t>& get_vertex_positions(void) const {return vertex_positions;}
-  const bArray<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
-  const bArray<double,brille::ref_ptr_t>& get_circum_centres(void) const {return circum_centres;}
+  const bArray<double>& get_vertex_positions(void) const {return vertex_positions;}
+  const bArray<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  const bArray<double>& get_circum_centres(void) const {return circum_centres;}
   const std::vector<double>& get_circum_radii(void) const {return circum_radii;}
   Polyhedron get_tetrahedron(const ind_t idx) const {
     if (nTetrahedra <= idx)
@@ -100,15 +100,13 @@ public:
     str += " in " + std::to_string(nTetrahedra) + " tetrahedra";
     return str;
   }
-  // template<class P>
-  // ind_t locate(const bArray<double,P>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
+  // ind_t locate(const bArray<double>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
   //   // no specified tetrahedra to check against, so check them all
   //   std::vector<ind_t> tosearch(nTetrahedra);
   //   std::iota(tosearch.begin(), tosearch.end(), 0u);
   //   return locate(tosearch, x, v, w);
   // }
-  // template<class P>
-  // ind_t locate(const std::vector<ind_t>& tosearch, const bArray<double,P>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
+  // ind_t locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
   //   if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
   //     throw std::runtime_error("locate requires a single 3-element vector.");
   //   if (std::any_of(tosearch.begin(), tosearch.end(), [this](ind_t a){return a>=this->nTetrahedra;}))
@@ -118,8 +116,7 @@ public:
   //     throw std::runtime_error("The point was not located!");
   //   return found;
   // }
-  // template<class P>
-  // ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double,P>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
+  // ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
   //   std::array<double,4> ws;
   //   v.clear();
   //   w.clear(); // make sure w is back to zero-elements
@@ -135,21 +132,18 @@ public:
   //   }
   //   return nTetrahedra;
   // }
-  template<class P>
-  ind_t locate(const bArray<double,P>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t locate(const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     return unsafe_locate(x, vw);
   }
-  template<class P>
-  ind_t unsafe_locate(const bArray<double,P>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t unsafe_locate(const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
     // no specified tetrahedra to check against, so check them all
     std::vector<ind_t> tosearch(nTetrahedra);
     std::iota(tosearch.begin(), tosearch.end(), 0u);
     return unsafe_locate(tosearch, x, vw);
   }
-  template<class P>
-  ind_t locate(const std::vector<ind_t>& tosearch, const bArray<double,P>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     if (std::any_of(tosearch.begin(), tosearch.end(), [this](ind_t a){return a>=this->nTetrahedra;}))
@@ -159,8 +153,7 @@ public:
       throw std::runtime_error("The point was not located!");
     return found;
   }
-  template<class P>
-  ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double,P>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
     std::array<double,4> ws;
     vw.clear();// make sure w is back to zero-elements
     for (ind_t idx: tosearch){
@@ -208,15 +201,13 @@ public:
     }
     return vs;
   }
-  template<class P>
-  bool might_contain(const ind_t tet, const bArray<double,P>& x) const {
+  bool might_contain(const ind_t tet, const bArray<double>& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
     return this->unsafe_might_contain(tet, x);
   }
-  template<class P>
-  bool contains(const ind_t tet, const bArray<double,P>& x) const{
+  bool contains(const ind_t tet, const bArray<double>& x) const{
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
@@ -239,22 +230,18 @@ public:
     return keys;
   }
 protected:
-  template<class P>
-  bool unsafe_might_contain(const ind_t tet, const bArray<double,P>& x) const {
+  bool unsafe_might_contain(const ind_t tet, const bArray<double>& x) const {
     return norm(x-circum_centres.view(tet)).all(brille::cmp::le, circum_radii[tet]);
   }
-  template<class P>
-  bool unsafe_contains(const ind_t tet, const bArray<double,P>& x) const {
+  bool unsafe_contains(const ind_t tet, const bArray<double>& x) const {
     std::array<double,4> w{0.,0.,0.,0.};
     return this->unsafe_contains(tet,x,w);
   }
-  template<class P>
-  bool unsafe_contains(const ind_t tet, const bArray<double,P>& x, std::array<double,4>& w) const {
+  bool unsafe_contains(const ind_t tet, const bArray<double>& x, std::array<double,4>& w) const {
     this->weights(tet, x, w);
     return std::all_of(w.begin(), w.end(), [](double z){ return (z>0.||brille::approx::scalar(z,0.)); });
   }
-  template<class P>
-  void weights(const ind_t tet, const bArray<double,P>& x, std::array<double,4>& w) const {
+  void weights(const ind_t tet, const bArray<double>& x, std::array<double,4>& w) const {
     const ind_t* i = vertices_per_tetrahedron.ptr(tet);
     double vol6 = 6.0*this->volume(tet);
     w[0] = orient3d(
@@ -330,8 +317,7 @@ public:
     connections.push_back(this->connect(i,i+1));
   }
   // make general locate and neighbour methods which drill-down through the layers
-  // template<class P>
-  // ind_t locate(const bArray<double,P>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
+  // ind_t locate(const bArray<double>& x, std::vector<ind_t>& v, std::vector<double>& w) const {
   //   if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
   //     throw std::runtime_error("locate requires a single 3-element vector.");
   //   if (layers.size() < 1)
@@ -345,14 +331,12 @@ public:
   //   }
   //   return idx;
   // }
-  // template<class P>
-  // ind_t locate(const bArray<double,P>& x, std::vector<ind_t>& v) const{
+  // ind_t locate(const bArray<double>& x, std::vector<ind_t>& v) const{
   //   std::vector<double> w;
   //   return this->locate(x, v, w);
   // }
-  template<class P>
   std::vector<std::pair<ind_t,double>>
-  locate(const bArray<double,P>& x) const {
+  locate(const bArray<double>& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     if (layers.size() < 1)
@@ -369,15 +353,13 @@ public:
     return vw;
   }
   // return the neighbouring vertices to a provided mesh-vertex in the lowest layer.
-  template<class P>
-  std::vector<ind_t> neighbours(const bArray<double,P>& x) const {
-    std::vector<ind_t> v;
-    this->locate(x, v);
-    if (v.size() != 1u){
+  std::vector<ind_t> neighbours(const bArray<double>& x) const {
+    std::vector<std::pair<ind_t,double>> vw = this->locate(x);
+    if (vw.size() != 1u){
       std::string msg = "The provided point is not a mesh vertex.";
       throw std::runtime_error(msg);
     }
-    return layers.back().neighbours(v[0]);
+    return layers.back().neighbours(vw[0].first);
   }
   std::vector<ind_t> neighbours(const ind_t v) const {
     return layers.back().neighbours(v);
@@ -395,8 +377,8 @@ public:
   // provide convenience functions which pass-through to the lowest layer
   ind_t number_of_tetrahedra() const {return layers.back().number_of_tetrahedra(); }
   ind_t number_of_vertices() const {return layers.back().number_of_vertices(); }
-  const bArray<double,brille::ref_ptr_t>& get_vertex_positions() const {return layers.back().get_vertex_positions(); }
-  const bArray<ind_t,brille::ref_ptr_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
+  const bArray<double>& get_vertex_positions() const {return layers.back().get_vertex_positions(); }
+  const bArray<ind_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
   std::set<size_t> collect_keys() const {return layers.back().collect_keys();}
 private:
   TetMap connect(const size_t high, const size_t low) const{
@@ -449,9 +431,9 @@ private:
   }
 };
 
-template <typename T, class P>
+template <typename T>
 TetTriLayer
-triangulate_one_layer(const bArray<T,P>& verts,
+triangulate_one_layer(const bArray<T>& verts,
                      const std::vector<std::vector<int>>& vpf,
                      const double max_cell_size=-1.0,
                      const int max_mesh_points=-1)
@@ -531,9 +513,9 @@ triangulate_one_layer(const bArray<T,P>& verts,
   return TetTriLayer(tgo);
 }
 
-template <typename T, class P>
+template <typename T>
 TetTri
-triangulate(const bArray<T,P>& verts,
+triangulate(const bArray<T>& verts,
             const std::vector<std::vector<int>>& vpf,
             const double max_cell_size=-1.0,
             const int layer_count=5,

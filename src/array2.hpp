@@ -20,32 +20,26 @@
 
 namespace brille {
 
-// struct ref_ptr{
-//   using type = char;
-// };
-// using ref_ptr_t = typename ref_ptr::type; // use char by default since it's small
-
-using ref_ptr_t = char;
-template<class T,class P> class Array2It;
+template<class T> class Array2It;
 
 /*! \brief A multidimensional shared data array with operator overloads
 
-The `Array2<T,P>`` object holds a multidimensional shared data object plus
+The `Array2<T>`` object holds a multidimensional shared data object plus
 information necessary to index into that array with an offset, different shape,
 and/or different stride than the underlying data contains.
 
-The `Array2<T,P>` object provides overloads for basic operations, a number of
+The `Array2<T>` object provides overloads for basic operations, a number of
 utility methods, and methods to create offset and/or reduced-range mutable
 or immutable views into the shared array.
 */
-template<class T, class P=ref_ptr_t>
+template<class T>
 class Array2{
 public:
-  using ref_t = std::shared_ptr<P>;
+  using ref_t = std::shared_ptr<void>;
   using shape_t = std::array<ind_t,2>;
   using bItr = BroadcastIt2<ind_t>;
   using sItr = SubIt2<ind_t>;
-  using aItr = Array2It<T,P>;
+  using aItr = Array2It<T>;
 protected:
   T*    _data;     //! A (possilby shared) raw pointer
   ind_t _num;      //! The number of elements stored under the raw pointer
@@ -90,8 +84,8 @@ public:
   sItr subItr(const shape_t& fix) const { return sItr(_shape, fix); }
   aItr valItr() const { return aItr(*this); }
   bItr broadcastItr(const shape_t& other) const { return bItr(_shape, other); }
-  template<class R, class Q>
-  bItr broadcastItr(const Array2<R,Q>& other) const {return bItr(_shape, other.shape());}
+  template<class R>
+  bItr broadcastItr(const Array2<R>& other) const {return bItr(_shape, other.shape());}
   bool is_column_ordered() const { // stride {1,2,4,8} is column ordered
     return _stride[0] <= _stride[1];
   }
@@ -107,12 +101,12 @@ public:
   }
   // empty initializer
   explicit Array2()
-  : _data(nullptr), _num(0), _own(false), _ref(std::make_shared<P>()),
+  : _data(nullptr), _num(0), _own(false), _ref(std::make_shared<char>()),
   _mutable(false), _offset({0,0}), _shape({0,0}), _stride({0,1})
   {}
   // 1D initializer
   Array2(T* data, const ind_t num, const bool own, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
+  : _data(data), _num(num), _own(own), _ref(std::make_shared<char>()),
     _mutable(mut), _offset({0,0}), _shape({num,1}), _stride({1,1})
   {
     this->init_check();
@@ -120,13 +114,14 @@ public:
   // 2D initializer
   Array2(T* data, const ind_t num, const bool own,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<P>()),
+  : _data(data), _num(num), _own(own), _ref(std::make_shared<char>()),
     _mutable(mut), _offset({0,0}), _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // 2D initializer with reference-counter specified (used in pybind11 wrapper)
-  Array2(T* data, const ind_t num, const bool own, ref_t ref,
+  template<class P>
+  Array2(T* data, const ind_t num, const bool own, std::shared_ptr<P> ref,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
   : _data(data), _num(num), _own(own), _ref(ref),
     _mutable(mut), _offset({0,0}), _shape(shape), _stride(stride)
@@ -134,7 +129,8 @@ public:
     this->init_check();
   }
   // 2D view constructor
-  Array2(T* data, const ind_t num, const bool own, const ref_t& ref,
+  template<class P>
+  Array2(T* data, const ind_t num, const bool own, const std::shared_ptr<P>& ref,
     const shape_t& offset, const shape_t& shape, const shape_t& stride, const bool mut=true)
   : _data(data), _num(num), _own(own), _ref(ref), _mutable(mut), _offset(offset),
     _shape(shape), _stride(stride)
@@ -186,15 +182,15 @@ public:
     this->init_check();
   }
   // otherwise possibly ambiguous constructor from std::vector
-  static Array2<T,P> from_std(const std::vector<T>& data){
+  static Array2<T> from_std(const std::vector<T>& data){
     ind_t num = static_cast<ind_t>(data.size());
     T* d = new T[num]();
     for (ind_t i=0; i<num; ++i) d[i] = data[i];
     // take ownership of d while creating the Array
-    return Array2<T,P>(d, num, true);
+    return Array2<T>(d, num, true);
   }
   template<class R, size_t Nel>
-  static Array2<T,P> from_std(const std::vector<std::array<R,Nel>>& data){
+  static Array2<T> from_std(const std::vector<std::array<R,Nel>>& data){
     shape_t shape{{static_cast<ind_t>(data.size()), static_cast<ind_t>(Nel)}};
     shape_t stride{shape[1], 1};
     ind_t num = shape[0]*shape[1];
@@ -202,18 +198,18 @@ public:
     ind_t x{0};
     for (ind_t i=0; i<shape[0]; ++i) for (ind_t j=0; j<shape[1]; ++j)
       d[x++] = static_cast<T>(data[i][j]);
-    return Array2<T,P>(d, num, true, shape, stride);
+    return Array2<T>(d, num, true, shape, stride);
   }
 
   // Rule-of-five definitions since we may not own the associated raw array:
-  Array2(const Array2<T,P>& o)
+  Array2(const Array2<T>& o)
   : _data(o._data), _num(o._num), _own(o._own), _ref(o._ref),
     _mutable(o._mutable), _offset(o._offset), _shape(o._shape), _stride(o._stride)
   {}
   ~Array2(){
     if (_own && _ref.use_count()==1 && _data != nullptr) delete[] _data;
   }
-  Array2<T,P>& operator=(const Array2<T,P>& other){
+  Array2<T>& operator=(const Array2<T>& other){
     if (this != &other){
       if (_own){
         T* old_data = _data;
@@ -234,43 +230,20 @@ public:
     }
     return *this;
   }
-  // Array2(Array2<T,P>&& other) noexcept
-  // : _data(std::exchange(other._data, nullptr))
-  // {
-  //   std::swap(_num, other._num);
-  //   std::swap(_own, other._own);
-  //   std::swap(_ref, other._ref);
-  //   std::swap(_mutable, other._mutable);
-  //   std::swap(_offset, other._offset);
-  //   std::swap(_shape, other._shape);
-  //   std::swap(_stride, other._stride);
-  // }
-  // Array2<T,P>& operator=(Array2<T,P>&& other) noexcept {
-  //   std::swap(_data, other._data);
-  //   std::swap(_num, other._num);
-  //   std::swap(_own, other._own);
-  //   std::swap(_ref, other._ref);
-  //   std::swap(_mutable, other._mutable);
-  //   std::swap(_offset, other._offset);
-  //   std::swap(_shape, other._shape);
-  //   std::swap(_stride, other._stride);
-  //   return *this;
-  // }
-
 
   // type casting requires a copy
   // the reference pointer type does not need to be P since a new raw array is made
-  // handles also Array2<T,P>(Array2<T,Q>&) reference type conversion
-  template<class R, class RP>
-  Array2(const Array2<R,RP>& other)
+  // handles also Array2<T>(Array2<T>&) reference type conversion
+  template<class R>
+  Array2(const Array2<R>& other)
   : _mutable(true), _offset({0,0}), _shape(other.shape())
   {
     this->set_stride();
     this->construct();
     for (auto x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
   }
-  template<class R, class RP>
-  Array2<T,P>& operator=(const Array2<R,RP>& other){
+  template<class R>
+  Array2<T>& operator=(const Array2<R>& other){
     _mutable = true;
     _shape = other.shape();
     _offset[0] = _offset[1] = 0;
@@ -283,7 +256,7 @@ public:
   // modifiers
   bool make_mutable() {_mutable = true; return _mutable;}
   bool make_immutable() {_mutable = false; return _mutable;}
-  Array2<T,ref_ptr_t> decouple() const {
+  Array2<T> decouple() const {
     if (!_own || !_mutable || _ref.use_count() > 1) return this->_decouple();
     return *this;
   }
@@ -312,7 +285,7 @@ private:
   void construct() {
     _num = this->size_from_shape();
     if (_num > 0){
-      _ref = std::make_shared<P>();
+      _ref = std::make_shared<char>();
       _data = new T[_num]();
       _own = true;
     } else {
@@ -355,7 +328,7 @@ private:
       throw std::runtime_error("Re-calculating non-contiguous strides is not yet working");
     _stride = this->calculate_stride(_shape);
   }
-  Array2<T,ref_ptr_t> _decouple() const {
+  Array2<T> _decouple() const {
     ind_t nnum = this->size_from_shape(_shape);
     T* new_data = new T[nnum]();
     shape_t new_st{_stride};
@@ -368,53 +341,40 @@ private:
       for (auto x: this->subItr()) new_data[sub2lin(x,new_st)] = _data[this->s2l_d(x)];
     }
     bool new_own = true; // always take ownership of C++ allocated memory
-    auto new_ref = std::make_shared<ref_ptr_t>(); // always use the default with C++ created arrays
+    auto new_ref = std::make_shared<char>(); // always use the default with C++ created arrays
     bool new_mut = true; // new allocated memory should be mutable
-    return Array2<T,ref_ptr_t>(new_data, nnum, new_own, new_ref, _shape, new_st, new_mut);
+    return Array2<T>(new_data, nnum, new_own, new_ref, _shape, new_st, new_mut);
   }
 public:
   // sub-array access
-  Array2<T,P> view() const; // whole array non-owning view
+  Array2<T> view() const; // whole array non-owning view
   //! View a single sub-array at index `i` or an offset-smaller array if single=false;
-  Array2<T,P> view(ind_t i) const;
+  Array2<T> view(ind_t i) const;
   //! View the sub-arrays from `i` to `j-1`
-  Array2<T,P> view(ind_t i, ind_t j) const;
-  Array2<T,P> view(const shape_t&) const;
+  Array2<T> view(ind_t i, ind_t j) const;
+  Array2<T> view(const shape_t&) const;
   // duplication of one or more sub-arrays:
-  Array2<T,ref_ptr_t>
+  Array2<T>
   extract(ind_t i) const;
-  template<class I, class IP>
-  std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-  extract(const Array2<I,IP>& i) const;
-  template<typename I>
-  std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-  extract(const std::vector<I>& i) const;
-  template<typename I, size_t Nel>
-  std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-  extract(const std::array<I,Nel>& i) const;
-  template<typename I, size_t Nel>
-  std::enable_if_t<std::is_integral_v<I>, Array2<T,ref_ptr_t>>
-  extract(const std::vector<std::array<I,Nel>>& i) const;
-  template<class RP>
-  Array2<T,ref_ptr_t>
-  extract(const Array2<bool,RP>& i) const;
-  Array2<T,ref_ptr_t>
-  extract(const std::vector<bool>& i) const;
-  template<class RP>
-  bool set(const ind_t i, const Array2<T,RP>& in);
-  template<class R, class RP>
-  bool set(const ind_t i, const Array2<R,RP>& in);
+  template<class I> std::enable_if_t<std::is_integral_v<I>, Array2<T>> extract(const Array2<I>& i) const;
+  template<class I> std::enable_if_t<std::is_integral_v<I>, Array2<T>> extract(const std::vector<I>& i) const;
+  template<class I, size_t Nel> std::enable_if_t<std::is_integral_v<I>, Array2<T>> extract(const std::array<I,Nel>& i) const;
+  template<class I, size_t Nel> std::enable_if_t<std::is_integral_v<I>, Array2<T>> extract(const std::vector<std::array<I,Nel>>& i) const;
+  Array2<T> extract(const Array2<bool>& i) const;
+  Array2<T> extract(const std::vector<bool>& i) const;
+  bool set(const ind_t i, const Array2<T>& in);
+  template<class R>
+  bool set(const ind_t i, const Array2<R>& in);
   bool set(const ind_t i, const std::vector<T>& in);
   template<size_t Nel> bool set(const ind_t i, const std::array<T,Nel>& in);
   T set(const shape_t& sub, T in);
-  template<class RP>
-  Array2<T,P>& append(const ind_t, const Array2<T,RP>&);
+  Array2<T>& append(const ind_t, const Array2<T>&);
   std::string to_string() const;
   std::string to_string(const ind_t) const;
 
-  Array2<T,P>& reshape(const shape_t& ns);
-  Array2<T,P>& resize(const shape_t&, T init=T(0));
-  template<class I> Array2<T,P>& resize(const I, T init=T(0));
+  Array2<T>& reshape(const shape_t& ns);
+  Array2<T>& resize(const shape_t&, T init=T(0));
+  template<class I> Array2<T>& resize(const I, T init=T(0));
   bool all(ind_t n=0) const;
   bool any(ind_t n=0) const;
   ind_t count(ind_t n=0) const;
@@ -430,13 +390,13 @@ public:
   ind_t count(T val, ind_t n=0) const;
   ind_t first(T val, ind_t n=0) const;
   ind_t last(T val, ind_t n=0) const;
-  Array2<int,ref_ptr_t> round() const;
-  Array2<int,ref_ptr_t> floor() const;
-  Array2<int,ref_ptr_t> ceil() const;
-  Array2<T,ref_ptr_t> sum(ind_t dim=0) const;
-  Array2<T,ref_ptr_t> prod(ind_t dim=0) const;
-  Array2<T,ref_ptr_t> min(ind_t dim=0) const;
-  Array2<T,ref_ptr_t> max(ind_t dim=0) const;
+  Array2<int> round() const;
+  Array2<int> floor() const;
+  Array2<int> ceil() const;
+  Array2<T> sum(ind_t dim=0) const;
+  Array2<T> prod(ind_t dim=0) const;
+  Array2<T> min(ind_t dim=0) const;
+  Array2<T> max(ind_t dim=0) const;
   T sum() const;
   T prod() const;
   template<class R, size_t Nel>
@@ -447,32 +407,26 @@ public:
   ind_t first(cmp expr, T val) const;
   ind_t last(cmp expr, T val) const;
   ind_t count(cmp expr, T val) const;
-  Array2<bool,ref_ptr_t> is(cmp expr, T val) const;
+  Array2<bool> is(cmp expr, T val) const;
   std::vector<ind_t> find(cmp expr, T val) const;
-  template<class R, class RP>
-  Array2<bool,ref_ptr_t>
-  is(cmp expr, const Array2<R,RP>& that) const;
-  template<class R>
-  std::vector<bool>
-  is(cmp expr, const std::vector<R>& val) const;
-  template<class R, class RP>
-  bool
-  is(const Array2<R,RP>& that) const;
+  template<class R> Array2<bool> is(cmp expr, const Array2<R>& that) const;
+  template<class R> std::vector<bool> is(cmp expr, const std::vector<R>& val) const;
+  template<class R> bool is(const Array2<R>& that) const;
   std::vector<bool> is_unique() const;
   std::vector<ind_t> unique_idx() const;
-  Array2<T,ref_ptr_t> unique() const;
-  Array2<T,ref_ptr_t>  operator-() const;
-  Array2<T,P>& operator +=(const T&);
-  Array2<T,P>& operator -=(const T&);
-  Array2<T,P>& operator *=(const T&);
-  Array2<T,P>& operator /=(const T&);
-  template<class R, class RP> Array2<T,P>& operator +=(const Array2<R,RP>&);
-  template<class R, class RP> Array2<T,P>& operator -=(const Array2<R,RP>&);
-  template<class R, class RP> Array2<T,P>& operator *=(const Array2<R,RP>&);
-  template<class R, class RP> Array2<T,P>& operator /=(const Array2<R,RP>&);
+  Array2<T> unique() const;
+  Array2<T>  operator-() const;
+  Array2<T>& operator +=(const T&);
+  Array2<T>& operator -=(const T&);
+  Array2<T>& operator *=(const T&);
+  Array2<T>& operator /=(const T&);
+  template<class R> Array2<T>& operator +=(const Array2<R>&);
+  template<class R> Array2<T>& operator -=(const Array2<R>&);
+  template<class R> Array2<T>& operator *=(const Array2<R>&);
+  template<class R> Array2<T>& operator /=(const Array2<R>&);
   T dot(ind_t i, ind_t j) const;
   T norm(ind_t i) const;
-  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value>>
+  template<class I, typename=std::enable_if_t<std::is_integral<I>::value>>
   void permute(std::vector<I>& p);
   bool swap(ind_t a, ind_t b);
   bool swap(ind_t i, ind_t a, ind_t b);
@@ -486,52 +440,50 @@ public:
   T& val(const ind_t i0);
   T& val(const ind_t i0, const ind_t j0);
   T& val(const shape_t& partial_subscript);
-  template<typename I> T& val(std::initializer_list<I> l);
+  template<class I> T& val(std::initializer_list<I> l);
   const T& val(const ind_t i0) const;
   const T& val(const ind_t i0, const ind_t j0) const;
   const T& val(const shape_t& partial_subscript) const;
-  template<typename I> const T& val(std::initializer_list<I> l) const;
+  template<class I> const T& val(std::initializer_list<I> l) const;
 
-  Array2<T,P> contiguous_copy() const;
+  Array2<T> contiguous_copy() const;
   // ^^^^^^^^^^ IMPLEMENTED  ^^^^^^^^^^^vvvvvvvvv TO IMPLEMENT vvvvvvvvvvvvvvvvv
 
 };
 
-template<class T,class P>
+template<class T>
 class Array2It {
 public:
-  Array2<T,P> array;
+  Array2<T> array;
   SubIt2<ind_t> subit;
 public:
   // constructing with array(a) does not copy the underlying data:
   explicit Array2It()
   : array(), subit()
   {}
-  Array2It(const Array2<T,P>& a, const SubIt2<ind_t>& s)
+  Array2It(const Array2<T>& a, const SubIt2<ind_t>& s)
   : array(a), subit(s)
   {}
-  Array2It(const Array2<T,P>& a)
+  Array2It(const Array2<T>& a)
   : array(a), subit(a.shape()) // initialises to first element, e.g., {0,…,0}
   {}
   //
-  Array2It<T,P> begin() const {
+  Array2It<T> begin() const {
     return Array2It(array);
   }
-  Array2It<T,P> end() const {
+  Array2It<T> end() const {
     return Array2It(array, subit.end());
   }
-  Array2It<T,P>& operator++() {
+  Array2It<T>& operator++() {
     ++subit;
     return *this;
   }
   const SubIt2<ind_t>& iterator() const {return subit;}
-  template<class Q>
-  bool operator==(const Array2It<T,Q>& other) const {
+  bool operator==(const Array2It<T>& other) const {
     // add checking to ensure array and other.array point to the same data?
     return subit == other.iterator();
   }
-  template<class Q>
-  bool operator!=(const Array2It<T,Q>& other) const {
+  bool operator!=(const Array2It<T>& other) const {
     return subit != other.iterator();
   }
   const T& operator*()  const {return array[*subit];}

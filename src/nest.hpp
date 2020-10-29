@@ -61,8 +61,7 @@ public:
   //
   double volume(void) const {return volume_;}
   //
-  template<class P, class Q>
-  std::array<double,4> weights(const bArray<double,P>& v, const bArray<double,Q>& x) const {
+  std::array<double,4> weights(const bArray<double>& v, const bArray<double>& x) const {
     std::array<double,4> w{{-1,-1,-1,-1}};
     if (this->might_contain(x)){
       double vol6 = volume_*6.0;
@@ -73,10 +72,9 @@ public:
     }
     return w;
   }
-  template<class P, class Q>
   bool contains(
-    const bArray<double,P>& v,
-    const bArray<double,Q>& x,
+    const bArray<double>& v,
+    const bArray<double>& x,
     std::array<double,4>& w
   ) const {
     if (this->might_contain(x)){
@@ -97,8 +95,7 @@ public:
     return msg;
   }
 private:
-  template<class Z>
-  bool might_contain(const bArray<double,Z>& x) const {
+  bool might_contain(const bArray<double>& x) const {
     std::array<double,3> d;
     d[0] = x.val(0,0) - centre_radius[0];
     d[1] = x.val(0,1) - centre_radius[1];
@@ -133,9 +130,8 @@ public:
   double volume(void) const {return boundary_.volume();}
   template<typename... A> bool contains(A... args) {return boundary_.contains(args...);}
   template<typename... A> std::array<double,4> weights(A... args) {return boundary_.weights(args...);}
-  template<class P, class Q>
   std::vector<std::pair<ind_t,double>> indices_weights(
-    const bArray<double,P>& v, const bArray<double,Q>& x
+    const bArray<double>& v, const bArray<double>& x
   ) const
   {
     std::array<double,4> w;
@@ -170,9 +166,8 @@ public:
     return keys;
   }
 protected:
-  template<class P, class Q>
   std::vector<std::pair<ind_t,double>> __indices_weights(
-    const bArray<double,P>& v, const bArray<double,Q>& x, std::array<double,4>& w
+    const bArray<double>& v, const bArray<double>& x, std::array<double,4>& w
   ) const
   {
     // This node is either the root (in which case it contains all tetrahedra)
@@ -194,12 +189,12 @@ protected:
     return empty;
   }
 };
-template<class T, class S, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
+template<class T, class S>
 class Nest{
 public:
   using ind_t = brille::ind_t;
-  using data_t = DualInterpolator<T,S,U,V>;
-  using vert_t = bArray<double,brille::ref_ptr_t>;
+  using data_t = DualInterpolator<T,S>;
+  using vert_t = bArray<double>;
 private:
   NestNode root_;
   vert_t vertices_;
@@ -242,16 +237,15 @@ public:
     /* (do this later) */
     return all_tet;
   }
-  template<class Z>
   std::vector<std::pair<ind_t,double>>
-  indices_weights(const bArray<double,Z> &x) const {
+  indices_weights(const bArray<double> &x) const {
     if (x.ndim()!=2 || x.size(0) != 1u || x.size(1) != 3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
     // return root_.indices_weights(vertices_, map_, x);
     return root_.indices_weights(vertices_, x);
   }
-  template<class R, class Z>
-  unsigned check_before_interpolating(const bArray<R,Z>& x) const{
+  template<class R>
+  unsigned check_before_interpolating(const bArray<R>& x) const{
     unsigned int mask = 0u;
     if (data_.size()==0)
       throw std::runtime_error("The interpolation data must be filled before interpolating.");
@@ -261,16 +255,15 @@ public:
       throw std::runtime_error("Contiguous vectors required for interpolation.");
     return mask;
   }
-  template<class Z>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>, brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const bArray<double,Z>& x) const {
+  std::tuple<brille::Array<T>, brille::Array<S>>
+  interpolate_at(const bArray<double>& x) const {
     this->check_before_interpolating(x);
     auto valsh = data_.values().data().shape();
     auto vecsh = data_.values().data().shape();
     valsh[0] = x.size(0);
     vecsh[0] = x.size(0);
-    brille::Array<T,brille::ref_ptr_t> vals(valsh);
-    brille::Array<S,brille::ref_ptr_t> vecs(vecsh);
+    brille::Array<T> vals(valsh);
+    brille::Array<S> vecs(vecsh);
     for (ind_t i=0; i<x.size(0); ++i){
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
       auto iw = root_.indices_weights(vertices_, x.extract(i));
@@ -278,9 +271,8 @@ public:
     }
     return std::make_tuple(vals, vecs);
   }
-  template<class Z>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>, brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const bArray<double,Z>& x, const int threads) const {
+  std::tuple<brille::Array<T>, brille::Array<S>>
+  interpolate_at(const bArray<double>& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // not used in parallel region
@@ -289,8 +281,8 @@ public:
     valsh[0] = x.size(0);
     vecsh[0] = x.size(0);
     // shared between threads
-    brille::Array<T,brille::ref_ptr_t> vals(valsh);
-    brille::Array<S,brille::ref_ptr_t> vecs(vecsh);
+    brille::Array<T> vals(valsh);
+    brille::Array<S> vecs(vecsh);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     ind_t unfound=0;
     long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
@@ -319,8 +311,8 @@ public:
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
   //! Return the number of bytes used per Q point
   size_t bytes_per_point() const {return data_.bytes_per_point(); }
-  template<class Z,template<class,class> class A>
-  brille::Array<double,brille::ref_ptr_t> debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const{
+  template<template<class> class A>
+  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const{
     return data_.debye_waller(Qpts,Masses,t_K);
   }
   void sort() {data_.sort();}

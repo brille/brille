@@ -47,7 +47,7 @@ template<class T, class P>
 class InnerInterpolationData{
 public:
   using ind_t = brille::ind_t;
-  template<class R, class S> using data_t = brille::Array<R,S>;
+  template<class R, class S> using data_t = brille::Array<R>;
   using shape_t = typename data_t<T,P>::shape_t;
   using ElementsType = std::array<brille::ind_t,3>;
   using ElementsCost = std::array<double,3>;
@@ -147,7 +147,7 @@ public:
   //
   template<class S, class R, class Q, class RotT>
   bool rotate_in_place(data_t<T,S>& x,
-                       const LQVec<R,Q>& q,
+                       const LQVec<R>& q,
                        const RotT& rt,
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
@@ -337,15 +337,15 @@ private:
   template<class S>
   bool rip_axial(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class S, class R, class Q>
-  bool rip_gamma_complex(data_t<T,S>&, const LQVec<R,Q>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_gamma_complex(data_t<T,S>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class P0, class R, class P1, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma(data_t<T,P0>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
   }
   template<class P0, class R, class P1, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(data_t<T,P0>&, const LQVec<R,P1>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(data_t<T,P0>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 };
@@ -605,7 +605,7 @@ class S = typename std::common_type<T,R>::type,
 class I = typename brille::ind_t
 >
 static std::complex<S>
-e_iqd(const LQVec<T,P>& q, const I i, const bArray<R,Q>& d, const size_t j)
+e_iqd(const LQVec<T>& q, const I i, const bArray<R>& d, const size_t j)
 {
   // const double pi = 3.14159265358979323846;
   S dotqd{0};
@@ -619,7 +619,7 @@ e_iqd(const LQVec<T,P>& q, const I i, const bArray<R,Q>& d, const size_t j)
 template<class T, class P>
 template<class P0, class R, class P1>
 bool InnerInterpolationData<T,P>::rip_gamma_complex(
-  data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
+  data_t<T,P0>& x, const LQVec<R>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {

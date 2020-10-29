@@ -23,7 +23,7 @@ template<class T, class R, class P, class Q>
 class InterpolationData{
 public:
   using ind_t = brille::ind_t;
-  template<class Y, class Z> using data_t = brille::Array<Y,Z>;
+  template<class Y, class Z> using data_t = brille::Array<Y>;
   using shape_t =      typename InnerInterpolationData<T,P>::shape_t;
   using ElementsType = typename InnerInterpolationData<T,P>::ElementsType;
   using ElementsCost = typename InnerInterpolationData<T,P>::ElementsCost;
@@ -75,10 +75,10 @@ public:
   std::vector<std::vector<typename PermutationTable::ind_t>>
   get_permutations(const std::vector<std::pair<I,double>>&) const;
   //
-//  bool rotate_in_place(data_t<T,brille::ref_ptr_t>& vals, data_t<R,brille::ref_ptr_t>& vecs, const std::vector<std::array<int,9>>& r) const {
+//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r) const {
 //    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
 //  }
-//  bool rotate_in_place(data_t<T,brille::ref_ptr_t>& vals, data_t<R,brille::ref_ptr_t>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
+//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
 //    return values_.rotate_in_place(vals, r, n) && vectors_.rotate_in_place(vecs, r, n);
 //  }
   //
@@ -116,7 +116,7 @@ public:
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
   // This returns a 1-D brille::Array (so it can't be a brille::Array2)
   template<class Z, template<class,class> class A>
-  brille::Array<double,brille::ref_ptr_t> debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const;
+  brille::Array<double> debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const;
   //
   template<typename I, typename S=typename CostTraits<T>::type, typename=std::enable_if_t<std::is_integral<I>::value> >
   std::vector<S> cost_matrix(const I i0, const I i1) const;
@@ -143,22 +143,22 @@ public:
   }
 private:
   template<class Z>
-  bArray<double,brille::ref_ptr_t> debye_waller_sum(const bArray<double,Z>& Qpts, const double t_K) const;
+  bArray<double> debye_waller_sum(const bArray<double>& Qpts, const double t_K) const;
   template<class Z>
-  bArray<double,brille::ref_ptr_t> debye_waller_sum(const LQVec<double,Z>& Qpts, const double beta) const{ return this->debye_waller_sum(Qpts.get_xyz(), beta); }
+  bArray<double> debye_waller_sum(const LQVec<double>& Qpts, const double beta) const{ return this->debye_waller_sum(Qpts.get_xyz(), beta); }
 };
 
 
 template<class T, class R, class P, class Q>
 template<class Z>
-bArray<double,brille::ref_ptr_t>
-InterpolationData<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const double t_K) const {
+bArray<double>
+InterpolationData<T,R,P,Q>::debye_waller_sum(const bArray<double>& Qpts, const double t_K) const {
   const double hbar = 6.582119569E-13; // meV⋅s
   const double kB   = 8.617333252E-2; // meV⋅K⁻¹
   size_t nQ = Qpts.size(0);
   ElementsType vector_elements = vectors_.elements();
   size_t nIons = vector_elements[1] / 3u; // already checked to be correct
-  bArray<double,brille::ref_ptr_t> WdQ(nQ,nIons); // Wᵈ(Q) has nIons entries per Q point
+  bArray<double> WdQ(nQ,nIons); // Wᵈ(Q) has nIons entries per Q point
   double coth_en, Q_dot_e_2;
   size_t vector_nq = vectors_.size();
   ind_t nbr = vectors_.branches();
@@ -169,7 +169,7 @@ InterpolationData<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const
   // indexing vectors for value and vector Arrays
   typename InterpolationData<T,R,P,Q>::shape_t qj{0,0}, qjd{0,0,0};
   // indexing array for ouput Array2
-  typename bArray<double,brille::ref_ptr_t>::shape_t Qd{{0,0}};
+  typename bArray<double>::shape_t Qd{{0,0}};
   // for each input Q point
   for (size_t Qidx=0; Qidx<nQ; ++Qidx){
     Qd[0] = Qidx;
@@ -202,7 +202,7 @@ InterpolationData<T,R,P,Q>::debye_waller_sum(const bArray<double,Z>& Qpts, const
 
 template<class T, class R, class P, class Q>
 template<class Z, template<class,class> class A>
-brille::Array<double,brille::ref_ptr_t>
+brille::Array<double>
 InterpolationData<T,R,P,Q>::debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const {
   ElementsType vector_elements = vectors_.elements();
   size_t nIons = vector_elements[1] / 3u;
@@ -212,7 +212,7 @@ InterpolationData<T,R,P,Q>::debye_waller(const A<double,Z>& Qpts, const std::vec
     throw std::runtime_error("Debye-Waller factor requires an equal number of ions and masses.");
   auto WdQ = this->debye_waller_sum(Qpts, t_K); // {nQ, nAtoms}
   brille::shape_t fshape{Qpts.size(0)}; // (nQ,)
-  brille::Array<double,brille::ref_ptr_t> factor(fshape); // we don't want an Array2 here!
+  brille::Array<double> factor(fshape); // we don't want an Array2 here!
   double d_sum;
   for (size_t Qidx=0; Qidx<Qpts.size(0); ++Qidx){
     d_sum = double(0);
