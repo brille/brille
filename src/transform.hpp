@@ -32,18 +32,18 @@ using invPtype = PrimitiveTraits::invP;
   The two LQVec objects have different indices but have the same Å⁻¹
   representation.
 */
-template<class T, class Q, typename S=typename std::common_type<T,Ptype>::type>
-LQVec<S,brille::ref_ptr_t> transform_to_primitive(const Reciprocal& lat, const LQVec<T,Q>& a){
+template<class T, typename S=typename std::common_type<T,Ptype>::type>
+LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice()))
     throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LQVec<S,brille::ref_ptr_t>(a);
+  if (PT.does_nothing()) return LQVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<Ptype,9> Pmat = PT.get_Pt(); // the transpose of the P matrix
   auto sh = a.shape();
-  LQVec<S,brille::ref_ptr_t> out(lat.primitive(), sh);
+  LQVec<S> out(lat.primitive(), sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
@@ -56,18 +56,18 @@ LQVec<S,brille::ref_ptr_t> transform_to_primitive(const Reciprocal& lat, const L
   vector expressed in the primitive version of the lattice and returns an
   equivalent Lattice vector expressed in units of the passed lattice.
 */
-template<class T, class Q, typename S=typename std::common_type<T,invPtype>::type>
-LQVec<S,brille::ref_ptr_t> transform_from_primitive(const Reciprocal& lat, const LQVec<T,Q>& a){
+template<class T, typename S=typename std::common_type<T,invPtype>::type>
+LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice()))
     throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LQVec<S,brille::ref_ptr_t>(a);
+  if (PT.does_nothing()) return LQVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<invPtype,9> Pmat = PT.get_invPt(); // the inverse of the transpose of P (or the transpose of the inverse of P)
   auto sh = a.shape();
-  LQVec<S,brille::ref_ptr_t> out(lat, sh);
+  LQVec<S> out(lat, sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
@@ -82,18 +82,18 @@ LQVec<S,brille::ref_ptr_t> transform_from_primitive(const Reciprocal& lat, const
   The two lattice vectors have different indices but have the same Å⁻¹
   representation.
 */
-template<class T, class Q, typename S=typename std::common_type<T,invPtype>::type>
-LDVec<S,brille::ref_ptr_t> transform_to_primitive(const Direct& lat, const LDVec<T,Q>& a){
+template<class T, typename S=typename std::common_type<T,invPtype>::type>
+LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.primitive().issame(a.get_lattice())) return a;
   if (!lat.issame(a.get_lattice()))
     throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LDVec<S,brille::ref_ptr_t>(a);
+  if (PT.does_nothing()) return LDVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<invPtype,9> Pmat = PT.get_invP(); // xₚ = P⁻¹ xₛ
   auto sh = a.shape();
-  LDVec<S,brille::ref_ptr_t> out(lat.primitive(), sh);
+  LDVec<S> out(lat.primitive(), sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
@@ -106,18 +106,18 @@ LDVec<S,brille::ref_ptr_t> transform_to_primitive(const Direct& lat, const LDVec
   vector expressed in the primitive version of the lattice and returns an
   equivalent Lattice vector expressed in units of the passed lattice.
 */
-template<class T, class Q, typename S=typename std::common_type<T,Ptype>::type>
-LDVec<S,brille::ref_ptr_t> transform_from_primitive(const Direct& lat, const LDVec<T,Q>& a){
+template<class T, typename S=typename std::common_type<T,Ptype>::type>
+LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   if (lat.issame(a.get_lattice())) return a;
   if (!lat.primitive().issame(a.get_lattice()))
     throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
   PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LDVec<S,brille::ref_ptr_t>(a);
+  if (PT.does_nothing()) return LDVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   std::array<Ptype,9> Pmat = PT.get_P(); // xₛ = P xₚ
   auto sh = a.shape();
-  LDVec<S,brille::ref_ptr_t> out(lat, sh);
+  LDVec<S> out(lat, sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector<S,Ptype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
@@ -125,23 +125,23 @@ LDVec<S,brille::ref_ptr_t> transform_from_primitive(const Direct& lat, const LDV
 }
 
 // utility functions for conversion of lattice vectors where only their components are stored
-template<class T, class P,typename S=typename std::common_type<T,double>::type>
-bArray<S,brille::ref_ptr_t> xyz_to_hkl(const Reciprocal& lat, const bArray<T,P>& xyz){
+template<class T, typename S=typename std::common_type<T,double>::type>
+bArray<S> xyz_to_hkl(const Reciprocal& lat, const bArray<T>& xyz){
   assert(xyz.stride().back() == 1u && xyz.size(xyz.ndim()-1)==3);
   auto fromxyz = lat.get_inverse_xyz_transform();
   auto sh = xyz.shape();
-  bArray<S,brille::ref_ptr_t> hkl(sh);
+  bArray<S> hkl(sh);
   sh.back() = 0;
   for (auto x: xyz.subItr(sh))
     brille::utils::multiply_matrix_vector<S,double,T,3>(hkl.ptr(x), fromxyz.data(), xyz.ptr(x));
   return hkl;
 }
-template<class T, class P,typename S=typename std::common_type<T,double>::type>
-bArray<S,brille::ref_ptr_t> hkl_to_xyz(const Reciprocal& lat, const bArray<T,P>& hkl){
+template<class T, typename S=typename std::common_type<T,double>::type>
+bArray<S> hkl_to_xyz(const Reciprocal& lat, const bArray<T>& hkl){
   assert(hkl.stride().back() == 1u && hkl.size(hkl.ndim()-1)==3);
   auto toxyz = lat.get_xyz_transform();
   auto sh = hkl.shape();
-  bArray<S,brille::ref_ptr_t> xyz(sh);
+  bArray<S> xyz(sh);
   sh.back() = 0;
   for (auto x: hkl.subItr(sh))
     brille::utils::multiply_matrix_vector<S,double,T,3>(xyz.ptr(x), toxyz.data(), hkl.ptr(x));

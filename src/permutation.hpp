@@ -107,13 +107,13 @@ two matrices.
                       3 --> `abs(sin(brille::utils::hermitian_angle))`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I, class P,
+template<class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool munkres_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                          const R Wscl, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
-                         bArray<size_t,P>& permutations,
+                         bArray<size_t>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
                          const int vec_cost_func = 0
                        ){
@@ -192,13 +192,11 @@ if (!munkres.get_assignment(assignment)){
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-brille::shape_t ni{static_cast<brille::ind_t>(neighbour_idx), 0};
-brille::shape_t ci{static_cast<brille::ind_t>(centre_idx), 0};
-for (size_t i=0; i<Nobj; ++i){
-  ni[1] = ci[1] = i;
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations[ni] == assignment[j]) permutations[ci] = j;
-}
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == assignment[j]) permutations.val(cind, i) = j;
 delete[] assignment;
 return true;
 }
@@ -262,13 +260,13 @@ two matrices.
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I, class P,
+template<class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool jv_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    bArray<size_t,P>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -340,13 +338,11 @@ lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-brille::shape_t ni{static_cast<brille::ind_t>(neighbour_idx), 0};
-brille::shape_t ci{static_cast<brille::ind_t>(centre_idx), 0};
-for (size_t i=0; i<Nobj; ++i){
-  ni[1] = ci[1] = i;
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations[ni] == static_cast<size_t>(rowsol[j])) permutations[ci] = static_cast<size_t>(j);
-}
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
 
 delete[] cost;
 delete[] usol;
@@ -356,7 +352,7 @@ delete[] colsol;
 return true;
 }
 
-template<class S, class T, class R, class I, class P,
+template<class S, class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool jv_permutation(const S* centre_vals, const T* centre_vecs,
@@ -364,7 +360,7 @@ bool jv_permutation(const S* centre_vals, const T* centre_vecs,
                     const std::array<I,3>& vals_Nel, const std::array<I,3>& vecs_Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t vals_span, const size_t vecs_span, const size_t Nobj,
-                    bArray<size_t,P>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -462,13 +458,12 @@ lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-brille::shape_t ni{static_cast<brille::ind_t>(neighbour_idx), 0};
-brille::shape_t ci{static_cast<brille::ind_t>(centre_idx), 0};
-for (size_t i=0; i<Nobj; ++i){
-  ni[1] = ci[1] = i;
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations[ni] == static_cast<size_t>(rowsol[j])) permutations[ci] = j;
-}
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
+
 delete[] cost;
 delete[] usol;
 delete[] vsol;
@@ -574,13 +569,13 @@ two matrices.
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
-template<class T, class R, class I, class P,
+template<class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
 bool sm_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    bArray<size_t,P>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -638,13 +633,12 @@ smp(Nobj, cost, rowsol, colsol, false);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-brille::shape_t ni{static_cast<brille::ind_t>(neighbour_idx), 0};
-brille::shape_t ci{static_cast<brille::ind_t>(centre_idx), 0};
-for (size_t i=0; i<Nobj; ++i){
-  ni[1] = ci[1] = i;
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations[ni] == rowsol[j]) permutations[ci] = j;
-}
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
+
 
 delete[] cost;
 delete[] rowsol;

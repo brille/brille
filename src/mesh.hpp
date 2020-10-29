@@ -33,17 +33,16 @@
 #include "triangulation_layers.hpp"
 
 
-template<class T, class S, class U, class V>
+template<class T, class S>
 class Mesh3{
   using ind_t = brille::ind_t;
-  using data_t = DualInterpolator<T,S,U,V>;
+  using data_t = DualInterpolator<T,S>;
 protected:
   TetTri mesh;
   data_t data_;
 public:
   //constructors
-  template<class Z>
-  Mesh3(const bArray<double,Z>& verts,
+  Mesh3(const bArray<double>& verts,
         const std::vector<std::vector<int>>& facets,
         const double max_volume=-1.0,
         const int num_levels=3,
@@ -53,11 +52,11 @@ public:
     this->mesh = triangulate(verts, facets, max_volume, num_levels, max_points);
     data_.initialize_permutation_table(this->size(), this->mesh.collect_keys());
   }
-  Mesh3(const Mesh3<T,S,U,V>& other){
+  Mesh3(const Mesh3<T,S>& other){
     this->mesh = other.mesh;
     this->data_ = other.data_;
   }
-  Mesh3<T,S,U,V>& operator=(const Mesh3<T,S,U,V>& other){
+  Mesh3<T,S>& operator=(const Mesh3<T,S>& other){
     this->mesh = other.mesh;
     this->data_ = other.data_;
     return *this;
@@ -67,9 +66,9 @@ public:
   //! Return the number of mesh vertices
   ind_t vertex_count() const { return this->mesh.number_of_vertices(); }
   //! Return the positions of all vertices in the mesh
-  const bArray<double,brille::ref_ptr_t>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
+  const bArray<double>& get_mesh_xyz() const{ return this->mesh.get_vertex_positions(); }
   //! Return the tetrahedron indices of the mesh
-  const bArray<ind_t,brille::ref_ptr_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
+  const bArray<ind_t>& get_mesh_tetrehedra() const{ return this->mesh.get_vertices_per_tetrahedron();}
   // Get a constant reference to the stored data
   const data_t& data(void) const {return data_;}
   // Replace the data stored in the object
@@ -81,24 +80,24 @@ public:
   //! Return the number of bytes used per Q point
   size_t bytes_per_point() const {return data_.bytes_per_point(); }
   // Calculate the Debye-Waller factor for the provided Q points and ion masses
-  template<class Z, template<class,class> class A>
-  brille::Array<double,brille::ref_ptr_t> debye_waller(const A<double,Z>& Qpts, const std::vector<double>& Masses, const double t_K) const{
+  template<template<class> class A>
+  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const{
     return data_.debye_waller(Qpts,Masses,t_K);
   }
 
   //! Perform sanity checks before attempting to interpolate
-  template<class R, class Z> unsigned int check_before_interpolating(const bArray<R,Z>& x) const;
+  template<class R> unsigned int check_before_interpolating(const bArray<R>& x) const;
   //! Perform linear interpolation at the specified Reciprocal lattice points
-  template<typename R, class Z>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const LQVec<R,Z>& x) const {return this->interpolate_at(x.get_xyz());}
+  template<class R>
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  interpolate_at(const LQVec<R>& x) const {return this->interpolate_at(x.get_xyz());}
   //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
-  template<typename R, class Z>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  interpolate_at(const bArray<R,Z>& x) const;
-  template<typename R, class Z>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  parallel_interpolate_at(const bArray<R,Z>& x, const int nthreads) const;
+  template<class R>
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  interpolate_at(const bArray<R>& x) const;
+  template<class R>
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  parallel_interpolate_at(const bArray<R>& x, const int nthreads) const;
   //! Return the neighbours for which a passed boolean array holds true
   // template<typename R> std::vector<ind_t> which_neighbours(const std::vector<R>& t, const R value, const ind_t idx) const;
   std::string to_string(void) const {

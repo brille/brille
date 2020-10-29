@@ -79,8 +79,8 @@ void declare_lattice_mat_basis_init(py::class_<T,Lattice> &pclass, const std::st
       throw std::runtime_error("Three three-vectors required.");
     T lattice((double *) info.ptr, info.strides, groupid);
     // pull in the basis information
-    // brille::Array<double,py::buffer_info> avpos = brille::py2a(pypos);
-    brille::Array2<double,py::buffer_info> avpos = brille::py2a2(pypos);
+    // brille::Array<double> avpos = brille::py2a(pypos);
+    brille::Array2<double> avpos = brille::py2a2(pypos);
     std::vector<std::array<double,3>> pos;
     for (brille::ind_t i=0; i<avpos.size(0); ++i){
       std::array<double,3> one;

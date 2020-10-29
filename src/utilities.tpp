@@ -578,15 +578,15 @@ inplace_antiphase(const I n, const std::complex<T>* a, const std::complex<T>* b,
   for (I i=0; i<n; ++i) phased[i] = eith*b[i];
 }
 
-template<class T, class R, template<class, class> class A>
+template<class T, template<class> class A>
 T
-unsafe_antiphase(const A<T,R>&, const A<T,R>&){
+unsafe_antiphase(const A<T>&, const A<T>&){
   return T(1);
 }
 
-template<class T, class R, template<class, class> class A>
+template<class T, template<class> class A>
 std::complex<T>
-unsafe_antiphase(const A<std::complex<T>,R>& a, const A<std::complex<T>,R>& b){
+unsafe_antiphase(const A<std::complex<T>>& a, const A<std::complex<T>>& b){
   T real_dot{0}, imag_dot{0};
   // a safe version of this would first ensure that a and b are the same shape
   for (auto [ox, ax, bx]: a.broadcastItr(b)){

@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "array_latvec.hpp" // defines bArray<T,P> as Array2<T,P> or Array<T,P>
+#include "array_latvec.hpp" // defines bArray<T> as Array2<T> or Array<T>
 #include "polyhedron.hpp"
 
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){

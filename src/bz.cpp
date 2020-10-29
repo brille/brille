@@ -17,7 +17,7 @@
 
 #include "bz.hpp"
 
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
+LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   auto ir_n = this->get_ir_normals();
   auto ir_p = this->get_ir_points();
   auto bz_n = this->get_normals();
@@ -116,32 +116,32 @@ bool BrillouinZone::check_ir_polyhedron(void){
 }
 
 // first Brillouin zone
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_vertices(void) const {
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, this->polyhedron.get_vertices());
+LQVec<double> BrillouinZone::get_vertices(void) const {
+  return LQVec<double>::from_invA(this->outerlattice, this->polyhedron.get_vertices());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_primitive_vertices(void) const {
+LQVec<double> BrillouinZone::get_primitive_vertices(void) const {
   auto v = this->get_vertices();
   if (this->isprimitive()) v = transform_to_primitive(this->outerlattice, v);
   return v;
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_points(void) const {
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, this->polyhedron.get_points());
+LQVec<double> BrillouinZone::get_points(void) const {
+  return LQVec<double>::from_invA(this->outerlattice, this->polyhedron.get_points());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_primitive_points(void) const {
-  LQVec<double,brille::ref_ptr_t> p = this->get_points();
+LQVec<double> BrillouinZone::get_primitive_points(void) const {
+  LQVec<double> p = this->get_points();
   if (this->isprimitive()) p = transform_to_primitive(this->outerlattice, p);
   return p;
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_normals(void) const {
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, this->polyhedron.get_normals());
+LQVec<double> BrillouinZone::get_normals(void) const {
+  return LQVec<double>::from_invA(this->outerlattice, this->polyhedron.get_normals());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_primitive_normals(void) const {
-  LQVec<double,brille::ref_ptr_t> n = this->get_normals();
+LQVec<double> BrillouinZone::get_primitive_normals(void) const {
+  LQVec<double> n = this->get_normals();
   if (this->isprimitive()) n = transform_to_primitive(this->outerlattice, n);
   return n;
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_half_edges(void) const{
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, this->polyhedron.get_half_edges());
+LQVec<double> BrillouinZone::get_half_edges(void) const{
+  return LQVec<double>::from_invA(this->outerlattice, this->polyhedron.get_half_edges());
 }
 std::vector<std::vector<int>> BrillouinZone::get_faces_per_vertex(void) const {
   return this->polyhedron.get_faces_per_vertex();
@@ -150,30 +150,30 @@ std::vector<std::vector<int>> BrillouinZone::get_vertices_per_face(void) const {
   return this->polyhedron.get_vertices_per_face();
 }
 // irreducible first Brillouin zone
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_vertices(void) const {
+LQVec<double> BrillouinZone::get_ir_vertices(void) const {
   Polyhedron irp = this->get_ir_polyhedron();
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, irp.get_vertices());
+  return LQVec<double>::from_invA(this->outerlattice, irp.get_vertices());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_primitive_vertices(void) const {
-  LQVec<double,brille::ref_ptr_t> v = this->get_ir_vertices();
+LQVec<double> BrillouinZone::get_ir_primitive_vertices(void) const {
+  LQVec<double> v = this->get_ir_vertices();
   if (this->isprimitive()) v = transform_to_primitive(this->outerlattice, v);
   return v;
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_points(void) const {
+LQVec<double> BrillouinZone::get_ir_points(void) const {
   Polyhedron irp = this->get_ir_polyhedron();
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, irp.get_points());
+  return LQVec<double>::from_invA(this->outerlattice, irp.get_points());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_primitive_points(void) const {
-  LQVec<double,brille::ref_ptr_t> p = this->get_ir_points();
+LQVec<double> BrillouinZone::get_ir_primitive_points(void) const {
+  LQVec<double> p = this->get_ir_points();
   if (this->isprimitive()) p = transform_to_primitive(this->outerlattice, p);
   return p;
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_normals(void) const {
+LQVec<double> BrillouinZone::get_ir_normals(void) const {
   Polyhedron irp = this->get_ir_polyhedron();
-  return LQVec<double,brille::ref_ptr_t>::from_invA(this->outerlattice, irp.get_normals());
+  return LQVec<double>::from_invA(this->outerlattice, irp.get_normals());
 }
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_primitive_normals(void) const {
-  LQVec<double,brille::ref_ptr_t> n = this->get_ir_normals();
+LQVec<double> BrillouinZone::get_ir_primitive_normals(void) const {
+  LQVec<double> n = this->get_ir_normals();
   if (this->isprimitive()) n = transform_to_primitive(this->outerlattice, n);
   return n;
 }
@@ -185,17 +185,17 @@ std::vector<std::vector<int>> BrillouinZone::get_ir_vertices_per_face(void) cons
 }
 
 // irreducible reciprocal space
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_ir_wedge_normals(void) const {
-  LQVec<double,brille::ref_ptr_t> out(this->outerlattice, 0u);
+LQVec<double> BrillouinZone::get_ir_wedge_normals(void) const {
+  LQVec<double> out(this->outerlattice, 0u);
   if (this->ir_wedge_normals.size(0))
-    out = LQVec<double,brille::ref_ptr_t>(this->outerlattice, this->ir_wedge_normals);
+    out = LQVec<double>(this->outerlattice, this->ir_wedge_normals);
   return out;
 }
 //
-LQVec<double,brille::ref_ptr_t> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
-  LQVec<double,brille::ref_ptr_t> lqwn(this->outerlattice, 0u);
+LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
+  LQVec<double> lqwn(this->outerlattice, 0u);
   if (this->ir_wedge_normals.size(0)){
-    lqwn = LQVec<double,brille::ref_ptr_t>(this->outerlattice, this->ir_wedge_normals);
+    lqwn = LQVec<double>(this->outerlattice, this->ir_wedge_normals);
     if (this->isprimitive())
       lqwn = transform_to_primitive(this->outerlattice, lqwn);
   }
@@ -243,12 +243,12 @@ void BrillouinZone::irreducible_vertex_search(){
   auto vertices30 = this->get_vertices();
   std::vector<std::vector<int>> i30 = this->get_faces_per_vertex();
 
-  LQVec<double,ref_ptr_t> vertices21(bznormals.get_lattice(), n21);
-  LQVec<double,ref_ptr_t> vertices12(bznormals.get_lattice(), n12);
-  LQVec<double,ref_ptr_t> vertices03(bznormals.get_lattice(), n03);
-  bArray<int,ref_ptr_t> i21(n21,3);
-  bArray<int,ref_ptr_t> i12(n12,3);
-  bArray<int,ref_ptr_t> i03(n03,3);
+  LQVec<double> vertices21(bznormals.get_lattice(), n21);
+  LQVec<double> vertices12(bznormals.get_lattice(), n12);
+  LQVec<double> vertices03(bznormals.get_lattice(), n03);
+  bArray<int> i21(n21,3);
+  bArray<int> i12(n12,3);
+  bArray<int> i03(n03,3);
 
   int c21=0, c12=0, c03=0;
   if (n21){ // protect against Nbz=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit
@@ -330,10 +330,10 @@ void BrillouinZone::irreducible_vertex_search(){
   total_verts  = vertices30.size(0) + vertices12.size(0);
   total_verts += vertices21.size(0) + vertices03.size(0);
 
-  LQVec<double, ref_ptr_t> all_verts(bznormals.get_lattice(), total_verts);
-  LQVec<double, ref_ptr_t> all_norms(bznormals.get_lattice(), bz_faces+ir_faces);
-  LQVec<double, ref_ptr_t> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
-  bArray<int, ref_ptr_t> all_ijk(total_verts,3);
+  LQVec<double> all_verts(bznormals.get_lattice(), total_verts);
+  LQVec<double> all_norms(bznormals.get_lattice(), bz_faces+ir_faces);
+  LQVec<double> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
+  bArray<int> all_ijk(total_verts,3);
 
   std::vector<size_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
 
@@ -458,7 +458,7 @@ void BrillouinZone::voro_search(const int extent){
   profile_update("Start BrillouinZone::voro_search with ",extent," extent");
   using namespace brille;
   std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
-  LQVec<int,ref_ptr_t> primtau(this->lattice, make_relative_neighbour_indices(extent));
+  LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
   size_t ntau = primtau.size(0);
   std::vector<size_t> perm(ntau);
   std::iota(perm.begin(), perm.end(), 0u); // {0u, 1u, 2u, ..., ntau-1}
@@ -486,4 +486,80 @@ void BrillouinZone::voro_search(const int extent){
   Polyhedron firstbz = Polyhedron::bisect(voronoi, tau/norm(tau), tau/2.0);
   this->polyhedron = firstbz;
   profile_update("  End BrillouinZone::voro_search with ",extent," extent");
+}
+
+
+// moved back from the header file now that their template parameters are lost again
+
+double
+normals_matrix_determinant(const LQVec<double>& a, const LQVec<double>&b, const LQVec<double>& c){
+  std::vector<double> metric(9);
+  std::vector<double> ax{a.get_xyz().to_std()}, bx{b.get_xyz().to_std()}, cx{c.get_xyz().to_std()};
+  for (size_t i=0; i<3; ++i){
+    metric[0+i] = ax[i];
+    metric[3+i] = bx[i];
+    metric[6+i] = cx[i];
+  }
+  return brille::utils::matrix_determinant(metric.data());
+}
+
+bool
+intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+             const LQVec<double>& nj, const LQVec<double>& pj,
+             const LQVec<double>& nk, const LQVec<double>& pk,
+             LQVec<double>& intersect, const int idx)
+{
+  double detM = normals_matrix_determinant(ni,nj,nk);
+  if (std::abs(detM) > 1e-10){
+    auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj) + cross(ni,nj)*dot(pk,nk);
+    tmp /= detM;
+    intersect.set(idx, tmp);
+    return true;
+  }
+  return false;
+}
+
+bool
+intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+             const LQVec<double>& nj, const LQVec<double>& pj,
+             const LQVec<double>& nk,
+             LQVec<double>& intersect, const int idx)
+{
+  double detM = normals_matrix_determinant(ni,nj,nk);
+  if (std::abs(detM) > 1e-10){
+    auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj);
+    tmp /= detM;
+    intersect.set(idx, tmp);
+    return true;
+  }
+  return false;
+}
+
+bool
+intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
+             const LQVec<double>& nj,
+             const LQVec<double>& nk,
+             LQVec<double>& intersect, const int idx)
+{
+  double detM = normals_matrix_determinant(ni,nj,nk);
+  if (std::abs(detM) > 1e-10){
+    auto tmp = cross(nj,nk)*dot(pi,ni);
+    tmp /= detM;
+    intersect.set(idx, tmp);
+    return true;
+  }
+  return false;
+}
+
+bool
+intersect_at(const LQVec<double>& ni,
+             const LQVec<double>& nj,
+             const LQVec<double>& nk,
+             LQVec<double>& intersect, const int idx)
+{
+  if (std::abs(normals_matrix_determinant(ni,nj,nk)) > 1e-10){
+    intersect.set(idx, 0*intersect.view(idx));
+    return true;
+  }
+  return false;
 }

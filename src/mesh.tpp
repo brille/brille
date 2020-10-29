@@ -16,9 +16,9 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 // Perform sanity checks before attempting to interpolate
-template<class T, class S, class U, class V> template<typename R, class Z>
+template<class T, class S> template<typename R>
 unsigned int
-Mesh3<T,S,U,V>::check_before_interpolating(const bArray<R,Z>& x) const{
+Mesh3<T,S>::check_before_interpolating(const bArray<R>& x) const{
   unsigned int mask = 0u;
   if (data_.size()==0)
     throw std::runtime_error("The interpolation data must be filled before interpolating.");
@@ -29,16 +29,16 @@ Mesh3<T,S,U,V>::check_before_interpolating(const bArray<R,Z>& x) const{
   return mask;
 }
 //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
-template<class T, class S, class U, class V> template<typename R, class Z>
-std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-Mesh3<T,S,U,V>::interpolate_at(const bArray<R,Z>& x) const {
+template<class T, class S> template<typename R>
+std::tuple<brille::Array<T>,brille::Array<S>>
+Mesh3<T,S>::interpolate_at(const bArray<R>& x) const {
   this->check_before_interpolating(x);
   auto valsh = data_.values().data().shape();
   auto vecsh = data_.vectors().data().shape();
   valsh[0] = x.size(0);
   vecsh[0] = x.size(0);
-  brille::Array<T,brille::ref_ptr_t> vals(valsh);
-  brille::Array<S,brille::ref_ptr_t> vecs(vecsh);
+  brille::Array<T> vals(valsh);
+  brille::Array<S> vecs(vecsh);
   for (ind_t i=0; i<x.size(0); ++i){
     verbose_update("Locating ",x.to_string(i));
     auto verts_weights = this->mesh.locate(x.view(i));
@@ -50,9 +50,9 @@ Mesh3<T,S,U,V>::interpolate_at(const bArray<R,Z>& x) const {
   }
   return std::make_tuple(vals, vecs);
 }
-template<class T, class S, class U, class V> template<typename R, class Z>
-std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-Mesh3<T,S,U,V>::parallel_interpolate_at(const bArray<R,Z>& x, const int threads) const {
+template<class T, class S> template<typename R>
+std::tuple<brille::Array<T>,brille::Array<S>>
+Mesh3<T,S>::parallel_interpolate_at(const bArray<R>& x, const int threads) const {
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   this->check_before_interpolating(x);
   // not used in parallel region
@@ -61,8 +61,8 @@ Mesh3<T,S,U,V>::parallel_interpolate_at(const bArray<R,Z>& x, const int threads)
   valsh[0] = x.size(0);
   vecsh[0] = x.size(0);
   // shared between threads
-  brille::Array<T,brille::ref_ptr_t> vals(valsh);
-  brille::Array<S,brille::ref_ptr_t> vecs(vecsh);
+  brille::Array<T> vals(valsh);
+  brille::Array<S> vecs(vecsh);
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long xsize = brille::utils::u2s<long, ind_t>(x.size(0));
 #pragma omp parallel for default(none) shared(x, vals, vecs, xsize) schedule(dynamic)

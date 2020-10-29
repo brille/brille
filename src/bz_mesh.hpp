@@ -23,9 +23,9 @@ typedef long slong;
 #include "bz.hpp"
 #include "mesh.hpp"
 
-template<class T, class S, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
-class BrillouinZoneMesh3: public Mesh3<T,S,U,V>{
-  using SuperClass = Mesh3<T,S,U,V>;
+template<class T, class S>
+class BrillouinZoneMesh3: public Mesh3<T,S>{
+  using SuperClass = Mesh3<T,S>;
 protected:
   BrillouinZone brillouinzone;
 public:
@@ -48,14 +48,14 @@ public:
   // get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   // get the mesh vertices in relative lattice units
-  bArray<double,brille::ref_ptr_t> get_mesh_hkl(void) const {
+  bArray<double> get_mesh_hkl(void) const {
     auto xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
     bz.get_lattice().get_xyz_transform(toxyz);
     if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
     auto shape = xyz.shape();
-    bArray<double,brille::ref_ptr_t> hkl(shape);
+    bArray<double> hkl(shape);
     std::vector<double> tmp(3);
     for (size_t i=0; i<shape[0]; ++i){
       auto vxyz = xyz.view(i).to_std();
@@ -65,11 +65,11 @@ public:
     return hkl;
   }
 
-  template<class R, class P>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  ir_interpolate_at(const LQVec<R,P>& x, const int nthreads, const bool no_move=false) const {
-    LQVec<R,brille::ref_ptr_t> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int,brille::ref_ptr_t> tau(x.get_lattice(), x.size(0));
+  template<class R>
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {
+    LQVec<R> ir_q(x.get_lattice(), x.size(0));
+    LQVec<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       ir_q = x;

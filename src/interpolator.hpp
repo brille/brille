@@ -44,17 +44,17 @@ enum class RotatesLike {
   Real, Reciprocal, Axial, Gamma
 };
 
-template<class T, class P>
+template<class T>
 class Interpolator{
 public:
   using ind_t = brille::ind_t;
   template<class Z> using element_t =std::array<Z,3>;
   using costfun_t = CostFunction<T>;
   //
-  template<class R, class S> using data_t = brille::Array<R,S>;
-  using shape_t = typename data_t<T,P>::shape_t;
+  template<class R> using data_t = brille::Array<R>;
+  using shape_t = typename data_t<T>::shape_t;
 private:
-  data_t<T,P> data_;      //!< The stored Array of points indexed like the holding-Object's vertices
+  data_t<T> data_;      //!< The stored Array of points indexed like the holding-Object's vertices
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
   element_t<double> _costmult; //!< The relative (multiplicative) cost for differences in each element type
@@ -71,13 +71,13 @@ public:
   : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real},
     _costmult({{1,1,1}}), _scalarfun(scf), _vectorfun(vcf)
   {}
-  Interpolator(data_t<T,P>& d, element_t<ind_t> el, RotatesLike rl)
+  Interpolator(data_t<T>& d, element_t<ind_t> el, RotatesLike rl)
   : data_(d), _elements(el), rotlike_{rl}, _costmult({{1,1,1,}})
   {
     this->set_cost_info(0,0);
     this->check_elements();
   }
-  Interpolator(data_t<T,P>& d, element_t<ind_t> el, RotatesLike rl, size_t csf, size_t cvf, element_t<double> wg)
+  Interpolator(data_t<T>& d, element_t<ind_t> el, RotatesLike rl, size_t csf, size_t cvf, element_t<double> wg)
   : data_(d), _elements(el), rotlike_{rl}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
@@ -85,7 +85,7 @@ public:
   }
   //
   void setup_fake(const ind_t sz, const ind_t br){
-    data_ = data_t<T,P>(sz, br);
+    data_ = data_t<T>(sz, br);
     _elements = {1u,0u,0u};
   }
   //
@@ -175,7 +175,7 @@ public:
     msg += " } data array";
     throw std::runtime_error(msg);
   }
-  const data_t<T,P>& data(void) const {return data_;}
+  const data_t<T>& data(void) const {return data_;}
   const element_t<ind_t>& elements(void) const {return _elements;}
   //
   template<class... Args>
@@ -192,9 +192,9 @@ public:
     }
   }
   //
-  template<class S, class R, class Q, class RotT>
-  bool rotate_in_place(data_t<T,S>& x,
-                       const LQVec<R,Q>& q,
+  template<class R, class RotT>
+  bool rotate_in_place(data_t<T>& x,
+                       const LQVec<R>& q,
                        const RotT& rt,
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
@@ -232,9 +232,9 @@ public:
     return rotlike_;
   }
   // Replace the data within this object.
-  template<class S, class I>
+  template<class I>
   void replace_data(
-      const data_t<T,S>& nd,
+      const data_t<T>& nd,
       const std::array<I,3>& ne,
       const RotatesLike rl = RotatesLike::Real)
   {
@@ -250,7 +250,7 @@ public:
   }
   // Replace the data in this object without specifying the data shape or its elements
   // this variant is necessary since the template specialization above can not have a default value for the elements
-  void replace_data(const data_t<T,P>& nd){
+  void replace_data(const data_t<T>& nd){
     return this->replace_data(nd, element_t<ind_t>({{0,0,0}}));
   }
   ind_t branch_span() const { return this->branch_span(_elements);}
@@ -366,60 +366,51 @@ private:
     return no;
   }
   // the 'mixed' variants of the rotate_in_place implementations
-  template<class S>
-  bool rip_real(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_recip(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_axial(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S, class R, class Q>
-  bool rip_gamma_complex(data_t<T,S>&, const LQVec<R,Q>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class P0, class R, class P1, class S=T>
+  bool rip_real(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_recip(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_axial(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R>
+  bool rip_gamma_complex(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma(data_t<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
   }
-  template<class P0, class R, class P1, class S=T>
+  template<class R, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(data_t<T,P0>&, const LQVec<R,P1>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
   // the vector-only variants
-  template<class S>
-  bool rip_real_vec(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_recip_vec(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_axial_vec(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S, class R, class Q>
-  bool rip_gamma_vec_complex(data_t<T,S>&, const LQVec<R,Q>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class P0, class R, class P1, class S=T>
+  bool rip_real_vec(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_recip_vec(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_axial_vec(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R>
+  bool rip_gamma_vec_complex(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma_vec(data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma_vec(data_t<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_vec_complex(x, q, gt, ps, r, ir, nth);
   }
-  template<class P0, class R, class P1, class S=T>
+  template<class R, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma_vec(data_t<T,P0>&, const LQVec<R,P1>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma_vec(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
   // the matrix-only variants
-  template<class S>
-  bool rip_real_mat(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_recip_mat(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S>
-  bool rip_axial_mat(data_t<T,S>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class S, class R, class Q>
-  bool rip_gamma_mat_complex(data_t<T,S>&, const LQVec<R,Q>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class P0, class R, class P1, class S=T>
+  bool rip_real_mat(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_recip_mat(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_axial_mat(data_t<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R>
+  bool rip_gamma_mat_complex(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma_mat(data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma_mat(data_t<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_mat_complex(x, q, gt, ps, r, ir, nth);
   }
-  template<class P0, class R, class P1, class S=T>
+  template<class R, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma_mat(data_t<T,P0>&, const LQVec<R,P1>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma_mat(data_t<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
   // add_cost_*
@@ -430,18 +421,12 @@ private:
   template<class S>
   void add_cost_mat(const ind_t, const ind_t, std::vector<S>&, bool) const;
   // interpolate_at_*
-  template<class S>
-  void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T,S>&, const ind_t, const bool) const;
-  template<class S>
-  void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T,S>&, const ind_t, const bool) const;
-  template<class S>
-  void interpolate_at_vec(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T,S>&, const ind_t, const bool) const;
-  template<class S>
-  void interpolate_at_vec(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T,S>&, const ind_t, const bool) const;
-  template<class S>
-  void interpolate_at_mat(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T,S>&, const ind_t, const bool) const;
-  template<class S>
-  void interpolate_at_mat(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T,S>&, const ind_t, const bool) const;
+  void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T>&, const ind_t, const bool) const;
+  void interpolate_at_vec(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T>&, const ind_t, const bool) const;
+  void interpolate_at_mat(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, data_t<T>&, const ind_t, const bool) const;
+  void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T>&, const ind_t, const bool) const;
+  void interpolate_at_vec(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T>&, const ind_t, const bool) const;
+  void interpolate_at_mat(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, data_t<T>&, const ind_t, const bool) const;
 };
 
 #include "interpolator_at.tpp"

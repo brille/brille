@@ -67,7 +67,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
 
 
   auto QinvA = Q.get_xyz();
-  // QinvA is (at present) a brille::Array2<double,> and so can not be reshaped
+  // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
   // Instead make a new brille::Array and copy the Q values by hand:
   brille::shape_t antshp{nQ, 1u, 3u};

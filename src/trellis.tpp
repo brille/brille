@@ -16,8 +16,8 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <cassert>
 
-template<class T, class R, class U, class V>
-PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
+template<class T, class R>
+PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
 : polyhedron_(poly), vertices_(0,3)
 {
   profile_update("Start of PolyhedronTrellis construction");
@@ -58,11 +58,11 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   }
   ind_t nNodes = this->node_count();
 
-  auto node_centres = bArray<double,brille::ref_ptr_t>::from_std(this->trellis_centres());
+  auto node_centres = bArray<double>::from_std(this->trellis_centres());
   double max_dist = this->trellis_node_circumsphere_radius() + poly.get_circumsphere_radius();
   std::vector<bool> node_is_null = norm(node_centres-poly.get_centroid()).is(brille::cmp::gt, max_dist).to_std();
 
-  auto all_intersections = bArray<double,brille::ref_ptr_t>::from_std(this->trellis_intersections());
+  auto all_intersections = bArray<double>::from_std(this->trellis_intersections());
   auto intersections_span = this->trellis_intersections_span();
   auto node_intersections = this->trellis_local_cube_indices();
   /*
@@ -73,11 +73,11 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   the polyhedron.
   */
   ind_t n_kept{0}, n_extra{0}, n_intersections{all_intersections.size(0)};
-  bArray<double,brille::ref_ptr_t> extra_intersections(n_intersections>>1u, 3u);
+  bArray<double> extra_intersections(n_intersections>>1u, 3u);
   std::vector<ind_t> map_idx(n_intersections, n_intersections+1);
   std::vector<std::vector<ind_t>> node_index_map(n_intersections);
   std::vector<bool> node_is_cube(nNodes, false);
-  bArray<double,brille::ref_ptr_t> Gamma(1u, 3u, 0.);
+  bArray<double> Gamma(1u, 3u, 0.);
   std::map<size_t, Polyhedron> poly_stash;
   Polyhedron node_zero = this->trellis_local_cube();
   for (ind_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
@@ -273,9 +273,9 @@ PolyhedronTrellis<T,R,U,V>::PolyhedronTrellis(const Polyhedron& poly, const doub
   data_.initialize_permutation_table(vertices_.size(0), this->collect_keys());
 }
 
-template<class T, class S, class U, class V>
+template<class T, class S>
 std::set<size_t>
-PolyhedronTrellis<T,S,U,V>::collect_keys() {
+PolyhedronTrellis<T,S>::collect_keys() {
   profile_update("Start of PolyhedronTrellis permutation key collection");
   std::set<size_t> keys;
   long long nnodes = brille::utils::u2s<long long, size_t>(nodes_.size());
@@ -294,9 +294,9 @@ PolyhedronTrellis<T,S,U,V>::collect_keys() {
   return keys;
 }
 
-template<class T, class S, class U, class V>
+template<class T, class S>
 std::set<size_t>
-PolyhedronTrellis<T,S,U,V>::collect_keys_node(const ind_t node){
+PolyhedronTrellis<T,S>::collect_keys_node(const ind_t node){
   std::set<size_t> keys;
   if (!nodes_.is_null(node)){
     if (nodes_.is_poly(node)){

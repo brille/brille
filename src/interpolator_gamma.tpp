@@ -1,9 +1,9 @@
-template<class T, class P, class R, class Q,
+template<class T, class R,
 class S = typename std::common_type<T,R>::type,
 class I = typename brille::ind_t
 >
 static std::complex<S>
-e_iqd(const LQVec<T,P>& q, const I i, const bArray<R,Q>& d, const size_t j)
+e_iqd(const LQVec<T>& q, const I i, const bArray<R>& d, const size_t j)
 {
   // const double pi = 3.14159265358979323846;
   S dotqd{0};
@@ -27,10 +27,10 @@ GammTable vectors through their .vector accessor. Then we know that the dot
 product of q = (h,k,l) and d = (a,b,c) is q⋅d = 2π (h*a + k*b + l*c).
 */
 
-template<class T, class P>
-template<class P0, class R, class P1>
-bool Interpolator<T,P>::rip_gamma_complex(
-  data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
+template<class T>
+template<class R>
+bool Interpolator<T>::rip_gamma_complex(
+  data_t<T>& x, const LQVec<R>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
@@ -123,10 +123,10 @@ bool Interpolator<T,P>::rip_gamma_complex(
   return true;
 }
 
-template<class T, class P>
-template<class P0, class R, class P1>
-bool Interpolator<T,P>::rip_gamma_vec_complex(
-  data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
+template<class T>
+template<class R>
+bool Interpolator<T>::rip_gamma_vec_complex(
+  data_t<T>& x, const LQVec<R>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>&, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
@@ -187,10 +187,10 @@ bool Interpolator<T,P>::rip_gamma_vec_complex(
 }
 
 
-template<class T, class P>
-template<class P0, class R, class P1>
-bool Interpolator<T,P>::rip_gamma_mat_complex(
-  data_t<T,P0>& x, const LQVec<R,P1>& q, const GammaTable& pgt,
+template<class T>
+template<class R>
+bool Interpolator<T>::rip_gamma_mat_complex(
+  data_t<T>& x, const LQVec<R>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {

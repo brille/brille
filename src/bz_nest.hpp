@@ -24,9 +24,9 @@ typedef long slong;
 #include "bz.hpp"
 #include "nest.hpp"
 
-template<class T, class S, class U=brille::ref_ptr_t, class V=brille::ref_ptr_t>
-class BrillouinZoneNest3: public Nest<T,S,U,V>{
-  using SuperClass = Nest<T,S,U,V>;
+template<class T, class S>
+class BrillouinZoneNest3: public Nest<T,S>{
+  using SuperClass = Nest<T,S>;
   BrillouinZone brillouinzone;
 public:
   template<typename... A>
@@ -36,21 +36,21 @@ public:
   //! get the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
   //! get the vertices of the leaf vertices in inverse Angstrom
-  bArray<double,brille::ref_ptr_t> get_xyz(void) const {return this->vertices();}
+  bArray<double> get_xyz(void) const {return this->vertices();}
   //! get the vertices of all vertices in absolute units
-  const bArray<double,brille::ref_ptr_t>& get_all_xyz(void) const {return this->all_vertices(); }
+  const bArray<double>& get_all_xyz(void) const {return this->all_vertices(); }
   //! get the vertices of the leaf vertices in relative lattice units
-  bArray<double,brille::ref_ptr_t> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  bArray<double> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  bArray<double,brille::ref_ptr_t> get_all_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->all_vertices()); }
+  bArray<double> get_all_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->all_vertices()); }
   // //! get the indices forming the faces of the tetrahedra
   // std::vector<std::array<size_t,4>> get_vertices_per_tetrahedron(void) const {return this->tetrahedra();}
 
-  template<class R, class P>
-  std::tuple<brille::Array<T,brille::ref_ptr_t>,brille::Array<S,brille::ref_ptr_t>>
-  ir_interpolate_at(const LQVec<R,P>& x, const int nth, const bool no_move=false) const {
-    LQVec<R,brille::ref_ptr_t> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int,brille::ref_ptr_t> tau(x.get_lattice(), x.size(0));
+  template<class R>
+  std::tuple<brille::Array<T>,brille::Array<S>>
+  ir_interpolate_at(const LQVec<R>& x, const int nth, const bool no_move=false) const {
+    LQVec<R> ir_q(x.get_lattice(), x.size(0));
+    LQVec<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       ir_q = x;
