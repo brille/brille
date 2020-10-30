@@ -26,7 +26,7 @@ void Interpolator<T>::interpolate_at_mix(
     for (size_t x=0; x<indices.size(); ++x){
       const T *dx = data_.ptr(indices[x]);
       for (ind_t b=0; b < b_; ++b) for (ind_t s=0; s<s_; ++s)
-        ox[b*s_+s] += weights[x]*eith*dx[perms[x][b]*s_+s];
+        ox[b*s_+s] += weights[x]*dx[perms[x][b]*s_+s];
     }
   }
 }

@@ -75,7 +75,7 @@ Mesh3<T,S>::parallel_interpolate_at(const bArray<R>& x, const int threads) const
   brille::Array2<S> vecs2(vecs);
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long xsize = brille::utils::u2s<long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) shared(x, vals, vecs, xsize) schedule(dynamic)
+#pragma omp parallel for default(none) shared(x, vals2, vecs2, xsize) schedule(dynamic)
   for (long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long>(si);
     auto verts_weights = this->mesh.locate(x.view(i));

@@ -297,7 +297,7 @@ public:
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     ind_t unfound=0;
     long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-  #pragma omp parallel for default(none) shared(x, vals, vecs) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(x, vals2, vecs2) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       ind_t i = brille::utils::s2u<ind_t, long long>(si);
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
