@@ -33,12 +33,17 @@ template<class T, class S> template<typename R>
 std::tuple<brille::Array<T>,brille::Array<S>>
 Mesh3<T,S>::interpolate_at(const bArray<R>& x) const {
   this->check_before_interpolating(x);
-  auto valsh = data_.values().data().shape();
-  auto vecsh = data_.vectors().data().shape();
+  auto valsh = data_.values().shape();
+  auto vecsh = data_.vectors().shape();
   valsh[0] = x.size(0);
   vecsh[0] = x.size(0);
   brille::Array<T> vals(valsh);
   brille::Array<S> vecs(vecsh);
+  // vals and vecs are row-ordered contiguous by default, so we can create
+  // mutable data-sharing Array2 objects for use with
+  // Interpolator2::interpolate_at through the constructor:
+  brille::Array2<T> vals2(vals);
+  brille::Array2<S> vecs2(vecs);
   for (ind_t i=0; i<x.size(0); ++i){
     verbose_update("Locating ",x.to_string(i));
     auto verts_weights = this->mesh.locate(x.view(i));
@@ -46,7 +51,7 @@ Mesh3<T,S>::interpolate_at(const bArray<R>& x) const {
       debug_update("Point ",x.to_string(i)," not found in tetrahedra!");
       throw std::runtime_error("Point not found in tetrahedral mesh");
     }
-    data_.interpolate_at(verts_weights, vals, vecs, i);
+    data_.interpolate_at(verts_weights, vals2, vecs2, i);
   }
   return std::make_tuple(vals, vecs);
 }
@@ -56,20 +61,25 @@ Mesh3<T,S>::parallel_interpolate_at(const bArray<R>& x, const int threads) const
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   this->check_before_interpolating(x);
   // not used in parallel region
-  auto valsh = data_.values().data().shape();
-  auto vecsh = data_.vectors().data().shape();
+  auto valsh = data_.values().shape();
+  auto vecsh = data_.vectors().shape();
   valsh[0] = x.size(0);
   vecsh[0] = x.size(0);
   // shared between threads
   brille::Array<T> vals(valsh);
   brille::Array<S> vecs(vecsh);
+  // vals and vecs are row-ordered contiguous by default, so we can create
+  // mutable data-sharing Array2 objects for use with
+  // Interpolator2::interpolate_at through the constructor:
+  brille::Array2<T> vals2(vals);
+  brille::Array2<S> vecs2(vecs);
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long xsize = brille::utils::u2s<long, ind_t>(x.size(0));
 #pragma omp parallel for default(none) shared(x, vals, vecs, xsize) schedule(dynamic)
   for (long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long>(si);
     auto verts_weights = this->mesh.locate(x.view(i));
-    data_.interpolate_at(verts_weights, vals, vecs, i);
+    data_.interpolate_at(verts_weights, vals2, vecs2, i);
   }
   return std::make_tuple(vals, vecs);
 }

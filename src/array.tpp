@@ -1047,6 +1047,17 @@ Array<T> Array<T>::contiguous_copy() const {
   return out;
 }
 
+template<class T>
+Array<T> Array<T>::contiguous_row_ordered_copy() const {
+  if (this->is_row_ordered() && this->is_contiguous()) return Array<T>(*this);
+  // make sure we calculate a row-ordered stride:
+  shape_t st(_shape.size(), 1u);
+  for (size_t i=st.size()-1; i--;) st[i] = st[i+1]*_shape[i+1];
+  Array<T> out(_shape, st);
+  for (auto x : SubIt<ind_t>(_shape)) out[x] = (*this)[x];
+  return out;
+}
+
 // template<class T>
 // Array<T> Array<T>::squeeze() const {
 //   ind_t lin = sub2lin(_offset, _stride);

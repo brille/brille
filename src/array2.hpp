@@ -17,6 +17,7 @@
 #include "comparisons.hpp"
 #include "approx.hpp"
 #include "types.hpp"
+#include "array.hpp"
 
 namespace brille {
 
@@ -43,10 +44,10 @@ public:
 protected:
   T*    _data;     //! A (possilby shared) raw pointer
   ind_t _num;      //! The number of elements stored under the raw pointer
+  ind_t _shift;    //! A linear shift to where our subscript indexing begins (_data+shift)[subscript]
   bool  _own;      //! Whether we need to worry about memory management of the pointer
   ref_t _ref;      //! A shared_ptr for reference counting an owned raw pointer
   bool  _mutable;  //! Whether we are allowed to modify the memory under the pointer
-  shape_t _offset; //! An offset different from {0,0} if a view
   shape_t _shape;  //! The shape of this view, prod(_shape) ≤ _num
   shape_t _stride; //! The stride of our view
 public:
@@ -60,6 +61,7 @@ public:
   const T* data(const ind_t& i0, const ind_t& i1) const { return _data + this->s2l_d(i0,i1);}
   const T* data(const shape_t& idx) const {return _data + this->s2l_d(idx);}
   ind_t raw_size() const {return _num;}
+  ind_t raw_shift() const {return _shift;}
   bool own() const {return _own;}
   ref_t ref() const {return _ref;}
   bool  ismutable(void) const {return _mutable;}
@@ -68,7 +70,6 @@ public:
   ind_t numel(void) const {
     return _shape[0]*_shape[1];
   }
-  shape_t offset(void) const {return _offset;}
   ind_t size(const ind_t dim) const {
     assert(dim < 2);
     return _shape[dim];
@@ -101,21 +102,21 @@ public:
   }
   // empty initializer
   explicit Array2()
-  : _data(nullptr), _num(0), _own(false), _ref(std::make_shared<char>()),
-  _mutable(false), _offset({0,0}), _shape({0,0}), _stride({0,1})
+  : _data(nullptr), _num(0), _shift(0u), _own(false), _ref(std::make_shared<char>()),
+  _mutable(false), _shape({0,0}), _stride({0,1})
   {}
   // 1D initializer
   Array2(T* data, const ind_t num, const bool own, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<char>()),
-    _mutable(mut), _offset({0,0}), _shape({num,1}), _stride({1,1})
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<char>()),
+    _mutable(mut), _shape({num,1}), _stride({1,1})
   {
     this->init_check();
   }
   // 2D initializer
   Array2(T* data, const ind_t num, const bool own,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(std::make_shared<char>()),
-    _mutable(mut), _offset({0,0}), _shape(shape), _stride(stride)
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<char>()),
+    _mutable(mut), _shape(shape), _stride(stride)
   {
     this->init_check();
   }
@@ -123,37 +124,37 @@ public:
   template<class P>
   Array2(T* data, const ind_t num, const bool own, std::shared_ptr<P> ref,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(ref),
-    _mutable(mut), _offset({0,0}), _shape(shape), _stride(stride)
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(ref),
+    _mutable(mut), _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // 2D view constructor
   template<class P>
-  Array2(T* data, const ind_t num, const bool own, const std::shared_ptr<P>& ref,
-    const shape_t& offset, const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _own(own), _ref(ref), _mutable(mut), _offset(offset),
+  Array2(T* data, const ind_t num, const ind_t shift, const bool own, const std::shared_ptr<P>& ref,
+    const shape_t& shape, const shape_t& stride, const bool mut=true)
+  : _data(data), _num(num), _shift(shift), _own(own), _ref(ref), _mutable(mut),
     _shape(shape), _stride(stride)
   {
     this->init_check();
   }
   // 2D allocate new memory constructor
   Array2(const ind_t s0, const ind_t s1)
-  : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  : _shift(0u), _mutable(true), _shape({s0,s1}), _stride({s1,1})
   {
     this->construct();
     this->init_check();
   }
   // 2D initialize new memory constructor
   Array2(const ind_t s0, const ind_t s1, const T init)
-  : _mutable(true), _offset({0,0}), _shape({s0,s1}), _stride({s1,1})
+  : _shift(0u), _mutable(true), _shape({s0,s1}), _stride({s1,1})
   {
     this->construct(init);
     this->init_check();
   }
   // 2D allocate new memory constructor
   Array2(const shape_t& shape)
-  : _mutable(true), _offset({0,0}), _shape(shape)
+  : _shift(0u), _mutable(true), _shape(shape)
   {
     this->set_stride();
     this->construct();
@@ -161,7 +162,7 @@ public:
   }
   // ND initialize new memory constructor
   Array2(const shape_t& shape, const T init)
-  : _mutable(true), _offset({0,0}), _shape(shape)
+  : _shift(0u), _mutable(true), _shape(shape)
   {
     this->set_stride();
     this->construct(init);
@@ -169,14 +170,14 @@ public:
   }
   // ND allocate new memory with specified stride constructor
   Array2(const shape_t& shape, const shape_t& stride)
-  : _mutable(true), _offset({0,0}), _shape(shape), _stride(stride)
+  : _shift(0u), _mutable(true), _shape(shape), _stride(stride)
   {
     this->construct();
     this->init_check();
   }
   // ND initialize new memory with specified stride constructor
   Array2(const shape_t& shape, const shape_t& stride, const T init)
-  : _mutable(true), _offset({0,0}), _shape(shape), _stride(stride)
+  : _shift(0u), _mutable(true), _shape(shape), _stride(stride)
   {
     this->construct(init);
     this->init_check();
@@ -200,11 +201,33 @@ public:
       d[x++] = static_cast<T>(data[i][j]);
     return Array2<T>(d, num, true, shape, stride);
   }
+  // Construct an Array2 from an Array, unravelling higher dimensions
+  Array2(const Array<T>& nd)
+  : _num(0u), _shift(0u), _shape({0,1}), _stride({1,1})
+  {
+    // we always want to construct contiguous row-ordered arrays
+    if (nd.ndim()>0){
+      _shape[0] = nd.size(0);
+      if (nd.ndim()>1){
+        for (ind_t i=1; i<nd.ndim(); ++i) _shape[1] *= nd.size(i);
+        _stride[0] = _shape[1];
+      }
+      // the following is a very-light (metadata) copy unless the underlying
+      // data is not row-ordered contiguous.
+      auto cnd = nd.contiguous_row_ordered_copy();
+      _data = cnd.data();
+      _num = cnd.raw_size();
+      _shift = cnd.raw_shift();
+      _own = cnd.own();
+      _ref = cnd.ref();
+      _mutable = cnd.ismutable();
+    }
+  }
 
   // Rule-of-five definitions since we may not own the associated raw array:
   Array2(const Array2<T>& o)
-  : _data(o._data), _num(o._num), _own(o._own), _ref(o._ref),
-    _mutable(o._mutable), _offset(o._offset), _shape(o._shape), _stride(o._stride)
+  : _data(o._data), _num(o._num), _shift(o._shift), _own(o._own), _ref(o._ref),
+    _mutable(o._mutable), _shape(o._shape), _stride(o._stride)
   {}
   ~Array2(){
     if (_own && _ref.use_count()==1 && _data != nullptr) delete[] _data;
@@ -223,8 +246,8 @@ public:
       }
       _own = other.own();
       _num = other.raw_size();
+      _shift = other.raw_shift();
       _mutable = other.ismutable();
-      _offset = other.offset();
       _shape = other.shape();
       _stride = other.stride();
     }
@@ -236,7 +259,7 @@ public:
   // handles also Array2<T>(Array2<T>&) reference type conversion
   template<class R>
   Array2(const Array2<R>& other)
-  : _mutable(true), _offset({0,0}), _shape(other.shape())
+  : _shift(0u), _mutable(true), _shape(other.shape())
   {
     this->set_stride();
     this->construct();
@@ -246,7 +269,7 @@ public:
   Array2<T>& operator=(const Array2<R>& other){
     _mutable = true;
     _shape = other.shape();
-    _offset[0] = _offset[1] = 0;
+    _shift = 0;
     this->set_stride();
     this->construct();
     for (auto x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
@@ -269,13 +292,13 @@ public:
   const T& operator[](shape_t& sub) const {return _data[this->s2l_d(sub)];}
 protected: // so inherited classes can calculate subscript indexes into their data
   ind_t l2l_d(const ind_t l) const {
-    return offset_sub2lin(_offset, lin2sub(l, _stride), _stride);
+    return l + _shift;
   }
   ind_t ij2l_d(const ind_t x, const ind_t y) const {
-    return offset_sub2lin(_offset, x, y, _stride);
+    return sub2lin(x, y, _stride) + _shift;
   }
   ind_t s2l_d(const shape_t& s) const {
-    return offset_sub2lin(_offset, s, _stride);
+    return sub2lin(s, _stride) + _shift;
   }
 private:
   ind_t size_from_shape(const shape_t& s) const {
@@ -302,11 +325,9 @@ private:
     _stride[0] = _shape[1];
   }
   void init_check(void){
-    shape_t sh{{_offset[0]+_shape[0], _offset[1]+_shape[1]}};
-    ind_t offset_size = this->size_from_shape(sh);
+    ind_t offset_size = _shift + this->size_from_shape(_shape);
     if (_num < offset_size) {
-      std::string msg = "The offset { ";
-      for (auto x: _offset) msg += std::to_string(x) + " ";
+      std::string msg = "The shift { " + std::to_string(_shift) + " ";
       msg += "} and size { ";
       for (auto x: _shape) msg += std::to_string(x) + " ";
       msg += "} of an Array must not exceed the allocated pointer size ";

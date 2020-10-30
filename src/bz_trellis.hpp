@@ -100,9 +100,12 @@ public:
     if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
       pgt.construct(brillouinzone.get_lattice().star(), brillouinzone.add_time_reversal());
     }
+    // make data-sharing Array2 objects for the rotation functions
+    brille::Array2<T> vals2(vals);
+    brille::Array2<R> vecs2(vecs);
     // actually perform the rotation to Q
-    this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nth);
-    this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nth);
+    this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, nth);
+    this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, nth);
     // we're done so bundle the output
     profile_update("  End BrillouinZoneTrellis3::ir_interpolate_at");
     return std::make_tuple(vals, vecs);

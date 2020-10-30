@@ -1,15 +1,14 @@
 template<class T>
 Array2<T> Array2<T>::view() const{
-  return Array2<T>(_data,_num,_own,_ref,_offset,_shape,_stride,false);
+  return Array2<T>(_data,_num,_shift,_own,_ref,_shape,_stride,false);
 }
 template<class T>
 Array2<T> Array2<T>::view(const ind_t i) const {
   if (i<_shape[0]){
     shape_t osize{_shape};
-    shape_t oofst{_offset};
-    oofst[0] += i;
+    ind_t oshft{_shift + i*_stride[0]};
     osize[0] = 1;
-    return Array2<T>(_data, _num, _own, _ref, oofst, osize, _stride, false);
+    return Array2<T>(_data, _num, oshft, _own, _ref, osize, _stride, false);
   }
   throw std::runtime_error("Array2 index too large");
 }
@@ -18,10 +17,9 @@ template<class T>
 Array2<T> Array2<T>::view(const ind_t i, const ind_t j) const {
   if (i<j && i<_shape[0] && j<=_shape[0]){
     shape_t osize{_shape};
-    shape_t oofst{_offset};
-    oofst[0] += i;
+    ind_t oshft{_shift + i*_stride[0]};
     osize[0] = j-i;
-    return Array2<T>(_data, _num, _own, _ref, oofst, osize, _stride, false);
+    return Array2<T>(_data, _num, oshft, _own, _ref, osize, _stride, false);
   }
   throw std::runtime_error("Array2 view indexing error");
 }
@@ -29,12 +27,12 @@ Array2<T> Array2<T>::view(const ind_t i, const ind_t j) const {
 template<class T>
 Array2<T> Array2<T>::view(const shape_t& v) const {
   shape_t osize{_shape};
-  shape_t oofst{_offset};
+  ind_t oshft{_shift};
   for (size_t i=0; i<_shape.size(); ++i) if (v[i] < _shape[i]) {
-    oofst[i] += v[i];
     osize[i] -= v[i];
+    oshft += v[i]*_stride[i];
   }
-  return Array2<T>(_data, _num, _own, _ref,oofst, osize, _stride, false);
+  return Array2<T>(_data, _num, oshft, _own, _ref, osize, _stride, false);
 }
 
 template<class T>
@@ -287,9 +285,7 @@ Array2<T>::reshape(const shape_t& ns){
   if (!this->is_contiguous())
     throw std::runtime_error("Array2::reshape does not work for strided arrays");
   _shape = ns;
-  ind_t linoffset = sub2lin(_offset, _stride);
   _stride = this->calculate_stride(ns);
-  _offset = lin2sub(linoffset, _stride);
   return *this;
 }
 
@@ -333,8 +329,7 @@ Array2<T>::resize(const shape_t& ns, const T init) {
   // find the new stride (maintaining row or column order)
   shape_t nt = calculate_stride(ns);
   // ensure our simple indexing will work
-  ind_t linoffset = sub2lin(_offset, _stride);
-  if (linoffset > 0)
+  if (_shift > 0)
     throw std::runtime_error("Resizing only works for zero-offset Array2s at present. Please extend.");
   // copy into the new array if the old array isn't the null pointer
   if (_data != nullptr && nd != nullptr)
@@ -346,7 +341,6 @@ Array2<T>::resize(const shape_t& ns, const T init) {
   _num = nnum;
   _own = true;
   _ref = std::make_shared<char>(); // resizing in place can not change the template parameter
-  _offset = shape_t({0,0});
   _shape = ns;
   _stride = nt;
   _mutable = true;

@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <omp.h>
 #include "array.hpp"
+#include "array2.hpp"
 #include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
 #include "utilities.hpp"
@@ -258,16 +259,21 @@ public:
   std::tuple<brille::Array<T>, brille::Array<S>>
   interpolate_at(const bArray<double>& x) const {
     this->check_before_interpolating(x);
-    auto valsh = data_.values().data().shape();
-    auto vecsh = data_.values().data().shape();
+    auto valsh = data_.values().shape();
+    auto vecsh = data_.values().shape();
     valsh[0] = x.size(0);
     vecsh[0] = x.size(0);
     brille::Array<T> vals(valsh);
     brille::Array<S> vecs(vecsh);
+    // vals and vecs are row-ordered contiguous by default, so we can create
+    // mutable data-sharing Array2 objects for use with
+    // Interpolator2::interpolate_at through the constructor:
+    brille::Array2<T> vals2(vals);
+    brille::Array2<S> vecs2(vecs);
     for (ind_t i=0; i<x.size(0); ++i){
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
       auto iw = root_.indices_weights(vertices_, x.extract(i));
-      data_.interpolate_at(iw, vals, vecs, i);
+      data_.interpolate_at(iw, vals2, vecs2, i);
     }
     return std::make_tuple(vals, vecs);
   }
@@ -276,13 +282,18 @@ public:
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // not used in parallel region
-    auto valsh = data_.values().data().shape();
-    auto vecsh = data_.vectors().data().shape();
+    auto valsh = data_.values().shape();
+    auto vecsh = data_.vectors().shape();
     valsh[0] = x.size(0);
     vecsh[0] = x.size(0);
     // shared between threads
     brille::Array<T> vals(valsh);
     brille::Array<S> vecs(vecsh);
+    // vals and vecs are row-ordered contiguous by default, so we can create
+    // mutable data-sharing Array2 objects for use with
+    // Interpolator2::interpolate_at through the constructor:
+    brille::Array2<T> vals2(vals);
+    brille::Array2<S> vecs2(vecs);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     ind_t unfound=0;
     long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
@@ -292,7 +303,7 @@ public:
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
       auto iw = root_.indices_weights(vertices_, x.extract(i));
       if (iw.size()){
-        data_.interpolate_at(iw, vals, vecs, i);
+        data_.interpolate_at(iw, vals2, vecs2, i);
       } else {
         ++unfound;
       }

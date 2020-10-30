@@ -55,9 +55,9 @@ if (CMAKE_BUILD_TYPE EQUAL "Debug")
   set(PROFILING ON)
 endif (CMAKE_BUILD_TYPE EQUAL "Debug")
 
-# if (PROFILING)
-  # add_definitions(-DPROFILING)
-# endif (PROFILING)
+if (PROFILING)
+  add_definitions(-DPROFILING)
+endif (PROFILING)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

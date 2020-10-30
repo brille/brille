@@ -26,6 +26,7 @@
 #include <functional>
 #include <omp.h>
 #include "array.hpp"
+#include "array2.hpp"
 #include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
 #include "utilities.hpp"
@@ -445,17 +446,22 @@ public:
   interpolate_at(const bArray<double>& x) const {
     profile_update("Single thread interpolation at ",x.size(0)," points");
     this->check_before_interpolating(x);
-    auto valsh = data_.values().data().shape();
-    auto vecsh = data_.vectors().data().shape();
+    auto valsh = data_.values().shape();
+    auto vecsh = data_.vectors().shape();
     valsh[0] = vecsh[0] = x.size(0);
     brille::Array<T> vals_out(valsh);
     brille::Array<R> vecs_out(vecsh);
+    // vals and vecs are row-ordered contiguous by default, so we can create
+    // mutable data-sharing Array2 objects for use with
+    // Interpolator2::interpolate_at through the constructor:
+    brille::Array2<T> vals2(vals_out);
+    brille::Array2<R> vecs2(vecs_out);
     for (size_t i=0; i<x.size(0); ++i){
       verbose_update("Locating ",x.to_string(i));
       auto indwghts = this->indices_weights(x.view(i));
       if (indwghts.size()<1)
         throw std::runtime_error("Point not found in PolyhedronTrellis");
-      data_.interpolate_at(indwghts, vals_out, vecs_out, i);
+      data_.interpolate_at(indwghts, vals2, vecs2, i);
     }
     return std::make_tuple(vals_out, vecs_out);
   }
@@ -464,12 +470,17 @@ public:
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     profile_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
-    auto valsh = data_.values().data().shape();
-    auto vecsh = data_.vectors().data().shape();
+    auto valsh = data_.values().shape();
+    auto vecsh = data_.vectors().shape();
     valsh[0] = vecsh[0] = x.size(0);
     // shared between threads
     brille::Array<T> vals_out(valsh);
     brille::Array<R> vecs_out(vecsh);
+    // vals and vecs are row-ordered contiguous by default, so we can create
+    // mutable data-sharing Array2 objects for use with
+    // Interpolator2::interpolate_at through the constructor:
+    brille::Array2<T> vals2(vals_out);
+    brille::Array2<R> vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     long long xsize = brille::utils::u2s<long long, size_t>(x.size(0));
     size_t n_unfound{0};
@@ -478,7 +489,7 @@ public:
       size_t i = brille::utils::s2u<size_t, long long>(si);
       auto indwghts = this->indices_weights(x.view(i));
       if (indwghts.size()>0) {
-        data_.interpolate_at(indwghts, vals_out, vecs_out, i);
+        data_.interpolate_at(indwghts, vals2, vecs2, i);
       } else {
         ++n_unfound;
       }

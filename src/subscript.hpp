@@ -466,6 +466,11 @@ I sub2lin(const std::array<I,2>& sub, const std::array<I,2>& str){
 }
 
 template <class I>
+I sub2lin(const I s0, const I s1, const std::array<I,2>& str){
+  return s0*str[0] + s1*str[1];
+}
+
+template <class I>
 I offset_sub2lin(const std::vector<I>& off, const std::vector<I>& sub, const std::vector<I>& str){
   I lin{0};
   for (size_t i=0; i<sub.size(); ++i) lin += (off[i]+sub[i])*str[i];

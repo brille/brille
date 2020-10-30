@@ -20,6 +20,7 @@
 
 #include <set>
 #include "array.hpp"
+#include "array2.hpp"
 #include "array_latvec.hpp" // defines bArray
 #include <vector>
 #include <array>

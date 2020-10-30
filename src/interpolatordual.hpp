@@ -14,7 +14,7 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-#include "interpolator.hpp"
+#include "interpolator2.hpp"
 
 #ifndef _DUALINTERPOLATOR_H_
 #define _DUALINTERPOLATOR_H_
@@ -23,9 +23,7 @@ template<class T, class R>
 class DualInterpolator{
 public:
   using ind_t = brille::ind_t;
-  template<class Y> using data_t = brille::Array<Y>;
   template<class Z> using element_t = std::array<Z,3>;
-  using shape_t = typename data_t<T>::shape_t;
 private:
   Interpolator<T> values_;
   Interpolator<R> vectors_;
@@ -65,15 +63,16 @@ public:
   RotatesLike values_rotate_like(const RotatesLike a){ return values_.rotateslike(a); }
   RotatesLike vectors_rotate_like(const RotatesLike a){ return vectors_.rotateslike(a); }
   //
-  // template<class TRef, class RRef>
+  // template<template<class> class A>
   // void
-  // interpolate_at(const std::vector<ind_t>& indices, const std::vector<double>& weights, data_t<T,TRef>& values_out, data_t<R,RRef>& vectors_out, const ind_t to) const {
+  // interpolate_at(const std::vector<ind_t>& indices, const std::vector<double>& weights, A<T>& values_out, A<R>& vectors_out, const ind_t to) const {
   //   auto permutations = this->get_permutations(indices);
   //   values_.interpolate_at(permutations, indices, weights, values_out, to, false);
   //   vectors_.interpolate_at(permutations, indices, weights, vectors_out, to, true);
   // }
+  template<template<class> class A>
   void
-  interpolate_at(const std::vector<std::pair<ind_t,double>>& indices_weights, data_t<T>& values_out, data_t<R>& vectors_out, const ind_t to) const {
+  interpolate_at(const std::vector<std::pair<ind_t,double>>& indices_weights, A<T>& values_out, A<R>& vectors_out, const ind_t to) const {
     auto permutations = this->get_permutations(indices_weights);
     values_.interpolate_at(permutations, indices_weights, values_out, to, false);
     vectors_.interpolate_at(permutations, indices_weights, vectors_out, to, true);
@@ -88,13 +87,6 @@ public:
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
   std::vector<std::vector<typename PermutationTable::ind_t>>
   get_permutations(const std::vector<std::pair<I,double>>&) const;
-  //
-//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r) const {
-//    return values_.rotate_in_place(vals, r) && vectors_.rotate_in_place(vecs, r);
-//  }
-//  bool rotate_in_place(data_t<T>& vals, data_t<R>& vecs, const std::vector<std::array<int,9>>& r, const int n) const {
-//    return values_.rotate_in_place(vals, r, n) && vectors_.rotate_in_place(vecs, r, n);
-//  }
   //
   // Replace the data within this object.
   void replace_data(Interpolator<T>& val, Interpolator<R>& vec){
@@ -184,35 +176,27 @@ DualInterpolator<T,R>::debye_waller_sum(const bArray<double>& Qpts, const double
   const double pref{hbar*hbar/static_cast<double>(2*vector_nq)}; // meV²⋅s²
   const auto& val{ values_.data()};
   const auto& vec{vectors_.data()};
-  // indexing vectors for value and vector Arrays
-  typename DualInterpolator<T,R>::shape_t qj{0,0}, qjd{0,0,0};
-  // indexing array for ouput Array2
-  typename bArray<double>::shape_t Qd{{0,0}};
+  ind_t vecsp = vectors_.branch_span();
   // for each input Q point
   for (size_t Qidx=0; Qidx<nQ; ++Qidx){
-    Qd[0] = Qidx;
     // and each ion
     for (size_t d=0; d<nIons; ++d){
-      qjd[2] = 3u*d;
-      Qd[1] = d;
       double qj_sum{0};
       // sum over all reduced q in the first Brillouin zone
       for (size_t q=0; q<vector_nq; ++q){
-        qjd[0] = qj[0] = q;
         // and over all 3*nIon branches at each q
         for (size_t j=0; j<nbr; ++j){
-          qjd[1] = qj[1] = j;
           // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
-          coth_en = brille::utils::coth_over_en(val[qj], beta);
+          coth_en = brille::utils::coth_over_en(val.val(q,j), beta);
           // and find |Q⋅ϵₛ|². Note: brille::utils::vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = brille::utils::vector_product(3u, Qpts.ptr(Qidx), vec.ptr(qjd));
+          Q_dot_e_2 = brille::utils::vector_product(3u, Qpts.ptr(Qidx), vec.ptr(q,j*vecsp+3u*d));
           // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
           qj_sum += Q_dot_e_2 * coth_en;
         }
       }
       // with the sum over s complete, normalize by ħ²/2 divided by the number
       // of points in the Brillouin zone and store the result at W[Qidx, d];
-      WdQ[Qd] = qj_sum*pref;
+      WdQ.val(Qidx,d) = qj_sum*pref;
     }
   }
   return WdQ;

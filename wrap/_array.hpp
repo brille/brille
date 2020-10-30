@@ -83,12 +83,17 @@ namespace brille {
   brille::Array<T> py2a(pybind11::array_t<T> pya){
     pybind11::buffer_info info = pya.request();
     std::vector<ind_t> shape, stride;
+    // the py::buffer_info contains a size which counts the indexable number
+    // of elements. This IS NOT the allocated size of the array unless it is
+    // contiguous. For non-contiguous arrays the allocated memory will fill
+    // max(shape[i]*stride[i])
+    ind_t num = info.size;
     for (ssize_t i=0; i<info.ndim; ++i){
       shape.push_back(static_cast<ind_t>(info.shape[i]));
       stride.push_back(static_cast<ind_t>(info.strides[i]/sizeof(T)));
+      if (shape[i]*stride[i] > num) num = shape[i]*stride[i];
     }
     T* ptr = (T*) info.ptr;
-    ind_t num = info.size;
     bool own_memory{false}; // we NEVER own the memory coming from Python
     bool py_mutable{!info.readonly};
     /*
@@ -127,12 +132,13 @@ namespace brille {
     if (info.ndim != 2)
       throw std::runtime_error("brille::Array2 objects require 2D input!");
     std::array<ind_t,2> shape, stride;
+    ind_t num = info.size;
     for (ssize_t i=0; i<info.ndim; ++i){
       shape[i] = static_cast<ind_t>(info.shape[i]);
       stride[i] = static_cast<ind_t>(info.strides[i]/sizeof(T));
+      if (shape[i]*stride[i] > num) num = shape[i]*stride[i];
     }
     T* ptr = (T*) info.ptr;
-    ind_t num = info.size;
     bool own_memory{false}; // we NEVER own the memory coming from Python
     bool py_mutable{!info.readonly};
     auto ref = std::make_shared<pybind11::buffer_info>(pya.request());

@@ -507,6 +507,7 @@ public:
   template<typename I> const T& val(std::initializer_list<I> l) const;
 
   Array<T> contiguous_copy() const;
+  Array<T> contiguous_row_ordered_copy() const;
   Array<T> squeeze() const;
   Array<T> squeeze(const ind_t dim) const;
   Array<T> slice(const ind_t i0) const;
