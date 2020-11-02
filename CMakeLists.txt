@@ -16,9 +16,10 @@ mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
 # Allow system catch2 to be required
 option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
-
+# Allow the log level to be set by cmake
+set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
 # Special option for profiling runs
-option(PROFILING "Emit profiling output to standard out" OFF)
+option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
 # Define the minimum version of libraries needed
 set(MINIMUM_PYBIND11_VERSION 2.5.0)
@@ -51,13 +52,21 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
 
-if (CMAKE_BUILD_TYPE EQUAL "Debug")
-  set(PROFILING ON)
-endif (CMAKE_BUILD_TYPE EQUAL "Debug")
-
-if (PROFILING)
-  add_definitions(-DPROFILING)
-endif (PROFILING)
+if (${BRILLE_LOGLEVEL} STREQUAL "VERBOSE")
+  message(STATUS "Verbose logging emitted at runtime")
+  add_definitions(-DVERBOSE)
+else()
+  if (${BRILLE_LOGLEVEL} STREQUAL "DEBUG")
+    message(STATUS "Debug logging emitted at runtime")
+    add_definitions(-DDEBUG)
+  else()
+    message(STATUS "Informational logging emitted at runtime")
+  endif()
+endif()
+if (BRILLE_PROFILING)
+  message(STATUS "Profiling output emitted at runtime")
+  add_definitions(-DBRILLE_PROFILING)
+endif (BRILLE_PROFILING)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

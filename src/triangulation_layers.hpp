@@ -522,27 +522,27 @@ triangulate(const bArray<T>& verts,
             const int max_mesh_points=-1)
 {
 //
-  info_update("Create layered triangulation");
+  profile_update("Create layered triangulation");
   assert(verts.ndim()==2 && verts.size(1)==3);
   std::vector<TetTriLayer> layers;
   if (layer_count < 2){
-    info_update("Less than two layers requested");
+    profile_update("Less than two layers requested");
     layers.push_back(triangulate_one_layer(verts, vpf, max_cell_size, max_mesh_points));
   } else {
-    info_update(layer_count," layers requested");
+    profile_update(layer_count," layers requested");
     // the highest-layer is the most-basic tetrahedral triangulation for the input
     layers.push_back(triangulate_one_layer(verts, vpf, -1, max_mesh_points));
     if (max_cell_size > 0.0){
       std::array<double,3> layer_vol_stats = layers[0].volume_statistics();
-      info_update("Highest layer has volume total, min, max: ", layer_vol_stats);
+      profile_update("Highest layer has volume total, min, max: ", layer_vol_stats);
       double highest_maxvol = layer_vol_stats[2];
       TetTriLayer lowest = triangulate_one_layer(verts, vpf, max_cell_size, max_mesh_points);
       layer_vol_stats = lowest.volume_statistics();
-      info_update(" Lowest layer has volume total, min, max: ", layer_vol_stats);
+      profile_update(" Lowest layer has volume total, min, max: ", layer_vol_stats);
       double lowest_maxvol = layer_vol_stats[2];
 
       double exponent = std::log(highest_maxvol/lowest_maxvol)/std::log(static_cast<double>(layer_count));
-      info_update("So an exponent of ",exponent," will be used.");
+      profile_update("So an exponent of ",exponent," will be used.");
       for (int i=layer_count-1; i>1; --i){ // start from second highest layer, finish at second lowest
         double layer_maxvol = lowest_maxvol * std::pow(static_cast<double>(i), exponent);
         layers.push_back(triangulate_one_layer(verts, vpf, layer_maxvol, max_mesh_points));

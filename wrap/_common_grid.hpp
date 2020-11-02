@@ -29,15 +29,7 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
     bool sort
   ){
     profile_update("Start of 'fill' operation");
-    // brille::Array<T> vals;
-    // brille::Array<R> vecs;
-    // std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
-    // RotatesLike val_rl, vec_rl;
     size_t count = cobj.vertex_count();
-    // std::tie(vals,val_el,val_rl)=fill_check(pyvals,pyvalelrl,count);
-    // std::tie(vecs,vec_el,vec_rl)=fill_check(pyvecs,pyvecelrl,count);
-    // cobj.replace_value_data(vals, val_el, val_rl);
-    // cobj.replace_vector_data(vecs, vec_el, vec_rl);
     Interpolator<T> vals = fill_check(pyvals,pyvalelrl,count);
     Interpolator<R> vecs = fill_check(pyvecs,pyvecelrl,count);
     cobj.replace_data(vals, vecs);
@@ -99,19 +91,7 @@ R"pbdoc(
     bool sort
   ){
     profile_update("Start of 'fill' operation with cost information");
-    // brille::Array<T> vals;
-    // brille::Array<R> vecs;
-    // std::array<brille::ind_t, 3> val_el{{0,0,0}}, vec_el{{0,0,0}};
-    // std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
-    // RotatesLike val_rl, vec_rl;
-    // int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
     size_t count = cobj.vertex_count();
-    // std::tie(vals,val_el,val_rl,val_sf,val_vf,val_wght)=fill_check(pyvals,pyvalel,pyvalwght,count);
-    // std::tie(vecs,vec_el,vec_rl,vec_sf,vec_vf,vec_wght)=fill_check(pyvecs,pyvecel,pyvecwght,count);
-    // cobj.replace_value_data(vals, val_el, val_rl);
-    // cobj.replace_vector_data(vecs, vec_el, vec_rl);
-    // cobj.set_value_cost_info(val_sf, val_vf, val_wght);
-    // cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
     Interpolator<T> vals = fill_check(pyvals,pyvalel,pyvalwght,count);
     Interpolator<R> vecs = fill_check(pyvecs,pyvecel,pyvecwght,count);
     cobj.replace_data(vals, vecs);
@@ -181,15 +161,16 @@ R"pbdoc(
   )pbdoc");
 
   cls.def_property_readonly("values",[](Class& cobj){
-    return a2py(cobj.data().values().data());
+    // extract the values data wrapped with shape information as an Array
+    return a2py(cobj.data().values().array());
   },R"pbdoc(
-    Return the stored eigenvalues
+    Return a shared view of the stored eigenvalues
   )pbdoc");
 
   cls.def_property_readonly("vectors",[](Class& cobj){
-    return a2py(cobj.data().vectors().data());
+    return a2py(cobj.data().vectors().array());
   },R"pbdoc(
-    Return the stored eigenvectors
+    Return a shared view of the stored eigenvectors
   )pbdoc");
 }
 

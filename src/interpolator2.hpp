@@ -190,6 +190,7 @@ public:
   }
   const bArray<T>& data(void) const {return data_;}
   shape_t shape(void) const {return shape_;};
+  brille::Array<T> array(void) const {return brille::Array<T>(data_,shape_);}
   element_t<ind_t> elements(void) const {return _elements;}
   //
   template<class... Args>

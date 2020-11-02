@@ -17,12 +17,10 @@
 #include "comparisons.hpp"
 #include "approx.hpp"
 #include "types.hpp"
+#include "array_.hpp"
 #include "array.hpp"
 
 namespace brille {
-
-template<class T> class Array2It;
-
 /*! \brief A multidimensional shared data array with operator overloads
 
 The `Array2<T>`` object holds a multidimensional shared data object plus
@@ -33,8 +31,7 @@ The `Array2<T>` object provides overloads for basic operations, a number of
 utility methods, and methods to create offset and/or reduced-range mutable
 or immutable views into the shared array.
 */
-template<class T>
-class Array2{
+template<class T> class Array2{
 public:
   using ref_t = std::shared_ptr<void>;
   using shape_t = std::array<ind_t,2>;
@@ -468,6 +465,7 @@ public:
   template<class I> const T& val(std::initializer_list<I> l) const;
 
   Array2<T> contiguous_copy() const;
+  Array2<T> contiguous_row_ordered_copy() const;
   // ^^^^^^^^^^ IMPLEMENTED  ^^^^^^^^^^^vvvvvvvvv TO IMPLEMENT vvvvvvvvvvvvvvvvv
 
 };

@@ -17,11 +17,10 @@
 #include "comparisons.hpp"
 #include "approx.hpp"
 #include "types.hpp"
+#include "array_.hpp"
+#include "array2.hpp"
 
 namespace brille {
-
-template<class T> class ArrayIt;
-
 /*! \brief A multidimensional shared data array with operator overloads
 
 The `Array<T>`` object holds a multidimensional shared data object plus
@@ -32,8 +31,7 @@ The `Array<T>` object provides overloads for basic operations, a number of
 utility methods, and methods to create offset and/or reduced-range mutable
 or immutable views into the shared array.
 */
-template<class T>
-class Array{
+template<class T> class Array{
 public:
   using ref_t = std::shared_ptr<void>;
   using shape_t = brille::shape_t;
@@ -231,6 +229,18 @@ public:
     for (ind_t i=0; i<shape[0]; ++i) for (ind_t j=0; j<shape[1]; ++j)
       d[x++] = static_cast<T>(data[i][j]);
     return Array<T>(d, num, true, shape, stride);
+  }
+  // Construct an Array from an Array2 and higher-dimensional shape:
+  Array(const Array2<T>& twod, const shape_t& shape): _shape(shape){
+    this->set_stride();
+    Array2<T> c2d = twod.contiguous_row_ordered_copy();
+    _data    = c2d.data();
+    _num     = c2d.raw_size();
+    _shift   = c2d.raw_shift();
+    _own     = c2d.own();
+    _ref     = c2d.ref();
+    _mutable = c2d.ismutable();
+    this->init_check();
   }
 
   // Rule-of-five definitions since we may not own the associated raw array:
