@@ -69,7 +69,8 @@ print(breu.log)
 
 When run with `brille == v0.4.3` this produced
 
->[2020-10-30 17:45:41:778] Start of BrillouinZone construction
+```bash
+[2020-10-30 17:45:41:778] Start of BrillouinZone construction
 [2020-10-30 17:45:41:811]   End of BrillouinZone construction
 [2020-10-30 17:45:41:811] Start of PolyhedronTrellis construction
 [2020-10-30 17:45:43:385]   End of PolyhedronTrellis construction
@@ -92,6 +93,7 @@ When run with `brille == v0.4.3` this produced
 [2020-10-30 17:46:28:296]   End BrillouinZoneTrellis3::ir_interpolate_at
 [2020-10-30 17:46:33:319] Interpolated values found
 [2020-10-30 17:46:35:747]   End of 'ir_interpolate_at' operation
+```
 
 which captures three memory copies
 
@@ -101,7 +103,8 @@ which captures three memory copies
 
 Switching to shared memory arrays yielded
 
->[2020-11-01 09:02:03:896] Start of BrillouinZone construction
+```bash
+[2020-11-01 09:02:03:896] Start of BrillouinZone construction
 [2020-11-01 09:02:03:920]   End of BrillouinZone construction
 [2020-11-01 09:02:03:920] Start of PolyhedronTrellis construction
 [2020-11-01 09:02:05:636]   End of PolyhedronTrellis Construction
@@ -123,5 +126,6 @@ Switching to shared memory arrays yielded
 [2020-11-01 09:02:56:681]   End Interpolator::rip_gamma_complex method
 [2020-11-01 09:02:56:681]   End BrillouinZoneTrellis3::ir_interpolate_at
 [2020-11-01 09:02:56:682]   End of 'ir_interpolate_at' operation
+```
 
 with equivalent operations taking 1, 0, and 1 msec, respectively.
