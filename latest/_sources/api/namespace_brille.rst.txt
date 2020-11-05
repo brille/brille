@@ -64,11 +64,11 @@ Functions
 
 - :ref:`exhale_function_array2_8hpp_1a40fcb00eae0ffc5121b7f6aa50fa453b`
 
-- :ref:`exhale_function_comparisons_8hpp_1a5b56249445137c718122268db20178b0`
-
 - :ref:`exhale_function_comparisons_8cpp_1ae773cb1b70eb4c8abf136928c7eef9d9`
 
 - :ref:`exhale_function_comparisons_8cpp_1a001897a517be61dc8cfaddb1e8710ec5`
+
+- :ref:`exhale_function_comparisons_8hpp_1a5b56249445137c718122268db20178b0`
 
 - :ref:`exhale_function_comparisons_8hpp_1ae524a675a7210c6d835b66e6457e5ad1`
 

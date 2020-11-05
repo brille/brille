@@ -81,13 +81,13 @@ Functions
 
 - :ref:`exhale_function_permutation_8hpp_1a0095bb2ef5966c7e781a2a6e01f4bf78`
 
+- :ref:`exhale_function_permutation_8hpp_1a9719f5d7aafae5e39fc35a55dd55d9a3`
+
 - :ref:`exhale_function_permutation_8hpp_1ac49786d3941915eb23005899e7576f87`
 
 - :ref:`exhale_function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea`
 
 - :ref:`exhale_function_permutation_8hpp_1ab5a34620fda3929341661795398b2ae1`
-
-- :ref:`exhale_function_permutation_8hpp_1a9719f5d7aafae5e39fc35a55dd55d9a3`
 
 - :ref:`exhale_function_permutation_8hpp_1a4d3bd3fb82cffda7184b384db05ccf03`
 

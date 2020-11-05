@@ -75,9 +75,9 @@ Functions
 
 - :ref:`exhale_function_polyhedron_8hpp_1ac6a789b445b0b68cc2baa536f785ab7b`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a5122b5827af9cbf50cd16988a1d504c2`
-
 - :ref:`exhale_function_polyhedron_8hpp_1acc473a5a311e2b25c12ae7ecdce226bc`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a5122b5827af9cbf50cd16988a1d504c2`
 
 - :ref:`exhale_function_polyhedron_8hpp_1a4dd81928550fdfddbb11dce98cf65df4`
 
