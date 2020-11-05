@@ -45,12 +45,12 @@
 class PermutationTable
 {
 public:
-	using int_t = int; // uint_fastN_t or uint_leastN_t?
+	using ind_t = unsigned; // uint_fastN_t or uint_leastN_t?
 private:
 	static const size_t offset{1u}; // first valid value in map
 	size_t IndexSize;
 	std::map<size_t,size_t> ijmap;
-	std::vector<std::vector<int_t>> permutations;
+	std::vector<std::vector<ind_t>> permutations;
 public:
 	PermutationTable(size_t ni, size_t branches): IndexSize(ni) {
 		this->add_zeroth(branches);
@@ -87,7 +87,9 @@ public:
 		auto itr = this->find(i,j);
 		return itr != ijmap.end() && itr->second < offset;
 	}
-	size_t set(const size_t i, const size_t j, const std::vector<int_t>& v){
+	template<class I>
+	size_t set(const size_t i, const size_t j, const std::vector<I>& vin){
+		std::vector<ind_t> v(vin.begin(), vin.end());
 		bool contains{false};
 		size_t idx{0};
 		size_t key = this->ij2key(i,j);
@@ -109,7 +111,9 @@ public:
 		itr->second = idx+offset;
 		return idx;
 	}
-	size_t overwrite(const size_t i, const size_t j, const std::vector<int_t>& v){
+	template<class I>
+	size_t overwrite(const size_t i, const size_t j, const std::vector<I>& vin){
+		std::vector<ind_t> v(vin.begin(), vin.end());
 		bool contains{false};
 		size_t idx{0};
 		size_t key = this->ij2key(i,j);
@@ -120,10 +124,10 @@ public:
 		itr->second = idx+offset;
 		return idx;
 	}
-	std::vector<int_t> safe_get(const size_t i, const size_t j) const {
+	std::vector<ind_t> safe_get(const size_t i, const size_t j) const {
 		auto itr = this->find(i,j);
 		bool actually_present = itr != ijmap.end() && itr->second >= offset;
-		// return actually_present ? permutations[itr->second - offset] : std::vector<int_t>();
+		// return actually_present ? permutations[itr->second - offset] : std::vector<ind_t>();
 		return permutations[actually_present ? itr->second - offset : 0];
 	}
 	std::set<size_t> keys() const {
@@ -141,9 +145,9 @@ public:
 private:
 	size_t ij2key(const size_t i, const size_t j) const { return i==j ? 0u : i*IndexSize+j; }
 	//
-	std::tuple<bool, size_t> find_permutation(const std::vector<int_t>& v) const {
+	std::tuple<bool, size_t> find_permutation(const std::vector<ind_t>& v) const {
 		size_t N = v.size();
-		auto equal_perm = [&](const std::vector<int_t>& p){
+		auto equal_perm = [&](const std::vector<ind_t>& p){
 			if (p.size() != N) return false;
 			for (size_t i=0; i<N; ++i)
 				if (p[i] != v[i]) return false;
@@ -154,7 +158,7 @@ private:
 		return std::make_tuple(itr != permutations.end(), std::distance(permutations.begin(), itr));
 	}
 	void add_zeroth(size_t branches) {
-		std::vector<int_t> identity(branches);
+		std::vector<ind_t> identity(branches);
 		std::iota(identity.begin(), identity.end(), 0);
 		if (permutations.size()<1) permutations.resize(1);
 		permutations[0] = identity;

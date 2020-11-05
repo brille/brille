@@ -19,6 +19,7 @@ set(CXX_SOURCES
   bravais.cpp
   bz.cpp
   bz_wedge.cpp
+  comparisons.cpp
   debug.cpp
   hall_symbol.cpp
   lattice.cpp
@@ -32,7 +33,6 @@ set(CXX_SOURCES
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})
   target_include_directories(${CXX_TARGET} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-  set_property(TARGET ${CXX_TARGET} PROPERTY CXX_STANDARD 14)
 endforeach()
 
 # # This method of forcing static linking doesn't work since MacOS uses clang.

@@ -25,7 +25,7 @@ void wrap_lattice(py::module &m){
   py::class_<Lattice> cls(m,"Lattice");
 
   cls.def(py::init<double,double,double,double,double,double,int>(),
-          "a"_a,"b"_a,"c"_a,"alpha"_a=PI/2,"beta"_a=PI/2,"gamma"_a=PI/2,
+          "a"_a,"b"_a,"c"_a,"alpha"_a=brille::halfpi,"beta"_a=brille::halfpi,"gamma"_a=brille::halfpi,
           "HallNumber"_a=1);
   //
   cls.def(py::init([](py::array_t<double> lens, py::array_t<double> angs, int hall) {

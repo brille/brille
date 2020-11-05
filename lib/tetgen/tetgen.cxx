@@ -6676,7 +6676,7 @@ REAL tetgenmesh::tetaspectratio(point pa, point pb, point pc, point pd)
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool tetgenmesh::circumsphere(REAL* pa, REAL* pb, REAL* pc, REAL* pd,
+bool tetgenmesh::circumsphere(const REAL* pa, const REAL* pb, const REAL* pc, const REAL* pd,
                               REAL* cent, REAL* radius)
 {
   REAL A[4][4], rhs[4], D;

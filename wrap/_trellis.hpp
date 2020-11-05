@@ -43,15 +43,29 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 
-  cls.def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_xyz());});
-  cls.def_property_readonly("inner_invA",[](const Class& cobj){return av2np(cobj.get_inner_xyz());});
-  cls.def_property_readonly("outer_invA",[](const Class& cobj){return av2np(cobj.get_outer_xyz());});
+  cls.def_property_readonly("invA",[](const Class& cobj){
+    return brille::a2py(cobj.get_xyz());
+  });
+  cls.def_property_readonly("inner_invA",[](const Class& cobj){
+    return brille::a2py(cobj.get_inner_xyz());
+  });
+  cls.def_property_readonly("outer_invA",[](const Class& cobj){
+    return brille::a2py(cobj.get_outer_xyz());
+  });
 
-  cls.def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_hkl());});
-  cls.def_property_readonly("inner_rlu",[](const Class& cobj){return av2np(cobj.get_inner_hkl());});
-  cls.def_property_readonly("outer_rlu",[](const Class& cobj){return av2np(cobj.get_outer_hkl());});
+  cls.def_property_readonly("rlu",[](const Class& cobj){
+    return brille::a2py(cobj.get_hkl());
+  });
+  cls.def_property_readonly("inner_rlu",[](const Class& cobj){
+    return brille::a2py(cobj.get_inner_hkl());
+  });
+  cls.def_property_readonly("outer_rlu",[](const Class& cobj){
+    return brille::a2py(cobj.get_outer_hkl());
+  });
 
-  cls.def_property_readonly("tetrahedra",[](const Class& cobj){return cobj.get_vertices_per_tetrahedron();});
+  cls.def_property_readonly("tetrahedra",[](const Class& cobj){
+    return cobj.get_vertices_per_tetrahedron();
+  });
 
   // cls.def("__repr__",&Class::to_string);
   def_grid_fill(cls);

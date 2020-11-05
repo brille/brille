@@ -1,4 +1,4 @@
-/* Copyright 2019 Greg Tucker
+/* Copyright 2019-2020 Greg Tucker
 //
 // This file is part of brille.
 //
@@ -22,11 +22,13 @@
 
 #include <complex>
 #include <cstdint>
-#include "arrayvector.hpp"
+#include "array.hpp"
+#include "array_latvec.hpp" // defines bArray
 #include "sorting_status.hpp"
 #include "munkres.hpp"
 #include "lapjv.hpp"
 #include "smp.hpp"
+
 
 /*! \brief Type information for cost-matrix elements used by Linear Assignment
      Problem solvers.
@@ -101,8 +103,8 @@ two matrices.
 @param vec_cost_func Used to select the eigenvector cost function:
                       0 --> `vector_angle`
                       1 --> `vector_distance`
-                      2 --> `1-vector_product`
-                      3 --> `abs(sin(hermitian_angle))`
+                      2 --> `1-brille::utils::vector_product`
+                      3 --> `abs(sin(brille::utils::hermitian_angle))`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
 template<class T, class R, class I,
@@ -111,7 +113,7 @@ template<class T, class R, class I,
 bool munkres_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                          const R Wscl, const R Wvec, const R Wmat,
                          const size_t span, const size_t Nobj,
-                         ArrayVector<size_t>& permutations,
+                         bArray<size_t>& permutations,
                          const size_t centre_idx, const size_t neighbour_idx,
                          const int vec_cost_func = 0
                        ){
@@ -162,10 +164,10 @@ for (size_t i=0; i<Nobj; ++i){
          least-orthogonal modes as being equivalent.
       */
       switch(vec_cost_func){
-        case 0: v_cost = std::abs(std::sin(hermitian_angle(Nel[1], c_i, n_j))); break;
-        case 1: v_cost = vector_distance(Nel[1], c_i, n_j); break;
-        case 2: v_cost = 1-vector_product(Nel[1], c_i, n_j); break;
-        case 3: v_cost = vector_angle(Nel[1], c_i, n_j); break;
+        case 0: v_cost = std::abs(std::sin(brille::utils::hermitian_angle(Nel[1], c_i, n_j))); break;
+        case 1: v_cost = brille::utils::vector_distance(Nel[1], c_i, n_j); break;
+        case 2: v_cost = 1-brille::utils::vector_product(Nel[1], c_i, n_j); break;
+        case 3: v_cost = brille::utils::vector_angle(Nel[1], c_i, n_j); break;
       }
       c_i += Nel[1];
       n_j += Nel[1];
@@ -174,7 +176,7 @@ for (size_t i=0; i<Nobj; ++i){
       I nel2 = std::sqrt(Nel[2]);
       if (nel2*nel2 != Nel[2])
         throw std::runtime_error("Non-square matrix in munkres_permutation");
-      m_cost = frobenius_distance(nel2, c_i, n_j);
+      m_cost = brille::utils::frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     munkres.get_cost()[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
@@ -190,10 +192,11 @@ if (!munkres.get_assignment(assignment)){
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-for (size_t i=0; i<Nobj; ++i)
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations.getvalue(neighbour_idx,i)==assignment[j])
-      permutations.insert(j,centre_idx,i);
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == assignment[j]) permutations.val(cind, i) = j;
 delete[] assignment;
 return true;
 }
@@ -251,9 +254,9 @@ two matrices.
 @param centre_idx The index into `permutations` where the output is stored
 @param neighbour_idx The index into `permutations` to find the neighbour permutation
 @param vec_cost_func Used to select the eigenvector cost function:
-                      0 --> `abs(sin(hermitian_angle))`
+                      0 --> `abs(sin(brille::utils::hermitian_angle))`
                       1 --> `vector_distance`
-                      2 --> `1-vector_product`
+                      2 --> `1-brille::utils::vector_product`
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
@@ -263,7 +266,7 @@ template<class T, class R, class I,
 bool jv_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    ArrayVector<size_t>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -300,10 +303,10 @@ for (size_t i=0; i<Nobj; ++i){
     }
     if (Nel[1]){
       switch(vec_cost_func){
-        case 0: v_cost = std::abs(std::sin(hermitian_angle(Nel[1], c_i, n_j))); break;
-        case 1: v_cost = vector_distance(Nel[1], c_i, n_j); break;
-        case 2: v_cost = 1-vector_product(Nel[1], c_i, n_j); break;
-        case 3: v_cost =     vector_angle(Nel[1], c_i, n_j); break;
+        case 0: v_cost = std::abs(std::sin(brille::utils::hermitian_angle(Nel[1], c_i, n_j))); break;
+        case 1: v_cost = brille::utils::vector_distance(Nel[1], c_i, n_j); break;
+        case 2: v_cost = 1-brille::utils::vector_product(Nel[1], c_i, n_j); break;
+        case 3: v_cost =     brille::utils::vector_angle(Nel[1], c_i, n_j); break;
       }
       c_i += Nel[1];
       n_j += Nel[1];
@@ -312,47 +315,13 @@ for (size_t i=0; i<Nobj; ++i){
       I nel2 = std::sqrt(Nel[2]);
       if (nel2*nel2 != Nel[2])
         throw std::runtime_error("Non-square matrix in jv_permutation");
-      m_cost = frobenius_distance(nel2, c_i, n_j);
+      m_cost = brille::utils::frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     // cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);
     cost[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
   }
 }
-// // protect against equally-good solutions in the same row:
-// for (size_t i=0; i<Nobj; ++i){
-//   R rowmin{cost[i*Nobj]};
-//   for (size_t j=1; j<Nobj; ++j) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
-//   int equal_to_min{0};
-//   for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
-//   if (equal_to_min > 1){
-//     info_update(equal_to_min," columns have the same lowest cost in row ",i);
-//     for (size_t j=0; j<Nobj; ++j) if (approx_scalar(rowmin, cost[j*Nobj+j]))
-//     cost[i*Nobj+j] += static_cast<R>(--equal_to_min*100)*std::numeric_limits<R>::epsilon();
-//   }
-// }
-// // and same column
-// for (size_t j=0; j<Nobj; ++j){
-//   R rowmin{cost[j]};
-//   for (size_t i=1; i<Nobj; ++i) if (rowmin > cost[i*Nobj+j]) rowmin = cost[i*Nobj+j];
-//   int equal_to_min{0};
-//   for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j])) ++equal_to_min;
-//   if (equal_to_min > 1){
-//     info_update(equal_to_min," rows have the same lowest cost in column ",j);
-//     for (size_t i=0; i<Nobj; ++i) if (approx_scalar(rowmin, cost[i*Nobj+j]))
-//     cost[i*Nobj+j] += static_cast<R>(--equal_to_min*100)*std::numeric_limits<R>::epsilon();
-//   }
-// }
-// /* Normalising the cost matrix before running Jonker-Volgenant *might* help
-//    with the infinite loop situation
-// */
-// R maxcost{cost[0]}, mincost{cost[0]};
-// for (size_t i=1; i<Nobj*Nobj; ++i){
-//   if (maxcost < cost[i]) maxcost = cost[i];
-//   if (mincost > cost[i]) mincost = cost[i];
-// }
-// info_update("JV costs range is (",mincost,",",maxcost,")");
-// for (size_t i=1; i<Nobj*Nobj; ++i) cost[i] = R(1000)*(cost[i]-mincost)/(maxcost-mincost);
 
 // use the Jonker-Volgenant algorithm to determine the optimal assignment
 /*
@@ -369,10 +338,11 @@ lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-for (size_t i=0; i<Nobj; ++i)
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations.getvalue(neighbour_idx,i)==static_cast<size_t>(rowsol[j])) // or should this be colsol?
-      permutations.insert(j,centre_idx,i);
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
 
 delete[] cost;
 delete[] usol;
@@ -390,7 +360,7 @@ bool jv_permutation(const S* centre_vals, const T* centre_vecs,
                     const std::array<I,3>& vals_Nel, const std::array<I,3>& vecs_Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t vals_span, const size_t vecs_span, const size_t Nobj,
-                    ArrayVector<size_t>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -437,20 +407,20 @@ for (size_t i=0; i<Nobj; ++i){
     v_cost = R(0);
     if (vals_Nel[1]){
       switch(vec_cost_func){
-        case 0: v_cost += std::abs(std::sin(hermitian_angle(vals_Nel[1], vals_c_i, vals_n_j))); break;
-        case 1: v_cost +=  vector_distance(vals_Nel[1], vals_c_i, vals_n_j); break;
-        case 2: v_cost += 1-vector_product(vals_Nel[1], vals_c_i, vals_n_j); break;
-        case 3: v_cost +=     vector_angle(vals_Nel[1], vals_c_i, vals_n_j); break;
+        case 0: v_cost += std::abs(std::sin(brille::utils::hermitian_angle(vals_Nel[1], vals_c_i, vals_n_j))); break;
+        case 1: v_cost +=  brille::utils::vector_distance(vals_Nel[1], vals_c_i, vals_n_j); break;
+        case 2: v_cost += 1-brille::utils::vector_product(vals_Nel[1], vals_c_i, vals_n_j); break;
+        case 3: v_cost +=     brille::utils::vector_angle(vals_Nel[1], vals_c_i, vals_n_j); break;
       }
       vals_c_i += vals_Nel[1];
       vals_n_j += vals_Nel[1];
     }
     if (vecs_Nel[1]){
       switch(vec_cost_func){
-        case 0: v_cost += std::abs(std::sin(hermitian_angle(vecs_Nel[1], vecs_c_i, vecs_n_j))); break;
-        case 1: v_cost +=  vector_distance(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
-        case 2: v_cost += 1-vector_product(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
-        case 3: v_cost +=     vector_angle(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
+        case 0: v_cost += std::abs(std::sin(brille::utils::hermitian_angle(vecs_Nel[1], vecs_c_i, vecs_n_j))); break;
+        case 1: v_cost +=  brille::utils::vector_distance(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
+        case 2: v_cost += 1-brille::utils::vector_product(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
+        case 3: v_cost +=     brille::utils::vector_angle(vecs_Nel[1], vecs_c_i, vecs_n_j); break;
       }
       vecs_c_i += vecs_Nel[1];
       vecs_n_j += vecs_Nel[1];
@@ -460,13 +430,13 @@ for (size_t i=0; i<Nobj; ++i){
       I nel2 = static_cast<I>(std::sqrt(vals_Nel[2]));
       if (nel2*nel2 != vals_Nel[2])
         throw std::runtime_error("Non-square matrix in jv_permutation");
-      m_cost = frobenius_distance(nel2, vals_c_i, vals_n_j);
+      m_cost = brille::utils::frobenius_distance(nel2, vals_c_i, vals_n_j);
     }
     if (vecs_Nel[2]){
       I nel2 = static_cast<I>(std::sqrt(vecs_Nel[2]));
       if (nel2*nel2 != vecs_Nel[2])
         throw std::runtime_error("Non-square matrix in jv_permutation");
-      m_cost = frobenius_distance(nel2, vecs_c_i, vecs_n_j);
+      m_cost = brille::utils::frobenius_distance(nel2, vecs_c_i, vecs_n_j);
     }
     // for each i we want to determine the cheapest j
     // cost[i*Nobj+j] = std::log(Wscl*s_cost + Wvec*v_cost + Wmat*m_cost);
@@ -488,10 +458,11 @@ lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-for (size_t i=0; i<Nobj; ++i)
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations.getvalue(neighbour_idx,i)==static_cast<size_t>(rowsol[j])) // or should this be colsol?
-      permutations.insert(j,centre_idx,i);
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
 
 delete[] cost;
 delete[] usol;
@@ -524,7 +495,7 @@ std::vector<int> jv_permutation(const std::vector<T>& cost){
 template<class T, class I>
 bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
   I Nobj = static_cast<I>(std::sqrt(cost.size()));
-  assert( cost.size() == Nobj*Nobj);
+  assert(cost.size() == static_cast<size_t>(Nobj)*static_cast<size_t>(Nobj));
   std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
   std::vector<I> col(Nobj,0);
   row.resize(Nobj);
@@ -534,7 +505,7 @@ bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
 template<class T, class I>
 bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row, std::vector<I>& col){
   I Nobj = static_cast<I>(std::sqrt(cost.size()));
-  assert( cost.size() == Nobj*Nobj);
+  assert(cost.size() == static_cast<size_t>(Nobj)*static_cast<size_t>(Nobj));
   std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
   row.resize(Nobj);
   col.resize(Nobj);
@@ -592,9 +563,9 @@ two matrices.
 @param centre_idx The index into `permutations` where the output is stored
 @param neighbour_idx The index into `permutations` to find the neighbour permutation
 @param vec_cost_func Used to select the eigenvector cost function:
-                      0 --> `abs(sin(hermitian_angle))`
+                      0 --> `abs(sin(brille::utils::hermitian_angle))`
                       1 --> `vector_distance`
-                      2 --> `1-vector_product`
+                      2 --> `1-brille::utils::vector_product`
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
 */
@@ -604,7 +575,7 @@ template<class T, class R, class I,
 bool sm_permutation(const T* centre, const T* neighbour, const std::array<I,3>& Nel,
                     const R Wscl, const R Wvec, const R Wmat,
                     const size_t span, const size_t Nobj,
-                    ArrayVector<size_t>& permutations,
+                    bArray<size_t>& permutations,
                     const size_t centre_idx, const size_t neighbour_idx,
                     const int vec_cost_func = 0
                    ){
@@ -637,10 +608,10 @@ for (size_t i=0; i<Nobj; ++i){
     }
     if (Nel[1]){
       switch(vec_cost_func){
-        case 0: v_cost = std::abs(std::sin(hermitian_angle(Nel[1], c_i, n_j))); break;
-        case 1: v_cost =  vector_distance(Nel[1], c_i, n_j); break;
-        case 2: v_cost = 1-vector_product(Nel[1], c_i, n_j); break;
-        case 3: v_cost =     vector_angle(Nel[2], c_i, n_j); break;
+        case 0: v_cost = std::abs(std::sin(brille::utils::hermitian_angle(Nel[1], c_i, n_j))); break;
+        case 1: v_cost =  brille::utils::vector_distance(Nel[1], c_i, n_j); break;
+        case 2: v_cost = 1-brille::utils::vector_product(Nel[1], c_i, n_j); break;
+        case 3: v_cost =     brille::utils::vector_angle(Nel[2], c_i, n_j); break;
         default: std::cout << "Unknown vector cost function. None used." << std::endl;
       }
       c_i += Nel[1];
@@ -650,7 +621,7 @@ for (size_t i=0; i<Nobj; ++i){
       I nel2 = std::sqrt(Nel[2]);
       if (nel2*nel2 != Nel[2])
         throw std::runtime_error("Non-square matrix in sm_permutation");
-      m_cost = frobenius_distance(nel2, c_i, n_j);
+      m_cost = brille::utils::frobenius_distance(nel2, c_i, n_j);
     }
     // for each i we want to determine the cheapest j
     cost[i*Nobj+j] = Wscl*s_cost + Wvec*v_cost + Wmat*m_cost;
@@ -662,10 +633,12 @@ smp(Nobj, cost, rowsol, colsol, false);
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
 */
-for (size_t i=0; i<Nobj; ++i)
-  for (size_t j=0; j<Nobj; ++j)
-    if (permutations.getvalue(neighbour_idx,i)==rowsol[j]) // or should this be colsol?
-      permutations.insert(j,centre_idx,i);
+brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
+brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
+for (brille::ind_t i=0; i<Nobj; ++i)
+  for (brille::ind_t j=0; j<Nobj; ++j)
+    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
+
 
 delete[] cost;
 delete[] rowsol;

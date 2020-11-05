@@ -19,6 +19,7 @@
 
 #include <pybind11/pybind11.h>
 
+#include "_array.hpp"
 #include "_common_grid.hpp"
 
 #include "bz_mesh.hpp"
@@ -36,9 +37,15 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
   cls.def(py::init<BrillouinZone,double,int,int>(), "brillouinzone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
-  cls.def_property_readonly("rlu",[](const Class& cobj){return av2np(cobj.get_mesh_hkl());});
-  cls.def_property_readonly("invA",[](const Class& cobj){return av2np(cobj.get_mesh_xyz());});
-  cls.def_property_readonly("tetrahedra",[](const Class& cobj){return av2np(cobj.get_mesh_tetrehedra());});
+  cls.def_property_readonly("rlu",[](const Class& cobj){
+    return brille::a2py(cobj.get_mesh_hkl());
+  });
+  cls.def_property_readonly("invA",[](const Class& cobj){
+    return brille::a2py(cobj.get_mesh_xyz());
+  });
+  cls.def_property_readonly("tetrahedra",[](const Class& cobj){
+    return brille::a2py(cobj.get_mesh_tetrehedra());
+  });
   cls.def("__repr__",&Class::to_string);
 
   def_grid_fill(cls);

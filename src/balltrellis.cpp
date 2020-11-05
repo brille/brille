@@ -81,7 +81,7 @@ Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const double f
     d = std::sqrt(d);
     for (size_t i=0; i<3u; ++i) xyz[i+3] /= d;
     // pick the z-axis as x × y
-    vector_cross(xyz.data()+6, xyz.data(), xyz.data()+3);
+    brille::utils::vector_cross(xyz.data()+6, xyz.data(), xyz.data()+3);
   }
   // find the extents of the data
   std::array<std::array<double,2>,3> minmax;

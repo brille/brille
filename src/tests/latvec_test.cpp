@@ -1,30 +1,30 @@
 #include <catch2/catch.hpp>
 
 #include "lattice.hpp"
-#include "latvec.hpp"
+#include "array_latvec.hpp"
 
 TEST_CASE("Lattice Vector tests","[latvec]"){
   Direct d(1.,1.,1.);
   Reciprocal r = d.star();
 
-  double values[] = { 1,0,0, 0,1,0, 0,0,1 };
-  LQVec<double> q(r,3,values);
+  std::vector<std::array<double,3>> values{{1,0,0},{0,1,0},{0,0,1}};
+  LQVec<double> q(r, bArray<double>::from_std(values));
 
   SECTION("length via .norm(integer)"){
     for(size_t i=0; i<3; i++)
-    REQUIRE( q.norm(i) == Approx(2*PI) );
+    REQUIRE( q.norm(i) == Approx(2*brille::pi) );
   }
   SECTION("length via norm()"){
-    ArrayVector<double> normq = norm(q);
-    REQUIRE( normq.size() == q.size() );
-    REQUIRE( normq.numel() == 1u );
-    for(size_t i=0; i<q.size(); ++i)
-      REQUIRE( q.norm(i) == normq.getvalue(i) );
+    auto normq = norm(q);
+    REQUIRE( normq.size(0) == q.size(0) );
+    REQUIRE( normq.size(1) == 1u );
+    for(size_t i=0; i<q.size(0); ++i)
+      REQUIRE( q.norm(i) == normq[i] );
   }
   SECTION("Single-element access via [integer] and cross product .cross(integer,integer)"){
-    LQVec<double> z = q[2];
-    LQVec<double> xy = q.cross(0,1)*(norm(q[2])/norm(q[1])/norm(q[0]));
-    REQUIRE( z.isapprox(xy) );
+    LQVec<double> z = q.view(2);
+    LQVec<double> xy = q.cross(0,1)*(norm(z)/norm(q.view(1))/norm(q.view(0)));
+    REQUIRE( z.is(xy) );
   }
 }
 
@@ -33,7 +33,7 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
 //============================================================================//
 // Class methods:                                                             //
 //----------------------------------------------------------------------------//
-// instantiation via L[DQ]Vec(::lattice,::ArrayVector)                        //
+// instantiation via L[DQ]Vec(::lattice,::Array)                        //
 // copy via L[DQ]Vec(::L[DQ]Vec)                                              //
 // assignment via =                                                           //
 // .get_lattice()                                                             //
@@ -54,6 +54,6 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
 // dot(L[DQ]Vec, L[QD]Vec)                                                    //
 // star(L[DQ]Vec)                                                             //
 // [+-/*](L[DQ]Vec,L[DQ]Vec)                                                  //
-// [+-/*](L[DQ]Vec,ArrayVector)                                               //
-// [+-/*](ArrayVector,L[DQ]Vec)                                               //
+// [+-/*](L[DQ]Vec,Array)                                               //
+// [+-/*](Array,L[DQ]Vec)                                               //
 ////////////////////////////////////////////////////////////////////////////////

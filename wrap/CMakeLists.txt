@@ -18,8 +18,10 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
   _bravais.cpp
   _bz.cpp
+  _debug.cpp
   _hall_symbol.cpp
-  _interpolation_data.cpp
+  #_interpolation_data.cpp
+  _interpolator.cpp
   _lattice.cpp
   _mesh.cpp
   _nest.cpp

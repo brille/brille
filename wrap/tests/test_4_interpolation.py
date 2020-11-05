@@ -12,11 +12,11 @@ ADDPATH = os.getcwd()
 if os.path.exists('Debug'):
     ADDPATH += "\\Debug"
 sys.path.append(ADDPATH)
-# Now the actual search for the module
-if find_spec('brille') is not None and find_spec('brille._brille') is not None:
-    import brille as s
-elif find_spec('_brille') is not None:
+# Now the actual search for the module, preferring a local build
+if find_spec('_brille') is not None:
     import _brille as s
+elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille as s
 else:
     raise Exception("Required brille module not found!")
 
@@ -109,7 +109,7 @@ def setup_grid(iscomplex=False, halfN=(2, 2, 2)):
     bz = s.BrillouinZone(rlat)
     max_volume = rlat.volume/(8*np.prod(halfN))
     if iscomplex:
-        bzg = s.BZTrellisQdc(bz, max_volume)
+        bzg = s.BZTrellisQcc(bz, max_volume)
     else:
         bzg = s.BZTrellisQdd(bz, max_volume)
     return bzg
@@ -155,57 +155,56 @@ class Interpolate (unittest.TestCase):
         """Test interpolation normalisation."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_ones(bzg.rlu),[1,])
-        interpolated_ones = bzg.interpolate_at(Qi)
-        # self.assertTrue( (interpolated_ones==1).all() )
-        self.assertTrue((np.abs(interpolated_ones-1) < 1e-15).all())
+        bzg.fill(sqwfunc_ones(bzg.rlu), (1,), bzg.rlu, (0,3))
+        interpolated_ones, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.allclose(interpolated_ones, 1.))
 
     def test_b_x(self):
         """Test with data as Qx."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_x(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        self.assertTrue(np.isclose(intres, Qi[:, 0]).all())
+        bzg.fill(sqwfunc_x(bzg.rlu), (1,), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(intres), sqwfunc_x(Qi)).all())
 
     def test_b_y(self):
         """Test with data as Qy."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_y(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        self.assertTrue(np.isclose(intres, Qi[:, 1]).all())
+        bzg.fill(sqwfunc_y(bzg.rlu), (1,), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(intres), sqwfunc_y(Qi)).all())
 
     def test_b_z(self):
         """Test with data as Qz."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_z(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        self.assertTrue(np.isclose(intres, Qi[:, 2]).all())
+        bzg.fill(sqwfunc_z(bzg.rlu), (1,), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(intres), sqwfunc_z(Qi)).all())
 
     def test_c_xy(self):
         """Test with data as Qx+Qy."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_xy(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        self.assertTrue(np.isclose(intres, Qi[:, 0]+Qi[:, 1]).all())
+        bzg.fill(sqwfunc_xy(bzg.rlu), (1,), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(intres), sqwfunc_xy(Qi)).all())
 
     def test_c_xyz(self):
         """Test with data as Qx+Qy+Qz."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(sqwfunc_xyz(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        self.assertTrue(np.isclose(intres, Qi[:, 0]+Qi[:, 1]+Qi[:, 2]).all())
+        bzg.fill(sqwfunc_xyz(bzg.rlu), (1,), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(intres), sqwfunc_xyz(Qi)).all())
 
     def test_d_vec_ident(self):
         """Test with data as vector Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(vecfun_ident(bzg.rlu),[0,3])
-        intres = bzg.interpolate_at(Qi)
+        bzg.fill(vecfun_ident(bzg.rlu), (0,3), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
         self.assertTrue(np.isclose(intres, Qi).all())
 
     def test_d_vec_rotx(self):
@@ -213,8 +212,8 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = np.pi/3
-        bzg.fill(vecfun_rotx(bzg.rlu, ang),[0,3])
-        intres = bzg.interpolate_at(Qi)
+        bzg.fill(vecfun_rotx(bzg.rlu, ang), (0,3), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
         antres = vecfun_rotx(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
 
@@ -223,8 +222,8 @@ class Interpolate (unittest.TestCase):
         bzg = setup_grid()
         Qi = define_Q_points()
         ang = 3*np.pi/5
-        bzg.fill(vecfun_rotz(bzg.rlu, ang),[0,3])
-        intres = bzg.interpolate_at(Qi)
+        bzg.fill(vecfun_rotz(bzg.rlu, ang), (0,3), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
         antres = vecfun_rotz(Qi, ang)
         self.assertTrue(np.isclose(intres, antres).all())
 
@@ -232,8 +231,8 @@ class Interpolate (unittest.TestCase):
         """Test with data as matrix Q."""
         bzg = setup_grid()
         Qi = define_Q_points()
-        bzg.fill(matfun_ident(bzg.rlu),[0,0,9])
-        intres = bzg.interpolate_at(Qi)
+        bzg.fill(matfun_ident(bzg.rlu), (0,0,9), bzg.rlu, (0,3))
+        intres, _ = bzg.interpolate_at(Qi)
         antres = matfun_ident(Qi)
         self.assertTrue(np.isclose(intres, antres).all())
 
@@ -241,10 +240,12 @@ class Interpolate (unittest.TestCase):
         """Test with data as complex-valued scalars."""
         bzg = setup_grid(iscomplex=True)
         Qi = define_Q_points()
-        bzg.fill(complex_scalar(bzg.rlu),[1,])
-        intres = bzg.interpolate_at(Qi)
-        antres = complex_scalar(Qi)
-        self.assertTrue(np.isclose(intres, antres).all())
+        complexQ = complex_scalar(bzg.rlu)
+        bzg.fill(complexQ, (1,), complexQ, (1,))
+        # complex eigenvalues have fixed phase while complex eigenvectors
+        # are allowed arbitrary phase.
+        val, vec = bzg.interpolate_at(Qi)
+        self.assertTrue(np.isclose(np.squeeze(val), complex_scalar(Qi)).all())
 
     # def test_g_big_grid(self):
     #     """Test with a large grid."""
@@ -259,13 +260,28 @@ class Interpolate (unittest.TestCase):
         """Test with data as iron spinwaves, but test only *at* grid points."""
         d = s.Direct((2.87, 2.87, 2.87), np.pi/2*np.array((1, 1, 1)), "Im-3m")
         r = d.star
-        bz = s.BrillouinZone(r)
+        bz = s.BrillouinZone(r) # constructs an irreducible Bz by default
         bzg = s.BZTrellisQdc(bz, 0.125)
         Q = bzg.rlu
-        bzg.fill(fe_dispersion(Q),[1,])
-        intres = bzg.interpolate_at(Q, False, False)
+        bzg.fill(fe_dispersion(Q), (1,), bzg.rlu, (0,3))
+        # The irreducible interpolation must be used here
+        # since the Brillouin zone is an *irreducible* Brillouin zone!!
+        intres, _ = bzg.ir_interpolate_at(Q, False, False)
         antres = fe_dispersion(Q)
-        self.assertTrue(np.isclose(intres, antres).all())
+        self.assertTrue(np.isclose(np.squeeze(intres), antres).all())
+
+    def test_j_stored_data_references(self):
+        """Ensure that the reference count for stored data is incremented"""
+        from sys import getrefcount as r
+        bzg = setup_grid()
+        val = sqwfunc_xyz(bzg.rlu)
+        vec = vecfun_rotz(bzg.rlu, np.pi/180*40)
+        # Store the value and vector array reference counts before filling
+        valr, vecr = r(val), r(vec)
+        # fill the data into the grid -- this increases each array refcount
+        bzg.fill(val, (1,), vec, (0,3))
+        self.assertTrue(valr + 1 == r(val))
+        self.assertTrue(vecr + 1 == r(vec))
 
 
 if __name__ == '__main__':

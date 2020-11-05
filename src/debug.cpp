@@ -29,7 +29,8 @@
   int terminal_width(void){
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return csbi.srWindow.Right - csbi.srWindow.Left;
+    auto width = csbi.srWindow.Right - csbi.srWindow.Left;
+    return width > 1 ? width : 1<<15;
   }
   int terminal_height(void){
     CONSOLE_SCREEN_BUFFER_INFO csbi;

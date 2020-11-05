@@ -32,7 +32,6 @@ def is_mingw():
     platform = get_platform()
     return platform.startswith("mingw")
 
-
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -101,7 +100,6 @@ class CMakeBuild(build_ext):
         check_call(
             [get_cmake(), '--build', '.', '--target', "_brille"] + build_args,
             cwd=self.build_temp)
-
 
 with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()

@@ -831,7 +831,7 @@ public:
 
 void exactinit(int, int, int, REAL, REAL, REAL);
 void exactdeinit();
-REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd);
+REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd);
 REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe);
 REAL orient4d(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe,
               REAL ah, REAL bh, REAL ch, REAL dh, REAL eh);
@@ -973,9 +973,16 @@ public:
   public:
     tetrahedron *tet;
     int ver; // Range from 0 to 11.
-    triface() : tet(0), ver(0) {}
+    explicit triface() : tet(0), ver(0) {}
+    triface(const triface& t){
+      tet = t.tet;
+      ver = t.ver;
+    }
     triface& operator=(const triface& t) {
-      tet = t.tet; ver = t.ver;
+      if (this != &t){
+        tet = t.tet;
+        ver = t.ver;
+      }
       return *this;
     }
   };
@@ -984,9 +991,16 @@ public:
   public:
     shellface *sh;
     int shver; // Range from 0 to 5.
-    face() : sh(0), shver(0) {}
+    explicit face() : sh(0), shver(0) {}
+    face(const face& s){
+      sh = s.sh;
+      shver = s.shver;
+    }
     face& operator=(const face& s) {
-      sh = s.sh; shver = s.shver;
+      if (this != &s){
+        sh = s.sh;
+        shver = s.shver;
+      }
       return *this;
     }
   };
@@ -1651,7 +1665,7 @@ public:
   bool tetalldihedral(point, point, point, point, REAL*, REAL*, REAL*);
   void tetallnormal(point, point, point, point, REAL N[4][3], REAL* volume);
   REAL tetaspectratio(point, point, point, point);
-  bool circumsphere(REAL*, REAL*, REAL*, REAL*, REAL* cent, REAL* radius);
+  bool circumsphere(const REAL*, const REAL*, const REAL*, const REAL*, REAL* cent, REAL* radius);
   bool orthosphere(REAL*,REAL*,REAL*,REAL*,REAL,REAL,REAL,REAL,REAL*,REAL*);
   void tetcircumcenter(point tetorg, point tetdest, point tetfapex,
                        point tettapex, REAL *circumcenter, REAL *radius);
