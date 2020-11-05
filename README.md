@@ -1,9 +1,9 @@
-![brille for Horace](brille.png)
-
-# brille
+# ![brille]
 A C++ library for symmetry operations and linear interpolation within an
 irreducible part of the first Brillouin zone.
 Wrapped for use in python using [pybind11](https://github.com/pybind/pybind11).
+
+[brille]: https://raw.githubusercontent.com/brille/brille/master/brille.svg
 
 ## irreducible polyhedron
 When provided with the lattice parameters or basis vectors of a real space spacegroup and its Hall symbol or number as determined by, e.g., [`Spglib`](https://github.com/atztogo/spglib),
@@ -17,7 +17,7 @@ Constructing and irreducible Brillouin zone polyhedron for a face centered cubic
 
 ```python
 	import brille
-	
+
 	direct_lattice = brille.Direct((4.96, 4.96, 4.96), (90, 90, 90), 'Fd-3m')
 	brillouin_zone = brille.BrillouinZone(direct_lattice.star)
 ```
