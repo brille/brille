@@ -29,19 +29,19 @@ Includes
 --------
 
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 - ``chrono``
 
 - ``debug.hpp`` (:ref:`file_src_debug.hpp`)
 
-- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
-
 - ``random``
 
 - ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -71,21 +71,21 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_polyhedron_8hpp_1af37d16dd40b9231c5cd5fca595923dc9`
+- :ref:`exhale_function_polyhedron_8hpp_1a35d07b728fe4e42d91b6395a55164f3a`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a05687f604a2ac37273f06fc7aba2e6e6`
+- :ref:`exhale_function_polyhedron_8hpp_1ac6a789b445b0b68cc2baa536f785ab7b`
 
-- :ref:`exhale_function_polyhedron_8hpp_1ada80908509b8e04589003873062d1775`
+- :ref:`exhale_function_polyhedron_8hpp_1a5122b5827af9cbf50cd16988a1d504c2`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a1bec5f6921cc813291ee51e015abe0e5`
+- :ref:`exhale_function_polyhedron_8hpp_1acc473a5a311e2b25c12ae7ecdce226bc`
 
-- :ref:`exhale_function_polyhedron_8hpp_1ad0c0f6e542f393ff472f84be4e843480`
+- :ref:`exhale_function_polyhedron_8hpp_1a4dd81928550fdfddbb11dce98cf65df4`
 
 - :ref:`exhale_function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a60e61f41d54c247fffbb4d13c753cdfa`
+- :ref:`exhale_function_polyhedron_8hpp_1a904db5af5b19a80c559f3237f79a7614`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a6581a2a2cbf1232f7466e4bf79161294`
+- :ref:`exhale_function_polyhedron_8hpp_1a937aa145c046c9592aea06c15d58b8f4`
 
 - :ref:`exhale_function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766`
 

@@ -86,10 +86,10 @@ Program Listing for File lattice.hpp
          }
          if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
          // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
-         // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
-         au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+         // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
+         au = (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
        }
-       double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+       double conversion = (AngleUnit::radian == au) ? 1.0 : brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
        for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
      }
      // void set_len_scalars(const double, const double, const double);
@@ -122,7 +122,7 @@ Program Listing for File lattice.hpp
        this->check_hall_number(h);
      }
      Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
-     Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
+     Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=brille::halfpi, const double bl=brille::halfpi, const double cl=brille::halfpi, const int h=1);
      Lattice(const double *, const std::string&, const std::string& choice="");
      Lattice(const double *, const double *, const std::string&, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided);
      template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
@@ -154,6 +154,9 @@ Program Listing for File lattice.hpp
      void get_metric_tensor(double * mt) const ;
      void get_covariant_metric_tensor(double *mt) const ;
      void get_contravariant_metric_tensor(double *mt) const ;
+     std::vector<double> get_metric_tensor() const ;
+     std::vector<double> get_covariant_metric_tensor() const ;
+     std::vector<double> get_contravariant_metric_tensor() const ;
      // some functions don't logically make sense for this base class, but
      // do for the derived classes. define them here for funsies
      bool issame(const Lattice&) const; // this should really have a tolerance
@@ -216,9 +219,11 @@ Program Listing for File lattice.hpp
      void get_xyz_transform(double*) const;
      void get_xyz_transform(double*, const size_t, const size_t) const;
      template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+     std::vector<double> get_xyz_transform() const;
      void get_inverse_xyz_transform(double*) const;
      void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
      template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+     std::vector<double> get_inverse_xyz_transform() const;
      void get_lattice_matrix(double*) const;
      void get_lattice_matrix(double*, const size_t, const size_t) const;
      template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
@@ -239,9 +244,11 @@ Program Listing for File lattice.hpp
      void get_xyz_transform(double*) const;
      void get_xyz_transform(double*, const size_t, const size_t) const;
      template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
+     std::vector<double> get_xyz_transform() const;
      void get_inverse_xyz_transform(double*) const;
      void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
      template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
+     std::vector<double> get_inverse_xyz_transform() const;
      void get_lattice_matrix(double*) const;
      void get_lattice_matrix(double*, const size_t, const size_t) const;
      template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;

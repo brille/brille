@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a35d07b728fe4e42d91b6395a55164f3a:
+
+Template Function bare_winding_angles
+=====================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: bare_winding_angles(const bArray<T>&, const size_t, const bArray<T>&)

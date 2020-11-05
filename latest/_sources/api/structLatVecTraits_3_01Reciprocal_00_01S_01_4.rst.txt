@@ -3,7 +3,7 @@
 Template Struct LatVecTraits< Reciprocal, S >
 =============================================
 
-- Defined in :ref:`file_src_latvec.hpp`
+- Defined in :ref:`file_src_array_latvec.hpp`
 
 
 Struct Documentation

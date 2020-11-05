@@ -284,81 +284,136 @@
   <span class="k">return</span> <span class="n">l</span><span class="p">;</span>
 <span class="p">}</span>
 
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">time_to_string</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">time</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
+
+  <span class="kt">time_t</span> <span class="n">curr_time</span> <span class="o">=</span> <span class="n">T</span><span class="o">::</span><span class="n">to_time_t</span><span class="p">(</span><span class="n">time</span><span class="p">);</span>
+  <span class="kt">char</span> <span class="n">sRep</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+  <span class="n">strftime</span><span class="p">(</span><span class="n">sRep</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">sRep</span><span class="p">),</span> <span class="s">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">localtime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">curr_time</span><span class="p">));</span>
+
+  <span class="k">typename</span> <span class="n">T</span><span class="o">::</span><span class="n">duration</span> <span class="n">since_epoch</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time_since_epoch</span><span class="p">();</span>
+  <span class="n">seconds</span> <span class="n">s</span> <span class="o">=</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">seconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">since_epoch</span><span class="p">);</span>
+  <span class="n">since_epoch</span> <span class="o">-=</span> <span class="n">s</span><span class="p">;</span>
+  <span class="n">milliseconds</span> <span class="n">milli</span> <span class="o">=</span> <span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">milliseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">since_epoch</span><span class="p">);</span>
+
+  <span class="n">stringstream</span> <span class="n">buffer</span><span class="p">;</span>
+  <span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">sRep</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;:&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">milli</span><span class="p">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">buffer</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="p">}</span>
+
 <span class="k">class</span> <span class="nc">DebugPrinter</span><span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">last_function</span><span class="p">;</span> <span class="c1">// replace this with the stack?</span>
+  <span class="kt">bool</span> <span class="n">_silenced</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">emit_datetime</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">_before</span><span class="p">;</span>
 <span class="k">public</span><span class="o">:</span>
-  <span class="n">DebugPrinter</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span><span class="o">:</span> <span class="n">last_function</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="p">{};</span>
+  <span class="n">DebugPrinter</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">last_function</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">_silenced</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span> <span class="n">emit_datetime</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span> <span class="n">_before</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="cp">#if defined(PROFILING)</span>
+    <span class="n">emit_datetime</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="cp">#endif</span>
+  <span class="p">};</span>
+  <span class="kt">bool</span> <span class="nf">silenced</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_silenced</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="nf">silenced</span><span class="p">(</span><span class="kt">bool</span> <span class="n">slc</span><span class="p">)</span> <span class="p">{</span><span class="n">_silenced</span> <span class="o">=</span> <span class="n">slc</span><span class="p">;</span> <span class="k">return</span> <span class="n">_silenced</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="nf">silence</span><span class="p">()</span> <span class="p">{</span><span class="n">_silenced</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="k">return</span> <span class="n">_silenced</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="nf">unsilence</span><span class="p">()</span> <span class="p">{</span><span class="n">_silenced</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="k">return</span> <span class="o">!</span><span class="n">_silenced</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="nf">datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">emit_datetime</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="nf">datetime</span><span class="p">(</span><span class="kt">bool</span> <span class="n">edt</span><span class="p">)</span> <span class="p">{</span><span class="n">emit_datetime</span> <span class="o">=</span> <span class="n">edt</span><span class="p">;</span> <span class="k">return</span> <span class="n">emit_datetime</span><span class="p">;}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fnc</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">l</span><span class="p">){</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">last_function</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">fnc</span><span class="p">)){</span>
-      <span class="n">last_function</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">;</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fnc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_silenced</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">torem</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">last_function</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">fnc</span><span class="p">)){</span>
+        <span class="n">last_function</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">fnc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">emit_datetime</span><span class="p">){</span>
+        <span class="c1">// auto tp = std::chrono::system_clock::now();</span>
+        <span class="c1">// auto tt = std::chrono::system_clock::to_time_t(tp);</span>
+        <span class="c1">// std::tm tm = *std::localtime(&amp;tt);</span>
+        <span class="c1">// std::stringstream buffer;</span>
+        <span class="c1">// buffer &lt;&lt; std::put_time(&amp;tm, &quot;%FT%T &quot;);</span>
+        <span class="c1">// std::string tstr = buffer.str();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tstr</span> <span class="o">=</span> <span class="n">time_to_string</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">());</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">tstr</span><span class="p">);</span> <span class="c1">// print without extra lead in spaces</span>
+        <span class="n">_before</span> <span class="o">+=</span> <span class="p">(</span><span class="n">torem</span> <span class="o">=</span> <span class="n">tstr</span><span class="p">.</span><span class="n">size</span><span class="p">());</span> <span class="c1">// add to lead in spacing</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">l</span><span class="p">...);</span>
+      <span class="n">_before</span> <span class="o">-=</span> <span class="n">torem</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">l</span><span class="p">...);</span>
   <span class="p">}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">println</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fnc</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">l</span><span class="p">){</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">last_function</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">fnc</span><span class="p">)){</span>
-      <span class="n">last_function</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">;</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fnc</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_silenced</span><span class="p">){</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">fnc</span><span class="p">,</span> <span class="n">l</span><span class="p">...);</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">l</span><span class="p">...);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lead_in</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">buffer</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">_before</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">buffer</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+  <span class="p">}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span>
   <span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">is_container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">void</span><span class="o">&gt;</span> <span class="n">inner_print</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">l</span><span class="p">){</span>
-    <span class="c1">// std::cout &lt;&lt; std::to_string(x);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">;</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">l</span><span class="p">...);</span>
   <span class="p">}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span>
   <span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">is_container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">void</span><span class="o">&gt;</span> <span class="n">inner_print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
     <span class="kt">size_t</span> <span class="n">l</span> <span class="o">=</span> <span class="n">max_element_length</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="c1">// size_t n = std::sqrt(x.size());</span>
     <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">terminal_width</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_before</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">)</span> <span class="n">w</span> <span class="o">-=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_before</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="n">w</span> <span class="o">/=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
     <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">){</span>
+    <span class="c1">// // if (x.size() == n*n){</span>
+    <span class="c1">// if (3u == n){</span>
+    <span class="c1">//   for (auto y: x){</span>
+    <span class="c1">//     s += &quot; &quot; + my_to_string(y, l);</span>
+    <span class="c1">//     ++count;</span>
+    <span class="c1">//     if (!(count % w)||!(count % n)){</span>
+    <span class="c1">//       s += &quot;\n&quot; + this-&gt;lead_in();</span>
+    <span class="c1">//       count = 0;</span>
+    <span class="c1">//     }</span>
+    <span class="c1">//   }</span>
+    <span class="c1">// } else {</span>
       <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">y</span><span class="p">:</span> <span class="n">x</span><span class="p">){</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">);</span>
-        <span class="o">++</span><span class="n">count</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="n">w</span><span class="p">)</span><span class="o">||!</span><span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="n">n</span><span class="p">)){</span>
-          <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-          <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
       <span class="p">}</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">y</span><span class="p">:</span> <span class="n">x</span><span class="p">){</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="c1">// }</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">args</span><span class="p">...);</span>
   <span class="p">}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span>
   <span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">is_container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">void</span><span class="o">&gt;</span> <span class="n">inner_print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
     <span class="kt">size_t</span> <span class="n">l</span><span class="o">=</span> <span class="n">max_element_length</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">N</span><span class="o">==</span><span class="mi">9</span><span class="p">){</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">a</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">){</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="n">b</span><span class="p">],</span> <span class="n">l</span><span class="p">);</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// if (N==9){</span>
+    <span class="c1">//   for (int a=0; a&lt;3; ++a){</span>
+    <span class="c1">//     for (int b=0; b&lt;3; ++b) s += &quot; &quot; + my_to_string(x[a*3+b], l);</span>
+    <span class="c1">//     s += &quot;\n&quot; + this-&gt;lead_in();</span>
+    <span class="c1">//   }</span>
+    <span class="c1">// } else {</span>
       <span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">terminal_width</span><span class="p">());</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_before</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">)</span> <span class="n">w</span> <span class="o">-=</span> <span class="n">_before</span><span class="p">;</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="n">w</span> <span class="o">/=</span> <span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
       <span class="kt">size_t</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">l</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
       <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="c1">// }</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">args</span><span class="p">...);</span>
   <span class="p">}</span>
   <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">L</span><span class="o">&gt;</span>
   <span class="kt">void</span> <span class="n">inner_print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;&amp;</span> <span class="n">vv</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
     <span class="kt">size_t</span> <span class="n">l</span> <span class="o">=</span> <span class="n">max_element_length</span><span class="p">(</span><span class="n">vv</span><span class="p">);</span>
     <span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">terminal_width</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_before</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">)</span> <span class="n">w</span> <span class="o">-=</span> <span class="n">_before</span><span class="p">;</span>
     <span class="kt">size_t</span> <span class="n">num</span><span class="p">;</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="n">w</span> <span class="o">/=</span> <span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
@@ -366,9 +421,9 @@
       <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">v</span><span class="p">){</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">num</span> <span class="o">%</span><span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">num</span> <span class="o">%</span><span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
       <span class="p">}</span>
-      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">args</span><span class="p">...);</span>
   <span class="p">}</span>
@@ -376,30 +431,31 @@
   <span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">is_container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">void</span><span class="o">&gt;</span> <span class="n">inner_print</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">&gt;&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">L</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
     <span class="kt">size_t</span> <span class="n">l</span> <span class="o">=</span> <span class="n">max_element_length</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
     <span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">terminal_width</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_before</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">)</span> <span class="n">w</span> <span class="o">-=</span> <span class="n">_before</span><span class="p">;</span>
     <span class="kt">size_t</span> <span class="n">num</span><span class="p">;</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">N</span><span class="o">==</span><span class="mi">9</span><span class="p">){</span>
-      <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">?</span> <span class="n">w</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">l</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span> <span class="o">:</span> <span class="n">w</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">+=</span><span class="n">num</span><span class="p">){</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">a</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">){</span>
-          <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">num</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span> <span class="n">s</span> <span class="o">+=</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">][</span><span class="n">a</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="n">b</span><span class="p">],</span> <span class="n">l</span><span class="p">);</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
-          <span class="p">}</span>
-          <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// if (N==9){</span>
+    <span class="c1">//   num = (l) ? w/(3*l+4) : w/3;</span>
+    <span class="c1">//   for (size_t i=0; i&lt;x.size(); i+=num){</span>
+    <span class="c1">//     for (int a=0; a&lt;3; ++a){</span>
+    <span class="c1">//       for (size_t j=0; j&lt;num &amp;&amp; (i+j)&lt;x.size(); ++j){</span>
+    <span class="c1">//         for (int b=0; b&lt;3; ++b) s += my_to_string(x[i+j][a*3+b], l);</span>
+    <span class="c1">//         s += &quot; &quot;;</span>
+    <span class="c1">//       }</span>
+    <span class="c1">//       s += &quot;\n&quot; + this-&gt;lead_in();</span>
+    <span class="c1">//     }</span>
+    <span class="c1">//     s += &quot;\n&quot; + this-&gt;lead_in();</span>
+    <span class="c1">//   }</span>
+    <span class="c1">// } else {</span>
       <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="n">w</span> <span class="o">/=</span> <span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
       <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
         <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">y</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
           <span class="n">s</span> <span class="o">+=</span> <span class="n">my_to_string</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">);</span>
-          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">num</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">++</span><span class="n">num</span> <span class="o">%</span> <span class="n">w</span><span class="p">))</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lead_in</span><span class="p">();</span>
       <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="c1">// }</span>
     <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">args</span><span class="p">...);</span>
   <span class="p">}</span>
   <span class="kt">void</span> <span class="n">inner_print</span><span class="p">(</span><span class="kt">void</span><span class="p">){};</span>
@@ -416,8 +472,8 @@
 <span class="cp">#endif</span>
 
 <span class="k">static</span> <span class="n">DebugPrinter</span> <span class="nf">_debug_printer</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="cp">#define info_update(...) _debug_printer.println(&quot;&quot;, __VA_ARGS__)</span>
-<span class="cp">#define info_update_if(tf, ...) if (tf) _debug_printer.println(&quot;&quot;, __VA_ARGS__)</span>
+<span class="cp">#define info_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)</span>
+<span class="cp">#define info_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)</span>
 <span class="c1">// #define info_update(...)</span>
 
 <span class="cp">#if defined(VERBOSE_DEBUG) || defined(DEBUG)</span>
@@ -435,6 +491,15 @@
 <span class="cp">#else</span>
   <span class="cp">#define verbose_update(...)</span>
   <span class="cp">#define verbose_update_if(...)</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if defined(PROFILING)</span>
+  <span class="c1">//_debug_printer.datetime(true); // profiling needs timing information</span>
+  <span class="cp">#define profile_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)</span>
+  <span class="cp">#define profile_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)</span>
+<span class="cp">#else</span>
+  <span class="cp">#define profile_update(...)</span>
+  <span class="cp">#define profile_update_if(...)</span>
 <span class="cp">#endif</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">TimeT</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="o">&gt;</span>

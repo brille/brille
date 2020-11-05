@@ -10,7 +10,7 @@ Program Listing for File neighbours.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
+   /* Copyright 2019-2020 Greg Tucker
    //
    // This file is part of brille.
    //
@@ -29,11 +29,11 @@ Program Listing for File neighbours.hpp
    
    #ifndef _NEIGHBOURS_H_
    #define _NEIGHBOURS_H_
-   #include "arrayvector.hpp"
+   #include "array_latvec.hpp" // defines bArray
    
-   ArrayVector<int> make_relative_neighbour_indices(const int extent=1);
-   ArrayVector<int> make_relative_neighbour_indices4(const int extent=1);
+   bArray<int> make_relative_neighbour_indices(const int extent=1);
+   bArray<int> make_relative_neighbour_indices4(const int extent=1);
    
-   ArrayVector<int> make_relative_neighbour_indices_prime(const int extent=1);
+   bArray<int> make_relative_neighbour_indices_prime(const int extent=1);
    
    #endif

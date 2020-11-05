@@ -38,14 +38,14 @@ Program Listing for File bz_wedge.cpp
      // PointSymmetry rotps = fullps.nfolds(1); // 1 to request only orders>1
      PointSymmetry rotps = fullps.higher(1); // 1 to request only orders>1
      // Get the vectors pointing to each full Brillouin zone facet cetre
-     LQVec<double> xyz = cat(cat(this->get_points(), this->get_vertices()), this->get_half_edges());
+     auto xyz = cat(0,this->get_points(), this->get_vertices(), this->get_half_edges());
    
      // debug_update("xyz=\n", xyz.to_string());
    
      // if rotps is empty, there are no 2+-fold rotations, act like we have ̄1:
      if (rotps.size()==0){
        debug_update("No 2+-fold rotation operations");
-       this->ir_wedge_is_ok(xyz.first(1u)); // for ̄1, assigns this->ir_polyhedron
+       this->ir_wedge_is_ok(xyz.view(0)); // for ̄1, assigns this->ir_polyhedron
        return;
      }
    
@@ -71,68 +71,66 @@ Program Listing for File bz_wedge.cpp
      debug_update("Rotations:\n", rotps.getall());
    
      // make lattice vectors from the stationary axes
-     LQVec<int> z(this->outerlattice, rotps.axes());
+     LQVec<int> z(this->outerlattice, bArray<int>::from_std(rotps.axes()));
      // Find ̂zᵢ⋅ẑⱼ
-     std::vector<std::vector<int>> dotij(z.size());
+     std::vector<std::vector<int>> dotij(z.size(0));
      double dottmp;
-     for (size_t i=0; i<z.size(); ++i) for (size_t j=0; j<z.size(); ++j){
+     for (size_t i=0; i<z.size(0); ++i) for (size_t j=0; j<z.size(0); ++j){
        dottmp = std::abs(z.dot(i,j)/z.norm(i)/z.norm(j));
-       dotij[i].push_back( approx_scalar(dottmp,0.) ? -1: approx_scalar(dottmp, 1.) ? 1 : 0);
+       dotij[i].push_back( brille::approx::scalar(dottmp,0.) ? -1: brille::approx::scalar(dottmp, 1.) ? 1 : 0);
      }
      debug_update("dot(i,j) flag\n", dotij);
    
      // Find a suitable in-rotation-plane vector for each stationary axis
-     LQVec<double> x(this->outerlattice, rotps.perpendicular_axes());
+     // LQVec<double> x(this->outerlattice, bArray<double>(rotps.perpendicular_axes()));
+     LQVec<double> x(this->outerlattice, bArray<int>::from_std(rotps.perpendicular_axes()));
      // or pick one of the BZ facet-points if the basis vector preffered flag
-     if (pbv) for (size_t i=0; i<x.size(); ++i) for (size_t j=0; j<xyz.size(); ++j)
-     if (dot(xyz.get(j), z.get(i)).all_approx(0.)){
-       x.set(i, xyz.get(j));
+     if (pbv) for (size_t i=0; i<x.size(0); ++i) for (size_t j=0; j<xyz.size(0); ++j)
+     if (dot(xyz.view(j), z.view(i)).all(brille::cmp::eq, 0.)){
+       x.set(i, xyz.view(j));
        break;
      }
    
      /* Two rotations with ẑᵢ⋅ẑⱼ≠0 should have (Rⁿx̂ᵢ)⋅(Rᵐx̂ⱼ)=1 for some n,m.
         To start, assume that n and m are 0 and find the x̂ᵢ such that x̂ᵢ⋅(ẑᵢ×ẑⱼ)=1
      */
-     std::vector<bool> handled(z.size(), false);
+     std::vector<bool> handled(z.size(0), false);
      bool flag;
-     for (size_t i=0; i<z.size()-1; ++i) for (size_t j=i+1; j<z.size(); ++j)
+     for (size_t i=0; i<z.size(0)-1; ++i) for (size_t j=i+1; j<z.size(0); ++j)
      // if zᵢ and zⱼ are neither parallel or perpendicular
      if (0 == dotij[i][j]){
        if (!handled[i]){
          if (!pbv /*basis vectors not preferred*/) x.set(i, z.cross(i, j));
-         if (handled[j] && !approx_scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(i, -x.get(i));
+         if (handled[j] && !brille::approx::scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(i, -x.extract(i));
          handled[i] = true;
        }
        if (!handled[j]){
          if (!pbv /*basis vectors not preferred*/){
-           flag = norm(cross(x.get(i), z.get(j))).all_approx(Comp::gt,1e-10);
+           flag = norm(cross(x.view(i), z.view(j))).all(brille::cmp::gt,1e-10);
            // if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ
-           // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.get(i));
-           x.set(j, (pok||flag) ? x.get(i) : z.cross(i,j));
+           // x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.view(i));
+           x.set(j, (pok||flag) ? x.view(i) : z.cross(i,j));
          }
-         if (!approx_scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(j, -x.get(j));
+         if (!brille::approx::scalar(x.dot(i,j), 0.) && x.dot(i,j)<0) x.set(j, -x.extract(j));
          handled[j] = true;
        }
      }
    
-     LQVec<double> y = cross(z, x); // complete a right-handed coordinate system
+     auto y = cross(z, x); // complete a right-handed coordinate system
      x= x/norm(x);
      y= y/norm(y);
-     debug_update("    z                x                        y           ");
-     debug_exec(update_msg = "--------- -----------------------  -----------------------\n";)
-     for (size_t i=0; i<z.size(); ++i){
-       debug_exec(update_msg += z.to_string(i) +" "+  x.to_string(i) +" "+ y.to_string(i) +"\n";)
-     }
-     debug_update(update_msg);
+     // debug_update("    z                x                        y           ");
+     // debug_update("--------- -----------------------  -----------------------";)
+     // debug_update(z.append(1,x).append(1,y).to_string()); // z, x&y dont have the same type so can't be appended :(
    
      /* Each symmetry operation in rotps is guaranteed to be a proper rotation,
         but there is no guarantee that it represents a *right handed* rotation.
         For the normal vectors to point the right way, we need to know if it is. */
-     std::vector<bool> is_right_handed(z.size(), true);
-     LQVec<double> Rv(this->outerlattice, 1u);
-     for (size_t i=0; i<z.size(); ++i) if (rotps.order(i)>2){
-       multiply_matrix_vector(Rv.data(0), rotps.data(i), x.data(i));
-       if (dot(y.get(i), Rv.get(0)).getvalue(0) < 0)
+     std::vector<bool> is_right_handed(z.size(0), true);
+     auto Rv = y.extract(0); // to ensure we have the same lattice, make a copy
+     for (size_t i=0; i<z.size(0); ++i) if (rotps.order(i)>2){
+       brille::utils::multiply_matrix_vector(Rv.ptr(0), rotps.data(i), x.ptr(i));
+       if (dot(y.view(i), Rv).all(brille::cmp::lt, 0.))
          is_right_handed[i] = false;
      }
      debug_update("Right handed:", is_right_handed);
@@ -148,36 +146,35 @@ Program Listing for File bz_wedge.cpp
      if (rotps.size() == 1){
        // We are assuming the system has inversion symmetry. We handle the case
        // where it doesn't elsewhere.
-       this->wedge_normal_check(z.get(0), normals, found);
-       this->ir_wedge_is_ok(normals.first(found)); // updates this->wedge_normals
+       this->wedge_normal_check(z.view(0), normals, found);
+       if (found < 1)
+         throw std::runtime_error("About to view normals 0:0 which is not allowed");
+       this->ir_wedge_is_ok(normals.view(0,found)); // updates this->wedge_normals
      }
      bool accepted;
      int order;
      LQVec<double> vi(this->outerlattice, max_order), zi(this->outerlattice, 1u);
      LQVec<double> vxz, zxv;
      for (size_t i=0; i<rotps.size(); ++i){
-       zi = is_right_handed[i] ? z.get(i) : -z.get(i);
+       zi = is_right_handed[i] ? z.view(i) : -z.extract(i);
        order = rotps.order(i);
-       debug_update("\nOrder ", order, ", z=", zi.to_string(0));
+       debug_update("\nOrder ",order,", z=",zi.to_string());
        accepted = false;
-       vi.set(0, x.get(i)); // do something better here?
-       for (int j=1; j<order; ++j) multiply_matrix_vector(vi.data(j), rotps.data(i), vi.data(j-1));
-       zxv = cross(zi, vi.first(order));
-       zxv = zxv/norm(zxv);
-       debug_exec(update_msg ="          R^n v                 z x (R^n v)      \n";)
-       debug_exec(update_msg+="------------------------ ------------------------\n";)
-       for (int j=0; j<order; ++j){
-         debug_exec(update_msg += vi.to_string(j) +" "+ zxv.to_string(j)+"\n");
-       }
-       debug_update(update_msg);
+       vi.set(0, x.view(i)); // do something better here?
+       for (int j=1; j<order; ++j) brille::utils::multiply_matrix_vector(vi.ptr(j), rotps.data(i), vi.ptr(j-1));
+       zxv = cross(zi, vi.view(0,order)); // order is guaranteed > 0
+       zxv /= norm(zxv);
+       debug_update("          R^n v                 z x (R^n v)      ");
+       debug_update("------------------------ ------------------------");
+       debug_update( vi.append(1,zxv).to_string() );
        if (2==order){
          // one-normal version of wedge_normal_check allows for either ±n
          // → no need to check z×Rv = z×(-x) = -(z×x)
-         accepted = this->wedge_normal_check(zxv.get(0), normals, found);
+         accepted = this->wedge_normal_check(zxv.view(0), normals, found);
          /* if we couldn't add a 2-fold normal, we have more work to do. */
          if (!accepted){
            // for now, hope that 90° away is good enough
-           this->wedge_normal_check(vi.get(0), normals, found);
+           this->wedge_normal_check(vi.view(0), normals, found);
          }
        } else {
          /* Consecutive acceptable normals *must* point into the irreducible wedge
@@ -187,33 +184,40 @@ Program Listing for File bz_wedge.cpp
          // if (this->isinside_wedge(zi, /*constructing=*/false).getvalue(0)){
            for (int j=0; j<order; ++j){
              if (accepted) break;
-             accepted = this->wedge_normal_check(zxv.get(j), -zxv.get((j+1)%order), normals, found);
+             accepted = this->wedge_normal_check(zxv.view(j), -zxv.extract((j+1)%order), normals, found);
            }
          // } // isinside_wedge
        } // order>2
      }
-     this->ir_wedge_is_ok(normals.first(found));
+     if (found < 1)
+       throw std::runtime_error("about to view normals 0:0, which is not allowed");
+     this->ir_wedge_is_ok(normals.view(0,found));
      debug_update("wedge_search finished");
    }
    
-   
-   ArrayVector<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& points){
+   bArray<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& points){
      // determine whether we should keep points based on the provided normals.
      // We want to only keep those points in the positive half-space for any one
      // normal, but if all normals contribute to reduce the remaining points to
      // lie in a single plane we instead want to keep all points.
-     ArrayVector<bool> keep(1u, points.size(), true);
-     std::vector<size_t> nop(normals.size(), 0); // number of not-on-plane points
-     for (size_t i=0; i<normals.size(); ++i)
-       nop[i] = dot(normals.extract(i), points).is_approx(Comp::gt,0.).count_true();
+     std::vector<size_t> nop(normals.size(0), 0); // number of not-on-plane points
+     for (size_t i=0; i<normals.size(0); ++i)
+       nop[i] = dot(normals.view(i), points).is(brille::cmp::gt,0.).count();
      // If there are no planes with 0 off-plane points, divide the space
+     bArray<bool> keep(points.size(0), 1u, true);
      if (std::find(nop.begin(),nop.end(),0u)==nop.end())
-       for (size_t i=0; i<points.size(); ++i)
-         keep.insert(dot(normals, points.extract(i)).all_approx(Comp::ge,0.), i);
+       for (size_t i=0; i<points.size(0); ++i)
+         keep[i] = dot(normals, points.view(i)).all(brille::cmp::ge,0.);
      return keep;
    }
    
-   void BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length){
+   bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length, const bool sort_one_sym){
+     std::string pmsg = "BrillouinZone::wedge_brute_force(";
+     if (special_2_folds) pmsg += "2-folds";
+     if (special_2_folds && special_mirrors) pmsg += ",";
+     if (special_mirrors) pmsg += "mirrors";
+     pmsg += ")";
+     profile_update("Start ",pmsg);
      debug_exec(std::string msg;)
      // Grab the pointgroup symmetry operations
      PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
@@ -224,12 +228,12 @@ Program Listing for File bz_wedge.cpp
      if (0 == ps.size()){
        if (fullps.size() > 1) // 𝟙 & -𝟙 → P -1 triclinic spacegroup
          this->wedge_triclinic();
-       return;
+       return this->check_ir_polyhedron();
      }
    
      // Get and combine the characteristic points of the first Brillouin zone:
      // The face centres, face corners, and mid-face-edge points.
-     LQVec<double> special = cat(this->get_points(), this->get_vertices(), this->get_half_edges());
+     auto special = cat(0, this->get_points(), this->get_vertices(), this->get_half_edges());
      std::vector<size_t> perm(ps.size());
      std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
        // ps is sorted in increasing rotation-order order, but we want to sort
@@ -250,7 +254,7 @@ Program Listing for File bz_wedge.cpp
      }
      ps.permute(perm); // ps now sorted
    
-     ArrayVector<bool> keep(1u, 0u);
+     bArray<bool> keep;
    
      // Keep track of *which* normals go into determining the irreducible wedge:
      LQVec<double> cutting_normals(this->outerlattice, ps.size());
@@ -262,17 +266,16 @@ Program Listing for File bz_wedge.cpp
      LDVec<int> vec(this->outerlattice.star(), 1u);// must be int since ps.axis returns array<int,3>
      LQVec<double> nrm(this->outerlattice, 1u);
      std::vector<std::array<double,3>> eiv{{{1,0,0}},{{0,1,0}},{{0,0,1}},{{1,1,0}},{{1,-1,0}},{{1,0,1}},{{0,1,1}},{{1,0,-1}},{{0,1,-1}},{{1,1,1}}};
-     LQVec<double> eis(this->outerlattice, eiv.size());
-     for (size_t i=0; i<eis.size(); ++i) eis.set(i, eiv[i]);
-     LDVec<double> reis(this->outerlattice.star(), eiv.size());
-     for (size_t i=0; i<reis.size(); ++i) reis.set(i, eiv[i]);
+     auto eiv_array = bArray<double>::from_std(eiv);
+     LQVec<double> eis(this->outerlattice, eiv_array);
+     LDVec<double> reis(this->outerlattice.star(), eiv_array);
      size_t is_nth_ei;
    
      debug_update_if(special_2_folds,"Deal with 2-fold rotations with axes along highest-symmetry directions first");
      if (special_2_folds) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==2){
        vec.set(0, ps.axis(i));
        // First check if this stationary axis is along a reciprocal space vector
-       is_nth_ei = norm(cross(eis, vec.star())).is_approx(Comp::eq, 0.).first_true();
+       is_nth_ei = norm(cross(eis, vec.star())).is(brille::cmp::eq, 0.).first();
        if (is_nth_ei < 9 /* This is less than great practice */){
          debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
          size_t e1, e2;
@@ -291,18 +294,18 @@ Program Listing for File bz_wedge.cpp
          // The plane normal is the cross product of the first real space vector
          // (expressed in units of the reciprocal lattice) and the second
          // reciprocal space vector.
-         nrm.set(0, cross(reis.extract(e1).star(), eis.extract(e2)));
-         if (norm(cross(eis, nrm)).is_approx(Comp::eq, 0.).count_true() == 1){
+         nrm.set(0, cross(reis.view(e1).star(), eis.view(e2)));
+         if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0.).count() == 1){
            // keep any special points beyond the bounding plane
-           keep = dot(nrm, special).is_approx(Comp::ge, 0.);
-           debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+           keep = dot(nrm, special).is(brille::cmp::ge, 0.);
+           debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",special.to_string(),keep.to_string());
            special = special.extract(keep);
            sym_unused[i] = false;
            cutting_normals.set(n_cut++, nrm);
          }
        }
        // Stationary axis along real space basis vector
-       is_nth_ei = norm(cross(reis, vec)).is_approx(Comp::eq, 0.).first_true();
+       is_nth_ei = norm(cross(reis, vec)).is(brille::cmp::eq, 0.).first();
        if (sym_unused[i] && is_nth_ei < 2){
          debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
          switch (is_nth_ei){
@@ -310,8 +313,8 @@ Program Listing for File bz_wedge.cpp
            case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
          }
          // keep any special points beyond the bounding plane
-         keep = dot(nrm, special).is_approx(Comp::ge, 0.);
-         debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >= 0:\n", special.to_string(keep));
+         keep = dot(nrm, special).is(brille::cmp::ge, 0.);
+         debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n", special.to_string(), keep.to_string());
          special = special.extract(keep);
          sym_unused[i] = false;
          cutting_normals.set(n_cut++, nrm);
@@ -321,16 +324,16 @@ Program Listing for File bz_wedge.cpp
      if (special_mirrors) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==-2){
        vec.set(0, ps.axis(i)); // the mirror plane normal is in the direct lattice
        nrm.set(0, vec.star()); // and we want the normal in the reciprocal lattice
-       keep = dot(nrm, special).is_approx(Comp::ge, 0.);
+       keep = dot(nrm, special).is(brille::cmp::ge, 0.);
        // we need at least three points (plus Γ) to define a polyhedron
        // If we are not keeping three points, check if applying the mirror plane
        // pointing the other way works for us:
-       if (keep.count_true() < 3){
+       if (keep.count() < 3){
          nrm = -1*nrm; // - change nrm since we save it for later
-         keep = dot(nrm, special).is_approx(Comp::ge, 0.);
+         keep = dot(nrm, special).is(brille::cmp::ge, 0.);
        }
-       if (keep.count_true() > 2){
-         debug_update("Keeping special points with\n",nrm.to_string(0)," dot p >=0:\n", special.to_string(keep));
+       if (keep.count() > 2){
+         debug_update("Keeping special points with\n",nrm.to_string()," dot p >=0:\n", special.to_string(), keep.to_string());
          special = special.extract(keep);
          sym_unused[i] = false;
          cutting_normals.set(n_cut++, nrm);
@@ -340,19 +343,19 @@ Program Listing for File bz_wedge.cpp
      // Find which points are mapped onto equivalent points by each symmetry operation
      std::vector<std::vector<size_t>> one_sym;
      std::vector<size_t> one_type, type_order;
-     std::vector<bool> unfound(special.size(), true), type_unfound;
+     std::vector<bool> unfound(special.size(0), true), type_unfound;
      for (size_t i=0; i<ps.size(); ++i) if (sym_unused[i]){
        debug_update("Unused symmetry ",i," with order ", ps.order(i));
        debug_update(ps.get(i));
        one_sym.clear();
        for (auto b: unfound) b = true;
-       for (size_t j=0; j<special.size(); ++j) if (unfound[j]){
+       for (size_t j=0; j<special.size(0); ++j) if (unfound[j]){
          one_type.clear();
          one_type.push_back(j);
          unfound[j] = false;
-         for (size_t k=j+1; k<special.size(); ++k)
-         if (unfound[k] && special.rotate_approx(k, j, transpose(ps.get(i)), -ps.order(i))){ // -order checks all possible rotations
-         // if (unfound[k] && special.rotate_approx(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations
+         for (size_t k=j+1; k<special.size(0); ++k)
+         if (unfound[k] && special.match(k, j, transpose(ps.get(i)), -ps.order(i))){ // -order checks all possible rotations
+         // if (unfound[k] && special.match(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations
            one_type.push_back(k);
            unfound[k] = false;
          }
@@ -360,12 +363,12 @@ Program Listing for File bz_wedge.cpp
          // sort the equivalent points by their relative order for this operation
          // such that Rⁱj ≡ type_order[i]
          type_order.clear();
-         type_order.insert(type_order.begin(), ps.order(i), special.size()); // set default to (non-indexable) size of the special array
+         type_order.insert(type_order.begin(), ps.order(i), special.size(0)); // set default to (non-indexable) size of the special array
          type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
          for (int o=0; o<ps.order(i); ++o)
          for (size_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
-           if (special.rotate_approx(one_type[k], j, transpose(ps.get(i)), o)){
-           // if (special.rotate_approx(one_type[k], j, transpose(ps.get_proper(i)), o)){
+           if (special.match(one_type[k], j, transpose(ps.get(i)), o)){
+           // if (special.match(one_type[k], j, transpose(ps.get_proper(i)), o)){
              type_order[o] = one_type[k];
              type_unfound[k] = false;
            }
@@ -375,18 +378,20 @@ Program Listing for File bz_wedge.cpp
          one_sym.push_back(type_order);
        }
        // sort one_sym by the number of valid (indexable) equivalent points
-       std::sort(one_sym.begin(), one_sym.end(),
-         [&](std::vector<size_t>& a, std::vector<size_t>& b){
-           size_t as = a.size() - std::count(a.begin(), a.end(), special.size());
-           size_t bs = b.size() - std::count(b.begin(), b.end(), special.size());
-           return as > bs;
-         }
-       );
+       if (sort_one_sym){
+         std::sort(one_sym.begin(), one_sym.end(),
+           [&](std::vector<size_t>& a, std::vector<size_t>& b){
+             size_t as = a.size() - std::count(a.begin(), a.end(), special.size(0));
+             size_t bs = b.size() - std::count(b.begin(), b.end(), special.size(0));
+             return as > bs;
+           }
+         );
+       }
        size_t keep_count;
        LQVec<double> pt0(this->outerlattice, 1u), pt1(this->outerlattice, 1u);
        for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]/*always true?*/){
          // we need at least two equivalent points, ideally there will be the same number as the order
-         if (one_sym[s].size() > static_cast<size_t>(std::count(one_sym[s].begin(), one_sym[s].end(), special.size())+1)){
+         if (one_sym[s].size() > static_cast<size_t>(std::count(one_sym[s].begin(), one_sym[s].end(), special.size(0))+1)){
            type_order = one_sym[s];
            debug_update("Highest-multiplicity distinct point type:",type_order);
          // auto loc = std::find_if(one_sym.begin(), one_sym.end(), [&](std::vector<size_t>x){return x.size()==static_cast<size_t>(ps.order(i));});
@@ -396,17 +401,17 @@ Program Listing for File bz_wedge.cpp
            // grab the rotation stationary axis
            vec.set(0, ps.axis(i));
            for (size_t j=0, k=1; j<type_order.size(); ++j, k=(j+1)%type_order.size())
-           if (sym_unused[i] && type_order[j]<special.size() && type_order[k]<special.size()){
+           if (sym_unused[i] && type_order[j]<special.size(0) && type_order[k]<special.size(0)){
              if (ps.order(i)>2){
                // hold the two special points in their own LQVec<double> (!not <int>!)
-               pt0 = special.extract(type_order[j]);
-               pt1 = special.extract(type_order[k]);
+               pt0 = special.view(type_order[j]);
+               pt1 = special.view(type_order[k]);
                // we have two plane normals to worry about:
-               debug_update("Stationary vector",vec.to_string(0),"and special points",pt0.to_string(0),"and",pt1.to_string(0));
+               debug_update("Stationary vector",vec.to_string(0)," and special points",pt0.to_string(0)," and",pt1.to_string(0));
                // find both cross products, remembering that we want normals
                // pointing *into* the wedge.
                nrm.resize(2);
-               if ( dot(pt1, cross(vec.star(), pt0)).all_approx(Comp::lt,0.) ){
+               if ( dot(pt1, cross(vec.star(), pt0)).all(brille::cmp::lt,0.) ){
                  // the rotation is left handed, so swap the special points
                  nrm.set(0, cross(vec.star(), pt1));
                  nrm.set(1, cross(pt0, vec.star()));
@@ -414,27 +419,27 @@ Program Listing for File bz_wedge.cpp
                  nrm.set(0, cross(vec.star(), pt0));
                  nrm.set(1, cross(pt1, vec.star()));
                }
-               debug_update("give normals:", nrm.to_string(";"));
+               debug_update("give normals:", nrm.to_string(0), " and", nrm.to_string(1));
                // now check that all special points are inside of the wedge defined by the normals
              } else {
                // order == 2, so only one normal to worry about:
-               nrm = cross(vec.star(), special.extract(type_order[j]));
+               nrm = cross(vec.star(), special.view(type_order[j]));
                // make sure we don't remove all points out of the plane containing
                // the rotation axis and the two special points
-               if (dot(nrm, special).is_approx(Comp::gt,0.).count_true() == 0)
+               if (dot(nrm, special).is(brille::cmp::gt,0.).count() == 0)
                  nrm *= -1; // switch the cross product
              }
              // check to make sure that using these normals do not remove all but a plane of points
              keep = keep_if(nrm, special);
-             keep_count = keep.count_true();
+             keep_count = keep.count();
              // We need at least three points (plus Γ) to define a polyhedron.
              // Also skip the extraction if we are keeping all points
-             if (keep_count > 2 && keep_count < keep.size()){
-               debug_update("Keeping special points:\n",special.to_string(keep));
+             if (keep_count > 2 && keep_count < keep.size(0)){
+               debug_update("Keeping ",keep.to_string()," of special points:\n",special.to_string());
                special = special.extract(keep);
                sym_unused[i]=false;
-               for (size_t nc=0; nc<nrm.size(); ++nc)
-                   cutting_normals.set(n_cut++, nrm.extract(nc));
+               for (size_t nc=0; nc<nrm.size(0); ++nc)
+                   cutting_normals.set(n_cut++, nrm.view(nc));
              }
            }
          }
@@ -442,12 +447,16 @@ Program Listing for File bz_wedge.cpp
      }
    
      // debug_update("Remaining special points\n", special.to_string());
-     ArrayVector<double> cn = cutting_normals.first(n_cut).get_xyz(); // the cutting direction is opposite the normal
-     ArrayVector<double> cp(3u, cn.size(), 0.);
+     bArray<double> cn(0,3);
+     if (n_cut > 0) /*protect against view(0,0)*/
+       cn = cutting_normals.view(0,n_cut).get_xyz(); // the cutting direction is opposite the normal
+     bArray<double> cp(cn.shape(), 0.);
      this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, -1*cn, cp);
      // copy functionality of set_ir_vertices, which set the normals as well
-     if (this->check_ir_polyhedron())
+     if (this->check_ir_polyhedron()){
+       verbose_update("Irreducible Polyhedron check succeeded. Set irreducible wedge normals");
        this->set_ir_wedge_normals(this->get_ir_polyhedron_wedge_normals());
+     }
    
    //  // append the Γ point onto the list of special points:
    //  special.resize(special.size()+1u);
@@ -467,41 +476,41 @@ Program Listing for File bz_wedge.cpp
      */
      if (fullps.has_space_inversion()){
        // ps only contains operations *with* a stationary axis (described in real space)
-       LDVec<int> all_axes(this->outerlattice.star(), ps.axes());
+       LDVec<int> all_axes(this->outerlattice.star(), bArray<int>::from_std(ps.axes()));
        double ir_volume = this->ir_polyhedron.get_volume();
        double goal_volume = this->polyhedron.get_volume()/static_cast<double>(fullps.size());
-       if (all_axes.is_unique().count_true() == 1u || approx_scalar(ir_volume, 2.0*goal_volume) ){
+       auto aaiu = all_axes.is_unique();
+       if (std::count(aaiu.begin(), aaiu.end(), true) == 1u || brille::approx::scalar(ir_volume, 2.0*goal_volume) ){
          debug_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
          Polyhedron div;
-         LQVec<double> bz_n = this->get_normals();
-         // LQVec<double> wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong
-         LQVec<double> wg_n = this->get_ir_polyhedron_wedge_normals(); // This pulls directly from the ir_polyhedron
-         ArrayVector<double> gamma(3u, 1u);
-         for (size_t i=0; i<3u; ++i) gamma.insert(0, 0, i);
-         for (size_t i=0; i<bz_n.size(); ++i){
-           div = this->ir_polyhedron.divide(bz_n.extract(i).get_xyz(), gamma);
-           if (approx_scalar(div.get_volume(), goal_volume)){
+         auto bz_n = this->get_normals();
+         // auto wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong
+         auto wg_n = this->get_ir_polyhedron_wedge_normals(); // This pulls directly from the ir_polyhedron
+         bArray<double> gamma({1u,3u}, 0.);
+         for (size_t i=0; i<bz_n.size(0); ++i){
+           div = this->ir_polyhedron.divide(bz_n.view(i).get_xyz(), gamma);
+           if (brille::approx::scalar(div.get_volume(), goal_volume)){
              // set div to be the ir_polyhedron
              this->ir_polyhedron = div;
              // add the new normal to wedge normals list
-             wg_n.resize(wg_n.size()+1);
-             wg_n.set(wg_n.size()-1, -bz_n.extract(i));
+             // extract instead of view to avoid copying the whole bz_n Array
+             // when the inversion happens.
+             wg_n.append(/*dimension to expand*/ 0u, -bz_n.extract(i));
              this->set_ir_wedge_normals(wg_n);
              break;
            }
          }
-         if (approx_scalar(this->ir_polyhedron.get_volume(), ir_volume)){
+         if (brille::approx::scalar(this->ir_polyhedron.get_volume(), ir_volume)){
            debug_update("Polyhedron volume still double expected.");
            bool proceed=true;
            // check for other dividing planes :/
-           LQVec<double> cij(this->outerlattice, 1u);
-           for (size_t i=0; proceed && i<bz_n.size()-1; ++i)
-           for (size_t j=i+1; proceed && j<bz_n.size(); ++j){
+           //LQVec<double> cij(this->outerlattice, 1u);
+           for (size_t i=0; proceed && i<bz_n.size(0)-1; ++i)
+           for (size_t j=i+1; proceed && j<bz_n.size(0); ++j){
              div = this->ir_polyhedron.divide(bz_n.cross(i,j).get_xyz(), gamma);
-             if (approx_scalar(div.get_volume(), goal_volume)){
+             if (brille::approx::scalar(div.get_volume(), goal_volume)){
                this->ir_polyhedron = div;
-               wg_n.resize(wg_n.size()+1);
-               wg_n.set(wg_n.size()-1, -bz_n.cross(i,j));
+               wg_n.append(0u, -bz_n.cross(i,j));
                this->set_ir_wedge_normals(wg_n);
                proceed = false;
              }
@@ -509,7 +518,10 @@ Program Listing for File bz_wedge.cpp
          }
        }
      }
-   
+     bool success = this->check_ir_polyhedron();
+     if (!success) pmsg += " failed";
+     profile_update("  End ",pmsg);
+     return success;
    }
    
    
@@ -523,8 +535,9 @@ Program Listing for File bz_wedge.cpp
         Equivalently then, we can resstrict ourselves to the subspace where
         x̂⋅(111) ≥ 0.
      */
-     LQVec<double> nrm(this->outerlattice, 1u);
-     nrm.set(0, std::array<double,3>({{1,1,1}}));
+     using namespace brille;
+     bArray<double> vec(1u, 3u, 1.);
+     LQVec<double> nrm(this->outerlattice, vec);
      this->set_ir_wedge_normals(nrm);
      this->irreducible_vertex_search();
    }

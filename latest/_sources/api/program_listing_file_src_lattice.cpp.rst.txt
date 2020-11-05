@@ -29,6 +29,7 @@ Program Listing for File lattice.cpp
    
    #include "lattice.hpp"
    #include "hall_symbol.hpp"
+   #include "approx.hpp"
    
    Lattice::Lattice(const double* latmat, const int h){
      double l[3]={0,0,0}, a[3]={0,0,0};
@@ -95,10 +96,10 @@ Program Listing for File lattice.cpp
          if (this->ang[i] > maxang) maxang = this->ang[i];
        }
        if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
-       au = (maxang < 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+       au = (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
      }
      if (au != AngleUnit::radian){
-       double conversion = PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+       double conversion = brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
        for (int i=0;i<3;i++) this->ang[i] *= conversion;
      }
    }
@@ -154,7 +155,7 @@ Program Listing for File lattice.cpp
        std::string msg = "Invalid lattice unit cell ";
        if (std::isnan(this->unitvolume())){
          msg += "angles [";
-         for (int i=0; i<3; ++i) msg += " " + std::to_string(a[0]/PI*180.);
+         for (int i=0; i<3; ++i) msg += " " + std::to_string(a[0]/brille::pi*180.);
          msg += " ]";
        } else {
          msg += "lengths [";
@@ -174,7 +175,7 @@ Program Listing for File lattice.cpp
      for (size_t i=0; i<3u; ++i){
        size_t j = (i+1)%3;
        size_t k = (i+2)%3;
-       lstar[i] = 2*PI*sinang[i]*this->len[j]*this->len[k]/this->volume;
+       lstar[i] = 2*brille::pi*sinang[i]*this->len[j]*this->len[k]/this->volume;
        astar[i] = std::acos((cosang[j]*cosang[k]-cosang[i])/(sinang[j]*sinang[k]));
      }
      return Lattice(lstar, astar, this->bravais, this->spgsym, this->ptgsym, this->basis);
@@ -207,12 +208,28 @@ Program Listing for File lattice.cpp
      double *tmp = nullptr;
      tmp = new double[9]();
      this->get_metric_tensor(tmp);
-     matrix_inverse(mt,tmp);
+     brille::utils::matrix_inverse(mt,tmp);
      delete[] tmp;
    }
    
+   std::vector<double> Lattice::get_metric_tensor() const {
+     std::vector<double> m(9);
+     this->get_metric_tensor(m.data());
+     return m;
+   }
+   std::vector<double> Lattice::get_covariant_metric_tensor() const {
+     std::vector<double> m(9);
+     this->get_covariant_metric_tensor(m.data());
+     return m;
+   }
+   std::vector<double> Lattice::get_contravariant_metric_tensor() const {
+     std::vector<double> m(9);
+     this->get_contravariant_metric_tensor(m.data());
+     return m;
+   }
+   
    bool Lattice::issame(const Lattice& lat) const{
-     return approx_vector(3, this->ang.data(), lat.ang.data()) && approx_vector(3, this->len.data(), lat.len.data());
+     return brille::approx::vector(3, this->ang.data(), lat.ang.data()) && brille::approx::vector(3, this->len.data(), lat.len.data());
    }
    
    bool Lattice::isapprox(const Lattice& lat) const {
@@ -226,7 +243,7 @@ Program Listing for File lattice.cpp
          a[i] = this->ang[(i+j)%3];
          l[i] = this->len[(i+j)%3];
        }
-       if (approx_vector(3, a, lat.ang.data()) && approx_vector(3, l, lat.len.data()))
+       if (brille::approx::vector(3, a, lat.ang.data()) && brille::approx::vector(3, l, lat.len.data()))
          return j+1;
      }
      for (j=0; j<3; ++j){
@@ -234,7 +251,7 @@ Program Listing for File lattice.cpp
          a[i] = this->ang[ap[(i+j)%3]];
          l[i] = this->len[ap[(i+j)%3]];
        }
-       if (approx_vector(3, a, lat.ang.data()) && approx_vector(3, l, lat.len.data()))
+       if (brille::approx::vector(3, a, lat.ang.data()) && brille::approx::vector(3, l, lat.len.data()))
          return -j-1;
      }
      return 0;
@@ -243,16 +260,16 @@ Program Listing for File lattice.cpp
    
    void Lattice::print(){
      printf("(%g %g %g) " ,this->len[0], this->len[1], this->len[2]);
-     printf("(%g %g %g)\n",this->ang[0]/PI*180, this->ang[1]/PI*180, this->ang[2]/PI*180);
+     printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
    }
    std::string lattice2string(const Lattice& l, const std::string& lenunit="", const std::string& angunit="°"){
      std::string repr;
      repr = "(" + std::to_string(l.get_a()) + " "
                 + std::to_string(l.get_b()) + " "
                 + std::to_string(l.get_c()) + ")" + lenunit
-          +" (" + std::to_string(l.get_alpha()/PI*180) + " "
-                + std::to_string(l.get_beta()/PI*180)  + " "
-                + std::to_string(l.get_gamma()/PI*180) + ")" + angunit;
+          +" (" + std::to_string(l.get_alpha()/brille::pi*180) + " "
+                + std::to_string(l.get_beta()/brille::pi*180)  + " "
+                + std::to_string(l.get_gamma()/brille::pi*180) + ")" + angunit;
      return repr;
    }
    std::string Lattice::string_repr(){ return lattice2string(*this); }
@@ -289,8 +306,8 @@ Program Listing for File lattice.cpp
        latmat[2*c+i*r] = this->len[2]*zhat[i]; // ̂z direction, third row
      }
    }
-   void Direct::get_xyz_transform(double* fromxyz) const{
-     this->get_xyz_transform(fromxyz, 3u, 1u);
+   void Direct::get_xyz_transform(double* toxyz) const{
+     this->get_xyz_transform(toxyz, 3u, 1u);
    }
    template<class I> void Direct::get_xyz_transform(double* x, std::vector<I>& s) const {
      this->get_xyz_transform(x, static_cast<size_t>(s[0]/sizeof(double)), static_cast<size_t>(s[1]/sizeof(double)));
@@ -303,9 +320,14 @@ Program Listing for File lattice.cpp
      this->star().get_B_matrix(B, 3u, 1u);
      // we want toxyz to be 2*pi*transpose(inverse(B));
      // use t as a buffer
-     matrix_inverse(t,B);
-     matrix_transpose(t); // in-place transpose using swap
-     for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) toxyz[i*c+j*r] = 2*PI*t[3*i+j];
+     brille::utils::matrix_inverse(t,B);
+     brille::utils::matrix_transpose(t); // in-place transpose using swap
+     for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) toxyz[i*c+j*r] = 2*brille::pi*t[3*i+j];
+   }
+   std::vector<double> Direct::get_xyz_transform() const {
+     std::vector<double> mat(9);
+     this->get_xyz_transform(mat.data());
+     return mat;
    }
    void Direct::get_inverse_xyz_transform(double* fromxyz) const{
      this->get_inverse_xyz_transform(fromxyz, 3u, 1u);
@@ -316,9 +338,14 @@ Program Listing for File lattice.cpp
    void Direct::get_inverse_xyz_transform(double *fromxyz, const size_t c, const size_t r) const{
      double toxyz[9], tmp[9];
      this->get_xyz_transform(toxyz,3u,1u);
-     if(!matrix_inverse(tmp, toxyz))
+     if(!brille::utils::matrix_inverse(tmp, toxyz))
        throw std::runtime_error("xyz_transform matrix has zero determinant");
      for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) fromxyz[i*c+j*r] = tmp[i*3+j];
+   }
+   std::vector<double> Direct::get_inverse_xyz_transform() const {
+     std::vector<double> mat(9);
+     this->get_inverse_xyz_transform(mat.data());
+     return mat;
    }
    void Reciprocal::get_lattice_matrix(double *latmat) const{
      this->get_lattice_matrix(latmat, 3u, 1u);
@@ -330,9 +357,9 @@ Program Listing for File lattice.cpp
      Direct d = this->star();
      double m[9], tmp[9];
      d.get_lattice_matrix(m, 3u, 1u);
-     matrix_inverse(tmp,m);
-     matrix_transpose(tmp);
-     for (int i=0; i<9; ++i) tmp[i]*=2*PI;
+     brille::utils::matrix_inverse(tmp,m);
+     brille::utils::matrix_transpose(tmp);
+     for (int i=0; i<9; ++i) tmp[i]*=2*brille::pi;
      for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) latmat[c*i+r*j] = tmp[3*i+j];
    }
    void Reciprocal::get_B_matrix(double* B) const {
@@ -365,7 +392,7 @@ Program Listing for File lattice.cpp
      // and c-star -- third column
      B[0*c+2*r] = this->get_c()*cos(this->get_beta());
      B[1*c+2*r] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
-     B[2*c+2*r] = 2*PI/d.get_c();
+     B[2*c+2*r] = 2*brille::pi/d.get_c();
    }
    void Reciprocal::get_xyz_transform(double *toxyz) const { this->get_xyz_transform(toxyz, 3u, 1u); }
    template<class I> void Reciprocal::get_xyz_transform(double* toxyz, std::vector<I>& strides) const {
@@ -377,6 +404,11 @@ Program Listing for File lattice.cpp
      // here we're going with x along astar and y in the (astar, bstar) plane -- this is the "B-matrix"
      this->get_B_matrix(toxyz, c, r);
    }
+   std::vector<double> Reciprocal::get_xyz_transform() const {
+     std::vector<double> mat(9);
+     this->get_xyz_transform(mat.data());
+     return mat;
+   }
    void Reciprocal::get_inverse_xyz_transform(double *fromxyz) const{
      this->get_inverse_xyz_transform(fromxyz, 3u, 1u);
    }
@@ -386,9 +418,14 @@ Program Listing for File lattice.cpp
    void Reciprocal::get_inverse_xyz_transform(double *fromxyz, const size_t c, const size_t r) const {
      double toxyz[9], tmp[9];
      this->get_xyz_transform(toxyz, 3u, 1u);
-     if(!matrix_inverse(tmp, toxyz))
+     if(!brille::utils::matrix_inverse(tmp, toxyz))
        throw std::runtime_error("xyz_transform matrix has zero determinant");
      for (size_t i=0; i<3u; ++i) for(size_t j=0; j<3u; ++j) fromxyz[i*c+j*r] = tmp[i*3+j];
+   }
+   std::vector<double> Reciprocal::get_inverse_xyz_transform() const {
+     std::vector<double> mat(9);
+     this->get_inverse_xyz_transform(mat.data());
+     return mat;
    }
    
    // We have to define these separately from Lattice since Lattice.star() doesn't exist.
@@ -410,11 +447,11 @@ Program Listing for File lattice.cpp
    
    void Direct::print(){
      printf("(%g %g %g)A " ,this->len[0], this->len[1], this->len[2]);
-     printf("(%g %g %g)\n",this->ang[0]/PI*180, this->ang[1]/PI*180, this->ang[2]/PI*180);
+     printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
    }
    void Reciprocal::print(){
      printf("(%g %g %g)/A " ,this->len[0], this->len[1], this->len[2]);
-     printf("(%g %g %g)\n",this->ang[0]/PI*180, this->ang[1]/PI*180, this->ang[2]/PI*180);
+     printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
    }
    
    
@@ -428,7 +465,7 @@ Program Listing for File lattice.cpp
        // Aₚ = Aₛ P. But here we have Aₛᵀ and want Aₚᵀ:
        // Aₚᵀ = (Aₛ P)ᵀ = Pᵀ Aₛᵀ
        // So we need the transpose of P from the PrimitiveTransform object:
-       multiply_matrix_matrix<double,double,double,3>(plm,P.get_Pt().data(),lm);
+       brille::utils::multiply_matrix_matrix<double,double,double,3>(plm,P.get_Pt().data(),lm);
        return Direct(plm);
      }
      return *this;

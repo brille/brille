@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a46e1919f4c621157ef522b80effa0ae0:
+
+Template Function brille::utils::magnitude(const std::complex<T>)
+=================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::magnitude(const std::complex<T>)

@@ -1,0 +1,13 @@
+.. _exhale_typedef_utilities_8hpp_1a4d1c3954fddf2998746ef737ada943dd:
+
+Typedef brille::utils::are_same
+===============================
+
+.. did not find file this was defined in
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::utils::are_same

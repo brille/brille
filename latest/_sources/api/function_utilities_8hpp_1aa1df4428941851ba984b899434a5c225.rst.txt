@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aa1df4428941851ba984b899434a5c225:
+
+Function brille::utils::my_cast< int, double >
+==============================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::my_cast< int, double >(const double)

@@ -31,11 +31,13 @@ Includes
 
 - ``algorithm``
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``array`` (:ref:`file_src_array.hpp`)
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+- ``vector``
 
 
 
@@ -64,4 +66,11 @@ Functions
 
 
 - :ref:`exhale_function_balltrellis_8hpp_1a8422f8db814524f649a7ab610a7f4106`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_balltrellis_8hpp_1ac68878228a13140311a0c3c40133dd41`
 

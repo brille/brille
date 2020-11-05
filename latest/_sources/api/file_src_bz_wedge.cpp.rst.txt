@@ -40,5 +40,5 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_bz__wedge_8cpp_1a264c92206205a7888358f8bb37871c30`
+- :ref:`exhale_function_bz__wedge_8cpp_1a25a8bec4db2651d27dc05208bb7ba2b5`
 

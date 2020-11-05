@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File comparisons.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File comparisons.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_comparisons.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-comparisons-hpp">
+<span id="program-listing-file-src-comparisons-hpp"></span><h1>Program Listing for File comparisons.hpp<a class="headerlink" href="#program-listing-for-file-comparisons-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_comparisons.hpp.html#file-src-comparisons-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/comparisons.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef COMPARISONS_HPP</span>
+<span class="cp">#define COMPARISONS_HPP</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+<span class="c1">// #include &quot;sharedspan.hpp&quot;</span>
+<span class="c1">// template&lt;class T&gt; using span_t = brille::SharedSpan&lt;T&gt;;</span>
+
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
+
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">cmp</span> <span class="p">{</span>
+  <span class="n">lt</span><span class="p">,</span>    <span class="c1">//&lt; less than</span>
+  <span class="n">gt</span><span class="p">,</span>    <span class="c1">//&lt; greater than</span>
+  <span class="n">le</span><span class="p">,</span>    <span class="c1">//&lt; less than or equal</span>
+  <span class="n">ge</span><span class="p">,</span>    <span class="c1">//&lt; greater than or equal</span>
+  <span class="n">eq</span><span class="p">,</span>    <span class="c1">//&lt; equal</span>
+  <span class="n">nle</span><span class="p">,</span>   <span class="c1">//&lt; not less than or equal</span>
+  <span class="n">nge</span><span class="p">,</span>   <span class="c1">//&lt; not greather than or equal</span>
+  <span class="n">neq</span><span class="p">,</span>   <span class="c1">//&lt; not equal</span>
+  <span class="n">le_ge</span><span class="p">,</span> <span class="c1">//&lt; (less than or equal) OR (greater than or equal)</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Comparer</span><span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">useT</span><span class="p">;</span>
+  <span class="n">T</span> <span class="n">relT</span><span class="p">;</span>
+  <span class="n">R</span> <span class="n">relR</span><span class="p">;</span>
+  <span class="n">T</span> <span class="n">absT</span><span class="p">;</span>
+  <span class="n">R</span> <span class="n">absR</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">,</span><span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">scalar</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span><span class="o">&amp;</span><span class="p">,</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span><span class="p">,</span><span class="k">const</span> <span class="kt">size_t</span><span class="o">&amp;</span><span class="p">,</span><span class="k">const</span> <span class="n">R</span><span class="o">*</span><span class="p">,</span><span class="k">const</span> <span class="kt">size_t</span><span class="o">&amp;</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">vector</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Comparer</span><span class="p">(</span><span class="k">const</span> <span class="n">cmp</span> <span class="n">op</span><span class="p">){</span>
+    <span class="c1">// predetermine tolerances and which we should use:</span>
+    <span class="kt">bool</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">useT</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">relT</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">relR</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">absT</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">absR</span><span class="p">)</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">tols</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="c1">// set the comparison function</span>
+    <span class="k">switch</span><span class="p">(</span><span class="n">op</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">lt</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">gt</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">&gt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">le</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">||</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">ge</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">||</span> <span class="n">a</span><span class="o">&gt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">eq</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">);</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">nle</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">&gt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">nge</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">b</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">neq</span><span class="p">:</span>
+      <span class="n">scalar</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">useT</span><span class="p">,</span><span class="n">relT</span><span class="p">,</span><span class="n">relR</span><span class="p">,</span><span class="n">absT</span><span class="p">,</span><span class="n">absR</span><span class="p">);</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Unhandled comparison&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">){</span>
+      <span class="c1">// A vector is NOT X if any of the elements are NOT X</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">neq</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">nge</span><span class="p">:</span>
+      <span class="k">case</span> <span class="n">cmp</span><span class="o">::</span><span class="nl">nle</span><span class="p">:</span>
+      <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sa</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sb</span><span class="p">){</span>
+        <span class="kt">bool</span> <span class="n">ret</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">ret</span> <span class="o">|=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">scalar</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sa</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sb</span><span class="p">]);</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">break</span><span class="p">;</span>
+      <span class="c1">// A vector IS X if all of the elements ARE X</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sa</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sb</span><span class="p">){</span>
+        <span class="kt">bool</span> <span class="n">ret</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">ret</span> <span class="o">&amp;=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">scalar</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sa</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sb</span><span class="p">]);</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// call the comparison function for two scalars</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);}</span>
+  <span class="c1">// call the comparison function for two raw vectors</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">vector</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">1u</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// call the comparison function for two strided raw vectors</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sa</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sb</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">vector</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">sa</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sb</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">ops</span> <span class="p">{</span>
+  <span class="n">plus</span><span class="p">,</span>  <span class="c1">//&lt; plus</span>
+  <span class="n">minus</span><span class="p">,</span> <span class="c1">//&lt; minus</span>
+  <span class="n">times</span><span class="p">,</span> <span class="c1">//&lt; times</span>
+  <span class="n">rdiv</span><span class="p">,</span>  <span class="c1">//&lt; right divide</span>
+  <span class="n">ldiv</span><span class="p">,</span>  <span class="c1">//&lt; left divide</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">RawBinaryOperator</span><span class="p">{</span>
+  <span class="n">ops</span> <span class="n">operation</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="n">T</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">T</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">binop</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">RawBinaryOperator</span><span class="p">(</span><span class="n">ops</span> <span class="n">op</span><span class="p">)</span><span class="o">:</span> <span class="n">operation</span><span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">operation</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">ops</span><span class="o">::</span><span class="nl">plus</span><span class="p">:</span>  <span class="n">binop</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">;};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">ops</span><span class="o">::</span><span class="nl">minus</span><span class="p">:</span> <span class="n">binop</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">ops</span><span class="o">::</span><span class="nl">times</span><span class="p">:</span> <span class="n">binop</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">;};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">ops</span><span class="o">::</span><span class="nl">rdiv</span><span class="p">:</span>  <span class="n">binop</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="p">;};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="n">ops</span><span class="o">::</span><span class="nl">ldiv</span><span class="p">:</span>  <span class="n">binop</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">b</span><span class="o">/</span><span class="n">a</span><span class="p">;};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Unhandled operation!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">T</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">binop</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);}</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">binop</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sc</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sa</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">sb</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sc</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">binop</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sa</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sb</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="o">&lt;</span><span class="n">cmp</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">cmp</span><span class="o">&amp;</span> <span class="n">c</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="o">&lt;</span><span class="n">ops</span><span class="o">&gt;</span><span class="p">(</span><span class="k">const</span> <span class="n">ops</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">);</span>
+
+<span class="p">}</span> <span class="c1">// namespace brille</span>
+
+
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

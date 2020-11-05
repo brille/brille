@@ -10,7 +10,7 @@ Program Listing for File neighbours.cpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
+   /* Copyright 2019-2020 Greg Tucker
    //
    // This file is part of brille.
    //
@@ -28,108 +28,49 @@ Program Listing for File neighbours.cpp
    // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    
    #include "neighbours.hpp"
+   #include <array>
+   #include <vector>
    
-   // int make_all_indices(LQVec<int> *ijk, const int extent){
-   //   if (ijk->numel()!=3u) throw "expected three vectors";
-   //   int min = -extent, max = extent+1;
-   //   int num = max-min;
-   //   ijk->resize(num*num*num-1); //-1 because we're skipping the origin
-   //   int *tmp = new int[3];
-   //   int n=0;
-   //   for (int i=min; i<max; i++){
-   //     tmp[0] = i;
-   //     for (int j=min; j<max; j++){
-   //       tmp[1] = j;
-   //       for (int k=min; k<max; k++){
-   //         tmp[2] = k;
-   //         if (i||j||k) ijk->set(n++,tmp); // as long as any are non-zero
-   //       }
-   //     }
-   //   }
-   //   delete[] tmp;
-   //   return n;
-   // }
-   
-   ArrayVector<int> make_relative_neighbour_indices(const int extent){
+   static std::vector<int> all_from_extent(const int extent){
      int min = -extent, max = extent+1;
-     int num = max-min;
-     ArrayVector<int> out(3u,num*num*num-1);  //-1 because we're skipping the origin
-     int *tmp = new int[3];
-     int n=0;
-     for (int i=min; i<max; i++){
-       tmp[0] = i;
-       for (int j=min; j<max; j++){
-         tmp[1] = j;
-         for (int k=min; k<max; k++){
-           tmp[2] = k;
-           if (i||j||k) out.set(n++,tmp); // as long as any are non-zero
-         }
-       }
-     }
-     delete[] tmp;
-     return out;
+     std::vector<int> vec;
+     for (int i=min; i<max; ++i) vec.push_back(i);
+     return vec;
    }
    
-   ArrayVector<int> make_relative_neighbour_indices_prime(const int extent){
-     int min = -extent, max = extent+1;
-     int num = max-min;
-     ArrayVector<int> out(3u,num*num*num-1);  //-1 because we're skipping the origin
-     int *tmp = nullptr;
-     tmp = new int[3];
-     int n=0;
-     for (int e=0; e<3; ++e){
-       for (int j=min; j<max; ++j){
-         for (int i=0; i<3; ++i) tmp[i]=0;
-         tmp[e] = j;
-         if (j) out.set(n++, tmp);
-       }
-     }
-     for (int e0=0; e0<2; ++e0){
-       for (int e1=e0+1; e1<3; ++e1){
-         for (int k=min; k<max; ++k){
-           for (int j=min; j<max; ++j){
-             for (int i=0; i<3; ++i) tmp[i]=0;
-             tmp[e0]=k;
-             tmp[e1]=j;
-             if (k&&j) out.set(n++,tmp);
-           }
-         }
-       }
-     }
-     for (int i=min; i<max; i++){
-       tmp[0] = i;
-       for (int j=min; j<max; j++){
-         tmp[1] = j;
-         for (int k=min; k<max; k++){
-           tmp[2] = k;
-           if (i&&j&&k) out.set(n++,tmp); // as long as any are non-zero
-         }
-       }
-     }
-     delete[] tmp;
-     return out;
+   bArray<int> make_relative_neighbour_indices(const int extent){
+     auto vec = all_from_extent(extent);
+     size_t num = vec.size();
+     size_t n{0};
+     std::vector<std::array<int,3>> o(num*num*num-1);  //-1 because we're skipping the origin)
+     for (auto i: vec) for (auto j: vec) for (auto k: vec) if (i||j||k)
+       o[n++] = {{i,j,k}};
+     return bArray<int>::from_std(o);
    }
    
-   ArrayVector<int> make_relative_neighbour_indices4(const int extent){
-     int min = -extent, max = extent+1;
-     int num = max-min;
-     ArrayVector<int> out(4u,num*num*num*num-1);  //-1 because we're skipping the origin
-     int *tmp = nullptr;
-     tmp = new int[4];
-     int n=0;
-     for (int i=min; i<max; i++){
-       tmp[0] = i;
-       for (int j=min; j<max; j++){
-         tmp[1] = j;
-         for (int k=min; k<max; k++){
-           tmp[2] = k;
-           for (int l=min; l<max; l++){
-             tmp[3] = l;
-             if (i||j||k||l) out.set(n++,tmp); // as long as any are non-zero
-           }
-         }
-       }
+   bArray<int> make_relative_neighbour_indices_prime(const int extent){
+     auto vec = all_from_extent(extent);
+     size_t num = vec.size();
+     size_t n{0};
+     std::vector<std::array<int,3>> o(num*num*num-1);
+     for (size_t i=0; i<num*num*num-1; ++i) o[i] = {{0,0,0}};
+     // first follow each axis:
+     for (int e=0; e<3; ++e) for (auto j: vec) if (j) o[n++][e] = j;
+     // next the ab, bc, and ac planes:
+     for (int e0=0; e0<2; ++e0) for (int e1=e0+1; e1<3; ++e1)
+     for (auto k: vec) for (auto j: vec) if (k&&j){
+       o[n][e0] = k; o[n++][e1] = j;
      }
-     delete[] tmp;
-     return out;
+     // then fill in everything else
+     for (auto i: vec) for (auto j: vec) for (auto k: vec) if (i&&j&&k)
+       o[n++] = {{i,j,k}};
+     return bArray<int>::from_std(o);
+   }
+   
+   bArray<int> make_relative_neighbour_indices4(const int extent){
+     auto v = all_from_extent(extent);
+     std::vector<std::array<int,4>> o;
+     for (auto i: v) for (auto j: v) for (auto k: v) for (auto l: v)
+     if (i||j||k||l) o.push_back({{i,j,k,l}});
+     return bArray<int>::from_std(o);
    }

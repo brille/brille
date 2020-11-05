@@ -20,17 +20,52 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_src_arrayvector.hpp.rst
+   file_src_approx.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_src_arrayvector.tpp.rst
+   file_src_array.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_src_arrayvector_operators.tpp.rst
+   file_src_array.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array2.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array2.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_latvec.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_latvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_ldvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_lqvec.tpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -90,6 +125,16 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_src_comparisons.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_comparisons.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_src_debug.cpp.rst
 
 .. toctree::
@@ -110,12 +155,92 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_src_inner_interpolation_data.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_src_interpolation.hpp.rst
 
 .. toctree::
    :maxdepth: 5
 
    file_src_interpolation_data.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_at.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_axial.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_cost.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_gamma.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_real.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_recip.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_at.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_axial.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_cost.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_gamma.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_real.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator_recip.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolatordual.hpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -131,26 +256,6 @@ Files
    :maxdepth: 5
 
    file_src_lattice.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_latvec.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_latvec.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_ldvec.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_lqvec.tpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -235,6 +340,11 @@ Files
 .. toctree::
    :maxdepth: 5
 
+   file_src_sharedspan.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
    file_src_smp.hpp.rst
 
 .. toctree::
@@ -251,6 +361,11 @@ Files
    :maxdepth: 5
 
    file_src_spg_database.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_subscript.hpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -291,6 +406,11 @@ Files
    :maxdepth: 5
 
    file_src_triangulation_simple.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_types.hpp.rst
 
 .. toctree::
    :maxdepth: 5

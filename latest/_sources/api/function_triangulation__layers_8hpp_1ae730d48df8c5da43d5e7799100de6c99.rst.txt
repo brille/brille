@@ -1,0 +1,13 @@
+.. _exhale_function_triangulation__layers_8hpp_1ae730d48df8c5da43d5e7799100de6c99:
+
+Template Function triangulate(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const int, const int)
+=========================================================================================================================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: triangulate(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const int, const int)

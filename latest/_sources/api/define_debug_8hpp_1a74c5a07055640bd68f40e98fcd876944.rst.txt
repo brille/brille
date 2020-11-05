@@ -1,0 +1,13 @@
+.. _exhale_define_debug_8hpp_1a74c5a07055640bd68f40e98fcd876944:
+
+Define profile_update
+=====================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: profile_update

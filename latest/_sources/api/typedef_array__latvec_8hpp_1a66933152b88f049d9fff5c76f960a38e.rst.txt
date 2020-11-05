@@ -1,0 +1,13 @@
+.. _exhale_typedef_array__latvec_8hpp_1a66933152b88f049d9fff5c76f960a38e:
+
+Typedef LatVecStar
+==================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: LatVecStar

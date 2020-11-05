@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Array:
+
+Template Class Array
+====================
+
+- Defined in :ref:`file_src_array.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Array
+   :members:
+   :protected-members:
+   :undoc-members:

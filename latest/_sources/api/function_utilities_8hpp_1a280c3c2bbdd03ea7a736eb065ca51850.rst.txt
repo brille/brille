@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a280c3c2bbdd03ea7a736eb065ca51850:
+
+Template Function brille::utils::hermitian_angle(const I, const std::complex<T> \*, const std::complex<T> \*)
+=============================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::hermitian_angle(const I, const std::complex<T> *, const std::complex<T> *)

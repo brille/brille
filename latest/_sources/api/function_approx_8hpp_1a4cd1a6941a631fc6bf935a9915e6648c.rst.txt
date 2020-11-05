@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a4cd1a6941a631fc6bf935a9915e6648c:
+
+Template Function brille::approx::array(const size_t, const size_t, const T \*, const R \*, const int)
+======================================================================================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::approx::array(const size_t, const size_t, const T *, const R *, const int)

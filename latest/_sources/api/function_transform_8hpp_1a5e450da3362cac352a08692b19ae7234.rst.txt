@@ -1,0 +1,13 @@
+.. _exhale_function_transform_8hpp_1a5e450da3362cac352a08692b19ae7234:
+
+Template Function xyz_to_hkl
+============================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: xyz_to_hkl(const Reciprocal&, const bArray<T>&)

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aec001a7863e941d7c0e8dedc6a0235e8:
+
+Template Function brille::utils::euclidean_angle
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::euclidean_angle(const I, const std::complex<T> *, const std::complex<T> *)

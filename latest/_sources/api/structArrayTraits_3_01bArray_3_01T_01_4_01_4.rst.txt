@@ -1,0 +1,16 @@
+.. _exhale_struct_structArrayTraits_3_01bArray_3_01T_01_4_01_4:
+
+Template Struct ArrayTraits< bArray< T > >
+==========================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ArrayTraits< bArray< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

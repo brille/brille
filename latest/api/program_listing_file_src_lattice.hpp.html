@@ -245,10 +245,10 @@ protected:
       }
       if (minang &lt; 0.) throw std::runtime_error(&quot;Unexpected negative inter-facial cell angle&quot;);
       // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
-      // au = (maxang &lt; 1.0) ? AngleUnit::pi : (maxang &lt; 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
-      au = (maxang &lt; 2.0*PIOVERTWO) ? AngleUnit::radian : AngleUnit::degree;
+      // au = (maxang &lt; 1.0) ? AngleUnit::pi : (maxang &lt; brille::pi) ? AngleUnit::radian : AngleUnit::degree;
+      au = (maxang &lt; brille::pi) ? AngleUnit::radian : AngleUnit::degree;
     }
-    double conversion = (AngleUnit::radian == au) ? 1.0 : PIOVERTWO*((AngleUnit::degree == au) ? 1.0/90.0 : 2.0);
+    double conversion = (AngleUnit::radian == au) ? 1.0 : brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
     for (int i=0;i&lt;3;i++) this-&gt;ang[i] = avec[i*span]*conversion;
   }
   // void set_len_scalars(const double, const double, const double);
@@ -281,7 +281,7 @@ public:
     this-&gt;check_hall_number(h);
   }
   Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
-  Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=PIOVERTWO, const double bl=PIOVERTWO, const double cl=PIOVERTWO, const int h=1);
+  Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=brille::halfpi, const double bl=brille::halfpi, const double cl=brille::halfpi, const int h=1);
   Lattice(const double *, const std::string&amp;, const std::string&amp; choice=&quot;&quot;);
   Lattice(const double *, const double *, const std::string&amp;, const std::string&amp; choice=&quot;&quot;, const AngleUnit au=AngleUnit::not_provided);
   template&lt;class I&gt;//, typename=typename std::enable_if&lt;std::is_integral&lt;I&gt;::value&gt;::type&gt;
@@ -313,6 +313,9 @@ public:
   void get_metric_tensor(double * mt) const ;
   void get_covariant_metric_tensor(double *mt) const ;
   void get_contravariant_metric_tensor(double *mt) const ;
+  std::vector&lt;double&gt; get_metric_tensor() const ;
+  std::vector&lt;double&gt; get_covariant_metric_tensor() const ;
+  std::vector&lt;double&gt; get_contravariant_metric_tensor() const ;
   // some functions don&#39;t logically make sense for this base class, but
   // do for the derived classes. define them here for funsies
   bool issame(const Lattice&amp;) const; // this should really have a tolerance
@@ -375,9 +378,11 @@ public:
   void get_xyz_transform(double*) const;
   void get_xyz_transform(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_xyz_transform(double*, std::vector&lt;I&gt;&amp;) const;
+  std::vector&lt;double&gt; get_xyz_transform() const;
   void get_inverse_xyz_transform(double*) const;
   void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_inverse_xyz_transform(double*, std::vector&lt;I&gt;&amp;) const;
+  std::vector&lt;double&gt; get_inverse_xyz_transform() const;
   void get_lattice_matrix(double*) const;
   void get_lattice_matrix(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_lattice_matrix(double*, std::vector&lt;I&gt;&amp;) const;
@@ -398,9 +403,11 @@ public:
   void get_xyz_transform(double*) const;
   void get_xyz_transform(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_xyz_transform(double*, std::vector&lt;I&gt;&amp;) const;
+  std::vector&lt;double&gt; get_xyz_transform() const;
   void get_inverse_xyz_transform(double*) const;
   void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_inverse_xyz_transform(double*, std::vector&lt;I&gt;&amp;) const;
+  std::vector&lt;double&gt; get_inverse_xyz_transform() const;
   void get_lattice_matrix(double*) const;
   void get_lattice_matrix(double*, const size_t, const size_t) const;
   template&lt;class I&gt; void get_lattice_matrix(double*, std::vector&lt;I&gt;&amp;) const;

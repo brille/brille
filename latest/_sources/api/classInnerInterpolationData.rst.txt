@@ -3,7 +3,7 @@
 Template Class InnerInterpolationData
 =====================================
 
-- Defined in :ref:`file_src_interpolation_data.hpp`
+- Defined in :ref:`file_src_inner_interpolation_data.hpp`
 
 
 Class Documentation

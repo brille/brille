@@ -173,7 +173,7 @@
   <div class="section" id="template-class-ldvec">
 <span id="exhale-class-classldvec"></span><h1>Template Class LDVec<a class="headerlink" href="#template-class-ldvec" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_src_latvec.hpp.html#file-src-latvec-hpp"><span class="std std-ref">File latvec.hpp</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_src_array_latvec.hpp.html#file-src-array-latvec-hpp"><span class="std std-ref">File array_latvec.hpp</span></a></p></li>
 </ul>
 <div class="section" id="inheritance-relationships">
 <h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
@@ -181,7 +181,7 @@
 <h3>Base Types<a class="headerlink" href="#base-types" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">LatVec</span></code> (<a class="reference internal" href="classLatVec.html#exhale-class-classlatvec"><span class="std std-ref">Class LatVec</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">ArrayVector&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classArrayVector.html#exhale-class-classarrayvector"><span class="std std-ref">Template Class ArrayVector</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::Array2&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classbrille_1_1Array2.html#exhale-class-classbrille-1-1array2"><span class="std std-ref">Template Class Array2</span></a>)</p></li>
 </ul>
 </div>
 </div>
@@ -189,58 +189,27 @@
 <h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
 <dl class="cpp class">
 <dt id="_CPPv4I0E5LDVec">
-<span id="_CPPv3I0E5LDVec"></span><span id="_CPPv2I0E5LDVec"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classLDVec"></span><em class="property">class </em><code class="sig-name descname">LDVec</code> : <em class="property">public</em> <a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <em class="property">public</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0E5LDVec" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0E5LDVec"></span><span id="_CPPv2I0E5LDVec"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classLDVec"></span><em class="property">class </em><code class="sig-name descname">LDVec</code> : <em class="property">public</em> <a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1Array2.html#_CPPv4I0EN6brille6Array2E" title="brille::Array2">Array2</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0E5LDVec" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>3-vector(s) expressed in units of a <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice </p>
-<p>By adding a <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice to a 3-element <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> this class represents one or more 3-vector in units of a real-space-spanning lattice. </p>
+<p>By adding a <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice to a 3-element bArray this class represents one or more 3-vector in units of a real-space-spanning lattice. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVec5LDVecERK6DirectK6size_tPK1T">
-<span id="_CPPv3N5LDVec5LDVecERK6DirectK6size_tPK1T"></span><span id="_CPPv2N5LDVec5LDVecERK6DirectK6size_tPK1T"></span><span id="LDVec::LDVec__DirectCR.sC.TCP"></span><span class="target" id="classLDVec_1ab41699bbcc2569db8fdbaf92701871c6"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em> = <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a>(), <em class="property">const</em> size_t <em>n</em> = 0, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> *<em>d</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec5LDVecERK6DirectK6size_tPK1T" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Default constructor, enforces that 3-vectors are held. </p>
+<dt id="_CPPv4N5LDVec5LDVecERK6Direct">
+<span id="_CPPv3N5LDVec5LDVecERK6Direct"></span><span id="_CPPv2N5LDVec5LDVecERK6Direct"></span><span id="LDVec::LDVec__DirectCR"></span><span class="target" id="classLDVec_1aa497ee0de6ca7a320d62f90b503e4a77"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em> = <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec5LDVecERK6Direct" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN5LDVec5LDVecERK6DirectDp4Args">
+<span id="_CPPv3IDpEN5LDVec5LDVecERK6DirectDp4Args"></span><span id="_CPPv2IDpEN5LDVec5LDVecERK6DirectDp4Args"></span>template&lt;typename ...<code class="sig-name descname">Args</code>&gt;<br /><span class="target" id="classLDVec_1abaf765deec3fa0d3d187caad3743f647"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em>, <a class="reference internal" href="#_CPPv4IDpEN5LDVec5LDVecERK6DirectDp4Args" title="LDVec::LDVec::Args">Args</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN5LDVec5LDVecERK6DirectDp4Args" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>integer number of three-vector constructor (macroed as templates can’t be distinguished) </p>
+<p>Fowarding constructor to let bArray deal with everything else </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi">
-<span id="_CPPv3I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi"></span><span id="_CPPv2I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi"></span>template&lt;class <code class="sig-name descname">Integer</code>, typename = <em class="property">typename</em> std::enable_if&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LDVec::LDVec::Integer">Integer</a>&gt;::value&gt;::type&gt;<br /><span class="target" id="classLDVec_1a2d8ecffd45542ac2d3af97b3b7bcacc3"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> *<em>d</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LDVec::LDVec::Integer">Integer</a>&gt; &amp;<em>shape</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="LDVec::LDVec::Integer">Integer</a>&gt; &amp;<em>strides</em>, <em class="property">const</em> int <em>flag</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN5LDVec5LDVecERK6DirectPK1TRKNSt6vectorI7IntegerEERKNSt6vectorI7IntegerEEKi" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Constructor taking a possibly non-contigous and/or non-row-ordered input. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N5LDVec5LDVecERK6DirectRK11ArrayVectorI1TEKi">
-<span id="_CPPv3N5LDVec5LDVecERK6DirectRK11ArrayVectorI1TEKi"></span><span id="_CPPv2N5LDVec5LDVecERK6DirectRK11ArrayVectorI1TEKi"></span><span id="LDVec::LDVec__DirectCR.ArrayVector:T:CR.iC"></span><span class="target" id="classLDVec_1ac09166e458ab52d13f42ec0e10745c5b"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em>, <em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<em>vec</em>, <em class="property">const</em> int <em>flag</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec5LDVecERK6DirectRK11ArrayVectorI1TEKi" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Copy constructor, optionally verifying that only 3-element arrays are provided. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0EN5LDVec5LDVecERK5LDVecI1RE">
-<span id="_CPPv3I0EN5LDVec5LDVecERK5LDVecI1RE"></span><span id="_CPPv2I0EN5LDVec5LDVecERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a5c0e14bcaf5ead486d0c0f902b2b5d79"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN5LDVec5LDVecERK5LDVecI1RE" title="LDVec::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN5LDVec5LDVecERK5LDVecI1RE" title="LDVec::LDVec::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LDVec5LDVecERK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>[Optional type conversion] copy constructor </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0EN5LDVec5LDVecERK6DirectRKNSt6vectorINSt5arrayI1RXL3EEEEEE">
-<span id="_CPPv3I0EN5LDVec5LDVecERK6DirectRKNSt6vectorINSt5arrayI1RXL3EEEEEE"></span><span id="_CPPv2I0EN5LDVec5LDVecERK6DirectRKNSt6vectorINSt5arrayI1RX3EEEEE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a87b17b49fdbd8787ecd2a74c57597721"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classDirect.html#_CPPv46Direct" title="Direct">Direct</a> &amp;<em>lat</em>, <em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="#_CPPv4I0EN5LDVec5LDVecERK6DirectRKNSt6vectorINSt5arrayI1RXL3EEEEEE" title="LDVec::LDVec::R">R</a>, 3&gt;&gt; &amp;<em>va</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LDVec5LDVecERK6DirectRKNSt6vectorINSt5arrayI1RXL3EEEEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>std::vector&lt;std::array&lt;T,3&gt;&gt; copy constructor </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N5LDVec5LDVecERK5LDVecI1TE">
-<span id="_CPPv3N5LDVec5LDVecERK5LDVecI1TE"></span><span id="_CPPv2N5LDVec5LDVecERK5LDVecI1TE"></span><span id="LDVec::LDVec__LDVec:T:CR"></span><span class="target" id="classLDVec_1a7443a9a84770543e37292f6a2fbe1da1"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5LDVec5LDVecERK5LDVecI1TE" title="LDVec::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec5LDVecERK5LDVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Explicit copy constructor. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N5LDVecaSERK5LDVecI1TE">
-<span id="_CPPv3N5LDVecaSERK5LDVecI1TE"></span><span id="_CPPv2N5LDVecaSERK5LDVecI1TE"></span><span id="LDVec::assign-operator__LDVec:T:CR"></span><span class="target" id="classLDVec_1a133a1899eb2a1ff0bd551dee96e292f8"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecaSERK5LDVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Assignment operator reusing data if we can. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVecixEK6size_t">
-<span id="_CPPv3NK5LDVecixEK6size_t"></span><span id="_CPPv2NK5LDVecixEK6size_t"></span><span id="LDVec::subscript-operator__sCC"></span><span class="target" id="classLDVec_1a587011ff430dfb38a7b0d1c8f031ad74"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVecixEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Extract the 3-vector with index <code class="docutils literal notranslate"><span class="pre">i</span></code> </p>
-</dd></dl>
+<dt id="_CPPv4I00EN5LDVec5LDVecERK5LDVecI1RE">
+<span id="_CPPv3I00EN5LDVec5LDVecERK5LDVecI1RE"></span><span id="_CPPv2I00EN5LDVec5LDVecERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, class <code class="sig-name descname">Q</code>&gt;<br /><span class="target" id="classLDVec_1a8e271e32672adf1da1c2778bf2e4eac0"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN5LDVec5LDVecERK5LDVecI1RE" title="LDVec::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I00EN5LDVec5LDVecERK5LDVecI1RE" title="LDVec::LDVec::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN5LDVec5LDVecERK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK5LDVec11get_latticeEv">
@@ -249,128 +218,65 @@
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11samelatticeEbPK5LDVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11samelatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeEPK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1ad4167d7296d26ba07fb8f86c3bdc902a"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LDVecI1RE" title="LDVec::samelattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11samelatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1ad4167d7296d26ba07fb8f86c3bdc902a"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LDVecI1RE" title="LDVec::samelattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11samelatticeEbPK5LQVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11samelatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeEPK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a7e0d3a6a595d0ff23661e88cee07963f"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LQVecI1RE" title="LDVec::samelattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11samelatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a7e0d3a6a595d0ff23661e88cee07963f"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LQVecI1RE" title="LDVec::samelattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11starlatticeEbPK5LDVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11starlatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeEPK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a38343972751d234ca20ff1b5582bed4d"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LDVecI1RE" title="LDVec::starlattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11starlatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a38343972751d234ca20ff1b5582bed4d"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LDVecI1RE" title="LDVec::starlattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11starlatticeEbPK5LQVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11starlatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeEPK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a52108f3b0cc0decc8a63b32aa14c4429"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LQVecI1RE" title="LDVec::starlattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11starlatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a52108f3b0cc0decc8a63b32aa14c4429"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LQVecI1RE" title="LDVec::starlattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11samelatticeEbRK5LDVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11samelatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeERK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1aa0264b643a325554af7582447f673ea3"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LDVecI1RE" title="LDVec::samelattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11samelatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1aa0264b643a325554af7582447f673ea3"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LDVecI1RE" title="LDVec::samelattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11samelatticeEbRK5LQVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11samelatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeERK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a5dee92f85e2a8342b9565dd28380906d"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LQVecI1RE" title="LDVec::samelattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11samelatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11samelatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a5dee92f85e2a8342b9565dd28380906d"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LQVecI1RE" title="LDVec::samelattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11samelatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11starlatticeEbRK5LDVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11starlatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeERK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a54e8b73192723905ce7c1dad028b8d61"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LDVecI1RE" title="LDVec::starlattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11starlatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a54e8b73192723905ce7c1dad028b8d61"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LDVecI1RE" title="LDVec::starlattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4I0ENK5LDVec11starlatticeEbRK5LQVecI1RE">
-<span id="_CPPv3I0ENK5LDVec11starlatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeERK5LQVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a34ca74ae68cf88aab82c9e91c6ca80b0"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LQVecI1RE" title="LDVec::starlattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I0ENK5LDVec11starlatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec11starlatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a34ca74ae68cf88aab82c9e91c6ca80b0"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LQVecI1RE" title="LDVec::starlattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec11starlatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK5LDVec7extractEK6size_t">
-<span id="_CPPv3NK5LDVec7extractEK6size_t"></span><span id="_CPPv2NK5LDVec7extractEK6size_t"></span><span id="LDVec::extract__sCC"></span><span class="target" id="classLDVec_1ae131d56514b8532b668bfd5b6f003b7d"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7extractEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return the ith single-array <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a>. </p>
+<dt id="_CPPv4IDpENK5LDVec4viewE5LDVecI1TEDp1A">
+<span id="_CPPv3IDpENK5LDVec4viewEDp1A"></span><span id="_CPPv2IDpENK5LDVec4viewEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classLDVec_1a64e879b38af5fc41e2391dba296b6889"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK5LDVec4viewE5LDVecI1TEDp1A" title="LDVec::view::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK5LDVec4viewE5LDVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a non-copying view into the <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a>. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK5LDVec5firstEK6size_t">
-<span id="_CPPv3NK5LDVec5firstEK6size_t"></span><span id="_CPPv2NK5LDVec5firstEK6size_t"></span><span id="LDVec::first__sCC"></span><span class="target" id="classLDVec_1a927ddd2e01e0ea70be8bb52212e6a90a"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">first</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>num</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec5firstEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Extract the first <code class="docutils literal notranslate"><span class="pre">num</span></code> vectors from an <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a>. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>a <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> containing the <code class="docutils literal notranslate"><span class="pre">num</span></code> vectors </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">num</span></code>: the number of vectors to return </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec7extractEK6size_tPK6size_t">
-<span id="_CPPv3NK5LDVec7extractEK6size_tPK6size_t"></span><span id="_CPPv2NK5LDVec7extractEK6size_tPK6size_t"></span><span id="LDVec::extract__sC.sCPC"></span><span class="target" id="classLDVec_1a35a6886978cf7f7976a001a3ddd93b54"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>n</em>, <em class="property">const</em> size_t *<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7extractEK6size_tPK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> <dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>A <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> containing the n arrays </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code>: the number of arrays to return </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code>: a pointer to the first index of the n arrays to return </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec7extractERK11ArrayVectorI6size_tE">
-<span id="_CPPv3NK5LDVec7extractERK11ArrayVectorI6size_tE"></span><span id="_CPPv2NK5LDVec7extractERK11ArrayVectorI6size_tE"></span><span id="LDVec::extract__ArrayVector:s:CRC"></span><span class="target" id="classLDVec_1a378c286d48e6525b2fea0920aea95c65"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;size_t&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7extractERK11ArrayVectorI6size_tE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> <dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>A <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> containing the indicies indicated by idx </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">idx</span></code>: a reference to an <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> containing the to-be-returned indices </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec7extractERK11ArrayVectorIbE">
-<span id="_CPPv3NK5LDVec7extractERK11ArrayVectorIbE"></span><span id="_CPPv2NK5LDVec7extractERK11ArrayVectorIbE"></span><span id="LDVec::extract__ArrayVector:b:CRC"></span><span class="target" id="classLDVec_1ae74a6fc3e6054e3b97d41bdbcdd16cb7"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;bool&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7extractERK11ArrayVectorIbE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Return a collection of arrays from the <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> <dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>An <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> containing the indicies indicated by tfvec </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tfvec</span></code>: a reference to an ArrayVector&lt;bool&gt; with true for the to-be-returned indices </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec7extractERKNSt6vectorIbEE">
-<span id="_CPPv3NK5LDVec7extractERKNSt6vectorIbEE"></span><span id="_CPPv2NK5LDVec7extractERKNSt6vectorIbEE"></span><span id="LDVec::extract__std::vector:b:CRC"></span><span class="target" id="classLDVec_1a912cb0704e6c8cf600a4cd3090337143"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7extractERKNSt6vectorIbEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec3getEK6size_t">
-<span id="_CPPv3NK5LDVec3getEK6size_t"></span><span id="_CPPv2NK5LDVec3getEK6size_t"></span><span id="LDVec::get__sCC"></span><span class="target" id="classLDVec_1a2c7516bf37ac2cb77ae04ad622598199"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec3getEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>extract the 3-vector with index <code class="docutils literal notranslate"><span class="pre">i</span></code> </p>
+<dt id="_CPPv4IDpENK5LDVec7extractE5LDVecI1TEDp1A">
+<span id="_CPPv3IDpENK5LDVec7extractEDp1A"></span><span id="_CPPv2IDpENK5LDVec7extractEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classLDVec_1a743a7da59ad1df21e5214170eb50aa7b"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK5LDVec7extractE5LDVecI1TEDp1A" title="LDVec::extract::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK5LDVec7extractE5LDVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a copied subset of the <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a>. </p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK5LDVec7get_hklEv">
-<span id="_CPPv3NK5LDVec7get_hklEv"></span><span id="_CPPv2NK5LDVec7get_hklEv"></span><span id="LDVec::get_hklC"></span><span class="target" id="classLDVec_1a5659e2970723e0a69e4dbe03ec33558d"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">get_hkl</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7get_hklEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK5LDVec7get_hklEv"></span><span id="_CPPv2NK5LDVec7get_hklEv"></span><span id="LDVec::get_hklC"></span><span class="target" id="classLDVec_1a2c0a0b852563489af3d6bbb81c7840fd"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">get_hkl</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7get_hklEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Extract just the coordinates in units of the <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice (strip off the lattice information) </p>
 </dd></dl>
 
 <dl class="cpp function">
 <dt id="_CPPv4NK5LDVec7get_xyzEv">
-<span id="_CPPv3NK5LDVec7get_xyzEv"></span><span id="_CPPv2NK5LDVec7get_xyzEv"></span><span id="LDVec::get_xyzC"></span><span class="target" id="classLDVec_1a299a16a4735b47c595f2d69aa70e4c8f"></span><a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;double&gt; <code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7get_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3NK5LDVec7get_xyzEv"></span><span id="_CPPv2NK5LDVec7get_xyzEv"></span><span id="LDVec::get_xyzC"></span><span class="target" id="classLDVec_1a969e8ce5e4cfa9bf6f06c83c326f4f27"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec7get_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Extract the coordinates in <em>an</em> orthonormal frame. </p>
 </dd></dl>
 
@@ -399,62 +305,24 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVecmIERK5LDVecI1TE">
-<span id="_CPPv3N5LDVecmIERK5LDVecI1TE"></span><span id="_CPPv2N5LDVecmIERK5LDVecI1TE"></span><span id="LDVec::sub-assign-operator__LDVec:T:CR"></span><span class="target" id="classLDVec_1a952726051b41f7081fadff81b9e91a3e"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecmIERK5LDVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LDVec22binary_operation_checkERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec22binary_operation_checkERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a8f45ccd53a3ed36616ad9a85f6f15d7d"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LDVecI1RE" title="LDVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVecpLERK5LDVecI1TE">
-<span id="_CPPv3N5LDVecpLERK5LDVecI1TE"></span><span id="_CPPv2N5LDVecpLERK5LDVecI1TE"></span><span id="LDVec::add-assign-operator__LDVec:T:CR"></span><span class="target" id="classLDVec_1aadbaf65396fb739c56f879f1b00361ef"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecpLERK5LDVecI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LDVec22binary_operation_checkERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec22binary_operation_checkERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a16177466cd010f981d1bbc8f973e91d0"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LQVecI1RE" title="LDVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec22binary_operation_checkEvRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVecpLERK1T">
-<span id="_CPPv3N5LDVecpLERK1T"></span><span id="_CPPv2N5LDVecpLERK1T"></span><span id="LDVec::add-assign-operator__TCR"></span><span class="target" id="classLDVec_1ad2dbfcaa1757c578fa9b748bd7370d84"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecpLERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE">
+<span id="_CPPv3I0I0E00ENK5LDVec22binary_operation_checkERK1AI1RE"></span><span id="_CPPv2I0I0E00ENK5LDVec22binary_operation_checkERK1AI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">A</code>, typename = <em class="property">typename</em> std::enable_if&lt;!std::is_base_of&lt;<a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE" title="LDVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE" title="LDVec::binary_operation_check::R">R</a>&gt;&gt;::value&gt;::type&gt;<br /><span class="target" id="classLDVec_1ad90409bc69fe67e3bb895416165b9cbe"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE" title="LDVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE" title="LDVec::binary_operation_check::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0I0E00ENK5LDVec22binary_operation_checkEvRK1AI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVecmIERK1T">
-<span id="_CPPv3N5LDVecmIERK1T"></span><span id="_CPPv2N5LDVecmIERK1T"></span><span id="LDVec::sub-assign-operator__TCR"></span><span class="target" id="classLDVec_1a7b3a1e44e87d7fbac756173838fdeb05"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecmIERK1T" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N5LDVecmLERK1T">
-<span id="_CPPv3N5LDVecmLERK1T"></span><span id="_CPPv2N5LDVecmLERK1T"></span><span id="LDVec::mul-assign-operator__TCR"></span><span class="target" id="classLDVec_1ae5ebd5e158a3f238cb0f141d99e3b068"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator*=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecmLERK1T" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4N5LDVecdVERK1T">
-<span id="_CPPv3N5LDVecdVERK1T"></span><span id="_CPPv2N5LDVecdVERK1T"></span><span id="LDVec::div-assign-operator__TCR"></span><span class="target" id="classLDVec_1a068da8086b85bde78e6b60f15a9d711a"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; &amp;<code class="sig-name descname">operator/=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a> &amp;<em>av</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVecdVERK1T" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE">
-<span id="_CPPv3I0ENK5LDVec17consistency_checkERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LDVec17consistency_checkERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a85d95110e48d9512334b16dbe009caf9"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE" title="LDVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Verify two <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> objects are compatible for binary operations. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE">
-<span id="_CPPv3I0ENK5LDVec17consistency_checkERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LDVec17consistency_checkERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a9bcb7531eda477ecda818327a525c049"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE" title="LDVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LDVec17consistency_checkE10AVSizeInfoRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE">
-<span id="_CPPv3I0I0E00ENK5LDVec17consistency_checkERK1AI1RE"></span><span id="_CPPv2I0I0E00ENK5LDVec17consistency_checkERK1AI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">A</code>, typename = <em class="property">typename</em> std::enable_if&lt;!std::is_base_of&lt;<a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::R">R</a>&gt;&gt;::value &amp;&amp; std::is_base_of&lt;<a class="reference internal" href="classArrayVector.html#_CPPv4I0E11ArrayVector" title="ArrayVector">ArrayVector</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::R">R</a>&gt;, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::R">R</a>&gt;&gt;::value&gt;::type&gt;<br /><span class="target" id="classLDVec_1a9b9d743641606267f3a6099ee5f0b9ff"></span><a class="reference internal" href="structAVSizeInfo.html#_CPPv410AVSizeInfo" title="AVSizeInfo">AVSizeInfo</a> <code class="sig-name descname">consistency_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="LDVec::consistency_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0I0E00ENK5LDVec17consistency_checkE10AVSizeInfoRK1AI1RE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Verify that a <a class="reference internal" href="classArrayVector.html#classArrayVector"><span class="std std-ref">ArrayVector</span></a> object is consistent for binary operations. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0EN5LDVec8isapproxEbRK5LDVecI1RE">
-<span id="_CPPv3I0EN5LDVec8isapproxERK5LDVecI1RE"></span><span id="_CPPv2I0EN5LDVec8isapproxERK5LDVecI1RE"></span>template&lt;typename <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1ac85f03fdeb335de855cb0f92e2875454"></span>bool <code class="sig-name descname">isapprox</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN5LDVec8isapproxEbRK5LDVecI1RE" title="LDVec::isapprox::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LDVec8isapproxEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0EN5LDVec2isEbRK5LDVecI1RE">
+<span id="_CPPv3I0EN5LDVec2isERK5LDVecI1RE"></span><span id="_CPPv2I0EN5LDVec2isERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLDVec_1a7749dfd3d92974370203e2af7e8bb3fb"></span>bool <code class="sig-name descname">is</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN5LDVec2isEbRK5LDVecI1RE" title="LDVec::is::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LDVec2isEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Check whether a second <a class="reference internal" href="#classLDVec"><span class="std std-ref">LDVec</span></a> is approximately the same as this object. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4NK5LDVec8isapproxEK6size_tK6size_t">
-<span id="_CPPv3NK5LDVec8isapproxEK6size_tK6size_t"></span><span id="_CPPv2NK5LDVec8isapproxEK6size_tK6size_t"></span><span id="LDVec::isapprox__sC.sCC"></span><span class="target" id="classLDVec_1a2d619c30eeeac1da9a5b9d56719e5e14"></span>bool <code class="sig-name descname">isapprox</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LDVec8isapproxEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Check whether two vectors in the object are approximately the same. </p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -475,12 +343,17 @@
 <dd><p>Find the ceiling of all elements using std::ceil. </p>
 </dd></dl>
 
+<dl class="cpp function">
+<dt id="_CPPv4N5LDVec8decoupleEv">
+<span id="_CPPv3N5LDVec8decoupleEv"></span><span id="_CPPv2N5LDVec8decoupleEv"></span><span id="LDVec::decouple"></span><span class="target" id="classLDVec_1a304db59b9fb7b454103be20ec43a2ee3"></span><a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LDVec" title="LDVec::T">T</a>&gt; <code class="sig-name descname">decouple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec8decoupleEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Protected Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N5LDVec17check_arrayvectorEKi">
-<span id="_CPPv3N5LDVec17check_arrayvectorEKi"></span><span id="_CPPv2N5LDVec17check_arrayvectorEKi"></span><span id="LDVec::check_arrayvector__iC"></span><span class="target" id="classLDVec_1a8295f4af91fc9d75164c2990e8b8774a"></span>void <code class="sig-name descname">check_arrayvector</code><span class="sig-paren">(</span><em class="property">const</em> int<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec17check_arrayvectorEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N5LDVec11check_arrayEv">
+<span id="_CPPv3N5LDVec11check_arrayEv"></span><span id="_CPPv2N5LDVec11check_arrayEv"></span><span id="LDVec::check_array"></span><span class="target" id="classLDVec_1a93e8f5e9ab61ebd6174e06d53b674f93"></span>void <code class="sig-name descname">check_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LDVec11check_arrayEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>

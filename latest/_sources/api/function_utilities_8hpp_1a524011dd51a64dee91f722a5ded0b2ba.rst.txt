@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a524011dd51a64dee91f722a5ded0b2ba:
+
+Template Function brille::utils::mul_arrays(std::complex<T> \*, const I, const I, const I, const std::complex<R> \*, const S \*)
+================================================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::mul_arrays(std::complex<T> *, const I, const I, const I, const std::complex<R> *, const S *)

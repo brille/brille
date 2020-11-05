@@ -1,0 +1,93 @@
+
+.. _namespace_brille:
+
+Namespace brille
+================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille__approx`
+
+- :ref:`namespace_brille__utils`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1Array`
+
+- :ref:`exhale_class_classbrille_1_1Array2`
+
+- :ref:`exhale_class_classbrille_1_1Array2It`
+
+- :ref:`exhale_class_classbrille_1_1ArrayIt`
+
+- :ref:`exhale_class_classbrille_1_1Comparer`
+
+- :ref:`exhale_class_classbrille_1_1RawBinaryOperator`
+
+- :ref:`exhale_class_classbrille_1_1SharedSpan`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d`
+
+- :ref:`exhale_enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_approx_8hpp_1afe271acd2a3bc8bc3eb462c8aec2355e`
+
+- :ref:`exhale_function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd`
+
+- :ref:`exhale_function_array_8hpp_1a1407cb53e716ef5551914e4b74c167bd`
+
+- :ref:`exhale_function_array2_8hpp_1ad8c9ae16222039dd5248a352db9a032d`
+
+- :ref:`exhale_function_array2_8hpp_1a40fcb00eae0ffc5121b7f6aa50fa453b`
+
+- :ref:`exhale_function_comparisons_8hpp_1a5b56249445137c718122268db20178b0`
+
+- :ref:`exhale_function_comparisons_8cpp_1ae773cb1b70eb4c8abf136928c7eef9d9`
+
+- :ref:`exhale_function_comparisons_8cpp_1a001897a517be61dc8cfaddb1e8710ec5`
+
+- :ref:`exhale_function_comparisons_8hpp_1ae524a675a7210c6d835b66e6457e5ad1`
+
+- :ref:`exhale_function_comparisons_8hpp_1a76f319bdad39bf229d99cdddcf137c80`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5`
+
+- :ref:`exhale_typedef_types_8hpp_1afb26ed66827f17ec93e3bd6c25570cf3`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488`
+
+- :ref:`exhale_variable_utilities_8hpp_1a5ba20e34189d20fb328e45611a48aa94`

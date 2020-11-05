@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1af668bb922e525d982d73233ffeb0f254:
+
+Template Function brille::utils::hermitian_product(const I, const std::complex<T> \*, const T \*)
+=================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::hermitian_product(const I, const std::complex<T> *, const T *)

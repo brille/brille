@@ -29,7 +29,7 @@ Includes
 --------
 
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 
 
@@ -48,9 +48,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_neighbours_8hpp_1ab298014048257572d2c49e5652d269f0`
+- :ref:`exhale_function_neighbours_8hpp_1ac1836aeded46d0800bb27556bc8ad125`
 
-- :ref:`exhale_function_neighbours_8hpp_1a552fa4fc3144e4876b2a16e91a5e43f9`
+- :ref:`exhale_function_neighbours_8hpp_1aa8d35095cf703027439b3015b4222103`
 
-- :ref:`exhale_function_neighbours_8hpp_1a5dbe7c6ad269fccab97a6f0a062121e7`
+- :ref:`exhale_function_neighbours_8hpp_1a93338b61468fad398f61ee93ba578bec`
 

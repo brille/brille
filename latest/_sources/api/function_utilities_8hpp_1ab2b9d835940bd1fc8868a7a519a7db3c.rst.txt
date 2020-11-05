@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ab2b9d835940bd1fc8868a7a519a7db3c:
+
+Template Function brille::utils::cast_vector
+============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::cast_vector(T *, const R *)

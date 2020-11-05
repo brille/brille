@@ -31,15 +31,19 @@ Includes
 
 - ``algorithm``
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 - ``debug.hpp`` (:ref:`file_src_debug.hpp`)
 
-- ``interpolation_data.hpp`` (:ref:`file_src_interpolation_data.hpp`)
-
-- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
+- ``interpolatordual.hpp`` (:ref:`file_src_interpolatordual.hpp`)
 
 - ``nest.tpp`` (:ref:`file_src_nest.tpp`)
 
@@ -57,7 +61,7 @@ Includes
 
 - ``utility``
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -86,4 +90,11 @@ Functions
 
 
 - :ref:`exhale_function_nest_8hpp_1a7e4706e6b32b7e80b3b5e389ee8154fe`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_nest_8hpp_1a6f70a24b3b81083e8d382c1370791347`
 

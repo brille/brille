@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a02e3db2d42eee18785f6eaf7d934ce89:
+
+Template Function brille::utils::trace
+======================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::trace(const T *)

@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1a96f92e0eff9086780d47de6c68ab9b14:
+
+Template Function is_fixed(I1, I2)
+==================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: is_fixed(I1, I2)

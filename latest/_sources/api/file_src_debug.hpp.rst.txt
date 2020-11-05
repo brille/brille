@@ -29,7 +29,7 @@ Includes
 --------
 
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``array`` (:ref:`file_src_array.hpp`)
 
 - ``chrono``
 
@@ -45,13 +45,15 @@ Includes
 
 - ``string``
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
 Included By
 -----------
 
+
+- :ref:`file_src_approx.hpp`
 
 - :ref:`file_src_utilities.hpp`
 
@@ -113,6 +115,8 @@ Functions
 
 - :ref:`exhale_function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b`
 
+- :ref:`exhale_function_debug_8hpp_1a9338cee94f7dedf640b68caff93ae364`
+
 
 Defines
 -------
@@ -129,6 +133,10 @@ Defines
 - :ref:`exhale_define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec`
 
 - :ref:`exhale_define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917`
+
+- :ref:`exhale_define_debug_8hpp_1a74c5a07055640bd68f40e98fcd876944`
+
+- :ref:`exhale_define_debug_8hpp_1aaac8c42e51b4450b78d40808d6a4abb1`
 
 - :ref:`exhale_define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25`
 

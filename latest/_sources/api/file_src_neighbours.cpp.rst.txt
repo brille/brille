@@ -29,7 +29,11 @@ Includes
 --------
 
 
+- ``array`` (:ref:`file_src_array.hpp`)
+
 - ``neighbours.hpp`` (:ref:`file_src_neighbours.hpp`)
+
+- ``vector``
 
 
 
@@ -40,9 +44,11 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_neighbours_8cpp_1a8a8cd05bcb1a02b9164c9893c3a7a41d`
+- :ref:`exhale_function_neighbours_8cpp_1a8e7d14d19774d2182b743a185b93b1bb`
 
-- :ref:`exhale_function_neighbours_8cpp_1a622e11c4a40f9b3620d5241dda6573ee`
+- :ref:`exhale_function_neighbours_8cpp_1a98d90a597cbfd5e898750b6b0e0099ae`
 
-- :ref:`exhale_function_neighbours_8cpp_1a471cfdc60cc703d871d6e4ec66f7dcb7`
+- :ref:`exhale_function_neighbours_8cpp_1ac6766f4e3df9f7013a35a23fba906795`
+
+- :ref:`exhale_function_neighbours_8cpp_1a8fecfbf00db8ac4ffbc8b8a1da18dc7b`
 

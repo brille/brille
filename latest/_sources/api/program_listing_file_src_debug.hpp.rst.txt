@@ -125,81 +125,136 @@ Program Listing for File debug.hpp
      return l;
    }
    
+   template<typename T>
+   std::string time_to_string(std::chrono::time_point<T> time) {
+     using namespace std;
+     using namespace std::chrono;
+   
+     time_t curr_time = T::to_time_t(time);
+     char sRep[100];
+     strftime(sRep, sizeof(sRep), "%Y-%m-%d %H:%M:%S", localtime(&curr_time));
+   
+     typename T::duration since_epoch = time.time_since_epoch();
+     seconds s = duration_cast<seconds>(since_epoch);
+     since_epoch -= s;
+     milliseconds milli = duration_cast<milliseconds>(since_epoch);
+   
+     stringstream buffer;
+     buffer << '[' << sRep << ':' << setfill('0') << setw(3) << milli.count() << "] ";
+     return buffer.str();
+   }
+   
    class DebugPrinter{
      std::string last_function; // replace this with the stack?
+     bool _silenced;
+     bool emit_datetime;
+     size_t _before;
    public:
-     DebugPrinter(const std::string& s): last_function(s) {};
+     DebugPrinter(const std::string& s)
+     : last_function(s), _silenced(false), emit_datetime(false), _before(0)
+     {
+       #if defined(PROFILING)
+       emit_datetime = true;
+       #endif
+     };
+     bool silenced() const {return _silenced;}
+     bool silenced(bool slc) {_silenced = slc; return _silenced;}
+     bool silence() {_silenced = true; return _silenced;}
+     bool unsilence() {_silenced = false; return !_silenced;}
+     bool datetime() const {return emit_datetime;}
+     bool datetime(bool edt) {emit_datetime = edt; return emit_datetime;}
      template<typename... L> void print(const std::string& fnc, L... l){
-       if (last_function.compare(fnc)){
-         last_function = fnc;
-         std::cout << fnc << std::endl;
+       if (!_silenced){
+         size_t torem{0};
+         if (last_function.compare(fnc)){
+           last_function = fnc;
+           std::cout << std::endl << fnc << std::endl;
+         }
+         if (emit_datetime){
+           // auto tp = std::chrono::system_clock::now();
+           // auto tt = std::chrono::system_clock::to_time_t(tp);
+           // std::tm tm = *std::localtime(&tt);
+           // std::stringstream buffer;
+           // buffer << std::put_time(&tm, "%FT%T ");
+           // std::string tstr = buffer.str();
+           std::string tstr = time_to_string(std::chrono::system_clock::now());
+           this->inner_print(tstr); // print without extra lead in spaces
+           _before += (torem = tstr.size()); // add to lead in spacing
+         }
+         this->inner_print(l...);
+         _before -= torem;
        }
-       this->inner_print(l...);
      }
      template<typename... L> void println(const std::string& fnc, L... l){
-       if (last_function.compare(fnc)){
-         last_function = fnc;
-         std::cout << fnc << std::endl;
+       if (!_silenced){
+         this->print(fnc, l...);
+         std::cout << std::endl;
        }
-       this->inner_print(l...);
-       std::cout << std::endl;
      }
    private:
+     std::string lead_in() const {
+       std::stringstream buffer;
+       for (size_t i=0; i<_before; ++i) buffer << " ";
+       return buffer.str();
+     }
      template<typename T, typename... L>
      enable_if_t<!is_container<T>::value, void> inner_print(const T& x, L... l){
-       // std::cout << std::to_string(x);
        std::cout << x;
        this->inner_print(l...);
      }
      template<typename T, typename... L>
      enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<T>& x, L... args){
        size_t l = max_element_length(x);
-       size_t n = std::sqrt(x.size());
+       // size_t n = std::sqrt(x.size());
        int w = terminal_width();
+       if (static_cast<int>(_before) < w) w -= static_cast<int>(_before);
        if (l) w /= static_cast<int>(l)+1;
        int count = 0;
        std::string s;
-       if (x.size() == n*n){
+       // // if (x.size() == n*n){
+       // if (3u == n){
+       //   for (auto y: x){
+       //     s += " " + my_to_string(y, l);
+       //     ++count;
+       //     if (!(count % w)||!(count % n)){
+       //       s += "\n" + this->lead_in();
+       //       count = 0;
+       //     }
+       //   }
+       // } else {
          for (auto y: x){
            s += " " + my_to_string(y, l);
-           ++count;
-           if (!(count % w)||!(count % n)){
-             s += "\n";
-             count = 0;
-           }
+           if (!(++count % w)) s += "\n" + this->lead_in();
          }
-       } else {
-         for (auto y: x){
-           s += " " + my_to_string(y, l);
-           if (!(++count % w)) s += "\n";
-         }
-       }
+       // }
        this->inner_print(s, args...);
      }
      template<typename T, size_t N, typename... L>
      enable_if_t<!is_container<T>::value, void> inner_print(const std::array<T,N>& x, L... args){
        size_t l= max_element_length(x);
        std::string s;
-       if (N==9){
-         for (int a=0; a<3; ++a){
-           for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
-           s += "\n";
-         }
-       } else {
+       // if (N==9){
+       //   for (int a=0; a<3; ++a){
+       //     for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
+       //     s += "\n" + this->lead_in();
+       //   }
+       // } else {
          size_t w = static_cast<size_t>(terminal_width());
+         if (_before < w) w -= _before;
          if (l) w /= l+1;
          size_t count = 0;
          for (size_t i=0; i<N; ++i){
            s += " " + my_to_string(x[i], l);
-           if (!(++count % w)) s += "\n";
+           if (!(++count % w)) s += "\n" + this->lead_in();
          }
-       }
+       // }
        this->inner_print(s, args...);
      }
      template<typename T, typename... L>
      void inner_print(const std::vector<std::vector<T>>& vv, L... args){
        size_t l = max_element_length(vv);
        size_t w = static_cast<size_t>(terminal_width());
+       if (_before < w) w -= _before;
        size_t num;
        std::string s;
        if (l) w /= l+1;
@@ -207,9 +262,9 @@ Program Listing for File debug.hpp
          num = 0;
          for (auto x: v){
            s += my_to_string(x, l);
-           if (!(++num %w)) s += "\n";
+           if (!(++num %w)) s += "\n" + this->lead_in();
          }
-         s += "\n";
+         s += "\n" + this->lead_in();
        }
        this->inner_print(s, args...);
      }
@@ -217,30 +272,31 @@ Program Listing for File debug.hpp
      enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
        size_t l = max_element_length(x);
        size_t w = static_cast<size_t>(terminal_width());
+       if (_before < w) w -= _before;
        size_t num;
        std::string s;
-       if (N==9){
-         num = (l) ? w/(3*l+4) : w/3;
-         for (size_t i=0; i<x.size(); i+=num){
-           for (int a=0; a<3; ++a){
-             for (size_t j=0; j<num && (i+j)<x.size(); ++j){
-               for (int b=0; b<3; ++b) s += my_to_string(x[i+j][a*3+b], l);
-               s += " ";
-             }
-             s += "\n";
-           }
-           s += "\n";
-         }
-       } else {
+       // if (N==9){
+       //   num = (l) ? w/(3*l+4) : w/3;
+       //   for (size_t i=0; i<x.size(); i+=num){
+       //     for (int a=0; a<3; ++a){
+       //       for (size_t j=0; j<num && (i+j)<x.size(); ++j){
+       //         for (int b=0; b<3; ++b) s += my_to_string(x[i+j][a*3+b], l);
+       //         s += " ";
+       //       }
+       //       s += "\n" + this->lead_in();
+       //     }
+       //     s += "\n" + this->lead_in();
+       //   }
+       // } else {
          if (l) w /= l+1;
          for (size_t i=0; i<x.size(); num=0, ++i){
            for (auto y: x[i]){
              s += my_to_string(y, l);
-             if (!(++num % w)) s += "\n";
+             if (!(++num % w)) s += "\n" + this->lead_in();
            }
-           s += "\n";
+           s += "\n" + this->lead_in();
          }
-       }
+       // }
        this->inner_print(s, args...);
      }
      void inner_print(void){};
@@ -257,8 +313,8 @@ Program Listing for File debug.hpp
    #endif
    
    static DebugPrinter _debug_printer("");
-   #define info_update(...) _debug_printer.println("", __VA_ARGS__)
-   #define info_update_if(tf, ...) if (tf) _debug_printer.println("", __VA_ARGS__)
+   #define info_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #define info_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
    // #define info_update(...)
    
    #if defined(VERBOSE_DEBUG) || defined(DEBUG)
@@ -276,6 +332,15 @@ Program Listing for File debug.hpp
    #else
      #define verbose_update(...)
      #define verbose_update_if(...)
+   #endif
+   
+   #if defined(PROFILING)
+     //_debug_printer.datetime(true); // profiling needs timing information
+     #define profile_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+     #define profile_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #else
+     #define profile_update(...)
+     #define profile_update_if(...)
    #endif
    
    template<typename TimeT = std::chrono::milliseconds>

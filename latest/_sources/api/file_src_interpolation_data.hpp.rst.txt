@@ -29,41 +29,9 @@ Includes
 --------
 
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
-
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
-
-- ``cassert``
-
-- ``functional``
-
-- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
-
-- ``mutex``
-
-- ``omp.h``
-
-- ``permutation.hpp`` (:ref:`file_src_permutation.hpp`)
-
-- ``permutation_table.hpp`` (:ref:`file_src_permutation_table.hpp`)
-
-- ``phonon.hpp`` (:ref:`file_src_phonon.hpp`)
-
-- ``utility``
-
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``inner_interpolation_data.hpp`` (:ref:`file_src_inner_interpolation_data.hpp`)
 
 
-
-Included By
------------
-
-
-- :ref:`file_src_mesh.hpp`
-
-- :ref:`file_src_nest.hpp`
-
-- :ref:`file_src_trellis.hpp`
 
 
 
@@ -72,44 +40,12 @@ Classes
 -------
 
 
-- :ref:`exhale_struct_structis__complex`
-
-- :ref:`exhale_struct_structis__complex_3_01std_1_1complex_3_01T_01_4_01_4`
-
-- :ref:`exhale_class_classInnerInterpolationData`
-
 - :ref:`exhale_class_classInterpolationData`
 
 
-Enums
------
+Defines
+-------
 
 
-- :ref:`exhale_enum_interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6`
-
-
-Functions
----------
-
-
-- :ref:`exhale_function_interpolation__data_8hpp_1a9818966d59dc284343051cb0c7625368`
-
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1a9863a0e06f8e4d61a8a65473e9dcda0a`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1a2b8685e51f08869ae646903d8b52de8c`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1abfffab46700de65d0a9721ccccd48255`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1a0440e69a84ed66cad84ba769182468fb`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1aa3198ffc0e17fcb31cd7053642959228`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1aafb2d4bd129b2238a12ab90db803ecb9`
-
-- :ref:`exhale_typedef_interpolation__data_8hpp_1a13aa44690b4ac61eabddff6b8dd0dfe5`
+- :ref:`exhale_define_interpolation__data_8hpp_1a46925b43bf89c8761772d98c7dc2b12b`
 

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ad0c75e6bf2d7f55339d5418c110777cb:
+
+Template Function brille::utils::cast_array
+===========================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::cast_array(T *, const R *)

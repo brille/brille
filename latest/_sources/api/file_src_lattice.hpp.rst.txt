@@ -35,7 +35,7 @@ Includes
 
 - ``primitive.hpp`` (:ref:`file_src_primitive.hpp`)
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -43,7 +43,7 @@ Included By
 -----------
 
 
-- :ref:`file_src_latvec.hpp`
+- :ref:`file_src_array_latvec.hpp`
 
 - :ref:`file_src_lattice.cpp`
 

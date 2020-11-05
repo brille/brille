@@ -29,7 +29,9 @@ Includes
 --------
 
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array`` (:ref:`file_src_array.hpp`)
 
 - ``symmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
 
@@ -37,7 +39,7 @@ Includes
 
 - ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 

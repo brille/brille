@@ -29,7 +29,9 @@ Includes
 --------
 
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 - ``complex``
 
@@ -49,11 +51,15 @@ Included By
 -----------
 
 
-- :ref:`file_src_interpolation_data.hpp`
+- :ref:`file_src_interpolator2.hpp`
 
 - :ref:`file_src_mesh.hpp`
 
 - :ref:`file_src_trellis.hpp`
+
+- :ref:`file_src_inner_interpolation_data.hpp`
+
+- :ref:`file_src_interpolator.hpp`
 
 
 
@@ -77,17 +83,17 @@ Functions
 
 - :ref:`exhale_function_permutation_8hpp_1ac49786d3941915eb23005899e7576f87`
 
-- :ref:`exhale_function_permutation_8hpp_1a06565f49f8cb3fc1b32d038b849d360a`
-
 - :ref:`exhale_function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea`
 
-- :ref:`exhale_function_permutation_8hpp_1aff379cd6c820518445d6d9137e4ccf40`
+- :ref:`exhale_function_permutation_8hpp_1ab5a34620fda3929341661795398b2ae1`
 
-- :ref:`exhale_function_permutation_8hpp_1a3e94727d4e5e3b7901ef3f5582e0da4b`
+- :ref:`exhale_function_permutation_8hpp_1a9719f5d7aafae5e39fc35a55dd55d9a3`
 
 - :ref:`exhale_function_permutation_8hpp_1a4d3bd3fb82cffda7184b384db05ccf03`
 
-- :ref:`exhale_function_permutation_8hpp_1ae743853940edb62f23a5045a363daabc`
+- :ref:`exhale_function_permutation_8hpp_1a3e94727d4e5e3b7901ef3f5582e0da4b`
 
-- :ref:`exhale_function_permutation_8hpp_1a221ca457429c58f8cbfdd6f62528bb13`
+- :ref:`exhale_function_permutation_8hpp_1a81058d742f4c63a0eb361053a94fd4e7`
+
+- :ref:`exhale_function_permutation_8hpp_1a751d2edb0f6df721f06d5fcc60b22827`
 

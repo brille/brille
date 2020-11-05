@@ -3,7 +3,7 @@
 Template Class LQVec
 ====================
 
-- Defined in :ref:`file_src_latvec.hpp`
+- Defined in :ref:`file_src_array_latvec.hpp`
 
 
 Inheritance Relationships
@@ -13,7 +13,7 @@ Base Types
 **********
 
 - ``public LatVec`` (:ref:`exhale_class_classLatVec`)
-- ``public ArrayVector< T >`` (:ref:`exhale_class_classArrayVector`)
+- ``public brille::Array2< T >`` (:ref:`exhale_class_classbrille_1_1Array2`)
 
 
 Class Documentation

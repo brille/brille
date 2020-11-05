@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1accaad3f781cb79ca6480197c7a5adf06:
+
+Template Function brille::utils::copy_vector
+============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::copy_vector(T *, const T *)

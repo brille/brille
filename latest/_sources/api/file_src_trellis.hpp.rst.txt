@@ -31,9 +31,15 @@ Includes
 
 - ``algorithm``
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 - ``atomic``
 
@@ -43,9 +49,7 @@ Includes
 
 - ``functional``
 
-- ``interpolation_data.hpp`` (:ref:`file_src_interpolation_data.hpp`)
-
-- ``latvec.hpp`` (:ref:`file_src_latvec.hpp`)
+- ``interpolatordual.hpp`` (:ref:`file_src_interpolatordual.hpp`)
 
 - ``mutex``
 
@@ -65,7 +69,7 @@ Includes
 
 - ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -109,9 +113,9 @@ Functions
 - :ref:`exhale_function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35`
 
 
-Typedefs
---------
+Defines
+-------
 
 
-- :ref:`exhale_typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58`
+- :ref:`exhale_define_trellis_8hpp_1a013a23ae25cfe5e1fdb57950b5b48e08`
 

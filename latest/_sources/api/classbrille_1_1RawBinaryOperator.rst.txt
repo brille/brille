@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1RawBinaryOperator:
+
+Template Class RawBinaryOperator
+================================
+
+- Defined in :ref:`file_src_comparisons.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::RawBinaryOperator
+   :members:
+   :protected-members:
+   :undoc-members:

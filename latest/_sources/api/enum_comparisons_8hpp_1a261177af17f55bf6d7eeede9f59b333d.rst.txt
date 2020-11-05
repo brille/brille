@@ -1,0 +1,13 @@
+.. _exhale_enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d:
+
+Enum cmp
+========
+
+- Defined in :ref:`file_src_comparisons.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::cmp

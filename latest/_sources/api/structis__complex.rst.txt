@@ -3,7 +3,7 @@
 Template Struct is_complex
 ==========================
 
-- Defined in :ref:`file_src_interpolation_data.hpp`
+- Defined in :ref:`file_src_inner_interpolation_data.hpp`
 
 
 Struct Documentation

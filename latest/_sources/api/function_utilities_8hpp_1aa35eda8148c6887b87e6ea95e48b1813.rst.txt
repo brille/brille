@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aa35eda8148c6887b87e6ea95e48b1813:
+
+Template Function brille::utils::vector_distance(const I, const std::complex<T> \*, const std::complex<T> \*)
+=============================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::vector_distance(const I, const std::complex<T> *, const std::complex<T> *)

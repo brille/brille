@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a0832fbc8effc0db6f86ba6f8a1f38df9:
+
+Template Function brille::utils::vector_product(const I, const T \*, const T \*)
+================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::vector_product(const I, const T *, const T *)

@@ -1,0 +1,13 @@
+.. _exhale_typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5:
+
+Typedef brille::ind_t
+=====================
+
+- Defined in :ref:`file_src_types.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::ind_t

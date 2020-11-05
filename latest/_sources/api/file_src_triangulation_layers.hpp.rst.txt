@@ -31,7 +31,11 @@ Includes
 
 - ``algorithm``
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
 
 - ``cassert``
 
@@ -45,7 +49,7 @@ Includes
 
 - ``tetgen.h``
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -73,7 +77,7 @@ Functions
 
 - :ref:`exhale_function_triangulation__layers_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a`
 
-- :ref:`exhale_function_triangulation__layers_8hpp_1a8dc7c36309a283c7d12c6396d6d4e27e`
+- :ref:`exhale_function_triangulation__layers_8hpp_1ae730d48df8c5da43d5e7799100de6c99`
 
-- :ref:`exhale_function_triangulation__layers_8hpp_1a021b328065e9a5cb4cda58b02177224d`
+- :ref:`exhale_function_triangulation__layers_8hpp_1a804e3e1cda485f36721a951a92ef70ac`
 

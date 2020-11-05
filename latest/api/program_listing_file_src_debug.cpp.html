@@ -200,7 +200,8 @@
   <span class="kt">int</span> <span class="nf">terminal_width</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
     <span class="n">CONSOLE_SCREEN_BUFFER_INFO</span> <span class="n">csbi</span><span class="p">;</span>
     <span class="n">GetConsoleScreenBufferInfo</span><span class="p">(</span><span class="n">GetStdHandle</span><span class="p">(</span><span class="n">STD_OUTPUT_HANDLE</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">csbi</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">csbi</span><span class="p">.</span><span class="n">srWindow</span><span class="p">.</span><span class="n">Right</span> <span class="o">-</span> <span class="n">csbi</span><span class="p">.</span><span class="n">srWindow</span><span class="p">.</span><span class="n">Left</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">width</span> <span class="o">=</span> <span class="n">csbi</span><span class="p">.</span><span class="n">srWindow</span><span class="p">.</span><span class="n">Right</span> <span class="o">-</span> <span class="n">csbi</span><span class="p">.</span><span class="n">srWindow</span><span class="p">.</span><span class="n">Left</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">width</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="nl">width</span> <span class="p">:</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">15</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="kt">int</span> <span class="nf">terminal_height</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
     <span class="n">CONSOLE_SCREEN_BUFFER_INFO</span> <span class="n">csbi</span><span class="p">;</span>

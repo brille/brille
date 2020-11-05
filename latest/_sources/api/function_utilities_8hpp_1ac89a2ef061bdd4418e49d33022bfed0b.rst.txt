@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ac89a2ef061bdd4418e49d33022bfed0b:
+
+Template Function brille::utils::matrix_cofactor
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::matrix_cofactor(R *, const R *, const int, const int, const int)

@@ -29,6 +29,8 @@ Includes
 --------
 
 
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
 - ``hall_symbol.hpp`` (:ref:`file_src_hall_symbol.hpp`)
 
 - ``lattice.hpp`` (:ref:`file_src_lattice.hpp`)

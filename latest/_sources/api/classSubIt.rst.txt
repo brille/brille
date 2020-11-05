@@ -1,0 +1,16 @@
+.. _exhale_class_classSubIt:
+
+Template Class SubIt
+====================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: SubIt
+   :members:
+   :protected-members:
+   :undoc-members:

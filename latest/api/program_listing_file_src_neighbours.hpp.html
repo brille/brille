@@ -169,7 +169,7 @@
   <div class="section" id="program-listing-for-file-neighbours-hpp">
 <span id="program-listing-file-src-neighbours-hpp"></span><h1>Program Listing for File neighbours.hpp<a class="headerlink" href="#program-listing-for-file-neighbours-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_neighbours.hpp.html#file-src-neighbours-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/neighbours.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019-2020 Greg Tucker</span>
 <span class="cm">//</span>
 <span class="cm">// This file is part of brille.</span>
 <span class="cm">//</span>
@@ -188,12 +188,12 @@
 
 <span class="cp">#ifndef _NEIGHBOURS_H_</span>
 <span class="cp">#define _NEIGHBOURS_H_</span>
-<span class="cp">#include</span> <span class="cpf">&quot;arrayvector.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array_latvec.hpp&quot; // defines bArray</span><span class="cp"></span>
 
-<span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-<span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices4</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices4</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 
-<span class="n">ArrayVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices_prime</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">make_relative_neighbour_indices_prime</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
 
 <span class="cp">#endif</span>
 </pre></div>

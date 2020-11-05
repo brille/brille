@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aefe195cd4c9355245b94faf5364e2f92:
+
+Template Function brille::utils::matrix_transpose(R \*)
+=======================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::matrix_transpose(R *)

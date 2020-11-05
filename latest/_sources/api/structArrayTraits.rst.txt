@@ -1,0 +1,16 @@
+.. _exhale_struct_structArrayTraits:
+
+Template Struct ArrayTraits
+===========================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ArrayTraits
+   :members:
+   :protected-members:
+   :undoc-members:

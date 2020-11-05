@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a1c6a45091ec072f61d316acbb373bfbe:
+
+Template Function brille::utils::my_cast
+========================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::my_cast(const R)

@@ -33,8 +33,8 @@ Program Listing for File interpolation.hpp
    #include <vector>
    #include <cmath>
    
-   template <class R,class S, template<class,class> class T>
-   int corners_and_weights(const T<R,S>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
+   template <class R, template<class> class T>
+   int corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
        size_t ndims = dirs.size();
        std::vector<double> p(ndims), m(ndims);
        std::vector<int> d(ndims);
@@ -94,8 +94,8 @@ Program Listing for File interpolation.hpp
        return oob;
    }
    
-   template <class R, class S, template<class,class> class T>
-   int floor_corners_and_weights(const T<R,S>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
+   template <class R, template<class> class T>
+   int floor_corners_and_weights(const T<R>* that, const double* zero, const double* step, const size_t *ijk, const double *x, size_t *c, double *w, const size_t N, const std::vector<size_t>& dirs){
        size_t ndims = dirs.size();
        std::vector<double> p(ndims), m(ndims);
        for (size_t i=0; i<ndims; ++i){
@@ -152,7 +152,9 @@ Program Listing for File interpolation.hpp
        return oob;
    }
    
-   template<typename T> T triangle_area(const ArrayVector<T>& a, const ArrayVector<T>& b, const ArrayVector<T>& c){
+   template<class T, template<class> class A>
+   T
+   triangle_area(const A<T>& a, const A<T>& b, const A<T>& c){
      T ab, bc, ac, s;
      ab = (a-b).norm(0);
      bc = (b-c).norm(0);
@@ -160,12 +162,14 @@ Program Listing for File interpolation.hpp
      s = (ab+bc+ac)/2.0;
      return std::sqrt(s*(s-ab)*(s-bc)*(s-ac)); // Heron's formula
    }
-   template<typename T> T tetrahedron_volume(const ArrayVector<T>& a, const ArrayVector<T>& b, const ArrayVector<T>& c, const ArrayVector<T>& d){
-     ArrayVector<T> dumb(3u, 4u);
+   template<class T, template<class> class A>
+   T
+   tetrahedron_volume(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+     A<T> dumb({4,3});
      dumb.set(0, b-a);
      dumb.set(1, c-a);
      dumb.set(2, d-a);
-     vector_cross(dumb.data(3), dumb.data(1), dumb.data(2));
+     brille::utils::vector_cross(dumb.ptr(3), dumb.ptr(1), dumb.ptr(2));
      return std::abs(dumb.dot(0,3)/6.0); // abs so that we don't have to worry about the permutation
    }
    /*
@@ -180,9 +184,11 @@ Program Listing for File interpolation.hpp
           3        p must lie within the triangle formed by v[0], v[1], and v[2]
           4        p must lie within the volume of the tetrahedron
    */
-   template<typename T> std::vector<double> tetrahedron_weights(const ArrayVector<T>& p, const ArrayVector<T>& v){
-     std::vector<double> weights(v.size());
-     switch (v.size()){
+   template<class T, template<class> class A>
+   std::vector<double>
+   tetrahedron_weights(const A<T>& p, const A<T>& v){
+     std::vector<double> weights(v.size(0));
+     switch (v.size(0)){
        case 1:{
          info_update("interpolation weight for one point is 1.");
          weights[0] = 1.0;
@@ -190,26 +196,26 @@ Program Listing for File interpolation.hpp
        }
        case 2:{
          info_update("finding interpolation weights for point along a line.");
-         T len = (v.extract(1)-v.extract(0)).norm(0);
-         weights[0] = (v.extract(1)-p).norm(0)/len;
-         weights[1] = (v.extract(0)-p).norm(0)/len;
+         T len = (v.view(1)-v.view(0)).norm(0);
+         weights[0] = (v.view(1)-p).norm(0)/len;
+         weights[1] = (v.view(0)-p).norm(0)/len;
          break;
        }
        case 3:{
          info_update("finding interpolation weights for point in a triangle.");
-         T area = triangle_area(v.extract(0), v.extract(1), v.extract(2));
-         weights[0] = triangle_area(p, v.extract(1), v.extract(2))/area;
-         weights[1] = triangle_area(v.extract(0), p, v.extract(2))/area;
-         weights[2] = triangle_area(v.extract(0), v.extract(1), p)/area;
+         T area = triangle_area(v.view(0), v.view(1), v.view(2));
+         weights[0] = triangle_area(p, v.view(1), v.view(2))/area;
+         weights[1] = triangle_area(v.view(0), p, v.view(2))/area;
+         weights[2] = triangle_area(v.view(0), v.view(1), p)/area;
          break;
        }
        case 4:{
          info_update("finding interpolation weights for point in a tetrahedron.");
-         T vol = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), v.extract(3));
-         weights[0] = tetrahedron_volume(p, v.extract(1), v.extract(2), v.extract(3))/vol;
-         weights[1] = tetrahedron_volume(v.extract(0), p, v.extract(2), v.extract(3))/vol;
-         weights[2] = tetrahedron_volume(v.extract(0), v.extract(1), p, v.extract(3))/vol;
-         weights[3] = tetrahedron_volume(v.extract(0), v.extract(1), v.extract(2), p)/vol;
+         T vol = tetrahedron_volume(v.view(0), v.view(1), v.view(2), v.view(3));
+         weights[0] = tetrahedron_volume(p, v.view(1), v.view(2), v.view(3))/vol;
+         weights[1] = tetrahedron_volume(v.view(0), p, v.view(2), v.view(3))/vol;
+         weights[2] = tetrahedron_volume(v.view(0), v.view(1), p, v.view(3))/vol;
+         weights[3] = tetrahedron_volume(v.view(0), v.view(1), v.view(2), p)/vol;
          break;
        }
        default:

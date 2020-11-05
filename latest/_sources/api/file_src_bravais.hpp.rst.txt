@@ -37,11 +37,11 @@ Included By
 -----------
 
 
+- :ref:`file_src_spg_database.hpp`
+
 - :ref:`file_src_symmetry.hpp`
 
 - :ref:`file_src_bravais.cpp`
-
-- :ref:`file_src_spg_database.hpp`
 
 - :ref:`file_src_hall_symbol.hpp`
 

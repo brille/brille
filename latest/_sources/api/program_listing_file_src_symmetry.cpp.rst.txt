@@ -121,7 +121,9 @@ Program Listing for File symmetry.cpp
      Motion<int,double> e, t(this->getm(i)); // x initalised to {E,0}
      int ord{0};
      while (++ord < 10 && t != e) { // if M[i]==e then order is 1 and this is done
-       //info_update("M^",ord," = {\n",t.getr(),"|\n",t.gett(),"\n}");
+       // info_update("M^",ord," = {");
+       // info_update(t.getr());
+       // info_update("|",t.gett(),"}");
        t = this->getm(i)*t;
      }
      info_update_if(t!=e,"Order not found for Motion {\n",this->getr(i),"|\n",this->gett(i),"\n}");

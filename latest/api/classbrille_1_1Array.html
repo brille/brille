@@ -1,0 +1,1083 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class Array &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Array2" href="classbrille_1_1Array2.html" />
+    <link rel="prev" title="Class Basis" href="classBasis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class Array</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Array.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-array">
+<span id="exhale-class-classbrille-1-1array"></span><h1>Template Class Array<a class="headerlink" href="#template-class-array" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">File array.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0EN6brille5ArrayE">
+<span id="_CPPv3I0EN6brille5ArrayE"></span><span id="_CPPv2I0EN6brille5ArrayE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Array"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Array</code><a class="headerlink" href="#_CPPv4I0EN6brille5ArrayE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A multidimensional shared data array with operator overloads. </p>
+<p>The <code class="docutils literal notranslate"><a class="reference internal" href="#classbrille_1_1Array"><span class="std std-ref"><span class="pre">Array</span></span></a><span class="pre">&lt;T&gt;</span></code>` object holds a multidimensional shared data object plus information necessary to index into that array with an offset, different shape, and/or different stride than the underlying data contains.</p>
+<p>The <code class="docutils literal notranslate"><a class="reference internal" href="#classbrille_1_1Array"><span class="std std-ref"><span class="pre">Array</span></span></a><span class="pre">&lt;T&gt;</span></code> object provides overloads for basic operations, a number of utility methods, and methods to create offset and/or reduced-range mutable or immutable views into the shared array. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille5Array5ref_tE">
+<span id="_CPPv3N6brille5Array5ref_tE"></span><span id="_CPPv2N6brille5Array5ref_tE"></span><span class="target" id="classbrille_1_1Array_1a061d260b39944ceb388a082adcc541fd"></span><em class="property">using </em><code class="sig-name descname">ref_t</code> = std::shared_ptr&lt;void&gt;<a class="headerlink" href="#_CPPv4N6brille5Array5ref_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N6brille5Array7shape_tE">
+<span id="_CPPv3N6brille5Array7shape_tE"></span><span id="_CPPv2N6brille5Array7shape_tE"></span><span class="target" id="classbrille_1_1Array_1a3a4c516444086d52b4a5b62bfa3dcc2c"></span><em class="property">using </em><code class="sig-name descname">shape_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1afb26ed66827f17ec93e3bd6c25570cf3.html#_CPPv4N6brille7shape_tE" title="brille::shape_t">shape_t</a><a class="headerlink" href="#_CPPv4N6brille5Array7shape_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N6brille5Array4bItrE">
+<span id="_CPPv3N6brille5Array4bItrE"></span><span id="_CPPv2N6brille5Array4bItrE"></span><span class="target" id="classbrille_1_1Array_1ad0b34595232b6ef554197ff71d1a7b05"></span><em class="property">using </em><code class="sig-name descname">bItr</code> = <a class="reference internal" href="classBroadcastIt.html#_CPPv4I0E11BroadcastIt" title="BroadcastIt">BroadcastIt</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille5Array4bItrE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N6brille5Array4sItrE">
+<span id="_CPPv3N6brille5Array4sItrE"></span><span id="_CPPv2N6brille5Array4sItrE"></span><span class="target" id="classbrille_1_1Array_1af055878987ee5bc6558e16431d8ce5aa"></span><em class="property">using </em><code class="sig-name descname">sItr</code> = <a class="reference internal" href="classSubIt.html#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille5Array4sItrE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N6brille5Array4aItrE">
+<span id="_CPPv3N6brille5Array4aItrE"></span><span id="_CPPv2N6brille5Array4aItrE"></span><span class="target" id="classbrille_1_1Array_1a31845c2869eacce2c626e7e08babe3c9"></span><em class="property">using </em><code class="sig-name descname">aItr</code> = <a class="reference internal" href="classbrille_1_1ArrayIt.html#_CPPv4I0EN6brille7ArrayItE" title="brille::ArrayIt">ArrayIt</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;<a class="headerlink" href="#_CPPv4N6brille5Array4aItrE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array4dataEv">
+<span id="_CPPv3N6brille5Array4dataEv"></span><span id="_CPPv2N6brille5Array4dataEv"></span><span id="brille::Array::data"></span><span class="target" id="classbrille_1_1Array_1a05c024ed6b9f6b56154917fdc732c06c"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The stride of our multidimensional view. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array4dataERK5ind_t">
+<span id="_CPPv3N6brille5Array4dataERK5ind_t"></span><span id="_CPPv2N6brille5Array4dataERK5ind_t"></span><span id="brille::Array::data__ind_tCR"></span><span class="target" id="classbrille_1_1Array_1ae3651e4ca42c6d970f1474e8ca7537ed"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> &amp;<em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array4dataERK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array4dataERK7shape_t">
+<span id="_CPPv3N6brille5Array4dataERK7shape_t"></span><span id="_CPPv2N6brille5Array4dataERK7shape_t"></span><span id="brille::Array::data__shape_tCR"></span><span class="target" id="classbrille_1_1Array_1a66d38e464a10d55f1a2828b5c8cbe25d"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array4dataERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4dataEv">
+<span id="_CPPv3NK6brille5Array4dataEv"></span><span id="_CPPv2NK6brille5Array4dataEv"></span><span id="brille::Array::dataC"></span><span class="target" id="classbrille_1_1Array_1a4249905e79bd9ffe115d868d1b55fbbc"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4dataERK5ind_t">
+<span id="_CPPv3NK6brille5Array4dataERK5ind_t"></span><span id="_CPPv2NK6brille5Array4dataERK5ind_t"></span><span id="brille::Array::data__ind_tCRC"></span><span class="target" id="classbrille_1_1Array_1a26aafa0a09a30594275cb5f51c11bfe8"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4dataERK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4dataERK7shape_t">
+<span id="_CPPv3NK6brille5Array4dataERK7shape_t"></span><span id="_CPPv2NK6brille5Array4dataERK7shape_t"></span><span id="brille::Array::data__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1a96d261148e0b46d920097118613d4447"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4dataERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array8raw_sizeEv">
+<span id="_CPPv3NK6brille5Array8raw_sizeEv"></span><span id="_CPPv2NK6brille5Array8raw_sizeEv"></span><span id="brille::Array::raw_sizeC"></span><span class="target" id="classbrille_1_1Array_1a5749bbf23ef1d2dce7431a31e6841e27"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">raw_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array8raw_sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array9raw_shiftEv">
+<span id="_CPPv3NK6brille5Array9raw_shiftEv"></span><span id="_CPPv2NK6brille5Array9raw_shiftEv"></span><span id="brille::Array::raw_shiftC"></span><span class="target" id="classbrille_1_1Array_1a6ded7821ce9f3005fc499278dabdf42a"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">raw_shift</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array9raw_shiftEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3ownEv">
+<span id="_CPPv3NK6brille5Array3ownEv"></span><span id="_CPPv2NK6brille5Array3ownEv"></span><span id="brille::Array::ownC"></span><span class="target" id="classbrille_1_1Array_1a3bae80b2b962aa5434a98d9c9ec3a981"></span>bool <code class="sig-name descname">own</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3ownEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3refEv">
+<span id="_CPPv3NK6brille5Array3refEv"></span><span id="_CPPv2NK6brille5Array3refEv"></span><span id="brille::Array::refC"></span><span class="target" id="classbrille_1_1Array_1a71b2ab150a894df7cee748499182d6e0"></span><a class="reference internal" href="#_CPPv4N6brille5Array5ref_tE" title="brille::Array::ref_t">ref_t</a> <code class="sig-name descname">ref</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3refEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array9ismutableEv">
+<span id="_CPPv3NK6brille5Array9ismutableEv"></span><span id="_CPPv2NK6brille5Array9ismutableEv"></span><span id="brille::Array::ismutable__voidC"></span><span class="target" id="classbrille_1_1Array_1a74f1f3fd1499536a86ed958a4a90b823"></span>bool <code class="sig-name descname">ismutable</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array9ismutableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7isconstEv">
+<span id="_CPPv3NK6brille5Array7isconstEv"></span><span id="_CPPv2NK6brille5Array7isconstEv"></span><span id="brille::Array::isconst__voidC"></span><span class="target" id="classbrille_1_1Array_1a7523d2ec7aecdd9a0beffd6b2dae11c0"></span>bool <code class="sig-name descname">isconst</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7isconstEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4ndimEv">
+<span id="_CPPv3NK6brille5Array4ndimEv"></span><span id="_CPPv2NK6brille5Array4ndimEv"></span><span id="brille::Array::ndim__voidC"></span><span class="target" id="classbrille_1_1Array_1a7bbda1fd611bd0c3c036a93863dd30c4"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">ndim</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4ndimEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5numelEv">
+<span id="_CPPv3NK6brille5Array5numelEv"></span><span id="_CPPv2NK6brille5Array5numelEv"></span><span id="brille::Array::numel__voidC"></span><span class="target" id="classbrille_1_1Array_1a83f87a2fcae654f303f2c8ab994b2e5b"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">numel</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5numelEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4sizeEK5ind_t">
+<span id="_CPPv3NK6brille5Array4sizeEK5ind_t"></span><span id="_CPPv2NK6brille5Array4sizeEK5ind_t"></span><span id="brille::Array::size__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a36e0de03096705538814d5cd5a099f43"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">size</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4sizeEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5shapeEv">
+<span id="_CPPv3NK6brille5Array5shapeEv"></span><span id="_CPPv2NK6brille5Array5shapeEv"></span><span id="brille::Array::shape__voidC"></span><span class="target" id="classbrille_1_1Array_1ac34d5c1f6c7ebf322ca6857821cbc8a0"></span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> <code class="sig-name descname">shape</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5shapeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6strideEv">
+<span id="_CPPv3NK6brille5Array6strideEv"></span><span id="_CPPv2NK6brille5Array6strideEv"></span><span id="brille::Array::stride__voidC"></span><span class="target" id="classbrille_1_1Array_1ade1181d766e1804104f571627827eb98"></span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> <code class="sig-name descname">stride</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6strideEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7cstrideEv">
+<span id="_CPPv3NK6brille5Array7cstrideEv"></span><span id="_CPPv2NK6brille5Array7cstrideEv"></span><span id="brille::Array::cstrideC"></span><span class="target" id="classbrille_1_1Array_1a6214cc34b023244773b0945439a84d80"></span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> <code class="sig-name descname">cstride</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7cstrideEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6subItrEv">
+<span id="_CPPv3NK6brille5Array6subItrEv"></span><span id="_CPPv2NK6brille5Array6subItrEv"></span><span id="brille::Array::subItrC"></span><span class="target" id="classbrille_1_1Array_1ab974d7a340470679e23c1348e2585f76"></span><a class="reference internal" href="#_CPPv4N6brille5Array4sItrE" title="brille::Array::sItr">sItr</a> <code class="sig-name descname">subItr</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6subItrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6subItrERK7shape_t">
+<span id="_CPPv3NK6brille5Array6subItrERK7shape_t"></span><span id="_CPPv2NK6brille5Array6subItrERK7shape_t"></span><span id="brille::Array::subItr__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1aa5f054f8afad3019c9b39cb96f4aa262"></span><a class="reference internal" href="#_CPPv4N6brille5Array4sItrE" title="brille::Array::sItr">sItr</a> <code class="sig-name descname">subItr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>fix</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6subItrERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6valItrEv">
+<span id="_CPPv3NK6brille5Array6valItrEv"></span><span id="_CPPv2NK6brille5Array6valItrEv"></span><span id="brille::Array::valItrC"></span><span class="target" id="classbrille_1_1Array_1aa2decfbfca8ef9c9deab84524fcb3111"></span><a class="reference internal" href="#_CPPv4N6brille5Array4aItrE" title="brille::Array::aItr">aItr</a> <code class="sig-name descname">valItr</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6valItrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array12broadcastItrERK7shape_t">
+<span id="_CPPv3NK6brille5Array12broadcastItrERK7shape_t"></span><span id="_CPPv2NK6brille5Array12broadcastItrERK7shape_t"></span><span id="brille::Array::broadcastItr__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1aa3cc56de68dfebce264d06c6d9560fe9"></span><a class="reference internal" href="#_CPPv4N6brille5Array4bItrE" title="brille::Array::bItr">bItr</a> <code class="sig-name descname">broadcastItr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array12broadcastItrERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array12broadcastItrE4bItrRK5ArrayI1RE">
+<span id="_CPPv3I0ENK6brille5Array12broadcastItrERK5ArrayI1RE"></span><span id="_CPPv2I0ENK6brille5Array12broadcastItrERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1ac00c2003002c562bdeafca552bcfd130"></span><a class="reference internal" href="#_CPPv4N6brille5Array4bItrE" title="brille::Array::bItr">bItr</a> <code class="sig-name descname">broadcastItr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array12broadcastItrE4bItrRK5ArrayI1RE" title="brille::Array::broadcastItr::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array12broadcastItrE4bItrRK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array17is_column_orderedEv">
+<span id="_CPPv3NK6brille5Array17is_column_orderedEv"></span><span id="_CPPv2NK6brille5Array17is_column_orderedEv"></span><span id="brille::Array::is_column_orderedC"></span><span class="target" id="classbrille_1_1Array_1acd12e2eb545f18dc7990b9861431a2d1"></span>bool <code class="sig-name descname">is_column_ordered</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array17is_column_orderedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array14is_row_orderedEv">
+<span id="_CPPv3NK6brille5Array14is_row_orderedEv"></span><span id="_CPPv2NK6brille5Array14is_row_orderedEv"></span><span id="brille::Array::is_row_orderedC"></span><span class="target" id="classbrille_1_1Array_1aba4881f5dc591cb72da5c727d28ec374"></span>bool <code class="sig-name descname">is_row_ordered</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array14is_row_orderedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array13is_contiguousEv">
+<span id="_CPPv3NK6brille5Array13is_contiguousEv"></span><span id="_CPPv2NK6brille5Array13is_contiguousEv"></span><span id="brille::Array::is_contiguousC"></span><span class="target" id="classbrille_1_1Array_1a6fa8c1c889160de75fff129eeb21f7a1"></span>bool <code class="sig-name descname">is_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array13is_contiguousEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayEv">
+<span id="_CPPv3N6brille5Array5ArrayEv"></span><span id="_CPPv2N6brille5Array5ArrayEv"></span><span id="brille::Array::Array"></span><span class="target" id="classbrille_1_1Array_1aa7e4603724aa05eb777f3420ae1d983e"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayEP1TK5ind_tKbKb">
+<span id="_CPPv3N6brille5Array5ArrayEP1TK5ind_tKbKb"></span><span id="_CPPv2N6brille5Array5ArrayEP1TK5ind_tKbKb"></span><span id="brille::Array::Array__TP.ind_tC.bC.bC"></span><span class="target" id="classbrille_1_1Array_1a781bcf9d1a3460647cf063505e1ede71"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<em>data</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>num</em>, <em class="property">const</em> bool <em>own</em>, <em class="property">const</em> bool <em>mut</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayEP1TK5ind_tKbKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayEP1TK5ind_tKbRK7shape_tRK7shape_tKb">
+<span id="_CPPv3N6brille5Array5ArrayEP1TK5ind_tKbRK7shape_tRK7shape_tKb"></span><span id="_CPPv2N6brille5Array5ArrayEP1TK5ind_tKbRK7shape_tRK7shape_tKb"></span><span id="brille::Array::Array__TP.ind_tC.bC.shape_tCR.shape_tCR.bC"></span><span class="target" id="classbrille_1_1Array_1a5748982b8bb47937eaedfde20fe68a95"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<em>data</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>num</em>, <em class="property">const</em> bool <em>own</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>stride</em>, <em class="property">const</em> bool <em>mut</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayEP1TK5ind_tKbRK7shape_tRK7shape_tKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tKbNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb">
+<span id="_CPPv3I0EN6brille5Array5ArrayEP1TK5ind_tKbNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb"></span><span id="_CPPv2I0EN6brille5Array5ArrayEP1TK5ind_tKbNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb"></span>template&lt;class <code class="sig-name descname">P</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a48e68c98407c696c1dd0bb6808369c6e"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<em>data</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>num</em>, <em class="property">const</em> bool <em>own</em>, std::shared_ptr&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tKbNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb" title="brille::Array::Array::P">P</a>&gt; <em>ref</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>stride</em>, <em class="property">const</em> bool <em>mut</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tKbNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tK5ind_tKbRKNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb">
+<span id="_CPPv3I0EN6brille5Array5ArrayEP1TK5ind_tK5ind_tKbRKNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb"></span><span id="_CPPv2I0EN6brille5Array5ArrayEP1TK5ind_tK5ind_tKbRKNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb"></span>template&lt;class <code class="sig-name descname">P</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a537e9bce93bfd3343111355bad1fb8a6"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<em>data</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>num</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>shift</em>, <em class="property">const</em> bool <em>own</em>, <em class="property">const</em> std::shared_ptr&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tK5ind_tKbRKNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb" title="brille::Array::Array::P">P</a>&gt; &amp;<em>ref</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>stride</em>, <em class="property">const</em> bool <em>mut</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array5ArrayEP1TK5ind_tK5ind_tKbRKNSt10shared_ptrI1PEERK7shape_tRK7shape_tKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayEK5ind_tK5ind_t">
+<span id="_CPPv3N6brille5Array5ArrayEK5ind_tK5ind_t"></span><span id="_CPPv2N6brille5Array5ArrayEK5ind_tK5ind_t"></span><span id="brille::Array::Array__ind_tC.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a83608d5f8da050b7d9901d01ad70ffed"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>s0</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>s1</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayEK5ind_tK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayEK5ind_tK5ind_tK1T">
+<span id="_CPPv3N6brille5Array5ArrayEK5ind_tK5ind_tK1T"></span><span id="_CPPv2N6brille5Array5ArrayEK5ind_tK5ind_tK1T"></span><span id="brille::Array::Array__ind_tC.ind_tC.TC"></span><span class="target" id="classbrille_1_1Array_1a39e322613703d68650291adc4d7e5339"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>s0</em>, <em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>s1</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>init</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayEK5ind_tK5ind_tK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK7shape_t">
+<span id="_CPPv3N6brille5Array5ArrayERK7shape_t"></span><span id="_CPPv2N6brille5Array5ArrayERK7shape_t"></span><span id="brille::Array::Array__shape_tCR"></span><span class="target" id="classbrille_1_1Array_1a5548357ecbeb349ea0d9f0676a4d00ce"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK7shape_tK1T">
+<span id="_CPPv3N6brille5Array5ArrayERK7shape_tK1T"></span><span id="_CPPv2N6brille5Array5ArrayERK7shape_tK1T"></span><span id="brille::Array::Array__shape_tCR.TC"></span><span class="target" id="classbrille_1_1Array_1addacec90a1a862bcdb23c7abde0875fd"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>init</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK7shape_tK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK7shape_tRK7shape_t">
+<span id="_CPPv3N6brille5Array5ArrayERK7shape_tRK7shape_t"></span><span id="_CPPv2N6brille5Array5ArrayERK7shape_tRK7shape_t"></span><span id="brille::Array::Array__shape_tCR.shape_tCR"></span><span class="target" id="classbrille_1_1Array_1abcd271d967497922a68a159c17308ad0"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>stride</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK7shape_tRK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK7shape_tRK7shape_tK1T">
+<span id="_CPPv3N6brille5Array5ArrayERK7shape_tRK7shape_tK1T"></span><span id="_CPPv2N6brille5Array5ArrayERK7shape_tRK7shape_tK1T"></span><span id="brille::Array::Array__shape_tCR.shape_tCR.TC"></span><span class="target" id="classbrille_1_1Array_1aeafc4da0c9294c066c083b59a58a1964"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>stride</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>init</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK7shape_tRK7shape_tK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK6Array2I1TERK7shape_t">
+<span id="_CPPv3N6brille5Array5ArrayERK6Array2I1TERK7shape_t"></span><span id="_CPPv2N6brille5Array5ArrayERK6Array2I1TERK7shape_t"></span><span id="brille::Array::Array__Array2:T:CR.shape_tCR"></span><span class="target" id="classbrille_1_1Array_1a83b94b1a8c4bb46af8e0706a020e03c6"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Array2.html#_CPPv4I0EN6brille6Array2E" title="brille::Array2">Array2</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>twod</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK6Array2I1TERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array5ArrayERK5ArrayI1TE">
+<span id="_CPPv3N6brille5Array5ArrayERK5ArrayI1TE"></span><span id="_CPPv2N6brille5Array5ArrayERK5ArrayI1TE"></span><span id="brille::Array::Array__Array:T:CR"></span><span class="target" id="classbrille_1_1Array_1a4fc21840036aaa58e59060e73657d90b"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array5ArrayERK5ArrayI1TE" title="brille::Array::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array5ArrayERK5ArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArrayD0Ev">
+<span id="_CPPv3N6brille5ArrayD0Ev"></span><span id="_CPPv2N6brille5ArrayD0Ev"></span><span id="brille::Array::~Array"></span><span class="target" id="classbrille_1_1Array_1ac7ab65a106293fa2c2ae0819ee9977d7"></span><code class="sig-name descname">~Array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArrayD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArrayaSERK5ArrayI1TE">
+<span id="_CPPv3N6brille5ArrayaSERK5ArrayI1TE"></span><span id="_CPPv2N6brille5ArrayaSERK5ArrayI1TE"></span><span id="brille::Array::assign-operator__Array:T:CR"></span><span class="target" id="classbrille_1_1Array_1ab5292ebbf368cf31787927c7bfbd49e9"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArrayaSERK5ArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array5ArrayERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5Array5ArrayERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5Array5ArrayERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1af2102f496d198c888b06029fc5e9ff54"></span><code class="sig-name descname">Array</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5Array5ArrayERK5ArrayI1RE" title="brille::Array::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5Array5ArrayERK5ArrayI1RE" title="brille::Array::Array::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array5ArrayERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5ArrayaSER5ArrayI1TERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5ArrayaSERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5ArrayaSERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a780ce8aa25e0421a8247a2c0631425b8"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayaSER5ArrayI1TERK5ArrayI1RE" title="brille::Array::operator=::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5ArrayaSER5ArrayI1TERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array12make_mutableEv">
+<span id="_CPPv3N6brille5Array12make_mutableEv"></span><span id="_CPPv2N6brille5Array12make_mutableEv"></span><span id="brille::Array::make_mutable"></span><span class="target" id="classbrille_1_1Array_1a07f8379d78a6aa1f6ba8fb58435c3c1b"></span>bool <code class="sig-name descname">make_mutable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array12make_mutableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array14make_immutableEv">
+<span id="_CPPv3N6brille5Array14make_immutableEv"></span><span id="_CPPv2N6brille5Array14make_immutableEv"></span><span id="brille::Array::make_immutable"></span><span class="target" id="classbrille_1_1Array_1a65bba94de873380aa60514c8a8a88517"></span>bool <code class="sig-name descname">make_immutable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array14make_immutableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array8decoupleEv">
+<span id="_CPPv3NK6brille5Array8decoupleEv"></span><span id="_CPPv2NK6brille5Array8decoupleEv"></span><span id="brille::Array::decoupleC"></span><span class="target" id="classbrille_1_1Array_1ad280da65e09ae0b7a1fbc4d0b3edda71"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">decouple</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array8decoupleEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArrayixE5ind_t">
+<span id="_CPPv3N6brille5ArrayixE5ind_t"></span><span id="_CPPv2N6brille5ArrayixE5ind_t"></span><span id="brille::Array::subscript-operator__ind_t"></span><span class="target" id="classbrille_1_1Array_1ad4f91bad19fe5939d169cf21f30c183d"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>lin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArrayixE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5ArrayixE5ind_t">
+<span id="_CPPv3NK6brille5ArrayixE5ind_t"></span><span id="_CPPv2NK6brille5ArrayixE5ind_t"></span><span id="brille::Array::subscript-operator__ind_tC"></span><span class="target" id="classbrille_1_1Array_1ad2b8e9f9bc447a9fafa63c22fa822803"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>lin</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5ArrayixE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArrayixER7shape_t">
+<span id="_CPPv3N6brille5ArrayixER7shape_t"></span><span id="_CPPv2N6brille5ArrayixER7shape_t"></span><span id="brille::Array::subscript-operator__shape_tR"></span><span class="target" id="classbrille_1_1Array_1a0c1a3fbc35a3492bd95f2bebd730fed1"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>sub</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArrayixER7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5ArrayixER7shape_t">
+<span id="_CPPv3NK6brille5ArrayixER7shape_t"></span><span id="_CPPv2NK6brille5ArrayixER7shape_t"></span><span id="brille::Array::subscript-operator__shape_tRC"></span><span class="target" id="classbrille_1_1Array_1a78b930d6dc171ac5916533eeada2a0d9"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>sub</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5ArrayixER7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4viewEv">
+<span id="_CPPv3NK6brille5Array4viewEv"></span><span id="_CPPv2NK6brille5Array4viewEv"></span><span id="brille::Array::viewC"></span><span class="target" id="classbrille_1_1Array_1a43d42e9ef13dc3035442fb2cf5ee2cc2"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4viewEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4viewE5ind_t">
+<span id="_CPPv3NK6brille5Array4viewE5ind_t"></span><span id="_CPPv2NK6brille5Array4viewE5ind_t"></span><span id="brille::Array::view__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a1c0c3dfce0cf4d450ce28dd07db41de9"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4viewE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>View a single sub-array at index <code class="docutils literal notranslate"><span class="pre">i</span></code> or an offset-smaller array if single=false;. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4viewE5ind_t5ind_t">
+<span id="_CPPv3NK6brille5Array4viewE5ind_t5ind_t"></span><span id="_CPPv2NK6brille5Array4viewE5ind_t5ind_t"></span><span id="brille::Array::view__ind_t.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a0b17c04905e7e91fc10d88777ba100c4"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4viewE5ind_t5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>View the sub-arrays from <code class="docutils literal notranslate"><span class="pre">i</span></code> to <code class="docutils literal notranslate"><span class="pre">j-1</span></code> </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4viewERK7shape_t">
+<span id="_CPPv3NK6brille5Array4viewERK7shape_t"></span><span id="_CPPv2NK6brille5Array4viewERK7shape_t"></span><span id="brille::Array::view__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1ae26c0f9db2a647b84c4c141d5be21293"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a>&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4viewERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7extractE5ind_t">
+<span id="_CPPv3NK6brille5Array7extractE5ind_t"></span><span id="_CPPv2NK6brille5Array7extractE5ind_t"></span><span id="brille::Array::extract__ind_tC"></span><span class="target" id="classbrille_1_1Array_1af7954954a397f41bd4086db3db1fcf9b"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7extractE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERK5ArrayI1IE">
+<span id="_CPPv3I0ENK6brille5Array7extractERK5ArrayI1IE"></span><span id="_CPPv2I0ENK6brille5Array7extractERK5ArrayI1IE"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1ad7556faa770b1dee605ca66328b02fc4"></span>std::enable_if_t&lt;std::is_integral_v&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERK5ArrayI1IE" title="brille::Array::extract::I">I</a>&gt;, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERK5ArrayI1IE" title="brille::Array::extract::I">I</a>&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERK5ArrayI1IE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorI1IEE">
+<span id="_CPPv3I0ENK6brille5Array7extractERKNSt6vectorI1IEE"></span><span id="_CPPv2I0ENK6brille5Array7extractERKNSt6vectorI1IEE"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1abfbec7b4a261291d3df5adb9ba78a107"></span>std::enable_if_t&lt;std::is_integral_v&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorI1IEE" title="brille::Array::extract::I">I</a>&gt;, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorI1IEE" title="brille::Array::extract::I">I</a>&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt5arrayI1I3NelEE">
+<span id="_CPPv3I0_6size_tENK6brille5Array7extractERKNSt5arrayI1I3NelEE"></span><span id="_CPPv2I0_6size_tENK6brille5Array7extractERKNSt5arrayI1I3NelEE"></span>template&lt;class <code class="sig-name descname">I</code>, size_t <code class="sig-name descname">Nel</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1aef8c5b3b44f3e077b283698ad7b262f9"></span>std::enable_if_t&lt;std::is_integral_v&lt;<a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt5arrayI1I3NelEE" title="brille::Array::extract::I">I</a>&gt;, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt5arrayI1I3NelEE" title="brille::Array::extract::I">I</a>, <a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt5arrayI1I3NelEE" title="brille::Array::extract::Nel">Nel</a>&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt5arrayI1I3NelEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorINSt5arrayI1I3NelEEEE">
+<span id="_CPPv3I0_6size_tENK6brille5Array7extractERKNSt6vectorINSt5arrayI1I3NelEEEE"></span><span id="_CPPv2I0_6size_tENK6brille5Array7extractERKNSt6vectorINSt5arrayI1I3NelEEEE"></span>template&lt;class <code class="sig-name descname">I</code>, size_t <code class="sig-name descname">Nel</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a51fbc46a08a54e236a1512104b544aa8"></span>std::enable_if_t&lt;std::is_integral_v&lt;<a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorINSt5arrayI1I3NelEEEE" title="brille::Array::extract::I">I</a>&gt;, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorINSt5arrayI1I3NelEEEE" title="brille::Array::extract::I">I</a>, <a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorINSt5arrayI1I3NelEEEE" title="brille::Array::extract::Nel">Nel</a>&gt;&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0_6size_tENK6brille5Array7extractENSt11enable_if_tINSt13is_integral_vI1IEE5ArrayI1TEEERKNSt6vectorINSt5arrayI1I3NelEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7extractERK5ArrayIbE">
+<span id="_CPPv3NK6brille5Array7extractERK5ArrayIbE"></span><span id="_CPPv2NK6brille5Array7extractERK5ArrayIbE"></span><span id="brille::Array::extract__Array:b:CRC"></span><span class="target" id="classbrille_1_1Array_1a1c31663485c2d4943f1fea59f146f877"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;bool&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7extractERK5ArrayIbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7extractERKNSt6vectorIbEE">
+<span id="_CPPv3NK6brille5Array7extractERKNSt6vectorIbEE"></span><span id="_CPPv2NK6brille5Array7extractERKNSt6vectorIbEE"></span><span id="brille::Array::extract__std::vector:b:CRC"></span><span class="target" id="classbrille_1_1Array_1ac5868517f63f68e5e5939e85621cf293"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7extractERKNSt6vectorIbEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3setEK5ind_tRK5ArrayI1TE">
+<span id="_CPPv3N6brille5Array3setEK5ind_tRK5ArrayI1TE"></span><span id="_CPPv2N6brille5Array3setEK5ind_tRK5ArrayI1TE"></span><span id="brille::Array::set__ind_tC.Array:T:CR"></span><span class="target" id="classbrille_1_1Array_1afccbb14e89ec24e99ef98d7b6fee76a4"></span>bool <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3setEK5ind_tRK5ArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array3setEbK5ind_tRK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5Array3setEK5ind_tRK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5Array3setEK5ind_tRK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a55112fd5385f21600af579b1b68828e4"></span>bool <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5Array3setEbK5ind_tRK5ArrayI1RE" title="brille::Array::set::R">R</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array3setEbK5ind_tRK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3setEK5ind_tRKNSt6vectorI1TEE">
+<span id="_CPPv3N6brille5Array3setEK5ind_tRKNSt6vectorI1TEE"></span><span id="_CPPv2N6brille5Array3setEK5ind_tRKNSt6vectorI1TEE"></span><span id="brille::Array::set__ind_tC.std::vector:T:CR"></span><span class="target" id="classbrille_1_1Array_1ad6956bcb396606658b62a45cb7682f70"></span>bool <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3setEK5ind_tRKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I_6size_tEN6brille5Array3setEbK5ind_tRKNSt5arrayI1T3NelEE">
+<span id="_CPPv3I_6size_tEN6brille5Array3setEK5ind_tRKNSt5arrayI1T3NelEE"></span><span id="_CPPv2I_6size_tEN6brille5Array3setEK5ind_tRKNSt5arrayI1T3NelEE"></span>template&lt;size_t <code class="sig-name descname">Nel</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a58a869c911dd398f46872f4450b7062a"></span>bool <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>, <a class="reference internal" href="#_CPPv4I_6size_tEN6brille5Array3setEbK5ind_tRKNSt5arrayI1T3NelEE" title="brille::Array::set::Nel">Nel</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_6size_tEN6brille5Array3setEbK5ind_tRKNSt5arrayI1T3NelEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3setERK7shape_t1T">
+<span id="_CPPv3N6brille5Array3setERK7shape_t1T"></span><span id="_CPPv2N6brille5Array3setERK7shape_t1T"></span><span id="brille::Array::set__shape_tCR.T"></span><span class="target" id="classbrille_1_1Array_1ac735130b6cac42765162cb9688b48894"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>sub</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3setERK7shape_t1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array6appendEK5ind_tRK5ArrayI1TE">
+<span id="_CPPv3N6brille5Array6appendEK5ind_tRK5ArrayI1TE"></span><span id="_CPPv2N6brille5Array6appendEK5ind_tRK5ArrayI1TE"></span><span id="brille::Array::append__ind_tC.Array:T:CR"></span><span class="target" id="classbrille_1_1Array_1a37ce2cf6c404c681fc0234d6d56d4f61"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array6appendEK5ind_tRK5ArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array9to_stringEv">
+<span id="_CPPv3NK6brille5Array9to_stringEv"></span><span id="_CPPv2NK6brille5Array9to_stringEv"></span><span id="brille::Array::to_stringC"></span><span class="target" id="classbrille_1_1Array_1ac4ddaf356ba648f20173464291b8d415"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array9to_stringEK5ind_t">
+<span id="_CPPv3NK6brille5Array9to_stringEK5ind_t"></span><span id="_CPPv2NK6brille5Array9to_stringEK5ind_t"></span><span id="brille::Array::to_string__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a1a6a6cb25a51727e5fcc44437687534a"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array9to_stringEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array7reshapeERK7shape_t">
+<span id="_CPPv3N6brille5Array7reshapeERK7shape_t"></span><span id="_CPPv2N6brille5Array7reshapeERK7shape_t"></span><span id="brille::Array::reshape__shape_tCR"></span><span class="target" id="classbrille_1_1Array_1ab3d2af56afc61d2e594c68d085165eca"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">reshape</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array7reshapeERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array6resizeERK7shape_t1T">
+<span id="_CPPv3N6brille5Array6resizeERK7shape_t1T"></span><span id="_CPPv2N6brille5Array6resizeERK7shape_t1T"></span><span id="brille::Array::resize__shape_tCR.T"></span><span class="target" id="classbrille_1_1Array_1ae05172bf9711f14f6a44995578e513a3"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a>&amp;, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>init</em> = <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>(0)<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array6resizeERK7shape_t1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Modify the number of arrays. </p>
+<p>Allocate a new T* and copy the overlapping region. The new shape must* have the same number of dimensions as the old shape.</p>
+<p>Resizing an array will decouple it from any other arrays sharing their underlying data. Such an operation should not be taken lightly.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ns</span></code>: the new shape </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">init</span></code>: an optional initialization value for any non-overlapping region </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array6resizeER5ArrayI1TEK1I1T">
+<span id="_CPPv3I0EN6brille5Array6resizeEK1I1T"></span><span id="_CPPv2I0EN6brille5Array6resizeEK1I1T"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1ac3ba5e7cc929ed379aa7b825e23bc60c"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5Array6resizeER5ArrayI1TEK1I1T" title="brille::Array::resize::I">I</a>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>init</em> = <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>(0)<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array6resizeER5ArrayI1TEK1I1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3allE5ind_t">
+<span id="_CPPv3NK6brille5Array3allE5ind_t"></span><span id="_CPPv2NK6brille5Array3allE5ind_t"></span><span id="brille::Array::all__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a2af54c3eb6b1c500ba09b3c6e36316b1"></span>bool <code class="sig-name descname">all</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3allE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3anyE5ind_t">
+<span id="_CPPv3NK6brille5Array3anyE5ind_t"></span><span id="_CPPv2NK6brille5Array3anyE5ind_t"></span><span id="brille::Array::any__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a02c85a1ca030122e2804c1cd84e748e8"></span>bool <code class="sig-name descname">any</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3anyE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5countE5ind_t">
+<span id="_CPPv3NK6brille5Array5countE5ind_t"></span><span id="_CPPv2NK6brille5Array5countE5ind_t"></span><span id="brille::Array::count__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a40e8993954560bebf5e229d2e4053c3c"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">count</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5countE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5firstE5ind_t">
+<span id="_CPPv3NK6brille5Array5firstE5ind_t"></span><span id="_CPPv2NK6brille5Array5firstE5ind_t"></span><span id="brille::Array::first__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a9627b7733713126aeb77ee79a9adc306"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">first</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5firstE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4lastE5ind_t">
+<span id="_CPPv3NK6brille5Array4lastE5ind_t"></span><span id="_CPPv2NK6brille5Array4lastE5ind_t"></span><span id="brille::Array::last__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a2ff44f78394083be5905d0233751e605"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">last</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4lastE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3allE1T5ind_t">
+<span id="_CPPv3NK6brille5Array3allE1T5ind_t"></span><span id="_CPPv2NK6brille5Array3allE1T5ind_t"></span><span id="brille::Array::all__T.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a1a844b6fee2db8cd58e050ed3050c72e"></span>bool <code class="sig-name descname">all</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3allE1T5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3anyE1T5ind_t">
+<span id="_CPPv3NK6brille5Array3anyE1T5ind_t"></span><span id="_CPPv2NK6brille5Array3anyE1T5ind_t"></span><span id="brille::Array::any__T.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a438a4577fb300423e7b889a30f257c7f"></span>bool <code class="sig-name descname">any</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3anyE1T5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5countE1T5ind_t">
+<span id="_CPPv3NK6brille5Array5countE1T5ind_t"></span><span id="_CPPv2NK6brille5Array5countE1T5ind_t"></span><span id="brille::Array::count__T.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a13531168bbdc4c6b584f16d448c755ca"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">count</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5countE1T5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5firstE1T5ind_t">
+<span id="_CPPv3NK6brille5Array5firstE1T5ind_t"></span><span id="_CPPv2NK6brille5Array5firstE1T5ind_t"></span><span id="brille::Array::first__T.ind_tC"></span><span class="target" id="classbrille_1_1Array_1ac4a1ad024d8f3eb5dd552a3e829956ac"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">first</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5firstE1T5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4lastE1T5ind_t">
+<span id="_CPPv3NK6brille5Array4lastE1T5ind_t"></span><span id="_CPPv2NK6brille5Array4lastE1T5ind_t"></span><span id="brille::Array::last__T.ind_tC"></span><span class="target" id="classbrille_1_1Array_1a92e0ac593a3af2cca3eae9f5fcdca1c2"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">last</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>n</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4lastE1T5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5roundEv">
+<span id="_CPPv3NK6brille5Array5roundEv"></span><span id="_CPPv2NK6brille5Array5roundEv"></span><span id="brille::Array::roundC"></span><span class="target" id="classbrille_1_1Array_1abd685d00b6311a515ca54fd9d1f2088e"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;int&gt; <code class="sig-name descname">round</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5roundEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5floorEv">
+<span id="_CPPv3NK6brille5Array5floorEv"></span><span id="_CPPv2NK6brille5Array5floorEv"></span><span id="brille::Array::floorC"></span><span class="target" id="classbrille_1_1Array_1a927d6c7b3e622981bdfe0dfd6ef676cd"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;int&gt; <code class="sig-name descname">floor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5floorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4ceilEv">
+<span id="_CPPv3NK6brille5Array4ceilEv"></span><span id="_CPPv2NK6brille5Array4ceilEv"></span><span id="brille::Array::ceilC"></span><span class="target" id="classbrille_1_1Array_1a410fad806318717ad22ea2bab6efbc03"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;int&gt; <code class="sig-name descname">ceil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4ceilEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3sumE5ind_t">
+<span id="_CPPv3NK6brille5Array3sumE5ind_t"></span><span id="_CPPv2NK6brille5Array3sumE5ind_t"></span><span id="brille::Array::sum__ind_tC"></span><span class="target" id="classbrille_1_1Array_1ac8e20b613da9e22043380d1b4f91dba4"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">sum</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3sumE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4prodE5ind_t">
+<span id="_CPPv3NK6brille5Array4prodE5ind_t"></span><span id="_CPPv2NK6brille5Array4prodE5ind_t"></span><span id="brille::Array::prod__ind_tC"></span><span class="target" id="classbrille_1_1Array_1aabdc533de02b0b909d565651af38176d"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">prod</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4prodE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3minE5ind_t">
+<span id="_CPPv3NK6brille5Array3minE5ind_t"></span><span id="_CPPv2NK6brille5Array3minE5ind_t"></span><span id="brille::Array::min__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a304cd02e686df4758c3a1c9f31ff133a"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">min</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3minE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3maxE5ind_t">
+<span id="_CPPv3NK6brille5Array3maxE5ind_t"></span><span id="_CPPv2NK6brille5Array3maxE5ind_t"></span><span id="brille::Array::max__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a1c7d5b39813e9fa147d0305ebeba1577"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">max</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3maxE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3sumEv">
+<span id="_CPPv3NK6brille5Array3sumEv"></span><span id="_CPPv2NK6brille5Array3sumEv"></span><span id="brille::Array::sumC"></span><span class="target" id="classbrille_1_1Array_1ac5debd5c92b5a52875e688ded98f18b2"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <code class="sig-name descname">sum</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3sumEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4prodEv">
+<span id="_CPPv3NK6brille5Array4prodEv"></span><span id="_CPPv2NK6brille5Array4prodEv"></span><span id="brille::Array::prodC"></span><span class="target" id="classbrille_1_1Array_1a13de72eddbb9ed36d639e108b2f8758f"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <code class="sig-name descname">prod</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4prodEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0_6size_tENK6brille5Array5matchEb5ind_t5ind_tRKNSt5arrayI1R3NelEEi">
+<span id="_CPPv3I0_6size_tENK6brille5Array5matchE5ind_t5ind_tRKNSt5arrayI1R3NelEEi"></span><span id="_CPPv2I0_6size_tENK6brille5Array5matchE5ind_t5ind_tRKNSt5arrayI1R3NelEEi"></span>template&lt;class <code class="sig-name descname">R</code>, size_t <code class="sig-name descname">Nel</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a031682d916b830fe93fe484a720cc1c3"></span>bool <code class="sig-name descname">match</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>j</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array5matchEb5ind_t5ind_tRKNSt5arrayI1R3NelEEi" title="brille::Array::match::R">R</a>, <a class="reference internal" href="#_CPPv4I0_6size_tENK6brille5Array5matchEb5ind_t5ind_tRKNSt5arrayI1R3NelEEi" title="brille::Array::match::Nel">Nel</a>&gt; &amp;<em>rot</em>, int <em>order</em> = 1<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0_6size_tENK6brille5Array5matchEb5ind_t5ind_tRKNSt5arrayI1R3NelEEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5matchE5ind_t5ind_t3ops1T">
+<span id="_CPPv3NK6brille5Array5matchE5ind_t5ind_t3ops1T"></span><span id="_CPPv2NK6brille5Array5matchE5ind_t5ind_t3ops1T"></span><span id="brille::Array::match__ind_t.ind_t.ops.TC"></span><span class="target" id="classbrille_1_1Array_1ae88ecacd1daef9327ff740d1dd999b92"></span>bool <code class="sig-name descname">match</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>j</em>, <a class="reference internal" href="enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8.html#_CPPv4N6brille3opsE" title="brille::ops">ops</a> <em>op</em> = <a class="reference internal" href="enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8.html#_CPPv4N6brille3opsE" title="brille::ops">ops</a>::<a class="reference internal" href="enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8.html#_CPPv4N6brille3ops4plusE" title="brille::ops::plus">plus</a>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em> = <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>{0}<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5matchE5ind_t5ind_t3ops1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3allE3cmp1T">
+<span id="_CPPv3NK6brille5Array3allE3cmp1T"></span><span id="_CPPv2NK6brille5Array3allE3cmp1T"></span><span id="brille::Array::all__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1aec681f3bfd9d655a8c2389504c10fa3b"></span>bool <code class="sig-name descname">all</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3allE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3anyE3cmp1T">
+<span id="_CPPv3NK6brille5Array3anyE3cmp1T"></span><span id="_CPPv2NK6brille5Array3anyE3cmp1T"></span><span id="brille::Array::any__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1a8827b860ea72998ce9756106c17586ce"></span>bool <code class="sig-name descname">any</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3anyE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5firstE3cmp1T">
+<span id="_CPPv3NK6brille5Array5firstE3cmp1T"></span><span id="_CPPv2NK6brille5Array5firstE3cmp1T"></span><span id="brille::Array::first__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1ad62a5ecc1dd65ce026262dd1c1b909fc"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">first</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5firstE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4lastE3cmp1T">
+<span id="_CPPv3NK6brille5Array4lastE3cmp1T"></span><span id="_CPPv2NK6brille5Array4lastE3cmp1T"></span><span id="brille::Array::last__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1a0000bffd796b6a6696e6d07949205dc3"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">last</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4lastE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5countE3cmp1T">
+<span id="_CPPv3NK6brille5Array5countE3cmp1T"></span><span id="_CPPv2NK6brille5Array5countE3cmp1T"></span><span id="brille::Array::count__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1a2e23db1cc467640bba2f281a169616ab"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">count</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5countE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array2isE3cmp1T">
+<span id="_CPPv3NK6brille5Array2isE3cmp1T"></span><span id="_CPPv2NK6brille5Array2isE3cmp1T"></span><span id="brille::Array::is__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1a5209b25b4000ca32b74ce43420f5d617"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;bool&gt; <code class="sig-name descname">is</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array2isE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4findE3cmp1T">
+<span id="_CPPv3NK6brille5Array4findE3cmp1T"></span><span id="_CPPv2NK6brille5Array4findE3cmp1T"></span><span id="brille::Array::find__cmp.TC"></span><span class="target" id="classbrille_1_1Array_1a1310e3ddadecb7c4f317870a65f00533"></span>std::vector&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; <code class="sig-name descname">find</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4findE3cmp1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array2isE5ArrayIbE3cmpRK5ArrayI1RE">
+<span id="_CPPv3I0ENK6brille5Array2isE3cmpRK5ArrayI1RE"></span><span id="_CPPv2I0ENK6brille5Array2isE3cmpRK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a1e72243f45e836b1f37313dc5d2a2961"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;bool&gt; <code class="sig-name descname">is</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array2isE5ArrayIbE3cmpRK5ArrayI1RE" title="brille::Array::is::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array2isE5ArrayIbE3cmpRK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array2isENSt6vectorIbEE3cmpRKNSt6vectorI1REE">
+<span id="_CPPv3I0ENK6brille5Array2isE3cmpRKNSt6vectorI1REE"></span><span id="_CPPv2I0ENK6brille5Array2isE3cmpRKNSt6vectorI1REE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a23d46d89afe0626d9f5b1a842e559747"></span>std::vector&lt;bool&gt; <code class="sig-name descname">is</code><span class="sig-paren">(</span><a class="reference internal" href="enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d.html#_CPPv4N6brille3cmpE" title="brille::cmp">cmp</a> <em>expr</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array2isENSt6vectorIbEE3cmpRKNSt6vectorI1REE" title="brille::Array::is::R">R</a>&gt; &amp;<em>val</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array2isENSt6vectorIbEE3cmpRKNSt6vectorI1REE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array2isEbRK5ArrayI1RE">
+<span id="_CPPv3I0ENK6brille5Array2isERK5ArrayI1RE"></span><span id="_CPPv2I0ENK6brille5Array2isERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a71dffe810b38ac8943480985c0b040ad"></span>bool <code class="sig-name descname">is</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array2isEbRK5ArrayI1RE" title="brille::Array::is::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array2isEbRK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array9is_uniqueEv">
+<span id="_CPPv3NK6brille5Array9is_uniqueEv"></span><span id="_CPPv2NK6brille5Array9is_uniqueEv"></span><span id="brille::Array::is_uniqueC"></span><span class="target" id="classbrille_1_1Array_1a3bac40dfe1169e184ac5b699e6562793"></span>std::vector&lt;bool&gt; <code class="sig-name descname">is_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array9is_uniqueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array10unique_idxEv">
+<span id="_CPPv3NK6brille5Array10unique_idxEv"></span><span id="_CPPv2NK6brille5Array10unique_idxEv"></span><span id="brille::Array::unique_idxC"></span><span class="target" id="classbrille_1_1Array_1a5bc8be50306630a1c2e7c62fafdfca6e"></span>std::vector&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; <code class="sig-name descname">unique_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array10unique_idxEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6uniqueEv">
+<span id="_CPPv3NK6brille5Array6uniqueEv"></span><span id="_CPPv2NK6brille5Array6uniqueEv"></span><span id="brille::Array::uniqueC"></span><span class="target" id="classbrille_1_1Array_1a37c5b46e116958eb933834704f5a11be"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6uniqueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5ArraymiEv">
+<span id="_CPPv3NK6brille5ArraymiEv"></span><span id="_CPPv2NK6brille5ArraymiEv"></span><span id="brille::Array::sub-operatorC"></span><span class="target" id="classbrille_1_1Array_1a29a31eb0c49c9e0600754201df431333"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">operator-</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5ArraymiEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArraypLERK1T">
+<span id="_CPPv3N6brille5ArraypLERK1T"></span><span id="_CPPv2N6brille5ArraypLERK1T"></span><span id="brille::Array::add-assign-operator__TCR"></span><span class="target" id="classbrille_1_1Array_1af2a3fdf55a84c3a272ff37efd231c4e6"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArraypLERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArraymIERK1T">
+<span id="_CPPv3N6brille5ArraymIERK1T"></span><span id="_CPPv2N6brille5ArraymIERK1T"></span><span id="brille::Array::sub-assign-operator__TCR"></span><span class="target" id="classbrille_1_1Array_1ab590fa7e4d00d2d9b4fa6164aec5de62"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArraymIERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArraymLERK1T">
+<span id="_CPPv3N6brille5ArraymLERK1T"></span><span id="_CPPv2N6brille5ArraymLERK1T"></span><span id="brille::Array::mul-assign-operator__TCR"></span><span class="target" id="classbrille_1_1Array_1ae8c429af69c249f9d9efeda388a79ac8"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator*=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArraymLERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5ArraydVERK1T">
+<span id="_CPPv3N6brille5ArraydVERK1T"></span><span id="_CPPv2N6brille5ArraydVERK1T"></span><span id="brille::Array::div-assign-operator__TCR"></span><span class="target" id="classbrille_1_1Array_1a469a2de71e614fabce820931203e3ea1"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator/=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5ArraydVERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5ArraypLER5ArrayI1TERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5ArraypLERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5ArraypLERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1abb28cc371ab10133fbcb620d123e3564"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator+=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArraypLER5ArrayI1TERK5ArrayI1RE" title="brille::Array::operator+=::R">R</a>&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5ArraypLER5ArrayI1TERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5ArraymIER5ArrayI1TERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5ArraymIERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5ArraymIERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a41b599326ace71b8cd5eb4a66f732d9b"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator-=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArraymIER5ArrayI1TERK5ArrayI1RE" title="brille::Array::operator-=::R">R</a>&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5ArraymIER5ArrayI1TERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5ArraymLER5ArrayI1TERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5ArraymLERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5ArraymLERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a5c7feb81cf38056606a13ef1818ef181"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator*=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArraymLER5ArrayI1TERK5ArrayI1RE" title="brille::Array::operator*=::R">R</a>&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5ArraymLER5ArrayI1TERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5ArraydVER5ArrayI1TERK5ArrayI1RE">
+<span id="_CPPv3I0EN6brille5ArraydVERK5ArrayI1RE"></span><span id="_CPPv2I0EN6brille5ArraydVERK5ArrayI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a7d45ae63a44e3eaa8edd5307d3b5dd87"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<code class="sig-name descname">operator/=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArraydVER5ArrayI1TERK5ArrayI1RE" title="brille::Array::operator/=::R">R</a>&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5ArraydVER5ArrayI1TERK5ArrayI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3dotE5ind_t5ind_t">
+<span id="_CPPv3NK6brille5Array3dotE5ind_t5ind_t"></span><span id="_CPPv2NK6brille5Array3dotE5ind_t5ind_t"></span><span id="brille::Array::dot__ind_t.ind_tC"></span><span class="target" id="classbrille_1_1Array_1aaf0f03777d2b22d334fe8f2fa30eb33b"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <code class="sig-name descname">dot</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3dotE5ind_t5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array4normE5ind_t">
+<span id="_CPPv3NK6brille5Array4normE5ind_t"></span><span id="_CPPv2NK6brille5Array4normE5ind_t"></span><span id="brille::Array::norm__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a37c47a93a1acd57c6b94cc4f887f24c3"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> <code class="sig-name descname">norm</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array4normE5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN6brille5Array7permuteEvRNSt6vectorI1IEE">
+<span id="_CPPv3I00EN6brille5Array7permuteERNSt6vectorI1IEE"></span><span id="_CPPv2I00EN6brille5Array7permuteERNSt6vectorI1IEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN6brille5Array7permuteEvRNSt6vectorI1IEE" title="brille::Array::permute::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1Array_1aa292d934b017cbd0d55f7f2020e3a288"></span>void <code class="sig-name descname">permute</code><span class="sig-paren">(</span>std::vector&lt;<a class="reference internal" href="#_CPPv4I00EN6brille5Array7permuteEvRNSt6vectorI1IEE" title="brille::Array::permute::I">I</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN6brille5Array7permuteEvRNSt6vectorI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array4swapE5ind_t5ind_t">
+<span id="_CPPv3N6brille5Array4swapE5ind_t5ind_t"></span><span id="_CPPv2N6brille5Array4swapE5ind_t5ind_t"></span><span id="brille::Array::swap__ind_t.ind_t"></span><span class="target" id="classbrille_1_1Array_1a56c14ee72896b6428b274d8f31e1b663"></span>bool <code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>a</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array4swapE5ind_t5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array4swapE5ind_t5ind_t5ind_t">
+<span id="_CPPv3N6brille5Array4swapE5ind_t5ind_t5ind_t"></span><span id="_CPPv2N6brille5Array4swapE5ind_t5ind_t5ind_t"></span><span id="brille::Array::swap__ind_t.ind_t.ind_t"></span><span class="target" id="classbrille_1_1Array_1a53357d0bcdd78cee8be54c624cd64909"></span>bool <code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>a</em>, <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array4swapE5ind_t5ind_t5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array6to_stdEv">
+<span id="_CPPv3NK6brille5Array6to_stdEv"></span><span id="_CPPv2NK6brille5Array6to_stdEv"></span><span id="brille::Array::to_stdC"></span><span class="target" id="classbrille_1_1Array_1a73a2135e072fc84b2d6186e1429f49df"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">to_std</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array6to_stdEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3ptrEv">
+<span id="_CPPv3N6brille5Array3ptrEv"></span><span id="_CPPv2N6brille5Array3ptrEv"></span><span id="brille::Array::ptr"></span><span class="target" id="classbrille_1_1Array_1a15c62eb7ece54a50b64233ada45ee64d"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3ptrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3ptrEK5ind_t">
+<span id="_CPPv3N6brille5Array3ptrEK5ind_t"></span><span id="_CPPv2N6brille5Array3ptrEK5ind_t"></span><span id="brille::Array::ptr__ind_tC"></span><span class="target" id="classbrille_1_1Array_1a405403ac47e90f506f9a1dc9d4c6dbeb"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3ptrEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDp0EN6brille5Array3ptrEP1TK5ind_tDp4Subs">
+<span id="_CPPv3IDp0EN6brille5Array3ptrEK5ind_tDp4Subs"></span><span id="_CPPv2IDp0EN6brille5Array3ptrEK5ind_tDp4Subs"></span>template&lt;class ...<code class="sig-name descname">Subs</code>, class = std::enable_if_t&lt;brille::utils::<a class="reference internal" href="typedef_utilities_8hpp_1a4d1c3954fddf2998746ef737ada943dd.html#_CPPv4I0DpEN6brille5utils8are_sameE" title="brille::utils::are_same">are_same</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, <a class="reference internal" href="#_CPPv4IDp0EN6brille5Array3ptrEP1TK5ind_tDp4Subs" title="brille::Array::ptr::Subs">Subs</a>...&gt;::value, void&gt;&gt;<br /><span class="target" id="classbrille_1_1Array_1aeac98b8ba9d2a34a738385b74e3b7ccf"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em>, <a class="reference internal" href="#_CPPv4IDp0EN6brille5Array3ptrEP1TK5ind_tDp4Subs" title="brille::Array::ptr::Subs">Subs</a>... <em>subscripts</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDp0EN6brille5Array3ptrEP1TK5ind_tDp4Subs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3ptrERK7shape_t">
+<span id="_CPPv3N6brille5Array3ptrERK7shape_t"></span><span id="_CPPv2N6brille5Array3ptrERK7shape_t"></span><span id="brille::Array::ptr__shape_tCR"></span><span class="target" id="classbrille_1_1Array_1a743a22695b860a746a4fe1d320dbc834"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>partial_subscript</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3ptrERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3ptrEv">
+<span id="_CPPv3NK6brille5Array3ptrEv"></span><span id="_CPPv2NK6brille5Array3ptrEv"></span><span id="brille::Array::ptrC"></span><span class="target" id="classbrille_1_1Array_1a5a495140db24a27cb303392527b6bb1d"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3ptrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3ptrEK5ind_t">
+<span id="_CPPv3NK6brille5Array3ptrEK5ind_t"></span><span id="_CPPv2NK6brille5Array3ptrEK5ind_t"></span><span id="brille::Array::ptr__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a1dd147305e71aa71e16d262c29bb0657"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3ptrEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDp0ENK6brille5Array3ptrEPK1TK5ind_tDp4Subs">
+<span id="_CPPv3IDp0ENK6brille5Array3ptrEK5ind_tDp4Subs"></span><span id="_CPPv2IDp0ENK6brille5Array3ptrEK5ind_tDp4Subs"></span>template&lt;class ...<code class="sig-name descname">Subs</code>, class = std::enable_if_t&lt;brille::utils::<a class="reference internal" href="typedef_utilities_8hpp_1a4d1c3954fddf2998746ef737ada943dd.html#_CPPv4I0DpEN6brille5utils8are_sameE" title="brille::utils::are_same">are_same</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, <a class="reference internal" href="#_CPPv4IDp0ENK6brille5Array3ptrEPK1TK5ind_tDp4Subs" title="brille::Array::ptr::Subs">Subs</a>...&gt;::value, void&gt;&gt;<br /><span class="target" id="classbrille_1_1Array_1a537a059b582dc5f87d4d06430a3ac705"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em>, <a class="reference internal" href="#_CPPv4IDp0ENK6brille5Array3ptrEPK1TK5ind_tDp4Subs" title="brille::Array::ptr::Subs">Subs</a>... <em>subscripts</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDp0ENK6brille5Array3ptrEPK1TK5ind_tDp4Subs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3ptrERK7shape_t">
+<span id="_CPPv3NK6brille5Array3ptrERK7shape_t"></span><span id="_CPPv2NK6brille5Array3ptrERK7shape_t"></span><span id="brille::Array::ptr__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1ad72350506dd81abdc13ba346bdd62c12"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">ptr</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>partial_subscript</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3ptrERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3valEK5ind_t">
+<span id="_CPPv3N6brille5Array3valEK5ind_t"></span><span id="_CPPv2N6brille5Array3valEK5ind_t"></span><span id="brille::Array::val__ind_tC"></span><span class="target" id="classbrille_1_1Array_1aca0815836757984e2179ed4f42e92de1"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3valEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDp0EN6brille5Array3valER1TK5ind_tDp4Subs">
+<span id="_CPPv3IDp0EN6brille5Array3valEK5ind_tDp4Subs"></span><span id="_CPPv2IDp0EN6brille5Array3valEK5ind_tDp4Subs"></span>template&lt;class ...<code class="sig-name descname">Subs</code>, class = std::enable_if_t&lt;brille::utils::<a class="reference internal" href="typedef_utilities_8hpp_1a4d1c3954fddf2998746ef737ada943dd.html#_CPPv4I0DpEN6brille5utils8are_sameE" title="brille::utils::are_same">are_same</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, <a class="reference internal" href="#_CPPv4IDp0EN6brille5Array3valER1TK5ind_tDp4Subs" title="brille::Array::val::Subs">Subs</a>...&gt;::value, void&gt;&gt;<br /><span class="target" id="classbrille_1_1Array_1a312ed8e202a2a73e95f37dd7e677738c"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em>, <a class="reference internal" href="#_CPPv4IDp0EN6brille5Array3valER1TK5ind_tDp4Subs" title="brille::Array::val::Subs">Subs</a>... <em>subscripts</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDp0EN6brille5Array3valER1TK5ind_tDp4Subs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array3valERK7shape_t">
+<span id="_CPPv3N6brille5Array3valERK7shape_t"></span><span id="_CPPv2N6brille5Array3valERK7shape_t"></span><span id="brille::Array::val__shape_tCR"></span><span class="target" id="classbrille_1_1Array_1a11fa2cffe84ff3fab77d781315dde84b"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>partial_subscript</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array3valERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5Array3valER1TNSt16initializer_listI1IEE">
+<span id="_CPPv3I0EN6brille5Array3valENSt16initializer_listI1IEE"></span><span id="_CPPv2I0EN6brille5Array3valENSt16initializer_listI1IEE"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1affc34b5f07da4e81ba28fe2ba6f11ec7"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span>std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5Array3valER1TNSt16initializer_listI1IEE" title="brille::Array::val::I">I</a>&gt; <em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5Array3valER1TNSt16initializer_listI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3valEK5ind_t">
+<span id="_CPPv3NK6brille5Array3valEK5ind_t"></span><span id="_CPPv2NK6brille5Array3valEK5ind_t"></span><span id="brille::Array::val__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a4ce3f764b99f07dfed576af377971cc3"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3valEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDp0ENK6brille5Array3valERK1TK5ind_tDp4Subs">
+<span id="_CPPv3IDp0ENK6brille5Array3valEK5ind_tDp4Subs"></span><span id="_CPPv2IDp0ENK6brille5Array3valEK5ind_tDp4Subs"></span>template&lt;class ...<code class="sig-name descname">Subs</code>, class = std::enable_if_t&lt;brille::utils::<a class="reference internal" href="typedef_utilities_8hpp_1a4d1c3954fddf2998746ef737ada943dd.html#_CPPv4I0DpEN6brille5utils8are_sameE" title="brille::utils::are_same">are_same</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, <a class="reference internal" href="#_CPPv4IDp0ENK6brille5Array3valERK1TK5ind_tDp4Subs" title="brille::Array::val::Subs">Subs</a>...&gt;::value, void&gt;&gt;<br /><span class="target" id="classbrille_1_1Array_1a16639f5480d2e033fcf5e92e9676a17e"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em>, <a class="reference internal" href="#_CPPv4IDp0ENK6brille5Array3valERK1TK5ind_tDp4Subs" title="brille::Array::val::Subs">Subs</a>... <em>subscripts</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDp0ENK6brille5Array3valERK1TK5ind_tDp4Subs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array3valERK7shape_t">
+<span id="_CPPv3NK6brille5Array3valERK7shape_t"></span><span id="_CPPv2NK6brille5Array3valERK7shape_t"></span><span id="brille::Array::val__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1aca6bebdaf62a35da41725dfbc991d687"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>partial_subscript</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array3valERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5Array3valERK1TNSt16initializer_listI1IEE">
+<span id="_CPPv3I0ENK6brille5Array3valENSt16initializer_listI1IEE"></span><span id="_CPPv2I0ENK6brille5Array3valENSt16initializer_listI1IEE"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a7356fb7cbc035e289ade419e55fe7554"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> &amp;<code class="sig-name descname">val</code><span class="sig-paren">(</span>std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5Array3valERK1TNSt16initializer_listI1IEE" title="brille::Array::val::I">I</a>&gt; <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5Array3valERK1TNSt16initializer_listI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array15contiguous_copyEv">
+<span id="_CPPv3NK6brille5Array15contiguous_copyEv"></span><span id="_CPPv2NK6brille5Array15contiguous_copyEv"></span><span id="brille::Array::contiguous_copyC"></span><span class="target" id="classbrille_1_1Array_1a8c9c865e13abc3cce20456eaa28bf9ee"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">contiguous_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array15contiguous_copyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array27contiguous_row_ordered_copyEv">
+<span id="_CPPv3NK6brille5Array27contiguous_row_ordered_copyEv"></span><span id="_CPPv2NK6brille5Array27contiguous_row_ordered_copyEv"></span><span id="brille::Array::contiguous_row_ordered_copyC"></span><span class="target" id="classbrille_1_1Array_1a7e36e85c968e0214a24f8ae901be897b"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">contiguous_row_ordered_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array27contiguous_row_ordered_copyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7squeezeEv">
+<span id="_CPPv3NK6brille5Array7squeezeEv"></span><span id="_CPPv2NK6brille5Array7squeezeEv"></span><span id="brille::Array::squeezeC"></span><span class="target" id="classbrille_1_1Array_1a82bc0f700c8f7d09799dc15237e3001c"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">squeeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7squeezeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array7squeezeEK5ind_t">
+<span id="_CPPv3NK6brille5Array7squeezeEK5ind_t"></span><span id="_CPPv2NK6brille5Array7squeezeEK5ind_t"></span><span id="brille::Array::squeeze__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a0ee91adf471e01e1a937302574959fbc"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">squeeze</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>dim</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array7squeezeEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5sliceEK5ind_t">
+<span id="_CPPv3NK6brille5Array5sliceEK5ind_t"></span><span id="_CPPv2NK6brille5Array5sliceEK5ind_t"></span><span id="brille::Array::slice__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a56e1c302e574b7ff486775b82122370d"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">slice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>i0</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5sliceEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array11shares_withERK5ArrayI1TE">
+<span id="_CPPv3NK6brille5Array11shares_withERK5ArrayI1TE"></span><span id="_CPPv2NK6brille5Array11shares_withERK5ArrayI1TE"></span><span id="brille::Array::shares_with__Array:T:CRC"></span><span class="target" id="classbrille_1_1Array_1a9b2d88f07526893c8900b058d56f1fd0"></span>bool <code class="sig-name descname">shares_with</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array11shares_withERK5ArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Static Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5Array8from_stdERKNSt6vectorI1TEE">
+<span id="_CPPv3N6brille5Array8from_stdERKNSt6vectorI1TEE"></span><span id="_CPPv2N6brille5Array8from_stdERKNSt6vectorI1TEE"></span><span id="brille::Array::from_std__std::vector:T:CR"></span><span class="target" id="classbrille_1_1Array_1a278a33a8fb4d892772a9f56177f5b906"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">from_std</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; &amp;<em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5Array8from_stdERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0_6size_tEN6brille5Array8from_stdE5ArrayI1TERKNSt6vectorINSt5arrayI1R3NelEEEE">
+<span id="_CPPv3I0_6size_tEN6brille5Array8from_stdERKNSt6vectorINSt5arrayI1R3NelEEEE"></span><span id="_CPPv2I0_6size_tEN6brille5Array8from_stdERKNSt6vectorINSt5arrayI1R3NelEEEE"></span>template&lt;class <code class="sig-name descname">R</code>, size_t <code class="sig-name descname">Nel</code>&gt;<br /><span class="target" id="classbrille_1_1Array_1a7e1274e24320fad1e19f981cadaf6184"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a>&gt; <code class="sig-name descname">from_std</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="#_CPPv4I0_6size_tEN6brille5Array8from_stdE5ArrayI1TERKNSt6vectorINSt5arrayI1R3NelEEEE" title="brille::Array::from_std::R">R</a>, <a class="reference internal" href="#_CPPv4I0_6size_tEN6brille5Array8from_stdE5ArrayI1TERKNSt6vectorINSt5arrayI1R3NelEEEE" title="brille::Array::from_std::Nel">Nel</a>&gt;&gt; &amp;<em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0_6size_tEN6brille5Array8from_stdE5ArrayI1TERKNSt6vectorINSt5arrayI1R3NelEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5l2l_dEK5ind_t">
+<span id="_CPPv3NK6brille5Array5l2l_dEK5ind_t"></span><span id="_CPPv2NK6brille5Array5l2l_dEK5ind_t"></span><span id="brille::Array::l2l_d__ind_tCC"></span><span class="target" id="classbrille_1_1Array_1a2bba16c32bd5b33031e6db2985034afb"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">l2l_d</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5l2l_dEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5Array5s2l_dERK7shape_t">
+<span id="_CPPv3NK6brille5Array5s2l_dERK7shape_t"></span><span id="_CPPv2NK6brille5Array5s2l_dERK7shape_t"></span><span id="brille::Array::s2l_d__shape_tCRC"></span><span class="target" id="classbrille_1_1Array_1a5e3e2554ea25f46cbb87618cbf6d2b10"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">s2l_d</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> &amp;<em>s</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5Array5s2l_dERK7shape_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array5_dataE">
+<span id="_CPPv3N6brille5Array5_dataE"></span><span id="_CPPv2N6brille5Array5_dataE"></span><span id="brille::Array::_data__TP"></span><span class="target" id="classbrille_1_1Array_1a77fbfccb6397c7331df7ef5a77f3113a"></span><a class="reference internal" href="#_CPPv4I0EN6brille5ArrayE" title="brille::Array::T">T</a> *<code class="sig-name descname">_data</code><a class="headerlink" href="#_CPPv4N6brille5Array5_dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array4_numE">
+<span id="_CPPv3N6brille5Array4_numE"></span><span id="_CPPv2N6brille5Array4_numE"></span><span id="brille::Array::_num__ind_t"></span><span class="target" id="classbrille_1_1Array_1a3b2723f366dbdbaee90699d731c52204"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">_num</code><a class="headerlink" href="#_CPPv4N6brille5Array4_numE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A (possilby shared) raw pointer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array6_shiftE">
+<span id="_CPPv3N6brille5Array6_shiftE"></span><span id="_CPPv2N6brille5Array6_shiftE"></span><span id="brille::Array::_shift__ind_t"></span><span class="target" id="classbrille_1_1Array_1a4958abd4d5c2948f39dd0ecea847d877"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">_shift</code><a class="headerlink" href="#_CPPv4N6brille5Array6_shiftE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of elements stored under the raw pointer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array4_ownE">
+<span id="_CPPv3N6brille5Array4_ownE"></span><span id="_CPPv2N6brille5Array4_ownE"></span><span id="brille::Array::_own__b"></span><span class="target" id="classbrille_1_1Array_1ad9dc85d7302b212008ec1c4f174c05b1"></span>bool <code class="sig-name descname">_own</code><a class="headerlink" href="#_CPPv4N6brille5Array4_ownE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A linear shift to where our subscript indexing begins (_data+shift)[subscript]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array4_refE">
+<span id="_CPPv3N6brille5Array4_refE"></span><span id="_CPPv2N6brille5Array4_refE"></span><span id="brille::Array::_ref__ref_t"></span><span class="target" id="classbrille_1_1Array_1af095b7e15fb116ca2e90ad3162e7205d"></span><a class="reference internal" href="#_CPPv4N6brille5Array5ref_tE" title="brille::Array::ref_t">ref_t</a> <code class="sig-name descname">_ref</code><a class="headerlink" href="#_CPPv4N6brille5Array4_refE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Whether we need to worry about memory management of the pointer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array8_mutableE">
+<span id="_CPPv3N6brille5Array8_mutableE"></span><span id="_CPPv2N6brille5Array8_mutableE"></span><span id="brille::Array::_mutable__b"></span><span class="target" id="classbrille_1_1Array_1a23f8e82b8db137c5f1a38e550bc9c431"></span>bool <code class="sig-name descname">_mutable</code><a class="headerlink" href="#_CPPv4N6brille5Array8_mutableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A shared_ptr for reference counting an owned raw pointer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array6_shapeE">
+<span id="_CPPv3N6brille5Array6_shapeE"></span><span id="_CPPv2N6brille5Array6_shapeE"></span><span id="brille::Array::_shape__shape_t"></span><span class="target" id="classbrille_1_1Array_1a20c497c5bde3442c3588c6845c16d2bc"></span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> <code class="sig-name descname">_shape</code><a class="headerlink" href="#_CPPv4N6brille5Array6_shapeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Whether we are allowed to modify the memory under the pointer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille5Array7_strideE">
+<span id="_CPPv3N6brille5Array7_strideE"></span><span id="_CPPv2N6brille5Array7_strideE"></span><span id="brille::Array::_stride__shape_t"></span><span class="target" id="classbrille_1_1Array_1af49168256ff5f751a4ad30425f9f9134"></span><a class="reference internal" href="#_CPPv4N6brille5Array7shape_tE" title="brille::Array::shape_t">shape_t</a> <code class="sig-name descname">_stride</code><a class="headerlink" href="#_CPPv4N6brille5Array7_strideE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The multidimensional shape of this view, prod(_shape) ≤ _num. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1Array2.html" class="btn btn-neutral float-right" title="Template Class Array2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classBasis.html" class="btn btn-neutral float-left" title="Class Basis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

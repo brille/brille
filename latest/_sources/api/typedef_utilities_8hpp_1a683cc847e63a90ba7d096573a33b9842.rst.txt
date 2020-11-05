@@ -1,0 +1,13 @@
+.. _exhale_typedef_utilities_8hpp_1a683cc847e63a90ba7d096573a33b9842:
+
+Typedef brille::utils::enable_if_t
+==================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::utils::enable_if_t

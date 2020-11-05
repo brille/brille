@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a4c8c4447f7394ab0f03b4606e9eadf66:
+
+Template Function brille::approx::tols
+======================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::approx::tols(const int)

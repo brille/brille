@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1ac2a219900fa7ebbd127ad7e528cd26dd:
+
+Template Function offset_sub2lin(const std::vector<I>&, const std::vector<I>&, const std::vector<I>&)
+=====================================================================================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: offset_sub2lin(const std::vector<I>&, const std::vector<I>&, const std::vector<I>&)

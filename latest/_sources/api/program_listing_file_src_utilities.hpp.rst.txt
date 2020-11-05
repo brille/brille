@@ -10,7 +10,7 @@ Program Listing for File utilities.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
+   /* Copyright 2019-2020 Greg Tucker
    //
    // This file is part of brille.
    //
@@ -38,19 +38,25 @@ Program Listing for File utilities.hpp
    #include <math.h>
    // #include <complex> // included by debug
    #include <numeric>
-   #include <tuple>
+   #include <iostream>
    #include "debug.hpp"
+   #include "approx.hpp"
    
-   // A mulitplier for the approximate-comparison tolerance
-   // 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
-   // but setting it any lower (9000 tried) causes other test lattices, namely,
-   // (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
-   #if defined(_MSC_VER) || defined(__MINW32__)
-   const int TOL_MULT=20000;
-   #else
-   const int TOL_MULT=10000;
-   #endif
-   
+   namespace brille{
+     const double             pi = 3.14159265358979323846;
+     const double         halfpi = 1.57079632679489661923;
+     // const double      quarterpi = 0.785398163397448309616;
+     // const double      inversepi = 0.318309886183790671538;
+     // const double      twooverpi = 0.636619772367581343076;
+     // const double  twooversqrtpi = 1.12837916709551257390;
+     // const double        sqrttwo = 1.41421356237309504880;
+     // const double sqrttwoovertwo = 0.707106781186547524401;
+     // const double              e = 2.71828182845904523536;
+     // const double          log2e = 1.44269504088896340736;
+     // const double         log10e = 0.434294481903251827651;
+     // const double            ln2 = 0.693147180559945309417;
+     // const double           ln10 = 2.30258509299404568402;
+     namespace utils{
    // We include numeric for std::gcd in C++17 (are we using it for anything else?)
    /* Pre-C++17 gcd was not part of the standard but may be present in an
    // experimental header -- which of course doesn't exist for MSVC
@@ -58,15 +64,6 @@ Program Listing for File utilities.hpp
    #if defined(__cplusplus) && __cplusplus > 201700L
      #define STD_GCD
    #endif
-   
-   const double PI = std::atan(1.0)*4;
-   const double PICUBED = PI*PI*PI;
-   const double PIOVERTWO = PI/2.0;
-   
-   template<typename T>
-   using IsInteger = std::enable_if_t<std::is_integral<T>::value,T>;
-   template<typename T>
-   using IsNotInteger = std::enable_if_t<!std::is_integral<T>::value,T>;
    
    template<typename T, int N=3> T trace(const T *M);
    
@@ -78,95 +75,38 @@ Program Listing for File utilities.hpp
    template<typename T, int N=3> bool equal_matrix(const T *A, const T *B, const T tol=0);
    template<typename T, int N=3> bool equal_vector(const T *A, const T *B, const T tol=0);
    
-   /*
-       This terrible class-based function specialization is all to get MSVC to stop complaining about a constant conditional expression.
-       The four void classes tacked onto the end of the template are all to allow for specializations where either or both of T and R
-       are floating point or integer numbers. If enable_if_t provides a type which is notvoid, then the specializations are:
-   
-          | T | R | TFloat  |  TInt   | RFloat  |  Rint   |
-          |---|---|---------|---------|---------|---------|
-          | 1.| 1.| notvoid |  void   | notvoid |  void   |
-          | 1 | 1.|  void   | notvoid | notvoid |  void   |
-          | 1.| 1 | notvoid |  void   |  void   | notvoid |
-          | 1 | 1 |  void   | notvoid |  void   | notvoid |
-   
-   */
-   /*isfpT | isfpR | which? | why?
-     ------|-------|--------|-----
-       0       0     either    both Ttol and Rtol are 0
-       1       1      Ttol     R is convertible to T
-       0       1      Rtol     Ttol is 0, so use Rtol
-       1       0      Ttol     Rtol is 0, so use Ttol
-   */
-   /*template<class T, class R, class TFloat = void, class TInt = void, class RFloat = void, class RInt = void>
-   class determine_tols_impl {
-   public:
-       static std::tuple<bool, bool, T, R> determine_tols(const int i);
-   };
-   template<class T, class R>
-   class determine_tols_impl<T,R,std::enable_if_t<std::is_floating_point<T>::value>, void, std::enable_if_t<std::is_floating_point<R>::value>, void> {
-   public:
-       static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
-           T Ttol = static_cast<T>(tol)* static_cast<T>(TOL_MULT)* std::numeric_limits<T>::epsilon();
-           R Rtol = static_cast<R>(tol)* static_cast<R>(TOL_MULT)* std::numeric_limits<R>::epsilon();
-           return std::make_tuple(std::is_convertible<T, R>::value, true, Ttol, Rtol);
-       }
-   };
-   template<class T, class R>
-   class determine_tols_impl <T,R,std::enable_if_t<std::is_floating_point<T>::value>, void, void, std::enable_if_t<std::is_integral<R>::value>> {
-   public:
-       static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
-           T Ttol = static_cast<T>(tol)* static_cast<T>(TOL_MULT)* std::numeric_limits<T>::epsilon();
-           return std::make_tuple(true, true, Ttol, R(0));
-       }
-   };
-   template<class T, class R>
-   class determine_tols_impl<T,R, void, std::enable_if_t<std::is_integral<T>::value>, std::enable_if_t<std::is_floating_point<R>::value>, void> {
-   public:
-       static std::tuple<bool, bool, T, R> determine_tols(const int tol) {
-           R Rtol = static_cast<R>(tol)* static_cast<R>(TOL_MULT)* std::numeric_limits<R>::epsilon();
-           return std::make_tuple(true, false, T(0), Rtol); // R can't generally be converted to integer T, but this was the behaviour before
-       }
-   };
-   template<class T, class R>
-   class determine_tols_impl<T,R, void, std::enable_if_t<std::is_integral<T>::value>, void, std::enable_if_t<std::is_integral<R>::value>> {
-   public:
-       static std::tuple<bool, bool, T, R> determine_tols(const int) {
-           return std::make_tuple(true, false, T(0), R(0));
-       }
-   };
-   
-   template<class T, class R> std::tuple<bool, bool, T, R> determine_tols(const int i=1) {
-       return determine_tols_impl<T, R>::determine_tols(i);
-   }
-   */
-   
-   template<typename T, typename R> std::tuple<bool,bool,T,R> determine_tols(const int=1);
-   template<typename T, typename R> bool approx_scalar(const T a, const R b, const int tol=1);
-   template<typename T, typename R> bool approx_array(const size_t N, const size_t M,const T *A, const R *B, const int tol=1);
-   template<typename T, typename R> bool approx_matrix(const size_t N, const T *A, const R *B, const int tol=1);
-   template<typename T, typename R> bool approx_vector(const size_t N, const T *A, const R *B, const int tol=1);
-   
-   
-   template<typename T, typename R, size_t N, size_t M> bool approx_array(const T *A, const R *B, const int tol=1);
-   template<typename T, typename R, size_t N=3> bool approx_matrix(const T *A, const R *B, const int tol=1);
-   template<typename T, typename R, size_t N=3> bool approx_vector(const T *A, const R *B, const int tol=1);
-   
-   
    template<typename T, typename R, typename S, size_t N, size_t I, size_t M> void multiply_arrays(T *C, const R *A, const S *B);
    template<typename T, typename R, typename S, size_t N=3> void multiply_matrix_matrix(T *C, const R *A, const S *B);
    template<typename T, typename R, typename S, size_t N=3> void multiply_matrix_vector(T *C, const R *A, const S *b);
    template<typename T, typename R, typename S, size_t N=3> void multiply_vector_matrix(T *C, const R *a, const S *B);
    
    // array multiplication with specializations for complex array type(s)
-   template<class T, class R, class S> void mul_arrays(T* C, const size_t n, const size_t l, const size_t m, const R* A, const S* B);
-   template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const R* A, const std::complex<S>* B);
-   template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const S* B);
-   template<class T, class R, class S> void mul_arrays(std::complex<T>* C, const size_t n, const size_t l, const size_t m, const std::complex<R>* A, const std::complex<S>* B);
+   template<class T, class R, class S, class I> void mul_arrays(T* C, const I n, const I l, const I m, const R* A, const S* B);
+   template<class T, class R, class S, class I> void mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const R* A, const std::complex<S>* B);
+   template<class T, class R, class S, class I> void mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const std::complex<R>* A, const S* B);
+   template<class T, class R, class S, class I> void mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const std::complex<R>* A, const std::complex<S>* B);
    // specializations for matrix*matrix, matrix*vector, and vector*matrix
-   template<class T, class R, class S> void mul_mat_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, n, A, B);}
-   template<class T, class R, class S> void mul_mat_vec(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, n, n, 1, A, B);}
-   template<class T, class R, class S> void mul_vec_mat(T* C, const size_t n, const R* A, const S* B){ mul_arrays(C, 1, n, n, A, B);}
+   template<class T, class R, class S, class I> void mul_mat_mat(T* C, const I n, const R* A, const S* B){ mul_arrays(C, n, n, n, A, B);}
+   template<class T, class R, class S, class I> void mul_mat_vec(T* C, const I n, const R* A, const S* B){ mul_arrays(C, n, n, I(1), A, B);}
+   template<class T, class R, class S, class I> void mul_vec_mat(T* C, const I n, const R* A, const S* B){ mul_arrays(C, I(1), n, n, A, B);}
+   
+   // template<class T,class R,class I,class S=std::common_type_t<T,R>>
+   // std::enable_if_t<std::is_unsigned_v<I>&&std::is_same_v<S,R>>
+   // mul_mat_vec_inplace(const I n, const T* A, R* B){
+   //   S* C = new S[n]();
+   //   mul_arrays<S,T,R,I>(C, n, n, I(1), A, B);
+   //   for (I i=0; i<n; ++i) B[n] = C[n];
+   //   delete[] C;
+   // }
+   template<class T,class R,class I,class S=std::common_type_t<T,R>>
+   std::enable_if_t<std::is_unsigned_v<I>>
+   mul_mat_vec_inplace(const I n, const T* A, R* B){
+     S* C = new S[n]();
+     mul_arrays(C, n, n, I(1), A, B);
+     //for (I i=0; i<n; ++i) B[n] = C[n];
+     std::copy(C,C+n,B);
+     delete[] C;
+   }
    
    template<typename T, typename R, typename S, int N, int M> void add_arrays(T *C, const R *A, const S *B);
    template<typename T, typename R, typename S, int N=3> void add_matrix(T *C, const R *A, const S *B);
@@ -214,6 +154,7 @@ Program Listing for File utilities.hpp
    void vector_cross(T* c, const R* a, const S* b) {
        vector_cross_impl<T, R, S, N>::vector_cross(c, a, b);
    }
+   template<typename S,typename T, typename R> S vector_dot(const size_t, const T* a, const R* b);
    template<typename R, int N=3> R vector_dot(const R *a, const R *b);
    
    template<typename T> T mod1(const T a);
@@ -221,30 +162,28 @@ Program Listing for File utilities.hpp
    template<typename T, typename R, int N=3> bool is_int_matrix(const T * A, const R tol);
    template<typename R> bool is_int_matrix(const int *, const R);
    
-   template<typename T> T frobenius_distance(const size_t n, const T* A, const T* B);
-   template<typename T> T frobenius_distance(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
+   template<class I, class T> T frobenius_distance(const I n, const T* A, const T* B);
+   template<class I, class T> T frobenius_distance(const I n, const std::complex<T>* A, const std::complex<T>* B);
    
-   template<typename T> T vector_angle(const size_t n, const T* A, const T* B);
-   template<typename T> T vector_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
-   template<typename T> T euclidean_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
-   template<typename T> T hermitian_angle(const size_t n, const std::complex<T>* A, const std::complex<T>* B);
-   template<typename T> T hermitian_angle(const size_t n, const T* A, const T* B);
+   template<class I, class T> T vector_angle(const I n, const T* A, const T* B);
+   template<class I, class T> T vector_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
+   template<class I, class T> T euclidean_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
+   template<class I, class T> T hermitian_angle(const I n, const std::complex<T>* A, const std::complex<T>* B);
+   template<class I, class T> T hermitian_angle(const I n, const T* A, const T* B);
+   template<class I, class T> T hermitian_product(const I n, const T* a, const T* b);
+   template<class I, class T> std::complex<T> hermitian_product(const I n, const T* a, const std::complex<T>* b);
+   template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const T* b);
+   template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
    
-   template<typename T> T hermitian_product(const size_t n, const T* a, const T* b);
-   template<typename T> std::complex<T> hermitian_product(const size_t n, const T* a, const std::complex<T>* b);
-   template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const T* b);
-   template<typename T> std::complex<T> hermitian_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
+   template<class I, class T> T vector_distance(const I n, const T* a, const T* b);
+   template<class I, class T> T vector_distance(const I n, const std::complex<T>* a, const std::complex<T>* b);
+   template<class I, class T> T vector_product(const I n, const T* a, const T* b);
+   template<class I, class T> T vector_product(const I n, const T* a, const std::complex<T>* b);
+   template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const T* b);
+   template<class I, class T> T vector_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
    
-   template<typename T> T vector_distance(const size_t n, const T* a, const T* b);
-   template<typename T> T vector_distance(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
-   
-   template<typename T> T vector_product(const size_t n, const T* a, const T* b);
-   template<typename T> T vector_product(const size_t n, const T* a, const std::complex<T>* b);
-   template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const T* b);
-   template<typename T> T vector_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
-   
-   template<typename T> T inner_product(const size_t n, const T* a, const T* b);
-   template<typename T> T inner_product(const size_t n, const std::complex<T>* a, const std::complex<T>* b);
+   template<class I, class T> T inner_product(const I n, const T* a, const T* b);
+   template<class I, class T> T inner_product(const I n, const std::complex<T>* a, const std::complex<T>* b);
    
    template<class T> T squared_distance(const T&A, const T& B);
    template<class T> T squared_distance(const std::complex<T>& A, const std::complex<T>& B);
@@ -261,10 +200,13 @@ Program Listing for File utilities.hpp
    enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
    binomial_coefficient(const T n, const R k);
    
-   template<typename S,typename U> S unsigned_to_signed(const U u);
-   template<typename U,typename S> U signed_to_unsigned(const S s);
+   template<typename S,typename U> S u2s(const U u);
+   template<typename U,typename S> U s2u(const S s);
    
    #include "utilities.tpp"
+   
+     } // namespace utils
+   } // namespace brille
    
    
    #endif

@@ -35,7 +35,9 @@ Program Listing for File bz_mesh.hpp
    #include "bz.hpp"
    #include "mesh.hpp"
    
-   template<class T, class S> class BrillouinZoneMesh3: public Mesh3<T,S>{
+   template<class T, class S>
+   class BrillouinZoneMesh3: public Mesh3<T,S>{
+     using SuperClass = Mesh3<T,S>;
    protected:
      BrillouinZone brillouinzone;
    public:
@@ -45,28 +47,34 @@ Program Listing for File bz_mesh.hpp
      // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
      template<typename... A>
      BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
-       Mesh3<T,S>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
+       SuperClass(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
        brillouinzone(bz) {}
      // get the BrillouinZone object
      BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
      // get the mesh vertices in relative lattice units
-     ArrayVector<double> get_mesh_hkl(void) const {
-       ArrayVector<double> xyz = this->get_mesh_xyz();
+     bArray<double> get_mesh_hkl(void) const {
+       auto xyz = this->get_mesh_xyz();
        double toxyz[9], fromxyz[9];
        const BrillouinZone bz = this->get_brillouinzone();
        bz.get_lattice().get_xyz_transform(toxyz);
-       if (!matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-       ArrayVector<double> hkl(3,xyz.size());
-       for (size_t i=0; i<xyz.size(); i++) multiply_matrix_vector<double,double,double,3>(hkl.data(i), fromxyz, xyz.data(i));
+       if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
+       auto shape = xyz.shape();
+       bArray<double> hkl(shape);
+       std::vector<double> tmp(3);
+       for (size_t i=0; i<shape[0]; ++i){
+         auto vxyz = xyz.view(i).to_std();
+         brille::utils::multiply_matrix_vector<double,double,double,3>(tmp.data(), fromxyz, vxyz.data());
+         hkl.set(i, tmp);
+       }
        return hkl;
      }
    
-     template<typename R>
-     std::tuple<ArrayVector<T>,ArrayVector<S>>
+     template<class R>
+     std::tuple<brille::Array<T>,brille::Array<S>>
      ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {
-       LQVec<R> ir_q(x.get_lattice(), x.size());
-       LQVec<int> tau(x.get_lattice(), x.size());
-       std::vector<size_t> rot(x.size(),0u), invrot(x.size(),0u);
+       LQVec<R> ir_q(x.get_lattice(), x.size(0));
+       LQVec<int> tau(x.get_lattice(), x.size(0));
+       std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
        if (no_move){
          ir_q = x;
        } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nthreads)){
@@ -75,11 +83,9 @@ Program Listing for File bz_mesh.hpp
          throw std::runtime_error(msg);
        }
        // perform the interpolation within the irreducible Brillouin zone
-       ArrayVector<T> vals;
-       ArrayVector<S> vecs;
-       std::tie(vals,vecs) = (nthreads > 1)
-           ? this->Mesh3<T,S>::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
-           : this->Mesh3<T,S>::interpolate_at(ir_q.get_xyz());
+       auto [vals, vecs] = (nthreads > 1)
+           ? this->SuperClass::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
+           : this->SuperClass::interpolate_at(ir_q.get_xyz());
        // we always need the pointgroup operations to 'rotate'
        PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
        // and might need the Phonon Gamma table
@@ -87,9 +93,11 @@ Program Listing for File bz_mesh.hpp
        if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
          pgt.construct(brillouinzone.get_lattice().star(), brillouinzone.add_time_reversal());
        }
+       brille::Array2<T> vals2(vals);
+       brille::Array2<S> vecs2(vecs);
        // actually perform the rotation to Q
-       this->data().values() .rotate_in_place(vals, ir_q, pgt, psym, rot, invrot, nthreads);
-       this->data().vectors().rotate_in_place(vecs, ir_q, pgt, psym, rot, invrot, nthreads);
+       this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, nthreads);
+       this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, nthreads);
        // we're done so bundle the output
        return std::make_tuple(vals, vecs);
      }

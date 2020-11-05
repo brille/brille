@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Comparer:
+
+Template Class Comparer
+=======================
+
+- Defined in :ref:`file_src_comparisons.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Comparer
+   :members:
+   :protected-members:
+   :undoc-members:

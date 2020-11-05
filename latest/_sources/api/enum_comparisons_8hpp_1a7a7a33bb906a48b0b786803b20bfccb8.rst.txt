@@ -1,0 +1,13 @@
+.. _exhale_enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8:
+
+Enum ops
+========
+
+- Defined in :ref:`file_src_comparisons.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::ops

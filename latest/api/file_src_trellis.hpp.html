@@ -178,7 +178,7 @@
 <li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
 <li><p><a class="reference internal" href="#enums" id="id5">Enums</a></p></li>
 <li><p><a class="reference internal" href="#functions" id="id6">Functions</a></p></li>
-<li><p><a class="reference internal" href="#typedefs" id="id7">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#defines" id="id7">Defines</a></p></li>
 </ul>
 </div>
 <div class="section" id="definition-src-trellis-hpp">
@@ -193,14 +193,16 @@
 <h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">array</span></code> (<a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">arrayvector.hpp</span></code> (<a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">approx.hpp</span></code> (<a class="reference internal" href="file_src_approx.hpp.html#file-src-approx-hpp"><span class="std std-ref">File approx.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array</span></code> (<a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">File array.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array.hpp</span></code> (<a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">File array.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array2.hpp</span></code> (<a class="reference internal" href="file_src_array2.hpp.html#file-src-array2-hpp"><span class="std std-ref">File array2.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array_latvec.hpp</span></code> (<a class="reference internal" href="file_src_array_latvec.hpp.html#file-src-array-latvec-hpp"><span class="std std-ref">File array_latvec.hpp</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">atomic</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">condition_variable</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">debug.hpp</span></code> (<a class="reference internal" href="file_src_debug.hpp.html#file-src-debug-hpp"><span class="std std-ref">File debug.hpp</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">functional</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">interpolation_data.hpp</span></code> (<a class="reference internal" href="file_src_interpolation_data.hpp.html#file-src-interpolation-data-hpp"><span class="std std-ref">File interpolation_data.hpp</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">latvec.hpp</span></code> (<a class="reference internal" href="file_src_latvec.hpp.html#file-src-latvec-hpp"><span class="std std-ref">File latvec.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interpolatordual.hpp</span></code> (<a class="reference internal" href="file_src_interpolatordual.hpp.html#file-src-interpolatordual-hpp"><span class="std std-ref">File interpolatordual.hpp</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mutex</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">omp.h</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">permutation.hpp</span></code> (<a class="reference internal" href="file_src_permutation.hpp.html#file-src-permutation-hpp"><span class="std std-ref">File permutation.hpp</span></a>)</p></li>
@@ -210,7 +212,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">triangulation_simple.hpp</span></code> (<a class="reference internal" href="file_src_triangulation_simple.hpp.html#file-src-triangulation-simple-hpp"><span class="std std-ref">File triangulation_simple.hpp</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">utilities.hpp</span></code> (<a class="reference internal" href="file_src_utilities.hpp.html#file-src-utilities-hpp"><span class="std std-ref">File utilities.hpp</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code> (<a class="reference internal" href="file_src_arrayvector.hpp.html#file-src-arrayvector-hpp"><span class="std std-ref">File arrayvector.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="included-by">
@@ -242,10 +244,10 @@
 <li><p><a class="reference internal" href="function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35.html#exhale-function-trellis-8hpp-1a40114278482bff18c09703b1b82ccb35"><span class="std std-ref">Template Function on_boundary</span></a></p></li>
 </ul>
 </div>
-<div class="section" id="typedefs">
-<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="typedef_trellis_8hpp_1a346fdce8e10cfb952b90dd9b6820ac58.html#exhale-typedef-trellis-8hpp-1a346fdce8e10cfb952b90dd9b6820ac58"><span class="std std-ref">Typedef index_t</span></a></p></li>
+<li><p><a class="reference internal" href="define_trellis_8hpp_1a013a23ae25cfe5e1fdb57950b5b48e08.html#exhale-define-trellis-8hpp-1a013a23ae25cfe5e1fdb57950b5b48e08"><span class="std std-ref">Define _TRELLIS_H_</span></a></p></li>
 </ul>
 </div>
 </div>

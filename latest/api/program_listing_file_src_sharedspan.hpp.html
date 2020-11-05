@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File sharedspan.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File sharedspan.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_sharedspan.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-sharedspan-hpp">
+<span id="program-listing-file-src-sharedspan-hpp"></span><h1>Program Listing for File sharedspan.hpp<a class="headerlink" href="#program-listing-for-file-sharedspan-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_sharedspan.hpp.html#file-src-sharedspan-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/sharedspan.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef SHAREDSPAN_HPP</span>
+<span class="cp">#define SHAREDSPAN_HPP</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="c1">// #include &lt;span&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;subscript.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">SharedSpan</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="n">ind_t</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">shape_t</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">ref_t</span><span class="p">;</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="n">T</span><span class="o">*</span> <span class="n">_data</span><span class="p">;</span>
+  <span class="n">ind_t</span> <span class="n">_size</span><span class="p">;</span>
+  <span class="n">shape_t</span> <span class="n">_shape</span><span class="p">;</span>
+  <span class="n">shape_t</span> <span class="n">_stride</span><span class="p">;</span>
+  <span class="n">ref_t</span> <span class="n">_refs</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">_owns</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// empty initialization -- C++ doesn&#39;t &#39;own&#39; the null pointer (for operator= below)</span>
+  <span class="k">explicit</span> <span class="n">SharedSpan</span><span class="p">()</span><span class="o">:</span> <span class="n">_data</span><span class="p">(</span><span class="k">nullptr</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="c1">// Non-owning wrapper around raw pointer and size (e.g., C++20 std::span&lt;T&gt;)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">ind_t</span> <span class="n">sz</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">o</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">_data</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">sz</span><span class="p">),</span> <span class="n">_refs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">_owns</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_shape</span> <span class="o">=</span> <span class="n">shape_t</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">_size</span><span class="p">);</span>
+    <span class="n">_stride</span> <span class="o">=</span> <span class="n">shape_t</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Non-owning wrapper around a raw pointer with shape and stride</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">st</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">o</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">_data</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">_shape</span><span class="p">(</span><span class="n">sh</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="n">st</span><span class="p">),</span> <span class="n">_refs</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">_owns</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_size</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size_from_shape</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Non-initializing with size only (1-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Initializing with size only (1-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">T</span> <span class="n">init</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">(</span><span class="n">init</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Non-initializing with shape only (N-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sh</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">sh</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">reset_stride</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Initializing with shape only (N-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sh</span><span class="p">,</span> <span class="n">T</span> <span class="n">init</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">sh</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">reset_stride</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">(</span><span class="n">init</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Non-initializing with shape and stride (N-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">st</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">sh</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="n">st</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Initializing with shape and stride (N-D)</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">st</span><span class="p">,</span> <span class="n">T</span> <span class="n">init</span><span class="p">)</span><span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">sh</span><span class="p">),</span> <span class="n">_stride</span><span class="p">(</span><span class="n">st</span><span class="p">),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">(</span><span class="n">init</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// // Copying std::vector&lt;T&gt; (1-D) ***** THIS CONFLICTS WITH // Non-initializing with shape only (N-D)</span>
+  <span class="c1">// SharedSpan(const std::vector&lt;T&gt;&amp; data): _shape({data.size()}), _stride({1}), _owns(true){</span>
+  <span class="c1">//   this-&gt;construct(data);</span>
+  <span class="c1">//   this-&gt;verify();</span>
+  <span class="c1">// }</span>
+  <span class="c1">// Copying std::vector&lt;std::array&lt;R,N&gt;&gt; (2-D)</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">Nel</span><span class="o">&gt;</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">Nel</span><span class="o">&gt;&gt;&amp;</span> <span class="n">data</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">_shape</span><span class="p">({</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">()),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Nel</span><span class="p">)}),</span>
+  <span class="n">_stride</span><span class="p">({</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Nel</span><span class="p">),</span> <span class="mi">1</span><span class="p">}),</span> <span class="n">_owns</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">verify</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// // [Optionally decouping] Copy constructor</span>
+  <span class="c1">// SharedSpan(const SharedSpan&lt;T&gt;&amp; other, bool decouple=false):</span>
+  <span class="c1">// _data(other._data), _size(other.size()), _shape(other.shape()), _stride(other.stride()),</span>
+  <span class="c1">// _refs(other.refs()), _owns(other.owns()) {</span>
+  <span class="c1">//   if (decouple){</span>
+  <span class="c1">//     if (_data){</span>
+  <span class="c1">//       T* dec = new T[_size]();</span>
+  <span class="c1">//       std::copy(_data, _data+_size, dec);</span>
+  <span class="c1">//       if (_owns &amp;&amp; _refs.use_count()==1) delete[] _data;</span>
+  <span class="c1">//       _data = dec;</span>
+  <span class="c1">//     }</span>
+  <span class="c1">//     _refs = std::make_shared&lt;char&gt;(0);</span>
+  <span class="c1">//   }</span>
+  <span class="c1">// }</span>
+  <span class="c1">// Copying is a shallow-copy and shares resources</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="k">const</span> <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">_data</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">_data</span><span class="p">),</span> <span class="n">_size</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">size</span><span class="p">()),</span> <span class="n">_shape</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">shape</span><span class="p">()),</span>
+  <span class="n">_stride</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">stride</span><span class="p">()),</span> <span class="n">_refs</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">refs</span><span class="p">()),</span> <span class="n">_owns</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">owns</span><span class="p">())</span> <span class="p">{}</span>
+  <span class="c1">// destructor</span>
+  <span class="o">~</span><span class="n">SharedSpan</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// bool del = _owns;</span>
+    <span class="c1">// del &amp;= _refs.use_count() == 1;</span>
+    <span class="c1">// del &amp;= _data != nullptr;</span>
+    <span class="c1">// if (del) delete[] _data;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_owns</span> <span class="o">&amp;&amp;</span> <span class="n">_refs</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_data</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="k">delete</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Assignment</span>
+  <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">other</span><span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_owns</span><span class="p">){</span>
+        <span class="n">T</span><span class="o">*</span> <span class="n">old_data</span> <span class="o">=</span> <span class="n">_data</span><span class="p">;</span>
+        <span class="n">ref_t</span> <span class="n">old_refs</span> <span class="o">=</span> <span class="n">_refs</span><span class="p">;</span>
+        <span class="n">_data</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">_data</span><span class="p">;</span>
+        <span class="n">_refs</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">refs</span><span class="p">();</span>
+        <span class="n">_owns</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">owns</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">old_refs</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="k">delete</span><span class="p">[]</span> <span class="n">old_data</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">_data</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">_data</span><span class="p">;</span>
+        <span class="n">_refs</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">refs</span><span class="p">();</span>
+        <span class="n">_owns</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">owns</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="n">_size</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+      <span class="n">_shape</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+      <span class="n">_stride</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">stride</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// Move constructor, also shallow</span>
+  <span class="n">SharedSpan</span><span class="p">(</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">noexcept</span>
+  <span class="o">:</span> <span class="n">_data</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exchange</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">_data</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">))</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_size</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_size</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_shape</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_shape</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_stride</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_stride</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_refs</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_refs</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_owns</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_owns</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// Move assignment</span>
+  <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">noexcept</span>
+  <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_data</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_data</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_size</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_size</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_shape</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_shape</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_stride</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_stride</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_refs</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_refs</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">_owns</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">_owns</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// modifiers</span>
+  <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">_decouple</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// actual decouple without checks</span>
+    <span class="n">T</span><span class="o">*</span> <span class="n">new_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">_size</span><span class="p">]();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">_data</span><span class="p">,</span> <span class="n">_data</span><span class="o">+</span><span class="n">_size</span><span class="p">,</span> <span class="n">new_data</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_owns</span><span class="p">){</span>
+      <span class="n">ref_t</span> <span class="n">old_ref</span> <span class="o">=</span> <span class="n">_refs</span><span class="p">;</span>
+      <span class="n">_refs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">old_ref</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">delete</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">_refs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">_owns</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">_data</span> <span class="o">=</span> <span class="n">new_data</span><span class="p">;</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">decouple</span><span class="p">(){</span>
+    <span class="c1">// only do anything if brille doesn&#39;t own the data or it is being shared internally</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_owns</span> <span class="o">||</span> <span class="n">_refs</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_decouple</span><span class="p">();</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// accessors</span>
+  <span class="c1">// std::span&lt;T&gt; span() const {return std::span(_data,_size);}</span>
+  <span class="n">T</span><span class="o">*</span> <span class="n">data</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">_data</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_data</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_size</span><span class="p">;}</span>
+  <span class="n">shape_t</span> <span class="n">shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shape</span><span class="p">;}</span>
+  <span class="n">shape_t</span> <span class="n">stride</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_stride</span><span class="p">;}</span>
+  <span class="n">shape_t</span> <span class="n">cstride</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">shape_t</span> <span class="n">cs</span><span class="p">(</span><span class="n">_stride</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">s</span><span class="p">:</span> <span class="n">cs</span><span class="p">)</span> <span class="n">s</span> <span class="o">*=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">cs</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">is_column_ordered</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">is_sorted</span><span class="p">(</span><span class="n">_stride</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_stride</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="n">ind_t</span> <span class="n">a</span><span class="p">,</span> <span class="n">ind_t</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">;});</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">is_row_ordered</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">is_sorted</span><span class="p">(</span><span class="n">_stride</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_stride</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="n">ind_t</span> <span class="n">a</span><span class="p">,</span> <span class="n">ind_t</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">;});</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">is_contiguous</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">shape_t</span> <span class="n">expected</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_row_ordered</span><span class="p">()){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">s</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">s</span><span class="o">!=</span><span class="n">_shape</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">expected</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">expected</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">));</span>
+      <span class="n">expected</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">_stride</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_stride</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">expected</span><span class="p">.</span><span class="n">rbegin</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">is_column_ordered</span><span class="p">()){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">s</span> <span class="p">:</span> <span class="n">_shape</span><span class="p">)</span> <span class="n">expected</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">expected</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">*</span><span class="n">s</span><span class="p">);</span>
+      <span class="c1">// expected has one too many elements</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">_stride</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_stride</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">expected</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">ref_t</span> <span class="n">refs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_refs</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="n">owns</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_owns</span><span class="p">;}</span>
+  <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">){</span><span class="k">return</span> <span class="n">_data</span><span class="p">[</span><span class="n">i</span><span class="p">];}</span>
+  <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_data</span><span class="p">[</span><span class="n">i</span><span class="p">];}</span>
+  <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sub</span><span class="p">){</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">sub</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">_stride</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">_data</span><span class="p">[</span><span class="n">sub2lin</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">_stride</span><span class="p">)];</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">sub</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">sub</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">_stride</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">_data</span><span class="p">[</span><span class="n">sub2lin</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">_stride</span><span class="p">)];</span>
+  <span class="p">}</span>
+
+  <span class="c1">// modifiers</span>
+  <span class="kt">size_t</span> <span class="n">reshape</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">ns</span><span class="p">){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">reduce</span><span class="p">(</span><span class="n">ns</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ns</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">());</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_size</span> <span class="o">==</span> <span class="n">n</span><span class="p">);</span>
+    <span class="n">_shape</span> <span class="o">=</span> <span class="n">ns</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">reset_stride</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">resize</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">ns</span><span class="p">,</span> <span class="n">T</span> <span class="n">init</span><span class="o">=</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">reduce</span><span class="p">(</span><span class="n">ns</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ns</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">());</span>
+    <span class="c1">// reuse the data container if we can</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_size</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">reshape</span><span class="p">(</span><span class="n">ns</span><span class="p">);</span>
+    <span class="c1">// we must preserve dimensionality if not reshaping</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">ns</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">shrinking</span><span class="p">,</span> <span class="n">growing</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ns</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">shrinking</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="n">growing</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">shrink</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">shrinking</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">shrinking</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">bool</span> <span class="n">a</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">;});</span>
+    <span class="kt">bool</span> <span class="n">grow</span> <span class="o">=</span> <span class="o">!</span><span class="n">shrink</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">growing</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">growing</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">bool</span> <span class="n">a</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">;});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">shrink</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">grow</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;This method is not able to resize from { &quot;</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">_shape</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;} to { &quot;</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">ns</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;}&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// make the new array</span>
+    <span class="n">T</span><span class="o">*</span> <span class="n">nd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">n</span><span class="p">]();</span>
+    <span class="c1">// fill the whole thing instead of trying to figure out difference indices</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">grow</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">nd</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="n">init</span><span class="p">);</span>
+    <span class="c1">// loop over the subscripted incides which fit inside both arrays</span>
+    <span class="n">shape_t</span> <span class="n">inside</span> <span class="o">=</span> <span class="n">shrink</span> <span class="o">?</span> <span class="nl">ns</span> <span class="p">:</span> <span class="n">_shape</span><span class="p">;</span>
+    <span class="c1">// store the original stride for subscript conversion</span>
+    <span class="n">shape_t</span> <span class="n">ot</span> <span class="o">=</span> <span class="n">_stride</span><span class="p">;</span>
+    <span class="c1">// update the shape and stride (maintaining row or column order)</span>
+    <span class="n">_shape</span> <span class="o">=</span> <span class="n">ns</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">reset_stride</span><span class="p">();</span>
+    <span class="c1">// copy into the new array if the old array isn&#39;t the null pointer</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_data</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">SubIt</span><span class="p">(</span><span class="n">inside</span><span class="p">))</span> <span class="n">nd</span><span class="p">[</span><span class="n">sub2lin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_stride</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_data</span><span class="p">[</span><span class="n">sub2lin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ot</span><span class="p">)];</span>
+    <span class="c1">// delete the old array if it&#39;s owned by C++ and no other objects hold its reference</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_owns</span> <span class="o">&amp;&amp;</span> <span class="n">_refs</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_data</span><span class="p">)</span> <span class="k">delete</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+    <span class="c1">// set the new data and make a new reference for it</span>
+    <span class="n">_data</span> <span class="o">=</span> <span class="n">nd</span><span class="p">;</span>
+    <span class="n">_size</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">_refs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="n">T</span><span class="o">*</span> <span class="n">ptr</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">idx</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">_data</span> <span class="o">+</span> <span class="n">sub2lin</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_stride</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">ptr</span><span class="p">(</span><span class="k">const</span> <span class="n">shape_t</span><span class="o">&amp;</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">_data</span> <span class="o">+</span> <span class="n">sub2lin</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">_stride</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ind_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size_from_shape</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+      <span class="n">_refs</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="n">_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">n</span><span class="p">]();</span>
+      <span class="n">_size</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">construct</span><span class="p">(</span><span class="n">T</span> <span class="n">init</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">_data</span><span class="p">,</span> <span class="n">_data</span><span class="o">+</span><span class="n">_size</span><span class="p">,</span> <span class="n">init</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">construct</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">d</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">_size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="c1">// template&lt;size_t Nel&gt;</span>
+  <span class="c1">// void construct(const std::vector&lt;std::array&lt;T,Nel&gt;&gt;&amp; d){</span>
+  <span class="c1">//   this-&gt;construct();</span>
+  <span class="c1">//   if (_size &gt; 0){</span>
+  <span class="c1">//     ind_t cnt{0};</span>
+  <span class="c1">//     for (auto a: d) for (auto x: a) _data[cnt++] = x;</span>
+  <span class="c1">//     if (cnt != _size)</span>
+  <span class="c1">//       throw std::logic_error(&quot;Something has gone wrong in construction&quot;);</span>
+  <span class="c1">//   }</span>
+  <span class="c1">// }</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">Nel</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">construct</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">Nel</span><span class="o">&gt;&gt;&amp;</span> <span class="n">d</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">construct</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+      <span class="n">ind_t</span> <span class="n">cnt</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">a</span><span class="p">:</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">a</span><span class="p">)</span> <span class="n">_data</span><span class="p">[</span><span class="n">cnt</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">!=</span> <span class="n">_size</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Something has gone wrong in construction&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">reset_stride</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">shape_t</span> <span class="n">nt</span><span class="p">(</span><span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">1u</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_stride</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">_stride</span><span class="p">.</span><span class="n">back</span><span class="p">()){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nt</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">nt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nt</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="n">nt</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">;</span> <span class="p">)</span> <span class="n">nt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nt</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">_stride</span> <span class="o">=</span> <span class="n">nt</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">verify</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">_stride</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_size</span> <span class="o">==</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size_from_shape</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">size_from_shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">reduce</span><span class="p">(</span><span class="n">_shape</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">_shape</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">ind_t</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">());</span>
+    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sz</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// end namespace brille</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="n">brille</span><span class="o">::</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">){</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">nx</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">stride</span><span class="p">());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">typename</span> <span class="n">brille</span><span class="o">::</span><span class="n">SharedSpan</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">nx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="n">nx</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

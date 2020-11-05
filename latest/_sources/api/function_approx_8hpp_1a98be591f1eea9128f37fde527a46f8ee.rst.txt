@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a98be591f1eea9128f37fde527a46f8ee:
+
+Template Function brille::approx::scalar
+========================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::approx::scalar(const T, const R, const int)

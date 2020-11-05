@@ -30,61 +30,76 @@ Program Listing for File mesh.tpp
    // Perform sanity checks before attempting to interpolate
    template<class T, class S> template<typename R>
    unsigned int
-   Mesh3<T,S>::check_before_interpolating(const ArrayVector<R>& x) const{
+   Mesh3<T,S>::check_before_interpolating(const bArray<R>& x) const{
      unsigned int mask = 0u;
      if (data_.size()==0)
-       throw std::runtime_error("The mesh must be filled before interpolating!");
-     if (x.numel()!=3u)
-       throw std::runtime_error("Mesh3 requires x values which are three-vectors.");
+       throw std::runtime_error("The interpolation data must be filled before interpolating.");
+     if (x.ndim()!=2 || x.size(1)!=3u)
+       throw std::runtime_error("Only (n,3) two-dimensional Q vectors supported in interpolating.");
+     if (x.stride().back()!=1)
+       throw std::runtime_error("Contiguous vectors required for interpolation.");
      return mask;
    }
    //! Perform linear interpolating at the specified points in the mesh's orthonormal frame
    template<class T, class S> template<typename R>
-   std::tuple<ArrayVector<T>,ArrayVector<S>>
-   Mesh3<T,S>::interpolate_at(const ArrayVector<R>& x) const {
+   std::tuple<brille::Array<T>,brille::Array<S>>
+   Mesh3<T,S>::interpolate_at(const bArray<R>& x) const {
      this->check_before_interpolating(x);
-     ArrayVector<T> vals(data_.values().numel(), x.size());
-     ArrayVector<S> vecs(data_.vectors().numel(), x.size());
-     std::vector<size_t> vertices;
-     std::vector<double> weights;
-     size_t found_tet, max_valid_tet = this->mesh.number_of_tetrahedra()-1;
-     for (size_t i=0; i<x.size(); ++i){
+     auto valsh = data_.values().shape();
+     auto vecsh = data_.vectors().shape();
+     valsh[0] = x.size(0);
+     vecsh[0] = x.size(0);
+     brille::Array<T> vals(valsh);
+     brille::Array<S> vecs(vecsh);
+     // vals and vecs are row-ordered contiguous by default, so we can create
+     // mutable data-sharing Array2 objects for use with
+     // Interpolator2::interpolate_at through the constructor:
+     brille::Array2<T> vals2(vals);
+     brille::Array2<S> vecs2(vecs);
+     for (ind_t i=0; i<x.size(0); ++i){
        verbose_update("Locating ",x.to_string(i));
-       found_tet = this->mesh.locate(x.extract(i), vertices, weights);
-       debug_update_if(found_tet > max_valid_tet,"Point ",x.to_string(i)," not found in tetrahedra!");
-       if (found_tet > max_valid_tet)
+       auto verts_weights = this->mesh.locate(x.view(i));
+       if (verts_weights.size()<1){
+         debug_update("Point ",x.to_string(i)," not found in tetrahedra!");
          throw std::runtime_error("Point not found in tetrahedral mesh");
-       verbose_update("Interpolate between vertices ", vertices," with weights ",weights);
-       data_.interpolate_at(vertices, weights, vals, vecs, i);
+       }
+       data_.interpolate_at(verts_weights, vals2, vecs2, i);
      }
      return std::make_tuple(vals, vecs);
    }
    template<class T, class S> template<typename R>
-   std::tuple<ArrayVector<T>,ArrayVector<S>>
-   Mesh3<T,S>::parallel_interpolate_at(const ArrayVector<R>& x, const int threads) const {
+   std::tuple<brille::Array<T>,brille::Array<S>>
+   Mesh3<T,S>::parallel_interpolate_at(const bArray<R>& x, const int threads) const {
      omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
      this->check_before_interpolating(x);
+     // not used in parallel region
+     auto valsh = data_.values().shape();
+     auto vecsh = data_.vectors().shape();
+     valsh[0] = x.size(0);
+     vecsh[0] = x.size(0);
      // shared between threads
-     ArrayVector<T> vals(data_.values().numel(), x.size());
-     ArrayVector<S> vecs(data_.vectors().numel(), x.size());
-     // private to each thread
-     std::vector<size_t> indexes;
-     std::vector<double> weights;
+     brille::Array<T> vals(valsh);
+     brille::Array<S> vecs(vecsh);
+     // vals and vecs are row-ordered contiguous by default, so we can create
+     // mutable data-sharing Array2 objects for use with
+     // Interpolator2::interpolate_at through the constructor:
+     brille::Array2<T> vals2(vals);
+     brille::Array2<S> vecs2(vecs);
      // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-     long xsize = unsigned_to_signed<long, size_t>(x.size());
-   #pragma omp parallel for default(none) shared(x, vals, vecs, xsize) private(indexes, weights) schedule(dynamic)
+     long xsize = brille::utils::u2s<long, ind_t>(x.size(0));
+   #pragma omp parallel for default(none) shared(x, vals2, vecs2, xsize) schedule(dynamic)
      for (long si=0; si<xsize; ++si){
-       size_t i = signed_to_unsigned<size_t, long>(si);
-       this->mesh.locate(x.extract(i), indexes, weights);
-       data_.interpolate_at(indexes, weights, vals, vecs, i);
+       ind_t i = brille::utils::s2u<ind_t, long>(si);
+       auto verts_weights = this->mesh.locate(x.view(i));
+       data_.interpolate_at(verts_weights, vals2, vecs2, i);
      }
      return std::make_tuple(vals, vecs);
    }
    
-   template<class T, class S> template<typename R>
-   std::vector<size_t>
-   Mesh3<T,S>::which_neighbours(const std::vector<R>& t, const R value, const size_t v) const{
-     std::vector<size_t> out;
-     for (size_t n: this->mesh.neighbours(v)) if (t[n] == value) out.push_back(n);
-     return out;
-   }
+   // template<class T, class S> template<typename R>
+   // std::vector<ind_t>
+   // Mesh3<T,S>::which_neighbours(const std::vector<R>& t, const R value, const ind_t v) const{
+   //   std::vector<ind_t> out;
+   //   for (ind_t n: this->mesh.neighbours(v)) if (t[n] == value) out.push_back(n);
+   //   return out;
+   // }

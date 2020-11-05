@@ -31,7 +31,7 @@ Includes
 
 - ``algorithm``
 
-- ``array`` (:ref:`file_src_arrayvector.hpp`)
+- ``array`` (:ref:`file_src_array.hpp`)
 
 - ``map``
 
@@ -39,7 +39,7 @@ Includes
 
 - ``tuple``
 
-- ``vector`` (:ref:`file_src_arrayvector.hpp`)
+- ``vector``
 
 
 
@@ -47,7 +47,11 @@ Included By
 -----------
 
 
-- :ref:`file_src_interpolation_data.hpp`
+- :ref:`file_src_interpolator2.hpp`
+
+- :ref:`file_src_inner_interpolation_data.hpp`
+
+- :ref:`file_src_interpolator.hpp`
 
 
 

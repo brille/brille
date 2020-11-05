@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1a9e0a4428e99f6fe6217b4f0b89b1ed25:
+
+Template Function sub2lin(const std::array<I, 2>&, const std::array<I, 2>&)
+===========================================================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: sub2lin(const std::array<I, 2>&, const std::array<I, 2>&)

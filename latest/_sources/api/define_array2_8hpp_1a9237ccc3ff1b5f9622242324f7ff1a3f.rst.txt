@@ -1,0 +1,13 @@
+.. _exhale_define_array2_8hpp_1a9237ccc3ff1b5f9622242324f7ff1a3f:
+
+Define ARRAY_ELEMENTWISE_INT_TRANSFORM
+======================================
+
+- Defined in :ref:`file_src_array2.tpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ARRAY_ELEMENTWISE_INT_TRANSFORM

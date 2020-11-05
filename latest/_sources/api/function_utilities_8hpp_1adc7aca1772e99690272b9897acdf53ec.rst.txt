@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1adc7aca1772e99690272b9897acdf53ec:
+
+Template Function brille::utils::u2s
+====================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::u2s(const U)

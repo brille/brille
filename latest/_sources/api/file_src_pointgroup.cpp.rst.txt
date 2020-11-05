@@ -31,8 +31,6 @@ Includes
 
 - ``algorithm``
 
-- ``arrayvector.hpp`` (:ref:`file_src_arrayvector.hpp`)
-
 - ``pointgroup.hpp`` (:ref:`file_src_pointgroup.hpp`)
 
 - ``pointsymmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
@@ -95,9 +93,9 @@ Functions
 
 - :ref:`exhale_function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1`
 
-- :ref:`exhale_function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7`
-
 - :ref:`exhale_function_pointgroup_8cpp_1ab0fc3acbc9016f3ee3ba75ba892235cc`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a06053e7847646559b7735566d68516c7`
 
 - :ref:`exhale_function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75`
 

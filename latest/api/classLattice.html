@@ -45,7 +45,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Class LatVec" href="classLatVec.html" />
-    <link rel="prev" title="Template Class InterpolationData" href="classInterpolationData.html" /> 
+    <link rel="prev" title="Template Class Interpolator" href="classInterpolator.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -239,7 +239,7 @@
 
 <dl class="cpp function">
 <dt id="_CPPv4N7Lattice7LatticeEKdKdKdKdKdKdKi">
-<span id="_CPPv3N7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="_CPPv2N7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="Lattice::Lattice__doubleC.doubleC.doubleC.doubleC.doubleC.doubleC.iC"></span><span class="target" id="classLattice_1aeb83b1823503f4c4b07f89bafb8b2c3a"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double <em>la</em> = 1.0, <em class="property">const</em> double <em>lb</em> = 1.0, <em class="property">const</em> double <em>lc</em> = 1.0, <em class="property">const</em> double <em>al</em> = <a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html#_CPPv49PIOVERTWO" title="PIOVERTWO">PIOVERTWO</a>, <em class="property">const</em> double <em>bl</em> = <a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html#_CPPv49PIOVERTWO" title="PIOVERTWO">PIOVERTWO</a>, <em class="property">const</em> double <em>cl</em> = <a class="reference internal" href="variable_utilities_8hpp_1aab78dbade0c0eb67fec29e76582c5611.html#_CPPv49PIOVERTWO" title="PIOVERTWO">PIOVERTWO</a>, <em class="property">const</em> int <em>h</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice7LatticeEKdKdKdKdKdKdKi" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="_CPPv2N7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="Lattice::Lattice__doubleC.doubleC.doubleC.doubleC.doubleC.doubleC.iC"></span><span class="target" id="classLattice_1a0a047d59f9f43c580a0fa851ed5f0cf8"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double <em>la</em> = 1.0, <em class="property">const</em> double <em>lb</em> = 1.0, <em class="property">const</em> double <em>lc</em> = 1.0, <em class="property">const</em> double <em>al</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> double <em>bl</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> double <em>cl</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> int <em>h</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N7Lattice7LatticeEKdKdKdKdKdKdKi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Construct the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a> from the three scalar lengths and three scalar angles. </p>
 </dd></dl>
 
@@ -356,6 +356,36 @@
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">mt</span></code>: Pointer to memory which can store 9 doubles </p></li>
 </ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Lattice17get_metric_tensorEv">
+<span id="_CPPv3NK7Lattice17get_metric_tensorEv"></span><span id="_CPPv2NK7Lattice17get_metric_tensorEv"></span><span id="Lattice::get_metric_tensorC"></span><span class="target" id="classLattice_1a8ed859d4388494c1b42ecd4c44074c25"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice17get_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the metric tensor of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Lattice27get_covariant_metric_tensorEv">
+<span id="_CPPv3NK7Lattice27get_covariant_metric_tensorEv"></span><span id="_CPPv2NK7Lattice27get_covariant_metric_tensorEv"></span><span id="Lattice::get_covariant_metric_tensorC"></span><span class="target" id="classLattice_1af87cb259f8f0f03639cc2f54da858896"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_covariant_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice27get_covariant_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the covariant metric tensor of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>  this is typically referred to as <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK7Lattice31get_contravariant_metric_tensorEv">
+<span id="_CPPv3NK7Lattice31get_contravariant_metric_tensorEv"></span><span id="_CPPv2NK7Lattice31get_contravariant_metric_tensorEv"></span><span id="Lattice::get_contravariant_metric_tensorC"></span><span class="target" id="classLattice_1a47a6625abfee5d5649d5ba54bef22f59"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_contravariant_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK7Lattice31get_contravariant_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the contravariant metric tensor of the <a class="reference internal" href="#classLattice"><span class="std std-ref">Lattice</span></a>  the inverse of <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
 </dd>
 </dl>
 </p>
@@ -543,7 +573,7 @@
         <a href="classLatVec.html" class="btn btn-neutral float-right" title="Class LatVec" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="classInterpolationData.html" class="btn btn-neutral float-left" title="Template Class InterpolationData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="classInterpolator.html" class="btn btn-neutral float-left" title="Template Class Interpolator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

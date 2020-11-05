@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1af8662d368fff9b24dbbab2b7d0693ae7:
+
+Template Function brille::utils::inplace_antiphase(const I, const std::complex<T> \*, const std::complex<T> \*, std::complex<T> \*)
+===================================================================================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::inplace_antiphase(const I, const std::complex<T> *, const std::complex<T> *, std::complex<T> *)
