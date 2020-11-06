@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class LQVec &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Mesh3" href="classMesh3.html" />
+    <link rel="prev" title="Template Class LDVec" href="classLDVec.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class LQVec</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classLQVec.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-lqvec">
+<span id="exhale-class-classlqvec"></span><h1>Template Class LQVec<a class="headerlink" href="#template-class-lqvec" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_array_latvec.hpp.html#file-src-array-latvec-hpp"><span class="std std-ref">File array_latvec.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-types">
+<h3>Base Types<a class="headerlink" href="#base-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">LatVec</span></code> (<a class="reference internal" href="classLatVec.html#exhale-class-classlatvec"><span class="std std-ref">Class LatVec</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::Array2&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classbrille_1_1Array2.html#exhale-class-classbrille-1-1array2"><span class="std std-ref">Template Class Array2</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0E5LQVec">
+<span id="_CPPv3I0E5LQVec"></span><span id="_CPPv2I0E5LQVec"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classLQVec"></span><em class="property">class </em><code class="sig-name descname">LQVec</code> : <em class="property">public</em> <a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1Array2.html#_CPPv4I0EN6brille6Array2E" title="brille::Array2">Array2</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0E5LQVec" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>3-vector(s) expressed in units of a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice </p>
+<p>By adding a <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice to a 3-element bArray this class represents one or more 3-vector in units of a reciprocal-space-spanning lattice. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec5LQVecERK10Reciprocal">
+<span id="_CPPv3N5LQVec5LQVecERK10Reciprocal"></span><span id="_CPPv2N5LQVec5LQVecERK10Reciprocal"></span><span id="LQVec::LQVec__ReciprocalCR"></span><span class="target" id="classLQVec_1ad623c54215fb5c2aab29b7d19d9c1133"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em> = <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec5LQVecERK10Reciprocal" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN5LQVec5LQVecERK10ReciprocalDp4Args">
+<span id="_CPPv3IDpEN5LQVec5LQVecERK10ReciprocalDp4Args"></span><span id="_CPPv2IDpEN5LQVec5LQVecERK10ReciprocalDp4Args"></span>template&lt;typename ...<code class="sig-name descname">Args</code>&gt;<br /><span class="target" id="classLQVec_1aa348ddfecc10e7ad20b3e6b9963db7b6"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <a class="reference internal" href="#_CPPv4IDpEN5LQVec5LQVecERK10ReciprocalDp4Args" title="LQVec::LQVec::Args">Args</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN5LQVec5LQVecERK10ReciprocalDp4Args" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>integer number of three-vector constructor (macroed as templates can’t be distinguished) </p>
+<p>Fowarding constructor to let bArray deal with everything else </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE">
+<span id="_CPPv3I0EN5LQVec5LQVecERK5LQVecI1RE"></span><span id="_CPPv2I0EN5LQVec5LQVecERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a231c5825bad6840c83f07388fa922c64"></span><code class="sig-name descname">LQVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="LQVec::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="LQVec::LQVec::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5LQVec5LQVecERK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec11get_latticeEv">
+<span id="_CPPv3NK5LQVec11get_latticeEv"></span><span id="_CPPv2NK5LQVec11get_latticeEv"></span><span id="LQVec::get_latticeC"></span><span class="target" id="classLQVec_1aa540d41c3e31ed24e9eed5e53035c5ff"></span><a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> <code class="sig-name descname">get_lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec11get_latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Explicit copy constructor: required in gcc 9+ since we define our own operator= below: </p>
+<p>Assignment operator reusing data if we can </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1afb07bfeb3cdf18c6da61f1c8f6ef85da"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE" title="LQVec::samelattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a6304b8a0acd957f8535f129260e907f9"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE" title="LQVec::samelattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a05b797457b920a9040c843d21be0433e"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE" title="LQVec::starlattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a492674a5e14c703289dd497dded26542"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE" title="LQVec::starlattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a1c04f12959af9cd8af013aba773938e3"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE" title="LQVec::samelattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11samelatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11samelatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1aac10bccbc509c0df268d4eeabb8222c8"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE" title="LQVec::samelattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11samelatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1ad900410ea93da25c8ffbac3b3e81cdfb"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE" title="LQVec::starlattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec11starlatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec11starlatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1aa4a4aeacaee4e599786c09bb02d86dc3"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE" title="LQVec::starlattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec11starlatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK5LQVec4viewE5LQVecI1TEDp1A">
+<span id="_CPPv3IDpENK5LQVec4viewEDp1A"></span><span id="_CPPv2IDpENK5LQVec4viewEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classLQVec_1aa7cd5e9250955e851115aceacd59f1a1"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK5LQVec4viewE5LQVecI1TEDp1A" title="LQVec::view::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK5LQVec4viewE5LQVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a non-copying view into the <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK5LQVec7extractE5LQVecI1TEDp1A">
+<span id="_CPPv3IDpENK5LQVec7extractEDp1A"></span><span id="_CPPv2IDpENK5LQVec7extractEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classLQVec_1a410cf8b90e86279b04c57f152603cfb6"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK5LQVec7extractE5LQVecI1TEDp1A" title="LQVec::extract::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK5LQVec7extractE5LQVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a copied subset of the <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7get_hklEv">
+<span id="_CPPv3NK5LQVec7get_hklEv"></span><span id="_CPPv2NK5LQVec7get_hklEv"></span><span id="LQVec::get_hklC"></span><span class="target" id="classLQVec_1a35981d2082e1e67c11c24c1067b67b6f"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">get_hkl</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7get_hklEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract just the coordinates in units of the <a class="reference internal" href="classReciprocal.html#classReciprocal"><span class="std std-ref">Reciprocal</span></a> lattice (strip off the lattice information) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec7get_xyzEv">
+<span id="_CPPv3NK5LQVec7get_xyzEv"></span><span id="_CPPv2NK5LQVec7get_xyzEv"></span><span id="LQVec::get_xyzC"></span><span class="target" id="classLQVec_1a7c77b5fef24ba377330f22df6f6872c8"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec7get_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the coordinates in an orthonormal frame with its first axis, x, along a*, its second, y, perpendicular with y⋅b*&gt;0 , and it’s third forming the right-handed set z=x×y. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4starEv">
+<span id="_CPPv3NK5LQVec4starEv"></span><span id="_CPPv2NK5LQVec4starEv"></span><span id="LQVec::starC"></span><span class="target" id="classLQVec_1afb436c9141c8f11a9efee7f60e96c09b"></span><a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;double&gt; <code class="sig-name descname">star</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4starEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the vector(s) expressed in units of the <a class="reference internal" href="classDirect.html#classDirect"><span class="std std-ref">Direct</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec3dotEK6size_tK6size_t">
+<span id="_CPPv3NK5LQVec3dotEK6size_tK6size_t"></span><span id="_CPPv2NK5LQVec3dotEK6size_tK6size_t"></span><span id="LQVec::dot__sC.sCC"></span><span class="target" id="classLQVec_1a186a456010e1ca031b6fde46b9761a13"></span>double <code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec3dotEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the scalar product between two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4normEK6size_t">
+<span id="_CPPv3NK5LQVec4normEK6size_t"></span><span id="_CPPv2NK5LQVec4normEK6size_t"></span><span id="LQVec::norm__sCC"></span><span class="target" id="classLQVec_1a5d6f57b6647177d01987339e1ffb1b84"></span>double <code class="sig-name descname">norm</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4normEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the absolute length of a vector in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5crossEK6size_tK6size_t">
+<span id="_CPPv3NK5LQVec5crossEK6size_tK6size_t"></span><span id="_CPPv2NK5LQVec5crossEK6size_tK6size_t"></span><span id="LQVec::cross__sC.sCC"></span><span class="target" id="classLQVec_1aafecd6228358758c551449f28972f53f"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">cross</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5crossEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the cross product of two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec22binary_operation_checkERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec22binary_operation_checkERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a32ec79af3d91f66cac4765a0f14dc437"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LQVecI1RE" title="LQVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LDVecI1RE">
+<span id="_CPPv3I0ENK5LQVec22binary_operation_checkERK5LDVecI1RE"></span><span id="_CPPv2I0ENK5LQVec22binary_operation_checkERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1a4c4bea08403ccdb85ca9d0e2f63edaab"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classLDVec.html#_CPPv4I0E5LDVec" title="LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LDVecI1RE" title="LQVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec22binary_operation_checkEvRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE">
+<span id="_CPPv3I0I0E00ENK5LQVec22binary_operation_checkERK1AI1RE"></span><span id="_CPPv2I0I0E00ENK5LQVec22binary_operation_checkERK1AI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">A</code>, typename = <em class="property">typename</em> std::enable_if&lt;!std::is_base_of&lt;<a class="reference internal" href="classLatVec.html#_CPPv46LatVec" title="LatVec">LatVec</a>, <a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE" title="LQVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE" title="LQVec::binary_operation_check::R">R</a>&gt;&gt;::value&gt;::type&gt;<br /><span class="target" id="classLQVec_1a887c31ffcc053120924d137c87b11d44"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE" title="LQVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE" title="LQVec::binary_operation_check::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0I0E00ENK5LQVec22binary_operation_checkEvRK1AI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK5LQVec2isEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK5LQVec2isERK5LQVecI1RE"></span><span id="_CPPv2I0ENK5LQVec2isERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classLQVec_1aa15e8eaa077cdbf813ec80bdba11670a"></span>bool <code class="sig-name descname">is</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK5LQVec2isEbRK5LQVecI1RE" title="LQVec::is::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK5LQVec2isEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check whether a second <a class="reference internal" href="#classLQVec"><span class="std std-ref">LQVec</span></a> is approximately the same as this object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5roundEv">
+<span id="_CPPv3NK5LQVec5roundEv"></span><span id="_CPPv2NK5LQVec5roundEv"></span><span id="LQVec::roundC"></span><span class="target" id="classLQVec_1a9214ba42dd027931fbc53fc8115e7fd1"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">round</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5roundEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Round all elements using std::round. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec5floorEv">
+<span id="_CPPv3NK5LQVec5floorEv"></span><span id="_CPPv2NK5LQVec5floorEv"></span><span id="LQVec::floorC"></span><span class="target" id="classLQVec_1a1d1c8a6e7969604c28cb6fd363028222"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">floor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec5floorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the floor of all elements using std::floor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5LQVec4ceilEv">
+<span id="_CPPv3NK5LQVec4ceilEv"></span><span id="_CPPv2NK5LQVec4ceilEv"></span><span id="LQVec::ceilC"></span><span class="target" id="classLQVec_1af3844f6f2ec39f91fb4979ce6f632fbc"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;int&gt; <code class="sig-name descname">ceil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5LQVec4ceilEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the ceiling of all elements using std::ceil. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec8decoupleEv">
+<span id="_CPPv3N5LQVec8decoupleEv"></span><span id="_CPPv2N5LQVec8decoupleEv"></span><span id="LQVec::decouple"></span><span class="target" id="classLQVec_1a0df7d5abaa3f2c2b43943b9589d65735"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">decouple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec8decoupleEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Static Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec9from_invAERK10ReciprocalRK6bArrayI1TEKi">
+<span id="_CPPv3N5LQVec9from_invAERK10ReciprocalRK6bArrayI1TEKi"></span><span id="_CPPv2N5LQVec9from_invAERK10ReciprocalRK6bArrayI1TEKi"></span><span id="LQVec::from_invA__ReciprocalCR.bArray:T:CR.iC"></span><span class="target" id="classLQVec_1a26bcfe2f902bc9b8390f35469528de20"></span><a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; <code class="sig-name descname">from_invA</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classReciprocal.html#_CPPv410Reciprocal" title="Reciprocal">Reciprocal</a> &amp;<em>lat</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E5LQVec" title="LQVec::T">T</a>&gt; &amp;<em>vec</em>, <em class="property">const</em> int = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec9from_invAERK10ReciprocalRK6bArrayI1TEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5LQVec11check_arrayEv">
+<span id="_CPPv3N5LQVec11check_arrayEv"></span><span id="_CPPv2N5LQVec11check_arrayEv"></span><span id="LQVec::check_array"></span><span class="target" id="classLQVec_1ac08ced88a7dcbdc2ef4ceb1e2d633541"></span>void <code class="sig-name descname">check_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5LQVec11check_arrayEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classMesh3.html" class="btn btn-neutral float-right" title="Template Class Mesh3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classLDVec.html" class="btn btn-neutral float-left" title="Template Class LDVec" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

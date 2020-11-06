@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ade437dc28bed32fd361ad153d7726cea:
+
+Template Function brille::utils::inner_product(const I, const std::complex<T> \*, const std::complex<T> \*)
+===========================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::inner_product(const I, const std::complex<T> *, const std::complex<T> *)

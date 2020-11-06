@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a78a2463c818ff5e1128d30fb1738404b:
+
+Template Function brille::utils::array_cofactor
+===============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::array_cofactor(R *, const R *, const int, const int, const int, const int)

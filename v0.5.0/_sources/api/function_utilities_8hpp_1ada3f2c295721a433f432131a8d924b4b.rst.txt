@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ada3f2c295721a433f432131a8d924b4b:
+
+Template Function brille::utils::vector_dot(const R \*, const R \*)
+===================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::vector_dot(const R *, const R *)

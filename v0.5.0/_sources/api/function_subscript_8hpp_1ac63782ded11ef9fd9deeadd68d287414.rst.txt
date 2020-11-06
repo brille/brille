@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1ac63782ded11ef9fd9deeadd68d287414:
+
+Template Function lin2sub(I, const std::array<I, 2>&)
+=====================================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: lin2sub(I, const std::array<I, 2>&)

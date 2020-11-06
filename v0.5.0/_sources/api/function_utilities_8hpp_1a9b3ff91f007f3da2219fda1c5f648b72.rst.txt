@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a9b3ff91f007f3da2219fda1c5f648b72:
+
+Template Function brille::utils::complex_conj_matrix_transpose
+==============================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::complex_conj_matrix_transpose(std::complex<R> *, const std::complex<R> *)

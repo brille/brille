@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File utilities.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>File utilities.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_utilities.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-utilities-hpp">
+<span id="file-src-utilities-hpp"></span><h1>File utilities.hpp<a class="headerlink" href="#file-utilities-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-utilities-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/utilities.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id4">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id5">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id6">Functions</a></p></li>
+<li><p><a class="reference internal" href="#typedefs" id="id7">Typedefs</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id8">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-utilities-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/utilities.hpp</span></code>)<a class="headerlink" href="#definition-src-utilities-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_utilities.hpp.html">Program Listing for File utilities.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">approx.hpp</span></code> (<a class="reference internal" href="file_src_approx.hpp.html#file-src-approx-hpp"><span class="std std-ref">File approx.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cmath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">debug.hpp</span></code> (<a class="reference internal" href="file_src_debug.hpp.html#file-src-debug-hpp"><span class="std std-ref">File debug.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iostream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">math.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdexcept</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_traits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utilities.tpp</span></code> (<a class="reference internal" href="file_src_utilities.tpp.html#file-src-utilities-tpp"><span class="std std-ref">File utilities.tpp</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">File array.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_array2.hpp.html#file-src-array2-hpp"><span class="std std-ref">File array2.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_symmetry.hpp.html#file-src-symmetry-hpp"><span class="std std-ref">File symmetry.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_pointsymmetry.hpp.html#file-src-pointsymmetry-hpp"><span class="std std-ref">File pointsymmetry.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_basis.hpp.html#file-src-basis-hpp"><span class="std std-ref">File basis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_polyhedron.hpp.html#file-src-polyhedron-hpp"><span class="std std-ref">File polyhedron.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_interpolator2.hpp.html#file-src-interpolator2-hpp"><span class="std std-ref">File interpolator2.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_mesh.hpp.html#file-src-mesh-hpp"><span class="std std-ref">File mesh.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">File nest.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_interpolator.hpp.html#file-src-interpolator-hpp"><span class="std std-ref">File interpolator.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_pointgroup.cpp.html#file-src-pointgroup-cpp"><span class="std std-ref">File pointgroup.cpp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_brille.html#namespace-brille"><span class="std std-ref">Namespace brille</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_brille__utils.html#namespace-brille-utils"><span class="std std-ref">Namespace brille::utils</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="classbrille_1_1utils_1_1vector__cross__impl.html#exhale-class-classbrille-1-1utils-1-1vector-cross-impl"><span class="std std-ref">Template Class vector_cross_impl</span></a></p></li>
+<li><p><a class="reference internal" href="classbrille_1_1utils_1_1vector__cross__impl_3_01T_00_01R_00_01S_00_013_01_4.html#exhale-class-classbrille-1-1utils-1-1vector-cross-impl-3-01t-00-01r-00-01s-00-013-01-4"><span class="std std-ref">Template Class vector_cross_impl&lt; T, R, S, 3 &gt;</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a5ebdcdcd4131c5e23b09bdc30bfc6e1b.html#exhale-function-utilities-8hpp-1a5ebdcdcd4131c5e23b09bdc30bfc6e1b"><span class="std std-ref">Template Function brille::utils::add_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3af2f154a0698152e13266db5a5c126a.html#exhale-function-utilities-8hpp-1a3af2f154a0698152e13266db5a5c126a"><span class="std std-ref">Template Function brille::utils::add_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a78a2463c818ff5e1128d30fb1738404b.html#exhale-function-utilities-8hpp-1a78a2463c818ff5e1128d30fb1738404b"><span class="std std-ref">Template Function brille::utils::array_cofactor</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad44988c88deafb3ba37dc8418f0f915f.html#exhale-function-utilities-8hpp-1ad44988c88deafb3ba37dc8418f0f915f"><span class="std std-ref">Template Function brille::utils::array_transpose</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a6fc828085a244b5b283af8b5d5a1f1e6.html#exhale-function-utilities-8hpp-1a6fc828085a244b5b283af8b5d5a1f1e6"><span class="std std-ref">Template Function brille::utils::binomial_coefficient</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad0c75e6bf2d7f55339d5418c110777cb.html#exhale-function-utilities-8hpp-1ad0c75e6bf2d7f55339d5418c110777cb"><span class="std std-ref">Template Function brille::utils::cast_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1abcc8d3d9a962b102ce1eb8ce82fcfc52.html#exhale-function-utilities-8hpp-1abcc8d3d9a962b102ce1eb8ce82fcfc52"><span class="std std-ref">Template Function brille::utils::cast_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ab2b9d835940bd1fc8868a7a519a7db3c.html#exhale-function-utilities-8hpp-1ab2b9d835940bd1fc8868a7a519a7db3c"><span class="std std-ref">Template Function brille::utils::cast_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ae8599d2a3ac58c2cefd695842912ab4d.html#exhale-function-utilities-8hpp-1ae8599d2a3ac58c2cefd695842912ab4d"><span class="std std-ref">Template Function brille::utils::copy_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a16fe07387a83e5310e0496380d55a526.html#exhale-function-utilities-8hpp-1a16fe07387a83e5310e0496380d55a526"><span class="std std-ref">Template Function brille::utils::copy_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1accaad3f781cb79ca6480197c7a5adf06.html#exhale-function-utilities-8hpp-1accaad3f781cb79ca6480197c7a5adf06"><span class="std std-ref">Template Function brille::utils::copy_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0899495acc9400b94addec3b219c6099.html#exhale-function-utilities-8hpp-1a0899495acc9400b94addec3b219c6099"><span class="std std-ref">Template Function brille::utils::encode_array_signs(const size_t, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ab16118482171e82a7eb8f9344979d331.html#exhale-function-utilities-8hpp-1ab16118482171e82a7eb8f9344979d331"><span class="std std-ref">Template Function brille::utils::encode_array_signs(const size_t, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7ad40645a616b361886c303896d897d0.html#exhale-function-utilities-8hpp-1a7ad40645a616b361886c303896d897d0"><span class="std std-ref">Template Function brille::utils::equal_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a74ff41ab591369d5a6dc62aa6685a8bf.html#exhale-function-utilities-8hpp-1a74ff41ab591369d5a6dc62aa6685a8bf"><span class="std std-ref">Template Function brille::utils::equal_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1da850e0914fc74323d245331d54a1dc.html#exhale-function-utilities-8hpp-1a1da850e0914fc74323d245331d54a1dc"><span class="std std-ref">Template Function brille::utils::equal_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aec001a7863e941d7c0e8dedc6a0235e8.html#exhale-function-utilities-8hpp-1aec001a7863e941d7c0e8dedc6a0235e8"><span class="std std-ref">Template Function brille::utils::euclidean_angle</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1abc17d1397519599cf970c8b1fb90d855.html#exhale-function-utilities-8hpp-1abc17d1397519599cf970c8b1fb90d855"><span class="std std-ref">Template Function brille::utils::frobenius_distance(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1212b62eae3fabc2dc6a6f022003a0bd.html#exhale-function-utilities-8hpp-1a1212b62eae3fabc2dc6a6f022003a0bd"><span class="std std-ref">Template Function brille::utils::frobenius_distance(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3e2f3ad853552c5d9e0115c2b2389e79.html#exhale-function-utilities-8hpp-1a3e2f3ad853552c5d9e0115c2b2389e79"><span class="std std-ref">Template Function brille::utils::gcd</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a280c3c2bbdd03ea7a736eb065ca51850.html#exhale-function-utilities-8hpp-1a280c3c2bbdd03ea7a736eb065ca51850"><span class="std std-ref">Template Function brille::utils::hermitian_angle(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7f2a6c1f15635efcb980b44c95cc3757.html#exhale-function-utilities-8hpp-1a7f2a6c1f15635efcb980b44c95cc3757"><span class="std std-ref">Template Function brille::utils::hermitian_angle(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a45892d72e5fd48e4a442a1fc3a233322.html#exhale-function-utilities-8hpp-1a45892d72e5fd48e4a442a1fc3a233322"><span class="std std-ref">Template Function brille::utils::hermitian_product(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a76613f2db9c893a8aaf58731f65a77b6.html#exhale-function-utilities-8hpp-1a76613f2db9c893a8aaf58731f65a77b6"><span class="std std-ref">Template Function brille::utils::hermitian_product(const I, const T *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1af668bb922e525d982d73233ffeb0f254.html#exhale-function-utilities-8hpp-1af668bb922e525d982d73233ffeb0f254"><span class="std std-ref">Template Function brille::utils::hermitian_product(const I, const std::complex&lt;T&gt; *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a377cddc281f875619a6041c1522792b3.html#exhale-function-utilities-8hpp-1a377cddc281f875619a6041c1522792b3"><span class="std std-ref">Template Function brille::utils::hermitian_product(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac4022188c1c7a95b0d2ae2b32f14e8cd.html#exhale-function-utilities-8hpp-1ac4022188c1c7a95b0d2ae2b32f14e8cd"><span class="std std-ref">Template Function brille::utils::inner_product(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ade437dc28bed32fd361ad153d7726cea.html#exhale-function-utilities-8hpp-1ade437dc28bed32fd361ad153d7726cea"><span class="std std-ref">Template Function brille::utils::inner_product(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a43b069dd4f4b6483e7b8084a7ff3dea3.html#exhale-function-utilities-8hpp-1a43b069dd4f4b6483e7b8084a7ff3dea3"><span class="std std-ref">Template Function brille::utils::is_int_matrix(const T *, const R)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1af8317a5f3c664105e0b7d45be1474fdd.html#exhale-function-utilities-8hpp-1af8317a5f3c664105e0b7d45be1474fdd"><span class="std std-ref">Template Function brille::utils::is_int_matrix(const int *, const)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a24c086886784a752620ce99e37cfcdea.html#exhale-function-utilities-8hpp-1a24c086886784a752620ce99e37cfcdea"><span class="std std-ref">Template Function brille::utils::magnitude(const T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a46e1919f4c621157ef522b80effa0ae0.html#exhale-function-utilities-8hpp-1a46e1919f4c621157ef522b80effa0ae0"><span class="std std-ref">Template Function brille::utils::magnitude(const std::complex&lt;T&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac713cafe8645a39b790d313c0e7d26c4.html#exhale-function-utilities-8hpp-1ac713cafe8645a39b790d313c0e7d26c4"><span class="std std-ref">Template Function brille::utils::make_eigenvectors_equivalent(const size_t, const T *, T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aee85cbc87502834c4dd3853fc4b21863.html#exhale-function-utilities-8hpp-1aee85cbc87502834c4dd3853fc4b21863"><span class="std std-ref">Template Function brille::utils::make_eigenvectors_equivalent(const size_t, const std::complex&lt;T&gt; *, std::complex&lt;T&gt;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a2bcd320b10ca80483579e534f4a3a985.html#exhale-function-utilities-8hpp-1a2bcd320b10ca80483579e534f4a3a985"><span class="std std-ref">Template Function brille::utils::matrix_adjoint</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac89a2ef061bdd4418e49d33022bfed0b.html#exhale-function-utilities-8hpp-1ac89a2ef061bdd4418e49d33022bfed0b"><span class="std std-ref">Template Function brille::utils::matrix_cofactor</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0ae34e134a746e370ec8f5cdac956760.html#exhale-function-utilities-8hpp-1a0ae34e134a746e370ec8f5cdac956760"><span class="std std-ref">Template Function brille::utils::matrix_determinant</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a94fa0c7bda76bde4eca9020703dba165.html#exhale-function-utilities-8hpp-1a94fa0c7bda76bde4eca9020703dba165"><span class="std std-ref">Template Function brille::utils::matrix_determinant_and_inverse</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1405204bf28472b5cb174e5e65c050dc.html#exhale-function-utilities-8hpp-1a1405204bf28472b5cb174e5e65c050dc"><span class="std std-ref">Template Function brille::utils::matrix_inverse</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a962d76a1b28b031647d600f8e7ee7020.html#exhale-function-utilities-8hpp-1a962d76a1b28b031647d600f8e7ee7020"><span class="std std-ref">Template Function brille::utils::matrix_metric</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a4f2b99b95232c708d52eb12050da4251.html#exhale-function-utilities-8hpp-1a4f2b99b95232c708d52eb12050da4251"><span class="std std-ref">Template Function brille::utils::matrix_transpose(R *, const R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aefe195cd4c9355245b94faf5364e2f92.html#exhale-function-utilities-8hpp-1aefe195cd4c9355245b94faf5364e2f92"><span class="std std-ref">Template Function brille::utils::matrix_transpose(R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ab86e4b9cbf939a28ebff2b7112653197.html#exhale-function-utilities-8hpp-1ab86e4b9cbf939a28ebff2b7112653197"><span class="std std-ref">Template Function brille::utils::mod1</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad6724a7c635f22ccc3f8ba86f8f546d9.html#exhale-function-utilities-8hpp-1ad6724a7c635f22ccc3f8ba86f8f546d9"><span class="std std-ref">Template Function brille::utils::mul_arrays(T *, const I, const I, const I, const R *, const S *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0f7584a80664fe702c8ac4186d67f585.html#exhale-function-utilities-8hpp-1a0f7584a80664fe702c8ac4186d67f585"><span class="std std-ref">Template Function brille::utils::mul_arrays(std::complex&lt;T&gt; *, const I, const I, const I, const R *, const std::complex&lt;S&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a524011dd51a64dee91f722a5ded0b2ba.html#exhale-function-utilities-8hpp-1a524011dd51a64dee91f722a5ded0b2ba"><span class="std std-ref">Template Function brille::utils::mul_arrays(std::complex&lt;T&gt; *, const I, const I, const I, const std::complex&lt;R&gt; *, const S *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ad3aff5a92d50ca5bbf91b608f54da640.html#exhale-function-utilities-8hpp-1ad3aff5a92d50ca5bbf91b608f54da640"><span class="std std-ref">Template Function brille::utils::mul_arrays(std::complex&lt;T&gt; *, const I, const I, const I, const std::complex&lt;R&gt; *, const std::complex&lt;S&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aacc104f7fc71fe5eb126cb0260200503.html#exhale-function-utilities-8hpp-1aacc104f7fc71fe5eb126cb0260200503"><span class="std std-ref">Template Function brille::utils::mul_mat_mat</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a89cf69af3e7b7b86723163bd0ad6227e.html#exhale-function-utilities-8hpp-1a89cf69af3e7b7b86723163bd0ad6227e"><span class="std std-ref">Template Function brille::utils::mul_mat_vec</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ace4f5ffad80a3aac477816c0742c4fb4.html#exhale-function-utilities-8hpp-1ace4f5ffad80a3aac477816c0742c4fb4"><span class="std std-ref">Template Function brille::utils::mul_mat_vec_inplace</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a056db9a86feff5c361a6fe779b182dd2.html#exhale-function-utilities-8hpp-1a056db9a86feff5c361a6fe779b182dd2"><span class="std std-ref">Template Function brille::utils::mul_vec_mat</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a79af617145cd2fc94e797fbb15f8cd93.html#exhale-function-utilities-8hpp-1a79af617145cd2fc94e797fbb15f8cd93"><span class="std std-ref">Template Function brille::utils::multiply_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a2b70785d6d4abdca83a93d1991a77b01.html#exhale-function-utilities-8hpp-1a2b70785d6d4abdca83a93d1991a77b01"><span class="std std-ref">Template Function brille::utils::multiply_matrix_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a285b4eab3f7bdf46465833a03c2a21f4.html#exhale-function-utilities-8hpp-1a285b4eab3f7bdf46465833a03c2a21f4"><span class="std std-ref">Template Function brille::utils::multiply_matrix_vector</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a125dc0b693043a388d9dc34228649d59.html#exhale-function-utilities-8hpp-1a125dc0b693043a388d9dc34228649d59"><span class="std std-ref">Template Function brille::utils::multiply_vector_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a1c6a45091ec072f61d316acbb373bfbe.html#exhale-function-utilities-8hpp-1a1c6a45091ec072f61d316acbb373bfbe"><span class="std std-ref">Template Function brille::utils::my_cast</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a943efb465389d3fb91112c692e538fba.html#exhale-function-utilities-8hpp-1a943efb465389d3fb91112c692e538fba"><span class="std std-ref">Template Function brille::utils::s2u</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a9d5dc926b4ebbf581ed30bbb2d22134f.html#exhale-function-utilities-8hpp-1a9d5dc926b4ebbf581ed30bbb2d22134f"><span class="std std-ref">Template Function brille::utils::similar_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1afb8add91606aaf7feca8813d36c6591f.html#exhale-function-utilities-8hpp-1afb8add91606aaf7feca8813d36c6591f"><span class="std std-ref">Template Function brille::utils::squared_distance(const T&amp;, const T&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a44106ee5ff1c41c16089559eedbfdeb5.html#exhale-function-utilities-8hpp-1a44106ee5ff1c41c16089559eedbfdeb5"><span class="std std-ref">Template Function brille::utils::squared_distance(const std::complex&lt;T&gt;&amp;, const std::complex&lt;T&gt;&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a07f25c511fe5f9103812e69207e54835.html#exhale-function-utilities-8hpp-1a07f25c511fe5f9103812e69207e54835"><span class="std std-ref">Template Function brille::utils::subtract_arrays</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a7555f1c960a7ff8b7e2c1b4a90424808.html#exhale-function-utilities-8hpp-1a7555f1c960a7ff8b7e2c1b4a90424808"><span class="std std-ref">Template Function brille::utils::subtract_matrix</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a02e3db2d42eee18785f6eaf7d934ce89.html#exhale-function-utilities-8hpp-1a02e3db2d42eee18785f6eaf7d934ce89"><span class="std std-ref">Template Function brille::utils::trace</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1adc7aca1772e99690272b9897acdf53ec.html#exhale-function-utilities-8hpp-1adc7aca1772e99690272b9897acdf53ec"><span class="std std-ref">Template Function brille::utils::u2s</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a9bb5a3deef23b17ba96de9fc1bda7a36.html#exhale-function-utilities-8hpp-1a9bb5a3deef23b17ba96de9fc1bda7a36"><span class="std std-ref">Template Function brille::utils::vector_angle(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3f23d835a066c6e33d5dbfc437cd9af2.html#exhale-function-utilities-8hpp-1a3f23d835a066c6e33d5dbfc437cd9af2"><span class="std std-ref">Template Function brille::utils::vector_angle(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a100561f645954a9fbbf87a57c2e67f1e.html#exhale-function-utilities-8hpp-1a100561f645954a9fbbf87a57c2e67f1e"><span class="std std-ref">Template Function brille::utils::vector_cross</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a3152f650f94f82d555a948d4ffa46de2.html#exhale-function-utilities-8hpp-1a3152f650f94f82d555a948d4ffa46de2"><span class="std std-ref">Template Function brille::utils::vector_distance(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aa35eda8148c6887b87e6ea95e48b1813.html#exhale-function-utilities-8hpp-1aa35eda8148c6887b87e6ea95e48b1813"><span class="std std-ref">Template Function brille::utils::vector_distance(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ac30c7e54b6bf14e09f402682fe4af3be.html#exhale-function-utilities-8hpp-1ac30c7e54b6bf14e09f402682fe4af3be"><span class="std std-ref">Template Function brille::utils::vector_dot(const, const T *, const R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1ada3f2c295721a433f432131a8d924b4b.html#exhale-function-utilities-8hpp-1ada3f2c295721a433f432131a8d924b4b"><span class="std std-ref">Template Function brille::utils::vector_dot(const R *, const R *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1aeee13fcdabe9425836039633d446457e.html#exhale-function-utilities-8hpp-1aeee13fcdabe9425836039633d446457e"><span class="std std-ref">Template Function brille::utils::vector_norm_squared</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a0832fbc8effc0db6f86ba6f8a1f38df9.html#exhale-function-utilities-8hpp-1a0832fbc8effc0db6f86ba6f8a1f38df9"><span class="std std-ref">Template Function brille::utils::vector_product(const I, const T *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a270a1917c6fb4c5ea712af01d1aad559.html#exhale-function-utilities-8hpp-1a270a1917c6fb4c5ea712af01d1aad559"><span class="std std-ref">Template Function brille::utils::vector_product(const I, const T *, const std::complex&lt;T&gt; *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1a4b78055c8ba014a9ce0ac7c26eac41ac.html#exhale-function-utilities-8hpp-1a4b78055c8ba014a9ce0ac7c26eac41ac"><span class="std std-ref">Template Function brille::utils::vector_product(const I, const std::complex&lt;T&gt; *, const T *)</span></a></p></li>
+<li><p><a class="reference internal" href="function_utilities_8hpp_1addd0dd89994ff2d373eec8236f619bb5.html#exhale-function-utilities-8hpp-1addd0dd89994ff2d373eec8236f619bb5"><span class="std std-ref">Template Function brille::utils::vector_product(const I, const std::complex&lt;T&gt; *, const std::complex&lt;T&gt; *)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="typedefs">
+<h2>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="typedef_utilities_8hpp_1a683cc847e63a90ba7d096573a33b9842.html#exhale-typedef-utilities-8hpp-1a683cc847e63a90ba7d096573a33b9842"><span class="std std-ref">Typedef brille::utils::enable_if_t</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#exhale-variable-utilities-8hpp-1a1659ed6edf82c3333d1ed0602a196488"><span class="std std-ref">Variable brille::halfpi</span></a></p></li>
+<li><p><a class="reference internal" href="variable_utilities_8hpp_1a5ba20e34189d20fb328e45611a48aa94.html#exhale-variable-utilities-8hpp-1a5ba20e34189d20fb328e45611a48aa94"><span class="std std-ref">Variable brille::pi</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

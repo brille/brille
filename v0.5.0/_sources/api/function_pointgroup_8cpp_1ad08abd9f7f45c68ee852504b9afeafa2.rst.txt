@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1ad08abd9f7f45c68ee852504b9afeafa2:
+
+Function ptg_get_transformation_matrix(int \*, const int \*, const int)
+=======================================================================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ptg_get_transformation_matrix(int *, const int *, const int)

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a94fa0c7bda76bde4eca9020703dba165:
+
+Template Function brille::utils::matrix_determinant_and_inverse
+===============================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::matrix_determinant_and_inverse(R *, const R *, const R, const int)

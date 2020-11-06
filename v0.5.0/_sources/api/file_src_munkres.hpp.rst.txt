@@ -1,0 +1,63 @@
+
+.. _file_src_munkres.hpp:
+
+File munkres.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/munkres.hpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_munkres.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``forward_list``
+
+- ``limits``
+
+- ``memory``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_permutation.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classMunkres`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43`
+

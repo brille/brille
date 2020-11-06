@@ -1,0 +1,16 @@
+.. _exhale_class_classTrellisLeaf:
+
+Class TrellisLeaf
+=================
+
+- Defined in :ref:`file_src_balltrellis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: TrellisLeaf
+   :members:
+   :protected-members:
+   :undoc-members:

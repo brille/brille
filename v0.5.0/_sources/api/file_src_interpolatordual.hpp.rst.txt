@@ -1,0 +1,54 @@
+
+.. _file_src_interpolatordual.hpp:
+
+File interpolatordual.hpp
+=========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/interpolatordual.hpp``)
+-----------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_interpolatordual.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``interpolator2.hpp`` (:ref:`file_src_interpolator2.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classDualInterpolator`
+

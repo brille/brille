@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a89cf69af3e7b7b86723163bd0ad6227e:
+
+Template Function brille::utils::mul_mat_vec
+============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::mul_mat_vec(T *, const I, const R *, const S *)

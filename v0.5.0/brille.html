@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python module brille &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="_static/katex_autorenderer.js"></script>
+        <script src="_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plotting utilities for brille" href="plotting.html" />
+    <link rel="prev" title="Interpolating Sodium Chloride phonons" href="tutorials/tutorial_00.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/brille.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-brille"></span><div class="section" id="python-module-brille">
+<h1>Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code><a class="headerlink" href="#python-module-brille" title="Permalink to this headline">¶</a></h1>
+<p>This module provides access to the C++ brille library which can be used to
+interact with spacegroup and pointgroup symmetry operations, to determine the
+first Brillouin zone for a given real space crystallographic lattice, to
+find _an_ irreducible polyhedron from the first Brillouin zone and the
+pointgroup operations of a spacegroup, to construct polyhedron-filling connected
+point networks, and to perform linear-interpolation of user-provided data for
+any reciprocal space point at a symmetry-equivalent position within the
+connected point network.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+</div>
+<span class="target" id="module-brille._brille"></span><div class="section" id="pybind11-module-brille-brille">
+<h1>pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code><a class="headerlink" href="#pybind11-module-brille-brille" title="Permalink to this headline">¶</a></h1>
+<p>This module provides the interface to the C++ library.</p>
+<p>All of the symbols defined within <code class="docutils literal notranslate"><span class="pre">_brille</span></code> are imported by <code class="docutils literal notranslate"><span class="pre">brille</span></code> to
+make using them that much easier. If in doubt, the interfaced classes can be
+accessed via their submodule syntax <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code>.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="brille._brille.Bravais">
+<em class="property">class </em><code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">Bravais</code><a class="headerlink" href="#brille._brille.Bravais" title="Permalink to this definition">¶</a></dt>
+<dd><p>Members:</p>
+<p>invalid</p>
+<p>P</p>
+<p>A</p>
+<p>B</p>
+<p>C</p>
+<p>I</p>
+<p>F</p>
+<p>R</p>
+<dl class="py method">
+<dt id="brille._brille.Bravais.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#brille._brille.Bravais.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle) -&gt; str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>(self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="brille._brille.HallSymbol">
+<em class="property">class </em><code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">HallSymbol</code><a class="headerlink" href="#brille._brille.HallSymbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>A crystallographic spacegroup’s symmetries encoded in Hall’s notation</p>
+<p>Hall proposed a compact unambiguous notation for the representation of the
+generators of a spacegroup. Within his notation each motion is comprised of
+a character with one or more subscripts and superscripts which describe its
+order, unique axis, and translation. The notation specifies that, depending
+on the position of a motion and details of any preceeding motion, some or
+all of the sub- and superscripts can be omitted. The <a class="reference internal" href="#brille._brille.HallSymbol" title="brille._brille.HallSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">HallSymbol</span></code></a> has
+been written to handle the logic necessary to decode a Hall symbol into its
+equivalent motions.
+An added compilcation arises when the Hall symbol is encoded as an ASCII
+string. Namely, there are no sub- or superscript glyphs and some scheme must
+be enacted to represent them.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="brille._brille.SortingStatus">
+<em class="property">class </em><code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">SortingStatus</code><a class="headerlink" href="#brille._brille.SortingStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object representing the status of a single object under sorting.</p>
+<p>Internally may be represented as a single unsigned integer where two or
+more bits are reserved for various flags, or as a set of boolean values
+and an integer.</p>
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.locked">
+<em class="property">property </em><code class="sig-name descname">locked</code><a class="headerlink" href="#brille._brille.SortingStatus.locked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the locked flag</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.sorted">
+<em class="property">property </em><code class="sig-name descname">sorted</code><a class="headerlink" href="#brille._brille.SortingStatus.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sorted flag</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="brille._brille.SortingStatus.visits">
+<em class="property">property </em><code class="sig-name descname">visits</code><a class="headerlink" href="#brille._brille.SortingStatus.visits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the visit count</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="brille._brille.emit">
+<code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">emit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brille._brille.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>emit() -&gt; bool</p></li>
+<li><p>emit(DebugPrinter emit status: bool) -&gt; bool</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py function">
+<dt id="brille._brille.emit_datetime">
+<code class="sig-prename descclassname">brille._brille.</code><code class="sig-name descname">emit_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#brille._brille.emit_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>emit_datetime() -&gt; bool</p></li>
+<li><p>emit_datetime(DebugPrinter emit datetime status: bool) -&gt; bool</p></li>
+</ol>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plotting.html" class="btn btn-neutral float-right" title="Plotting utilities for brille" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorials/tutorial_00.html" class="btn btn-neutral float-left" title="Interpolating Sodium Chloride phonons" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

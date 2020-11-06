@@ -1,0 +1,69 @@
+
+.. _file_src_transform.hpp:
+
+File transform.hpp
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/transform.hpp``)
+----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_transform.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.hpp`
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_transform_8hpp_1aa7401f8f159e6ae95f3c44eead3a341e`
+
+- :ref:`exhale_function_transform_8hpp_1acbf833bb0d55190130dc71aad295c619`
+
+- :ref:`exhale_function_transform_8hpp_1a14c2b3d7c03bcb543c24e0531b709f6a`
+
+- :ref:`exhale_function_transform_8hpp_1ab34393ec4728941dd5897362d37c427d`
+
+- :ref:`exhale_function_transform_8hpp_1ad8cbc7f1ec780313668f25a0c7a9aab8`
+
+- :ref:`exhale_function_transform_8hpp_1a5e450da3362cac352a08692b19ae7234`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_transform_8hpp_1afbc51959885d33b5db8306d0aba9f96c`
+
+- :ref:`exhale_typedef_transform_8hpp_1ac39cc28ca385d0a8a410b3dcb7d23585`
+

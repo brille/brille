@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a07f25c511fe5f9103812e69207e54835:
+
+Template Function brille::utils::subtract_arrays
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::subtract_arrays(T *, const R *, const S *)

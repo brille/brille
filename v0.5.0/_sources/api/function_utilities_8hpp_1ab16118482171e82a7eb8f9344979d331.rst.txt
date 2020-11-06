@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ab16118482171e82a7eb8f9344979d331:
+
+Template Function brille::utils::encode_array_signs(const size_t, const std::complex<T> \*)
+===========================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::encode_array_signs(const size_t, const std::complex<T> *)

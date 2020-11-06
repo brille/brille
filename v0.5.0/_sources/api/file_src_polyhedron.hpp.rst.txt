@@ -1,0 +1,99 @@
+
+.. _file_src_polyhedron.hpp:
+
+File polyhedron.hpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/polyhedron.hpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_polyhedron.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+- ``chrono``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``random``
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classPolyhedron`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_polyhedron_8hpp_1a35d07b728fe4e42d91b6395a55164f3a`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ac6a789b445b0b68cc2baa536f785ab7b`
+
+- :ref:`exhale_function_polyhedron_8hpp_1acc473a5a311e2b25c12ae7ecdce226bc`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a5122b5827af9cbf50cd16988a1d504c2`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a4dd81928550fdfddbb11dce98cf65df4`
+
+- :ref:`exhale_function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a904db5af5b19a80c559f3237f79a7614`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a937aa145c046c9592aea06c15d58b8f4`
+
+- :ref:`exhale_function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4`
+
+- :ref:`exhale_function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c`
+

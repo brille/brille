@@ -1,0 +1,37 @@
+
+.. _file_src_interpolator2_real.tpp:
+
+File interpolator2_real.tpp
+===========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/interpolator2_real.tpp``)
+-------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_interpolator2_real.tpp.rst
+
+
+
+
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_interpolator2.hpp`
+
+
+

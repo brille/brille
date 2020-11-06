@@ -1,0 +1,13 @@
+.. _exhale_enum_interpolator2_8hpp_1a3c6366569dd8b593ba20918b442160d6:
+
+Enum RotatesLike
+================
+
+- Defined in :ref:`file_src_interpolator2.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: RotatesLike

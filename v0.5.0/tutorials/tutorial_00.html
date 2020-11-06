@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Interpolating Sodium Chloride phonons &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python module brille" href="../brille.html" />
+    <link rel="prev" title="User Guide" href="../tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorial.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interpolating Sodium Chloride phonons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dispersion-plots">Dispersion plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inelastic-neutron-scattering">Inelastic Neutron Scattering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../tutorial.html">User Guide</a> &raquo;</li>
+        
+      <li>Interpolating Sodium Chloride phonons</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorials/tutorial_00.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="interpolating-sodium-chloride-phonons">
+<h1>Interpolating Sodium Chloride phonons<a class="headerlink" href="#interpolating-sodium-chloride-phonons" title="Permalink to this headline">¶</a></h1>
+<p>Sodium Chloride forms face-centred cubic crystals in Space group
+<span class="math">\(F m \bar{3} m\)</span> (Hall symbol <span class="math">\(-F 4 2 3\)</span>) with lattice
+parameter <span class="math">\(a \approx 5.69\)</span> Å.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">Euphonic</span></code> is a project which can take force constant information at
+gridded positions in <span class="math">\(\mathbf{Q}\)</span> and use Fourier interpolation to
+approximate the dynamical matrix at arbitrary <span class="math">\(\mathbf{Q}\)</span>.
+It can then solve the eigenvalue problem to determine the eigenvalues,
+<span class="math">\(\omega_i^2(\mathbf{Q})\)</span>, and eigenvectors,
+<span class="math">\(\hat{\epsilon}_{ij}(\mathbf{Q})\)</span>, which are the squared energy
+and vectors related to the atom-resolved displacements for the
+<span class="math">\({i=1,…,3 N_\text{atom}}\)</span> phonon branches,
+where <span class="math">\({j=1,\ldots,N_\text{atom}}\)</span>.</p>
+<p>In the specific case of NaCl with its basis described in the face-centred
+lattice, the dynamical matrix is a <span class="math">\(24\times24\)</span> matrix and the eigenvalue
+problem can be solved relatively quickly on a modern computer.
+Still, it may be advantageous to minimise the work performed by
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">Euphonic</span></code> and let <a class="reference internal" href="../brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> do the heavy lifting.</p>
+<p>The interface between <a class="reference internal" href="../brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">Euphonic</span></code> is implemented as
+a class, <code class="xref py py-class docutils literal notranslate"><span class="pre">brille.euphonic.BrEu</span></code>.</p>
+<p>The first step in creating an appropriate interpolation grid object is to load
+the force constant data from, e.g., a CASTEP binary file.
+An appropriate file for <a class="reference external" href="https://github.com/brille/brilleu/raw/master/brilleu/NaCl.castep_bin">NaCl</a> can be used in conjunction with
+<a class="reference download internal" download="" href="../_downloads/6c53e4ad648d9756e7ca578019e7b4de/tutorial_00.py"><code class="xref download docutils literal notranslate"><span class="pre">this</span> <span class="pre">script</span></code></a> to reproduce the content of this
+tutorial.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nacl</span> <span class="o">=</span> <span class="n">getBrillEuObj</span><span class="p">(</span><span class="s1">&#39;NaCl&#39;</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scattering_lengths</span><span class="o">=</span><span class="n">scattering_lengths</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Constructing the <code class="xref py py-class docutils literal notranslate"><span class="pre">brille.euphonic.BrEu</span></code> object creates a hybrid grid
+in the irreducible Brillouin zone and then uses the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Euphonic.data.interpolation.InterpolationData</span></code> object to store
+<span class="math">\(\omega_i(\mathbf{q}_\text{ir})\)</span> and
+<span class="math">\(\hat{\epsilon}_{ij}(\mathbf{q}_\text{ir})\)</span> at each grid vertex.
+The stored data are then used to determine a sorting permutation for each vertex
+which attempts to place equivalent modes at equal indexes on all neighbouring
+vertices. As we will see, this process is not yet perfected.</p>
+<div class="section" id="dispersion-plots">
+<h2>Dispersion plots<a class="headerlink" href="#dispersion-plots" title="Permalink to this headline">¶</a></h2>
+<p>Interpolation can be used to determine the dispersion relation along any path
+in reciprocal space. One such path starts at the origin and goes to
+<span class="math">\(\mathbf{Q} = (1\,2\,3)\)</span> which is on the Brillouin zone boundary for
+<span class="math">\(\mathbf{G} = (1\,1\,3)\)</span> and passes through the
+<span class="math">\(\mathbf{G} = (1\,1\,1)\)</span> and <span class="math">\(\mathbf{G} = (0\,2\,2)\)</span>
+first Brilouin zones.</p>
+<div class="figure align-center" id="id1">
+<img alt="NaCl [123] path" src="../_images/nacl_123_path.png" />
+<p class="caption"><span class="caption-text">The <span class="math">\((0\,0\,0)\)</span>, <span class="math">\((1\,1\,1)\)</span>, <span class="math">\((0\,2\,2)\)</span>, and
+<span class="math">\((1\,1\,3)\)</span> first Brillouin zones and the path from <span class="math">\((0\,0\,0)\)</span>
+to <span class="math">\((1\,2\,3)\)</span></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>We can construct points along the path and find <span class="math">\(\omega_i(\mathbf{Q})\)</span>
+using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">qhkl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xi</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">xi</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">xi</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">w_q</span> <span class="o">=</span> <span class="n">nacl</span><span class="o">.</span><span class="n">w_q</span><span class="p">(</span><span class="n">qhkl</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since this path passes through four first Brillouin zones, an equivalent path
+must pass through the irreducible Brillouin zone multiple times. We can find
+the irreducible path using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">irqhkl</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">invrot</span> <span class="o">=</span> <span class="n">nacl</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">BrillouinZone</span><span class="o">.</span><span class="n">ir_moveinto</span><span class="p">(</span><span class="n">qhkl</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id2">
+<img alt="NaCl [123] irreducible path and dispersion" src="../_images/nacl_123_disp.png" />
+<p class="caption"><span class="caption-text">The irreducible path is shown in the irreducible Brillouin zone on the left,
+note that it passes through the irreducible polyhedron multiple times.
+The dispersion relation on the right is obtained by linear interpolation
+within the irreducible polyhedron.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="inelastic-neutron-scattering">
+<h2>Inelastic Neutron Scattering<a class="headerlink" href="#inelastic-neutron-scattering" title="Permalink to this headline">¶</a></h2>
+<p>Inelastic neutron scattering experiments performed with surveying instruments
+produce observations of scattering intensity at points in <span class="math">\((\mathbf{Q},E)\)</span>
+which are not on a regular grid.</p>
+<p>The intensity measured in a neutron scattering experiment from one-phonon
+scattering</p>
+<div class="math">
+\[\begin{aligned}
+S(\mathbf{Q}, E) & \propto \sum_i S_i(\mathbf{Q}) \delta(E-\hbar\omega_i(\mathbf{Q})) \\
+S_i(\mathbf{Q}) & = \frac{1}{\omega_i(\mathbf{Q})}
+                   \left|\sum_j \frac{b_j}{\sqrt{M_j}}
+                                \mathbf{Q}\cdot\hat{\epsilon}_{ij}(\mathbf{Q})
+                                e^{i \mathbf{Q}\cdot\mathbf{r}^0_j}
+                   \right|^2
+\end{aligned}\]</div>
+<p>with <span class="math">\(S_i(\mathbf{Q})\)</span> and <span class="math">\(\omega_i(\mathbf{Q})\)</span> directly calculable
+from theory via, e.g., <code class="xref py py-mod docutils literal notranslate"><span class="pre">Euphonic</span></code>.</p>
+<p>If the observations were on a regular <span class="math">\((\mathbf{Q},E)\)</span> grid then it would
+be straightforward to calculate <span class="math">\(S_i(\mathbf{Q})\)</span> and
+<span class="math">\(\omega_i(\mathbf{Q})\)</span> for each unique <span class="math">\(\mathbf{Q}\)</span>
+with the extension to <span class="math">\(S(\mathbf{Q},E)\)</span> involving an approximation to
+the convolution of the instrumental resolution and a delta function.</p>
+<p>Since, the detectors observe along (nonlinear) kinematically constrained
+paths through <span class="math">\((\mathbf{Q},E)\)</span>, each observation is likely to have a
+unique <span class="math">\(\mathbf{Q}\)</span> and, as a result, the calculation of
+<span class="math">\(S_i(\mathbf{Q})\)</span> and <span class="math">\(\omega_i(\mathbf{Q})\)</span> is necessary for
+<em>every</em> observation.</p>
+<p>If the <span class="math">\((\mathbf{Q},E)\)</span> observation positions are known for all detectors
+then <a class="reference internal" href="../brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> can be used to find <span class="math">\(S(\mathbf{Q},E)\)</span>.
+Correct handling of the non-uniform observations is non-trivial and special
+software packages exist for this purpose, e.g., <a class="reference external" href="https://github.com/pace-neutrons/horace">Horace</a>.
+Here we will avoid these complications by calculating <span class="math">\(S(\mathbf{Q},E)\)</span>
+for all points in a <span class="math">\((\mathbf{Q},E)\)</span> grid.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">nu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">50</span><span class="n">j</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">60</span><span class="n">j</span><span class="p">]</span>
+<span class="n">ξ</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">En</span> <span class="o">=</span> <span class="n">nu</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nu</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Qhkl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ξ</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ξ</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">ξ</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">brSQE</span> <span class="o">=</span> <span class="n">nacl</span><span class="p">(</span><span class="n">Qhkl</span><span class="p">,</span> <span class="n">En</span><span class="p">,</span> <span class="n">resfun</span><span class="o">=</span><span class="s1">&#39;sho&#39;</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id3">
+<img alt="NaCl [123] inelastic neutron scattering intensity map" src="../_images/nacl_123_sqw.png" />
+<p class="caption"><span class="caption-text">Inleastic neutron scattering intensity for the same path through recprocal
+space as above.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../brille.html" class="btn btn-neutral float-right" title="Python module brille" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../tutorial.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

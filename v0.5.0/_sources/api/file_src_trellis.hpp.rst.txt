@@ -1,0 +1,121 @@
+
+.. _file_src_trellis.hpp:
+
+File trellis.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/trellis.hpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_trellis.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+- ``atomic``
+
+- ``condition_variable``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``functional``
+
+- ``interpolatordual.hpp`` (:ref:`file_src_interpolatordual.hpp`)
+
+- ``mutex``
+
+- ``omp.h``
+
+- ``permutation.hpp`` (:ref:`file_src_permutation.hpp`)
+
+- ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
+
+- ``queue``
+
+- ``trellis.tpp`` (:ref:`file_src_trellis.tpp`)
+
+- ``triangulation_simple.hpp`` (:ref:`file_src_triangulation_simple.hpp`)
+
+- ``tuple``
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz_trellis.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classCubeNode`
+
+- :ref:`exhale_class_classNodeContainer`
+
+- :ref:`exhale_class_classNullNode`
+
+- :ref:`exhale_class_classPolyhedronTrellis`
+
+- :ref:`exhale_class_classPolyNode`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6`
+
+- :ref:`exhale_function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_trellis_8hpp_1a013a23ae25cfe5e1fdb57950b5b48e08`
+

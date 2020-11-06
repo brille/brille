@@ -1,0 +1,16 @@
+.. _exhale_struct_structLatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4:
+
+Template Struct LatVecTraits< LDVec< R >, S >
+=============================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: LatVecTraits< LDVec< R >, S >
+   :members:
+   :protected-members:
+   :undoc-members:

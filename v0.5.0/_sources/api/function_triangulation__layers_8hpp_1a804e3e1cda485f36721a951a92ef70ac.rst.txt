@@ -1,0 +1,13 @@
+.. _exhale_function_triangulation__layers_8hpp_1a804e3e1cda485f36721a951a92ef70ac:
+
+Template Function triangulate_one_layer
+=======================================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: triangulate_one_layer(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const int)

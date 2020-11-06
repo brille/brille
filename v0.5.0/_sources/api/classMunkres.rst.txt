@@ -1,0 +1,16 @@
+.. _exhale_class_classMunkres:
+
+Template Class Munkres
+======================
+
+- Defined in :ref:`file_src_munkres.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Munkres
+   :members:
+   :protected-members:
+   :undoc-members:

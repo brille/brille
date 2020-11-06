@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a7555f1c960a7ff8b7e2c1b4a90424808:
+
+Template Function brille::utils::subtract_matrix
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::subtract_matrix(T *, const R *, const S *)

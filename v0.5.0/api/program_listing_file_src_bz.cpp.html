@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File bz.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File bz.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_bz.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-bz-cpp">
+<span id="program-listing-file-src-bz-cpp"></span><h1>Program Listing for File bz.cpp<a class="headerlink" href="#program-listing-for-file-bz-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_bz.cpp.html#file-src-bz-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bz.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;bz.hpp&quot;</span><span class="cp"></span>
+
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_polyhedron_wedge_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">ir_n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_normals</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">ir_p</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_points</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">bz_n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">bz_p</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">bz_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="c1">// check if the irBZ face point is on a first BZ zone face too</span>
+    <span class="k">auto</span> <span class="n">not_bz</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">bz_n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ir_p</span> <span class="o">-</span> <span class="n">bz_p</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">neq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">not_bz</span><span class="p">.</span><span class="n">any</span><span class="p">())</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Why are all of the points on the first BZ surface?!&quot;</span><span class="p">);</span>
+    <span class="n">ir_n</span> <span class="o">=</span> <span class="n">ir_n</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">not_bz</span><span class="p">);</span>
+    <span class="n">ir_p</span> <span class="o">=</span> <span class="n">ir_p</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">not_bz</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// It is possible that, lacking inversion symmetry, we have found an</span>
+  <span class="c1">// irreducible polyhedron which is comprised of two convex polyhedra that</span>
+  <span class="c1">// are mutualy inverse. In such a case for every normal in ir_n there is also</span>
+  <span class="c1">// its opposite also in ir_n, and so ir_n defines a wedge and an anti-wedge in</span>
+  <span class="c1">// which no finite point can be inside</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">ir_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="cm">/* [lacks inversion] or this-&gt;no_ir_mirroring? */</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">no_inverse</span><span class="p">(</span><span class="n">ir_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">),</span> <span class="n">keep</span><span class="p">(</span><span class="n">ir_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ir_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">no_inverse</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">ir_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">no_inverse</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">ir_n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="n">ir_n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">)).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">no_inverse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">no_inverse</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">keep</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">no_inverse</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">no_inverse</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">))</span>
+      <span class="n">ir_n</span> <span class="o">=</span> <span class="n">ir_n</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// the remaining irBZ faces are the irreducible reciprocal space wedge</span>
+  <span class="c1">// which we store with the opposite sign in this-&gt;ir_wedge_normals</span>
+  <span class="k">return</span> <span class="o">-</span><span class="n">ir_n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Polyhedron</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_polyhedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">;}</span>
+<span class="n">Polyhedron</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_polyhedron</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">true_ir</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="c1">// If the ir polyhedron fills the first BZ using the symmetry operations</span>
+  <span class="c1">// of the pointgroup (plus time inversion, if included), then no ir_mirroring</span>
+  <span class="c1">// is to be performed. In this case or if the &#39;true_ir&#39; was requested, return</span>
+  <span class="c1">// the computed ir_polyhedron</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">no_ir_mirroring</span> <span class="o">||</span> <span class="o">!</span><span class="n">true_ir</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">;</span>
+  <span class="c1">// Otherwise, the ir_polyedron is only half of the true (non-convex)</span>
+  <span class="c1">// irreducible polyhedron, so add the lack of inversion symmetry explicitly.</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">mirror</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">check_ir_polyhedron</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Start BrillouinZone::check_ir_polyhedron&quot;</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_if_mirroring_needed</span><span class="p">();</span> <span class="c1">// move this to end of wedge_brute_force?</span>
+  <span class="n">PointSymmetry</span> <span class="n">fullps</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kt">double</span> <span class="n">volume_goal</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">()</span> <span class="o">/</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">fullps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">Polyhedron</span> <span class="n">irbz</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">(),</span> <span class="n">rotated</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">irbz</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span> <span class="n">volume_goal</span><span class="p">)){</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;The current &#39;irreducible&#39; polyhedron has the wrong volume&quot;</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Since &quot;</span><span class="p">,</span><span class="n">irbz</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span><span class="s">&quot; != &quot;</span><span class="p">,</span><span class="n">volume_goal</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cm">/* TODO FIXME -- make a LatticePolyhedron class to handle this? */</span>
+  <span class="cm">/* Our Polyhedron class holds the vertices, and plane information of a</span>
+<span class="cm">     convex polyhedron expressed in an orthonormal frame tied to the</span>
+<span class="cm">     conventional reciprocal space lattice. The conversion from lattice</span>
+<span class="cm">     vectors to absolute vectors is done with a transformation matrix, B.</span>
+<span class="cm">     The rotation and rotoinversions, R, stored in the PointSymmetry object</span>
+<span class="cm">     are expressed in units of the conventional real space lattice.</span>
+
+<span class="cm">     Reciprocal space vectors rotate via the transpose of R, Rᵀ; and since the</span>
+<span class="cm">     polyhedron contains vertices, points, and normals of the form Bx and we</span>
+<span class="cm">     need to apply Rᵀ to x directly, we want to &quot;rotate&quot; each part of the</span>
+<span class="cm">     polyhedron by B Rᵀ B⁻¹, e.g., B Rᵀ B⁻¹ B x = B Rᵀ x.</span>
+<span class="cm">  */</span>
+  <span class="c1">// double B[9], invB[9], RtinvB[8];</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;</span> <span class="n">B</span><span class="p">,</span> <span class="n">invB</span><span class="p">,</span> <span class="n">RtinvB</span><span class="p">,</span> <span class="n">BRtinvB</span><span class="p">;</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_B_matrix</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">matrix_inverse</span><span class="p">(</span><span class="n">invB</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">B</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;inverse(B)&quot;</span><span class="p">,</span><span class="n">invB</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;</span> <span class="n">Rt</span><span class="p">;</span>
+  <span class="c1">// get the operations of the pointgroup which are not 1 or -1</span>
+  <span class="c1">// keeping -1 would probably be ok, but hopefully it won&#39;t hurt to remove it now</span>
+  <span class="n">PointSymmetry</span> <span class="n">ps</span> <span class="o">=</span> <span class="n">fullps</span><span class="p">.</span><span class="n">higher</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">Rt</span> <span class="o">=</span> <span class="n">transpose</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span> <span class="c1">// Rᵀ</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">transpose(R)&quot;</span><span class="p">,</span><span class="n">Rt</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">RtinvB</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">Rt</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">invB</span><span class="p">.</span><span class="n">data</span><span class="p">());</span> <span class="c1">// Rᵀ*B⁻¹</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;transpose(R) inverse(B)&quot;</span><span class="p">,</span><span class="n">RtinvB</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">BRtinvB</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">B</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">RtinvB</span><span class="p">.</span><span class="n">data</span><span class="p">());</span> <span class="c1">// B*Rᵀ*B⁻¹</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Rotate the polyhedron by&quot;</span><span class="p">,</span> <span class="n">BRtinvB</span><span class="p">);</span>
+    <span class="n">rotated</span> <span class="o">=</span> <span class="n">irbz</span><span class="p">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">BRtinvB</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Checking for intersection &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">irbz</span><span class="p">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">rotated</span><span class="p">)){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;The current &#39;irreducible&#39; polyhedron intersects with itself and therefore is not correct.&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// volume is right and no intersections</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;  End BrillouinZone::check_ir_polyhedron&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// first Brillouin zone</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_primitive_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">v</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_points</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_primitive_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">p</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">p</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_normals</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_primitive_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">n</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_half_edges</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_half_edges</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_faces_per_vertex</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_faces_per_vertex</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_vertices_per_face</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_vertices_per_face</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">// irreducible first Brillouin zone</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Polyhedron</span> <span class="n">irp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">irp</span><span class="p">.</span><span class="n">get_vertices</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_primitive_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_vertices</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">v</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Polyhedron</span> <span class="n">irp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">irp</span><span class="p">.</span><span class="n">get_points</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_primitive_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">p</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_points</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">p</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Polyhedron</span> <span class="n">irp</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_invA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">irp</span><span class="p">.</span><span class="n">get_normals</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_primitive_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_normals</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span> <span class="n">n</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_faces_per_vertex</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">().</span><span class="n">get_faces_per_vertex</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_vertices_per_face</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron</span><span class="p">().</span><span class="n">get_vertices_per_face</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// irreducible reciprocal space</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_ir_wedge_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//</span>
+<span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">get_primitive_ir_wedge_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">lqwn</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span>
+    <span class="n">lqwn</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isprimitive</span><span class="p">())</span>
+      <span class="n">lqwn</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">lqwn</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">lqwn</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">print</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;BrillouinZone with &quot;</span><span class="p">;</span>
+  <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">vertices_count</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; vertices and &quot;</span><span class="p">;</span>
+  <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">faces_count</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot; faces&quot;</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">irreducible_vertex_search</span><span class="p">(){</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="p">;</span>
+  <span class="cm">/* We need to check for three-plane intersections for all combinations of two</span>
+<span class="cm">     1st Brillouin zone planes and one irreducible reciprocal space normal and</span>
+<span class="cm">     two irreducible reciprocal space normals and one 1st Brillouin zone plane.</span>
+<span class="cm">  */</span>
+  <span class="kt">size_t</span> <span class="n">Nbz</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">().</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kt">size_t</span> <span class="n">Nir</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">Nir</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// for which there are M*(N*(N-1))/2 + N*(M*(M-1))/2 total possible combinations</span>
+  <span class="kt">size_t</span> <span class="n">n21</span> <span class="o">=</span> <span class="p">((</span><span class="n">Nbz</span><span class="o">*</span><span class="p">(</span><span class="n">Nbz</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">Nir</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">n12</span> <span class="o">=</span> <span class="p">((</span><span class="n">Nir</span><span class="o">*</span><span class="p">(</span><span class="n">Nir</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">Nbz</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">n03</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nir</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">n03</span> <span class="o">+=</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Checking {&quot;</span><span class="p">,</span><span class="n">n21</span><span class="p">,</span><span class="s">&quot;, &quot;</span><span class="p">,</span><span class="n">n12</span><span class="p">,</span><span class="s">&quot;, &quot;</span><span class="p">,</span><span class="n">n03</span><span class="p">,</span><span class="s">&quot;} {2:1, 1:2, 0:3} zone:wedge 3-plane intersection points&quot;</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">bznormals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">bzpoints</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">();</span>
+
+  <span class="c1">// We will create a polyhedron using (some of) these normals. It is imperitive</span>
+  <span class="c1">// that the polyhedron normals point *outwards* from the centre of the polyhedron</span>
+  <span class="c1">// while we&#39;ve thus far defined the wedge normals to point *into* the irreducible</span>
+  <span class="c1">// reciprocal space wedge.</span>
+  <span class="k">auto</span> <span class="n">irnormals</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_wedge_normals</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">vertices30</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">i30</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_faces_per_vertex</span><span class="p">();</span>
+
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vertices21</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">n21</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vertices12</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">n12</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vertices03</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">n03</span><span class="p">);</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">i21</span><span class="p">(</span><span class="n">n21</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">i12</span><span class="p">(</span><span class="n">n12</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">i03</span><span class="p">(</span><span class="n">n03</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="kt">int</span> <span class="n">c21</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c12</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c03</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n21</span><span class="p">){</span> <span class="c1">// protect against Nbz=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span>  <span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="n">Nbz</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span> <span class="n">Nbz</span>   <span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span>  <span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span> <span class="n">Nir</span>   <span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intersect_at</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                     <span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span>
+                     <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">k</span><span class="p">),</span>                   <span class="n">vertices21</span><span class="p">,</span> <span class="n">c21</span><span class="p">)){</span>
+      <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c21</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">=</span><span class="n">i</span><span class="p">;</span> <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c21</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">j</span><span class="p">;</span> <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c21</span><span class="o">++</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="n">k</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n12</span><span class="p">){</span> <span class="c1">// protect against Nir=0, since size_t(0)-1 = 4294967294 or 18446744073709551615 if its 32- or 64-bit</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span>  <span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">Nbz</span>   <span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span>  <span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="p">(</span><span class="n">Nir</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">k</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span> <span class="n">Nir</span>   <span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intersect_at</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                     <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span>
+                     <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">k</span><span class="p">),</span>                   <span class="n">vertices12</span><span class="p">,</span> <span class="n">c12</span><span class="p">)){</span>
+      <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c12</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c12</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">j</span><span class="p">,</span> <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c12</span><span class="o">++</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="n">k</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n03</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span>  <span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="n">Nir</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="p">(</span><span class="n">Nir</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">k</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span> <span class="n">Nir</span>   <span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intersect_at</span><span class="p">(</span><span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                     <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span>
+                     <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">k</span><span class="p">),</span>                   <span class="n">vertices03</span><span class="p">,</span> <span class="n">c03</span><span class="p">)){</span>
+      <span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c03</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">=</span><span class="n">i</span><span class="p">;</span> <span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c03</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">j</span><span class="p">;</span> <span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">c03</span><span class="o">++</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="n">k</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Intersections found&quot;</span><span class="p">);</span>
+  <span class="c1">// make sure we shrink all sets of vertices to just those found!</span>
+  <span class="c1">// plus remove any intersection points outside of the first Brillouin zone</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">shrink_and_prune_outside</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c21</span><span class="p">),</span> <span class="n">vertices21</span><span class="p">,</span> <span class="n">i21</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">shrink_and_prune_outside</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c12</span><span class="p">),</span> <span class="n">vertices12</span><span class="p">,</span> <span class="n">i12</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">shrink_and_prune_outside</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c03</span><span class="p">),</span> <span class="n">vertices03</span><span class="p">,</span> <span class="n">i03</span><span class="p">);</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Intersections pruned&quot;</span><span class="p">);</span>
+  <span class="c1">// Now we have four lists of vertices, plus lists of the normal vectors</span>
+  <span class="c1">// and on-plane points, which define the three planes that intersect at each</span>
+  <span class="c1">// vertex.</span>
+  <span class="c1">// We want to combine these lists:</span>
+
+  <span class="kt">int</span> <span class="n">max_bz_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_ir_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="n">i30</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">j</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">max_bz_idx</span><span class="p">)</span> <span class="n">max_bz_idx</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_bz_idx</span><span class="p">)</span> <span class="n">max_bz_idx</span><span class="o">=</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_bz_idx</span><span class="p">)</span> <span class="n">max_bz_idx</span><span class="o">=</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_ir_idx</span><span class="p">)</span> <span class="n">max_ir_idx</span><span class="o">=</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_bz_idx</span><span class="p">)</span> <span class="n">max_bz_idx</span><span class="o">=</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_ir_idx</span><span class="p">)</span> <span class="n">max_ir_idx</span><span class="o">=</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_ir_idx</span><span class="p">)</span> <span class="n">max_ir_idx</span><span class="o">=</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">&gt;</span><span class="n">max_ir_idx</span><span class="p">)</span> <span class="n">max_ir_idx</span><span class="o">=</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">max_bz_idx</span><span class="o">++</span><span class="p">;</span> <span class="n">max_ir_idx</span><span class="o">++</span><span class="p">;</span> <span class="c1">// since we count from 0, and need one more element than the highest index.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">bz_face_present</span><span class="p">(</span><span class="n">max_bz_idx</span><span class="p">,</span> <span class="nb">false</span><span class="p">),</span> <span class="n">ir_face_present</span><span class="p">(</span><span class="n">max_ir_idx</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="n">i30</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">j</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span> <span class="n">bz_face_present</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">bz_face_present</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">bz_face_present</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">ir_face_present</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">bz_face_present</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">ir_face_present</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">ir_face_present</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">ir_face_present</span><span class="p">[</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="n">ind_t</span> <span class="n">bz_faces</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">bz_face_present</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">bz_face_present</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="n">ind_t</span> <span class="n">ir_faces</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">ir_face_present</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ir_face_present</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+
+  <span class="n">ind_t</span> <span class="n">total_verts</span><span class="p">;</span>
+  <span class="n">total_verts</span>  <span class="o">=</span> <span class="n">vertices30</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertices12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">total_verts</span> <span class="o">+=</span> <span class="n">vertices21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertices03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">all_verts</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">total_verts</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">all_norms</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">bz_faces</span><span class="o">+</span><span class="n">ir_faces</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">all_point</span><span class="p">(</span><span class="n">bznormals</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">bz_faces</span><span class="o">+</span><span class="n">ir_faces</span><span class="p">);</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">all_ijk</span><span class="p">(</span><span class="n">total_verts</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">bz_face_mapped</span><span class="p">(</span><span class="n">max_bz_idx</span><span class="p">,</span> <span class="mi">0u</span><span class="p">),</span> <span class="n">ir_face_mapped</span><span class="p">(</span><span class="n">max_ir_idx</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span>
+
+  <span class="kt">size_t</span> <span class="n">face_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i30</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="s">&quot; 3:0 normals and plane-points&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="n">i30</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">j</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">j</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span>  <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+      <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span> <span class="c1">// so that bz_face_mapped is the index+1</span>
+    <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 2:1 normals and plane-points&quot;</span><span class="p">);</span>
+  <span class="n">ind_t</span> <span class="n">jdx</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span>  <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span>  <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">face_idx</span><span class="p">)</span> <span class="o">*=</span> <span class="mf">0.0</span><span class="p">;</span>
+      <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 1:2 normals and plane-points&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">bznormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span>  <span class="n">bzpoints</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">face_idx</span><span class="p">)</span> <span class="o">*=</span> <span class="mf">0.0</span><span class="p">;</span>
+      <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">face_idx</span><span class="p">)</span> <span class="o">*=</span> <span class="mf">0.0</span><span class="p">;</span>
+      <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 0:3 normals and plane-points&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">jdx</span> <span class="o">=</span> <span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]){</span>
+      <span class="n">all_norms</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">face_idx</span><span class="p">,</span> <span class="n">irnormals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">jdx</span><span class="p">));</span>
+      <span class="n">all_point</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">face_idx</span><span class="p">)</span> <span class="o">*=</span> <span class="mf">0.0</span><span class="p">;</span>
+      <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">jdx</span><span class="p">]</span> <span class="o">=</span> <span class="o">++</span><span class="n">face_idx</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Normals and plane-points combined&quot;</span><span class="p">);</span>
+
+  <span class="n">ind_t</span> <span class="n">vert_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i30</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="s">&quot; 3:0 vertices and planes-per-vertex&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i30</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i30</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i30</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i30</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_verts</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">vert_idx</span><span class="o">++</span><span class="p">,</span> <span class="n">vertices30</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 2:1 vertices and planes-per-vertex&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i21</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i21</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_verts</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">vert_idx</span><span class="o">++</span><span class="p">,</span> <span class="n">vertices21</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 1:2 vertices and planes-per-vertex&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i12</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">bz_face_mapped</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i12</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_verts</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">vert_idx</span><span class="o">++</span><span class="p">,</span> <span class="n">vertices12</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combine &quot;</span><span class="p">,</span> <span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; 0:3 vertices and planes-per-vertex&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">i03</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_ijk</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">vert_idx</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="n">ir_face_mapped</span><span class="p">[</span><span class="n">i03</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">all_verts</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">vert_idx</span><span class="o">++</span><span class="p">,</span> <span class="n">vertices03</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Vertices and planes-per-vertex combined&quot;</span><span class="p">);</span>
+  <span class="c1">// four lists now combined into one.</span>
+  <span class="c1">//      all_ijk   -- (N,3) array of which three planes intersected at a vertex</span>
+  <span class="c1">//      all_verts -- (N,) vector of intersection vertex locations</span>
+  <span class="c1">//      all_norms -- (N,) vector of plane normals (indexed by all_ijk)</span>
+  <span class="c1">//      all_point -- (N,) vector of on-plane points (indexed by all_ijk)</span>
+
+  <span class="c1">// Find which vertices are inside the irreducible wedge</span>
+  <span class="k">const</span> <span class="kt">bool</span> <span class="n">constructing</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span> <span class="c1">// here we *are* building-up the irreducible Brillouin zone</span>
+  <span class="k">auto</span> <span class="n">keep</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside_wedge</span><span class="p">(</span><span class="n">all_verts</span><span class="p">,</span> <span class="n">constructing</span><span class="p">);</span>
+  <span class="c1">// and pull out those vertices and their intersecting plane indices</span>
+  <span class="n">all_verts</span> <span class="o">=</span> <span class="n">all_verts</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+  <span class="n">all_ijk</span>   <span class="o">=</span> <span class="n">all_ijk</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+
+  <span class="c1">// it is imperitive that the xyz coordinate system of the irreducible</span>
+  <span class="c1">// polyhedron is the same as that used by the Brillouin zone polyhedron.</span>
+  <span class="c1">// Deal with this in a special function elsewhere.</span>
+  <span class="c1">//</span>
+  <span class="c1">// Creating a Polyhedron object automatically keeps only unique vertices</span>
+  <span class="c1">// and facet planes which are polygons, plus finds the vertex to facet</span>
+  <span class="c1">// and facet to vertex indexing required for, e.g., plotting</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_polyhedron</span><span class="p">(</span><span class="n">all_verts</span><span class="p">,</span> <span class="n">all_point</span><span class="p">,</span> <span class="n">all_norms</span><span class="p">);</span>
+  <span class="c1">// this-&gt;set_ir_polyhedron(all_verts, all_point, all_norms, all_ijk);</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Found a &quot;</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">string_repr</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">voro_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="p">){</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Start BrillouinZone::voro_search with &quot;</span><span class="p">,</span><span class="n">extent</span><span class="p">,</span><span class="s">&quot; extent&quot;</span><span class="p">);</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">bbmin</span><span class="p">{</span><span class="mf">1e3</span><span class="p">,</span><span class="mf">1e3</span><span class="p">,</span><span class="mf">1e3</span><span class="p">},</span> <span class="n">bbmax</span><span class="p">{</span><span class="o">-</span><span class="mf">1e3</span><span class="p">,</span><span class="o">-</span><span class="mf">1e3</span><span class="p">,</span><span class="o">-</span><span class="mf">1e3</span><span class="p">};</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">primtau</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="n">make_relative_neighbour_indices</span><span class="p">(</span><span class="n">extent</span><span class="p">));</span>
+  <span class="kt">size_t</span> <span class="n">ntau</span> <span class="o">=</span> <span class="n">primtau</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">perm</span><span class="p">(</span><span class="n">ntau</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// {0u, 1u, 2u, ..., ntau-1}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">size_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">){</span>
+    <span class="k">return</span> <span class="n">primtau</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">primtau</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="c1">// verbose_update(&quot;unsorted primtau\n&quot;,primtau.to_string(),norm(primtau).to_string());</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;unsorted primtau</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">cat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">primtau</span><span class="p">,</span><span class="n">norm</span><span class="p">(</span><span class="n">primtau</span><span class="p">)).</span><span class="n">to_string</span><span class="p">());</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;permutation:&quot;</span><span class="p">,</span><span class="n">perm</span><span class="p">);</span>
+  <span class="n">primtau</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="n">perm</span><span class="p">);</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;sorted primtau</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">cat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">primtau</span><span class="p">,</span><span class="n">norm</span><span class="p">(</span><span class="n">primtau</span><span class="p">)).</span><span class="n">to_string</span><span class="p">());</span>
+  <span class="c1">// the first Brillouin zone polyhedron will be expressed in absolute units</span>
+  <span class="c1">// in the xyz frame of the conventional reciprocal lattice</span>
+  <span class="k">auto</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">primtau</span><span class="p">).</span><span class="n">get_xyz</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ntau</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tau</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">bbmin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="n">bbmin</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tau</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">bbmax</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="n">bbmax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// create an initialize the voro++ voronoicell object</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Construct the bounding polyhedron from &quot;</span><span class="p">,</span><span class="n">bbmin</span><span class="p">,</span><span class="s">&quot; to &quot;</span><span class="p">,</span><span class="n">bbmax</span><span class="p">);</span>
+  <span class="n">Polyhedron</span> <span class="n">voronoi</span> <span class="o">=</span> <span class="n">polyhedron_box</span><span class="p">(</span><span class="n">bbmin</span><span class="p">,</span> <span class="n">bbmax</span><span class="p">);</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Bounding polyhedron with volume = &quot;</span><span class="p">,</span><span class="n">voronoi</span><span class="p">.</span><span class="n">get_volume</span><span class="p">());</span>
+  <span class="c1">// and then use the reciprocal lattice points to subdivide the cell until</span>
+  <span class="c1">// only the first Brillouin zone is left:</span>
+  <span class="n">Polyhedron</span> <span class="n">firstbz</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">bisect</span><span class="p">(</span><span class="n">voronoi</span><span class="p">,</span> <span class="n">tau</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">tau</span><span class="p">),</span> <span class="n">tau</span><span class="o">/</span><span class="mf">2.0</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span> <span class="o">=</span> <span class="n">firstbz</span><span class="p">;</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;  End BrillouinZone::voro_search with &quot;</span><span class="p">,</span><span class="n">extent</span><span class="p">,</span><span class="s">&quot; extent&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">// moved back from the header file now that their template parameters are lost again</span>
+
+<span class="kt">double</span>
+<span class="n">normals_matrix_determinant</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">c</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">metric</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ax</span><span class="p">{</span><span class="n">a</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">().</span><span class="n">to_std</span><span class="p">()},</span> <span class="n">bx</span><span class="p">{</span><span class="n">b</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">().</span><span class="n">to_std</span><span class="p">()},</span> <span class="n">cx</span><span class="p">{</span><span class="n">c</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">().</span><span class="n">to_std</span><span class="p">()};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">metric</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">metric</span><span class="p">[</span><span class="mi">3</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">metric</span><span class="p">[</span><span class="mi">6</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">matrix_determinant</span><span class="p">(</span><span class="n">metric</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span>
+<span class="n">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">double</span> <span class="n">detM</span> <span class="o">=</span> <span class="n">normals_matrix_determinant</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">detM</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">){</span>
+    <span class="k">auto</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="n">ni</span><span class="p">)</span> <span class="o">+</span> <span class="n">cross</span><span class="p">(</span><span class="n">nk</span><span class="p">,</span><span class="n">ni</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pj</span><span class="p">,</span><span class="n">nj</span><span class="p">)</span> <span class="o">+</span> <span class="n">cross</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nj</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pk</span><span class="p">,</span><span class="n">nk</span><span class="p">);</span>
+    <span class="n">tmp</span> <span class="o">/=</span> <span class="n">detM</span><span class="p">;</span>
+    <span class="n">intersect</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span>
+<span class="n">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">double</span> <span class="n">detM</span> <span class="o">=</span> <span class="n">normals_matrix_determinant</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">detM</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">){</span>
+    <span class="k">auto</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="n">ni</span><span class="p">)</span> <span class="o">+</span> <span class="n">cross</span><span class="p">(</span><span class="n">nk</span><span class="p">,</span><span class="n">ni</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pj</span><span class="p">,</span><span class="n">nj</span><span class="p">);</span>
+    <span class="n">tmp</span> <span class="o">/=</span> <span class="n">detM</span><span class="p">;</span>
+    <span class="n">intersect</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span>
+<span class="n">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">double</span> <span class="n">detM</span> <span class="o">=</span> <span class="n">normals_matrix_determinant</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">detM</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">){</span>
+    <span class="k">auto</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">)</span><span class="o">*</span><span class="n">dot</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span><span class="n">ni</span><span class="p">);</span>
+    <span class="n">tmp</span> <span class="o">/=</span> <span class="n">detM</span><span class="p">;</span>
+    <span class="n">intersect</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span>
+<span class="n">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">normals_matrix_determinant</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span><span class="n">nj</span><span class="p">,</span><span class="n">nk</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">){</span>
+    <span class="n">intersect</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">intersect</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

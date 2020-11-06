@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File pointsymmetry.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File pointsymmetry.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_pointsymmetry.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-pointsymmetry-hpp">
+<span id="program-listing-file-src-pointsymmetry-hpp"></span><h1>Program Listing for File pointsymmetry.hpp<a class="headerlink" href="#program-listing-for-file-pointsymmetry-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_pointsymmetry.hpp.html#file-src-pointsymmetry-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/pointsymmetry.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef _POINTSYMMETRY_H_</span>
+<span class="cp">#define _POINTSYMMETRY_H_</span>
+
+<span class="c1">// #include &lt;vector&gt;</span>
+<span class="c1">// #include &lt;array&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="c1">// #include &lt;numeric&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&quot;utilities.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">Vector</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">Matrices</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">Vectors</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+
+<span class="cm">/*****************************************************************************\</span>
+<span class="cm">| PointSymmetry class                                                         |</span>
+<span class="cm">|-----------------------------------------------------------------------------|</span>
+<span class="cm">|   Holds N 3x3 rotation matrices R which comprise a point group symmetry.    |</span>
+<span class="cm">|-----------------------------------------------------------------------------|</span>
+<span class="cm">| Member functions:                                                           |</span>
+<span class="cm">|   set      copy a given matrix into R at index i.                           |</span>
+<span class="cm">|   get      copy the rotation at index i into the provided matrix.           |</span>
+<span class="cm">|   resize   grow or shrink the number of rotations that the object can hold  |</span>
+<span class="cm">|            -- this causes a memory copy if the old and new sizes are finite.|</span>
+<span class="cm">|   size     return the number of rotations the object can/does store.        |</span>
+<span class="cm">\*****************************************************************************/</span>
+<span class="k">class</span> <span class="nc">PointSymmetry</span><span class="p">{</span>
+  <span class="n">Matrices</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">R</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">PointSymmetry</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">:</span> <span class="n">R</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">R</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">n</span><span class="p">);}</span>
+  <span class="n">PointSymmetry</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrices</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">rots</span><span class="p">)</span><span class="o">:</span> <span class="n">R</span><span class="p">(</span><span class="n">rots</span><span class="p">){</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sort</span><span class="p">();</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Matrices</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">getall</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                  <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">;</span>  <span class="p">}</span>
+  <span class="kt">size_t</span>               <span class="n">size</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">R</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="p">}</span>
+  <span class="kt">size_t</span>               <span class="n">resize</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">newsize</span><span class="p">)</span>                            <span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>                                       <span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="p">)</span>                                 <span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">)</span>                                 <span class="p">;</span>
+  <span class="kt">bool</span>                 <span class="nf">get</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>                        <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span>                 <span class="nf">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>                       <span class="p">;</span>
+  <span class="kt">int</span> <span class="o">*</span>                <span class="nf">data</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                                    <span class="p">;</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span>          <span class="nf">data</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                               <span class="k">const</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">pop</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                                   <span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">erase</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                                   <span class="p">;</span>
+  <span class="kt">bool</span>                 <span class="nf">has</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="p">)</span>                            <span class="k">const</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">get</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                                <span class="k">const</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">get_proper</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                         <span class="k">const</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">get_inverse</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                        <span class="k">const</span><span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">get_inverse_index</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                  <span class="k">const</span><span class="p">;</span>
+  <span class="kt">size_t</span>               <span class="nf">find_index</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="p">)</span>                     <span class="k">const</span><span class="p">;</span>
+  <span class="c1">// const Matrix&lt;int&gt;&amp;   get(const size_t i)                                const;</span>
+  <span class="kt">void</span>                 <span class="nf">sort</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">ad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                                    <span class="p">;</span>
+  <span class="kt">void</span>                 <span class="nf">permute</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span><span class="p">)</span>                     <span class="p">;</span>
+  <span class="kt">int</span>                  <span class="nf">order</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                              <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>     <span class="n">orders</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                       <span class="k">const</span><span class="p">;</span>
+  <span class="kt">int</span>                  <span class="nf">isometry</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                           <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>     <span class="n">isometries</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                   <span class="k">const</span><span class="p">;</span>
+  <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">axis</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                               <span class="k">const</span><span class="p">;</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>         <span class="n">axes</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                         <span class="k">const</span><span class="p">;</span>
+  <span class="kt">bool</span>                 <span class="nf">has_space_inversion</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                          <span class="k">const</span><span class="p">;</span>
+  <span class="kt">void</span>                 <span class="nf">print</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                              <span class="k">const</span><span class="p">;</span>
+  <span class="kt">void</span>                 <span class="nf">print</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                        <span class="k">const</span><span class="p">;</span>
+  <span class="n">PointSymmetry</span>        <span class="nf">generate</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                     <span class="k">const</span><span class="p">;</span>
+  <span class="n">PointSymmetry</span>        <span class="nf">generators</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                                   <span class="k">const</span><span class="p">;</span>
+  <span class="n">PointSymmetry</span>        <span class="nf">nfolds</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">min_order</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                      <span class="k">const</span><span class="p">;</span>
+  <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>          <span class="n">perpendicular_axis</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span>                 <span class="k">const</span><span class="p">;</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>         <span class="n">perpendicular_axes</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>                           <span class="k">const</span><span class="p">;</span>
+  <span class="n">PointSymmetry</span>        <span class="nf">higher</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">min_order</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                      <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

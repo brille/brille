@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class Motion &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Munkres" href="classMunkres.html" />
+    <link rel="prev" title="Template Class Mesh3" href="classMesh3.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class Motion</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classMotion.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-motion">
+<span id="exhale-class-classmotion"></span><h1>Template Class Motion<a class="headerlink" href="#template-class-motion" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_symmetry.hpp.html#file-src-symmetry-hpp"><span class="std std-ref">File symmetry.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E6Motion">
+<span id="_CPPv3I00E6Motion"></span><span id="_CPPv2I00E6Motion"></span>template&lt;class <code class="sig-name descname">R</code>, class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classMotion"></span><em class="property">class </em><code class="sig-name descname">Motion</code><a class="headerlink" href="#_CPPv4I00E6Motion" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion6MotionEv">
+<span id="_CPPv3N6Motion6MotionEv"></span><span id="_CPPv2N6Motion6MotionEv"></span><span id="Motion::Motion"></span><span class="target" id="classMotion_1a5837414da606429bf9b70911a82df726"></span><code class="sig-name descname">Motion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion6MotionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion6MotionERK6MatrixI1RE">
+<span id="_CPPv3N6Motion6MotionERK6MatrixI1RE"></span><span id="_CPPv2N6Motion6MotionERK6MatrixI1RE"></span><span id="Motion::Motion__Matrix:R:CR"></span><span class="target" id="classMotion_1aa31232e0a5a40c4aa293c1fb8731470f"></span><code class="sig-name descname">Motion</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#_CPPv4I0E6Matrix" title="Matrix">Matrix</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>&gt; &amp;<em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion6MotionERK6MatrixI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion6MotionERK6VectorI1TE">
+<span id="_CPPv3N6Motion6MotionERK6VectorI1TE"></span><span id="_CPPv2N6Motion6MotionERK6VectorI1TE"></span><span id="Motion::Motion__Vector:T:CR"></span><span class="target" id="classMotion_1ad28800ae55cdd24cbda360feda3267e1"></span><code class="sig-name descname">Motion</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion6MotionERK6VectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion6MotionERK6MatrixI1RERK6VectorI1TE">
+<span id="_CPPv3N6Motion6MotionERK6MatrixI1RERK6VectorI1TE"></span><span id="_CPPv2N6Motion6MotionERK6MatrixI1RERK6VectorI1TE"></span><span id="Motion::Motion__Matrix:R:CR.Vector:T:CR"></span><span class="target" id="classMotion_1ae9ff96a3631ecc00fe21b7489161e51a"></span><code class="sig-name descname">Motion</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#_CPPv4I0E6Matrix" title="Matrix">Matrix</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>&gt; &amp;<em>X</em>, <em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion6MotionERK6MatrixI1RERK6VectorI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion6MotionERKNSt6stringEb">
+<span id="_CPPv3N6Motion6MotionERKNSt6stringEb"></span><span id="_CPPv2N6Motion6MotionERKNSt6stringEb"></span><span id="Motion::Motion__ssCR.b"></span><span class="target" id="classMotion_1a1d355eab01d3de8a0705641ef516c31c"></span><code class="sig-name descname">Motion</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>x</em>, bool <em>change_of_basis</em> = false<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion6MotionERKNSt6stringEb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6MotionmlERK6MotionI1R1TE">
+<span id="_CPPv3NK6MotionmlERK6MotionI1R1TE"></span><span id="_CPPv2NK6MotionmlERK6MotionI1R1TE"></span><span id="Motion::mul-operator__Motion:R.T:CRC"></span><span class="target" id="classMotion_1a8954c3d6c0dd20d7872043b23a8ddcaf"></span><a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion">Motion</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>, <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; <code class="sig-name descname">operator*</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion">Motion</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>, <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6MotionmlERK6MotionI1R1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6Motion7inverseEv">
+<span id="_CPPv3NK6Motion7inverseEv"></span><span id="_CPPv2NK6Motion7inverseEv"></span><span id="Motion::inverseC"></span><span class="target" id="classMotion_1ad3573d1098ccd7f929b35581ecdb94a9"></span><a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion">Motion</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>, <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; <code class="sig-name descname">inverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6Motion7inverseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6Motion10move_pointE6VectorI1SERK6VectorI1SE">
+<span id="_CPPv3I0ENK6Motion10move_pointERK6VectorI1SE"></span><span id="_CPPv2I0ENK6Motion10move_pointERK6VectorI1SE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMotion_1ae0054c9ce0c87d49baa24cf3aef5712d"></span><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion10move_pointE6VectorI1SERK6VectorI1SE" title="Motion::move_point::S">S</a>&gt; <code class="sig-name descname">move_point</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion10move_pointE6VectorI1SERK6VectorI1SE" title="Motion::move_point::S">S</a>&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6Motion10move_pointE6VectorI1SERK6VectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6Motion11move_vectorE6VectorI1SERK6VectorI1SE">
+<span id="_CPPv3I0ENK6Motion11move_vectorERK6VectorI1SE"></span><span id="_CPPv2I0ENK6Motion11move_vectorERK6VectorI1SE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMotion_1a958a50f6cdc82265b572f3eaa7e64a3b"></span><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion11move_vectorE6VectorI1SERK6VectorI1SE" title="Motion::move_vector::S">S</a>&gt; <code class="sig-name descname">move_vector</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion11move_vectorE6VectorI1SERK6VectorI1SE" title="Motion::move_vector::S">S</a>&gt; &amp;<em>v</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6Motion11move_vectorE6VectorI1SERK6VectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6Motion10move_axialE6VectorI1SERK6VectorI1SE">
+<span id="_CPPv3I0ENK6Motion10move_axialERK6VectorI1SE"></span><span id="_CPPv2I0ENK6Motion10move_axialERK6VectorI1SE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMotion_1af9cca6a2cce38bd31c0d226e919a70f9"></span><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion10move_axialE6VectorI1SERK6VectorI1SE" title="Motion::move_axial::S">S</a>&gt; <code class="sig-name descname">move_axial</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion10move_axialE6VectorI1SERK6VectorI1SE" title="Motion::move_axial::S">S</a>&gt; &amp;<em>a</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6Motion10move_axialE6VectorI1SERK6VectorI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6Motion4getrEv">
+<span id="_CPPv3NK6Motion4getrEv"></span><span id="_CPPv2NK6Motion4getrEv"></span><span id="Motion::getr__voidC"></span><span class="target" id="classMotion_1add8d674e2dbcccb514eac1c761607d69"></span><a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#_CPPv4I0E6Matrix" title="Matrix">Matrix</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>&gt; <code class="sig-name descname">getr</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6Motion4getrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6Motion4gettEv">
+<span id="_CPPv3NK6Motion4gettEv"></span><span id="_CPPv2NK6Motion4gettEv"></span><span id="Motion::gett__voidC"></span><span class="target" id="classMotion_1ab5ed0f5742802d24e69be767dfdde6e3"></span><a class="reference internal" href="typedef_hall__symbol_8hpp_1a2b8a7995f8d9cc961c01001ce885484a.html#_CPPv4I0E6Vector" title="Vector">Vector</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; <code class="sig-name descname">gett</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6Motion4gettEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6MotioneqERK6MotionI1R1TE">
+<span id="_CPPv3NK6MotioneqERK6MotionI1R1TE"></span><span id="_CPPv2NK6MotioneqERK6MotionI1R1TE"></span><span id="Motion::eq-operator__Motion:R.T:CRC"></span><span class="target" id="classMotion_1a4cf7ca88a9f662e975b8b4ecda4ffd13"></span>bool <code class="sig-name descname">operator==</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion">Motion</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>, <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6MotioneqERK6MotionI1R1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6Motion12equal_matrixEbRK6MatrixI1SE">
+<span id="_CPPv3I0ENK6Motion12equal_matrixERK6MatrixI1SE"></span><span id="_CPPv2I0ENK6Motion12equal_matrixERK6MatrixI1SE"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classMotion_1a60b4ffbf03b7ff03af7e054b4eaf9174"></span>bool <code class="sig-name descname">equal_matrix</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_hall__symbol_8hpp_1a7422197b16cc51e45a272f56a98a5bef.html#_CPPv4I0E6Matrix" title="Matrix">Matrix</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6Motion12equal_matrixEbRK6MatrixI1SE" title="Motion::equal_matrix::S">S</a>&gt; &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6Motion12equal_matrixEbRK6MatrixI1SE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6MotionneERK6MotionI1R1TE">
+<span id="_CPPv3NK6MotionneERK6MotionI1R1TE"></span><span id="_CPPv2NK6MotionneERK6MotionI1R1TE"></span><span id="Motion::neq-operator__Motion:R.T:CRC"></span><span class="target" id="classMotion_1abc1cb161b71195ca752089ac4cb2f16f"></span>bool <code class="sig-name descname">operator!=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion">Motion</a>&lt;<a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::R">R</a>, <a class="reference internal" href="#_CPPv4I00E6Motion" title="Motion::T">T</a>&gt; &amp;<em>m</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6MotionneERK6MotionI1R1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6Motion21has_identity_rotationEv">
+<span id="_CPPv3NK6Motion21has_identity_rotationEv"></span><span id="_CPPv2NK6Motion21has_identity_rotationEv"></span><span id="Motion::has_identity_rotationC"></span><span class="target" id="classMotion_1afdb3b2e0f943a02d52fe9ee3902b8be1"></span>bool <code class="sig-name descname">has_identity_rotation</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6Motion21has_identity_rotationEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6Motion24has_identity_translationEv">
+<span id="_CPPv3NK6Motion24has_identity_translationEv"></span><span id="_CPPv2NK6Motion24has_identity_translationEv"></span><span id="Motion::has_identity_translationC"></span><span class="target" id="classMotion_1aac1c6878cf9c2f70f13d4d0bcbbd3dd1"></span>bool <code class="sig-name descname">has_identity_translation</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6Motion24has_identity_translationEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6Motion10from_asciiERKNSt6stringEKb">
+<span id="_CPPv3N6Motion10from_asciiERKNSt6stringEKb"></span><span id="_CPPv2N6Motion10from_asciiERKNSt6stringEKb"></span><span id="Motion::from_ascii__ssCR.bC"></span><span class="target" id="classMotion_1ac30ccac45e329766bf4a5796090a69b8"></span>size_t <code class="sig-name descname">from_ascii</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>x</em>, <em class="property">const</em> bool <em>cob</em> = false<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Motion10from_asciiERKNSt6stringEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classMunkres.html" class="btn btn-neutral float-right" title="Template Class Munkres" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classMesh3.html" class="btn btn-neutral float-left" title="Template Class Mesh3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

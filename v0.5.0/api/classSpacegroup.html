@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Spacegroup &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class Stopwatch" href="classStopwatch.html" />
+    <link rel="prev" title="Class SortingStatus" href="classSortingStatus.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Spacegroup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classSpacegroup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-spacegroup">
+<span id="exhale-class-classspacegroup"></span><h1>Class Spacegroup<a class="headerlink" href="#class-spacegroup" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_spg_database.hpp.html#file-src-spg-database-hpp"><span class="std std-ref">File spg_database.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv410Spacegroup">
+<span id="_CPPv310Spacegroup"></span><span id="_CPPv210Spacegroup"></span><span id="Spacegroup"></span><span class="target" id="classSpacegroup"></span><em class="property">class </em><code class="sig-name descname">Spacegroup</code><a class="headerlink" href="#_CPPv410Spacegroup" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup10SpacegroupEv">
+<span id="_CPPv3N10Spacegroup10SpacegroupEv"></span><span id="_CPPv2N10Spacegroup10SpacegroupEv"></span><span id="Spacegroup::Spacegroup"></span><span class="target" id="classSpacegroup_1a0fd06d8b5713fd99637450a96153e254"></span><code class="sig-name descname">Spacegroup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup10SpacegroupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup10SpacegroupEKiRKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringEK7BravaisKiKi">
+<span id="_CPPv3N10Spacegroup10SpacegroupEKiRKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringEK7BravaisKiKi"></span><span id="_CPPv2N10Spacegroup10SpacegroupEKiRKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringEK7BravaisKiKi"></span><span id="Spacegroup::Spacegroup__iC.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.BravaisC.iC.iC"></span><span class="target" id="classSpacegroup_1ace7e1d58074e4427a6c7666000fec790"></span><code class="sig-name descname">Spacegroup</code><span class="sig-paren">(</span><em class="property">const</em> int <em>no</em>, <em class="property">const</em> std::string &amp;<em>sf</em>, <em class="property">const</em> std::string &amp;<em>hs</em>, <em class="property">const</em> std::string &amp;<em>its</em>, <em class="property">const</em> std::string &amp;<em>itf</em>, <em class="property">const</em> std::string &amp;<em>ith</em>, <em class="property">const</em> std::string &amp;<em>ch</em>, <em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <em>br</em>, <em class="property">const</em> int <em>pno</em>, <em class="property">const</em> int <em>hno</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup10SpacegroupEKiRKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringEK7BravaisKiKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup10SpacegroupEi">
+<span id="_CPPv3N10Spacegroup10SpacegroupEi"></span><span id="_CPPv2N10Spacegroup10SpacegroupEi"></span><span id="Spacegroup::Spacegroup__i"></span><span class="target" id="classSpacegroup_1aa73a57f4a83ad8044f436ae2a72e23f0"></span><code class="sig-name descname">Spacegroup</code><span class="sig-paren">(</span>int <em>_hall_number</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup10SpacegroupEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup15get_hall_numberEv">
+<span id="_CPPv3NK10Spacegroup15get_hall_numberEv"></span><span id="_CPPv2NK10Spacegroup15get_hall_numberEv"></span><span id="Spacegroup::get_hall_number__voidC"></span><span class="target" id="classSpacegroup_1a86046a06f4d9f7ef12b3403041203ac3"></span>int <code class="sig-name descname">get_hall_number</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup15get_hall_numberEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup30get_international_table_numberEv">
+<span id="_CPPv3NK10Spacegroup30get_international_table_numberEv"></span><span id="_CPPv2NK10Spacegroup30get_international_table_numberEv"></span><span id="Spacegroup::get_international_table_number__voidC"></span><span class="target" id="classSpacegroup_1aadb0f084e2d7cae00edeeed86353557d"></span>int <code class="sig-name descname">get_international_table_number</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup30get_international_table_numberEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup21get_pointgroup_numberEv">
+<span id="_CPPv3NK10Spacegroup21get_pointgroup_numberEv"></span><span id="_CPPv2NK10Spacegroup21get_pointgroup_numberEv"></span><span id="Spacegroup::get_pointgroup_number__voidC"></span><span class="target" id="classSpacegroup_1a7d16b04e6a9a5a6e55dfe5d4653098bf"></span>int <code class="sig-name descname">get_pointgroup_number</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup21get_pointgroup_numberEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup22get_schoenflies_symbolEv">
+<span id="_CPPv3NK10Spacegroup22get_schoenflies_symbolEv"></span><span id="_CPPv2NK10Spacegroup22get_schoenflies_symbolEv"></span><span id="Spacegroup::get_schoenflies_symbol__voidC"></span><span class="target" id="classSpacegroup_1ae9e67a7a089cea712e9979201e4f88b0"></span>std::string <code class="sig-name descname">get_schoenflies_symbol</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup22get_schoenflies_symbolEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup15get_hall_symbolEv">
+<span id="_CPPv3NK10Spacegroup15get_hall_symbolEv"></span><span id="_CPPv2NK10Spacegroup15get_hall_symbolEv"></span><span id="Spacegroup::get_hall_symbol__voidC"></span><span class="target" id="classSpacegroup_1ae2d37d78c69ff176ea75d92245b90cf1"></span>std::string <code class="sig-name descname">get_hall_symbol</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup15get_hall_symbolEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup30get_international_table_symbolEv">
+<span id="_CPPv3NK10Spacegroup30get_international_table_symbolEv"></span><span id="_CPPv2NK10Spacegroup30get_international_table_symbolEv"></span><span id="Spacegroup::get_international_table_symbol__voidC"></span><span class="target" id="classSpacegroup_1a516d5c096b10912637667496753f587f"></span>std::string <code class="sig-name descname">get_international_table_symbol</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup30get_international_table_symbolEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup28get_international_table_fullEv">
+<span id="_CPPv3NK10Spacegroup28get_international_table_fullEv"></span><span id="_CPPv2NK10Spacegroup28get_international_table_fullEv"></span><span id="Spacegroup::get_international_table_full__voidC"></span><span class="target" id="classSpacegroup_1ad1800adb474cda9830a9324b1fdc3e5f"></span>std::string <code class="sig-name descname">get_international_table_full</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup28get_international_table_fullEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup29get_international_table_shortEv">
+<span id="_CPPv3NK10Spacegroup29get_international_table_shortEv"></span><span id="_CPPv2NK10Spacegroup29get_international_table_shortEv"></span><span id="Spacegroup::get_international_table_short__voidC"></span><span class="target" id="classSpacegroup_1ab5a2fb06bdc64de67dd482ae9591f6c5"></span>std::string <code class="sig-name descname">get_international_table_short</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup29get_international_table_shortEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup10get_choiceEv">
+<span id="_CPPv3NK10Spacegroup10get_choiceEv"></span><span id="_CPPv2NK10Spacegroup10get_choiceEv"></span><span id="Spacegroup::get_choice__voidC"></span><span class="target" id="classSpacegroup_1aa2925ece2a12041a3e4f49fa80ce52a6"></span>std::string <code class="sig-name descname">get_choice</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup10get_choiceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup16get_bravais_typeEv">
+<span id="_CPPv3NK10Spacegroup16get_bravais_typeEv"></span><span id="_CPPv2NK10Spacegroup16get_bravais_typeEv"></span><span id="Spacegroup::get_bravais_typeC"></span><span class="target" id="classSpacegroup_1abad3687bca000da20b2780836cae3078"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">get_bravais_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup16get_bravais_typeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup15set_hall_numberEKi">
+<span id="_CPPv3N10Spacegroup15set_hall_numberEKi"></span><span id="_CPPv2N10Spacegroup15set_hall_numberEKi"></span><span id="Spacegroup::set_hall_number__iC"></span><span class="target" id="classSpacegroup_1abb9d4edc732e0d561e3eb22982a7c231"></span>int <code class="sig-name descname">set_hall_number</code><span class="sig-paren">(</span><em class="property">const</em> int <em>nh</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup15set_hall_numberEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup30set_international_table_numberEKi">
+<span id="_CPPv3N10Spacegroup30set_international_table_numberEKi"></span><span id="_CPPv2N10Spacegroup30set_international_table_numberEKi"></span><span id="Spacegroup::set_international_table_number__iC"></span><span class="target" id="classSpacegroup_1a81b98be676f5ae164c96c05d343492a7"></span>int <code class="sig-name descname">set_international_table_number</code><span class="sig-paren">(</span><em class="property">const</em> int <em>itn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup30set_international_table_numberEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup21set_pointgroup_numberEKi">
+<span id="_CPPv3N10Spacegroup21set_pointgroup_numberEKi"></span><span id="_CPPv2N10Spacegroup21set_pointgroup_numberEKi"></span><span id="Spacegroup::set_pointgroup_number__iC"></span><span class="target" id="classSpacegroup_1a48fafeae340a6ec7f51eed56955f2cdd"></span>int <code class="sig-name descname">set_pointgroup_number</code><span class="sig-paren">(</span><em class="property">const</em> int <em>pgn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup21set_pointgroup_numberEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup22set_schoenflies_symbolERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup22set_schoenflies_symbolERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup22set_schoenflies_symbolERKNSt6stringE"></span><span id="Spacegroup::set_schoenflies_symbol__ssCR"></span><span class="target" id="classSpacegroup_1aa13f11aa018dd7725b39c90a37b81acf"></span>std::string <code class="sig-name descname">set_schoenflies_symbol</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup22set_schoenflies_symbolERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup15set_hall_symbolERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup15set_hall_symbolERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup15set_hall_symbolERKNSt6stringE"></span><span id="Spacegroup::set_hall_symbol__ssCR"></span><span class="target" id="classSpacegroup_1aafb5c989a10149f648815d131b14bd3d"></span>std::string <code class="sig-name descname">set_hall_symbol</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup15set_hall_symbolERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup30set_international_table_symbolERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup30set_international_table_symbolERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup30set_international_table_symbolERKNSt6stringE"></span><span id="Spacegroup::set_international_table_symbol__ssCR"></span><span class="target" id="classSpacegroup_1a867543bb76c30885850fb04bc5970904"></span>std::string <code class="sig-name descname">set_international_table_symbol</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup30set_international_table_symbolERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup28set_international_table_fullERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup28set_international_table_fullERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup28set_international_table_fullERKNSt6stringE"></span><span id="Spacegroup::set_international_table_full__ssCR"></span><span class="target" id="classSpacegroup_1a57190c9ec9558a743f75861ce0d39df5"></span>std::string <code class="sig-name descname">set_international_table_full</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup28set_international_table_fullERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup29set_international_table_shortERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup29set_international_table_shortERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup29set_international_table_shortERKNSt6stringE"></span><span id="Spacegroup::set_international_table_short__ssCR"></span><span class="target" id="classSpacegroup_1a8c005835a7a8210c53ad9899d50bb919"></span>std::string <code class="sig-name descname">set_international_table_short</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup29set_international_table_shortERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup10set_choiceERKNSt6stringE">
+<span id="_CPPv3N10Spacegroup10set_choiceERKNSt6stringE"></span><span id="_CPPv2N10Spacegroup10set_choiceERKNSt6stringE"></span><span id="Spacegroup::set_choice__ssCR"></span><span class="target" id="classSpacegroup_1ae1c785e3fb2801ce822535ba114896c7"></span>std::string <code class="sig-name descname">set_choice</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>ns</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup10set_choiceERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N10Spacegroup16set_bravais_typeEK7Bravais">
+<span id="_CPPv3N10Spacegroup16set_bravais_typeEK7Bravais"></span><span id="_CPPv2N10Spacegroup16set_bravais_typeEK7Bravais"></span><span id="Spacegroup::set_bravais_type__BravaisC"></span><span class="target" id="classSpacegroup_1ab006daa9bc9d1e56956894f1c6bdfc2f"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">set_bravais_type</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Spacegroup16set_bravais_typeEK7Bravais" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup11string_reprEv">
+<span id="_CPPv3NK10Spacegroup11string_reprEv"></span><span id="_CPPv2NK10Spacegroup11string_reprEv"></span><span id="Spacegroup::string_repr__voidC"></span><span class="target" id="classSpacegroup_1a96e61e6f2280a889648f021af8a92d3e"></span>std::string <code class="sig-name descname">string_repr</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup11string_reprEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup14get_pointgroupEv">
+<span id="_CPPv3NK10Spacegroup14get_pointgroupEv"></span><span id="_CPPv2NK10Spacegroup14get_pointgroupEv"></span><span id="Spacegroup::get_pointgroup__voidC"></span><span class="target" id="classSpacegroup_1af34d40774da9fcafced5b98207171f50"></span><a class="reference internal" href="classPointgroup.html#_CPPv410Pointgroup" title="Pointgroup">Pointgroup</a> <code class="sig-name descname">get_pointgroup</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup14get_pointgroupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup23get_spacegroup_symmetryEv">
+<span id="_CPPv3NK10Spacegroup23get_spacegroup_symmetryEv"></span><span id="_CPPv2NK10Spacegroup23get_spacegroup_symmetryEv"></span><span id="Spacegroup::get_spacegroup_symmetryC"></span><span class="target" id="classSpacegroup_1aeed131c2cbec12f21585306632f6a5cc"></span><a class="reference internal" href="classSymmetry.html#_CPPv48Symmetry" title="Symmetry">Symmetry</a> <code class="sig-name descname">get_spacegroup_symmetry</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup23get_spacegroup_symmetryEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK10Spacegroup23get_pointgroup_symmetryEKi">
+<span id="_CPPv3NK10Spacegroup23get_pointgroup_symmetryEKi"></span><span id="_CPPv2NK10Spacegroup23get_pointgroup_symmetryEKi"></span><span id="Spacegroup::get_pointgroup_symmetry__iCC"></span><span class="target" id="classSpacegroup_1a0c3b801f217a4db0bb21e606e4aeaf5f"></span><a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> <code class="sig-name descname">get_pointgroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK10Spacegroup23get_pointgroup_symmetryEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup6numberE">
+<span id="_CPPv3N10Spacegroup6numberE"></span><span id="_CPPv2N10Spacegroup6numberE"></span><span id="Spacegroup::number__i"></span><span class="target" id="classSpacegroup_1a46044446327c81fb2c9ff6548b652b94"></span>int <code class="sig-name descname">number</code><a class="headerlink" href="#_CPPv4N10Spacegroup6numberE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup11schoenfliesE">
+<span id="_CPPv3N10Spacegroup11schoenfliesE"></span><span id="_CPPv2N10Spacegroup11schoenfliesE"></span><span id="Spacegroup::schoenflies__ss"></span><span class="target" id="classSpacegroup_1a32358cd2f37eba018599be3f4aa8c52e"></span>std::string <code class="sig-name descname">schoenflies</code><a class="headerlink" href="#_CPPv4N10Spacegroup11schoenfliesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup11hall_symbolE">
+<span id="_CPPv3N10Spacegroup11hall_symbolE"></span><span id="_CPPv2N10Spacegroup11hall_symbolE"></span><span id="Spacegroup::hall_symbol__ss"></span><span class="target" id="classSpacegroup_1af80d6d830d647d16da7a90101b6eeea5"></span>std::string <code class="sig-name descname">hall_symbol</code><a class="headerlink" href="#_CPPv4N10Spacegroup11hall_symbolE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup13internationalE">
+<span id="_CPPv3N10Spacegroup13internationalE"></span><span id="_CPPv2N10Spacegroup13internationalE"></span><span id="Spacegroup::international__ss"></span><span class="target" id="classSpacegroup_1ab84ed1b51ad44053818d6a9b5f53f9c3"></span>std::string <code class="sig-name descname">international</code><a class="headerlink" href="#_CPPv4N10Spacegroup13internationalE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup18international_fullE">
+<span id="_CPPv3N10Spacegroup18international_fullE"></span><span id="_CPPv2N10Spacegroup18international_fullE"></span><span id="Spacegroup::international_full__ss"></span><span class="target" id="classSpacegroup_1a2d146a1febb00c8ee1a9d1a1f8867cbe"></span>std::string <code class="sig-name descname">international_full</code><a class="headerlink" href="#_CPPv4N10Spacegroup18international_fullE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup19international_shortE">
+<span id="_CPPv3N10Spacegroup19international_shortE"></span><span id="_CPPv2N10Spacegroup19international_shortE"></span><span id="Spacegroup::international_short__ss"></span><span class="target" id="classSpacegroup_1a6475e377ac38e1dfdd986bc083429404"></span>std::string <code class="sig-name descname">international_short</code><a class="headerlink" href="#_CPPv4N10Spacegroup19international_shortE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup6choiceE">
+<span id="_CPPv3N10Spacegroup6choiceE"></span><span id="_CPPv2N10Spacegroup6choiceE"></span><span id="Spacegroup::choice__ss"></span><span class="target" id="classSpacegroup_1a7023ac3cffa73aaed951b1b2e928b2dc"></span>std::string <code class="sig-name descname">choice</code><a class="headerlink" href="#_CPPv4N10Spacegroup6choiceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup7bravaisE">
+<span id="_CPPv3N10Spacegroup7bravaisE"></span><span id="_CPPv2N10Spacegroup7bravaisE"></span><span id="Spacegroup::bravais__Bravais"></span><span class="target" id="classSpacegroup_1ab2829711202ab997cf46fc9bd7617143"></span><a class="reference internal" href="enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf.html#_CPPv47Bravais" title="Bravais">Bravais</a> <code class="sig-name descname">bravais</code><a class="headerlink" href="#_CPPv4N10Spacegroup7bravaisE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup17pointgroup_numberE">
+<span id="_CPPv3N10Spacegroup17pointgroup_numberE"></span><span id="_CPPv2N10Spacegroup17pointgroup_numberE"></span><span id="Spacegroup::pointgroup_number__i"></span><span class="target" id="classSpacegroup_1a04c6da6abeee7557814572a653848bfa"></span>int <code class="sig-name descname">pointgroup_number</code><a class="headerlink" href="#_CPPv4N10Spacegroup17pointgroup_numberE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N10Spacegroup11hall_numberE">
+<span id="_CPPv3N10Spacegroup11hall_numberE"></span><span id="_CPPv2N10Spacegroup11hall_numberE"></span><span id="Spacegroup::hall_number__i"></span><span class="target" id="classSpacegroup_1a1cd2d871f43bde020fe732d4c4b3c460"></span>int <code class="sig-name descname">hall_number</code><a class="headerlink" href="#_CPPv4N10Spacegroup11hall_numberE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classStopwatch.html" class="btn btn-neutral float-right" title="Template Class Stopwatch" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classSortingStatus.html" class="btn btn-neutral float-left" title="Class SortingStatus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

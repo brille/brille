@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File pointsymmetry.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File pointsymmetry.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_pointsymmetry.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-pointsymmetry-cpp">
+<span id="program-listing-file-src-pointsymmetry-cpp"></span><h1>Program Listing for File pointsymmetry.cpp<a class="headerlink" href="#program-listing-for-file-pointsymmetry-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_pointsymmetry.cpp.html#file-src-pointsymmetry-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/pointsymmetry.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;pointsymmetry.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;pointgroup.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+<span class="cm">/*****************************************************************************\</span>
+<span class="cm">| PointSymmetry class Member functions:                                       |</span>
+<span class="cm">\*****************************************************************************/</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">){</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">newR</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">newR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">newR</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">r</span><span class="p">){</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">){</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">newR</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+  <span class="c1">// a valid encoded Motion will be of the form</span>
+  <span class="c1">// ∑ₙiₙαₙ + f where each iₙ is an integer, αₙ∈{x,y,z}</span>
+  <span class="c1">// and f one of 0, ±1/12, ±1/6, ±1/4, ±1/3, ±1/2</span>
+  <span class="c1">// but we should support any rational or floating point value for f</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">i</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+  <span class="kt">char</span> <span class="n">c</span><span class="p">{</span><span class="sc">&#39; &#39;</span><span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">stream</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+  <span class="kt">size_t</span> <span class="n">ret</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">good</span><span class="p">()){</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="kt">char</span><span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">){</span>
+      <span class="k">case</span> <span class="sc">&#39;;&#39;</span><span class="o">:</span> <span class="c1">// end of one motion</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">newR</span><span class="p">);</span>
+        <span class="n">newR</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;,&#39;</span><span class="o">:</span> <span class="c1">// end of motion component</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span>
+        <span class="n">newR</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span>
+        <span class="n">newR</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span>
+        <span class="n">newR</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span> <span class="c1">// not ;,xyz</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">tmp</span><span class="p">;</span>
+        <span class="n">tmp</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">haspoint</span><span class="p">{</span><span class="nb">false</span><span class="p">},</span> <span class="n">hasslash</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;;,xyz-+&quot;</span><span class="p">,</span><span class="n">stream</span><span class="p">.</span><span class="n">peek</span><span class="p">())</span><span class="o">==</span><span class="k">nullptr</span><span class="p">){</span>
+          <span class="n">hasslash</span> <span class="o">|=</span> <span class="sc">&#39;/&#39;</span><span class="o">==</span><span class="n">stream</span><span class="p">.</span><span class="n">peek</span><span class="p">();</span>
+          <span class="n">haspoint</span> <span class="o">|=</span> <span class="sc">&#39;.&#39;</span><span class="o">==</span><span class="n">stream</span><span class="p">.</span><span class="n">peek</span><span class="p">();</span>
+          <span class="n">tmp</span> <span class="o">&lt;&lt;</span> <span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">haspoint</span> <span class="o">&amp;&amp;</span> <span class="n">hasslash</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Number has both point and slash?!&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">haspoint</span><span class="o">^</span><span class="n">hasslash</span><span class="p">))</span> <span class="n">tmp</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// TT (error) or FF (integer)</span>
+        <span class="c1">// either floating point or rational numbers represent part of the</span>
+        <span class="c1">// translation which strictly shouldn&#39;t be here for pointgroup</span>
+        <span class="c1">// operations, but we should just skip for now</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="sc">&#39;;&#39;</span><span class="o">!=</span><span class="n">c</span><span class="p">)</span> <span class="n">ret</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">newR</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">){</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">9</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">9</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="o">*</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">data</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="o">?</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">()</span> <span class="o">:</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">data</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="o">?</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">()</span> <span class="o">:</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="o">?</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">});</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">get_proper</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()){</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isometry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">9u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">out</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">get_inverse</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">identity</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="n">result</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="n">identity</span><span class="p">;</span>
+  <span class="c1">// We *could* calculate R⁻¹ but might run into rounding/type issues.</span>
+  <span class="c1">// We know that there must be an element of R for which RᵢRⱼ=E,</span>
+  <span class="c1">// the identity element. Let&#39;s look for Rⱼ instead.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">data</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">matrix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">identity</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Incomplete pointgroup. Missing inverse of operation.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">get_inverse_index</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">identity</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span> <span class="n">result</span><span class="p">;</span>
+  <span class="c1">// We *could* calculate R⁻¹ but might run into rounding/type issues.</span>
+  <span class="c1">// We know that there must be an element of R for which RᵢRⱼ=E,</span>
+  <span class="c1">// the identity element. Let&#39;s look for Rⱼ instead.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">data</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">matrix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">identity</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span> <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Incomplete pointgroup. Missing inverse of operation.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">find_index</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">iseq</span> <span class="o">=</span> <span class="p">[</span><span class="n">ap</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">()](</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">r</span><span class="p">){</span> <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">matrix</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">ap</span><span class="p">,</span><span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">());};</span>
+  <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">iseq</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">itr</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// const Matrix&lt;int&gt;&amp; PointSymmetry::get(const size_t i) const {</span>
+<span class="c1">//   if (i&gt;=this-&gt;size())</span>
+<span class="c1">//     throw std::out_of_range(&quot;The requested symmetry operation is out of range&quot;);</span>
+<span class="c1">//   return this-&gt;R[i];</span>
+<span class="c1">// }</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">newsize</span><span class="p">){</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">newsize</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">*</span><span class="mi">3u</span><span class="o">+</span><span class="n">k</span><span class="p">];</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">oup</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">){</span> <span class="k">return</span> <span class="n">rotation_order</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">rotation_order</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">());};</span>
+  <span class="k">auto</span> <span class="n">odw</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">){</span> <span class="k">return</span> <span class="n">rotation_order</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">rotation_order</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">());};</span>
+  <span class="k">auto</span> <span class="n">iup</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">){</span> <span class="k">return</span> <span class="n">isometry_value</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">isometry_value</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">());};</span>
+  <span class="k">auto</span> <span class="n">idw</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">){</span> <span class="k">return</span> <span class="n">isometry_value</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">isometry_value</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">());};</span>
+  <span class="k">switch</span><span class="p">(</span><span class="n">mode</span><span class="p">){</span>
+    <span class="c1">// sort by isometry, decreasing</span>
+    <span class="k">case</span> <span class="o">-</span><span class="mi">2</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">idw</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="c1">// sort by order, decreasing</span>
+    <span class="k">case</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">odw</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="c1">// sort by isometry, increasing</span>
+    <span class="k">case</span>  <span class="mi">2</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">iup</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="c1">// sort by order, increasing</span>
+    <span class="k">default</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">oup</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">permute</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">o</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// 0, 1, 2, …, size()-1</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">s</span><span class="o">=</span><span class="n">p</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">());</span> <span class="c1">// includes requires *sorted* ranges</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">includes</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">o</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">||</span> <span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">!=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()){</span>
+    <span class="n">msg</span><span class="o">=</span><span class="s">&quot;The provided permutation vector [&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">p</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; ] is invalid.&quot;</span><span class="p">;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; A permutation of [&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">o</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; ] was expected.&quot;</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// swapping requires we have the inverse permutation</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">s</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="c1">// perform the actual element swapping</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]);</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// confirm that the permuting worked:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">is_sorted</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">())){</span>
+    <span class="n">msg</span><span class="o">=</span><span class="s">&quot;Undoing the permutation [&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">p</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">msg</span> <span class="o">+=</span><span class="s">&quot; ] failed. End result is [&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">s</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">msg</span> <span class="o">+=</span><span class="s">&quot; ]&quot;</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">orders</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">o</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">)</span> <span class="n">o</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">rotation_order</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">()));</span>
+  <span class="k">return</span> <span class="n">o</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">isometries</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">)</span> <span class="n">i</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">isometry_value</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">()));</span>
+  <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">axes</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ax</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">)</span> <span class="n">ax</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">rotation_axis_and_perpendicular_vectors</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">())[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">ax</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">has_space_inversion</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="c1">// space inversion means that a pointgroup operation has isometry -1.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">op</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">==</span> <span class="n">isometry_value</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">has</span><span class="p">(</span><span class="k">const</span> <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">m</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span><span class="p">:</span> <span class="n">R</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">matrix</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">()))</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">pop</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">size_t</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">erase</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">){</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&quot;The requested symmetry operation is out of range&quot;</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">order</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&quot;The requested symmetry operation is out of range&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">rotation_order</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">isometry</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&quot;The requested symmetry operation is out of range&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">isometry_value</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">axis</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&quot;The requested symmetry operation is out of range&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">rotation_axis_and_perpendicular_vectors</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">())[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">perpendicular_axis</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&quot;The requested symmetry operation is out of range&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">rotation_axis_and_perpendicular_vectors</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">())[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">perpendicular_axes</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ax</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">r</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">R</span><span class="p">)</span> <span class="n">ax</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">rotation_axis_and_perpendicular_vectors</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">data</span><span class="p">())[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">ax</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">PointSymmetry</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">generate</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">E</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="c1">// E, the identity operation</span>
+  <span class="n">PointSymmetry</span> <span class="n">gen</span><span class="p">;</span>
+  <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">E</span><span class="p">);</span> <span class="c1">// any generated operations always need the identity operation</span>
+  <span class="kt">size_t</span> <span class="n">gensize</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">E</span><span class="p">;</span>
+    <span class="c1">// for each of R, R¹,…, Rⁿ⁻¹</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="n">count</span><span class="o">--</span><span class="p">;){</span> <span class="c1">// post-decrimate to run the loop count times</span>
+      <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+      <span class="n">x</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+      <span class="c1">// multiply Rⁱ by the operators in gen</span>
+      <span class="n">gensize</span> <span class="o">=</span> <span class="n">gen</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="c1">// only multiply against pre-existing operations</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">gensize</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+        <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">gen</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+        <span class="c1">// and add them to gen if they are not already present</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">gen</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">gen</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">PointSymmetry</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">generators</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">PointSymmetry</span> <span class="n">listA</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getall</span><span class="p">()),</span> <span class="n">listB</span><span class="p">,</span> <span class="n">listC</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">listA</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+    <span class="c1">// move the first element of A to B</span>
+    <span class="n">listB</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">listA</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="c1">// use the operations in B as generators</span>
+    <span class="n">listC</span> <span class="o">=</span> <span class="n">listB</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
+    <span class="c1">// remove from A all generated operations (in C)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">listA</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">listC</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">listA</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="o">?</span><span class="n">listA</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">:++</span><span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// listA is empty, listB contains at least the generators</span>
+  <span class="c1">// for each element of B, use all other elements to generate operations C</span>
+  <span class="c1">// if the skipped element is in C, remove it from B as it is not a generator</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">listB</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">listC</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">listB</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="o">?</span><span class="n">listB</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">:++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">listA</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// empty-out A again</span>
+    <span class="c1">// copy every element but i from B to A</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">listB</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">!=</span><span class="n">j</span><span class="p">)</span> <span class="n">listA</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">listB</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+    <span class="c1">// use the reduced list as generators</span>
+    <span class="n">listC</span> <span class="o">=</span> <span class="n">listA</span><span class="p">.</span><span class="n">generate</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// listB now contains a complete set of generators (which might not be unique for the pointgroup)</span>
+  <span class="k">return</span> <span class="n">listB</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">PointSymmetry</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">nfolds</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">min_order</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">all_axis</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">axes</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">eqv_idx</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">unq_idx</span><span class="p">;</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">unq_axis</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">isunique</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">j</span><span class="p">:</span> <span class="n">unq_idx</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">vector</span><span class="p">(</span><span class="n">all_axis</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">data</span><span class="p">(),</span> <span class="n">all_axis</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">())){</span>
+      <span class="n">eqv_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+      <span class="n">isunique</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isunique</span><span class="p">){</span>
+      <span class="n">unq_idx</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="n">eqv_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+      <span class="n">unq_axis</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">all_axis</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// equal-valued entries of eqv_idx have the same stationary axis</span>
+  <span class="c1">// but the order of the selected unique rotation may not be what we want</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">unq_idx</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="kt">size_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">unq_idx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="n">eqv_idx</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="n">unq_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">unq_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cm">/* Now each unique index points to a symmetry operation of highest order along</span>
+<span class="cm">     its unique axis. What is not determined at this point is whether each</span>
+<span class="cm">     symmetry operation is N or ̄N -- both of which are of order N.</span>
+<span class="cm">     In order to ensure we return just the rotation part of any symmetry</span>
+<span class="cm">     operation, we must multiply any rotoinversion operations by the inversion</span>
+<span class="cm">     operation.*/</span>
+  <span class="kt">int</span> <span class="n">onebar</span><span class="p">[</span><span class="mi">9</span><span class="p">]{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+  <span class="n">PointSymmetry</span> <span class="n">out</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="n">unq_idx</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">min_order</span><span class="p">){</span>
+    <span class="n">out</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isometry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onebar</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">out</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span> <span class="c1">// double-check that the orders are sorted</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">PointSymmetry</span> <span class="n">PointSymmetry</span><span class="o">::</span><span class="n">higher</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">min_order</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">PointSymmetry</span> <span class="n">out</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">min_order</span><span class="p">)</span>
+  <span class="n">out</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="n">out</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

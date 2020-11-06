@@ -1,0 +1,13 @@
+.. _exhale_function_interpolation_8hpp_1a6c2a3840cde2197e49fccfa1fbe93570:
+
+Template Function triangle_area
+===============================
+
+- Defined in :ref:`file_src_interpolation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: triangle_area(const A<T>&, const A<T>&, const A<T>&)

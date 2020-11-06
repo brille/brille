@@ -1,0 +1,148 @@
+
+.. _file_src_approx.hpp:
+
+File approx.hpp
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/approx.hpp``)
+-------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_approx.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``cmath``
+
+- ``debug.hpp`` (:ref:`file_src_debug.hpp`)
+
+- ``iostream``
+
+- ``limits``
+
+- ``math.h``
+
+- ``numeric``
+
+- ``stdexcept``
+
+- ``string``
+
+- ``tuple``
+
+- ``type_traits``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_utilities.hpp`
+
+- :ref:`file_src_comparisons.hpp`
+
+- :ref:`file_src_array.hpp`
+
+- :ref:`file_src_array2.hpp`
+
+- :ref:`file_src_symmetry.hpp`
+
+- :ref:`file_src_basis.hpp`
+
+- :ref:`file_src_balltrellis.hpp`
+
+- :ref:`file_src_polyhedron.hpp`
+
+- :ref:`file_src_bz.hpp`
+
+- :ref:`file_src_interpolator2.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_triangulation_simple.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+- :ref:`file_src_inner_interpolation_data.hpp`
+
+- :ref:`file_src_interpolator.hpp`
+
+- :ref:`file_src_lattice.cpp`
+
+- :ref:`file_src_pointsymmetry.cpp`
+
+- :ref:`file_src_triangulation.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__approx`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_approx_8hpp_1afe271acd2a3bc8bc3eb462c8aec2355e`
+
+- :ref:`exhale_function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd`
+
+- :ref:`exhale_function_approx_8hpp_1a62cc037dd78d1d23c4494fc74644510e`
+
+- :ref:`exhale_function_approx_8hpp_1a91c57121b7e924b2a033a014c1cdc50f`
+
+- :ref:`exhale_function_approx_8hpp_1a36fcd700b1f5c494cae717e01dd607f9`
+
+- :ref:`exhale_function_approx_8hpp_1aa8208de1f7cf17c5e9973ba79363c3b3`
+
+- :ref:`exhale_function_approx_8hpp_1ad04345f9f9ceecf0605d4284c80261f8`
+
+- :ref:`exhale_function_approx_8hpp_1af767219f987d5d6c336a37537b3334f2`
+
+- :ref:`exhale_function_approx_8hpp_1a4cd1a6941a631fc6bf935a9915e6648c`
+
+- :ref:`exhale_function_approx_8hpp_1a0094807f2932570b4f321a7776d26420`
+
+- :ref:`exhale_function_approx_8hpp_1a7a089bf35def584727e389dc31d7521e`
+
+- :ref:`exhale_function_approx_8hpp_1a98be591f1eea9128f37fde527a46f8ee`
+
+- :ref:`exhale_function_approx_8hpp_1a4c8c4447f7394ab0f03b4606e9eadf66`
+
+- :ref:`exhale_function_approx_8hpp_1a91e1b2bc8172186d40eade5a9a94c1fb`
+
+- :ref:`exhale_function_approx_8hpp_1a1f38059ec5f6cf7e90fc47194f48a4f4`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_approx_8hpp_1affae3b9c337594c5eb244330e67574da`
+

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1acec6b245dcf28ad648f91d5975776c91:
+
+Template Function brille::utils::unsafe_antiphase(const A<T>&, const A<T>&)
+===========================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::unsafe_antiphase(const A<T>&, const A<T>&)

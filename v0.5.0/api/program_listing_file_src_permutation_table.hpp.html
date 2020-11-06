@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File permutation_table.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File permutation_table.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_permutation_table.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-permutation-table-hpp">
+<span id="program-listing-file-src-permutation-table-hpp"></span><h1>Program Listing for File permutation_table.hpp<a class="headerlink" href="#program-listing-for-file-permutation-table-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_permutation_table.hpp.html#file-src-permutation-table-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/permutation_table.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2020 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef PERMUTATION_TABLE_HPP_</span>
+<span class="cp">#define PERMUTATION_TABLE_HPP_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;tuple&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+
+<span class="c1">// /*</span>
+<span class="c1">// For future futher optimisation we might want to use the upper triangular</span>
+<span class="c1">// matrix to pre-allocate all possible permutation entries in the std::vector;</span>
+<span class="c1">// There are N(N-1)/2 ordered pairs of vertices (i&lt;j) for N total vertices which is</span>
+<span class="c1">// still very large for large N [𝒪(0.5 N²)].</span>
+<span class="c1">// To help with this, we will need to convert (i,j) to a linear index into the</span>
+<span class="c1">// upper triangular part; which is complicated but already solved</span>
+<span class="c1">//  https://stackoverflow.com/a/27088560</span>
+<span class="c1">// */</span>
+<span class="c1">// static size_t upper_triangular_ij2k(size_t i, size_t j, size_t n) {</span>
+<span class="c1">//  return (n*(n-1)/2) - (n-i)*((n-i)-1)/2 +j -i -1;</span>
+<span class="c1">// }</span>
+<span class="c1">// static std::tuple&lt;size_t, size_t&gt; upper_triangular_k2ij(size_t k, size_t n){</span>
+<span class="c1">//  size_t i = n - 2 - static_cast&lt;size_t&gt;(std::floor(std::sqrt(-8*k + 4*n*(n-1)-7)/2 - 0.5));</span>
+<span class="c1">//  size_t j = k + i + 1 - n*(n-1)/2 + (n-i)*((n-i)-1)/2;</span>
+<span class="c1">//  return</span>
+<span class="c1">// }</span>
+
+<span class="k">class</span> <span class="nc">PermutationTable</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">using</span> <span class="n">ind_t</span> <span class="o">=</span> <span class="kt">unsigned</span><span class="p">;</span> <span class="c1">// uint_fastN_t or uint_leastN_t?</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">offset</span><span class="p">{</span><span class="mi">1u</span><span class="p">};</span> <span class="c1">// first valid value in map</span>
+    <span class="kt">size_t</span> <span class="n">IndexSize</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">ijmap</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&gt;</span> <span class="n">permutations</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">PermutationTable</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">ni</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">branches</span><span class="p">)</span><span class="o">:</span> <span class="n">IndexSize</span><span class="p">(</span><span class="n">ni</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">add_zeroth</span><span class="p">(</span><span class="n">branches</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="n">PermutationTable</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">ni</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">branches</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">kys</span><span class="p">)</span><span class="o">:</span> <span class="n">IndexSize</span><span class="p">(</span><span class="n">ni</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">add_zeroth</span><span class="p">(</span><span class="n">branches</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="nl">k</span><span class="p">:</span> <span class="n">kys</span><span class="p">)</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// 0u ≡ not-yet-added value</span>
+    <span class="p">};</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">refresh</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">br</span><span class="p">){</span>
+        <span class="kt">bool</span> <span class="n">invalidated</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ni</span> <span class="o">!=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">IndexSize</span><span class="p">){</span>
+            <span class="n">info_update</span><span class="p">(</span><span class="s">&quot;Resizing the PermutationTable is probably not what you wanted&quot;</span><span class="p">);</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">ijmap</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">IndexSize</span> <span class="o">=</span> <span class="n">ni</span><span class="p">;</span>
+            <span class="n">invalidated</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">br</span> <span class="o">!=</span> <span class="n">permutations</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">()){</span>
+            <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">itr</span><span class="p">:</span> <span class="n">ijmap</span><span class="p">)</span> <span class="n">itr</span><span class="p">.</span><span class="n">second</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="c1">// all mapped values reset to the invalid value</span>
+            <span class="n">permutations</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">add_zeroth</span><span class="p">(</span><span class="n">br</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">invalidated</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="kt">size_t</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ij2key</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">itr</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">has</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">itr</span> <span class="o">!=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&gt;=</span> <span class="n">offset</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">value_needed</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">itr</span> <span class="o">!=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;</span> <span class="n">offset</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+    <span class="kt">size_t</span> <span class="n">set</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">vin</span><span class="p">){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">vin</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vin</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="kt">bool</span> <span class="n">contains</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+        <span class="kt">size_t</span> <span class="n">idx</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+        <span class="kt">size_t</span> <span class="n">key</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ij2key</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+        <span class="c1">// if the key is already present, emplace will not overwrite it anyway</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">itr</span> <span class="o">!=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="k">return</span> <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        <span class="c1">// the ijmap does not contain key (i,j), so check for permutation duplication</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">contains</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_permutation</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="c1">// add this permutation if it&#39;s not present</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">contains</span><span class="p">)</span> <span class="n">permutations</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="c1">// and store the mapping</span>
+        <span class="n">ijmap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">idx</span><span class="o">+</span><span class="n">offset</span><span class="p">);</span> <span class="c1">// +offset for -offset in get</span>
+        <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">overwrite</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">idx</span><span class="p">){</span>
+        <span class="kt">size_t</span> <span class="n">key</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ij2key</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="kt">size_t</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">itr</span> <span class="o">==</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Can not overwrite a non-existant key&quot;</span><span class="p">);</span>
+        <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">=</span> <span class="n">idx</span><span class="o">+</span><span class="n">offset</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+    <span class="kt">size_t</span> <span class="n">overwrite</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">vin</span><span class="p">){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">vin</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vin</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="kt">bool</span> <span class="n">contains</span><span class="p">{</span><span class="nb">false</span><span class="p">};</span>
+        <span class="kt">size_t</span> <span class="n">idx</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+        <span class="kt">size_t</span> <span class="n">key</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ij2key</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="kt">size_t</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">itr</span> <span class="o">==</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Can not overwrite a non-existant key&quot;</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">contains</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_permutation</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">contains</span><span class="p">)</span> <span class="n">permutations</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+        <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">=</span> <span class="n">idx</span><span class="o">+</span><span class="n">offset</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">safe_get</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="kt">bool</span> <span class="n">actually_present</span> <span class="o">=</span> <span class="n">itr</span> <span class="o">!=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&gt;=</span> <span class="n">offset</span><span class="p">;</span>
+        <span class="c1">// return actually_present ? permutations[itr-&gt;second - offset] : std::vector&lt;ind_t&gt;();</span>
+        <span class="k">return</span> <span class="n">permutations</span><span class="p">[</span><span class="n">actually_present</span> <span class="o">?</span> <span class="n">itr</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">-</span> <span class="nl">offset</span> <span class="p">:</span> <span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">keys</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">k</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">ij</span><span class="p">:</span> <span class="n">ijmap</span><span class="p">)</span> <span class="n">k</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ij</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">k</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">insert_keys</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">ks</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">k</span><span class="p">:</span> <span class="n">ks</span><span class="p">){</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="kt">size_t</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">itr</span> <span class="o">==</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="n">ijmap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// value=0u ≡ invalid-value</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">keys</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">size_t</span> <span class="n">ij2key</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span><span class="o">==</span><span class="n">j</span> <span class="o">?</span> <span class="mi">0u</span> <span class="o">:</span> <span class="n">i</span><span class="o">*</span><span class="n">IndexSize</span><span class="o">+</span><span class="n">j</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">//</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">find_permutation</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">auto</span> <span class="n">equal_perm</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">){</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="n">N</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">auto</span> <span class="n">itr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">permutations</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">equal_perm</span><span class="p">);</span>
+        <span class="c1">// returns (true, found_index) or (false, permutations.size())</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">itr</span> <span class="o">!=</span> <span class="n">permutations</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">itr</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">add_zeroth</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">branches</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">identity</span><span class="p">(</span><span class="n">branches</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">identity</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">identity</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">permutations</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span> <span class="n">permutations</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">permutations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">identity</span><span class="p">;</span>
+        <span class="n">ijmap</span><span class="p">[</span><span class="mi">0u</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0u</span> <span class="o">+</span> <span class="n">offset</span><span class="p">;</span><span class="c1">// offset first valid value</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Itr</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span>
+<span class="n">permutation_table_keys_from_indicies</span><span class="p">(</span><span class="n">Itr</span> <span class="n">i_beg</span><span class="p">,</span> <span class="n">Itr</span> <span class="n">i_end</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">keys</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">Itr</span> <span class="n">j</span><span class="o">=</span><span class="n">i_beg</span><span class="p">;</span> <span class="n">j</span><span class="o">!=</span><span class="n">i_end</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">Itr</span> <span class="n">k</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">!=</span><span class="n">i_end</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">j</span><span class="o">!=*</span><span class="n">k</span><span class="p">){</span>
+        <span class="n">keys</span><span class="p">.</span><span class="n">insert</span><span class="p">((</span><span class="o">*</span><span class="n">j</span><span class="p">)</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">));</span>
+        <span class="n">keys</span><span class="p">.</span><span class="n">insert</span><span class="p">((</span><span class="o">*</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">keys</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

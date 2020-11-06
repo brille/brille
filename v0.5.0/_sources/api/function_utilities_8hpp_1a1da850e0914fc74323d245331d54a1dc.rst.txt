@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a1da850e0914fc74323d245331d54a1dc:
+
+Template Function brille::utils::equal_vector
+=============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::equal_vector(const T *, const T *, const T)

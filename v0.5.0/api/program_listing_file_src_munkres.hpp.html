@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File munkres.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File munkres.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_munkres.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-munkres-hpp">
+<span id="program-listing-file-src-munkres-hpp"></span><h1>Program Listing for File munkres.hpp<a class="headerlink" href="#program-listing-for-file-munkres-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_munkres.hpp.html#file-src-munkres-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/munkres.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef __MUNKRES_H_</span>
+<span class="cp">#define __MUNKRES_H_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;forward_list&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;limits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="k">enum</span> <span class="n">marker</span> <span class="p">{</span>
+  <span class="n">NORMAL</span><span class="p">,</span>
+  <span class="n">STARED</span><span class="p">,</span>
+  <span class="n">PRIMED</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Munkres</span><span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">size_t</span> <span class="n">N</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">cost</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">marker</span><span class="o">&gt;</span> <span class="n">mask</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">step</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">rowcover</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">colcover</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">stored_row</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">stored_col</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">finished</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Munkres</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">cmat</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">())</span> <span class="o">:</span> <span class="n">N</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">cost</span><span class="p">(</span><span class="n">cmat</span><span class="p">),</span> <span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">)</span> <span class="n">cost</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">);</span>
+    <span class="c1">// mask, rowcover, and colcover have their values set when run_assignment is called</span>
+    <span class="n">mask</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">);</span>
+    <span class="n">rowcover</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+    <span class="n">colcover</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+    <span class="c1">// try to run the assignment algorithm</span>
+    <span class="n">finished</span> <span class="o">=</span> <span class="n">run_assignment</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">reset</span><span class="p">(){</span>
+    <span class="c1">// Make sure the mask and covers are set correctly for the start of a run</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">marker</span><span class="o">::</span><span class="n">NORMAL</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">rowcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">colcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">stored_row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">stored_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// We should start from the beginning:</span>
+    <span class="c1">// on the first step</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// and not yet finished</span>
+    <span class="n">finished</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">run_assignment</span><span class="p">(){</span>
+    <span class="n">reset</span><span class="p">();</span>
+    <span class="c1">// check that we *can* perform an assignment</span>
+    <span class="n">T</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">sum</span><span class="o">+=</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="c1">// If there is cost information we&#39;re not done yet.</span>
+    <span class="kt">bool</span> <span class="n">done</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nb">false</span> <span class="o">:</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">done</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// show();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">step_one</span><span class="p">();</span>   <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">step_two</span><span class="p">();</span>   <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">step_three</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span> <span class="n">step_four</span><span class="p">();</span>  <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">5</span><span class="o">:</span> <span class="n">step_five</span><span class="p">();</span>  <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">6</span><span class="o">:</span> <span class="n">step_six</span><span class="p">();</span>   <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">7</span><span class="o">:</span> <span class="n">finished</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span> <span class="n">done</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="n">done</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">finished</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">get_cost</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span> <span class="k">return</span> <span class="n">cost</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">get_cost</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cost</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">get_assignment</span><span class="p">(</span><span class="kt">size_t</span><span class="o">*</span> <span class="n">out</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">finished</span><span class="p">)</span> <span class="n">run_assignment</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">finished</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">)</span> <span class="n">out</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">=</span><span class="n">c</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">finished</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;X&quot;</span><span class="p">,</span> <span class="n">star</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="n">prime</span> <span class="o">=</span> <span class="s">&quot;&#39;&quot;</span><span class="p">,</span> <span class="n">blank</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">repr</span><span class="o">=</span> <span class="s">&quot;step=&quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="n">repr</span> <span class="o">+=</span> <span class="p">(</span><span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">?</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">blank</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="n">repr</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">){</span>
+      <span class="n">repr</span> <span class="o">+=</span> <span class="p">(</span><span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">?</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">blank</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">repr</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">PRIMED</span> <span class="o">?</span> <span class="nl">prime</span> <span class="p">:</span> <span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">STARED</span> <span class="o">?</span> <span class="nl">star</span> <span class="p">:</span> <span class="n">blank</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="n">repr</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="k">return</span> <span class="n">repr</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">show</span><span class="p">(){</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;s=%d</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span><span class="n">step</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">?</span> <span class="s">&quot;X&quot;</span> <span class="o">:</span> <span class="s">&quot;&quot;</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">){</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">?</span> <span class="s">&quot;X&quot;</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%5.2f%s</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">PRIMED</span> <span class="o">?</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">:</span> <span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">STARED</span> <span class="o">?</span> <span class="s">&quot;*&quot;</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">find_a_zero</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="o">&amp;</span><span class="n">row</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="o">&amp;</span><span class="n">col</span><span class="p">){</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">notdone</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">notdone</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">notdone</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+          <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span> <span class="n">r</span><span class="p">;</span>
+          <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span> <span class="n">c</span><span class="p">;</span>
+          <span class="n">notdone</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">long</span> <span class="kt">long</span> <span class="n">get_col_of_star_in_row</span><span class="p">(</span><span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="o">&amp;</span><span class="n">row</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">sir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">col</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">row</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">sir</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">){</span>
+      <span class="n">sir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span> <span class="n">c</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">col</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_one</span><span class="p">(){</span>
+    <span class="c1">// for each row of the cost matrix, find the smallest element</span>
+    <span class="c1">// and subtract it from every element in its row.</span>
+    <span class="n">T</span> <span class="n">smallest</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">){</span>
+      <span class="n">smallest</span> <span class="o">=</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="p">];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">&lt;</span><span class="n">smallest</span><span class="p">)</span> <span class="n">smallest</span><span class="o">=</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">-=</span><span class="n">smallest</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// With step one finished, go on to step 2</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_two</span><span class="p">(){</span>
+    <span class="c1">// Find a zero (Z) in the resulting matrix. If there is no starred zero</span>
+    <span class="c1">// in its row or column, star Z. Repeat for each element in the matrix.</span>
+    <span class="n">T</span> <span class="n">zero</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="n">zero</span> <span class="o">&amp;&amp;</span> <span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+          <span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">;</span>
+          <span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="c1">// reset the cover vectors, since we abused them in this step:</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">rowcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+      <span class="n">colcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Step two finished. Go on to three.</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_three</span><span class="p">(){</span>
+    <span class="c1">// Cover each column containing a starred zero.</span>
+    <span class="c1">// If N columns are covered, the starred zeros describe a complete set of</span>
+    <span class="c1">// unique assignments, and we are done.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">)</span> <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="c1">// If we&#39;ve found N starred zeros, go to step 7; otherwise step 4</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">)</span> <span class="o">?</span> <span class="mi">7</span> <span class="o">:</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_four</span><span class="p">(){</span>
+    <span class="c1">// Find a noncovered zero and prime it. If there is no starred zero in the</span>
+    <span class="c1">// row containing this primed zero, go to step 5.</span>
+    <span class="c1">// Otherwise, cover this row and uncover the column containing the starred</span>
+    <span class="c1">// zero. Continue in this manner until there are no uncovered zeros left.</span>
+    <span class="c1">// Save the smallest uncovered value and go to step 6.</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">row</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">col</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">done</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">done</span><span class="p">){</span>
+      <span class="n">find_a_zero</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kt">size_t</span> <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">row</span><span class="p">;</span>
+        <span class="kt">size_t</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">col</span><span class="p">;</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">marker</span><span class="o">::</span><span class="n">PRIMED</span><span class="p">;</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">get_col_of_star_in_row</span><span class="p">(</span><span class="n">row</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">col</span><span class="p">;</span>
+          <span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="n">done</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+          <span class="n">step</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+          <span class="n">stored_row</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+          <span class="n">stored_col</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_five</span><span class="p">(){</span>
+    <span class="c1">// Construct a series of alternating primed and starred zeros as follows:</span>
+    <span class="c1">// Let Z0 represent the uncovered primed zero found in step 4.</span>
+    <span class="c1">// Let Z1 denote the starred zero in the column of Z0 (if any).</span>
+    <span class="c1">// Let Z2 denote the primed zero in the row of Z1 (always present if Z1 exists)</span>
+    <span class="c1">// Continue until the series terminates at a primed zero that has no starred</span>
+    <span class="c1">// zero in its column.</span>
+    <span class="c1">// Unstar each starred zero of the series.</span>
+    <span class="c1">// Star each primed zero of the series.</span>
+    <span class="c1">// Erase all primes and uncover every line in the matrix.</span>
+    <span class="c1">// Return to step three.</span>
+
+    <span class="c1">// path contains pairs of row/column values where we have found</span>
+    <span class="c1">// either a star or a prime that is part of the alternating sequence.</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">forward_list</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">path</span> <span class="p">{{</span><span class="n">stored_row</span><span class="p">,</span> <span class="n">stored_col</span><span class="p">}};</span>
+
+
+    <span class="kt">size_t</span> <span class="n">rowcol</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="n">stored_col</span><span class="p">};</span> <span class="c1">// the starting point is a PRIMED (found previously in step 4).</span>
+    <span class="k">const</span> <span class="n">marker</span> <span class="n">whichmark</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">,</span> <span class="n">marker</span><span class="o">::</span><span class="n">PRIMED</span><span class="p">};</span>
+    <span class="c1">// starting with i=0 --&gt; we look first along a row for a STARED zero.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">rowcol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">rowcol</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">rowcol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">rowcol</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">==</span> <span class="n">whichmark</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+        <span class="n">path</span><span class="p">.</span><span class="n">push_front</span><span class="p">({</span><span class="n">rowcol</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rowcol</span><span class="p">[</span><span class="mi">1</span><span class="p">]});</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">;</span>    <span class="c1">// switch between row and col, and between STARED and PRIMED</span>
+        <span class="n">rowcol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="c1">// exploit unsiged integer roll-over, and that</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">size_t</span> <span class="n">idx</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">i</span> <span class="p">:</span> <span class="n">path</span><span class="p">){</span>
+      <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">first</span><span class="o">*</span><span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+      <span class="c1">// unstar each starred zero.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">marker</span><span class="o">::</span><span class="n">STARED</span> <span class="o">==</span> <span class="n">mask</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="n">mask</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">marker</span><span class="o">::</span><span class="n">NORMAL</span><span class="p">;</span>
+      <span class="c1">// star each primed zero.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">marker</span><span class="o">::</span><span class="n">PRIMED</span> <span class="o">==</span> <span class="n">mask</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span> <span class="n">mask</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">marker</span><span class="o">::</span><span class="n">STARED</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// erase all primes.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">marker</span><span class="o">::</span><span class="n">PRIMED</span><span class="o">==</span><span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">marker</span><span class="o">::</span><span class="n">NORMAL</span><span class="p">;</span>
+    <span class="c1">// uncover every line</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">rowcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">colcover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// return to step three;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">step_six</span><span class="p">(){</span>
+    <span class="c1">// Add the value found in step 4 to every element of each covered row</span>
+    <span class="c1">// and subtract it from every element of each uncovered column.</span>
+    <span class="c1">// Return to step 4 without altering any stars, primes or covered lines.</span>
+    <span class="k">auto</span> <span class="n">smallest</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">smallest</span><span class="p">)</span> <span class="n">smallest</span><span class="o">=</span><span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">r</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">r</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">c</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">rowcover</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="n">smallest</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">colcover</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">cost</span><span class="p">[</span><span class="n">r</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="n">c</span><span class="p">]</span> <span class="o">-=</span> <span class="n">smallest</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="n">step</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

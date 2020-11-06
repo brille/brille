@@ -1,0 +1,16 @@
+.. _exhale_struct_structArrayTraits_3_01LQVec_3_01T_01_4_01_4:
+
+Template Struct ArrayTraits< LQVec< T > >
+=========================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ArrayTraits< LQVec< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

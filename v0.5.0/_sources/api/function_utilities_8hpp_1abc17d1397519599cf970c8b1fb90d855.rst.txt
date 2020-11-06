@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1abc17d1397519599cf970c8b1fb90d855:
+
+Template Function brille::utils::frobenius_distance(const I, const T \*, const T \*)
+====================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::frobenius_distance(const I, const T *, const T *)

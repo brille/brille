@@ -1,0 +1,13 @@
+.. _exhale_typedef_inner__interpolation__data_8hpp_1a446606f821163a6727252e4a0d11ca4a:
+
+Typedef CostFunction
+====================
+
+- Defined in :ref:`file_src_inner_interpolation_data.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: CostFunction

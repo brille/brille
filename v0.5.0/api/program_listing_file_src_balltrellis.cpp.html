@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File balltrellis.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File balltrellis.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_balltrellis.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-balltrellis-cpp">
+<span id="program-listing-file-src-balltrellis-cpp"></span><h1>Program Listing for File balltrellis.cpp<a class="headerlink" href="#program-listing-for-file-balltrellis-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_balltrellis.cpp.html#file-src-balltrellis-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/balltrellis.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;balltrellis.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
+
+<span class="cm">/* A note about the directions chosen for binning the leaves:</span>
+<span class="cm">  A better way of doing this would be to compute the covariance and/or</span>
+<span class="cm">  correlation matrix for the leaf centres, e.g.,</span>
+<span class="cm">    | ∑|xᵢ-̄x|² ∑|yᵢ-̄x|² ∑|zᵢ-̄x|² |</span>
+<span class="cm">    | ∑|xᵢ-̄y|² ∑|yᵢ-̄y|² ∑|zᵢ-̄y|² |</span>
+<span class="cm">    | ∑|xᵢ-̄z|² ∑|yᵢ-̄z|² ∑|zᵢ-̄z|² |</span>
+<span class="cm">  and then find its eigenvectors. If we ever decide to include a real</span>
+<span class="cm">  linear algebra library then we could easily update this function to make</span>
+<span class="cm">  use of its eigenvalue solver as well.</span>
+<span class="cm">  For now, an additional library just to address this issue is probably overkill.</span>
+<span class="cm">*/</span>
+<span class="n">Trellis</span> <span class="nf">construct_trellis</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TrellisLeaf</span><span class="o">&gt;&amp;</span> <span class="n">leaves</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">fraction</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">,</span> <span class="n">c</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;</span> <span class="n">xyz</span><span class="p">{</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">};</span>
+  <span class="kt">double</span> <span class="n">d</span><span class="p">;</span>
+  <span class="c1">// we need more than one leaf to be able to calculate x, y, and z</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">leaves</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">){</span>
+    <span class="c1">// find the centroid of the leaf positions</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">leaves</span><span class="p">){</span>
+      <span class="n">p</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">centre</span><span class="p">();</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">leaves</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="c1">// plus the vector pointing to the farthest leaf from the centroid</span>
+    <span class="c1">// choose this direction to be our x-axis</span>
+    <span class="kt">double</span> <span class="n">dmax</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">leaves</span><span class="p">){</span>
+      <span class="n">p</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">centre</span><span class="p">();</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">d</span><span class="o">&gt;</span><span class="n">dmax</span><span class="p">){</span>
+        <span class="n">dmax</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// normalise the x-axis:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="n">d</span><span class="p">;</span>
+    <span class="c1">// find the perpendicular direction with the farthest leaf from the centroid</span>
+    <span class="c1">// choose this to be our y-axis</span>
+    <span class="n">dmax</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">pperp</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">leaves</span><span class="p">){</span>
+      <span class="n">p</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">centre</span><span class="p">();</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span> <span class="c1">// p⋅x</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// dot(p, ̂x)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">pperp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">d</span><span class="o">*</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">// p - ̂x dot(p, ̂x)</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="n">pperp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">pperp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">dmax</span><span class="p">){</span>
+        <span class="n">dmax</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pperp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// normalise the y-axis;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">];</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">/=</span> <span class="n">d</span><span class="p">;</span>
+    <span class="c1">// pick the z-axis as x × y</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">vector_cross</span><span class="p">(</span><span class="n">xyz</span><span class="p">.</span><span class="n">data</span><span class="p">()</span><span class="o">+</span><span class="mi">6</span><span class="p">,</span> <span class="n">xyz</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">xyz</span><span class="p">.</span><span class="n">data</span><span class="p">()</span><span class="o">+</span><span class="mi">3</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// find the extents of the data</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">minmax</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)();</span>
+    <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">lowest</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// minimum does not need to include the radius but maximum does:</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">leaves</span><span class="p">){</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">centre</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">r</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">radius</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">d</span> <span class="o">+=</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">xyz</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">3u</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">r</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; optimisation testing</span>
+  <span class="kt">double</span> <span class="n">max_radius</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">leaf</span><span class="p">:</span> <span class="n">leaves</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">leaf</span><span class="p">.</span><span class="n">radius</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_radius</span><span class="p">)</span> <span class="n">max_radius</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">.</span><span class="n">radius</span><span class="p">();</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;The maximum leaf radius is &quot;</span><span class="p">,</span><span class="n">max_radius</span><span class="p">);</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;And the leaves extend over&quot;</span><span class="p">);</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot; x = &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s">&quot; : &quot;</span><span class="p">,</span><span class="n">minmax</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot; y = &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="s">&quot; : &quot;</span><span class="p">,</span><span class="n">minmax</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot; z = &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="n">xyz</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span><span class="s">&quot; : &quot;</span><span class="p">,</span><span class="n">minmax</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="n">max_radius</span> <span class="o">*</span> <span class="n">fraction</span><span class="p">;</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Using a boundary step size of max_radius*&quot;</span><span class="p">,</span><span class="n">fraction</span><span class="p">,</span><span class="s">&quot; which is &quot;</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+  <span class="c1">// &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+  <span class="c1">// and construct the boundaries</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">boundaries</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="c1">// // find the boundary step size</span>
+    <span class="c1">// d = (minmax[i][1]-minmax[i][0]) / static_cast&lt;double&gt;(Nxyz[i]);</span>
+    <span class="c1">// and construct the boundaries:</span>
+    <span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">minmax</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">()</span><span class="o">+</span><span class="n">d</span><span class="p">);</span>
+    <span class="c1">// replace the first and last boundaries to -∞ and +∞, respectively</span>
+    <span class="c1">// boundaries[i].front() = -std::numeric_limits&lt;double&gt;::infinity();</span>
+    <span class="c1">// boundaries[i].back()  =  std::numeric_limits&lt;double&gt;::infinity();</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Step size along axis &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;, &quot;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s">&quot;, yields &quot;</span><span class="p">,</span><span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot; bins with boundaries &quot;</span><span class="p">,</span><span class="n">boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Construct the Trellis object assigning the leaves to nodes</span>
+  <span class="n">Trellis</span> <span class="n">trellis</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">boundaries</span><span class="p">,</span> <span class="n">leaves</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">trellis</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

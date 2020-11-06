@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File approx.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>File approx.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_approx.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-approx-hpp">
+<span id="file-src-approx-hpp"></span><h1>File approx.hpp<a class="headerlink" href="#file-approx-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-approx-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/approx.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id3">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id4">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id6">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-approx-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/approx.hpp</span></code>)<a class="headerlink" href="#definition-src-approx-hpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_approx.hpp.html">Program Listing for File approx.hpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">debug.hpp</span></code> (<a class="reference internal" href="file_src_debug.hpp.html#file-src-debug-hpp"><span class="std std-ref">File debug.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iostream</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limits</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">math.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdexcept</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_traits</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_src_utilities.hpp.html#file-src-utilities-hpp"><span class="std std-ref">File utilities.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_comparisons.hpp.html#file-src-comparisons-hpp"><span class="std std-ref">File comparisons.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">File array.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_array2.hpp.html#file-src-array2-hpp"><span class="std std-ref">File array2.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_symmetry.hpp.html#file-src-symmetry-hpp"><span class="std std-ref">File symmetry.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_basis.hpp.html#file-src-basis-hpp"><span class="std std-ref">File basis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_balltrellis.hpp.html#file-src-balltrellis-hpp"><span class="std std-ref">File balltrellis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_polyhedron.hpp.html#file-src-polyhedron-hpp"><span class="std std-ref">File polyhedron.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_bz.hpp.html#file-src-bz-hpp"><span class="std std-ref">File bz.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_interpolator2.hpp.html#file-src-interpolator2-hpp"><span class="std std-ref">File interpolator2.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation_layers.hpp.html#file-src-triangulation-layers-hpp"><span class="std std-ref">File triangulation_layers.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation_simple.hpp.html#file-src-triangulation-simple-hpp"><span class="std std-ref">File triangulation_simple.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">File nest.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_inner_interpolation_data.hpp.html#file-src-inner-interpolation-data-hpp"><span class="std std-ref">File inner_interpolation_data.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_interpolator.hpp.html#file-src-interpolator-hpp"><span class="std std-ref">File interpolator.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_lattice.cpp.html#file-src-lattice-cpp"><span class="std std-ref">File lattice.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_pointsymmetry.cpp.html#file-src-pointsymmetry-cpp"><span class="std std-ref">File pointsymmetry.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_src_triangulation.hpp.html#file-src-triangulation-hpp"><span class="std std-ref">File triangulation.hpp</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_brille.html#namespace-brille"><span class="std std-ref">Namespace brille</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_brille__approx.html#namespace-brille-approx"><span class="std std-ref">Namespace brille::approx</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_approx_8hpp_1afe271acd2a3bc8bc3eb462c8aec2355e.html#exhale-function-approx-8hpp-1afe271acd2a3bc8bc3eb462c8aec2355e"><span class="std std-ref">Template Function brille::abs(const T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd.html#exhale-function-approx-8hpp-1a02c88194e9eb1a33d3d50b661dc0bcfd"><span class="std std-ref">Template Function brille::abs(const T)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a62cc037dd78d1d23c4494fc74644510e.html#exhale-function-approx-8hpp-1a62cc037dd78d1d23c4494fc74644510e"><span class="std std-ref">Template Function brille::approx::_array</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a91c57121b7e924b2a033a014c1cdc50f.html#exhale-function-approx-8hpp-1a91c57121b7e924b2a033a014c1cdc50f"><span class="std std-ref">Template Function brille::approx::_scalar(const T, const R, const bool, const T, const, const T, const)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a36fcd700b1f5c494cae717e01dd607f9.html#exhale-function-approx-8hpp-1a36fcd700b1f5c494cae717e01dd607f9"><span class="std std-ref">Template Function brille::approx::_scalar(const T, const R, const bool, const T, const R, const T, const R)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1aa8208de1f7cf17c5e9973ba79363c3b3.html#exhale-function-approx-8hpp-1aa8208de1f7cf17c5e9973ba79363c3b3"><span class="std std-ref">Template Function brille::approx::_scalar(const T, const R, const bool, const, const, const, const)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1ad04345f9f9ceecf0605d4284c80261f8.html#exhale-function-approx-8hpp-1ad04345f9f9ceecf0605d4284c80261f8"><span class="std std-ref">Template Function brille::approx::_scalar(const T, const R, const bool, const, const R, const, const R)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1af767219f987d5d6c336a37537b3334f2.html#exhale-function-approx-8hpp-1af767219f987d5d6c336a37537b3334f2"><span class="std std-ref">Template Function brille::approx::array(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a4cd1a6941a631fc6bf935a9915e6648c.html#exhale-function-approx-8hpp-1a4cd1a6941a631fc6bf935a9915e6648c"><span class="std std-ref">Template Function brille::approx::array(const size_t, const size_t, const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a0094807f2932570b4f321a7776d26420.html#exhale-function-approx-8hpp-1a0094807f2932570b4f321a7776d26420"><span class="std std-ref">Template Function brille::approx::matrix(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a7a089bf35def584727e389dc31d7521e.html#exhale-function-approx-8hpp-1a7a089bf35def584727e389dc31d7521e"><span class="std std-ref">Template Function brille::approx::matrix(const size_t, const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a98be591f1eea9128f37fde527a46f8ee.html#exhale-function-approx-8hpp-1a98be591f1eea9128f37fde527a46f8ee"><span class="std std-ref">Template Function brille::approx::scalar</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a4c8c4447f7394ab0f03b4606e9eadf66.html#exhale-function-approx-8hpp-1a4c8c4447f7394ab0f03b4606e9eadf66"><span class="std std-ref">Template Function brille::approx::tols</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a91e1b2bc8172186d40eade5a9a94c1fb.html#exhale-function-approx-8hpp-1a91e1b2bc8172186d40eade5a9a94c1fb"><span class="std std-ref">Template Function brille::approx::vector(const T *, const R *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_approx_8hpp_1a1f38059ec5f6cf7e90fc47194f48a4f4.html#exhale-function-approx-8hpp-1a1f38059ec5f6cf7e90fc47194f48a4f4"><span class="std std-ref">Template Function brille::approx::vector(const size_t, const T *, const R *, const int)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_approx_8hpp_1affae3b9c337594c5eb244330e67574da.html#exhale-variable-approx-8hpp-1affae3b9c337594c5eb244330e67574da"><span class="std std-ref">Variable brille::approx::TOL_MULT</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_variable_utilities_8hpp_1a5ba20e34189d20fb328e45611a48aa94:
+
+Variable brille::pi
+===================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: brille::pi

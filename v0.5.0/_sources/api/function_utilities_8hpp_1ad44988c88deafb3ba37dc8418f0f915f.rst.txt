@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ad44988c88deafb3ba37dc8418f0f915f:
+
+Template Function brille::utils::array_transpose
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::array_transpose(R *, const R *)

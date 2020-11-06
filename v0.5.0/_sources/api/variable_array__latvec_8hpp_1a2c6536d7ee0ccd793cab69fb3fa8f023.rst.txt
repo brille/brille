@@ -1,0 +1,13 @@
+.. _exhale_variable_array__latvec_8hpp_1a2c6536d7ee0ccd793cab69fb3fa8f023:
+
+Variable bothArrays
+===================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: bothArrays

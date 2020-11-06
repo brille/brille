@@ -1,0 +1,952 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File trellis.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File trellis.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_trellis.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-trellis-hpp">
+<span id="program-listing-file-src-trellis-hpp"></span><h1>Program Listing for File trellis.hpp<a class="headerlink" href="#program-listing-for-file-trellis-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/trellis.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;tuple&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;condition_variable&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array2.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array_latvec.hpp&quot; // defines bArray</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;polyhedron.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;utilities.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;triangulation_simple.hpp&quot;</span><span class="cp"></span>
+<span class="c1">// #include &quot;interpolation_data.hpp&quot;</span>
+<span class="cp">#include</span> <span class="cpf">&quot;interpolatordual.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;permutation.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+
+<span class="cp">#ifndef _TRELLIS_H_</span>
+<span class="cp">#define _TRELLIS_H_</span>
+
+
+<span class="cm">/*</span>
+<span class="cm">  Storing the lowest bin boundary (zero[3]), constant difference (step[3]),</span>
+<span class="cm">  and number of bins (size[3]) and directly calculating the bin for a given x</span>
+<span class="cm">  is a possible solution, but one which is no faster than storing bin bounds.</span>
+<span class="cm">  Since storing the boundaries can enable non-uniform bins this seems like</span>
+<span class="cm">  the better long-term solution.</span>
+<span class="cm">*/</span>
+<span class="c1">// template&lt;class T, class I&gt;</span>
+<span class="c1">// static I find_bin(const T zero, const T step, const I size, const T x){</span>
+<span class="c1">//   // we want to find i such that 0 &lt;= i*step &lt; x-zero &lt; (i+1)*step</span>
+<span class="c1">//   I i = x &gt; zero ?  static_cast&lt;I&gt;(std::floor((x-zero)/static_cast&lt;T&gt;(step))) : 0;</span>
+<span class="c1">//   return i &lt; size ? i : size-1;</span>
+<span class="c1">// }</span>
+<span class="c1">// template&lt;class T, class I&gt;</span>
+<span class="c1">// static int on_boundary(const T zero, const T step, const I size, const T x, const I i){</span>
+<span class="c1">//   // if x is infinitesimally smaller than zero+step*(i+1)</span>
+<span class="c1">//   if (i+1&lt;size &amp;&amp; brille::approx::scalar(zero+step*(i+1),x)) return  1;</span>
+<span class="c1">//   // if x is infinitesimally larger than zero+step*i</span>
+<span class="c1">//   if (i  &gt;0    &amp;&amp; brille::approx::scalar(zero+step*(i  ),x)) return -1;</span>
+<span class="c1">//   return 0;</span>
+<span class="c1">// }</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">static</span> <span class="kt">size_t</span> <span class="n">find_bin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">x</span><span class="p">){</span>
+  <span class="k">auto</span> <span class="n">found_at</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">bin_edges</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="n">x</span><span class="p">](</span><span class="kt">double</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">b</span><span class="o">&gt;</span><span class="n">x</span><span class="p">;});</span>
+  <span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">found_at</span><span class="p">);</span>
+  <span class="c1">// if unfound make sure we return off-the-edge on the correct side:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span> <span class="n">bin_edges</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">bin_edges</span><span class="p">.</span><span class="n">front</span><span class="p">())</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">d</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">?</span> <span class="n">d</span><span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">d</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">on_boundary</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">){</span>
+  <span class="c1">// if (i==0) then above d was *either* 0 or 1, otherwise d = i + 1;</span>
+  <span class="c1">// if (i==0) we can&#39;t go lower in either case, so no problem.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">&lt;</span><span class="n">bin_edges</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">x</span><span class="p">))</span> <span class="k">return</span>  <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span>  <span class="o">&gt;</span><span class="mi">0</span>                <span class="o">&amp;&amp;</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">i</span>  <span class="p">],</span><span class="n">x</span><span class="p">))</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">NodeType</span> <span class="p">{</span><span class="n">null</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">poly</span><span class="p">};</span>
+
+
+<span class="k">class</span> <span class="nc">NullNode</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">using</span> <span class="n">ind_t</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span><span class="p">;</span>
+  <span class="n">NullNode</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">NullNode</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+  <span class="c1">//</span>
+  <span class="k">virtual</span> <span class="n">NodeType</span> <span class="nf">type</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">null</span><span class="p">;}</span>
+  <span class="k">virtual</span> <span class="n">ind_t</span> <span class="nf">vertex_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="mi">0u</span><span class="p">;}</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">();}</span>
+  <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">vertices_per_tetrahedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span><span class="p">();}</span>
+  <span class="c1">// bool indices_weights(const bArray&lt;double&gt;&amp;, const bArray&lt;double&gt;&amp;, std::vector&lt;ind_t&gt;&amp;, std::vector&lt;double&gt;&amp;) const {return false;}</span>
+  <span class="kt">bool</span> <span class="n">indices_weights</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="nb">false</span><span class="p">;}</span>
+  <span class="kt">double</span> <span class="n">volume</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="mf">0.</span><span class="p">;}</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">CubeNode</span><span class="o">:</span> <span class="k">public</span> <span class="n">NullNode</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span> <span class="mi">8</span><span class="o">&gt;</span> <span class="n">vertex_indices</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">CubeNode</span><span class="p">()</span><span class="o">:</span> <span class="n">vertex_indices</span><span class="p">({{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}})</span> <span class="p">{}</span>
+  <span class="n">CubeNode</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">8</span><span class="o">&gt;&amp;</span> <span class="n">vi</span><span class="p">)</span><span class="o">:</span> <span class="n">vertex_indices</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">CubeNode</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&amp;</span> <span class="n">vi</span><span class="p">)</span><span class="o">:</span> <span class="n">vertex_indices</span><span class="p">({{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}})</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vi</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">)</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;CubeNode objects take 8 indices.&quot;</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">8u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">vertex_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">vi</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">vertex_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">8u</span><span class="p">;}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">v</span><span class="p">:</span> <span class="n">vertex_indices</span><span class="p">)</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// bool indices_weights(</span>
+  <span class="c1">//   const bArray&lt;double&gt;&amp; vertices,</span>
+  <span class="c1">//   const bArray&lt;double&gt;&amp; x,</span>
+  <span class="c1">//   std::vector&lt;ind_t&gt;&amp; indices,</span>
+  <span class="c1">//   std::vector&lt;double&gt;&amp; weights</span>
+  <span class="c1">// ) const {</span>
+  <span class="c1">//   // The CubeNode object contains the indices into `vertices` necessary to find</span>
+  <span class="c1">//   // the 8 corners of the cube. Those indices should be ordered</span>
+  <span class="c1">//   // (000) (100) (110) (010) (101) (001) (011) (111)</span>
+  <span class="c1">//   // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal</span>
+  <span class="c1">//   auto node_verts = vertices.extract(vertex_indices);</span>
+  <span class="c1">//   double node_volume = abs(node_verts.view(0)-node_verts.view(7)).prod(1)[0];</span>
+  <span class="c1">//   auto w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped</span>
+  <span class="c1">//   // If any normalised weights are greater than 1+eps() the point isn&#39;t in this node</span>
+  <span class="c1">//   if (w.any(brille::cmp::gt, 1.)) return false;</span>
+  <span class="c1">//   auto needed = w.is(brille::cmp::gt, 0.);</span>
+  <span class="c1">//   indices.clear();</span>
+  <span class="c1">//   weights.clear();</span>
+  <span class="c1">//   for (int i=0; i&lt;8; ++i) if (needed[i]) {</span>
+  <span class="c1">//     // the weight corresponds to the vertex opposite the one used to find the partial volume</span>
+  <span class="c1">//     indices.push_back(vertex_indices[7-i]);</span>
+  <span class="c1">//     weights.push_back(w[i]);</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   return true;</span>
+  <span class="c1">// }</span>
+  <span class="kt">bool</span> <span class="n">indices_weights</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;&amp;</span> <span class="n">iw</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// The CubeNode object contains the indices into `vertices` necessary to find</span>
+    <span class="c1">// the 8 corners of the cube. Those indices should be ordered</span>
+    <span class="c1">// (000) (100) (110) (010) (101) (001) (011) (111)</span>
+    <span class="c1">// so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal</span>
+    <span class="k">auto</span> <span class="n">node_verts</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">vertex_indices</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="n">node_volume</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">node_verts</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="n">node_verts</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">7</span><span class="p">)).</span><span class="n">prod</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">auto</span> <span class="n">w</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">node_verts</span><span class="p">).</span><span class="n">prod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">node_volume</span><span class="p">;</span> <span class="c1">// the normalised volume of each sub-parallelpiped</span>
+    <span class="c1">// If any normalised weights are greater than 1+eps() the point isn&#39;t in this node</span>
+    <span class="n">iw</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">needed</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">needed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="c1">// the weight corresponds to the vertex opposite the one used to find the partial volume</span>
+      <span class="n">iw</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">vertex_indices</span><span class="p">[</span><span class="mi">7</span><span class="o">-</span><span class="n">i</span><span class="p">],</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">volume</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">vertices</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// The CubeNode object contains the indices into `vertices` necessary to find</span>
+    <span class="c1">// the 8 corners of the cube. Those indices should be ordered</span>
+    <span class="c1">// (000) (100) (110) (010) (101) (001) (011) (111)</span>
+    <span class="c1">// so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal</span>
+    <span class="k">return</span> <span class="n">abs</span><span class="p">(</span><span class="n">vertices</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">vertex_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="n">vertices</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">vertex_indices</span><span class="p">[</span><span class="mi">7</span><span class="p">])).</span><span class="n">prod</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">PolyNode</span><span class="o">:</span> <span class="k">public</span> <span class="n">NullNode</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">vi_t</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">ci_t</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vol_t</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">PolyNode</span><span class="p">()</span> <span class="p">{};</span>
+  <span class="c1">// actually constructing the tetrahedra from, e.g., a Polyhedron object will</span>
+  <span class="c1">// need to be done elsewhere</span>
+  <span class="n">PolyNode</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;&amp;</span> <span class="n">vit</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;&amp;</span> <span class="n">cit</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">volt</span>
+  <span class="p">)</span><span class="o">:</span> <span class="n">vi_t</span><span class="p">(</span><span class="n">vit</span><span class="p">),</span> <span class="n">ci_t</span><span class="p">(</span><span class="n">cit</span><span class="p">),</span> <span class="n">vol_t</span><span class="p">(</span><span class="n">volt</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="c1">// count-up the number fo unique vertices in the tetrahedra-triangulated polyhedron</span>
+  <span class="n">ind_t</span> <span class="n">tetrahedra_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vi_t</span><span class="p">.</span><span class="n">size</span><span class="p">());}</span>
+  <span class="n">ind_t</span> <span class="n">vertex_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">vertices</span><span class="p">().</span><span class="n">size</span><span class="p">());}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">tet</span><span class="p">:</span> <span class="n">vi_t</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">idx</span><span class="p">:</span> <span class="n">tet</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">idx</span><span class="p">)</span><span class="o">==</span><span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">vertices_per_tetrahedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">vi_t</span><span class="p">;}</span>
+  <span class="c1">// bool indices_weights(</span>
+  <span class="c1">//   const bArray&lt;double&gt;&amp; vertices,</span>
+  <span class="c1">//   const bArray&lt;double&gt;&amp; x,</span>
+  <span class="c1">//   std::vector&lt;ind_t&gt;&amp; indices,</span>
+  <span class="c1">//   std::vector&lt;double&gt;&amp; weights</span>
+  <span class="c1">// ) const {</span>
+  <span class="c1">//   indices.clear();</span>
+  <span class="c1">//   weights.clear();</span>
+  <span class="c1">//   std::array&lt;double,4&gt; w{{0,0,0,0}};</span>
+  <span class="c1">//   for (ind_t i=0; i&lt;vi_t.size(); ++i)</span>
+  <span class="c1">//   if (this-&gt;tetrahedra_contains(i, vertices, x, w)){</span>
+  <span class="c1">//     for (int j=0; j&lt;4; ++j) if (!brille::approx::scalar(w[j],0.)){</span>
+  <span class="c1">//       indices.push_back(vi_t[i][j]);</span>
+  <span class="c1">//       weights.push_back(w[j]);</span>
+  <span class="c1">//     }</span>
+  <span class="c1">//     return true;</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   return false;</span>
+  <span class="c1">// }</span>
+  <span class="kt">bool</span> <span class="n">indices_weights</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">vertices</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;&amp;</span> <span class="n">iw</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">iw</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">vi_t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">tetrahedra_contains</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="mf">0.</span><span class="p">))</span>
+        <span class="n">iw</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span><span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">]));</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">volume</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">vol_t</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vol_t</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">tetrahedra_contains</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">ind_t</span> <span class="n">t</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&amp;</span> <span class="n">w</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">tetrahedra_might_contain</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">x</span><span class="p">))</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">vol6</span> <span class="o">=</span> <span class="n">vol_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">*</span><span class="mf">6.0</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span> <span class="n">x</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>           <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">1u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">2u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">3u</span><span class="p">])</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">0u</span><span class="p">]),</span> <span class="n">x</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>           <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">2u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">3u</span><span class="p">])</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">0u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">1u</span><span class="p">]),</span> <span class="n">x</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>           <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">3u</span><span class="p">])</span> <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">orient3d</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">0u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">1u</span><span class="p">]),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">vi_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">2u</span><span class="p">]),</span> <span class="n">x</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>           <span class="p">)</span><span class="o">/</span><span class="n">vol6</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">w</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">double</span> <span class="n">z</span><span class="p">){</span><span class="k">return</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mf">0.</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);}))</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">tetrahedra_might_contain</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">ind_t</span> <span class="n">t</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// find the vector from the circumsphere centre to x:</span>
+    <span class="kt">double</span> <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">ci_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">ci_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">ci_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+    <span class="c1">// compute the squared length of v, and the circumsphere radius squared</span>
+    <span class="kt">double</span> <span class="n">d2</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">ci_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">ci_t</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="mi">3</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">d2</span> <span class="o">+=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="c1">// if the squared distance is no greater than the squared radius, x might be inside the tetrahedra</span>
+    <span class="k">return</span> <span class="n">d2</span> <span class="o">&lt;</span> <span class="n">r2</span> <span class="o">||</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">r2</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">NodeContainer</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">using</span> <span class="n">ind_t</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">NodeType</span><span class="p">,</span><span class="n">ind_t</span><span class="o">&gt;&gt;</span> <span class="n">nodes_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">CubeNode</span><span class="o">&gt;</span> <span class="n">cube_nodes_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PolyNode</span><span class="o">&gt;</span> <span class="n">poly_nodes_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">size_t</span> <span class="n">size</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">();}</span>
+  <span class="kt">size_t</span> <span class="n">cube_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nodes_</span><span class="p">.</span><span class="n">end</span><span class="p">(),[](</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">NodeType</span><span class="p">,</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">n</span><span class="p">){</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">cube</span> <span class="o">==</span> <span class="n">n</span><span class="p">.</span><span class="n">first</span><span class="p">;});</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">poly_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nodes_</span><span class="p">.</span><span class="n">end</span><span class="p">(),[](</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">NodeType</span><span class="p">,</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">n</span><span class="p">){</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">poly</span> <span class="o">==</span> <span class="n">n</span><span class="p">.</span><span class="n">first</span><span class="p">;});</span>
+  <span class="p">}</span>
+  <span class="kt">size_t</span> <span class="n">null_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nodes_</span><span class="p">.</span><span class="n">end</span><span class="p">(),[](</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">NodeType</span><span class="p">,</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">n</span><span class="p">){</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">null</span> <span class="o">==</span> <span class="n">n</span><span class="p">.</span><span class="n">first</span><span class="p">;});</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">push_back</span><span class="p">(</span><span class="k">const</span> <span class="n">CubeNode</span><span class="o">&amp;</span> <span class="n">n</span><span class="p">){</span>
+    <span class="n">nodes_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">NodeType</span><span class="o">::</span><span class="n">cube</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cube_nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+    <span class="n">cube_nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">push_back</span><span class="p">(</span><span class="k">const</span> <span class="n">PolyNode</span><span class="o">&amp;</span> <span class="n">n</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">vertex_count</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;empty polynodes are not allowed!&quot;</span><span class="p">);</span>
+    <span class="n">nodes_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">NodeType</span><span class="o">::</span><span class="n">poly</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">poly_nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+    <span class="n">poly_nodes_</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">push_back</span><span class="p">(</span><span class="k">const</span> <span class="n">NullNode</span><span class="o">&amp;</span><span class="p">){</span>
+    <span class="n">nodes_</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">NodeType</span><span class="o">::</span><span class="n">null</span><span class="p">,</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">)());</span>
+  <span class="p">}</span>
+  <span class="n">NodeType</span> <span class="n">type</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">is_cube</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">cube</span> <span class="o">==</span> <span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="n">is_poly</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">poly</span> <span class="o">==</span> <span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;}</span>
+  <span class="kt">bool</span> <span class="n">is_null</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">null</span> <span class="o">==</span> <span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">CubeNode</span><span class="o">&amp;</span> <span class="n">cube_at</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">cube_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="n">PolyNode</span><span class="o">&amp;</span> <span class="n">poly_at</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">vertex_count</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">cube</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">cube_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">vertex_count</span><span class="p">();</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">poly</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">vertex_count</span><span class="p">();</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">cube</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">cube_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">vertices</span><span class="p">();</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">poly</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">vertices</span><span class="p">();</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">vertices_per_tetrahedron</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span> <span class="o">==</span> <span class="n">NodeType</span><span class="o">::</span><span class="n">poly</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">vertices_per_tetrahedron</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// bool indices_weights(const ind_t i, const bArray&lt;double&gt;&amp; v, const bArray&lt;double&gt;&amp; x, std::vector&lt;ind_t&gt;&amp; indices, std::vector&lt;double&gt;&amp; weights) const{</span>
+  <span class="c1">//   switch (nodes_[i].first){</span>
+  <span class="c1">//     case NodeType::cube:</span>
+  <span class="c1">//     return cube_nodes_[nodes_[i].second].indices_weights(v,x,indices,weights);</span>
+  <span class="c1">//     case NodeType::poly:</span>
+  <span class="c1">//     return poly_nodes_[nodes_[i].second].indices_weights(v,x,indices,weights);</span>
+  <span class="c1">//     case NodeType::null:</span>
+  <span class="c1">//       throw std::logic_error(&quot;attempting to access null node!&quot;);</span>
+  <span class="c1">//     default:</span>
+  <span class="c1">//     return false;</span>
+  <span class="c1">//   }</span>
+  <span class="c1">// }</span>
+  <span class="kt">bool</span> <span class="n">indices_weights</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;&amp;</span> <span class="n">iw</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">cube</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">cube_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">indices_weights</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">iw</span><span class="p">);</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">poly</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">indices_weights</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">iw</span><span class="p">);</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">null</span><span class="p">:</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;attempting to access null node!&quot;</span><span class="p">);</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">volume</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">verts</span><span class="p">,</span> <span class="k">const</span> <span class="n">ind_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">){</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">cube</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">cube_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">volume</span><span class="p">(</span><span class="n">verts</span><span class="p">);</span>
+      <span class="k">case</span> <span class="n">NodeType</span><span class="o">::</span><span class="nl">poly</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">poly_nodes_</span><span class="p">[</span><span class="n">nodes_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">].</span><span class="n">volume</span><span class="p">(</span><span class="n">verts</span><span class="p">);</span>
+      <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="mf">0.</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">PolyhedronTrellis</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">using</span> <span class="n">ind_t</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">data_t</span> <span class="o">=</span> <span class="n">DualInterpolator</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">vert_t</span> <span class="o">=</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">Polyhedron</span> <span class="n">polyhedron_</span><span class="p">;</span>
+  <span class="n">data_t</span> <span class="n">data_</span><span class="p">;</span>
+  <span class="n">vert_t</span> <span class="n">vertices_</span><span class="p">;</span>
+  <span class="n">NodeContainer</span> <span class="n">nodes_</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">boundaries_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">PolyhedronTrellis</span><span class="p">(</span><span class="k">const</span> <span class="n">Polyhedron</span><span class="o">&amp;</span> <span class="n">polyhedron</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">max_volume</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">always_triangulate</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+  <span class="c1">// explicit PolyhedronTrellis(const Polyhedron&amp; polyhedron, const double max_volume){</span>
+  <span class="c1">//   this-&gt;construct(polyhedron, max_volume);</span>
+  <span class="c1">// }</span>
+  <span class="c1">// PolyhedronTrellis(const Polyhedron&amp; polyhedron, const size_t number_density){</span>
+  <span class="c1">//   double max_volume = polyhedron.get_volume()/static_cast&lt;double&gt;(number_density);</span>
+  <span class="c1">//   this-&gt;construct(polyhedron, max_volume);</span>
+  <span class="c1">// };</span>
+  <span class="k">explicit</span> <span class="nf">PolyhedronTrellis</span><span class="p">()</span><span class="o">:</span> <span class="n">vertices_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">ind_t</span> <span class="nf">expected_vertex_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">ind_t</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">count</span> <span class="o">*=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="nf">vertex_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vertices_</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">vert_t</span><span class="o">&amp;</span> <span class="n">vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">vertices_</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">vert_t</span><span class="o">&amp;</span> <span class="n">vertices</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span><span class="o">==</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">)</span> <span class="n">vertices_</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">vertices_</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">vert_t</span> <span class="n">cube_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">keep</span><span class="p">(</span><span class="n">vertices_</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_cube</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">idx</span><span class="p">:</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">vertices</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="n">keep</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">vertices_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">vert_t</span> <span class="n">poly_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">keep</span><span class="p">(</span><span class="n">vertices_</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_poly</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">idx</span><span class="p">:</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">vertices</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="n">keep</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">vertices_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">vertices_per_tetrahedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_poly</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">tet</span><span class="p">:</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">vertices_per_tetrahedron</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">tet</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// bool indices_weights(const bArray&lt;double&gt;&amp; x, std::vector&lt;ind_t&gt;&amp; indices, std::vector&lt;double&gt;&amp; weights) const {</span>
+  <span class="c1">//   if (x.ndim()!=2 &amp;&amp; x.size(0)!=1u &amp;&amp; x.size(1)!=3u)</span>
+  <span class="c1">//     throw std::runtime_error(&quot;The indices and weights can only be found for one point at a time.&quot;);</span>
+  <span class="c1">//   return nodes_.indices_weights(this-&gt;node_index(x), vertices_, x, indices, weights);</span>
+  <span class="c1">// }</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+  <span class="n">indices_weights</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">iw</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span><span class="o">!=</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">!=</span><span class="mi">1u</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">!=</span><span class="mi">3u</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The indices and weights can only be found for one point at a time.&quot;</span><span class="p">);</span>
+    <span class="n">nodes_</span><span class="p">.</span><span class="n">indices_weights</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">node_index</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">vertices_</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">iw</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">iw</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span>
+  <span class="kt">unsigned</span> <span class="n">check_before_interpolating</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">mask</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">data_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The interpolation data must be filled before interpolating.&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span><span class="o">!=</span><span class="mi">2</span> <span class="o">||</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">!=</span><span class="mi">3u</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Only (n,3) two-dimensional Q vectors supported in interpolating.&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">stride</span><span class="p">().</span><span class="n">back</span><span class="p">()</span><span class="o">!=</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Contiguous vectors required for interpolation.&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">mask</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+  <span class="n">interpolate_at</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Single thread interpolation at &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; points&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_before_interpolating</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">valsh</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">shape</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">vecsh</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">valsh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vecsh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals_out</span><span class="p">(</span><span class="n">valsh</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">vecs_out</span><span class="p">(</span><span class="n">vecsh</span><span class="p">);</span>
+    <span class="c1">// vals and vecs are row-ordered contiguous by default, so we can create</span>
+    <span class="c1">// mutable data-sharing Array2 objects for use with</span>
+    <span class="c1">// Interpolator2::interpolate_at through the constructor:</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals2</span><span class="p">(</span><span class="n">vals_out</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">vecs2</span><span class="p">(</span><span class="n">vecs_out</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Locating &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+      <span class="k">auto</span> <span class="n">indwghts</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">indices_weights</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">indwghts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Point not found in PolyhedronTrellis&quot;</span><span class="p">);</span>
+      <span class="n">data_</span><span class="p">.</span><span class="n">interpolate_at</span><span class="p">(</span><span class="n">indwghts</span><span class="p">,</span> <span class="n">vals2</span><span class="p">,</span> <span class="n">vecs2</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">vals_out</span><span class="p">,</span> <span class="n">vecs_out</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+  <span class="n">interpolate_at</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">threads</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_before_interpolating</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="p">(</span><span class="n">threads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">threads</span> <span class="p">:</span> <span class="n">omp_get_max_threads</span><span class="p">()</span> <span class="p">);</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Parallel interpolation at &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; points with &quot;</span><span class="p">,</span><span class="n">threads</span><span class="p">,</span><span class="s">&quot; threads&quot;</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">valsh</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">shape</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">vecsh</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">vectors</span><span class="p">().</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">valsh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vecsh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// shared between threads</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals_out</span><span class="p">(</span><span class="n">valsh</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">vecs_out</span><span class="p">(</span><span class="n">vecsh</span><span class="p">);</span>
+    <span class="c1">// vals and vecs are row-ordered contiguous by default, so we can create</span>
+    <span class="c1">// mutable data-sharing Array2 objects for use with</span>
+    <span class="c1">// Interpolator2::interpolate_at through the constructor:</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals2</span><span class="p">(</span><span class="n">vals_out</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">vecs2</span><span class="p">(</span><span class="n">vecs_out</span><span class="p">);</span>
+    <span class="c1">// OpenMP &lt; v3.0 (VS uses v2.0) requires signed indexes for omp parallel</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">xsize</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">u2s</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="kt">size_t</span> <span class="n">n_unfound</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="cp">#pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize) reduction(+:n_unfound) schedule(dynamic)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">xsize</span><span class="p">;</span> <span class="o">++</span><span class="n">si</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">s2u</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+      <span class="k">auto</span> <span class="n">indwghts</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">indices_weights</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">indwghts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">data_</span><span class="p">.</span><span class="n">interpolate_at</span><span class="p">(</span><span class="n">indwghts</span><span class="p">,</span> <span class="n">vals2</span><span class="p">,</span> <span class="n">vecs2</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">n_unfound</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;interpolate at failed to find &quot;</span><span class="o">+</span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">n_unfound</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; point&quot;</span><span class="o">+</span><span class="p">(</span><span class="n">n_unfound</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">?</span><span class="s">&quot;s.&quot;</span><span class="o">:</span><span class="s">&quot;.&quot;</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">vals_out</span><span class="p">,</span> <span class="n">vecs_out</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">node_count</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ind_t</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">count</span> <span class="o">*=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">span</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},</span> <span class="n">sz</span><span class="o">=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sz</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// const std::array&lt;std::vector&lt;double&gt;,3&gt;&amp; boundaries(void) const {return boundaries_;}</span>
+  <span class="c1">//</span>
+  <span class="c1">// Find the appropriate node for an arbitrary point:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">node_subscript</span><span class="p">(</span><span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">sub</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">dim</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">dim</span><span class="p">)</span>
+      <span class="n">sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">find_bin</span><span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">dim</span><span class="p">],</span> <span class="n">p</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">dim</span><span class="p">)));</span>
+    <span class="c1">// it&#39;s possible that a subscript could go beyond the last bin in any direction!</span>
+    <span class="kt">bool</span> <span class="n">bad</span> <span class="o">=</span> <span class="o">!</span><span class="n">subscript_ok_and_not_null</span><span class="p">(</span><span class="n">sub</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">bad</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">close</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+      <span class="c1">// determine if we are close to a boundary along any of the three binning</span>
+      <span class="c1">// directions. if we are, on_boundary returns the direction in which we</span>
+      <span class="c1">// can safely take a step without leaving the binned region</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">on_boundary</span><span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">p</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="k">auto</span> <span class="n">num_close</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">close</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">close</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">a</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">!=</span><span class="mi">0</span><span class="p">;});</span>
+      <span class="c1">// check one</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">newsub</span><span class="p">{</span><span class="n">sub</span><span class="p">};</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">num_close</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">bad</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">newsub</span> <span class="o">=</span> <span class="n">sub</span><span class="p">;</span>
+        <span class="n">newsub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="o">!</span><span class="n">subscript_ok_and_not_null</span><span class="p">(</span><span class="n">newsub</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="c1">// check two</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">bad</span> <span class="o">&amp;&amp;</span> <span class="n">num_close</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">bad</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">bad</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">close</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">newsub</span> <span class="o">=</span> <span class="n">sub</span><span class="p">;</span>
+        <span class="n">newsub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">newsub</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">close</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="o">!</span><span class="n">subscript_ok_and_not_null</span><span class="p">(</span><span class="n">newsub</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="c1">// check all three</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">bad</span> <span class="o">&amp;&amp;</span> <span class="n">num_close</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">){</span>
+        <span class="n">newsub</span> <span class="o">=</span> <span class="n">sub</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">newsub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">close</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">bad</span> <span class="o">=</span> <span class="o">!</span><span class="n">subscript_ok_and_not_null</span><span class="p">(</span><span class="n">newsub</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bad</span><span class="p">)</span> <span class="n">sub</span> <span class="o">=</span> <span class="n">newsub</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">info_update_if</span><span class="p">(</span><span class="n">bad</span><span class="p">,</span><span class="s">&quot;The node subscript &quot;</span><span class="p">,</span><span class="n">sub</span><span class="p">,</span><span class="s">&quot; for the point &quot;</span><span class="p">,</span><span class="n">p</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="s">&quot; is either invalid or points to a null node!&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">sub</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// find the node linear index for a point</span>
+  <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="n">ind_t</span> <span class="n">node_index</span><span class="p">(</span><span class="k">const</span> <span class="n">S</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sub2idx</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">node_subscript</span><span class="p">(</span><span class="n">p</span><span class="p">));</span> <span class="p">}</span>
+
+  <span class="c1">// return a list of non-null neighbouring nodes</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">node_neighbours</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">sz</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()},</span> <span class="n">sp</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">span</span><span class="p">()},</span> <span class="n">sub</span><span class="p">;</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">idx2sub</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">sp</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sub</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">k</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="n">i</span><span class="o">&amp;&amp;</span><span class="mi">1</span><span class="o">==</span><span class="n">j</span><span class="o">&amp;&amp;</span><span class="mi">1</span><span class="o">==</span><span class="n">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">n_sub</span> <span class="p">{{</span><span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sub</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">}};</span>
+      <span class="n">ind_t</span> <span class="n">n_idx</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sub2idx</span><span class="p">(</span><span class="n">n_sub</span><span class="p">,</span> <span class="n">sp</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_null</span><span class="p">(</span><span class="n">n_idx</span><span class="p">))</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n_idx</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">const</span> <span class="n">CubeNode</span><span class="o">&amp;</span> <span class="n">cube_node</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_cube</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Out-of-bounds or non-cube node&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">cube_at</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="n">PolyNode</span><span class="o">&amp;</span> <span class="n">poly_node</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_poly</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Out-of-bounds or non-polyhedron node&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">poly_at</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span> <span class="o">=</span> <span class="s">&quot;(&quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">())</span> <span class="n">str</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">str</span> <span class="o">+=</span> <span class="s">&quot; )&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="n">data_t</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">data_</span><span class="p">;}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">replace_data</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span><span class="n">data_</span><span class="p">.</span><span class="n">replace_data</span><span class="p">(</span><span class="n">args</span><span class="p">...);}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">replace_value_data</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span> <span class="n">data_</span><span class="p">.</span><span class="n">replace_value_data</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">replace_vector_data</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span> <span class="n">data_</span><span class="p">.</span><span class="n">replace_vector_data</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">set_value_cost_info</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span> <span class="n">data_</span><span class="p">.</span><span class="n">set_value_cost_info</span><span class="p">(</span><span class="n">args</span><span class="p">...);</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">set_vector_cost_info</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span><span class="n">data_</span><span class="p">.</span><span class="n">set_vector_cost_info</span><span class="p">(</span><span class="n">args</span><span class="p">...);}</span>
+  <span class="kt">size_t</span> <span class="n">bytes_per_point</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">data_</span><span class="p">.</span><span class="n">bytes_per_point</span><span class="p">();</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">debye_waller</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">Qpts</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">Masses</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">t_K</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">data_</span><span class="p">.</span><span class="n">debye_waller</span><span class="p">(</span><span class="n">Qpts</span><span class="p">,</span><span class="n">Masses</span><span class="p">,</span><span class="n">t_K</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">sort</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span> <span class="n">data_</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span> <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">total_node_volume</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">vol</span><span class="p">{</span><span class="mf">0.</span><span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nodes_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">vol</span> <span class="o">+=</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">volume</span><span class="p">(</span><span class="n">vertices_</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">vol</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">subscript_ok_and_not_null</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">subscript_ok</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">nodes_</span><span class="p">.</span><span class="n">is_null</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">sub2idx</span><span class="p">(</span><span class="n">sub</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">subscript_ok</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">subscript_ok</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">subscript_ok</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sz</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">dim</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">dim</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">sz</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">sub2idx</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sub2idx</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">span</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">idx2sub</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">idx2sub</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">span</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">ind_t</span> <span class="n">sub2idx</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sp</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">ind_t</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">dim</span><span class="o">&lt;</span><span class="mi">3u</span><span class="p">;</span> <span class="o">++</span><span class="n">dim</span><span class="p">)</span> <span class="n">idx</span> <span class="o">+=</span> <span class="n">sp</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">*</span><span class="n">sub</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+    <span class="c1">// info_update(&quot;span &quot;,sp,&quot; gives subscript &quot;,sub,&quot; as linear &quot;,idx);</span>
+    <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">idx2sub</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&amp;</span> <span class="n">sp</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">sub</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+    <span class="n">ind_t</span> <span class="n">rem</span><span class="p">{</span><span class="n">idx</span><span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3u</span><span class="p">;</span> <span class="n">dim</span><span class="o">--</span><span class="p">;){</span>
+      <span class="n">sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">rem</span><span class="o">/</span><span class="n">sp</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+      <span class="n">rem</span> <span class="o">-=</span> <span class="n">sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">*</span><span class="n">sp</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sub</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// template&lt;typename S&gt; void add_node(const S&amp; node) {nodes_.push_back(node);}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">S</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">which_vertices_of_node</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="n">value</span><span class="p">,</span> <span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="nl">n</span><span class="p">:</span> <span class="n">nodes_</span><span class="p">.</span><span class="n">vertices</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">S</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">which_node_neighbours</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="n">value</span><span class="p">,</span> <span class="k">const</span> <span class="n">ind_t</span> <span class="n">idx</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="nl">n</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">node_neighbours</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Func</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">which_node_neighbours</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">Func</span> <span class="n">ufunc</span><span class="p">,</span> <span class="k">const</span> <span class="n">ind_t</span> <span class="n">node</span>
+  <span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="nl">n</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">node_neighbours</span><span class="p">(</span><span class="n">node</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">ufunc</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">n</span><span class="p">]))</span> <span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">collect_keys</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">collect_keys_node</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">trellis_centres</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">cents</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="n">cents</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">((</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">+</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">centres</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">z</span><span class="p">:</span> <span class="n">cents</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">y</span><span class="p">:</span> <span class="n">cents</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">cents</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">centres</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">});</span>
+    <span class="k">return</span> <span class="n">centres</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">trellis_centres_span</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">cs0</span><span class="p">{</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="n">cs1</span><span class="p">{</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="n">cs0</span><span class="p">,</span> <span class="n">cs0</span><span class="o">*</span><span class="n">cs1</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">trellis_intersections</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">intersections</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">z</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">y</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">intersections</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">});</span>
+    <span class="k">return</span> <span class="n">intersections</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">trellis_intersections_span</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">bs0</span><span class="p">{</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">()},</span> <span class="n">bs1</span><span class="p">{</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="p">()};</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="n">bs0</span><span class="p">,</span> <span class="n">bs0</span><span class="o">*</span><span class="n">bs1</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">trellis_local_cube_indices</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="cm">/* Each node with linear index idx has a subscripted index (i,j,k)</span>
+<span class="cm">       and is surrounded by the trellis intersections of boundaries</span>
+<span class="cm">       (i,j,k) + { (000), (100), (110), (010), (101), (001), (011), (111)};</span>
+<span class="cm">    */</span>
+    <span class="c1">// the order of the cube node intersections is paramount:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">idx</span><span class="p">{{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}}};</span>
+    <span class="k">return</span> <span class="n">idx</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Polyhedron</span> <span class="n">trellis_local_cube</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">min_corner</span><span class="p">,</span> <span class="n">max_corner</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="kt">double</span> <span class="n">cen</span> <span class="o">=</span> <span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+      <span class="n">min_corner</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">?</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="n">cen</span><span class="p">;</span>
+      <span class="n">max_corner</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">?</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="n">boundaries_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="n">cen</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">polyhedron_box</span><span class="p">(</span><span class="n">min_corner</span><span class="p">,</span> <span class="n">max_corner</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">trellis_node_circumsphere_radius</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// this will break if the boundaries_ are ever allowed to be non-uniform</span>
+    <span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kt">double</span> <span class="n">c</span> <span class="o">=</span> <span class="n">boundaries_</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">boundaries_</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;trellis.tpp&quot;</span><span class="cp"></span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

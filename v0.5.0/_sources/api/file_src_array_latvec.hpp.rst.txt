@@ -1,0 +1,164 @@
+
+.. _file_src_array_latvec.hpp:
+
+File array_latvec.hpp
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/array_latvec.hpp``)
+-------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_array_latvec.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.tpp`` (:ref:`file_src_array_latvec.tpp`)
+
+- ``array_ldvec.tpp`` (:ref:`file_src_array_ldvec.tpp`)
+
+- ``array_lqvec.tpp`` (:ref:`file_src_array_lqvec.tpp`)
+
+- ``exception``
+
+- ``lattice.hpp`` (:ref:`file_src_lattice.hpp`)
+
+- ``typeinfo``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_balltrellis.hpp`
+
+- :ref:`file_src_neighbours.hpp`
+
+- :ref:`file_src_transform.hpp`
+
+- :ref:`file_src_polyhedron.hpp`
+
+- :ref:`file_src_phonon.hpp`
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_interpolator2.hpp`
+
+- :ref:`file_src_permutation.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_triangulation_simple.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+- :ref:`file_src_inner_interpolation_data.hpp`
+
+- :ref:`file_src_interpolator.hpp`
+
+- :ref:`file_src_triangulation.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structArrayTraits`
+
+- :ref:`exhale_struct_structArrayTraits_3_01bArray_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structArrayTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structArrayTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structLatticeTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structLatticeTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structLatVecTraits`
+
+- :ref:`exhale_struct_structLatVecTraits_3_01Direct_00_01S_01_4`
+
+- :ref:`exhale_struct_structLatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structLatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structLatVecTraits_3_01Reciprocal_00_01S_01_4`
+
+- :ref:`exhale_class_classLatVec`
+
+- :ref:`exhale_class_classLDVec`
+
+- :ref:`exhale_class_classLQVec`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_array__latvec_8hpp_1a325533c5743834e5edfeec84879c1919`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a2b8d8b119a80ed372fc62843914fc17c`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_array__latvec_8hpp_1a3d156af269eddd9918e6a24fe8984654`
+
+- :ref:`exhale_define_array__latvec_8hpp_1acc515bc6f938e2b4d78f75b2d6bb67cb`
+
+- :ref:`exhale_define_array__latvec_8hpp_1aaff8662a1963cd30170718dfc05d09cc`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a66933152b88f049d9fff5c76f960a38e`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a88e3f30b3c3714f61dad3de2dbaa52a3`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a34f040f284f91eff0572fe5e5b509485`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a2c6536d7ee0ccd793cab69fb3fa8f023`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a96eff26c7178c3d62a223eb163324cbf`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a4d14210f871237604e0e473c2b77547e`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a80ab419f9be986076026e67fa1af56fc`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1ae9f03c3fa4d22142daf2f215ed630d5e`
+

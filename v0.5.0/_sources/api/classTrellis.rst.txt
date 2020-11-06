@@ -1,0 +1,16 @@
+.. _exhale_class_classTrellis:
+
+Class Trellis
+=============
+
+- Defined in :ref:`file_src_balltrellis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Trellis
+   :members:
+   :protected-members:
+   :undoc-members:

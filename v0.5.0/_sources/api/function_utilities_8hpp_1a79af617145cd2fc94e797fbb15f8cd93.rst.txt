@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a79af617145cd2fc94e797fbb15f8cd93:
+
+Template Function brille::utils::multiply_arrays
+================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::multiply_arrays(T *, const R *, const S *)

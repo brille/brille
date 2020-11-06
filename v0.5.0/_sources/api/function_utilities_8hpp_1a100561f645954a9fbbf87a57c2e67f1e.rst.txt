@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a100561f645954a9fbbf87a57c2e67f1e:
+
+Template Function brille::utils::vector_cross
+=============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::vector_cross(T *, const R *, const S *)

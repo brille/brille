@@ -1,0 +1,13 @@
+.. _exhale_define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f:
+
+Define ZERO_PREC
+================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ZERO_PREC

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ab86e4b9cbf939a28ebff2b7112653197:
+
+Template Function brille::utils::mod1
+=====================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::mod1(const T)

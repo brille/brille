@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class DualInterpolator &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class GammaTable" href="classGammaTable.html" />
+    <link rel="prev" title="Class Direct" href="classDirect.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class DualInterpolator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classDualInterpolator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-dualinterpolator">
+<span id="exhale-class-classdualinterpolator"></span><h1>Template Class DualInterpolator<a class="headerlink" href="#template-class-dualinterpolator" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_interpolatordual.hpp.html#file-src-interpolatordual-hpp"><span class="std std-ref">File interpolatordual.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00E16DualInterpolator">
+<span id="_CPPv3I00E16DualInterpolator"></span><span id="_CPPv2I00E16DualInterpolator"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classDualInterpolator"></span><em class="property">class </em><code class="sig-name descname">DualInterpolator</code><a class="headerlink" href="#_CPPv4I00E16DualInterpolator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N16DualInterpolator5ind_tE">
+<span id="_CPPv3N16DualInterpolator5ind_tE"></span><span id="_CPPv2N16DualInterpolator5ind_tE"></span><span class="target" id="classDualInterpolator_1ab86efdb682e7050d23973a30a3de329d"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><a class="headerlink" href="#_CPPv4N16DualInterpolator5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4I0EN16DualInterpolator9element_tE">
+<span id="_CPPv3I0EN16DualInterpolator9element_tE"></span><span id="_CPPv2I0EN16DualInterpolator9element_tE"></span>template&lt;class <code class="sig-name descname">Z</code>&gt;<br /><span class="target" id="classDualInterpolator_1a7cd3290a7cfc5c70f9e973f3d015ed9d"></span><em class="property">using </em><code class="sig-name descname">element_t</code> = std::array&lt;<a class="reference internal" href="#_CPPv4I0EN16DualInterpolator9element_tE" title="DualInterpolator::element_t::Z">Z</a>, 3&gt;<a class="headerlink" href="#_CPPv4I0EN16DualInterpolator9element_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator16DualInterpolatorEv">
+<span id="_CPPv3N16DualInterpolator16DualInterpolatorEv"></span><span id="_CPPv2N16DualInterpolator16DualInterpolatorEv"></span><span id="DualInterpolator::DualInterpolator"></span><span class="target" id="classDualInterpolator_1a47df6d01fca2810d89d40f69cdeda549"></span><code class="sig-name descname">DualInterpolator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator16DualInterpolatorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE">
+<span id="_CPPv3N16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="_CPPv2N16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="DualInterpolator::DualInterpolator__Interpolator:T:R.Interpolator:R:R"></span><span class="target" id="classDualInterpolator_1a01fb4592ab2d21aae1433bf43cb81cda"></span><code class="sig-name descname">DualInterpolator</code><span class="sig-paren">(</span><a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::T">T</a>&gt; &amp;<em>val</em>, <a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator15validate_valuesEv">
+<span id="_CPPv3N16DualInterpolator15validate_valuesEv"></span><span id="_CPPv2N16DualInterpolator15validate_valuesEv"></span><span id="DualInterpolator::validate_values"></span><span class="target" id="classDualInterpolator_1ae79c410f84d905082fba15ed56751299"></span>void <code class="sig-name descname">validate_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator15validate_valuesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator16validate_vectorsEv">
+<span id="_CPPv3N16DualInterpolator16validate_vectorsEv"></span><span id="_CPPv2N16DualInterpolator16validate_vectorsEv"></span><span id="DualInterpolator::validate_vectors"></span><span class="target" id="classDualInterpolator_1a1c25d3283a307f7342ca0996fc71c972"></span>void <code class="sig-name descname">validate_vectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator16validate_vectorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator4sizeEv">
+<span id="_CPPv3NK16DualInterpolator4sizeEv"></span><span id="_CPPv2NK16DualInterpolator4sizeEv"></span><span id="DualInterpolator::sizeC"></span><span class="target" id="classDualInterpolator_1a85af5459671f0b1b70e4779888a94b83"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator6valuesEv">
+<span id="_CPPv3NK16DualInterpolator6valuesEv"></span><span id="_CPPv2NK16DualInterpolator6valuesEv"></span><span id="DualInterpolator::valuesC"></span><span class="target" id="classDualInterpolator_1a427e44ced2cc5afe8d53699b6728a890"></span><em class="property">const</em> <a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::T">T</a>&gt; &amp;<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator6valuesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator7vectorsEv">
+<span id="_CPPv3NK16DualInterpolator7vectorsEv"></span><span id="_CPPv2NK16DualInterpolator7vectorsEv"></span><span id="DualInterpolator::vectorsC"></span><span class="target" id="classDualInterpolator_1ad3a2984968ad5c29e7801f6de734a215"></span><em class="property">const</em> <a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::R">R</a>&gt; &amp;<code class="sig-name descname">vectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator7vectorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator8branchesEv">
+<span id="_CPPv3NK16DualInterpolator8branchesEv"></span><span id="_CPPv2NK16DualInterpolator8branchesEv"></span><span id="DualInterpolator::branchesC"></span><span class="target" id="classDualInterpolator_1a708879a1fc615024959a57de3c146bf6"></span><a class="reference internal" href="#_CPPv4N16DualInterpolator5ind_tE" title="DualInterpolator::ind_t">ind_t</a> <code class="sig-name descname">branches</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike">
+<span id="_CPPv3N16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike"></span><span id="_CPPv2N16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike"></span><span id="DualInterpolator::rotateslike__RotatesLikeC.RotatesLikeC"></span><span class="target" id="classDualInterpolator_1a90e5eb9b1794a477c42fbc2c73cc35d1"></span>void <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>values</em>, <em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator18values_rotate_likeEK11RotatesLike">
+<span id="_CPPv3N16DualInterpolator18values_rotate_likeEK11RotatesLike"></span><span id="_CPPv2N16DualInterpolator18values_rotate_likeEK11RotatesLike"></span><span id="DualInterpolator::values_rotate_like__RotatesLikeC"></span><span class="target" id="classDualInterpolator_1ae2aa678b477d5e39d6e88ec66bb08607"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">values_rotate_like</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator18values_rotate_likeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator19vectors_rotate_likeEK11RotatesLike">
+<span id="_CPPv3N16DualInterpolator19vectors_rotate_likeEK11RotatesLike"></span><span id="_CPPv2N16DualInterpolator19vectors_rotate_likeEK11RotatesLike"></span><span id="DualInterpolator::vectors_rotate_like__RotatesLikeC"></span><span class="target" id="classDualInterpolator_1accd6661b95fa5743879ffd7734b22f35"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">vectors_rotate_like</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator19vectors_rotate_likeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t">
+<span id="_CPPv3II0E0ENK16DualInterpolator14interpolate_atERKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t"></span><span id="_CPPv2II0E0ENK16DualInterpolator14interpolate_atERKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classDualInterpolator_1acc565a8f50d7500eb3afc9524d8ba57e"></span>void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4N16DualInterpolator5ind_tE" title="DualInterpolator::ind_t">ind_t</a>, double&gt;&gt; &amp;<em>indices_weights</em>, <a class="reference internal" href="#_CPPv4II0E0ENK16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="DualInterpolator::interpolate_at::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::T">T</a>&gt; &amp;<em>values_out</em>, <a class="reference internal" href="#_CPPv4II0E0ENK16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="DualInterpolator::interpolate_at::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::R">R</a>&gt; &amp;<em>vectors_out</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N16DualInterpolator5ind_tE" title="DualInterpolator::ind_t">ind_t</a> <em>to</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I">
+<span id="_CPPv3I00ENK16DualInterpolator15get_permutationEK1IK1I"></span><span id="_CPPv2I00ENK16DualInterpolator15get_permutationEK1IK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="DualInterpolator::get_permutation::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1ae9be202f1c61957807a90213cd89c0d0"></span>std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classPermutationTable.html#_CPPv416PermutationTable" title="PermutationTable">PermutationTable</a>::<a class="reference internal" href="classPermutationTable.html#_CPPv4N16PermutationTable5ind_tE" title="PermutationTable::ind_t">ind_t</a>&gt; <code class="sig-name descname">get_permutation</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="DualInterpolator::get_permutation::I">I</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="DualInterpolator::get_permutation::I">I</a><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE">
+<span id="_CPPv3I00ENK16DualInterpolator16get_permutationsERKNSt6vectorI1IEE"></span><span id="_CPPv2I00ENK16DualInterpolator16get_permutationsERKNSt6vectorI1IEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="DualInterpolator::get_permutations::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1a54a748b759fefc7787af4d2ec83675fb"></span>std::vector&lt;std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classPermutationTable.html#_CPPv416PermutationTable" title="PermutationTable">PermutationTable</a>::<a class="reference internal" href="classPermutationTable.html#_CPPv4N16PermutationTable5ind_tE" title="PermutationTable::ind_t">ind_t</a>&gt;&gt; <code class="sig-name descname">get_permutations</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="DualInterpolator::get_permutations::I">I</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE">
+<span id="_CPPv3I00ENK16DualInterpolator16get_permutationsERKNSt6vectorINSt4pairI1IdEEEE"></span><span id="_CPPv2I00ENK16DualInterpolator16get_permutationsERKNSt6vectorINSt4pairI1IdEEEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="DualInterpolator::get_permutations::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1ae7c5f508bfb271029785bcdf8ba9339d"></span>std::vector&lt;std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classPermutationTable.html#_CPPv416PermutationTable" title="PermutationTable">PermutationTable</a>::<a class="reference internal" href="classPermutationTable.html#_CPPv4N16PermutationTable5ind_tE" title="PermutationTable::ind_t">ind_t</a>&gt;&gt; <code class="sig-name descname">get_permutations</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="DualInterpolator::get_permutations::I">I</a>, double&gt;&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE">
+<span id="_CPPv3N16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="_CPPv2N16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="DualInterpolator::replace_data__Interpolator:T:R.Interpolator:R:R"></span><span class="target" id="classDualInterpolator_1afa185a8e7d33a6576cc75304b19f69da"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::T">T</a>&gt; &amp;<em>val</em>, <a class="reference internal" href="classInterpolator.html#_CPPv4I0E12Interpolator" title="Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN16DualInterpolator18replace_value_dataEvDp1A">
+<span id="_CPPv3IDpEN16DualInterpolator18replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN16DualInterpolator18replace_value_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classDualInterpolator_1a06f1e11a7f25c32e547b47bae3ab6083"></span>void <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN16DualInterpolator18replace_value_dataEvDp1A" title="DualInterpolator::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN16DualInterpolator18replace_value_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN16DualInterpolator19replace_vector_dataEvDp1A">
+<span id="_CPPv3IDpEN16DualInterpolator19replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN16DualInterpolator19replace_vector_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classDualInterpolator_1a4dd04ae42dada3b9e354b26e8d3958fd"></span>void <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN16DualInterpolator19replace_vector_dataEvDp1A" title="DualInterpolator::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN16DualInterpolator19replace_vector_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE">
+<span id="_CPPv3N16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE"></span><span id="_CPPv2N16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE"></span><span id="DualInterpolator::initialize_permutation_table__sC.std::set:s:CR"></span><span class="target" id="classDualInterpolator_1a609c8881857a1f3b9850ce2d17b9627b"></span>void <code class="sig-name descname">initialize_permutation_table</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>nverts</em>, <em class="property">const</em> std::set&lt;size_t&gt; &amp;<em>keys</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator24update_permutation_tableEv">
+<span id="_CPPv3N16DualInterpolator24update_permutation_tableEv"></span><span id="_CPPv2N16DualInterpolator24update_permutation_tableEv"></span><span id="DualInterpolator::update_permutation_table"></span><span class="target" id="classDualInterpolator_1ad6d7ebb4c4b496ce6d4ac3ef42591363"></span>void <code class="sig-name descname">update_permutation_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator24update_permutation_tableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE"></span><span id="DualInterpolator::set_value_cost_info__iC.iC.element_t:double:CR"></span><span class="target" id="classDualInterpolator_1a3c62e7221dac0a46ad181115a9d6a4b7"></span>void <code class="sig-name descname">set_value_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>csf</em>, <em class="property">const</em> int <em>cvf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN16DualInterpolator9element_tE" title="DualInterpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE"></span><span id="DualInterpolator::set_vector_cost_info__iC.iC.element_t:double:CR"></span><span class="target" id="classDualInterpolator_1acf50ce7b110776faeea5c64d8f4c680c"></span>void <code class="sig-name descname">set_vector_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>csf</em>, <em class="property">const</em> int <em>cvf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN16DualInterpolator9element_tE" title="DualInterpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator9to_stringEv">
+<span id="_CPPv3NK16DualInterpolator9to_stringEv"></span><span id="_CPPv2NK16DualInterpolator9to_stringEv"></span><span id="DualInterpolator::to_stringC"></span><span class="target" id="classDualInterpolator_1a3191c8685a5e706c47e1598ecf2031d8"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd">
+<span id="_CPPv3II0E0ENK16DualInterpolator12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span id="_CPPv2II0E0ENK16DualInterpolator12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classDualInterpolator_1a444b5f5e06fd9939e0ff7b257b23705b"></span>brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;double&gt; <code class="sig-name descname">debye_waller</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0ENK16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd" title="DualInterpolator::debye_waller::A">A</a>&lt;double&gt; &amp;<em>Qpts</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>Masses</em>, <em class="property">const</em> double <em>t_K</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I">
+<span id="_CPPv3I000ENK16DualInterpolator11cost_matrixEK1IK1I"></span><span id="_CPPv2I000ENK16DualInterpolator11cost_matrixEK1IK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename <code class="sig-name descname">S</code> = <em class="property">typename</em> <a class="reference internal" href="structCostTraits.html#_CPPv4I0E10CostTraits" title="CostTraits">CostTraits</a>&lt;<a class="reference internal" href="#_CPPv4I00E16DualInterpolator" title="DualInterpolator::T">T</a>&gt;::type, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="DualInterpolator::cost_matrix::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1a68673602ac8015ad52d591c27cdf999c"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="DualInterpolator::cost_matrix::S">S</a>&gt; <code class="sig-name descname">cost_matrix</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="DualInterpolator::cost_matrix::I">I</a> <em>i0</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="DualInterpolator::cost_matrix::I">I</a> <em>i1</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I000ENK16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE">
+<span id="_CPPv3I00EN16DualInterpolator13permute_modesEK1IRKNSt6vectorI5ind_tEE"></span><span id="_CPPv2I00EN16DualInterpolator13permute_modesEK1IRKNSt6vectorI5ind_tEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="DualInterpolator::permute_modes::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1ad22702e95534afd07a45fee3451aa348"></span>void <code class="sig-name descname">permute_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="DualInterpolator::permute_modes::I">I</a> <em>i</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4N16DualInterpolator5ind_tE" title="DualInterpolator::ind_t">ind_t</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE">
+<span id="_CPPv3I00EN16DualInterpolator21inverse_permute_modesEK1IRKNSt6vectorI5ind_tEE"></span><span id="_CPPv2I00EN16DualInterpolator21inverse_permute_modesEK1IRKNSt6vectorI5ind_tEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="DualInterpolator::inverse_permute_modes::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1a9f6637c19ec58d0b38783a0f5ffc7c11"></span>void <code class="sig-name descname">inverse_permute_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="DualInterpolator::inverse_permute_modes::I">I</a> <em>i</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4N16DualInterpolator5ind_tE" title="DualInterpolator::ind_t">ind_t</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN16DualInterpolator13is_degenerateEbK1I">
+<span id="_CPPv3I00EN16DualInterpolator13is_degenerateEK1I"></span><span id="_CPPv2I00EN16DualInterpolator13is_degenerateEK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN16DualInterpolator13is_degenerateEbK1I" title="DualInterpolator::is_degenerate::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1acbf13b97d623a0829397f1c8ee5a339d"></span>bool <code class="sig-name descname">is_degenerate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN16DualInterpolator13is_degenerateEbK1I" title="DualInterpolator::is_degenerate::I">I</a> <em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN16DualInterpolator13is_degenerateEbK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N16DualInterpolator4sortEv">
+<span id="_CPPv3N16DualInterpolator4sortEv"></span><span id="_CPPv2N16DualInterpolator4sortEv"></span><span id="DualInterpolator::sort__void"></span><span class="target" id="classDualInterpolator_1a34743e93d556b7022b1cfa6a2c46178c"></span>void <code class="sig-name descname">sort</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N16DualInterpolator4sortEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE">
+<span id="_CPPv3I00EN16DualInterpolator24determine_permutation_ijEK1IK1IRNSt5mutexE"></span><span id="_CPPv2I00EN16DualInterpolator24determine_permutation_ijEK1IK1IRNSt5mutexE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="DualInterpolator::determine_permutation_ij::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classDualInterpolator_1a75dceebb85a972d5d2365a4353e6127e"></span>bool <code class="sig-name descname">determine_permutation_ij</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="DualInterpolator::determine_permutation_ij::I">I</a> <em>i</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="DualInterpolator::determine_permutation_ij::I">I</a> <em>j</em>, std::mutex &amp;<em>map_mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK16DualInterpolator15bytes_per_pointEv">
+<span id="_CPPv3NK16DualInterpolator15bytes_per_pointEv"></span><span id="_CPPv2NK16DualInterpolator15bytes_per_pointEv"></span><span id="DualInterpolator::bytes_per_pointC"></span><span class="target" id="classDualInterpolator_1a1b9251925812e6c27ade5a65b7fb51d9"></span>size_t <code class="sig-name descname">bytes_per_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK16DualInterpolator15bytes_per_pointEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classGammaTable.html" class="btn btn-neutral float-right" title="Class GammaTable" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classDirect.html" class="btn btn-neutral float-left" title="Class Direct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

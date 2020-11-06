@@ -1,0 +1,26 @@
+
+.. _program_listing_file_src_array_.hpp:
+
+Program Listing for File array_.hpp
+===================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_array_.hpp>` (``src/array_.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #ifndef ARRAY__HPP
+   #define ARRAY__HPP
+   
+   namespace brille {
+     // declare both Array and Array2 so that they can each contain conversion
+     // constructors for the other.
+     template<class T> class Array;
+     template<class T> class Array2;
+   
+     // declare their itterators here
+     template<class T> class ArrayIt;
+     template<class T> class Array2It;
+   }
+   #endif

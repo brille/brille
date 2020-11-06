@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File array_latvec.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File array_latvec.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_array_latvec.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-array-latvec-hpp">
+<span id="program-listing-file-src-array-latvec-hpp"></span><h1>Program Listing for File array_latvec.hpp<a class="headerlink" href="#program-listing-for-file-array-latvec-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_array_latvec.hpp.html#file-src-array-latvec-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array_latvec.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef _LATVEC_CLASS_H_</span>
+<span class="cp">#define _LATVEC_CLASS_H_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;typeinfo&gt; // for std::bad_cast</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;exception&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;lattice.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array2.hpp&quot;</span><span class="cp"></span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">using</span> <span class="n">bArray</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">LatVec</span><span class="p">{};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">LDVec</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">LQVec</span><span class="p">;</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="p">...</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">ArrayTraits</span><span class="p">{</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">array</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">latvec</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">ArrayTraits</span><span class="o">&lt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">array</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">latvec</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">ArrayTraits</span><span class="o">&lt;</span><span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">array</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">latvec</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">ArrayTraits</span><span class="o">&lt;</span><span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">array</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">static</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">latvec</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">isArray</span> <span class="o">=</span> <span class="n">ArrayTraits</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;::</span><span class="n">array</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">isLatVec</span> <span class="o">=</span> <span class="n">ArrayTraits</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;::</span><span class="n">latvec</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">isBareArray</span> <span class="o">=</span> <span class="n">isArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">bothArrays</span> <span class="o">=</span> <span class="n">isArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">isArray</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">bareArrays</span> <span class="o">=</span> <span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="k">constexpr</span> <span class="kt">bool</span> <span class="n">bothLatVecs</span> <span class="o">=</span> <span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">B</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">equal_shapes</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span><span class="n">b</span><span class="p">){</span>
+  <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">ok</span><span class="p">)</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+  <span class="k">return</span> <span class="n">ok</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">Nel</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">equal_shapes</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">Nel</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">Nel</span><span class="o">&gt;&amp;</span><span class="n">b</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="cp">#define LVEC_SCALAR_INPLACE_OP_DEF(L,X) \</span>
+<span class="cp">L &lt;T&gt;&amp;\</span>
+<span class="cp">operator X (const T&amp; v){\</span>
+<span class="cp">  for (auto x: this-&gt;subItr()) this-&gt;_data[this-&gt;s2l_d(x)] X v;\</span>
+<span class="cp">  return *this;\</span>
+<span class="cp">}</span>
+<span class="cp">#define LVEC_ARRAY_INPLACE_OP_DEF(L,X) \</span>
+<span class="cp">template&lt;template&lt;class&gt; class A&gt;\</span>
+<span class="cp">std::enable_if_t&lt;isArray&lt;T,A&gt;, L &lt;T&gt;&gt;&amp;\</span>
+<span class="cp">operator X (const A&lt;T&gt;&amp; b){\</span>
+<span class="cp">  auto itr = this-&gt;broadcastItr(b.shape());\</span>
+<span class="cp">  if (!equal_shapes(itr.shape(), this-&gt;shape())) throw std::runtime_error(&quot;Incompatible shaped Array for binary operation&quot;);\</span>
+<span class="cp">  for (auto [ox, ax, bx]: itr) this-&gt;_data[this-&gt;s2l_d(ax)] X b[bx];\</span>
+<span class="cp">  return *this;\</span>
+<span class="cp">}</span>
+
+<span class="cp">#define LVEC_INIT_INT(N,L,X) N(const L &amp;lat, const X &amp;n)\</span>
+<span class="cp">: bArray&lt;T&gt;(static_cast&lt;brille::ind_t&gt;(n),3), lattice(lat)\</span>
+<span class="cp">{}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">LDVec</span><span class="o">:</span> <span class="k">public</span> <span class="n">LatVec</span><span class="p">,</span> <span class="k">public</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="n">Direct</span> <span class="n">lattice</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// default constructor for zero three-vectors:</span>
+  <span class="k">explicit</span> <span class="n">LDVec</span><span class="p">(</span><span class="k">const</span> <span class="n">Direct</span><span class="o">&amp;</span> <span class="n">lat</span><span class="o">=</span><span class="n">Direct</span><span class="p">())</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">int</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">unsigned</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="n">Direct</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span> <span class="n">LDVec</span><span class="p">(</span><span class="k">const</span> <span class="n">Direct</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">...),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_array</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Q</span><span class="o">&gt;</span>
+  <span class="n">LDVec</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">()),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+
+
+  <span class="n">Direct</span> <span class="n">get_lattice</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">vec</span><span class="o">-&gt;</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">isstar</span><span class="p">(</span><span class="n">vec</span><span class="o">-&gt;</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">isstar</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="c1">// extract overloads preserving lattice information</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">view</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">extract</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">get_hkl</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_xyz</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">star</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="kt">double</span> <span class="nf">dot</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="nf">norm</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">));</span> <span class="p">}</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="c1">// LDVec&lt;T&gt;&amp; operator-=(const LDVec&lt;T&gt;&amp; av);</span>
+  <span class="c1">// LDVec&lt;T&gt;&amp; operator+=(const LDVec&lt;T&gt;&amp; av);</span>
+
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LDVec</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">samelattice</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">starlattice</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span>
+  <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_base_of</span><span class="o">&lt;</span><span class="n">LatVec</span><span class="p">,</span><span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">bool</span> <span class="n">is</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">that</span><span class="p">){</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">samelattice</span><span class="p">(</span><span class="n">that</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">is</span><span class="p">(</span><span class="n">that</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">round</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">floor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">floor</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ceil</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">ceil</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">decouple</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">decouple</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">check_array</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">LQVec</span><span class="o">:</span>  <span class="k">public</span> <span class="n">LatVec</span><span class="p">,</span> <span class="k">public</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="n">Reciprocal</span> <span class="n">lattice</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// default constructor for zero three-vectors:</span>
+  <span class="k">explicit</span> <span class="n">LQVec</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span> <span class="n">lat</span><span class="o">=</span><span class="n">Reciprocal</span><span class="p">())</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">int</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">unsigned</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="n">LVEC_INIT_INT</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="n">Reciprocal</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+  <span class="n">LQVec</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">...),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_array</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="n">LQVec</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">()),</span> <span class="n">lattice</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">())</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+
+  <span class="c1">// LQVec(const LQVec&lt;T&gt;&amp; other, const bool m, const bool d): bArray&lt;T&gt;(other.get_hkl(), m, d), lattice{other.get_lattice()} {}</span>
+  <span class="c1">// LQVec(const LQVec&lt;T&gt;&amp; other, const bool m=false, const bool d=false): bArray&lt;T&gt;(other.get_hkl(),m,d), lattice(other.get_lattice()) {}</span>
+
+  <span class="c1">// //! Type conversion assignment:</span>
+  <span class="c1">// template&lt;class R&gt; LQVec&lt;T&gt;&amp; operator=(const LQVec&lt;R&gt;&amp; other){</span>
+  <span class="c1">//   this-&gt;lattice = other.get_lattice();</span>
+  <span class="c1">//   *this = bArray&lt;T&gt;(other.get_hkl());</span>
+  <span class="c1">//   return *this;</span>
+  <span class="c1">// }</span>
+  <span class="c1">// LQVec&lt;T&gt;&amp; operator=(const LQVec&lt;T&gt;&amp; other){</span>
+  <span class="c1">//   if (this != &amp;other){ // do nothing if called by, e.g., a = a;</span>
+  <span class="c1">//     this-&gt;lattice = other.get_lattice();</span>
+  <span class="c1">//     this-&gt;bArray&lt;T&gt;::operator=(other);</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   return *this;</span>
+  <span class="c1">// }</span>
+  <span class="c1">// LQVec&lt;T&gt;&amp; operator=(LQVec&lt;T&gt;&amp;&amp; other) noexcept {</span>
+  <span class="c1">//</span>
+  <span class="c1">// }</span>
+
+  <span class="n">Reciprocal</span> <span class="n">get_lattice</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">vec</span><span class="o">-&gt;</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">isstar</span><span class="p">(</span><span class="n">vec</span><span class="o">-&gt;</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">samelattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="p">)</span>    <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">starlattice</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lattice</span><span class="p">.</span><span class="n">isstar</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span> <span class="p">}</span>
+  <span class="c1">// extract overloads preserving lattice information</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">view</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">extract</span><span class="p">(</span><span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">get_hkl</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_xyz</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">star</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="kt">double</span> <span class="nf">dot</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="nf">norm</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">));</span> <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+  <span class="n">LVEC_SCALAR_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+  <span class="n">LVEC_ARRAY_INPLACE_OP_DEF</span><span class="p">(</span><span class="n">LQVec</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+  <span class="c1">// LQVec&lt;T&gt; operator -();</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">samelattice</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">starlattice</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span>
+  <span class="k">typename</span><span class="o">=</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_if</span><span class="o">&lt;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_base_of</span><span class="o">&lt;</span><span class="n">LatVec</span><span class="p">,</span><span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&gt;::</span><span class="n">value</span><span class="o">&gt;::</span><span class="n">type</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">binary_operation_check</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="k">const</span> <span class="p">{}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">bool</span> <span class="n">is</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">samelattice</span><span class="p">(</span><span class="n">that</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">is</span><span class="p">(</span><span class="n">that</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">round</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">floor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">floor</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ceil</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">ceil</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="c1">//</span>
+  <span class="k">static</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">from_invA</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">,</span> <span class="k">const</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">vec</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">vec</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">);</span>
+    <span class="c1">// initialise an empy array for the relative lattice unit components</span>
+    <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">rlu</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">stride</span><span class="p">());</span>
+    <span class="k">auto</span> <span class="n">vsh</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">vsh</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// grab the transformation matric from the lattice</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">fromxyz</span> <span class="o">=</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_inverse_xyz_transform</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span><span class="p">:</span> <span class="n">vec</span><span class="p">.</span><span class="n">subItr</span><span class="p">(</span><span class="n">vsh</span><span class="p">))</span>
+      <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">rlu</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">fromxyz</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="c1">// finally make the vector(s) with lattice and components:</span>
+    <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">rlu</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">decouple</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lattice</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">decouple</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">check_array</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="cp">#undef LVEC_SCALAR_INPLACE_OP_DEF</span>
+<span class="cp">#undef LVEC_ARRAY_INPLACE_OP_DEF</span>
+<span class="cp">#undef LVEC_INIT_INT</span>
+
+<span class="cp">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span>
+<span class="c1">// extend the lattice traits structs</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatticeTraits</span><span class="o">&lt;</span><span class="n">LDVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">Direct</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">Reciprocal</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatticeTraits</span><span class="o">&lt;</span><span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">Reciprocal</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">Direct</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="p">,</span> <span class="n">class</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatVecTraits</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="kt">void</span><span class="p">;</span> <span class="c1">//&lt; LDVec&lt;R&gt; or LQVec&lt;R&gt;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="kt">void</span><span class="p">;</span> <span class="c1">//&lt; LQVec&lt;R&gt; or LDVec&lt;R&gt;</span>
+<span class="p">};</span>
+<span class="cp">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">LDVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">Direct</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">Reciprocal</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">type</span> <span class="o">=</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">star</span> <span class="o">=</span> <span class="n">LDVec</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="p">...</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">LatVecType</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="p">...</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">using</span> <span class="n">LatVecStar</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">T</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">star</span><span class="p">;</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;array_latvec.tpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array_ldvec.tpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array_lqvec.tpp&quot;</span><span class="cp"></span>
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

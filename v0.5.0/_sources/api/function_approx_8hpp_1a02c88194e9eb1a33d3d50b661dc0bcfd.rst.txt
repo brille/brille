@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd:
+
+Template Function brille::abs(const T)
+======================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::abs(const T)

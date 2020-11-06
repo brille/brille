@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d:
+
+Function _internal_pointgroup_rotations
+=======================================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: _internal_pointgroup_rotations(int *, const int, const std::vector<std::array<int, 9>>&, const int)

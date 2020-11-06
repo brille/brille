@@ -1,0 +1,26 @@
+.. _exhale_class_classLatVec:
+
+Class LatVec
+============
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public LDVec< T >`` (:ref:`exhale_class_classLDVec`)
+- ``public LQVec< T >`` (:ref:`exhale_class_classLQVec`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: LatVec
+   :members:
+   :protected-members:
+   :undoc-members:

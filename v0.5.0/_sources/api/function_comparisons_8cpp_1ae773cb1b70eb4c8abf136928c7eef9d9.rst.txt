@@ -1,0 +1,13 @@
+.. _exhale_function_comparisons_8cpp_1ae773cb1b70eb4c8abf136928c7eef9d9:
+
+Function brille::to_string(const cmp&)
+======================================
+
+- Defined in :ref:`file_src_comparisons.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::to_string(const cmp&)

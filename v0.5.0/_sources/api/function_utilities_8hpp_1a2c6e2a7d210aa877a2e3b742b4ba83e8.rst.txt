@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a2c6e2a7d210aa877a2e3b742b4ba83e8:
+
+Template Function brille::utils::coth_over_en(const std::complex<T>, const R)
+=============================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::coth_over_en(const std::complex<T>, const R)

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a7ad40645a616b361886c303896d897d0:
+
+Template Function brille::utils::equal_array
+============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::equal_array(const T *, const T *, const T)

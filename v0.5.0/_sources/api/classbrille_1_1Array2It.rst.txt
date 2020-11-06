@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Array2It:
+
+Template Class Array2It
+=======================
+
+- Defined in :ref:`file_src_array2.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Array2It
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,90 @@
+
+.. _file_src_pointgroup.hpp:
+
+File pointgroup.hpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/pointgroup.hpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_pointgroup.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``pointsymmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+- ``symmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_spg_database.hpp`
+
+- :ref:`file_src_pointgroup.cpp`
+
+- :ref:`file_src_pointsymmetry.cpp`
+
+- :ref:`file_src_symmetry.cpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classPointgroup`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_pointgroup_8hpp_1afb7670c9af88ff4483b56dfa699d310f`
+
+- :ref:`exhale_enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9`
+
+- :ref:`exhale_function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c`
+
+- :ref:`exhale_function_pointgroup_8hpp_1ad08abd9f7f45c68ee852504b9afeafa2`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a725220077e7877c4550ca9aa6285840e`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a11f82a4ea69025d95e62c3e5f41dfe6b`
+

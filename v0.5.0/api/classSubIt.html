@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class SubIt &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class SubIt2" href="classSubIt2.html" />
+    <link rel="prev" title="Template Class Stopwatch" href="classStopwatch.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class SubIt</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classSubIt.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-subit">
+<span id="exhale-class-classsubit"></span><h1>Template Class SubIt<a class="headerlink" href="#template-class-subit" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_subscript.hpp.html#file-src-subscript-hpp"><span class="std std-ref">File subscript.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0E5SubIt">
+<span id="_CPPv3I0E5SubIt"></span><span id="_CPPv2I0E5SubIt"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classSubIt"></span><em class="property">class </em><code class="sig-name descname">SubIt</code><a class="headerlink" href="#_CPPv4I0E5SubIt" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N5SubIt6holderE">
+<span id="_CPPv3N5SubIt6holderE"></span><span id="_CPPv2N5SubIt6holderE"></span><span id="SubIt::holder"></span><span class="target" id="classSubIt_1a98e4af34e841ea16c3482771185f3b50"></span><em class="property">typedef </em>std::vector&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; <code class="sig-name descname">holder</code><a class="headerlink" href="#_CPPv4N5SubIt6holderE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItEv">
+<span id="_CPPv3N5SubIt5SubItEv"></span><span id="_CPPv2N5SubIt5SubItEv"></span><span id="SubIt::SubIt"></span><span class="target" id="classSubIt_1ab6681c712d0a96624d7cd37755827e28"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItERK6holder">
+<span id="_CPPv3N5SubIt5SubItERK6holder"></span><span id="_CPPv2N5SubIt5SubItERK6holder"></span><span id="SubIt::SubIt__holderCR"></span><span class="target" id="classSubIt_1abbaf422e422aff66c43e8438eaed0d78"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_sh</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItERK6holder" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItERK6holderRK6holder">
+<span id="_CPPv3N5SubIt5SubItERK6holderRK6holder"></span><span id="_CPPv2N5SubIt5SubItERK6holderRK6holder"></span><span id="SubIt::SubIt__holderCR.holderCR"></span><span class="target" id="classSubIt_1a5ea3840ddfe2e11d4f772ecf6141828e"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_sh</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_in</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItERK6holderRK6holder" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItERK6holderRK6holderRK6holderRKNSt6vectorIbEE">
+<span id="_CPPv3N5SubIt5SubItERK6holderRK6holderRK6holderRKNSt6vectorIbEE"></span><span id="_CPPv2N5SubIt5SubItERK6holderRK6holderRK6holderRKNSt6vectorIbEE"></span><span id="SubIt::SubIt__holderCR.holderCR.holderCR.std::vector:b:CR"></span><span class="target" id="classSubIt_1a212acd45272e4f5f833930ed5d3bbbfd"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_sh</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_in</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<em>_s</em>, <em class="property">const</em> std::vector&lt;bool&gt; &amp;<em>_f</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItERK6holderRK6holderRK6holderRKNSt6vectorIbEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItERK5SubItI1TE">
+<span id="_CPPv3N5SubIt5SubItERK5SubItI1TE"></span><span id="_CPPv2N5SubIt5SubItERK5SubItI1TE"></span><span id="SubIt::SubIt__SubIt:T:CR"></span><span class="target" id="classSubIt_1afef6a5dd2fd5f57725de6a3b44d7eca2"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt5SubItERK5SubItI1TE" title="SubIt::SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; &amp;<em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItERK5SubItI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubIt5SubItEPK5SubItI1TE">
+<span id="_CPPv3N5SubIt5SubItEPK5SubItI1TE"></span><span id="_CPPv2N5SubIt5SubItEPK5SubItI1TE"></span><span id="SubIt::SubIt__SubIt:T:CP"></span><span class="target" id="classSubIt_1aa9130ee03350fdadb0a6d2d889902b13"></span><code class="sig-name descname">SubIt</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt5SubItEPK5SubItI1TE" title="SubIt::SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; *<em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubIt5SubItEPK5SubItI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubItaSERK5SubItI1TE">
+<span id="_CPPv3N5SubItaSERK5SubItI1TE"></span><span id="_CPPv2N5SubItaSERK5SubItI1TE"></span><span id="SubIt::assign-operator__SubIt:T:CR"></span><span class="target" id="classSubIt_1abc4daae691e31876c4e8bc0703a2632d"></span><a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; &amp;<em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubItaSERK5SubItI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubIt5shapeEv">
+<span id="_CPPv3NK5SubIt5shapeEv"></span><span id="_CPPv2NK5SubIt5shapeEv"></span><span id="SubIt::shapeC"></span><span class="target" id="classSubIt_1a180b44317bb868de40ef171db81d14e9"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<code class="sig-name descname">shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubIt5shapeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubIt4ndimEv">
+<span id="_CPPv3NK5SubIt4ndimEv"></span><span id="_CPPv2NK5SubIt4ndimEv"></span><span id="SubIt::ndimC"></span><span class="target" id="classSubIt_1ae84ec70467df79bb7b37310c1cab05d1"></span>size_t <code class="sig-name descname">ndim</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubIt4ndimEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubItppEv">
+<span id="_CPPv3N5SubItppEv"></span><span id="_CPPv2N5SubItppEv"></span><span id="SubIt::inc-operator"></span><span class="target" id="classSubIt_1af609bd894c560f4dfdb81def134a3ae4"></span><a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a> &amp;<code class="sig-name descname">operator++</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubItppEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubIteqERK5SubItI1TE">
+<span id="_CPPv3NK5SubIteqERK5SubItI1TE"></span><span id="_CPPv2NK5SubIteqERK5SubItI1TE"></span><span id="SubIt::eq-operator__SubIt:T:CRC"></span><span class="target" id="classSubIt_1a89a1db9590663f021d418e132bcb3dbc"></span>bool <code class="sig-name descname">operator==</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubIteqERK5SubItI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubItneERK5SubItI1TE">
+<span id="_CPPv3NK5SubItneERK5SubItI1TE"></span><span id="_CPPv2NK5SubItneERK5SubItI1TE"></span><span id="SubIt::neq-operator__SubIt:T:CRC"></span><span class="target" id="classSubIt_1a84ff5724e8a0c5ae241fceed1ab0af41"></span>bool <code class="sig-name descname">operator!=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubItneERK5SubItI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubItmlEv">
+<span id="_CPPv3NK5SubItmlEv"></span><span id="_CPPv2NK5SubItmlEv"></span><span id="SubIt::mul-operatorC"></span><span class="target" id="classSubIt_1a31b4769e12f985740cb1b63febd6b8c1"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<code class="sig-name descname">operator*</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubItmlEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubItptEv">
+<span id="_CPPv3NK5SubItptEv"></span><span id="_CPPv2NK5SubItptEv"></span><span id="SubIt::pointer-operatorC"></span><span class="target" id="classSubIt_1a2ec7bf9c9a5810fcac7e67ad37326a5e"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> *<code class="sig-name descname">operator-&gt;</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubItptEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubItmlEv">
+<span id="_CPPv3N5SubItmlEv"></span><span id="_CPPv2N5SubItmlEv"></span><span id="SubIt::mul-operator"></span><span class="target" id="classSubIt_1a7e373e32f0b8e7f1a39b2765b24b6026"></span><a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> &amp;<code class="sig-name descname">operator*</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubItmlEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N5SubItptEv">
+<span id="_CPPv3N5SubItptEv"></span><span id="_CPPv2N5SubItptEv"></span><span id="SubIt::pointer-operator"></span><span class="target" id="classSubIt_1abd5643751fbf8d44c1743dd1398b8ce5"></span><a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> *<code class="sig-name descname">operator-&gt;</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5SubItptEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubIt5beginEv">
+<span id="_CPPv3NK5SubIt5beginEv"></span><span id="_CPPv2NK5SubIt5beginEv"></span><span id="SubIt::beginC"></span><span class="target" id="classSubIt_1a596f8f8f69355d42d2b4375aa2b31d32"></span><a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; <code class="sig-name descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubIt5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK5SubIt3endEv">
+<span id="_CPPv3NK5SubIt3endEv"></span><span id="_CPPv2NK5SubIt3endEv"></span><span id="SubIt::endC"></span><span class="target" id="classSubIt_1af96295d61c5f1b3ec723e85f7c843cee"></span><a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt">SubIt</a>&lt;<a class="reference internal" href="#_CPPv4I0E5SubIt" title="SubIt::T">T</a>&gt; <code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK5SubIt3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N5SubIt6_shapeE">
+<span id="_CPPv3N5SubIt6_shapeE"></span><span id="_CPPv2N5SubIt6_shapeE"></span><span id="SubIt::_shape__holder"></span><span class="target" id="classSubIt_1a38d0c994be4ef59c6466a15df4c60f58"></span><a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> <code class="sig-name descname">_shape</code><a class="headerlink" href="#_CPPv4N5SubIt6_shapeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N5SubIt5_inptE">
+<span id="_CPPv3N5SubIt5_inptE"></span><span id="_CPPv2N5SubIt5_inptE"></span><span id="SubIt::_inpt__holder"></span><span class="target" id="classSubIt_1a3f954e48654aef530e80a73cfb436670"></span><a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> <code class="sig-name descname">_inpt</code><a class="headerlink" href="#_CPPv4N5SubIt5_inptE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N5SubIt4_subE">
+<span id="_CPPv3N5SubIt4_subE"></span><span id="_CPPv2N5SubIt4_subE"></span><span id="SubIt::_sub__holder"></span><span class="target" id="classSubIt_1a1d98a6911fecd63e9e7da30e2bdd4418"></span><a class="reference internal" href="#_CPPv4N5SubIt6holderE" title="SubIt::holder">holder</a> <code class="sig-name descname">_sub</code><a class="headerlink" href="#_CPPv4N5SubIt4_subE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N5SubIt6_fixedE">
+<span id="_CPPv3N5SubIt6_fixedE"></span><span id="_CPPv2N5SubIt6_fixedE"></span><span id="SubIt::_fixed__std::vector:b:"></span><span class="target" id="classSubIt_1adf0447b032c89fc151bd722aec6003d7"></span>std::vector&lt;bool&gt; <code class="sig-name descname">_fixed</code><a class="headerlink" href="#_CPPv4N5SubIt6_fixedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N5SubIt6_firstE">
+<span id="_CPPv3N5SubIt6_firstE"></span><span id="_CPPv2N5SubIt6_firstE"></span><span id="SubIt::_first__s"></span><span class="target" id="classSubIt_1a96c72b2db1f2ef54b9bb85c0cdf791b8"></span>size_t <code class="sig-name descname">_first</code><a class="headerlink" href="#_CPPv4N5SubIt6_firstE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classSubIt2.html" class="btn btn-neutral float-right" title="Template Class SubIt2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classStopwatch.html" class="btn btn-neutral float-left" title="Template Class Stopwatch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

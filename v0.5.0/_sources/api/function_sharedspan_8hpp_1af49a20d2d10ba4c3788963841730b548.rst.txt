@@ -1,0 +1,13 @@
+.. _exhale_function_sharedspan_8hpp_1af49a20d2d10ba4c3788963841730b548:
+
+Template Function operator-
+===========================
+
+- Defined in :ref:`file_src_sharedspan.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator-(const brille::SharedSpan<T>&)

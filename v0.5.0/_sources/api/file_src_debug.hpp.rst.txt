@@ -1,0 +1,158 @@
+
+.. _file_src_debug.hpp:
+
+File debug.hpp
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/debug.hpp``)
+------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_debug.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``chrono``
+
+- ``complex``
+
+- ``iomanip``
+
+- ``iostream``
+
+- ``sstream``
+
+- ``stdio.h``
+
+- ``string``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_approx.hpp`
+
+- :ref:`file_src_utilities.hpp`
+
+- :ref:`file_src_balltrellis.cpp`
+
+- :ref:`file_src_polyhedron.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_triangulation_simple.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+- :ref:`file_src_debug.cpp`
+
+- :ref:`file_src_triangulation.hpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structis__container`
+
+- :ref:`exhale_struct_structis__container_3_01std_1_1array_3_01T_00_01N_01_4_01_4`
+
+- :ref:`exhale_struct_structis__container_3_01std_1_1vector_3_01T_01_4_01_4`
+
+- :ref:`exhale_class_classDebugPrinter`
+
+- :ref:`exhale_class_classStopwatch`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_debug_8hpp_1a6f9442bd052df5835781a74bbb2a3c37`
+
+- :ref:`exhale_function_debug_8hpp_1a8e5fb81891b64bdb89ec8a782ce2e2ec`
+
+- :ref:`exhale_function_debug_8hpp_1abcffcdb2c2f41452f025c969f7aa6b21`
+
+- :ref:`exhale_function_debug_8hpp_1aff3dfc331399c0aa0b523af487737919`
+
+- :ref:`exhale_function_debug_8hpp_1a0c20dd634e96d294377cec1a13de3079`
+
+- :ref:`exhale_function_debug_8hpp_1a3871ece379eb7ac34c84a44a54540e0e`
+
+- :ref:`exhale_function_debug_8hpp_1a0b3093fed158a3f0068dad54f912f679`
+
+- :ref:`exhale_function_debug_8hpp_1a139c8c143451283a24423405a1efa5be`
+
+- :ref:`exhale_function_debug_8hpp_1a8e74dfc92a7960dee8846c4ca8b36e49`
+
+- :ref:`exhale_function_debug_8hpp_1a27fe47130ea545d2352dfb27d897668b`
+
+- :ref:`exhale_function_debug_8hpp_1a9338cee94f7dedf640b68caff93ae364`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_debug_8hpp_1abedbae75207c3ed5a9d1d073fdef8a08`
+
+- :ref:`exhale_define_debug_8hpp_1ac72ed6ed9aa2135cd2cdf31117063ed9`
+
+- :ref:`exhale_define_debug_8hpp_1ab91fe1aeaaf05b854aff42c73ccb3438`
+
+- :ref:`exhale_define_debug_8hpp_1acb19c496d0cfaaf9613f43d6e12ce690`
+
+- :ref:`exhale_define_debug_8hpp_1aa09a9df35a65cf0a46c6d1204def01ec`
+
+- :ref:`exhale_define_debug_8hpp_1a9e12fe7b023bd30105df59b431e65917`
+
+- :ref:`exhale_define_debug_8hpp_1a74c5a07055640bd68f40e98fcd876944`
+
+- :ref:`exhale_define_debug_8hpp_1aaac8c42e51b4450b78d40808d6a4abb1`
+
+- :ref:`exhale_define_debug_8hpp_1a3d84193837bbe8f95c90badc9b071a25`
+
+- :ref:`exhale_define_debug_8hpp_1aa6ef311a30404b1b6353981d9dc58428`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_debug_8hpp_1aa3198ffc0e17fcb31cd7053642959228`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_debug_8hpp_1a5fddb49cb3a6df9709e0136524901b55`
+

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a3af2f154a0698152e13266db5a5c126a:
+
+Template Function brille::utils::add_matrix
+===========================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::add_matrix(T *, const R *, const S *)

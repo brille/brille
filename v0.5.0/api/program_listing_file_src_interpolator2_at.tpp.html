@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File interpolator2_at.tpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File interpolator2_at.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_interpolator2_at.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-interpolator2-at-tpp">
+<span id="program-listing-file-src-interpolator2-at-tpp"></span><h1>Program Listing for File interpolator2_at.tpp<a class="headerlink" href="#program-listing-for-file-interpolator2-at-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_interpolator2_at.tpp.html#file-src-interpolator2-at-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/interpolator2_at.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">Interpolator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">interpolate_at_mix</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&gt;&amp;</span> <span class="n">perms</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&amp;</span> <span class="n">indices</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">weights</span><span class="p">,</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">out</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">ind_t</span> <span class="n">to</span><span class="p">,</span>
+  <span class="k">const</span> <span class="kt">bool</span> <span class="n">arbitrary_phase_allowed</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">indices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">weights</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Interpolation requires input data!&quot;</span><span class="p">);</span>
+  <span class="n">ind_t</span> <span class="n">b_</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">branches</span><span class="p">()},</span> <span class="n">s_</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">branch_span</span><span class="p">()};</span>
+  <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Combining</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">data_</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">indices</span><span class="p">).</span><span class="n">to_string</span><span class="p">(),</span><span class="s">&quot;with weights &quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
+  <span class="n">T</span> <span class="o">*</span><span class="n">ox</span> <span class="o">=</span> <span class="n">out</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">arbitrary_phase_allowed</span><span class="p">){</span>
+    <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">d0</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">// a reference point for the phase calculation</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">indices</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">x</span><span class="p">){</span>
+      <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">dx</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">b_</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">){</span>
+        <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">perms</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">b</span><span class="p">];</span>
+        <span class="n">T</span> <span class="n">eith</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">antiphase</span><span class="p">(</span><span class="n">s_</span><span class="p">,</span> <span class="n">d0</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="p">,</span> <span class="n">dx</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">s_</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">s_</span><span class="p">;</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span> <span class="n">ox</span><span class="p">[</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">*</span><span class="n">eith</span><span class="o">*</span><span class="n">dx</span><span class="p">[</span><span class="n">p</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">indices</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">x</span><span class="p">){</span>
+      <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">dx</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">b_</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">s_</span><span class="p">;</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">ox</span><span class="p">[</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">*</span><span class="n">dx</span><span class="p">[</span><span class="n">perms</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1">// template&lt;class T&gt;</span>
+<span class="c1">// void Interpolator&lt;T&gt;::interpolate_at_mix(</span>
+<span class="c1">//   const std::vector&lt;std::vector&lt;ind_t&gt;&gt;&amp; perms,</span>
+<span class="c1">//   const std::vector&lt;std::pair&lt;ind_t,double&gt;&gt;&amp; idx_wgt,</span>
+<span class="c1">//   bArray&lt;T&gt;&amp; out,</span>
+<span class="c1">//   const ind_t to,</span>
+<span class="c1">//   const bool arbitrary_phase_allowed</span>
+<span class="c1">// ) const {</span>
+<span class="c1">//   if (idx_wgt.size()==0)</span>
+<span class="c1">//     throw std::logic_error(&quot;Interpolation requires input data!&quot;);</span>
+<span class="c1">//   std::vector&lt;int&gt; dummy;</span>
+<span class="c1">//   ind_t b_{this-&gt;branches()}, s_{this-&gt;branch_span()};</span>
+<span class="c1">//   T * ox = out.ptr(to);</span>
+<span class="c1">//   if (arbitrary_phase_allowed){</span>
+<span class="c1">//     const T *d0 = data_.ptr(idx_wgt[0].first);</span>
+<span class="c1">//     std::transform(perms.begin(), perms.end(), idx_wgt.begin(), std::back_inserter(dummy),</span>
+<span class="c1">//     [&amp;](const std::vector&lt;ind_t&gt;&amp; perm, const std::pair&lt;ind_t,double&gt;&amp; iw){</span>
+<span class="c1">//       const T *dx = data_.ptr(iw.first);</span>
+<span class="c1">//       for (ind_t b=0; b&lt;b_; ++b)</span>
+<span class="c1">//       {</span>
+<span class="c1">//         auto p = perm[b];</span>
+<span class="c1">//         T eith = brille::utils::antiphase(s_, d0+b*s_, dx+p*s_);</span>
+<span class="c1">//         for (ind_t s=0; s&lt;s_; ++s) ox[b*s_+s] += iw.second*eith*dx[p*s_+s];</span>
+<span class="c1">//       }</span>
+<span class="c1">//       return 1;</span>
+<span class="c1">//     });</span>
+<span class="c1">//   } else {</span>
+<span class="c1">//     std::transform(perms.begin(), perms.end(), idx_wgt.begin(), std::back_inserter(dummy),</span>
+<span class="c1">//     [&amp;](const std::vector&lt;ind_t&gt;&amp; perm, const std::pair&lt;ind_t,double&gt;&amp; iw){</span>
+<span class="c1">//       const T *dx = data_.ptr(iw.first);</span>
+<span class="c1">//       for (ind_t b=0; b&lt;b_; ++b)</span>
+<span class="c1">//       {</span>
+<span class="c1">//         for (ind_t s=0; s&lt;s_; ++s) ox[b*s_+s] += iw.second*dx[perm[b]*s_+s];</span>
+<span class="c1">//       }</span>
+<span class="c1">//       return 1;</span>
+<span class="c1">//     });</span>
+<span class="c1">//   }</span>
+<span class="c1">// }</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">Interpolator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">interpolate_at_mix</span><span class="p">(</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="o">&gt;&gt;&amp;</span> <span class="n">perms</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ind_t</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;&gt;&amp;</span> <span class="n">idx_wgt</span><span class="p">,</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">out</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">ind_t</span> <span class="n">to</span><span class="p">,</span>
+  <span class="k">const</span> <span class="kt">bool</span> <span class="n">arbitrary_phase_allowed</span>
+<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">idx_wgt</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;Interpolation requires input data!&quot;</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dummy</span><span class="p">;</span>
+  <span class="n">ind_t</span> <span class="n">b_</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">branches</span><span class="p">()},</span> <span class="n">s_</span><span class="p">{</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">branch_span</span><span class="p">()};</span>
+  <span class="n">T</span> <span class="o">*</span> <span class="n">ox</span> <span class="o">=</span> <span class="n">out</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">arbitrary_phase_allowed</span><span class="p">){</span>
+    <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">d0</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">idx_wgt</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">idx_wgt</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">const</span> <span class="n">T</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">idx_wgt</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span><span class="o">&lt;</span><span class="n">b_</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">perms</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">b</span><span class="p">];</span>
+        <span class="n">T</span> <span class="n">eith</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">antiphase</span><span class="p">(</span><span class="n">s_</span><span class="p">,</span> <span class="n">d0</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="p">,</span> <span class="n">dx</span><span class="o">+</span><span class="n">p</span><span class="o">*</span><span class="n">s_</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">s_</span><span class="p">;</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span> <span class="n">ox</span><span class="p">[</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="n">idx_wgt</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="o">*</span><span class="n">eith</span><span class="o">*</span><span class="n">dx</span><span class="p">[</span><span class="n">p</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">idx_wgt</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">const</span> <span class="n">T</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">data_</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">idx_wgt</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">b</span><span class="o">&lt;</span><span class="n">b_</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">perms</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">b</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">ind_t</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">s_</span><span class="p">;</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span> <span class="n">ox</span><span class="p">[</span><span class="n">b</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="n">idx_wgt</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="o">*</span><span class="n">dx</span><span class="p">[</span><span class="n">p</span><span class="o">*</span><span class="n">s_</span><span class="o">+</span><span class="n">s</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

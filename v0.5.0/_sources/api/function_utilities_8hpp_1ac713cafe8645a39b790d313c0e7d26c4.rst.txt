@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1ac713cafe8645a39b790d313c0e7d26c4:
+
+Template Function brille::utils::make_eigenvectors_equivalent(const size_t, const T \*, T \*)
+=============================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::make_eigenvectors_equivalent(const size_t, const T *, T *)

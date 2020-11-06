@@ -1,0 +1,13 @@
+.. _exhale_variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d:
+
+Variable pointgroup_data
+========================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: pointgroup_data

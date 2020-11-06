@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a7c7eb5f6ea03328582d482be1b8ee2c2:
+
+Template Function brille::utils::antiphase(const)
+=================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::antiphase(const)

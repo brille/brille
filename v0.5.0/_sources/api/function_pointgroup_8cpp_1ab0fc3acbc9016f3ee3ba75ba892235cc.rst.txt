@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8cpp_1ab0fc3acbc9016f3ee3ba75ba892235cc:
+
+Function my_to_string(const Holohedry&)
+=======================================
+
+- Defined in :ref:`file_src_pointgroup.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: my_to_string(const Holohedry&)

@@ -1,0 +1,16 @@
+.. _exhale_class_classInterpolator:
+
+Template Class Interpolator
+===========================
+
+- Defined in :ref:`file_src_interpolator.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Interpolator
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class Interpolator &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class Lattice" href="classLattice.html" />
+    <link rel="prev" title="Template Class InterpolationData" href="classInterpolationData.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class Interpolator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classInterpolator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-interpolator">
+<span id="exhale-class-classinterpolator"></span><h1>Template Class Interpolator<a class="headerlink" href="#template-class-interpolator" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_interpolator.hpp.html#file-src-interpolator-hpp"><span class="std std-ref">File interpolator.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0E12Interpolator">
+<span id="_CPPv3I0E12Interpolator"></span><span id="_CPPv2I0E12Interpolator"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classInterpolator"></span><em class="property">class </em><code class="sig-name descname">Interpolator</code><a class="headerlink" href="#_CPPv4I0E12Interpolator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator5ind_tE">
+<span id="_CPPv3N12Interpolator5ind_tE"></span><span id="_CPPv2N12Interpolator5ind_tE"></span><span class="target" id="classInterpolator_1ae1c40e8b5369763a3e7778eda1cdd077"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><a class="headerlink" href="#_CPPv4N12Interpolator5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4I0EN12Interpolator9element_tE">
+<span id="_CPPv3I0EN12Interpolator9element_tE"></span><span id="_CPPv2I0EN12Interpolator9element_tE"></span>template&lt;class <code class="sig-name descname">Z</code>&gt;<br /><span class="target" id="classInterpolator_1a48a8b03bfc549b8762bfc4130f07c65c"></span><em class="property">using </em><code class="sig-name descname">element_t</code> = std::array&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t::Z">Z</a>, 3&gt;<a class="headerlink" href="#_CPPv4I0EN12Interpolator9element_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator9costfun_tE">
+<span id="_CPPv3N12Interpolator9costfun_tE"></span><span id="_CPPv2N12Interpolator9costfun_tE"></span><span class="target" id="classInterpolator_1ae5a8b30493f3fd3daf36a49d4e01d941"></span><em class="property">using </em><code class="sig-name descname">costfun_t</code> = <a class="reference internal" href="typedef_inner__interpolation__data_8hpp_1a446606f821163a6727252e4a0d11ca4a.html#_CPPv4I0E12CostFunction" title="CostFunction">CostFunction</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt;<a class="headerlink" href="#_CPPv4N12Interpolator9costfun_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4I0EN12Interpolator6data_tE">
+<span id="_CPPv3I0EN12Interpolator6data_tE"></span><span id="_CPPv2I0EN12Interpolator6data_tE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classInterpolator_1ab119ab51b909ca51a4f4c7c2ec5288be"></span><em class="property">using </em><code class="sig-name descname">data_t</code> = brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t::R">R</a>&gt;<a class="headerlink" href="#_CPPv4I0EN12Interpolator6data_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator7shape_tE">
+<span id="_CPPv3N12Interpolator7shape_tE"></span><span id="_CPPv2N12Interpolator7shape_tE"></span><span class="target" id="classInterpolator_1ad1689011b6d9bdafa3eb797bd8c3b862"></span><em class="property">using </em><code class="sig-name descname">shape_t</code> = <em class="property">typename</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt;::shape_t<a class="headerlink" href="#_CPPv4N12Interpolator7shape_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator5ind_tE">
+<span id="_CPPv3N12Interpolator5ind_tE"></span><span class="target" id="classInterpolator_1ae1c40e8b5369763a3e7778eda1cdd077"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4I0EN12Interpolator9element_tE">
+<span id="_CPPv3I0EN12Interpolator9element_tE"></span>template&lt;class <code class="sig-name descname">Z</code>&gt;<br /><span class="target" id="classInterpolator_1a48a8b03bfc549b8762bfc4130f07c65c"></span><em class="property">using </em><code class="sig-name descname">element_t</code> = std::array&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t::Z">Z</a>, 3&gt;<br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator9costfun_tE">
+<span id="_CPPv3N12Interpolator9costfun_tE"></span><span class="target" id="classInterpolator_1ae5a8b30493f3fd3daf36a49d4e01d941"></span><em class="property">using </em><code class="sig-name descname">costfun_t</code> = <a class="reference internal" href="typedef_inner__interpolation__data_8hpp_1a446606f821163a6727252e4a0d11ca4a.html#_CPPv4I0E12CostFunction" title="CostFunction">CostFunction</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt;<br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N12Interpolator7shape_tE">
+<span id="_CPPv3N12Interpolator7shape_tE"></span><span class="target" id="classInterpolator_1a850448d4ebb3accf203b9705bdeb7a3a"></span><em class="property">using </em><code class="sig-name descname">shape_t</code> = std::vector&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt;<br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorE6size_t6size_t">
+<span id="_CPPv3N12Interpolator12InterpolatorE6size_t6size_t"></span><span id="_CPPv2N12Interpolator12InterpolatorE6size_t6size_t"></span><span id="Interpolator::Interpolator__s.s"></span><span class="target" id="classInterpolator_1a02b0051ebb3f3f0eb5f3d2daed384c5c"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span>size_t <em>scf_type</em> = 0, size_t <em>vcf_type</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorE6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorE9costfun_t9costfun_t">
+<span id="_CPPv3N12Interpolator12InterpolatorE9costfun_t9costfun_t"></span><span id="_CPPv2N12Interpolator12InterpolatorE9costfun_t9costfun_t"></span><span id="Interpolator::Interpolator__costfun_t.costfun_t"></span><span class="target" id="classInterpolator_1ad9c646882d5b27860eddbd86630d9cef"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N12Interpolator9costfun_tE" title="Interpolator::costfun_t">costfun_t</a> <em>scf</em>, <a class="reference internal" href="#_CPPv4N12Interpolator9costfun_tE" title="Interpolator::costfun_t">costfun_t</a> <em>vcf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorE9costfun_t9costfun_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike">
+<span id="_CPPv3N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike"></span><span id="_CPPv2N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike"></span><span id="Interpolator::Interpolator__data_t:T:R.element_t:ind_t:.RotatesLike"></span><span class="target" id="classInterpolator_1a8d3b8aa7cda86d0c16e186e65f29a194"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE">
+<span id="_CPPv3N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="_CPPv2N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="Interpolator::Interpolator__data_t:T:R.element_t:ind_t:.RotatesLike.s.s.element_t:double:"></span><span class="target" id="classInterpolator_1a30b512df184df01d88b97515946263a7"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em>, size_t <em>csf</em>, size_t <em>cvf</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;double&gt; <em>wg</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorER6data_tI1TE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator10setup_fakeEK5ind_tK5ind_t">
+<span id="_CPPv3N12Interpolator10setup_fakeEK5ind_tK5ind_t"></span><span id="_CPPv2N12Interpolator10setup_fakeEK5ind_tK5ind_t"></span><span id="Interpolator::setup_fake__ind_tC.ind_tC"></span><span class="target" id="classInterpolator_1a2d80866d53d44396e76e6cdc6099c185"></span>void <code class="sig-name descname">setup_fake</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>sz</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>br</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator10setup_fakeEK5ind_tK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator13set_cost_infoEKiKi">
+<span id="_CPPv3N12Interpolator13set_cost_infoEKiKi"></span><span id="_CPPv2N12Interpolator13set_cost_infoEKiKi"></span><span id="Interpolator::set_cost_info__iC.iC"></span><span class="target" id="classInterpolator_1a386b9eabadec859b1e6ed4a7552f7379"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator13set_cost_infoEKiKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator13set_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N12Interpolator13set_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N12Interpolator13set_cost_infoEKiKiRK9element_tIdE"></span><span id="Interpolator::set_cost_info__iC.iC.element_t:double:CR"></span><span class="target" id="classInterpolator_1aa9b8b7a590b37e9fb320dc2286a66a82"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator13set_cost_infoEKiKiRK9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator4sizeEv">
+<span id="_CPPv3NK12Interpolator4sizeEv"></span><span id="_CPPv2NK12Interpolator4sizeEv"></span><span id="Interpolator::size__voidC"></span><span class="target" id="classInterpolator_1aa9c35af31b163b47cd486e76d386df2e"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">size</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator8branchesEv">
+<span id="_CPPv3NK12Interpolator8branchesEv"></span><span id="_CPPv2NK12Interpolator8branchesEv"></span><span id="Interpolator::branches__voidC"></span><span class="target" id="classInterpolator_1ab080ea1ec1e101ca4f3e9d63c40883d9"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">branches</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator21only_vector_or_matrixEv">
+<span id="_CPPv3NK12Interpolator21only_vector_or_matrixEv"></span><span id="_CPPv2NK12Interpolator21only_vector_or_matrixEv"></span><span id="Interpolator::only_vector_or_matrix__voidC"></span><span class="target" id="classInterpolator_1a329401982bf8f59eee4fd38b9298e000"></span>bool <code class="sig-name descname">only_vector_or_matrix</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator21only_vector_or_matrixEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator4dataEv">
+<span id="_CPPv3NK12Interpolator4dataEv"></span><span id="_CPPv2NK12Interpolator4dataEv"></span><span id="Interpolator::data__voidC"></span><span class="target" id="classInterpolator_1a8f485e2e9a30179889cc4c0167d3eae9"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator8elementsEv">
+<span id="_CPPv3NK12Interpolator8elementsEv"></span><span id="_CPPv2NK12Interpolator8elementsEv"></span><span id="Interpolator::elements__voidC"></span><span class="target" id="classInterpolator_1ad020a1255df790261f37303fbbd55c0c"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; &amp;<code class="sig-name descname">elements</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator8elementsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK12Interpolator14interpolate_atEvDp4Args">
+<span id="_CPPv3IDpENK12Interpolator14interpolate_atEDp4Args"></span><span id="_CPPv2IDpENK12Interpolator14interpolate_atEDp4Args"></span>template&lt;class ...<code class="sig-name descname">Args</code>&gt;<br /><span class="target" id="classInterpolator_1ad533d620d2ac015430f300de9a9ac6ca"></span>void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK12Interpolator14interpolate_atEvDp4Args" title="Interpolator::interpolate_at::Args">Args</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK12Interpolator14interpolate_atEvDp4Args" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi">
+<span id="_CPPv3I00ENK12Interpolator15rotate_in_placeER6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span><span id="_CPPv2I00ENK12Interpolator15rotate_in_placeER6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span>template&lt;class <code class="sig-name descname">R</code>, class <code class="sig-name descname">RotT</code>&gt;<br /><span class="target" id="classInterpolator_1a0e85e6e224fe334bae9f28034ea2adba"></span>bool <code class="sig-name descname">rotate_in_place</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Interpolator::rotate_in_place::R">R</a>&gt; &amp;<em>q</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Interpolator::rotate_in_place::RotT">RotT</a> &amp;<em>rt</em>, <em class="property">const</em> <a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> &amp;<em>ps</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>r</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>invr</em>, <em class="property">const</em> int <em>nth</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6data_tI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator11rotateslikeEv">
+<span id="_CPPv3NK12Interpolator11rotateslikeEv"></span><span id="_CPPv2NK12Interpolator11rotateslikeEv"></span><span id="Interpolator::rotateslikeC"></span><span class="target" id="classInterpolator_1acc113a6b937c71775afa60a956f4a179"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator11rotateslikeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator11rotateslikeEK11RotatesLike">
+<span id="_CPPv3N12Interpolator11rotateslikeEK11RotatesLike"></span><span id="_CPPv2N12Interpolator11rotateslikeEK11RotatesLike"></span><span id="Interpolator::rotateslike__RotatesLikeC"></span><span class="target" id="classInterpolator_1ae68ceb492db5945da75d2efcc23945ec"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator11rotateslikeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN12Interpolator12replace_dataEvRK6data_tI1TERKNSt5arrayI1IXL3EEEEK11RotatesLike">
+<span id="_CPPv3I0EN12Interpolator12replace_dataERK6data_tI1TERKNSt5arrayI1IXL3EEEEK11RotatesLike"></span><span id="_CPPv2I0EN12Interpolator12replace_dataERK6data_tI1TERKNSt5arrayI1IX3EEEK11RotatesLike"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classInterpolator_1a8634f3a81a65cd312da818f6b77782bd"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>nd</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator12replace_dataEvRK6data_tI1TERKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Interpolator::replace_data::I">I</a>, 3&gt; &amp;<em>ne</em>, <em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em> = <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a>::<a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv4N11RotatesLike4RealE" title="RotatesLike::Real">Real</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN12Interpolator12replace_dataEvRK6data_tI1TERKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12replace_dataERK6data_tI1TE">
+<span id="_CPPv3N12Interpolator12replace_dataERK6data_tI1TE"></span><span id="_CPPv2N12Interpolator12replace_dataERK6data_tI1TE"></span><span id="Interpolator::replace_data__data_t:T:CR"></span><span class="target" id="classInterpolator_1a50d5eca979d577d76bda69677b515680"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator6data_tE" title="Interpolator::data_t">data_t</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>nd</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12replace_dataERK6data_tI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator11branch_spanEv">
+<span id="_CPPv3NK12Interpolator11branch_spanEv"></span><span id="_CPPv2NK12Interpolator11branch_spanEv"></span><span id="Interpolator::branch_spanC"></span><span class="target" id="classInterpolator_1a675e23dcf3582f9c7cfceaa088015ea2"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">branch_span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator11branch_spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator9to_stringEv">
+<span id="_CPPv3NK12Interpolator9to_stringEv"></span><span id="_CPPv2NK12Interpolator9to_stringEv"></span><span id="Interpolator::to_stringC"></span><span class="target" id="classInterpolator_1a5e53fa13fac39c0c9bd88403dccc3f61"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEKb">
+<span id="_CPPv3I0ENK12Interpolator8add_costEK5ind_tK5ind_tRNSt6vectorI1SEEKb"></span><span id="_CPPv2I0ENK12Interpolator8add_costEK5ind_tK5ind_tRNSt6vectorI1SEEKb"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classInterpolator_1a55e5539780236280d4ef86eb9d630fb2"></span>void <code class="sig-name descname">add_cost</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>i0</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>i1</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEKb" title="Interpolator::add_cost::S">S</a>&gt; &amp;<em>cost</em>, <em class="property">const</em> bool <em>apa</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEKb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK12Interpolator15any_equal_modesEbK1I">
+<span id="_CPPv3I0ENK12Interpolator15any_equal_modesEK1I"></span><span id="_CPPv2I0ENK12Interpolator15any_equal_modesEK1I"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classInterpolator_1ac99b45dc80880e675b1f09269e7d86a3"></span>bool <code class="sig-name descname">any_equal_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK12Interpolator15any_equal_modesEbK1I" title="Interpolator::any_equal_modes::I">I</a> <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK12Interpolator15any_equal_modesEbK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator15bytes_per_pointEv">
+<span id="_CPPv3NK12Interpolator15bytes_per_pointEv"></span><span id="_CPPv2NK12Interpolator15bytes_per_pointEv"></span><span id="Interpolator::bytes_per_pointC"></span><span class="target" id="classInterpolator_1a8d8548973a4609c91eea653f5f96af64"></span>size_t <code class="sig-name descname">bytes_per_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator15bytes_per_pointEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorE6size_t6size_t">
+<span id="_CPPv3N12Interpolator12InterpolatorE6size_t6size_t"></span><span id="_CPPv2N12Interpolator12InterpolatorE6size_t6size_t"></span><span class="target" id="classInterpolator_1a02b0051ebb3f3f0eb5f3d2daed384c5c"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span>size_t <em>scf_type</em> = 0, size_t <em>vcf_type</em> = 0<span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorE9costfun_t9costfun_t">
+<span id="_CPPv3N12Interpolator12InterpolatorE9costfun_t9costfun_t"></span><span id="_CPPv2N12Interpolator12InterpolatorE9costfun_t9costfun_t"></span><span class="target" id="classInterpolator_1ad9c646882d5b27860eddbd86630d9cef"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N12Interpolator9costfun_tE" title="Interpolator::costfun_t">costfun_t</a> <em>scf</em>, <a class="reference internal" href="#_CPPv4N12Interpolator9costfun_tE" title="Interpolator::costfun_t">costfun_t</a> <em>vcf</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike">
+<span id="_CPPv3N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike"></span><span id="_CPPv2N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike"></span><span id="Interpolator::Interpolator__bArray:T:R.shape_t.element_t:ind_t:.RotatesLike"></span><span class="target" id="classInterpolator_1ac47dafc0f8cd0f2cbc3771db0829f81d"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4N12Interpolator7shape_tE" title="Interpolator::shape_t">shape_t</a> <em>sh</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE">
+<span id="_CPPv3N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="_CPPv2N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="Interpolator::Interpolator__bArray:T:R.shape_t.element_t:ind_t:.RotatesLike.s.s.element_t:double:"></span><span class="target" id="classInterpolator_1a7ed0bfd73367fac4fe67692ce77763af"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4N12Interpolator7shape_tE" title="Interpolator::shape_t">shape_t</a> <em>sh</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em>, size_t <em>csf</em>, size_t <em>cvf</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;double&gt; <em>wg</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorER6bArrayI1TE7shape_t9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike">
+<span id="_CPPv3N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike"></span><span id="_CPPv2N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike"></span><span id="Interpolator::Interpolator__brille::Array:T:R.element_t:ind_t:.RotatesLike"></span><span class="target" id="classInterpolator_1ad228ec88af242c653118dbf7b937f9fd"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span>brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE">
+<span id="_CPPv3N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="_CPPv2N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE"></span><span id="Interpolator::Interpolator__brille::Array:T:R.element_t:ind_t:.RotatesLike.s.s.element_t:double:"></span><span class="target" id="classInterpolator_1a9db500626974f77e250c34d878b39c78"></span><code class="sig-name descname">Interpolator</code><span class="sig-paren">(</span>brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>d</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <em>el</em>, <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em>, size_t <em>csf</em>, size_t <em>cvf</em>, <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;double&gt; <em>wg</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Interpolator12InterpolatorERN6brille5ArrayI1TEE9element_tI5ind_tE11RotatesLike6size_t6size_t9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator10setup_fakeEK5ind_tK5ind_t">
+<span id="_CPPv3N12Interpolator10setup_fakeEK5ind_tK5ind_t"></span><span id="_CPPv2N12Interpolator10setup_fakeEK5ind_tK5ind_t"></span><span class="target" id="classInterpolator_1a2d80866d53d44396e76e6cdc6099c185"></span>void <code class="sig-name descname">setup_fake</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>sz</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <em>br</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator13set_cost_infoEKiKi">
+<span id="_CPPv3N12Interpolator13set_cost_infoEKiKi"></span><span id="_CPPv2N12Interpolator13set_cost_infoEKiKi"></span><span class="target" id="classInterpolator_1a386b9eabadec859b1e6ed4a7552f7379"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator13set_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N12Interpolator13set_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N12Interpolator13set_cost_infoEKiKiRK9element_tIdE"></span><span class="target" id="classInterpolator_1aa9b8b7a590b37e9fb320dc2286a66a82"></span>void <code class="sig-name descname">set_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>scf</em>, <em class="property">const</em> int <em>vcf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator4sizeEv">
+<span id="_CPPv3NK12Interpolator4sizeEv"></span><span id="_CPPv2NK12Interpolator4sizeEv"></span><span class="target" id="classInterpolator_1aa9c35af31b163b47cd486e76d386df2e"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">size</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator8branchesEv">
+<span id="_CPPv3NK12Interpolator8branchesEv"></span><span id="_CPPv2NK12Interpolator8branchesEv"></span><span class="target" id="classInterpolator_1ab080ea1ec1e101ca4f3e9d63c40883d9"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">branches</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator21only_vector_or_matrixEv">
+<span id="_CPPv3NK12Interpolator21only_vector_or_matrixEv"></span><span id="_CPPv2NK12Interpolator21only_vector_or_matrixEv"></span><span class="target" id="classInterpolator_1a329401982bf8f59eee4fd38b9298e000"></span>bool <code class="sig-name descname">only_vector_or_matrix</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator4dataEv">
+<span id="_CPPv3NK12Interpolator4dataEv"></span><span id="_CPPv2NK12Interpolator4dataEv"></span><span class="target" id="classInterpolator_1a525c7b7ce31a667ffd231fbb86e0cfdc"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<code class="sig-name descname">data</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator5shapeEv">
+<span id="_CPPv3NK12Interpolator5shapeEv"></span><span id="_CPPv2NK12Interpolator5shapeEv"></span><span id="Interpolator::shape__voidC"></span><span class="target" id="classInterpolator_1aed6a8628d8a08771af1ab4d568089614"></span><a class="reference internal" href="#_CPPv4N12Interpolator7shape_tE" title="Interpolator::shape_t">shape_t</a> <code class="sig-name descname">shape</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator5shapeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator5arrayEv">
+<span id="_CPPv3NK12Interpolator5arrayEv"></span><span id="_CPPv2NK12Interpolator5arrayEv"></span><span id="Interpolator::array__voidC"></span><span class="target" id="classInterpolator_1a29c685ec52c268c1f85ef5de6d061d18"></span>brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; <code class="sig-name descname">array</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK12Interpolator5arrayEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator8elementsEv">
+<span id="_CPPv3NK12Interpolator8elementsEv"></span><span id="_CPPv2NK12Interpolator8elementsEv"></span><span class="target" id="classInterpolator_1a9a876f719cbe2efdaa233bfa556185b9"></span><a class="reference internal" href="#_CPPv4I0EN12Interpolator9element_tE" title="Interpolator::element_t">element_t</a>&lt;<a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>&gt; <code class="sig-name descname">elements</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK12Interpolator14interpolate_atEvDp4Args">
+<span id="_CPPv3IDpENK12Interpolator14interpolate_atEDp4Args"></span>template&lt;class ...<code class="sig-name descname">Args</code>&gt;<br /><span class="target" id="classInterpolator_1ad533d620d2ac015430f300de9a9ac6ca"></span>void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK12Interpolator14interpolate_atEvDp4Args" title="Interpolator::interpolate_at::Args">Args</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi">
+<span id="_CPPv3I00ENK12Interpolator15rotate_in_placeER6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span><span id="_CPPv2I00ENK12Interpolator15rotate_in_placeER6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi"></span>template&lt;class <code class="sig-name descname">R</code>, class <code class="sig-name descname">RotT</code>&gt;<br /><span class="target" id="classInterpolator_1a5bc95b1d4ea3974af329f80ecc0a659e"></span>bool <code class="sig-name descname">rotate_in_place</code><span class="sig-paren">(</span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>x</em>, <em class="property">const</em> <a class="reference internal" href="classLQVec.html#_CPPv4I0E5LQVec" title="LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Interpolator::rotate_in_place::R">R</a>&gt; &amp;<em>q</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Interpolator::rotate_in_place::RotT">RotT</a> &amp;<em>rt</em>, <em class="property">const</em> <a class="reference internal" href="classPointSymmetry.html#_CPPv413PointSymmetry" title="PointSymmetry">PointSymmetry</a> &amp;<em>ps</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>r</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>invr</em>, <em class="property">const</em> int <em>nth</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK12Interpolator15rotate_in_placeEbR6bArrayI1TERK5LQVecI1RERK4RotTRK13PointSymmetryRKNSt6vectorI6size_tEERKNSt6vectorI6size_tEEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator11rotateslikeEv">
+<span id="_CPPv3NK12Interpolator11rotateslikeEv"></span><span id="_CPPv2NK12Interpolator11rotateslikeEv"></span><span class="target" id="classInterpolator_1acc113a6b937c71775afa60a956f4a179"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N12Interpolator11rotateslikeEK11RotatesLike">
+<span id="_CPPv3N12Interpolator11rotateslikeEK11RotatesLike"></span><span id="_CPPv2N12Interpolator11rotateslikeEK11RotatesLike"></span><span class="target" id="classInterpolator_1ae68ceb492db5945da75d2efcc23945ec"></span><a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN12Interpolator12replace_dataEvRK6bArrayI1TEK7shape_tRKNSt5arrayI1IXL3EEEEK11RotatesLike">
+<span id="_CPPv3I0EN12Interpolator12replace_dataERK6bArrayI1TEK7shape_tRKNSt5arrayI1IXL3EEEEK11RotatesLike"></span><span id="_CPPv2I0EN12Interpolator12replace_dataERK6bArrayI1TEK7shape_tRKNSt5arrayI1IX3EEEK11RotatesLike"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classInterpolator_1a8fb35b2b45f1855c66a60baa653c2b3c"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>nd</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator7shape_tE" title="Interpolator::shape_t">shape_t</a> <em>sh</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator12replace_dataEvRK6bArrayI1TEK7shape_tRKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Interpolator::replace_data::I">I</a>, 3&gt; &amp;<em>ne</em>, <em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em> = <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a>::<a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv4N11RotatesLike4RealE" title="RotatesLike::Real">Real</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN12Interpolator12replace_dataEvRK6bArrayI1TEK7shape_tRKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN12Interpolator12replace_dataEvRKN6brille5ArrayI1TEERKNSt5arrayI1IXL3EEEEK11RotatesLike">
+<span id="_CPPv3I0EN12Interpolator12replace_dataERKN6brille5ArrayI1TEERKNSt5arrayI1IXL3EEEEK11RotatesLike"></span><span id="_CPPv2I0EN12Interpolator12replace_dataERKN6brille5ArrayI1TEERKNSt5arrayI1IX3EEEK11RotatesLike"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classInterpolator_1a77a245a3f29ee576e98d2c586f14d497"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>nd</em>, <em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0EN12Interpolator12replace_dataEvRKN6brille5ArrayI1TEERKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Interpolator::replace_data::I">I</a>, 3&gt; &amp;<em>ne</em>, <em class="property">const</em> <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a> <em>rl</em> = <a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv411RotatesLike" title="RotatesLike">RotatesLike</a>::<a class="reference internal" href="enum_inner__interpolation__data_8hpp_1a3c6366569dd8b593ba20918b442160d6.html#_CPPv4N11RotatesLike4RealE" title="RotatesLike::Real">Real</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN12Interpolator12replace_dataEvRKN6brille5ArrayI1TEERKNSt5arrayI1IXL3EEEEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0EN12Interpolator12replace_dataEvRK1AI1TE">
+<span id="_CPPv3II0E0EN12Interpolator12replace_dataERK1AI1TE"></span><span id="_CPPv2II0E0EN12Interpolator12replace_dataERK1AI1TE"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classInterpolator_1acf54e311cc6f4b4cdc5a830812963230"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0EN12Interpolator12replace_dataEvRK1AI1TE" title="Interpolator::replace_data::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0E12Interpolator" title="Interpolator::T">T</a>&gt; &amp;<em>nd</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4II0E0EN12Interpolator12replace_dataEvRK1AI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator11branch_spanEv">
+<span id="_CPPv3NK12Interpolator11branch_spanEv"></span><span id="_CPPv2NK12Interpolator11branch_spanEv"></span><span class="target" id="classInterpolator_1a675e23dcf3582f9c7cfceaa088015ea2"></span><a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a> <code class="sig-name descname">branch_span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator9to_stringEv">
+<span id="_CPPv3NK12Interpolator9to_stringEv"></span><span id="_CPPv2NK12Interpolator9to_stringEv"></span><span class="target" id="classInterpolator_1a5e53fa13fac39c0c9bd88403dccc3f61"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEb">
+<span id="_CPPv3I0ENK12Interpolator8add_costEK5ind_tK5ind_tRNSt6vectorI1SEEb"></span><span id="_CPPv2I0ENK12Interpolator8add_costEK5ind_tK5ind_tRNSt6vectorI1SEEb"></span>template&lt;class <code class="sig-name descname">S</code>&gt;<br /><span class="target" id="classInterpolator_1ac5e0431543d57fd6547ed83c5a571ac9"></span>void <code class="sig-name descname">add_cost</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N12Interpolator5ind_tE" title="Interpolator::ind_t">ind_t</a>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEb" title="Interpolator::add_cost::S">S</a>&gt;&amp;, bool<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK12Interpolator8add_costEvK5ind_tK5ind_tRNSt6vectorI1SEEb" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK12Interpolator15any_equal_modesEbK1I">
+<span id="_CPPv3I0ENK12Interpolator15any_equal_modesEK1I"></span>template&lt;typename <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classInterpolator_1ac99b45dc80880e675b1f09269e7d86a3"></span>bool <code class="sig-name descname">any_equal_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK12Interpolator15any_equal_modesEbK1I" title="Interpolator::any_equal_modes::I">I</a> <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK12Interpolator15bytes_per_pointEv">
+<span id="_CPPv3NK12Interpolator15bytes_per_pointEv"></span><span id="_CPPv2NK12Interpolator15bytes_per_pointEv"></span><span class="target" id="classInterpolator_1a8d8548973a4609c91eea653f5f96af64"></span>size_t <code class="sig-name descname">bytes_per_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classLattice.html" class="btn btn-neutral float-right" title="Class Lattice" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classInterpolationData.html" class="btn btn-neutral float-left" title="Template Class InterpolationData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

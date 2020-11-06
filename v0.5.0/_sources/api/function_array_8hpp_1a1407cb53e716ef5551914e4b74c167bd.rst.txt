@@ -1,0 +1,13 @@
+.. _exhale_function_array_8hpp_1a1407cb53e716ef5551914e4b74c167bd:
+
+Template Function brille::broadcast_shape_check(const std::vector<T>&, const std::vector<T>&)
+=============================================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::broadcast_shape_check(const std::vector<T>&, const std::vector<T>&)

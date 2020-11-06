@@ -1,0 +1,1480 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File array.tpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File array.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_array.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-array-tpp">
+<span id="program-listing-file-src-array-tpp"></span><h1>Program Listing for File array.tpp<a class="headerlink" href="#program-listing-for-file-array-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_array.tpp.html#file-src-array-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::view() const{
+  // return Array&lt;T&gt;(_data,_num,_own,_ref,_offset,_shape,_stride,false);
+  return Array&lt;T&gt;(_data, _num, _shift, _own, _ref, _shape, _stride, false);
+}
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::view(const ind_t i) const {
+  if (i&lt;_shape[0]){
+    shape_t oshape{_shape};
+    oshape[0] = 1;
+    // shape_t oofst{_offset}; oofst[0] += i;
+    ind_t oshift{_shift + i*_stride[0]};
+    return Array&lt;T&gt;(_data, _num, oshift, _own, _ref, oshape, _stride, false);
+  }
+  throw std::runtime_error(&quot;Array index too large&quot;);
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::view(const ind_t i, const ind_t j) const {
+  if (i&lt;j &amp;&amp; i&lt;_shape[0] &amp;&amp; j&lt;=_shape[0]){
+    shape_t oshape{_shape};
+    oshape[0] = j-i;
+    // shape_t oofst{_offset}; oofst[0] += i;
+    ind_t oshift{_shift + i*_stride[0]};
+    return Array&lt;T&gt;(_data, _num, oshift, _own, _ref, oshape, _stride, false);
+  }
+  throw std::runtime_error(&quot;Array view indexing error&quot;);
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::view(const shape_t&amp; v) const {
+  shape_t oshape{_shape};
+  // shape_t oofst{_offset};
+  ind_t oshift{_shift};
+  for (size_t i=0; i&lt;_shape.size(); ++i) if (v[i] &lt; _shape[i]) {
+    // oofst[i] += v[i];
+    oshape[i] -= v[i];
+    oshift += v[i]*_stride[i];
+  }
+  return Array&lt;T&gt;(_data, _num, oshift, _own, _ref, oshape, _stride, false);
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::extract(const ind_t i) const{
+  return this-&gt;view(i).decouple();
+}
+
+template&lt;class T&gt;
+template&lt;class I&gt;
+std::enable_if_t&lt;std::is_integral_v&lt;I&gt;, Array&lt;T&gt;&gt;
+Array&lt;T&gt;::extract(const Array&lt;I&gt;&amp; i) const {
+  if (i.numel() != i.size(0))
+    throw std::runtime_error(&quot;Array extraction requires (N,{1,...,1}) shape&quot;);
+  for (auto x: i.valItr()) if (!(0 &lt;= x &amp;&amp; static_cast&lt;ind_t&gt;(x) &lt; _shape[0]))
+    throw std::runtime_error(&quot;Array extract index must be in range&quot;);
+  shape_t osize{_shape};
+  osize[0] = i.size(0);
+  Array&lt;T&gt; out(osize);
+  ind_t j{0};
+  for (auto v: i.valItr()) out.set(j++, this-&gt;view(static_cast&lt;ind_t&gt;(v)));
+  return out;
+}
+
+template&lt;class T&gt;
+template&lt;class I&gt;
+std::enable_if_t&lt;std::is_integral_v&lt;I&gt;, Array&lt;T&gt;&gt;
+Array&lt;T&gt;::extract(const std::vector&lt;I&gt;&amp; i) const {
+  for (auto x: i) if (!(0 &lt;= x &amp;&amp; static_cast&lt;ind_t&gt;(x) &lt; _shape[0]))
+    throw std::runtime_error(&quot;Array extract index must be in range&quot;);
+  shape_t osize{_shape};
+  osize[0] = static_cast&lt;ind_t&gt;(i.size());
+  Array&lt;T&gt; out(osize);
+  for (ind_t j=0; j&lt;osize[0]; ++j) out.set(j, this-&gt;view(i[j]));
+  return out;
+}
+
+template&lt;class T&gt;
+template&lt;class I, size_t Nel&gt;
+std::enable_if_t&lt;std::is_integral_v&lt;I&gt;, Array&lt;T&gt;&gt;
+Array&lt;T&gt;::extract(const std::array&lt;I,Nel&gt;&amp; i) const
+{
+  for (auto x: i) if (!(0 &lt;= x &amp;&amp; static_cast&lt;ind_t&gt;(x) &lt; _shape[0]))
+    throw std::runtime_error(&quot;Array extract index must be in range&quot;);
+  shape_t osize{_shape};
+  osize[0] = static_cast&lt;ind_t&gt;(Nel);
+  Array&lt;T&gt; out(osize);
+  for (ind_t j=0; j&lt;osize[0]; ++j)
+  {
+    out.set(j, this-&gt;view(static_cast&lt;ind_t&gt;(i[j])));
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+template&lt;class I, size_t Nel&gt;
+std::enable_if_t&lt;std::is_integral_v&lt;I&gt;, Array&lt;T&gt;&gt;
+Array&lt;T&gt;::extract(const std::vector&lt;std::array&lt;I,Nel&gt;&gt;&amp; i) const
+{
+  for (auto a: i) for (auto x: a) if (!(0 &lt;= x &amp;&amp; static_cast&lt;ind_t&gt;(x) &lt; _shape[0]))
+    throw std::runtime_error(&quot;Array extract index must be in range&quot;);
+  shape_t osh{static_cast&lt;ind_t&gt;(i.size()), static_cast&lt;ind_t&gt;(Nel)};
+  for (ind_t i=1; i&lt;this-&gt;ndim(); ++i)
+    osh.push_back(_shape[i]);
+  Array&lt;T&gt; out(osh);
+  shape_t xi{_shape};
+  for (ind_t a=0; a&lt;i.size(); ++a)
+  {
+    osh[0] = a;
+    for (ind_t b=0; b&lt;Nel; ++b)
+    {
+      osh[1] = b;
+      xi[0] = static_cast&lt;ind_t&gt;(i[a][b]);
+      for (auto sub: SubIt(_shape, xi))
+      {
+        for (ind_t j=0; j&lt;_shape.size(); ++j) osh[j+1]=sub[j];
+        out[sub] = _data[this-&gt;s2l_d(xi)];
+      }
+    }
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::extract(const Array&lt;bool&gt;&amp; i) const {
+  shape_t isize = i.shape();
+  if (isize[0] &gt; _shape[0])
+    throw std::runtime_error(&quot;Boolean Array extraction requires no more bools than the first Array dimension&quot;);
+  shape_t osize{_shape};
+  osize[0] = i.count();
+  Array&lt;T&gt; out(osize);
+  ind_t n = isize[0] &lt; _shape[0] ? isize[0] : _shape[0];
+  ind_t idx{0};
+  for (ind_t j=0; j&lt;n; ++j) if (i[j]) out.set(idx++, this-&gt;view(j));
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::extract(const std::vector&lt;bool&gt;&amp; i) const {
+  if (i.size() &gt; _shape[0])
+    throw std::runtime_error(&quot;Boolean Array extraction requires no more bools than the first Array dimension&quot;);
+  shape_t osize{_shape};
+  auto count = std::count(i.begin(), i.end(), true);
+  osize[0] = static_cast&lt;ind_t&gt;(count);
+  Array&lt;T&gt; out(osize);
+  ind_t n = i.size() &lt; _shape[0] ? i.size() : _shape[0];
+  ind_t idx{0};
+  for (ind_t j=0; j&lt;n; ++j) if (i[j]) out.set(idx++, this-&gt;view(j));
+  return out;
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::set(const ind_t i, const Array&lt;T&gt;&amp; in){
+  // we might be able to do this better/faster if we both *this and in
+  // have the same strides_ and we account for any offset. For now calculate
+  // the &#39;hard&#39; way no matter what:
+  shape_t inshape = in.shape();
+  size_t ndim = _shape.size();
+  for (ind_t dim=1; dim&lt;ndim; ++dim) if (_shape[dim] != inshape[dim])
+    throw std::runtime_error(&quot;Set requires equal dimensions beyond the first dimension&quot;);
+  inshape[0] = 1u; // this *should* be the case anyway
+  for(auto sub: SubIt&lt;ind_t&gt;(inshape)){
+    const T&amp; tmp = in[sub];
+    sub[0] = i; // [0,0,…,0],[0,0,…,1],…,[0,1,…,0],… to [i,0,…,0],[i,0,…,1],…,[i,1,…,0],…
+    _data[this-&gt;s2l_d(sub)] = tmp;
+  }
+  return true;
+}
+
+template&lt;class T&gt;
+template&lt;class R&gt;
+bool Array&lt;T&gt;::set(const ind_t i, const Array&lt;R&gt;&amp; in){
+  // we might be able to do this better/faster if we both *this and in
+  // have the same strides_ and we account for any offset. For now calculate
+  // the &#39;hard&#39; way no matter what:
+  shape_t inshape = in.shape();
+  size_t ndim = _shape.size();
+  for (ind_t dim=1; dim&lt;ndim; ++dim) if (_shape[dim] != inshape[dim])
+    throw std::runtime_error(&quot;Set requires equal dimensions beyond the first dimension&quot;);
+  inshape[0] = 1u; // this *should* be the case anyway
+  for(auto sub: SubIt&lt;ind_t&gt;(inshape)){
+    const R&amp; tmp = in[sub];
+    sub[0] = i; // [0,0,…,0],[0,0,…,1],…,[0,1,…,0],… to [i,0,…,0],[i,0,…,1],…,[i,1,…,0],…
+    _data[this-&gt;s2l_d(sub)] = static_cast&lt;T&gt;(tmp);
+  }
+  return true;
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::set(const ind_t i, const std::vector&lt;T&gt;&amp; in){
+  if (this-&gt;numel() != _shape[0]*in.size())
+    throw std::runtime_error(&quot;Set requires the correct number of elements&quot;);
+  shape_t tsize = this-&gt;shape();
+  tsize[0] = 1u;
+  // in is (hopefully) a row-ordered linear indexing
+  size_t idx{0};
+  for (auto sub: SubIt&lt;ind_t&gt;(tsize)){
+    sub[0] = i;
+    _data[this-&gt;s2l_d(sub)] = in[idx++];
+  }
+  return true;
+}
+
+template&lt;class T&gt;
+template&lt;size_t Nel&gt;
+bool Array&lt;T&gt;::set(const ind_t i, const std::array&lt;T, Nel&gt;&amp; in){
+  if (this-&gt;numel() != _shape[0]*Nel)
+    throw std::runtime_error(&quot;Set requires the correct number of elements&quot;);
+  shape_t tsize = this-&gt;shape();
+  tsize[0] = 1u;
+  // in is (hopefully) a row-ordered linear indexing
+  size_t idx{0};
+  for (auto sub: SubIt&lt;ind_t&gt;(tsize)){
+    sub[0] = i;
+    _data[this-&gt;s2l_d(sub)] = in[idx++];
+  }
+  return true;
+}
+
+template&lt;class T&gt;
+T Array&lt;T&gt;::set(const shape_t&amp; sub, const T in){
+  auto ind = this-&gt;s2l_d(sub);
+  _data[ind] = in;
+  return _data[ind];
+}
+
+template&lt;class T&gt;
+std::string Array&lt;T&gt;::to_string() const{
+  if (this-&gt;_num == 0) return std::string(&quot;Unallocated Array&quot;);
+  size_t width{0};
+  for (ind_t i=0; i&lt;_num; ++i){
+    size_t l = my_to_string(_data[i]).size();
+    if (l &gt; width) width = l;
+  }
+  std::string out;
+  std::vector&lt;bool&gt; isin(this-&gt;ndim(), false);
+  bool preamble{false};
+  size_t ndim = _shape.size();
+  for (auto sub: SubIt&lt;ind_t&gt;(_shape)){
+    if (!preamble){
+      for (ind_t i=0; i&lt;ndim-1; ++i)
+      if (sub[i] == 0 &amp;&amp; !isin[i]){
+        out += &quot;[&quot;;
+        isin[i] = true;
+      }
+      else
+        out += &quot; &quot;;
+      out += &quot;[&quot;; // for i=ndim-1;
+      preamble=true;
+    }
+
+    out += my_to_string(_data[this-&gt;s2l_d(sub)], width);
+    // out += std::to_string(_data[this-&gt;s2l_d(sub)]);
+    if (sub[ndim-1]+1 &lt; _shape[ndim-1]){
+      out += &quot;, &quot;;
+    } else {
+      for (ind_t i=0; i&lt;ndim-1; ++i){
+        bool isend{true};
+        for (ind_t k=i; k&lt;ndim; k++) isend &amp;= sub[k]+1 == _shape[k];
+        if (isend){
+          out += &quot;]&quot;;
+          isin[i] = false;
+        }
+      }
+      out += &quot;],&quot;; // &#39;]&#39; for i=ndim-1;
+      size_t nret = std::count(isin.begin(), isin.end(), false);
+      for (size_t n=0; n&lt;nret; ++n) out += &quot;\n&quot;;
+      preamble=false;
+    }
+  }
+  for (size_t i=0; i&lt;ndim; ++i) out.pop_back(); // remove the trailing &#39;\n&#39;s
+  out.pop_back(); // and the trailing ,
+  out += &quot;\n&quot;;
+  return out;
+}
+
+template&lt;class T&gt;
+std::string Array&lt;T&gt;::to_string(const ind_t i) const {
+  auto out = this-&gt;view(i).to_string();
+  out.pop_back(); // remove the trailing \n
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;&amp;
+Array&lt;T&gt;::reshape(const shape_t&amp; ns){
+  ind_t num = this-&gt;size_from_shape(ns);
+  info_update_if(num &gt; _num, &quot;Array::reshape only intended for equal-element number changes.&quot;);
+  // assert( num &lt;= _num );
+  if (!this-&gt;is_contiguous())
+    throw std::runtime_error(&quot;Array::reshape does not work for strided arrays&quot;);
+  _shape = ns;
+  // _shift *is* the linear offset, and doesn&#39;t care about the subscript shape
+  // ind_t linoffset = sub2lin(_offset, _stride);
+  _stride = this-&gt;calculate_stride(ns);
+  // _offset = lin2sub(linoffset, _stride);
+  return *this;
+}
+
+/*! \brief Modify the number of arrays
+
+Allocate a new T* and copy the overlapping region. The new shape
+*must* have the same number of dimensions as the old shape.
+
+Resizing an array will decouple it from any other arrays sharing their
+underlying data. Such an operation should not be taken lightly.
+
+@param ns the new shape
+@param init an optional initialization value for any non-overlapping region
+*/
+template&lt;class T&gt;
+Array&lt;T&gt;&amp;
+Array&lt;T&gt;::resize(const shape_t&amp; ns, const T init) {
+  ind_t nnum = this-&gt;size_from_shape(ns);
+  //if (nnum == _num) return this-&gt;reshape(ns);
+  // otherwise resizing can not change dimensionality
+  assert(_shape.size() == ns.size());
+  // determine which axes are changing and how
+  std::vector&lt;bool&gt; shrinking, growing;
+  for (size_t i=0; i&lt;ns.size(); ++i){
+    shrinking.push_back(ns[i] &lt;= _shape[i]);
+    growing.push_back(ns[i] &gt;= _shape[i]);
+  }
+  bool shrink = std::all_of(shrinking.begin(), shrinking.end(), [](bool a){return a;});
+  bool grow = !shrink &amp;&amp; std::all_of(growing.begin(), growing.end(), [](bool a){return a;});
+  if (!shrink &amp;&amp; !grow){
+    std::string msg = &quot;This method is not able to resize from { &quot;;
+    for (auto x : _shape) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;} to { &quot;;
+    for (auto x : ns) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;}&quot;;
+    throw std::runtime_error(msg);
+  }
+  // make the new array
+  T* nd = new T[nnum]();
+  // fill the whole thing instead of trying to figure out difference indices
+  if (grow) std::fill(nd, nd+nnum, init);
+  // loop over the subscripted incides which fit inside both arrays
+  shape_t inside = shrink ? ns : _shape;
+  // find the new stride (maintaining row or column order)
+  shape_t nt = calculate_stride(ns);
+  // ensure our simple indexing will work
+  // ind_t linoffset = sub2lin(_offset, _stride);
+  // if (linoffset &gt; 0)
+  if (_shift &gt; 0)
+    throw std::runtime_error(&quot;Resizing only works for zero-offset Arrays at present. Please extend.&quot;);
+  // copy into the new array if the old array isn&#39;t the null pointer
+  if (_data != nullptr &amp;&amp; nd != nullptr)
+    for (auto x : SubIt(inside)) nd[sub2lin(x, nt)] = _data[sub2lin(x, _stride)];
+  // delete the old _data if we hold the only reference
+  if (_own &amp;&amp; _ref.use_count()==1 &amp;&amp; _data != nullptr) delete[] _data;
+  // update data, number, ownership, reference, size, stride, and mutability
+  _data = nd;
+  _num = nnum;
+  _own = true;
+  _ref = std::make_shared&lt;char&gt;(); // resizing in place can not change the template parameter
+  // _offset = shape_t(ns.size(), 0);
+  _shape = ns;
+  _stride = nt;
+  _mutable = true;
+  // pass back a reference to this object
+  return *this;
+}
+template&lt;class T&gt; template&lt;class I&gt;
+Array&lt;T&gt;&amp;
+Array&lt;T&gt;::resize(const I ns, const T init) {
+  shape_t nshape{_shape};
+  if (nshape.size()&gt;0)
+    nshape[0] = static_cast&lt;ind_t&gt;(ns);
+  else{
+    throw std::runtime_error(&quot;Resizing a null-shaped Array not supported (yet)&quot;);
+    //nshape.push_back(static_cast&lt;ind_t&gt;(ns));
+  }
+  return this-&gt;resize(nshape, init);
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;&amp;
+Array&lt;T&gt;::append(const ind_t dim, const Array&lt;T&gt;&amp; extra) {
+  assert(this != &amp;extra);
+  ind_t ndim = this-&gt;ndim();
+  assert(extra.ndim() == ndim &amp;&amp; dim&lt;ndim);
+  auto eshape = extra.shape();
+  for (size_t i=0; i&lt;ndim; ++i) if (i!=dim &amp;&amp; eshape[i]!=_shape[i])
+    throw std::runtime_error(&quot;Incompatible Array to append&quot;);
+  // the new expanded size only changes along dim
+  eshape[dim] += _shape[dim];
+  // stash this original shape along dim for use in the loop:
+  ind_t tshapedim = _shape[dim];
+  // and resizing the Array to the new size copies existing entries
+  this-&gt;resize(eshape);
+  // so we need only iterate over the extra Array
+  for (auto x : SubIt(extra.shape())){
+    // offsetting its subscript to the new position
+    auto y = x;
+    y[dim] += tshapedim; // offset by the original shape along the dimension
+    // and copying the contents
+    (*this)[y] = extra[x];
+  }
+  return *this;
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::all(const ind_t n) const{
+  ind_t nml = this-&gt;numel();
+  ind_t count = (n &gt; 0 &amp;&amp; n &lt; nml) ? n : nml;
+  for (ind_t i=0; i&lt;count; ++i) if (!_data[this-&gt;l2l_d(i)]) return false;
+  return true;
+}
+template&lt;class T&gt;
+bool Array&lt;T&gt;::any(const ind_t n) const{
+  ind_t nml = this-&gt;numel();
+  ind_t count = (n &gt; 0 &amp;&amp; n &lt; nml) ? n : nml;
+  for (ind_t i=0; i&lt;count; ++i) if (_data[this-&gt;l2l_d(i)]) return true;
+  return false;
+}
+template&lt;class T&gt;
+bool Array&lt;T&gt;::all(const T val, const ind_t n) const{
+  ind_t nml = this-&gt;numel();
+  ind_t count = (n &gt; 0 &amp;&amp; n &lt; nml) ? n : nml;
+  for (ind_t i=0; i&lt;count; ++i) if (val != _data[this-&gt;l2l_d(i)]) return false;
+  return true;
+}
+template&lt;class T&gt;
+bool Array&lt;T&gt;::any(const T val, const ind_t n) const{
+  ind_t nml = this-&gt;numel();
+  ind_t count = (n &gt; 0 &amp;&amp; n &lt; nml) ? n : nml;
+  for (ind_t i=0; i&lt;count; ++i) if (val == _data[this-&gt;l2l_d(i)]) return true;
+  return false;
+}
+
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::count(const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  ind_t count{0};
+  for (ind_t i=0; i&lt;no; ++i) if (_data[this-&gt;l2l_d(i)]) ++count;
+  return count;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::count(const T val, const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  ind_t count{0};
+  for (ind_t i=0; i&lt;no; ++i) if (val == _data[this-&gt;l2l_d(i)]) ++count;
+  return count;
+}
+
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::first(const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  for (ind_t i=0; i&lt;no; ++i) if (_data[this-&gt;l2l_d(i)]) return i;
+  return no;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::first(const T val, const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  for (ind_t i=0; i&lt;no; ++i) if (val == _data[this-&gt;l2l_d(i)]) return i;
+  return no;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::last(const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  for (ind_t i=no; i--;) if (_data[this-&gt;l2l_d(i)]) return i;
+  return no;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::last(const T val, const ind_t n) const{
+  ind_t el = this-&gt;numel();
+  ind_t no = (n &gt; 0 &amp;&amp; n &lt; el) ? n : el;
+  for (ind_t i=no; i--;) if (val == _data[this-&gt;l2l_d(i)]) return i;
+  return no;
+}
+
+#define ARRAY_ELEMENTWISE_INT_TRANSFORM(X) template&lt;class T&gt;\
+Array&lt;int&gt;\
+Array&lt;T&gt;:: X () const {\
+  Array&lt;int&gt; out(_shape, _stride);\
+  for (auto x: SubIt(out.shape()))\
+    out[x] = static_cast&lt;int&gt;(std:: X (_data[this-&gt;s2l_d(x)]));\
+  return out;\
+}
+ARRAY_ELEMENTWISE_INT_TRANSFORM(round)
+ARRAY_ELEMENTWISE_INT_TRANSFORM(floor)
+ARRAY_ELEMENTWISE_INT_TRANSFORM(ceil)
+#undef ARRAY_ELEMENTWISE_INT_TRANSFORM
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::sum(const ind_t dim) const{
+  size_t ndim = _shape.size();
+  assert(dim &lt; ndim);
+  shape_t ostride = this-&gt;stride();
+  shape_t osize = this-&gt;shape();
+  osize[dim] = 1u;
+  if (this-&gt;is_row_ordered()){
+    for (ind_t i=0; i&lt;dim; ++i) ostride[i] /= _shape[dim];
+  } else {
+    for (ind_t i=dim+1; i&lt;ndim; ++i) ostride[i] /= _shape[dim];
+  }
+  Array&lt;T&gt; out(osize, ostride);
+  for (auto oidx: SubIt&lt;ind_t&gt;(osize)) {
+    T tmp{0};
+    auto idx = oidx;
+    for (ind_t i=0; i&lt;_shape[dim]; ++i) {
+      idx[dim] = i;
+      tmp += _data[this-&gt;s2l_d(idx)];
+    }
+    out[oidx] = tmp;
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::prod(const ind_t dim) const{
+  size_t ndim = _shape.size();
+  assert(dim &lt; ndim);
+  shape_t ostride = this-&gt;stride();
+  shape_t osize = this-&gt;shape();
+  osize[dim] = 1u;
+  if (this-&gt;is_row_ordered()){
+    for (ind_t i=0; i&lt;dim; ++i) ostride[i] /= _shape[dim];
+  } else {
+    for (ind_t i=dim+1; i&lt;ndim; ++i) ostride[i] /= _shape[dim];
+  }
+  Array&lt;T&gt; out(osize, ostride);
+  for (auto oidx: SubIt&lt;ind_t&gt;(osize)) {
+    T tmp{1};
+    auto idx = oidx;
+    for (ind_t i=0; i&lt;_shape[dim]; ++i) {
+      idx[dim] = i;
+      tmp *= _data[this-&gt;s2l_d(idx)];
+    }
+    out[oidx] = tmp;
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::min(const ind_t dim) const{
+  size_t ndim = _shape.size();
+  assert(dim &lt; ndim);
+  shape_t ostride = this-&gt;stride();
+  shape_t osize = this-&gt;shape();
+  osize[dim] = 1u;
+  if (this-&gt;is_row_ordered()){
+    for (ind_t i=0; i&lt;dim; ++i) ostride[i] /= _shape[dim];
+  } else {
+    for (ind_t i=dim+1; i&lt;ndim; ++i) ostride[i] /= _shape[dim];
+  }
+  Array&lt;T&gt; out(osize, ostride);
+  for (auto oidx: SubIt&lt;ind_t&gt;(osize)) {
+    T tmp{(std::numeric_limits&lt;T&gt;::max)()};
+    auto idx = oidx;
+    for (ind_t i=0; i&lt;_shape[dim]; ++i) {
+      idx[dim] = i;
+      T tst = _data[this-&gt;s2l_d(idx)];
+      if (tst &lt; tmp) tmp = tst;
+    }
+    out[oidx] = tmp;
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::max(const ind_t dim) const{
+  size_t ndim = _shape.size();
+  assert(dim &lt; ndim);
+  shape_t ostride = this-&gt;stride();
+  shape_t osize = this-&gt;shape();
+  osize[dim] = 1u;
+  if (this-&gt;is_row_ordered()){
+    for (ind_t i=0; i&lt;dim; ++i) ostride[i] /= _shape[dim];
+  } else {
+    for (ind_t i=dim+1; i&lt;ndim; ++i) ostride[i] /= _shape[dim];
+  }
+  // the stride along any dimension can not be zero. protect against it:
+  for (ind_t i=0; i&lt;ndim; ++i) if (ostride[i] &lt; 1u) ostride[i] = 1u;
+
+  Array&lt;T&gt; out(osize, ostride);
+  for (auto oidx: SubIt&lt;ind_t&gt;(osize)) {
+    T tmp{std::numeric_limits&lt;T&gt;::lowest()};
+    auto idx = oidx;
+    for (ind_t i=0; i&lt;_shape[dim]; ++i) {
+      idx[dim] = i;
+      T tst = _data[this-&gt;s2l_d(idx)];
+      if (tst &gt; tmp) tmp = tst;
+    }
+    out[oidx] = tmp;
+  }
+  return out;
+}
+
+template&lt;class T&gt;
+T Array&lt;T&gt;::sum() const{
+  T out{0};
+  for (auto x : _shape) out += _data[this-&gt;s2l_d(x)];
+  return out;
+}
+
+template&lt;class T&gt;
+T Array&lt;T&gt;::prod() const{
+  T out{1};
+  for (auto x : _shape) out *= _data[this-&gt;s2l_d(x)];
+  return out;
+}
+
+template&lt;class T&gt;
+template&lt;class R, size_t Nel&gt;
+bool Array&lt;T&gt;::match(const ind_t i, const ind_t j, const std::array&lt;R,Nel&gt;&amp; rot, const int order) const {
+  assert(this-&gt;ndim() == 2u); // only defined for 2-D Arrays
+  assert(Nel == _shape[1]*_shape[1]);
+  ind_t n = _shape[1];
+  auto ai=this-&gt;view(i);
+  auto aj=this-&gt;view(j);
+  std::vector&lt;T&gt; tmp(n,T(0));
+  for (ind_t k=0; k&lt;n; ++k) tmp[k] = aj[k];
+  brille::Comparer&lt;T,T&gt; eq(brille::cmp::eq);
+  if (order &lt; 0){
+    int o{0};
+    do{
+      //check against the current tmp vector whether this order rotation has moved j to i
+      if (eq(n, ai.data(), tmp.data())) return true;
+      // otherwise apply the rotation (again)
+      brille::utils::mul_mat_vec_inplace(n, rot.data(), tmp.data());
+    } while (o++ &lt; std::abs(order));
+    return false;
+  } else {
+    // rotate exactly order times
+    for (int o=0; o&lt;order; ++o)
+      brille::utils::mul_mat_vec_inplace(n, rot.data(), tmp.data());
+    return eq(n, ai.data(), tmp.data());
+  }
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::match(const ind_t i, const ind_t j, brille::ops op, T val) const {
+  auto ai= this-&gt;view(i);
+  auto aj= this-&gt;view(j);
+  brille::Comparer&lt;T,T&gt; neq(brille::cmp::neq);
+  ind_t no = this-&gt;numel()/_shape[0];
+  switch (op){
+    case brille::ops::plus:
+    for (ind_t k=0; k&lt;no; ++k) if (neq(ai[k], aj[k]+val)) return false;
+    break;
+    case brille::ops::minus:
+    for (ind_t k=0; k&lt;no; ++k) if (neq(ai[k], aj[k]-val)) return false;
+    break;
+    case brille::ops::times:
+    for (ind_t k=0; k&lt;no; ++k) if (neq(ai[k], aj[k]*val)) return false;
+    break;
+    case brille::ops::rdiv:
+    for (ind_t k=0; k&lt;no; ++k) if (neq(ai[k], aj[k]/val)) return false;
+    break;
+    case brille::ops::ldiv:
+    for (ind_t k=0; k&lt;no; ++k) if (neq(ai[k], val/aj[k])) return false;
+    break;
+    default:
+    throw std::runtime_error(std::string(&quot;Unhandled operator &quot;)+brille::to_string(op));
+  }
+  return true;
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::all(const brille::cmp expr, const T val) const {
+  if (brille::cmp::le_ge == expr)
+    return this-&gt;all(brille::cmp::le, val) || this-&gt;all(brille::cmp::ge, val);
+  ind_t no = this-&gt;numel();
+  brille::Comparer&lt;T,T&gt; op(expr);
+  for (ind_t k=0; k&lt;no; ++k) if(!op(_data[this-&gt;l2l_d(k)], val)) return false;
+  return true;
+}
+template&lt;class T&gt;
+bool Array&lt;T&gt;::any(const brille::cmp expr, const T val) const {
+  return this-&gt;first(expr, val) &lt; this-&gt;numel();
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::first(const brille::cmp expr, const T val) const {
+  ind_t no = this-&gt;numel();
+  brille::Comparer&lt;T,T&gt; op(expr);
+  for (ind_t k=0; k&lt;no; ++k) if(op(_data[this-&gt;l2l_d(k)], val)) return k;
+  return no;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::last(const brille::cmp expr, const T val) const {
+  ind_t no = this-&gt;numel();
+  brille::Comparer&lt;T,T&gt; op(expr);
+  for (ind_t k=no; k--;) if(op(_data[this-&gt;l2l_d(k)], val)) return k;
+  return no;
+}
+template&lt;class T&gt;
+ind_t
+Array&lt;T&gt;::count(const brille::cmp expr, const T val) const {
+  ind_t no = this-&gt;numel();
+  brille::Comparer&lt;T,T&gt; op(expr);
+  ind_t cnt{0};
+  for (ind_t k=0; k&lt;no; ++k) if(op(_data[this-&gt;l2l_d(k)], val)) ++cnt;
+  return cnt;
+}
+
+template&lt;class T&gt;
+Array&lt;bool&gt;
+Array&lt;T&gt;::is(const brille::cmp expr, const T val) const {
+  Array&lt;bool&gt; out(_shape, _stride, true);
+  ind_t no = this-&gt;numel();
+  brille::Comparer&lt;T,T&gt; op(expr);
+  for (ind_t k=0; k&lt;no; ++k) out[k] = op(_data[this-&gt;l2l_d(k)], val);
+  return out;
+}
+
+template&lt;class T&gt;
+std::vector&lt;ind_t&gt;
+Array&lt;T&gt;::find(const brille::cmp expr, const T val) const {
+  Array&lt;bool&gt; this_is = this-&gt;is(expr, val);
+  ind_t no = this-&gt;numel();
+  std::vector&lt;ind_t&gt; out;
+  for (ind_t k=0; k&lt;no; ++k) if (this_is[k]) out.push_back(k);
+  return out;
+}
+
+template&lt;class T&gt; template&lt;class R&gt;
+Array&lt;bool&gt;
+Array&lt;T&gt;::is(const brille::cmp expr, const Array&lt;R&gt;&amp; that) const {
+  // To handle singleton-dimension broadcasting, this function needs to be split
+  auto tsize = that.shape();
+  if (!std::equal(_shape.begin(), _shape.end(), tsize.begin(),
+      [](ind_t a, ind_t b){return 1==b || a==b;})){
+    std::string msg = &quot;An Array with size ( &quot;;
+    for (auto x: tsize) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;) can not be broadcast to match one with size ( &quot;;
+    for (auto x: _shape) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;).&quot;;
+    throw std::runtime_error(msg);
+  }
+  Array&lt;bool&gt; out(_shape, _stride, true);
+  size_t ndim = _shape.size();
+  if (std::equal(_shape.begin(), _shape.end(), tsize.begin())){
+    // No broadcast
+    brille::Comparer&lt;T,R&gt; op(expr);
+    // no guarantees about same stride, so use subscript iterator:
+    for (auto sub: SubIt&lt;ind_t&gt;(_shape))
+      out[sub] = op(_data[this-&gt;s2l_d(sub)], that[sub]);
+  } else {
+    // Broadcast
+    for (ind_t i=1; i&lt;ndim; ++i) if (_shape[i]!=tsize[i])
+      throw std::runtime_error(&quot;Broadcasting beyond the first dimension requires viewing beyond the first dimension!&quot;);
+    for (ind_t i=0; i&lt;_shape[0]; ++i)
+      out.set(i, this-&gt;view(i).is(expr, that));
+  }
+  return out;
+}
+
+template&lt;class T&gt; template&lt;class R&gt;
+std::vector&lt;bool&gt;
+Array&lt;T&gt;::is(const brille::cmp expr, const std::vector&lt;R&gt;&amp; val) const{
+  assert(2==this-&gt;ndim());
+  assert(val.size() == _shape[1]);
+  std::vector&lt;bool&gt; out;
+  out.reserve(_shape[0]);
+  brille::Comparer&lt;T,R&gt; op(expr);
+  for (ind_t i=0; i&lt;_shape[0]; ++i)
+    out.push_back(op(_shape[1], this-&gt;ptr(i), _stride[1], val.data(), 1u));
+  return out;
+}
+
+template&lt;class T&gt; template&lt;class R&gt;
+bool Array&lt;T&gt;::is(const Array&lt;R&gt;&amp; that) const {
+  return this-&gt;is(brille::cmp::eq, that).all(true);
+}
+
+template&lt;class T&gt;
+std::vector&lt;bool&gt;
+Array&lt;T&gt;::is_unique() const{
+  assert(2==this-&gt;ndim());
+  if (_shape[0] &lt; 1u) return std::vector&lt;bool&gt;();
+  std::vector&lt;bool&gt; out(1u, true);
+  out.reserve(_shape[0]);
+  brille::Comparer&lt;T,T&gt; op(brille::cmp::neq);
+  ind_t sz{_shape[1]}, st{_stride[1]};
+  for (ind_t i=1; i&lt;_shape[0]; ++i){
+    bool isu{true};
+    for (ind_t j=0; j&lt;i; ++j){
+      isu &amp;= op(sz, this-&gt;ptr(i), st, this-&gt;ptr(j), st);
+      if (!isu) break;
+    }
+    out.push_back(isu);
+  }
+  return out;
+}
+template&lt;class T&gt;
+std::vector&lt;ind_t&gt;
+Array&lt;T&gt;::unique_idx() const{
+  assert(2==this-&gt;ndim());
+  if (_shape[0] &lt; 1u) return std::vector&lt;ind_t&gt;();
+  std::vector&lt;ind_t&gt; out(1u, 0u);
+  out.reserve(_shape[0]);
+  brille::Comparer&lt;T,T&gt; op(brille::cmp::eq);
+  ind_t sz{_shape[1]}, st{_stride[1]};
+  for (ind_t i=1; i&lt;_shape[0]; ++i){
+    ind_t idx{i};
+    for (ind_t j=0; j&lt;i; ++j)
+    if(j==out[j] &amp;&amp; op(sz, this-&gt;ptr(i), st, this-&gt;ptr(j), st)){
+      idx=j;
+      break;
+    }
+    out.push_back(idx);
+  }
+  return out;
+}
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::unique() const {
+  std::vector&lt;bool&gt; isu = this-&gt;is_unique();
+  size_t u_count = std::count(isu.begin(), isu.end(), true);
+  shape_t osize{_shape};
+  osize[0] = static_cast&lt;ind_t&gt;(u_count);
+  Array&lt;T&gt; out(osize, _stride);
+  for (ind_t i=0,u=0; i&lt;_shape[0]; ++i) if (isu[i]) out.set(u++, this-&gt;view(i));
+  return out;
+}
+template&lt;class T&gt;
+T Array&lt;T&gt;::dot(ind_t i, ind_t j) const {
+  assert(2==this-&gt;ndim());
+  assert(i&lt;_shape[0]);
+  assert(j&lt;_shape[0]);
+  ind_t sz{_shape[1]}, st{_stride[1]};
+  std::vector&lt;T&gt; prods(sz,0);
+  brille::RawBinaryOperator&lt;T&gt; prod(brille::ops::times);
+  // perform elementwise multiplication on the views of i and j
+  prod(sz, prods.data(), 1u, this-&gt;ptr(i), st, this-&gt;ptr(j), st);
+  // find the sum of the products
+  // std::reduce can do this in parallel but gcc&lt;v9.3 does not implement all of C++17
+  return std::accumulate(prods.begin(), prods.end(), T(0));
+
+  // auto vi = this-&gt;view(i).valItr();
+  // auto vj = this-&gt;view(j).valItr();
+  // return std::transform(vi.begin() vi.end(), vj.begin(), vj.end(), T(0), std::multiples&lt;T&gt;, std::plus&lt;T&gt;);
+}
+template&lt;class T&gt;
+T Array&lt;T&gt;::norm(ind_t i) const {
+  return std::sqrt(this-&gt;dot(i,i));
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt;
+Array&lt;T&gt;::operator-() const{
+  Array&lt;T&gt; neg(_shape, _stride);
+  for (auto s: SubIt(_shape)) neg[s] = -_data[this-&gt;s2l_d(s)];
+  return neg;
+}
+
+
+template&lt;class T&gt;
+template&lt;typename I, typename&gt;
+void Array&lt;T&gt;::permute(std::vector&lt;I&gt;&amp; p){
+  std::vector&lt;I&gt; s=p, o(_shape[0]);
+  std::iota(o.begin(), o.end(), 0u);
+  std::sort(s.begin(), s.end());
+  debug_update_if(!std::includes(o.begin(),o.end(),s.begin(),s.end()),&quot;The permutation vector &quot;,p,&quot; is invalid. Expected permutation of &quot;,o);
+  // get the inverse permutation to enable element swapping:
+  for (size_t i=0; i&lt;p.size(); ++i) s[p[i]] = i;
+  // perform the swaps until we have no more to do:
+  for (size_t i=0; i&lt;_shape[0];){
+    if (s[i]!=i){
+      this-&gt;swap(i,s[i]);
+      std::swap(s[i], s[s[i]]);
+    } else{
+      ++i;
+    }
+  }
+  debug_update_if(!std::is_sorted(s.begin(),s.end()), &quot;Undoing the permutation &quot;,p,&quot; failed. End result is &quot;,s);
+}
+
+template&lt;class T&gt;
+bool Array&lt;T&gt;::swap(const ind_t a, const ind_t b){
+  assert(a&lt;_shape[0] &amp;&amp; b&lt;_shape[0]);
+  shape_t sub{_shape};
+  sub[0] = a; // fix the 0th index to &#39;a&#39; in the iterator
+  auto itr = SubIt&lt;ind_t&gt;(_shape, sub);
+  for (auto aidx: itr){
+    // for each of the [a,...] subscripted indices, construct [b,...]
+    shape_t bidx{aidx};
+    bidx[0] = b;
+    // precalculate the offset/stride/shaped subscripts:
+    auto sa = this-&gt;s2l_d(aidx);
+    auto sb = this-&gt;s2l_d(bidx);
+    // perform the actual swap:
+    T store = _data[sa];
+    _data[sa] = _data[sb];
+    _data[sb] = store;
+  }
+  return true;
+}
+template&lt;class T&gt;
+bool Array&lt;T&gt;::swap(ind_t i, ind_t a, ind_t b){
+  assert(this-&gt;ndim() == 2 &amp;&amp; i &lt; _shape[0] &amp;&amp; a &lt; _shape[1] &amp;&amp; b &lt; _shape[1]);
+  shape_t ia{i,a}, ib{i,b};
+  T store = _data[this-&gt;s2l_d(ia)];
+  _data[this-&gt;s2l_d(ia)] = _data[this-&gt;s2l_d(ib)];
+  _data[this-&gt;s2l_d(ib)] = store;
+  return true;
+}
+
+template&lt;class T&gt;
+std::vector&lt;T&gt; Array&lt;T&gt;::to_std() const {
+  std::vector&lt;T&gt; out;
+  for (auto x: this-&gt;valItr()) out.push_back(x);
+  return out;
+}
+
+template&lt;class T&gt;
+T* Array&lt;T&gt;::ptr(){
+  shape_t idx(_shape.size(), 0);
+  return _data + s2l_d(idx);
+}
+template&lt;class T&gt;
+T* Array&lt;T&gt;::ptr(const ind_t i0){
+  assert(i0 &lt; _shape[0]);
+  shape_t idx(_shape.size(), 0);
+  idx[0] = i0;
+  return _data + s2l_d(idx);
+}
+template&lt;class T&gt;
+template&lt;class ... Subs, class&gt;
+T* Array&lt;T&gt;::ptr(const ind_t i0, Subs... subscripts){
+  const size_t nsub = 1+sizeof...(Subs);
+  if (nsub != this-&gt;ndim()) throw std::runtime_error(&quot;Wrong number of subscripts for value access&quot;);
+  return this-&gt;ptr(brille::utils::make_vector(i0, subscripts...));
+}
+template&lt;class T&gt;
+T* Array&lt;T&gt;::ptr(const shape_t&amp; p){
+  assert(p.size() &lt;= _shape.size());
+  for (size_t i=0; i&lt;p.size(); ++i) assert(p[i] &lt; _shape[i]);
+  shape_t idx(_shape.size(), 0);
+  for (size_t i=0; i&lt;p.size(); ++i) idx[i] = p[i];
+  return _data + s2l_d(idx);
+}
+
+template&lt;class T&gt;
+const T* Array&lt;T&gt;::ptr() const {
+  shape_t idx(_shape.size(), 0);
+  return _data + s2l_d(idx);
+}
+template&lt;class T&gt;
+const T* Array&lt;T&gt;::ptr(const ind_t i0) const {
+  assert(i0 &lt; _shape[0]);
+  shape_t idx(_shape.size(), 0);
+  idx[0] = i0;
+  return _data + s2l_d(idx);
+}
+template&lt;class T&gt;
+template&lt;class ... Subs, class&gt;
+const T* Array&lt;T&gt;::ptr(const ind_t i0, Subs... subscripts) const {
+  const size_t nsub = 1+sizeof...(Subs);
+  if (nsub != this-&gt;ndim()) throw std::runtime_error(&quot;Wrong number of subscripts for value access&quot;);
+  return this-&gt;ptr(brille::utils::make_vector(i0, subscripts...));
+}
+template&lt;class T&gt;
+const T* Array&lt;T&gt;::ptr(const shape_t&amp; p) const {
+  assert(p.size() &lt;= _shape.size());
+  for (size_t i=0; i&lt;p.size(); ++i) assert(p[i] &lt; _shape[i]);
+  shape_t idx(_shape.size(), 0);
+  for (size_t i=0; i&lt;p.size(); ++i) idx[i] = p[i];
+  return _data + s2l_d(idx);
+}
+
+
+template&lt;class T&gt;
+T&amp; Array&lt;T&gt;::val(const ind_t i0){
+  assert(i0 &lt; _shape[0]);
+  shape_t idx(_shape.size(), 0);
+  idx[0] = i0;
+  return _data[s2l_d(idx)];
+}
+template&lt;class T&gt;
+template&lt;class ... Subs, class&gt;
+T&amp; Array&lt;T&gt;::val(const ind_t i0, Subs... subscripts){
+  const size_t nsub = 1+sizeof...(Subs);
+  if (nsub != this-&gt;ndim()) throw std::runtime_error(&quot;Wrong number of subscripts for value access&quot;);
+  return this-&gt;val(brille::utils::make_vector(i0, subscripts...));
+}
+template&lt;class T&gt;
+T&amp; Array&lt;T&gt;::val(const shape_t&amp; p){
+  assert(p.size() &lt;= _shape.size());
+  for (size_t i=0; i&lt;p.size(); ++i) assert(p[i] &lt; _shape[i]);
+  shape_t idx(_shape.size(), 0);
+  for (size_t i=0; i&lt;p.size(); ++i) idx[i] = p[i];
+  return _data[s2l_d(idx)];
+}
+template&lt;class T&gt; template&lt;typename I&gt;
+T&amp; Array&lt;T&gt;::val(std::initializer_list&lt;I&gt; l){
+  shape_t idx;
+  for (auto&amp; x: l) idx.emplace_back(x);
+  return this-&gt;val(idx);
+}
+
+template&lt;class T&gt;
+const T&amp; Array&lt;T&gt;::val(const ind_t i0) const {
+  assert(i0 &lt; _shape[0]);
+  shape_t idx(_shape.size(), 0);
+  idx[0] = i0;
+  return _data[s2l_d(idx)];
+}
+template&lt;class T&gt;
+template&lt;class ... Subs, class&gt;
+const T&amp; Array&lt;T&gt;::val(const ind_t i0, Subs... subscripts) const {
+  const size_t nsub = 1+sizeof...(Subs);
+  if (nsub != this-&gt;ndim()) throw std::runtime_error(&quot;Wrong number of subscripts for value access&quot;);
+  return this-&gt;val(brille::utils::make_vector(i0, subscripts...));
+}
+template&lt;class T&gt;
+const T&amp; Array&lt;T&gt;::val(const shape_t&amp; p) const {
+  assert(p.size() &lt;= _shape.size());
+  for (size_t i=0; i&lt;p.size(); ++i) assert(p[i] &lt; _shape[i]);
+  shape_t idx(_shape.size(), 0);
+  for (size_t i=0; i&lt;p.size(); ++i) idx[i] = p[i];
+  return _data[s2l_d(idx)];
+}
+template&lt;class T&gt; template&lt;typename I&gt;
+const T&amp; Array&lt;T&gt;::val(std::initializer_list&lt;I&gt; l) const {
+  shape_t idx;
+  for (auto&amp; x: l) idx.emplace_back(x);
+  return this-&gt;val(idx);
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::contiguous_copy() const {
+  if (this-&gt;is_contiguous()) return Array&lt;T&gt;(*this);
+  Array&lt;T&gt; out(_shape, this-&gt;calculate_stride(_shape));
+  for (auto x : SubIt&lt;ind_t&gt;(_shape)) out[x] = (*this)[x];
+  return out;
+}
+
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::contiguous_row_ordered_copy() const {
+  if (this-&gt;is_row_ordered() &amp;&amp; this-&gt;is_contiguous()) return Array&lt;T&gt;(*this);
+  // make sure we calculate a row-ordered stride:
+  shape_t st(_shape.size(), 1u);
+  for (size_t i=st.size()-1; i--;) st[i] = st[i+1]*_shape[i+1];
+  Array&lt;T&gt; out(_shape, st);
+  for (auto x : SubIt&lt;ind_t&gt;(_shape)) out[x] = (*this)[x];
+  return out;
+}
+
+// template&lt;class T&gt;
+// Array&lt;T&gt; Array&lt;T&gt;::squeeze() const {
+//   ind_t lin = sub2lin(_offset, _stride);
+//   shape_t n_off, n_str, n_shp;
+//   for (ind_t i=0; i&lt;_shape.size(); ++i) if (_shape[i] &gt; 1) {
+//     n_off.push_back(_offset[i]);
+//     n_str.push_back(_stride[i]);
+//     n_shp.push_back(_shape[i]);
+//   }
+//   if (n_shp.size() &lt; 1){
+//     n_off.push_back(lin);
+//     n_str.push_back(1u);
+//     n_shp.push_back(1u);
+//   }
+//   ind_t n_lin = sub2lin(n_off, n_str);
+//   if (n_lin &lt; lin) for (ind_t i=0; i&lt;n_shp.size(); ++i) if (1u == n_str[i]){
+//     n_off[i] += lin - n_lin;
+//     break;
+//   }
+//   if (sub2lin(n_off, n_str) != lin)
+//     throw std::runtime_error(&quot;Error determining correct offset in squeeze&quot;)
+//   return Array&lt;T&gt;(_data, _num, _own, _ref, n_off, n_shp, n_str, _mutable);
+// }
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::squeeze() const {
+  shape_t n_str, n_shp;
+  for (ind_t i=0; i&lt;_shape.size(); ++i) if (_shape[i] &gt; 1) {
+    n_str.push_back(_stride[i]);
+    n_shp.push_back(_shape[i]);
+  }
+  if (n_shp.size() &lt; 1){
+    n_str.push_back(1u);
+    n_shp.push_back(1u);
+  }
+  return Array&lt;T&gt;(_data, _num, _shift, _own, _ref, n_shp, n_str, _mutable);
+}
+
+// template&lt;class T&gt;
+// Array&lt;T&gt; Array&lt;T&gt;::squeeze(const ind_t ax) const {
+//   ind_t lin = sub2lin(_offset, _stride);
+//   shape_t n_off, n_str, n_shp;
+//   for (ind_t i=0; i&lt;_shape.size(); ++i) if (ax != i || _shape[i] &gt; 1) {
+//     n_off.push_back(_offset[i]);
+//     n_str.push_back(_stride[i]);
+//     n_shp.push_back(_shape[i]);
+//   }
+//   if (n_shp.size() &lt; 1){
+//     n_off.push_back(lin);
+//     n_str.push_back(1u);
+//     n_shp.push_back(1u);
+//   }
+//   ind_t n_lin = sub2lin(n_off, n_str);
+//   if (n_lin &lt; lin) for (ind_t i=0; i&lt;n_shp.size(); ++i) if (1u == n_str[i]){
+//     n_off[i] += lin - n_lin;
+//     break;
+//   }
+//   if (sub2lin(n_off, n_str) != lin)
+//     throw std::runtime_error(&quot;Error determining correct offset in squeeze&quot;)
+//   return Array&lt;T&gt;(_data, _num, _own, _ref, n_off, n_shp, n_str, _mutable);
+// }
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::squeeze(const ind_t ax) const {
+  shape_t n_str, n_shp;
+  for (ind_t i=0; i&lt;_shape.size(); ++i) if (ax != i || _shape[i] &gt; 1) {
+    n_str.push_back(_stride[i]);
+    n_shp.push_back(_shape[i]);
+  }
+  if (n_shp.size() &lt; 1){
+    n_str.push_back(1u);
+    n_shp.push_back(1u);
+  }
+  return Array&lt;T&gt;(_data, _num, _shift, _own, _ref, n_shp, n_str, _mutable);
+}
+
+// template&lt;class T&gt;
+// Array&lt;T&gt; Array&lt;T&gt;::slice(const ind_t i) const {
+//   if (i&lt;_shape[0]){
+//     // update the offset along the first dimension to include i
+//     shape_t t_off{_offset};
+//     t_off[0] += i;
+//     // calculate the linear offset
+//     ind_t lin = sub2lin(t_off, _stride);
+//     // pull together the remaining dimension(s)
+//     shape_t n_off, n_str, n_shp;
+//     for (ind_t i=1; i&lt;_shape.size(); ++i){
+//       n_off.push_back(_offset[i]);
+//       n_str.push_back(_stride[i]);
+//       n_shp.push_back(_shape[i]);
+//     }
+//     // ensuring that we keep at least one
+//     if (n_shp.size() &lt; 1){
+//       n_off.push_back(lin);
+//       n_str.push_back(1u);
+//       n_shp.push_back(1u);
+//     }
+//     // make sure the total linear offset remains the same
+//     ind_t n_lin = sub2lin(n_off, n_str);
+//     if (n_lin &lt; lin) for (ind_t i=0; i&lt;n_shp.size(); ++i) if (1u == n_str[i]){
+//       n_off[i] += lin - n_lin;
+//       break;
+//     }
+//     if (sub2lin(n_off, n_str) != lin)
+//       throw std::runtime_error(&quot;Error determinging correct offset in slice&quot;);
+//     return Array&lt;T&gt;(_data, _num, _own, _ref, n_off, n_shp, n_str, _mutable);
+//   }
+//   throw std::runtime_error(&quot;Array index too large&quot;);
+// }
+template&lt;class T&gt;
+Array&lt;T&gt; Array&lt;T&gt;::slice(const ind_t i) const {
+  if (i&lt;_shape[0]){
+    // update the offset along the first dimension to include i
+    ind_t n_shift{_shift + i*_stride[0]};
+    // pull together the remaining dimension(s)
+    shape_t n_str, n_shp;
+    for (ind_t i=1; i&lt;_shape.size(); ++i){
+      n_str.push_back(_stride[i]);
+      n_shp.push_back(_shape[i]);
+    }
+    // ensuring that we keep at least one
+    if (n_shp.size() &lt; 1){
+      n_str.push_back(1u);
+      n_shp.push_back(1u);
+    }
+    return Array&lt;T&gt;(_data, _num, n_shift, _own, _ref, n_shp, n_str, _mutable);
+  }
+  throw std::runtime_error(&quot;Array index too large&quot;);
+}
+
+
+#define SCALAR_INPLACE_OP(X) template&lt;class T&gt;\
+Array&lt;T&gt;&amp; Array&lt;T&gt;::operator X (const T&amp; val){\
+  if (!this-&gt;ismutable()) throw std::runtime_error(&quot;Immutable Arrays can not be modified&quot;);\
+  ind_t nel=this-&gt;numel();\
+  ind_t idx{0};\
+  for (ind_t i=0; i&lt;nel; ++i){\
+    idx = this-&gt;l2l_d(i);\
+    _data[idx] X val;\
+  }\
+  return *this;\
+}
+SCALAR_INPLACE_OP(+=)
+SCALAR_INPLACE_OP(-=)
+SCALAR_INPLACE_OP(*=)
+SCALAR_INPLACE_OP(/=)
+#undef SCALAR_INPLACE_OP
+
+template&lt;class T&gt;
+bool broadcast_shape_check(const std::vector&lt;T&gt;&amp; a, const std::vector&lt;T&gt;&amp;b){
+  bool ok = a.size() == b.size();
+  ok &amp;= brille::approx::vector(a.size(), a.data(), b.data());
+  if (!ok){
+    std::string msg = &quot;In place broadcasting is not possible for { &quot;;
+    for (auto x: a) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;} shaped Array and { &quot;;
+    for (auto x: b) msg += std::to_string(x) + &quot; &quot;;
+    msg += &quot;} shaped operand&quot;;
+    throw std::runtime_error(msg);
+  }
+  return ok;
+}
+
+#define ARRAY_INPLACE_OP(X) template&lt;class T&gt; template&lt;class R&gt;\
+Array&lt;T&gt;&amp; Array&lt;T&gt;::operator X (const Array&lt;R&gt;&amp; val){\
+  if (!this-&gt;ismutable()) throw std::runtime_error(&quot;Immutable Arrays can not be modified&quot;);\
+  BroadcastIt&lt;ind_t&gt; itr(_shape, val.shape());\
+  broadcast_shape_check(_shape, itr.shape());\
+  for (auto [ox, tx, vx]: itr) _data[this-&gt;s2l_d(tx)] X val[vx];\
+  return *this;\
+}
+ARRAY_INPLACE_OP(+=)
+ARRAY_INPLACE_OP(-=)
+ARRAY_INPLACE_OP(*=)
+ARRAY_INPLACE_OP(/=)
+#undef ARRAY_INPLACE_OP
+
+
+/*
+(Temporarily) Define basic Array&lt;T&gt; OP Array&lt;R&gt; here
+*/
+// &#39;pure&#39; Array&lt;T&gt; [+-*/] &#39;pure&#39; Array&lt;R&gt;
+#define ARRAY_ARRAY_OP(X)\
+template&lt;class T, class R, class S = std::common_type_t&lt;T,R&gt;&gt;\
+Array&lt;S&gt;\
+operator X (const Array&lt;T&gt;&amp; a, const Array&lt;R&gt;&amp; b){\
+  auto itr = a.broadcastItr(b);\
+  Array&lt;S&gt; out(itr.shape());\
+  for (auto [ox, ax, bx]: itr) out[ox] = a[ax] X b[bx];\
+  return out;\
+}
+ARRAY_ARRAY_OP(+)
+ARRAY_ARRAY_OP(-)
+ARRAY_ARRAY_OP(*)
+ARRAY_ARRAY_OP(/)
+#undef ARRAY_ARRAY_OP
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

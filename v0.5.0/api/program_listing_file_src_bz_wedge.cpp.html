@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File bz_wedge.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File bz_wedge.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_bz_wedge.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-bz-wedge-cpp">
+<span id="program-listing-file-src-bz-wedge-cpp"></span><h1>Program Listing for File bz_wedge.cpp<a class="headerlink" href="#program-listing-for-file-bz-wedge-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_bz_wedge.cpp.html#file-src-bz-wedge-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bz_wedge.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
+<span class="cm">//</span>
+<span class="cm">// This file is part of brille.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">// any later version.</span>
+<span class="cm">//</span>
+<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">// See the GNU Affero General Public License for more details.</span>
+<span class="cm">//</span>
+<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;bz.hpp&quot;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">wedge_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">pbv</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">pok</span><span class="p">){</span>
+  <span class="n">debug_exec</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">update_msg</span><span class="p">;)</span>
+  <span class="c1">// Get the full pointgroup symmetry information</span>
+  <span class="n">PointSymmetry</span> <span class="n">fullps</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="p">);</span>
+  <span class="c1">// And use it to find only the highest-order rotation operation along each</span>
+  <span class="c1">// unique stationary axis.</span>
+  <span class="c1">// PointSymmetry rotps = fullps.nfolds(1); // 1 to request only orders&gt;1</span>
+  <span class="n">PointSymmetry</span> <span class="n">rotps</span> <span class="o">=</span> <span class="n">fullps</span><span class="p">.</span><span class="n">higher</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// 1 to request only orders&gt;1</span>
+  <span class="c1">// Get the vectors pointing to each full Brillouin zone facet cetre</span>
+  <span class="k">auto</span> <span class="n">xyz</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_half_edges</span><span class="p">());</span>
+
+  <span class="c1">// debug_update(&quot;xyz=\n&quot;, xyz.to_string());</span>
+
+  <span class="c1">// if rotps is empty, there are no 2+-fold rotations, act like we have ̄1:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;No 2+-fold rotation operations&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">xyz</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span> <span class="c1">// for ̄1, assigns this-&gt;ir_polyhedron</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">int</span> <span class="n">max_order</span><span class="o">=</span><span class="n">rotps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// since the rotations are sorted</span>
+
+  <span class="c1">// rotps is sorted in increasing rotation-order order, but we want to sort</span>
+  <span class="c1">// by increasing stationary-axis length (so that, e.g, [100] is dealt with</span>
+  <span class="c1">// before [111]). We could ammend the PointSymmetry.sort method but since the</span>
+  <span class="c1">// rotations are defined in a lattice that would only work for cubic systems;</span>
+  <span class="c1">// e.g., in a hexagonal lattice [100], [010], and [1-10] are all the same</span>
+  <span class="c1">// length. So we need to create a sorting permutation here for rotps to use.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">perm</span><span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// 0u, 1u, 2u,...</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">size_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">){</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">lq</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">2u</span><span class="p">);</span>
+    <span class="n">lq</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0u</span><span class="p">,</span> <span class="n">rotps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+    <span class="n">lq</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span> <span class="n">rotps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">lq</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="mi">0u</span><span class="p">,</span><span class="mi">0u</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">lq</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span><span class="mi">1u</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="c1">// with the permutation found, permute rotps:</span>
+  <span class="n">rotps</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="n">perm</span><span class="p">);</span>
+
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Rotations:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rotps</span><span class="p">.</span><span class="n">getall</span><span class="p">());</span>
+
+  <span class="c1">// make lattice vectors from the stationary axes</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">z</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">from_std</span><span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">axes</span><span class="p">()));</span>
+  <span class="c1">// Find ̂zᵢ⋅ẑⱼ</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dotij</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="kt">double</span> <span class="n">dottmp</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+    <span class="n">dottmp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">/</span><span class="n">z</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="n">z</span><span class="p">.</span><span class="n">norm</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+    <span class="n">dotij</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">dottmp</span><span class="p">,</span><span class="mf">0.</span><span class="p">)</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">dottmp</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;dot(i,j) flag</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">dotij</span><span class="p">);</span>
+
+  <span class="c1">// Find a suitable in-rotation-plane vector for each stationary axis</span>
+  <span class="c1">// LQVec&lt;double&gt; x(this-&gt;outerlattice, bArray&lt;double&gt;(rotps.perpendicular_axes()));</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">from_std</span><span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">perpendicular_axes</span><span class="p">()));</span>
+  <span class="c1">// or pick one of the BZ facet-points if the basis vector preffered flag</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">pbv</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">xyz</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">xyz</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">z</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)){</span>
+    <span class="n">x</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">xyz</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+    <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/* Two rotations with ẑᵢ⋅ẑⱼ≠0 should have (Rⁿx̂ᵢ)⋅(Rᵐx̂ⱼ)=1 for some n,m.</span>
+<span class="cm">     To start, assume that n and m are 0 and find the x̂ᵢ such that x̂ᵢ⋅(ẑᵢ×ẑⱼ)=1</span>
+<span class="cm">  */</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">handled</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="kt">bool</span> <span class="n">flag</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+  <span class="c1">// if zᵢ and zⱼ are neither parallel or perpendicular</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">dotij</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">handled</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pbv</span> <span class="cm">/*basis vectors not preferred*/</span><span class="p">)</span> <span class="n">x</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">z</span><span class="p">.</span><span class="n">cross</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">handled</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">x</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="n">x</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+      <span class="n">handled</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">handled</span><span class="p">[</span><span class="n">j</span><span class="p">]){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pbv</span> <span class="cm">/*basis vectors not preferred*/</span><span class="p">){</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">z</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">))).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span><span class="mf">1e-10</span><span class="p">);</span>
+        <span class="c1">// if both or neither parallel is ok (pok) and zⱼ∥xᵢ, xⱼ=zᵢ×zⱼ; otherwise xⱼ=xᵢ</span>
+        <span class="c1">// x.set(j, (pok^u_parallel_v) ? z.cross(i,j) : x.view(i));</span>
+        <span class="n">x</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">pok</span><span class="o">||</span><span class="n">flag</span><span class="p">)</span> <span class="o">?</span> <span class="n">x</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="n">z</span><span class="p">.</span><span class="n">cross</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">x</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">x</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+      <span class="n">handled</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span> <span class="c1">// complete a right-handed coordinate system</span>
+  <span class="n">x</span><span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="n">y</span><span class="o">=</span> <span class="n">y</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+  <span class="c1">// debug_update(&quot;    z                x                        y           &quot;);</span>
+  <span class="c1">// debug_update(&quot;--------- -----------------------  -----------------------&quot;;)</span>
+  <span class="c1">// debug_update(z.append(1,x).append(1,y).to_string()); // z, x&amp;y dont have the same type so can&#39;t be appended :(</span>
+
+  <span class="cm">/* Each symmetry operation in rotps is guaranteed to be a proper rotation,</span>
+<span class="cm">     but there is no guarantee that it represents a *right handed* rotation.</span>
+<span class="cm">     For the normal vectors to point the right way, we need to know if it is. */</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">is_right_handed</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">Rv</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// to ensure we have the same lattice, make a copy</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">z</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">){</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">Rv</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">rotps</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">x</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">Rv</span><span class="p">).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">lt</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span>
+      <span class="n">is_right_handed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Right handed:&quot;</span><span class="p">,</span> <span class="n">is_right_handed</span><span class="p">);</span>
+
+  <span class="cm">/* We now have for every symmetry operation a consistent vector in the</span>
+<span class="cm">     rotation plane. We can now use z, x, and rotps to find and add the wedge</span>
+<span class="cm">     normals. We should find one normal for each 2-fold axis and two normals</span>
+<span class="cm">     for each 3-, 4-, and 6-fold axis. Plus we need space for one extra normal</span>
+<span class="cm">     if there is only one rotation axis and the pointgroup has inversion.     */</span>
+  <span class="kt">size_t</span> <span class="n">found</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">expected</span> <span class="o">+=</span> <span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">normals</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">expected</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+    <span class="c1">// We are assuming the system has inversion symmetry. We handle the case</span>
+    <span class="c1">// where it doesn&#39;t elsewhere.</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_normal_check</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">normals</span><span class="p">,</span> <span class="n">found</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">found</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;About to view normals 0:0 which is not allowed&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">found</span><span class="p">));</span> <span class="c1">// updates this-&gt;wedge_normals</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">accepted</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">order</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vi</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">max_order</span><span class="p">),</span> <span class="n">zi</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vxz</span><span class="p">,</span> <span class="n">zxv</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">rotps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">is_right_handed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">?</span> <span class="n">z</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="o">-</span><span class="n">z</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">rotps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Order &quot;</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="s">&quot;, z=&quot;</span><span class="p">,</span><span class="n">zi</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+    <span class="n">accepted</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">vi</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span> <span class="c1">// do something better here?</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">order</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">vi</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">rotps</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">vi</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+    <span class="n">zxv</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">zi</span><span class="p">,</span> <span class="n">vi</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">order</span><span class="p">));</span> <span class="c1">// order is guaranteed &gt; 0</span>
+    <span class="n">zxv</span> <span class="o">/=</span> <span class="n">norm</span><span class="p">(</span><span class="n">zxv</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;          R^n v                 z x (R^n v)      &quot;</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;------------------------ ------------------------&quot;</span><span class="p">);</span>
+    <span class="n">debug_update</span><span class="p">(</span> <span class="n">vi</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">zxv</span><span class="p">).</span><span class="n">to_string</span><span class="p">()</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">2</span><span class="o">==</span><span class="n">order</span><span class="p">){</span>
+      <span class="c1">// one-normal version of wedge_normal_check allows for either ±n</span>
+      <span class="c1">// → no need to check z×Rv = z×(-x) = -(z×x)</span>
+      <span class="n">accepted</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_normal_check</span><span class="p">(</span><span class="n">zxv</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">normals</span><span class="p">,</span> <span class="n">found</span><span class="p">);</span>
+      <span class="cm">/* if we couldn&#39;t add a 2-fold normal, we have more work to do. */</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">accepted</span><span class="p">){</span>
+        <span class="c1">// for now, hope that 90° away is good enough</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_normal_check</span><span class="p">(</span><span class="n">vi</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">normals</span><span class="p">,</span> <span class="n">found</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="cm">/* Consecutive acceptable normals *must* point into the irreducible wedge</span>
+<span class="cm">         otherwise they destroy the polyhedron.</span>
+<span class="cm">         Check between each pair of in-plane vectors (Rⁿx, Rⁿ⁺¹x),</span>
+<span class="cm">         for n=[0,order) with the last check (Rᵒ⁻¹x,R⁰x)≡(Rᵒ⁻¹x,x)            */</span>
+      <span class="c1">// if (this-&gt;isinside_wedge(zi, /*constructing=*/false).getvalue(0)){</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">order</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">accepted</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+          <span class="n">accepted</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_normal_check</span><span class="p">(</span><span class="n">zxv</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="o">-</span><span class="n">zxv</span><span class="p">.</span><span class="n">extract</span><span class="p">((</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">order</span><span class="p">),</span> <span class="n">normals</span><span class="p">,</span> <span class="n">found</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="c1">// } // isinside_wedge</span>
+    <span class="p">}</span> <span class="c1">// order&gt;2</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">found</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;about to view normals 0:0, which is not allowed&quot;</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">found</span><span class="p">));</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;wedge_search finished&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">bArray</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">keep_if</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">normals</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">){</span>
+  <span class="c1">// determine whether we should keep points based on the provided normals.</span>
+  <span class="c1">// We want to only keep those points in the positive half-space for any one</span>
+  <span class="c1">// normal, but if all normals contribute to reduce the remaining points to</span>
+  <span class="c1">// lie in a single plane we instead want to keep all points.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">nop</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// number of not-on-plane points</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">nop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">points</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span><span class="mf">0.</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
+  <span class="c1">// If there are no planes with 0 off-plane points, divide the space</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">keep</span><span class="p">(</span><span class="n">points</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1u</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">nop</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nop</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0u</span><span class="p">)</span><span class="o">==</span><span class="n">nop</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">points</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">keep</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">,</span> <span class="n">points</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">ge</span><span class="p">,</span><span class="mf">0.</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">keep</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">special_2_folds</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">special_mirrors</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">sort_by_length</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">sort_one_sym</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pmsg</span> <span class="o">=</span> <span class="s">&quot;BrillouinZone::wedge_brute_force(&quot;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">special_2_folds</span><span class="p">)</span> <span class="n">pmsg</span> <span class="o">+=</span> <span class="s">&quot;2-folds&quot;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">special_2_folds</span> <span class="o">&amp;&amp;</span> <span class="n">special_mirrors</span><span class="p">)</span> <span class="n">pmsg</span> <span class="o">+=</span> <span class="s">&quot;,&quot;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">special_mirrors</span><span class="p">)</span> <span class="n">pmsg</span> <span class="o">+=</span> <span class="s">&quot;mirrors&quot;</span><span class="p">;</span>
+  <span class="n">pmsg</span> <span class="o">+=</span> <span class="s">&quot;)&quot;</span><span class="p">;</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Start &quot;</span><span class="p">,</span><span class="n">pmsg</span><span class="p">);</span>
+  <span class="n">debug_exec</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">;)</span>
+  <span class="c1">// Grab the pointgroup symmetry operations</span>
+  <span class="n">PointSymmetry</span> <span class="n">fullps</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="p">);</span>
+  <span class="c1">// Now restrict the symmetry operations to those with order &gt; 1.</span>
+  <span class="n">PointSymmetry</span> <span class="n">ps</span> <span class="o">=</span> <span class="n">fullps</span><span class="p">.</span><span class="n">higher</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="c1">// if the full pointgroup contains only 𝟙 (and -𝟙) then ps is empty and there</span>
+  <span class="c1">// this algorithm can not be used:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">fullps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// 𝟙 &amp; -𝟙 → P -1 triclinic spacegroup</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_triclinic</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ir_polyhedron</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Get and combine the characteristic points of the first Brillouin zone:</span>
+  <span class="c1">// The face centres, face corners, and mid-face-edge points.</span>
+  <span class="k">auto</span> <span class="n">special</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_half_edges</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">perm</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0u</span><span class="p">);</span> <span class="c1">// 0u, 1u, 2u,...</span>
+    <span class="c1">// ps is sorted in increasing rotation-order order, but we want to sort</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">sort_by_length</span><span class="p">){</span>
+      <span class="c1">// by increasing stationary-axis length (so that, e.g, [100] is dealt with</span>
+      <span class="c1">// before [111]).</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">size_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">){</span>
+          <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">lq</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">2u</span><span class="p">);</span>
+          <span class="n">lq</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0u</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+          <span class="n">lq</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+          <span class="k">return</span> <span class="n">lq</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="mi">0u</span><span class="p">,</span><span class="mi">0u</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">lq</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span><span class="mi">1u</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// by decreasing isometry so that we deal with rotoinversions last</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">perm</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">perm</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">size_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">b</span><span class="p">){</span>
+        <span class="k">return</span> <span class="n">ps</span><span class="p">.</span><span class="n">isometry</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ps</span><span class="p">.</span><span class="n">isometry</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+  <span class="n">ps</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="n">perm</span><span class="p">);</span> <span class="c1">// ps now sorted</span>
+
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">keep</span><span class="p">;</span>
+
+  <span class="c1">// Keep track of *which* normals go into determining the irreducible wedge:</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cutting_normals</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="kt">size_t</span> <span class="n">n_cut</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">sym_unused</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+  <span class="c1">// deal with any two-fold axes along êᵢ first:</span>
+  <span class="c1">// The stationary vector of each rotation is a real space vector!</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="mi">1u</span><span class="p">);</span><span class="c1">// must be int since ps.axis returns array&lt;int,3&gt;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">nrm</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;&gt;</span> <span class="n">eiv</span><span class="p">{{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">}},{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}}};</span>
+  <span class="k">auto</span> <span class="n">eiv_array</span> <span class="o">=</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">from_std</span><span class="p">(</span><span class="n">eiv</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">eis</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">eiv_array</span><span class="p">);</span>
+  <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">reis</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">eiv_array</span><span class="p">);</span>
+  <span class="kt">size_t</span> <span class="n">is_nth_ei</span><span class="p">;</span>
+
+  <span class="n">debug_update_if</span><span class="p">(</span><span class="n">special_2_folds</span><span class="p">,</span><span class="s">&quot;Deal with 2-fold rotations with axes along highest-symmetry directions first&quot;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">special_2_folds</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">isometry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">){</span>
+    <span class="n">vec</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="c1">// First check if this stationary axis is along a reciprocal space vector</span>
+    <span class="n">is_nth_ei</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">eis</span><span class="p">,</span> <span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">())).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">).</span><span class="n">first</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_nth_ei</span> <span class="o">&lt;</span> <span class="mi">9</span> <span class="cm">/* This is less than great practice */</span><span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;2-fold axis &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot; is ei* No. &quot;</span><span class="p">,</span><span class="n">is_nth_ei</span><span class="p">);</span>
+      <span class="kt">size_t</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">;</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="n">is_nth_ei</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="cm">/* (100)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="cm">/* n = (001)×(100)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="cm">/* (010)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="cm">/* n = (100)×(010)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="cm">/* (001)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="cm">/* n = (010)×(001)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="cm">/* (110)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="cm">/* n = (110)×(001)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span> <span class="cm">/* (1̄10)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span> <span class="cm">/* n = (001)×(1̄10)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">5</span><span class="o">:</span> <span class="cm">/* (101)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span> <span class="cm">/* n = (010)×(101)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">6</span><span class="o">:</span> <span class="cm">/* (011)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">6</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="cm">/* n = (011)×(100)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">7</span><span class="o">:</span> <span class="cm">/* (10̄1)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">7</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="cm">/* n = (10̄1)×(010)⋆ */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">8</span><span class="o">:</span> <span class="cm">/* (01̄1)⋆ */</span> <span class="n">e1</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span> <span class="cm">/* n = (100)×(01̄1)* */</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="n">e1</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">e2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="c1">// The plane normal is the cross product of the first real space vector</span>
+      <span class="c1">// (expressed in units of the reciprocal lattice) and the second</span>
+      <span class="c1">// reciprocal space vector.</span>
+      <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">reis</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">e1</span><span class="p">).</span><span class="n">star</span><span class="p">(),</span> <span class="n">eis</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">e2</span><span class="p">)));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">eis</span><span class="p">,</span> <span class="n">nrm</span><span class="p">)).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+        <span class="c1">// keep any special points beyond the bounding plane</span>
+        <span class="n">keep</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">ge</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Keeping special points with &quot;</span><span class="p">,</span><span class="n">nrm</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; dot p &gt;= 0:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">special</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="n">keep</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+        <span class="n">special</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+        <span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">cutting_normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">n_cut</span><span class="o">++</span><span class="p">,</span> <span class="n">nrm</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// Stationary axis along real space basis vector</span>
+    <span class="n">is_nth_ei</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">reis</span><span class="p">,</span> <span class="n">vec</span><span class="p">)).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">).</span><span class="n">first</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">is_nth_ei</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;2-fold axis &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot; is ei No. &quot;</span><span class="p">,</span><span class="n">is_nth_ei</span><span class="p">);</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="n">is_nth_ei</span><span class="p">){</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">eiv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="k">break</span><span class="p">;</span> <span class="cm">/* (100) → n = (010)* */</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">eiv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="k">break</span><span class="p">;</span> <span class="cm">/* (010) → n = (100)* */</span>
+      <span class="p">}</span>
+      <span class="c1">// keep any special points beyond the bounding plane</span>
+      <span class="n">keep</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">ge</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Keeping special points with &quot;</span><span class="p">,</span><span class="n">nrm</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; dot p &gt;= 0:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">special</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">keep</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+      <span class="n">special</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+      <span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="n">cutting_normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">n_cut</span><span class="o">++</span><span class="p">,</span> <span class="n">nrm</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">debug_update_if</span><span class="p">(</span><span class="n">special_mirrors</span><span class="p">,</span><span class="s">&quot;Deal with mirror planes&quot;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">special_mirrors</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">isometry</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">==-</span><span class="mi">2</span><span class="p">){</span>
+    <span class="n">vec</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">i</span><span class="p">));</span> <span class="c1">// the mirror plane normal is in the direct lattice</span>
+    <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">());</span> <span class="c1">// and we want the normal in the reciprocal lattice</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">ge</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="c1">// we need at least three points (plus Γ) to define a polyhedron</span>
+    <span class="c1">// If we are not keeping three points, check if applying the mirror plane</span>
+    <span class="c1">// pointing the other way works for us:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">keep</span><span class="p">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">){</span>
+      <span class="n">nrm</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">nrm</span><span class="p">;</span> <span class="c1">// - change nrm since we save it for later</span>
+      <span class="n">keep</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">ge</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">keep</span><span class="p">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Keeping special points with</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nrm</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="s">&quot; dot p &gt;=0:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">special</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">keep</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+      <span class="n">special</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+      <span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="n">cutting_normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">n_cut</span><span class="o">++</span><span class="p">,</span> <span class="n">nrm</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Now figure out how all special points are related for each symmetry operation&quot;</span><span class="p">);</span>
+  <span class="c1">// Find which points are mapped onto equivalent points by each symmetry operation</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">one_sym</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">one_type</span><span class="p">,</span> <span class="n">type_order</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">unfound</span><span class="p">(</span><span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">),</span> <span class="n">type_unfound</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Unused symmetry &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot; with order &quot;</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">one_sym</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">b</span><span class="p">:</span> <span class="n">unfound</span><span class="p">)</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">unfound</span><span class="p">[</span><span class="n">j</span><span class="p">]){</span>
+      <span class="n">one_type</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+      <span class="n">one_type</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+      <span class="n">unfound</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">unfound</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">special</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">transpose</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="o">-</span><span class="n">ps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">))){</span> <span class="c1">// -order checks all possible rotations</span>
+      <span class="c1">// if (unfound[k] &amp;&amp; special.match(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations</span>
+        <span class="n">one_type</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+        <span class="n">unfound</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Point equivalent to &quot;</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="s">&quot; for symmetry &quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s">&quot;:&quot;</span><span class="p">,</span><span class="n">one_type</span><span class="p">);</span>
+      <span class="c1">// sort the equivalent points by their relative order for this operation</span>
+      <span class="c1">// such that Rⁱj ≡ type_order[i]</span>
+      <span class="n">type_order</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+      <span class="n">type_order</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">type_order</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span> <span class="c1">// set default to (non-indexable) size of the special array</span>
+      <span class="n">type_unfound</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span> <span class="n">type_unfound</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">type_unfound</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">one_type</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">o</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">o</span><span class="o">&lt;</span><span class="n">ps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> <span class="o">++</span><span class="n">o</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">one_type</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">type_unfound</span><span class="p">[</span><span class="n">k</span><span class="p">]){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">special</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">one_type</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">j</span><span class="p">,</span> <span class="n">transpose</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">o</span><span class="p">)){</span>
+        <span class="c1">// if (special.match(one_type[k], j, transpose(ps.get_proper(i)), o)){</span>
+          <span class="n">type_order</span><span class="p">[</span><span class="n">o</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_type</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+          <span class="n">type_unfound</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="c1">// and store the sorted equivalent indices</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Which are sorted by their rotation order:&quot;</span><span class="p">,</span><span class="n">type_order</span><span class="p">);</span>
+      <span class="n">one_sym</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">type_order</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// sort one_sym by the number of valid (indexable) equivalent points</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sort_one_sym</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">one_sym</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">one_sym</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+        <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">){</span>
+          <span class="kt">size_t</span> <span class="n">as</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+          <span class="kt">size_t</span> <span class="n">bs</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+          <span class="k">return</span> <span class="n">as</span> <span class="o">&gt;</span> <span class="n">bs</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">size_t</span> <span class="n">keep_count</span><span class="p">;</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">pt0</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">1u</span><span class="p">),</span> <span class="n">pt1</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">s</span><span class="o">&lt;</span><span class="n">one_sym</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="cm">/*always true?*/</span><span class="p">){</span>
+      <span class="c1">// we need at least two equivalent points, ideally there will be the same number as the order</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">one_sym</span><span class="p">[</span><span class="n">s</span><span class="p">].</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">one_sym</span><span class="p">[</span><span class="n">s</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span> <span class="n">one_sym</span><span class="p">[</span><span class="n">s</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span> <span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)){</span>
+        <span class="n">type_order</span> <span class="o">=</span> <span class="n">one_sym</span><span class="p">[</span><span class="n">s</span><span class="p">];</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Highest-multiplicity distinct point type:&quot;</span><span class="p">,</span><span class="n">type_order</span><span class="p">);</span>
+      <span class="c1">// auto loc = std::find_if(one_sym.begin(), one_sym.end(), [&amp;](std::vector&lt;size_t&gt;x){return x.size()==static_cast&lt;size_t&gt;(ps.order(i));});</span>
+      <span class="c1">// if (loc != one_sym.end()){</span>
+      <span class="c1">//   size_t idx = loc - one_sym.begin();</span>
+        <span class="c1">// type_order = one_sym[idx];</span>
+        <span class="c1">// grab the rotation stationary axis</span>
+        <span class="n">vec</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ps</span><span class="p">.</span><span class="n">axis</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">type_order</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">type_order</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">type_order</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;</span><span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">type_order</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&lt;</span><span class="n">special</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">order</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">){</span>
+            <span class="c1">// hold the two special points in their own LQVec&lt;double&gt; (!not &lt;int&gt;!)</span>
+            <span class="n">pt0</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">type_order</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+            <span class="n">pt1</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">type_order</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+            <span class="c1">// we have two plane normals to worry about:</span>
+            <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Stationary vector&quot;</span><span class="p">,</span><span class="n">vec</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; and special points&quot;</span><span class="p">,</span><span class="n">pt0</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot; and&quot;</span><span class="p">,</span><span class="n">pt1</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+            <span class="c1">// find both cross products, remembering that we want normals</span>
+            <span class="c1">// pointing *into* the wedge.</span>
+            <span class="n">nrm</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">dot</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">pt0</span><span class="p">)).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">lt</span><span class="p">,</span><span class="mf">0.</span><span class="p">)</span> <span class="p">){</span>
+              <span class="c1">// the rotation is left handed, so swap the special points</span>
+              <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">pt1</span><span class="p">));</span>
+              <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">pt0</span><span class="p">,</span> <span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">()));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">pt0</span><span class="p">));</span>
+              <span class="n">nrm</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cross</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">()));</span>
+            <span class="p">}</span>
+            <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;give normals:&quot;</span><span class="p">,</span> <span class="n">nrm</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s">&quot; and&quot;</span><span class="p">,</span> <span class="n">nrm</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+            <span class="c1">// now check that all special points are inside of the wedge defined by the normals</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// order == 2, so only one normal to worry about:</span>
+            <span class="n">nrm</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">special</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">type_order</span><span class="p">[</span><span class="n">j</span><span class="p">]));</span>
+            <span class="c1">// make sure we don&#39;t remove all points out of the plane containing</span>
+            <span class="c1">// the rotation axis and the two special points</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">).</span><span class="n">is</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span><span class="mf">0.</span><span class="p">).</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+              <span class="n">nrm</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="c1">// switch the cross product</span>
+          <span class="p">}</span>
+          <span class="c1">// check to make sure that using these normals do not remove all but a plane of points</span>
+          <span class="n">keep</span> <span class="o">=</span> <span class="n">keep_if</span><span class="p">(</span><span class="n">nrm</span><span class="p">,</span> <span class="n">special</span><span class="p">);</span>
+          <span class="n">keep_count</span> <span class="o">=</span> <span class="n">keep</span><span class="p">.</span><span class="n">count</span><span class="p">();</span>
+          <span class="c1">// We need at least three points (plus Γ) to define a polyhedron.</span>
+          <span class="c1">// Also skip the extraction if we are keeping all points</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">keep_count</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">keep_count</span> <span class="o">&lt;</span> <span class="n">keep</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span>
+            <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Keeping &quot;</span><span class="p">,</span><span class="n">keep</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="s">&quot; of special points:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">special</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+            <span class="n">special</span> <span class="o">=</span> <span class="n">special</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">keep</span><span class="p">);</span>
+            <span class="n">sym_unused</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">nc</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">nc</span><span class="o">&lt;</span><span class="n">nrm</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">nc</span><span class="p">)</span>
+                <span class="n">cutting_normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">n_cut</span><span class="o">++</span><span class="p">,</span> <span class="n">nrm</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">nc</span><span class="p">));</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// debug_update(&quot;Remaining special points\n&quot;, special.to_string());</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n_cut</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="cm">/*protect against view(0,0)*/</span>
+    <span class="n">cn</span> <span class="o">=</span> <span class="n">cutting_normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_cut</span><span class="p">).</span><span class="n">get_xyz</span><span class="p">();</span> <span class="c1">// the cutting direction is opposite the normal</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cp</span><span class="p">(</span><span class="n">cn</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="o">::</span><span class="n">bisect</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">cn</span><span class="p">,</span> <span class="n">cp</span><span class="p">);</span>
+  <span class="c1">// copy functionality of set_ir_vertices, which set the normals as well</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ir_polyhedron</span><span class="p">()){</span>
+    <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;Irreducible Polyhedron check succeeded. Set irreducible wedge normals&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron_wedge_normals</span><span class="p">());</span>
+  <span class="p">}</span>
+
+<span class="c1">//  // append the Γ point onto the list of special points:</span>
+<span class="c1">//  special.resize(special.size()+1u);</span>
+<span class="c1">//  for (size_t i=0; i&lt;3u; ++i) special.insert(0, special.size()-1, i);</span>
+<span class="c1">//  // and then form the irreducible polyhedron by finding the convex hull</span>
+<span class="c1">//  // of these points: (which sets the wedge normals too)</span>
+<span class="c1">//  this-&gt;set_ir_vertices(special);</span>
+
+  <span class="cm">/*If the full pointsymmetry has space inversion *and* there is only a single</span>
+<span class="cm">    stationary rotation/rotoinversion axis the thus-far-found polyhedron has</span>
+<span class="cm">    twice the volume of the true irreducible polyhedron.</span>
+<span class="cm">    We need to split the polyhedron in half by a plane perpendicular to *one of*</span>
+<span class="cm">    the full-Brillouin zone normal directions.</span>
+<span class="cm">    This is easier for spacegroups with orthogonal basis vectors -- we can</span>
+<span class="cm">    usually pick the stationary axis -- but is trickier if the basis vectors</span>
+<span class="cm">    are not orthogonal.</span>
+<span class="cm">  */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">fullps</span><span class="p">.</span><span class="n">has_space_inversion</span><span class="p">()){</span>
+    <span class="c1">// ps only contains operations *with* a stationary axis (described in real space)</span>
+    <span class="n">LDVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">all_axes</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">from_std</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">axes</span><span class="p">()));</span>
+    <span class="kt">double</span> <span class="n">ir_volume</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">goal_volume</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">()</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">fullps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="k">auto</span> <span class="n">aaiu</span> <span class="o">=</span> <span class="n">all_axes</span><span class="p">.</span><span class="n">is_unique</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">aaiu</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">aaiu</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1u</span> <span class="o">||</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">ir_volume</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">goal_volume</span><span class="p">)</span> <span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)&quot;</span><span class="p">);</span>
+      <span class="n">Polyhedron</span> <span class="n">div</span><span class="p">;</span>
+      <span class="k">auto</span> <span class="n">bz_n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">();</span>
+      <span class="c1">// auto wg_n = this-&gt;get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong</span>
+      <span class="k">auto</span> <span class="n">wg_n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron_wedge_normals</span><span class="p">();</span> <span class="c1">// This pulls directly from the ir_polyhedron</span>
+      <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">gamma</span><span class="p">({</span><span class="mi">1u</span><span class="p">,</span><span class="mi">3u</span><span class="p">},</span> <span class="mf">0.</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">bz_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+        <span class="n">div</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">divide</span><span class="p">(</span><span class="n">bz_n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">gamma</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">div</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span> <span class="n">goal_volume</span><span class="p">)){</span>
+          <span class="c1">// set div to be the ir_polyhedron</span>
+          <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">div</span><span class="p">;</span>
+          <span class="c1">// add the new normal to wedge normals list</span>
+          <span class="c1">// extract instead of view to avoid copying the whole bz_n Array</span>
+          <span class="c1">// when the inversion happens.</span>
+          <span class="n">wg_n</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="cm">/*dimension to expand*/</span> <span class="mi">0u</span><span class="p">,</span> <span class="o">-</span><span class="n">bz_n</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+          <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="n">wg_n</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span> <span class="n">ir_volume</span><span class="p">)){</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Polyhedron volume still double expected.&quot;</span><span class="p">);</span>
+        <span class="kt">bool</span> <span class="n">proceed</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+        <span class="c1">// check for other dividing planes :/</span>
+        <span class="c1">//LQVec&lt;double&gt; cij(this-&gt;outerlattice, 1u);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">proceed</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">bz_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">proceed</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">bz_n</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">j</span><span class="p">){</span>
+          <span class="n">div</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">divide</span><span class="p">(</span><span class="n">bz_n</span><span class="p">.</span><span class="n">cross</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">).</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">gamma</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">div</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span> <span class="n">goal_volume</span><span class="p">)){</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">div</span><span class="p">;</span>
+            <span class="n">wg_n</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0u</span><span class="p">,</span> <span class="o">-</span><span class="n">bz_n</span><span class="p">.</span><span class="n">cross</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">));</span>
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="n">wg_n</span><span class="p">);</span>
+            <span class="n">proceed</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">success</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ir_polyhedron</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">pmsg</span> <span class="o">+=</span> <span class="s">&quot; failed&quot;</span><span class="p">;</span>
+  <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;  End &quot;</span><span class="p">,</span><span class="n">pmsg</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">success</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">BrillouinZone</span><span class="o">::</span><span class="n">wedge_triclinic</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+  <span class="cm">/* Assuming that this is spacegroup P -1 we have inversion symmetry only.</span>
+<span class="cm">     We always want to find a set of planes that divides symmetry equivalent</span>
+<span class="cm">     regions of space. With only -1 symmetry we have to make a choice as to</span>
+<span class="cm">     *which* space inversion we care about.</span>
+<span class="cm">     We could restrict ourselves to {x≥0, y, z}, {x, y≥0, z}, {x, y, z≥0} or</span>
+<span class="cm">     their opposites, or any other subspace for which xyz ≥ 0.</span>
+<span class="cm">     Equivalently then, we can resstrict ourselves to the subspace where</span>
+<span class="cm">     x̂⋅(111) ≥ 0.</span>
+<span class="cm">  */</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">(</span><span class="mi">1u</span><span class="p">,</span> <span class="mi">3u</span><span class="p">,</span> <span class="mf">1.</span><span class="p">);</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">nrm</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">vec</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="n">nrm</span><span class="p">);</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">irreducible_vertex_search</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

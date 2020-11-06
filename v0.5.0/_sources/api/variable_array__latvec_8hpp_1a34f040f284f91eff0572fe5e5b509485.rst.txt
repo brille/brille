@@ -1,0 +1,13 @@
+.. _exhale_variable_array__latvec_8hpp_1a34f040f284f91eff0572fe5e5b509485:
+
+Variable bareArrays
+===================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: bareArrays
