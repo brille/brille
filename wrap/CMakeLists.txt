@@ -44,11 +44,6 @@ if(BRILLE_BUILD_TESTING)
   file(GLOB python_tests_ tests/test_*.py)
 
   foreach(python_test ${python_tests_})
-    add_test(NAME python||${BRILLE_PYTHON_MODULE}||${python_test}
-      COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -s ${test_folder} -p ${python_test}
-    )
+    add_test(NAME ${python_test} COMMAND ${PYTHON_EXECUTABLE} ${python_test} )
   endforeach()
-
-#  add_test(NAME python COMMAND ${PYTHON_EXECUTABLE} -m unittest discover -v -s ${PROJECT_SOURCE_DIR}/tests)
-#  add_dependencies(check _brille)
 endif()

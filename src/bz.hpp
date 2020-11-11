@@ -746,7 +746,7 @@ private:
         auto isin = this->isinside(vrt);
         verbose_update("and retaining ", std::count(isin.begin(), isin.end(), true), " inside vertices");
         vrt = vrt.extract(isin);
-        ijk = vrt.extract(isin);
+        ijk = ijk.extract(isin);
       }
     }
   }

@@ -1,24 +1,29 @@
 #!/usr/bin/env python3
-import os, sys, unittest
+import os
+import sys
+import unittest
 import numpy as np
+from pathlib import Path
+from importlib.util import find_spec
+addpath = Path() # the relative working directory path
+config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
+if config:
+    # print('CMAKE_BUILD_TYPE = {}'.format(config))
+    if Path(addpath, config).exists():
+        addpath = Path(addpath, config)
+    elif Path(addpath, '..', config).exists():
+        addpath = Path(addpath, '..', config)
+# print('adding {} to Python search path'.format(addpath))
+sys.path.append(str(addpath.absolute()))
 
-# We need to tell Python where it can find the brille module.
-addpath = os.getcwd()
-# It's either in the working directory where python was called or in
-# a sub-directory (called Debug using Visual Studio under Windows)
-if os.path.exists('Debug'):
-    addpath += "\\Debug"
-sys.path.append(addpath)
-
-from importlib import util
-
-if util.find_spec('brille') is not None and util.find_spec('brille._brille') is not None:
-    import brille as s
-elif util.find_spec('_brille') is not None:
+if find_spec('_brille') is not None:
     import _brille as s
+    # print(find_spec('_brille'))
+elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille as s
+    # print(find_spec('brille._brille'))
 else:
     raise Exception("brille module not found!")
-
 
 class Lattice (unittest.TestCase):
     def test_a_init2(self):

@@ -1,23 +1,30 @@
 #!/usr/bin/env python3
-import os, sys, unittest
+import os
+import sys
+import unittest
 import numpy as np
+from pathlib import Path
+from importlib.util import find_spec
+addpath = Path() # the relative working directory path
+config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
+if config:
+    # print('CMAKE_BUILD_TYPE = {}'.format(config))
+    if Path(addpath, config).exists():
+        addpath = Path(addpath, config)
+    elif Path(addpath, '..', config).exists():
+        addpath = Path(addpath, '..', config)
+# print('adding {} to Python search path'.format(addpath))
+sys.path.append(str(addpath.absolute()))
 
-# We need to tell Python where it can find the brille module.
-addpath = os.getcwd()
-# It's either in the working directory where python was called or in
-# a sub-directory (called Debug using Visual Studio under Windows)
-if os.path.exists('Debug'):
-    addpath += "\\Debug"
-sys.path.append(addpath)
-
-from importlib import util
-
-if util.find_spec('brille') is not None and util.find_spec('brille._brille') is not None:
-    import brille as b
-elif util.find_spec('_brille') is not None:
+if find_spec('_brille') is not None:
     import _brille as b
+    # print(find_spec('_brille'))
+elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille as b
+    # print(find_spec('brille._brille'))
 else:
     raise Exception("brille module not found!")
+
 
 def fetchLoad(loader, fetchfile, **kwds):
     """Fetch remote binary file from the :py:mod:`brille` repository
@@ -40,7 +47,6 @@ def fetchLoad(loader, fetchfile, **kwds):
     import requests
     import pathlib
     base_url = "https://raw.githubusercontent.com/brille/brille/master/wrap/tests"
-    fetchfile = material + ".castep_bin"
     with tempfile.TemporaryDirectory() as tmp_dir:
         r = requests.get(base_url + "/" + fetchfile)
         if not r.ok:
@@ -70,6 +76,7 @@ def getLoad(loader, file, **kwds):
     loaded
         The loaded object or value returned by the `loader` function
     """
+    import os
     import pathlib
     docs_dir = os.path.dirname(os.path.abspath(__file__))
     try:
@@ -144,7 +151,7 @@ class GammaTest (unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-# 
+#
 # # The data used in  the above test was generated using NDLT1145, a Dell XPS
 # # laptop running Windows 10, using
 # #   brille   v0.5.0-master.1b5e5a6
