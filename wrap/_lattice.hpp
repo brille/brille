@@ -94,6 +94,26 @@ void declare_lattice_mat_basis_init(py::class_<T,Lattice> &pclass, const std::st
   }), py::arg( "lattice vectors" ), py::arg("atom positions"), py::arg("atom types"), py::arg(argname.c_str())=defarg);
 }
 
+template<class T>
+void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass, const std::string &argname){
+  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const Symmetry& sym){
+    py::buffer_info info = vecs.request();
+    if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
+      throw std::runtime_error("Basis vectors must be a 3x3 array");
+    T lattice((double *) info.ptr, info.strides, groupid);
+    brille::Array2<double> avpos = brille::py2a2(pypos);
+    std::vector<std::array<double,3>> pos;
+    for (brille::ind_t i=0; i<avpos.size(0); ++i){
+      std::array<double,3> one;
+      for (brille::ind_t j=0; j<3u; ++j) one[j] = avpos.val(i,j);
+      pos.push_back(one);
+    }
+    lattice.set_basis(pos,typ);
+    lattice.set_spacegroup_symmetry(sym);
+    return lattice;
+  }), py::arg("lattice vectors"), py::arg("atom positions"), py::arg("atom types"), py::arg("spacegroup operations");
+)
+}
 
 template<class T>
 void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &lenunit) {
