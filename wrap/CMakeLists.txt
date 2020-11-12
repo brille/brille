@@ -40,10 +40,20 @@ target_sources(${BRILLE_PYTHON_MODULE} PRIVATE ${BRILLE_PYTHON_MODULE_SOURCES})
 target_include_directories(${BRILLE_PYTHON_MODULE} PRIVATE ${CMAKE_BINARY_DIR})
 
 if(BRILLE_BUILD_TESTING)
-  set(test_folder "${CMAKE_CURRENT_SOURCE_DIR}/tests")
-  file(GLOB python_tests_ tests/test_*.py)
-
-  foreach(python_test ${python_tests_})
-    add_test(NAME ${python_test} COMMAND ${PYTHON_EXECUTABLE} ${python_test} )
-  endforeach()
+  #ensure that the python interpreter knows how to import numpy
+  execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c "import numpy"
+    RESULT_VARIABLE EXIT_CODE
+    OUTPUT_QUIET
+  )
+  if (${EXIT_CODE} EQUAL 0)
+    # python interpreter knows about numpy, so we can add all test_*.py tests
+    set(test_folder "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    file(GLOB python_tests_ tests/test_*.py)
+    foreach(python_test ${python_tests_})
+      add_test(NAME ${python_test} COMMAND ${PYTHON_EXECUTABLE} ${python_test} )
+    endforeach()
+  else()
+    message(WARNING "Install numpy for ${PYTHON_EXECUTABLE} to run all tests")
+  endif()
 endif()
