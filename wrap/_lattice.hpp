@@ -100,7 +100,7 @@ void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass, const std
     py::buffer_info info = vecs.request();
     if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
       throw std::runtime_error("Basis vectors must be a 3x3 array");
-    T lattice((double *) info.ptr, info.strides, groupid);
+    brille::Array2<double> latmat = brille::py2a2(vecs);
     brille::Array2<double> avpos = brille::py2a2(pypos);
     std::vector<std::array<double,3>> pos;
     for (brille::ind_t i=0; i<avpos.size(0); ++i){
@@ -108,9 +108,7 @@ void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass, const std
       for (brille::ind_t j=0; j<3u; ++j) one[j] = avpos.val(i,j);
       pos.push_back(one);
     }
-    lattice.set_basis(pos,typ);
-    lattice.set_spacegroup_symmetry(sym);
-    return lattice;
+    return T(latmat, pos, typ, sym);
   }), py::arg("lattice vectors"), py::arg("atom positions"), py::arg("atom types"), py::arg("spacegroup operations");
 )
 }
