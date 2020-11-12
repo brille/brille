@@ -95,7 +95,7 @@ void declare_lattice_mat_basis_init(py::class_<T,Lattice> &pclass, const std::st
 }
 
 template<class T>
-void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass, const std::string &argname){
+void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass){
   pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const Symmetry& sym){
     py::buffer_info info = vecs.request();
     if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
@@ -109,8 +109,7 @@ void declare_lattice_mat_basis_sym_init(py::class_<T,Lattice> &pclass, const std
       pos.push_back(one);
     }
     return T(latmat, pos, typ, sym);
-  }), py::arg("lattice vectors"), py::arg("atom positions"), py::arg("atom types"), py::arg("spacegroup operations");
-)
+  }), py::arg("lattice vectors"), py::arg("atom positions"), py::arg("atom types"), py::arg("spacegroup operations"));
 }
 
 template<class T>
@@ -127,6 +126,7 @@ void declare_lattice_methods(py::class_<T,Lattice> &pclass, const std::string &l
     declare_lattice_mat_init(pclass,hstr,hstrdef);
     declare_lattice_mat_basis_init(pclass,hnum,hnumdef);
     declare_lattice_mat_basis_init(pclass,hstr,hstrdef);
+    declare_lattice_mat_basis_sym_init(pclass);
     pclass.def_property_readonly("star",&T::star,"Return the dual lattice");
     pclass.def_property_readonly("xyz_transform",[](T &d){
       auto result = py::array_t<double, py::array::c_style>({3,3});
