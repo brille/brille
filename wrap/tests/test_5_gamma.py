@@ -5,25 +5,25 @@ import unittest
 import numpy as np
 from pathlib import Path
 from importlib.util import find_spec
-addpath = Path() # the relative working directory path
+addpaths = [Path(), Path('..')] # we might be in .../build/wrap/
 config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
 if config:
-    # print('CMAKE_BUILD_TYPE = {}'.format(config))
-    if Path(addpath, config).exists():
-        addpath = Path(addpath, config)
-    elif Path(addpath, '..', config).exists():
-        addpath = Path(addpath, '..', config)
-# print('adding {} to Python search path'.format(addpath))
-sys.path.append(str(addpath.absolute()))
+  for path in addpaths:
+    if Path(path, config).exists():
+      addpaths.append(Path(path,config))
+# reverse before adding to ensure we put the new directories first
+sys.path.reverse()
+for path in addpaths:
+  sys.path.append(str(path.absolute()))
+sys.path.reverse()
 
 if find_spec('_brille') is not None:
-    import _brille as b
-    # print(find_spec('_brille'))
+    import _brille as s
 elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
-    import brille as b
-    # print(find_spec('brille._brille'))
+    import brille as s
 else:
-    raise Exception("brille module not found!")
+    abspaths = [str(path.absolute()) for path in addpaths]
+    raise Exception("brille module not found in {}!".format(abspaths))
 
 
 def fetchLoad(loader, fetchfile, **kwds):
@@ -94,15 +94,15 @@ class GammaTest (unittest.TestCase):
         basis_vec = nacl['basis_vectors']
         atom_pos = nacl['atom_positions']
         atom_idx = nacl['atom_index']
-        dlat = b.Direct(basis_vec, atom_pos, atom_idx, 'P1')
-        dlat.spacegroup = b.Symmetry(nacl['spacegroup_mat'],nacl['spacegroup_vec'])
+        dlat = s.Direct(basis_vec, atom_pos, atom_idx, 'P1')
+        dlat.spacegroup = s.Symmetry(nacl['spacegroup_mat'],nacl['spacegroup_vec'])
         # use it to construct an irreducible Brillouin zone
-        bz = b.BrillouinZone(dlat.star)
+        bz = s.BrillouinZone(dlat.star)
         # and use that to produce a hybrid interpolation grid
         # with parameters stored in the binary pack
         max_volume = float(nacl['grid_max_volume'])
         always_triangulate = bool(nacl['grid_always_triangulate'])
-        grid = b.BZTrellisQdc(bz, max_volume, always_triangulate)
+        grid = s.BZTrellisQdc(bz, max_volume, always_triangulate)
 
         # verify the stored grid points to ensure we have the same irreducible
         # wedge and grid
@@ -120,18 +120,27 @@ class GammaTest (unittest.TestCase):
         # find all symmetry equivalent q within the first Brillouin zone by
         # applying each pointgroup operator to q_ir to find q_nu = R^T_nu q_ir
         q_nu = np.einsum('xji,aj->xi', dlat.pointgroup.W, q_ir)
-
+        
+        # The std::sort algorithm does not provide the same pointgroup sorting
+        # on all systems, but there should be a permutation mapping:
+        perm = np.array([np.squeeze(np.argwhere(np.all(np.isclose(q_nu,x),axis=1))) for x in nacl['q_nu']])
+        # The permutation must be complete and unique
+        self.assertTrue(np.unique(perm).size == q_nu.shape[0])
+        # And the permuted q_nu must match the stored q_nu
+        q_nu = q_nu[perm]
+        self.assertTrue(np.allclose(q_nu, nacl['q_nu']))      
+        
         # Use the grid to interpolate at each q_nu:
         br_val, br_vec = grid.ir_interpolate_at(q_nu)
         br_val = np.squeeze(br_val)
-
+        
         # verify that q_ir does not have degeneracies:
         self.assertFalse(np.any(np.isclose(np.diff(br_val, axis=1), 0.)))
         # and that the 'interpolated' eigenvalues are identical for all q_nu
         self.assertTrue(np.allclose(np.diff(br_val, axis=0), 0.))
         # plus that the interpolated eigenvalues match the store Euphonic eigenvalues
         self.assertTrue(np.allclose(br_val, nacl['euphonic_values']))
-
+        
         # convert the eigenvalues into the same cartesian coordinate system
         # used by Euphonic
         br_vec = np.einsum('ba,ijkb->ijka', basis_vec, br_vec)
@@ -187,13 +196,14 @@ if __name__ == '__main__':
 # nacl['grid_vectors_weights'] = (0., 1., 0.)
 #
 # q_ir = breu.grid.rlu[4:5]
-# q_nu = np.einsum('xji,aj->xi', breu.grid.BrillouinZone.lattice.pointgroup.W, q_ir)
+# nacl['pointgroup'] = breu.grid.BrillouinZone.lattice.pointgroup.W
+# nacl['q_nu'] = np.einsum('xji,aj->xi', nacl['pointgroup'], q_ir)
 #
-# br_nu = breu.QpointPhononModes(q_nu, interpolate=True)
+# br_nu = breu.QpointPhononModes(nacl['q_nu'], interpolate=True)
 # nacl['brille_values'] = br_nu.ω
 # nacl['brille_vectors'] = br_nu.ε
 #
-# eu_nu = breu.QpointPhononModes(q_nu, interpolate=False)
+# eu_nu = breu.QpointPhononModes(nacl['q_nu'], interpolate=False)
 # nacl['euphonic_values'] = eu_nu.ω
 # nacl['euphonic_vectors'] = eu_nu.ε
 #
