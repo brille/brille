@@ -483,8 +483,7 @@ ARRAY_ELEMENTWISE_INT_TRANSFORM(ceil)
 template<class T>
 Array2<T>
 Array2<T>::sum(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
@@ -504,8 +503,7 @@ Array2<T>::sum(const ind_t dim) const{
 template<class T>
 Array2<T>
 Array2<T>::prod(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
@@ -525,8 +523,7 @@ Array2<T>::prod(const ind_t dim) const{
 template<class T>
 Array2<T>
 Array2<T>::min(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness

@@ -245,7 +245,13 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   bArray<bool> keep;
 
   // Keep track of *which* normals go into determining the irreducible wedge:
-  LQVec<double> cutting_normals(this->outerlattice, ps.size());
+  // count how many normals we might need
+  // 2-folds divide space with one normal
+  // 3-, 4-, 6-folds need two normals
+  size_t n_expected{0};
+  for (size_t i=0; i<ps.size(); ++i)
+    n_expected += (ps.order(i)==2) ? 1u : 2u;
+  LQVec<double> cutting_normals(this->outerlattice, n_expected);
   size_t n_cut{0};
 
   std::vector<bool> sym_unused(ps.size(), true);
