@@ -32,7 +32,6 @@
 #include "utilities.hpp"
 #include "debug.hpp"
 #include "triangulation_simple.hpp"
-// #include "interpolation_data.hpp"
 #include "interpolatordual.hpp"
 #include "permutation.hpp"
 #include "approx.hpp"

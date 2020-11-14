@@ -9,7 +9,6 @@
 
 #include "_array.hpp"
 #include "_c_to_python.hpp"
-// #include "_interpolation_data.hpp"
 #include "_interpolator.hpp"
 
 #include "bz.hpp"

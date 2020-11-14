@@ -26,7 +26,6 @@
 #include <array>
 #include <omp.h>
 #include "interpolation.hpp"
-// #include "interpolation_data.hpp"
 #include "interpolatordual.hpp"
 #include "utilities.hpp"
 #include "permutation.hpp"
