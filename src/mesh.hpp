@@ -33,6 +33,7 @@
 #include <queue>
 #include "triangulation_layers.hpp"
 
+namespace brille {
 
 template<class T, class S>
 class Mesh3{
@@ -107,9 +108,9 @@ public:
     return str;
   }
   void sort() {data_.sort();}
-private:
 };
 
 #include "mesh.tpp"
 
+} // namespace brille
 #endif // _MESH_H_

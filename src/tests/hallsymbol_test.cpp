@@ -6,6 +6,8 @@
 #include "hall_symbol.hpp"
 #include "spg_database.hpp"
 
+using namespace brille;
+
 TEST_CASE("Ensure HallSymbol and Symmetry(xyz string) concur","[HallSymbol]"){
   std::vector<std::pair<std::string, std::string>> hall_xyz;
   hall_xyz.push_back(std::make_pair("P -2zb","x, y+1/2, -z"));

@@ -16,6 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include "bz.hpp"
+using namespace brille;
 
 LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   auto ir_n = this->get_ir_normals();
@@ -255,9 +256,11 @@ void BrillouinZone::irreducible_vertex_search(){
     for (ind_t i=0  ; i<(Nbz-1); ++i)
     for (ind_t j=i+1; j< Nbz   ; ++j)
     for (ind_t k=0  ; k< Nir   ; ++k)
-    if (intersect_at(bznormals.view(i), bzpoints.view(i),
-                     bznormals.view(j), bzpoints.view(j),
-                     irnormals.view(k),                   vertices21, c21)){
+    if (brille::intersect_at(
+      bznormals.view(i), bzpoints.view(i),
+      bznormals.view(j), bzpoints.view(j),
+      irnormals.view(k),                   vertices21, c21)
+    ){
       i21.val(c21,0)=i; i21.val(c21,1)=j; i21.val(c21++,2)=k;
     }
   }
@@ -265,9 +268,11 @@ void BrillouinZone::irreducible_vertex_search(){
     for (ind_t i=0  ; i< Nbz   ; ++i)
     for (ind_t j=0  ; j<(Nir-1); ++j)
     for (ind_t k=j+1; k< Nir   ; ++k)
-    if (intersect_at(bznormals.view(i), bzpoints.view(i),
-                     irnormals.view(j),
-                     irnormals.view(k),                   vertices12, c12)){
+    if (brille::intersect_at(
+      bznormals.view(i), bzpoints.view(i),
+      irnormals.view(j),
+      irnormals.view(k),                   vertices12, c12)
+    ){
       i12.val(c12,0)=i, i12.val(c12,1)=j, i12.val(c12++,2)=k;
     }
   }
@@ -275,9 +280,11 @@ void BrillouinZone::irreducible_vertex_search(){
     for (ind_t i=0  ; i<(Nir-2); ++i)
     for (ind_t j=i+1; j<(Nir-1); ++j)
     for (ind_t k=j+1; k< Nir   ; ++k)
-    if (intersect_at(irnormals.view(i),
-                     irnormals.view(j),
-                     irnormals.view(k),                   vertices03, c03)){
+    if (brille::intersect_at(
+      irnormals.view(i),
+      irnormals.view(j),
+      irnormals.view(k),                   vertices03, c03)
+    ){
       i03.val(c03,0)=i; i03.val(c03,1)=j; i03.val(c03++,2)=k;
     }
   }
@@ -490,9 +497,12 @@ void BrillouinZone::voro_search(const int extent){
 
 
 // moved back from the header file now that their template parameters are lost again
-
 double
-normals_matrix_determinant(const LQVec<double>& a, const LQVec<double>&b, const LQVec<double>& c){
+brille::normals_matrix_determinant(
+  const LQVec<double>& a,
+  const LQVec<double>&b,
+  const LQVec<double>& c
+){
   std::vector<double> metric(9);
   std::vector<double> ax{a.get_xyz().to_std()}, bx{b.get_xyz().to_std()}, cx{c.get_xyz().to_std()};
   for (size_t i=0; i<3; ++i){
@@ -504,12 +514,13 @@ normals_matrix_determinant(const LQVec<double>& a, const LQVec<double>&b, const 
 }
 
 bool
-intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
-             const LQVec<double>& nj, const LQVec<double>& pj,
-             const LQVec<double>& nk, const LQVec<double>& pk,
-             LQVec<double>& intersect, const int idx)
-{
-  double detM = normals_matrix_determinant(ni,nj,nk);
+brille::intersect_at(
+  const LQVec<double>& ni, const LQVec<double>& pi,
+  const LQVec<double>& nj, const LQVec<double>& pj,
+  const LQVec<double>& nk, const LQVec<double>& pk,
+  LQVec<double>& intersect, const int idx
+){
+  double detM = brille::normals_matrix_determinant(ni,nj,nk);
   if (std::abs(detM) > 1e-10){
     auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj) + cross(ni,nj)*dot(pk,nk);
     tmp /= detM;
@@ -520,12 +531,13 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
 }
 
 bool
-intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
-             const LQVec<double>& nj, const LQVec<double>& pj,
-             const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx)
-{
-  double detM = normals_matrix_determinant(ni,nj,nk);
+brille::intersect_at(
+  const LQVec<double>& ni, const LQVec<double>& pi,
+  const LQVec<double>& nj, const LQVec<double>& pj,
+  const LQVec<double>& nk,
+  LQVec<double>& intersect, const int idx
+){
+  double detM = brille::normals_matrix_determinant(ni,nj,nk);
   if (std::abs(detM) > 1e-10){
     auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj);
     tmp /= detM;
@@ -536,12 +548,13 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
 }
 
 bool
-intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
-             const LQVec<double>& nj,
-             const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx)
-{
-  double detM = normals_matrix_determinant(ni,nj,nk);
+brille::intersect_at(
+  const LQVec<double>& ni, const LQVec<double>& pi,
+  const LQVec<double>& nj,
+  const LQVec<double>& nk,
+  LQVec<double>& intersect, const int idx
+){
+  double detM = brille::normals_matrix_determinant(ni,nj,nk);
   if (std::abs(detM) > 1e-10){
     auto tmp = cross(nj,nk)*dot(pi,ni);
     tmp /= detM;
@@ -552,12 +565,13 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
 }
 
 bool
-intersect_at(const LQVec<double>& ni,
-             const LQVec<double>& nj,
-             const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx)
-{
-  if (std::abs(normals_matrix_determinant(ni,nj,nk)) > 1e-10){
+brille::intersect_at(
+  const LQVec<double>& ni,
+  const LQVec<double>& nj,
+  const LQVec<double>& nk,
+  LQVec<double>& intersect, const int idx
+){
+  if (std::abs(brille::normals_matrix_determinant(ni,nj,nk)) > 1e-10){
     intersect.set(idx, 0*intersect.view(idx));
     return true;
   }

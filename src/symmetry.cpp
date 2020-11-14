@@ -21,7 +21,7 @@
 #include <iostream>
 #include "pointgroup.hpp"
 #include <algorithm>
-
+using namespace brille;
 /*****************************************************************************\
 | Symmetry class Member functions:                                            |
 |-----------------------------------------------------------------------------|

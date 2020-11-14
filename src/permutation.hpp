@@ -29,6 +29,7 @@
 #include "lapjv.hpp"
 #include "smp.hpp"
 
+namespace brille {
 
 /*! \brief Type information for cost-matrix elements used by Linear Assignment
      Problem solvers.
@@ -127,7 +128,7 @@ bool munkres_permutation(const T* centre, const T* neighbour, const std::array<I
 */
 // initialize variables
 R s_cost{0}, v_cost{0}, m_cost{0};
-Munkres<R> munkres(Nobj);
+brille::assignment::Munkres<R> munkres(Nobj);
 size_t *assignment = new size_t[Nobj]();
 const T *c_i, *n_j;
 // calculate costs and fill the Munkres cost matrix
@@ -333,7 +334,7 @@ then the Jonker-Volgenant algorithm enters an infinite loop.
 The version in lapjv.h has a check to avoid this but it might still be a
 problem.
 */
-lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
+brille::assignment::lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
 /* use the fact that the neighbour objects have already had their global
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
@@ -453,7 +454,7 @@ then the Jonker-Volgenant algorithm enters an infinite loop.
 The version in lapjv.h has a check to avoid this but it might still be a
 problem.
 */
-lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
+brille::assignment::lapjv((int)Nobj, cost, false, rowsol, colsol, usol, vsol);
 /* use the fact that the neighbour objects have already had their global
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
@@ -484,7 +485,7 @@ std::vector<I> jv_permutation(const std::vector<T>& cost){
   std::vector<T> usol(Nobj,T(0)), vsol(Nobj,T(0));
   std::vector<I> rows(Nobj,I(0)), cols(Nobj,I(0));
 
-  lapjv(Nobj, cost.data(), false, rows.data(), cols.data(), usol.data(), vsol.data());
+  brille::assignment::lapjv(Nobj, cost.data(), false, rows.data(), cols.data(), usol.data(), vsol.data());
   return rows;
 }
 template<class T>
@@ -499,7 +500,7 @@ bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
   std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
   std::vector<I> col(Nobj,0);
   row.resize(Nobj);
-  lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
+  brille::assignment::lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
   return true;
 }
 template<class T, class I>
@@ -509,7 +510,7 @@ bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row, std::v
   std::vector<T> u(Nobj,T(0)), v(Nobj,T(0));
   row.resize(Nobj);
   col.resize(Nobj);
-  lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
+  brille::assignment::lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
   return true;
 }
 
@@ -628,7 +629,7 @@ for (size_t i=0; i<Nobj; ++i){
   }
 }
 
-smp(Nobj, cost, rowsol, colsol, false);
+brille::assignment::smp(Nobj, cost, rowsol, colsol, false);
 /* use the fact that the neighbour objects have already had their global
    permutation saved into `permutations` to determine the global permuation
    for the centre objects too; storing the result into `permutations` as well.
@@ -721,4 +722,5 @@ apply_inverse_permutation(ObjItr objects, ObjItr end, PermItr indices){
   }
 }
 
+} // namespace brille
 #endif

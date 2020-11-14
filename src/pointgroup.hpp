@@ -62,6 +62,8 @@
 #include "symmetry.hpp"
 #include "pointsymmetry.hpp"
 
+namespace brille {
+
 enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};
 std::string my_to_string(const Holohedry& h);
 enum class Laue {_, _1, _2m, _mmm, _4m, _4mmm, _3, _3m, _6m, _6mmm, _m3, _m3m};
@@ -107,4 +109,5 @@ int isometry_value(const int *rot);
 int rotation_order(const int *rot);
 std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot);
 std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>&, const int);
+} // namespace brille
 #endif

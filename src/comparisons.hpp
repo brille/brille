@@ -3,8 +3,6 @@
 
 #include <functional>
 #include "approx.hpp"
-// #include "sharedspan.hpp"
-// template<class T> using span_t = brille::SharedSpan<T>;
 
 namespace brille {
 

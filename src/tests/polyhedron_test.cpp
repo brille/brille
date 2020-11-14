@@ -3,6 +3,8 @@
 #include "array_latvec.hpp" // defines bArray<T> as Array2<T> or Array<T>
 #include "polyhedron.hpp"
 
+using namespace brille;
+
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
   auto verts = bArray<double>::from_std(va_verts);

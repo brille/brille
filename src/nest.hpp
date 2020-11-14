@@ -29,12 +29,13 @@
 #include "utilities.hpp"
 #include "debug.hpp"
 #include "triangulation_simple.hpp"
-// #include "interpolation_data.hpp"
 #include "interpolatordual.hpp"
 #include "approx.hpp"
 
 #ifndef _NEST_H_
 #define _NEST_H_
+
+namespace brille {
 
 template<typename T,size_t N>
 static bool none_negative(const std::array<T,N>& x){
@@ -342,4 +343,5 @@ private:
 };
 
 #include "nest.tpp"
+} // namespace brille
 #endif

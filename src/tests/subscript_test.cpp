@@ -2,6 +2,8 @@
 #include "subscript.hpp"
 #include "utilities.hpp"
 
+using namespace brille;
+
 TEST_CASE("Full array iterator","[subscript]"){
   std::vector<std::vector<int>> expected{
     {0,0,0},{0,0,1},{0,0,2},

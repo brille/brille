@@ -26,6 +26,9 @@
 template<class T>
 using bArray = brille::Array2<T>;
 
+namespace brille {
+
+
 /*! \brief Superclass to identify both LDVec and LQVec
 
 The two Lattice vector classes, LDVec and LQVec, are subclasses of bArray.
@@ -430,5 +433,7 @@ template<class... T> using LatVecStar = typename LatVecTraits<T...>::star;
 #include "array_latvec.tpp"
 #include "array_ldvec.tpp"
 #include "array_lqvec.tpp"
+
+}
 
 #endif

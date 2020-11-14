@@ -19,6 +19,8 @@
 #include <array>
 #include <vector>
 
+using namespace brille;
+
 static std::vector<int> all_from_extent(const int extent){
   int min = -extent, max = extent+1;
   std::vector<int> vec;
@@ -26,7 +28,7 @@ static std::vector<int> all_from_extent(const int extent){
   return vec;
 }
 
-bArray<int> make_relative_neighbour_indices(const int extent){
+bArray<int> brille::make_relative_neighbour_indices(const int extent){
   auto vec = all_from_extent(extent);
   size_t num = vec.size();
   size_t n{0};
@@ -36,7 +38,7 @@ bArray<int> make_relative_neighbour_indices(const int extent){
   return bArray<int>::from_std(o);
 }
 
-bArray<int> make_relative_neighbour_indices_prime(const int extent){
+bArray<int> brille::make_relative_neighbour_indices_prime(const int extent){
   auto vec = all_from_extent(extent);
   size_t num = vec.size();
   size_t n{0};
@@ -55,7 +57,7 @@ bArray<int> make_relative_neighbour_indices_prime(const int extent){
   return bArray<int>::from_std(o);
 }
 
-bArray<int> make_relative_neighbour_indices4(const int extent){
+bArray<int> brille::make_relative_neighbour_indices4(const int extent){
   auto v = all_from_extent(extent);
   std::vector<std::array<int,4>> o;
   for (auto i: v) for (auto j: v) for (auto k: v) for (auto l: v)

@@ -24,6 +24,8 @@
 #include <vector>
 #include <algorithm>
 
+namespace brille {
+
 // /*
 // For future futher optimisation we might want to use the upper triangular
 // matrix to pre-allocate all possible permutation entries in the std::vector;
@@ -177,5 +179,5 @@ permutation_table_keys_from_indicies(Itr i_beg, Itr i_end, const size_t n){
 	return keys;
 }
 
-
+} // namespace brille
 #endif

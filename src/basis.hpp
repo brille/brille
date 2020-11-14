@@ -25,6 +25,8 @@
 #include "utilities.hpp"
 #include "approx.hpp"
 
+namespace brille {
+
 class Basis{
 public:
   using point = std::array<double,3>;
@@ -104,5 +106,5 @@ public:
   }
 };
 
-
+} // end namespace brille
 #endif // BASIS_HPP

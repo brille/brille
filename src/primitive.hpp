@@ -21,6 +21,8 @@
 // #include <array>
 #include "spg_database.hpp"
 
+namespace brille {
+
 template<class T> std::array<T,9> transpose(const std::array<T,9>& a){
   return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
 }
@@ -130,4 +132,5 @@ struct PrimitiveTraits{
   using P = double;
   using invP = int;
 };
+} // end namespace brille
 #endif

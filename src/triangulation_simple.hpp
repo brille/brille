@@ -26,6 +26,8 @@
 #include "debug.hpp"
 #include "approx.hpp"
 
+namespace brille {
+
 class SimpleTet{
   using ind_t = brille::ind_t;
   bArray<double> vertex_positions; // (nVertices, 3)
@@ -190,4 +192,6 @@ protected:
     vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
   }
 };
+
+} // end namespace brille 
 #endif // _TRIANGULATION_H_

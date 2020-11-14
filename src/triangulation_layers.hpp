@@ -29,6 +29,8 @@
 #include "polyhedron.hpp"
 #include "approx.hpp"
 
+namespace brille {
+
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);
   if (at == x.end()) throw std::logic_error("Value not found?!");
@@ -555,4 +557,5 @@ triangulate(const bArray<T>& verts,
   return TetTri(layers);
 }
 
+} // end namespace brille
 #endif // _TRIANGULATION_H_

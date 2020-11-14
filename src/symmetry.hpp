@@ -26,11 +26,14 @@
 #include "utilities.hpp"
 #include "bravais.hpp"
 #include "approx.hpp"
+#include "symmetry_common.hpp"
 
-template<class T> using Matrix = std::array<T,9>;
-template<class T> using Vector = std::array<T,3>;
-template<class T> using Matrices = std::vector<Matrix<T>>;
-template<class T> using Vectors = std::vector<Vector<T>>;
+namespace brille {
+
+// template<class T> using Matrix = std::array<T,9>;
+// template<class T> using Vector = std::array<T,3>;
+// template<class T> using Matrices = std::vector<Matrix<T>>;
+// template<class T> using Vectors = std::vector<Vector<T>>;
 
 template<class R, class T> class Motion{
   Matrix<R> W;
@@ -327,5 +330,5 @@ public:
   size_t  find_matrix_index(const Matrix<int>&) const;
 };
 
-
+} // end namespace brille
 #endif

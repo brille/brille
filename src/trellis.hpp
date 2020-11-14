@@ -40,6 +40,7 @@
 #ifndef _TRELLIS_H_
 #define _TRELLIS_H_
 
+namespace brille {
 
 /*
   Storing the lowest bin boundary (zero[3]), constant difference (step[3]),
@@ -727,4 +728,5 @@ private:
 };
 
 #include "trellis.tpp"
+} // end namespace brille
 #endif

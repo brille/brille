@@ -64,6 +64,8 @@
 // #include "symmetry.hpp"
 #include "pointgroup.hpp"
 
+namespace brille {
+
 class Spacegroup{
 public:
   int number;
@@ -135,4 +137,5 @@ int international_string_to_hall_number(const std::string& itname, const std::st
 int hall_symbol_to_hall_number(const std::string& hsymbol);
 int string_to_hall_number(const std::string&, const std::string& choice="");
 
+} // end namespace brille
 #endif

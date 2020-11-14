@@ -19,6 +19,8 @@
 #include "hall_symbol.hpp"
 #include "approx.hpp"
 
+using namespace brille;
+
 Lattice::Lattice(const double* latmat, const int h){
   double l[3]={0,0,0}, a[3]={0,0,0};
   latmat_to_lenang(latmat,3,1,l,a); // (3,1) -> assume row-ordered matrix
@@ -98,7 +100,7 @@ void Lattice::check_hall_number(const int h){
   this->ptgsym = spg.get_pointgroup_symmetry();
 }
 void Lattice::check_IT_name(const std::string& itname, const std::string& choice){
-  int hall_number = string_to_hall_number(itname, choice);
+  int hall_number = brille::string_to_hall_number(itname, choice);
   if (hall_number > 0 && hall_number < 531){
     this->check_hall_number(hall_number);
   } else {

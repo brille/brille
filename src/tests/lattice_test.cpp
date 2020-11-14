@@ -2,6 +2,8 @@
 
 #include "lattice.hpp"
 
+using namespace brille;
+
 TEST_CASE("Lattice and its subclasses are tested","[lattice]"){
   Lattice l(2*brille::pi,2*brille::pi,2*brille::pi,brille::halfpi,brille::halfpi,brille::halfpi);
   Direct d(l);

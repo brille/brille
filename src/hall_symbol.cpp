@@ -1,6 +1,7 @@
 
 #include "hall_symbol.hpp"
 #include "bravais.hpp" // for bravais_letter
+using namespace brille;
 
 bool HallSymbol::from_ascii(const std::string& s){
   char c;
@@ -87,7 +88,7 @@ bool HallSymbol::from_ascii(const std::string& s){
 
 bool HallSymbol::validate(){
   // verify that everything went ok
-  bool ok = bravais_is_known(this->L);
+  bool ok = brille::bravais_is_known(this->L);
   for (auto ss: this->symbols) ok &= ss.validate();
   // further validation could be possible by finding the full spacegroup
   return ok;
@@ -145,7 +146,7 @@ Symmetry HallSymbol::get_generators() const {
 std::string HallSymbol::to_ascii() const {
   std::string s;
   if (this->centrosymmetric) s += "-";
-  s += bravais_letter(this->L);
+  s += brille::bravais_letter(this->L);
   for (auto z: this->symbols) s += " " + z.to_ascii();
   return s;
 }

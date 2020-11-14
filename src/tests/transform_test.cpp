@@ -10,6 +10,8 @@
 #include "transform.hpp"
 #include "approx.hpp"
 
+using namespace brille;
+
 TEST_CASE("primitive transforms","[transform]"){
   Bravais c{Bravais::_};
   SECTION("Body centring"){         c = Bravais::I; }

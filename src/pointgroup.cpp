@@ -67,7 +67,7 @@
 #define NUM_ROT_AXES 73
 #define ZERO_PREC 1e-10
 
-//using namespace rsm;
+using namespace brille;
 
 typedef struct {
   int table[10];
@@ -180,7 +180,7 @@ static int get_pointgroup_number_by_rotations(const int *rotations,const int num
 static int get_pointgroup_number(const PointSymmetry & pointsym);
 static int get_pointgroup_class_table(int table[10], const PointSymmetry & pointsym);
 static int isometry_type(const int *rot);
-int rotation_order(const int *rot);
+// int rotation_order(const int *rot);
 static int get_rotation_axis(const int *rot);
 static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const int rot_order);
 static int laue2m(int axes[3], const PointSymmetry & pointsym);
@@ -192,7 +192,7 @@ static void set_transformation_matrix(int *tmat, const int axes[3]);
 
 
 /* Retrun pointgroup.number = 0 if failed */
-Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations)
+Pointgroup brille::ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations)
 {
   int i, pg_num;
   int axes[3];
@@ -203,7 +203,7 @@ Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotation
   pg_num = get_pointgroup_number_by_rotations(rotations, num_rotations);
   pointgroup = Pointgroup(pg_num);
   if (pg_num > 0) {
-    pointsym = ptg_get_pointsymmetry(rotations, num_rotations);
+    pointsym = brille::ptg_get_pointsymmetry(rotations, num_rotations);
     get_axes(axes, pointgroup.laue, pointsym);
     set_transformation_matrix(transform_mat, axes);
   }
@@ -219,7 +219,7 @@ void Pointgroup::setup(void){
   this->laue = pgt.laue;
 }
 
-PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
+PointSymmetry brille::ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
 {
   PointSymmetry pointsym(0);
   // copy the first rotation matrix
@@ -239,7 +239,7 @@ PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotation
 
 static int get_pointgroup_number_by_rotations(const int *rotations, const int num_rotations)
 {
-	PointSymmetry psym = ptg_get_pointsymmetry(rotations, num_rotations);
+	PointSymmetry psym = brille::ptg_get_pointsymmetry(rotations, num_rotations);
   return get_pointgroup_number(psym);
 }
 
@@ -325,12 +325,12 @@ static int isometry_type(const int *rot){
   }
   return rot_type;
 }
-int isometry_value(const int *rot){
+int brille::isometry_value(const int *rot){
 	int values[] = {-6,-4,-3,-2,-1,1,2,3,4,6};
 	int isometry = isometry_type(rot);
 	return (isometry>=0) ? values[isometry] : 0;
 }
-int rotation_order(const int *rot){
+int brille::rotation_order(const int *rot){
 	int orders[] = {6,4,3,2,1,1,2,3,4,6};
 	int isometry = isometry_type(rot);
 	return (isometry>=0) ? orders[isometry] : 0;
@@ -595,7 +595,7 @@ static void set_transformation_matrix(int *tmat, const int *axes){
 }
 
 
-std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
+std::vector<std::array<int,9>> brille::get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
 {
 	const size_t N = rotations.size();
 	std::vector<std::array<int,9>> rot_tmp;
@@ -635,7 +635,7 @@ std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array
 
 static int _internal_pointgroup_rotations(int *rotations, const int max_size, const std::vector<std::array<int,9>>& all_rots, const int is_time_reversal)
 {
-  std::vector<std::array<int,9>> unq_rots = get_unique_rotations(all_rots,is_time_reversal);
+  std::vector<std::array<int,9>> unq_rots = brille::get_unique_rotations(all_rots,is_time_reversal);
 	if (unq_rots.size() > static_cast<size_t>(max_size)){
     std::string msg = "Indicated maximum size " + std::to_string(max_size);
     msg += " is less than number of unique rotations (";
@@ -648,13 +648,13 @@ static int _internal_pointgroup_rotations(int *rotations, const int max_size, co
 	return static_cast<int>(unq_rots.size());
 }
 
-int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
+int brille::get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
 	Symmetry sym = Spacegroup(hall_number).get_spacegroup_symmetry();
 	int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallr(), is_time_reversal);
 	return num_unique;
 }
 
-std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot){
+std::array<std::array<int,3>,3> brille::rotation_axis_and_perpendicular_vectors(const int* rot){
 	int prop_rot[9];
 	std::array<std::array<int,3>,3> out {{ {{0, 0, 0}}, {{0, 0, 0}}, {{0, 0, 0}} }};
 

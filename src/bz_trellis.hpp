@@ -24,6 +24,8 @@ typedef long slong;
 #include "trellis.hpp"
 #include "phonon.hpp"
 
+namespace brille {
+
 template<class T, class R>
 class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
   using SuperClass = PolyhedronTrellis<T,R>;
@@ -112,4 +114,5 @@ public:
   }
 };
 
+} // end namespace brille
 #endif // _BZ_TRELLIS_

@@ -19,6 +19,8 @@
 #define _NEIGHBOURS_H_
 #include "array_latvec.hpp" // defines bArray
 
+namespace brille {
+
 /*! Construct an bArray with 3 elements per array of all (2N+1)³-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
 
@@ -33,4 +35,5 @@ bArray<int> make_relative_neighbour_indices4(const int extent=1);
 
 bArray<int> make_relative_neighbour_indices_prime(const int extent=1);
 
+} // namespace brille
 #endif

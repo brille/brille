@@ -30,6 +30,8 @@
 #include "phonon.hpp"
 #include "approx.hpp"
 
+namespace brille {
+
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
 
   The BrillouinZone object is created from a Reciprocal lattice and if that
@@ -840,4 +842,5 @@ normals matrix which determines *if* three planes intersect.
 double
 normals_matrix_determinant(const LQVec<double>& a, const LQVec<double>&b, const LQVec<double>& c);
 
+} // end namespace brille
 #endif

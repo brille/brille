@@ -24,6 +24,8 @@ typedef long slong;
 #include "bz.hpp"
 #include "nest.hpp"
 
+namespace brille {
+
 template<class T, class S>
 class BrillouinZoneNest3: public Nest<T,S>{
   using SuperClass = Nest<T,S>;
@@ -81,4 +83,5 @@ public:
   }
 };
 
+}
 #endif

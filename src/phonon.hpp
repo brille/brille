@@ -21,6 +21,8 @@
 #include <tuple>
 #include "array_latvec.hpp" // defines bArray
 
+namespace brille {
+
 /*! \brief A superclass for all rotation-required tabulated information
 
 When information is interpolated in the irreducible part of reciprocal space
@@ -169,4 +171,5 @@ private:
   }
 };
 
+} // namespace brille
 #endif

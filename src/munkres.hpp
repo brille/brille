@@ -23,6 +23,8 @@
 #include <memory>
 #include <vector>
 
+namespace brille::assignment {
+
 enum marker {
   NORMAL,
   STARED,
@@ -306,4 +308,5 @@ private:
 
 };
 
+} // end namespace brille::assignment
 #endif

@@ -1,7 +1,8 @@
 #include "bravais.hpp"
 
+using namespace brille;
 
-std::string bravais_string(const Bravais b){
+std::string brille::bravais_string(const Bravais b){
   std::string repr;
   switch (b){
     case Bravais::_: repr = "centering error";        break;
@@ -16,7 +17,7 @@ std::string bravais_string(const Bravais b){
   return repr;
 }
 
-char bravais_letter(const Bravais b){
+char brille::bravais_letter(const Bravais b){
   switch (b){
     case Bravais::_: return '!';
     case Bravais::P: return 'P';
@@ -30,7 +31,7 @@ char bravais_letter(const Bravais b){
   return '\0';
 }
 
-bool bravais_is_known(const Bravais b){
+bool brille::bravais_is_known(const Bravais b){
   switch (b){
     case Bravais::P:
     case Bravais::A:

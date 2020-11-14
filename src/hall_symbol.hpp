@@ -11,10 +11,12 @@
 #include "symmetry.hpp" // for class Symmetry
 #include "pointsymmetry.hpp" // and PointSymmetry
 
-template<class T> using Matrix = std::array<T,9>;
-template<class T> using Vector = std::array<T,3>;
-template<class T> using Matrices = std::vector<Matrix<T>>;
-template<class T> using Vectors = std::vector<Vector<T>>;
+namespace brille {
+
+// template<class T> using Matrix = std::array<T,9>;
+// template<class T> using Vector = std::array<T,3>;
+// template<class T> using Matrices = std::vector<Matrix<T>>;
+// template<class T> using Vectors = std::vector<Vector<T>>;
 
 class SeitzSymbol {
   int N;
@@ -93,4 +95,5 @@ public:
   Symmetry get_generators() const;
 };
 
+} // namespace brille
 #endif

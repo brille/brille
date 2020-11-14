@@ -24,11 +24,14 @@
 #include <algorithm>
 // #include <numeric>
 #include "utilities.hpp"
+#include "symmetry_common.hpp" // defines Matrix, Vector, Matrices, Vectors
 
-template<class T> using Matrix = std::array<T,9>;
-template<class T> using Vector = std::array<T,3>;
-template<class T> using Matrices = std::vector<Matrix<T>>;
-template<class T> using Vectors = std::vector<Vector<T>>;
+namespace brille {
+
+// template<class T> using Matrix = std::array<T,9>;
+// template<class T> using Vector = std::array<T,3>;
+// template<class T> using Matrices = std::vector<Matrix<T>>;
+// template<class T> using Vectors = std::vector<Vector<T>>;
 
 /*****************************************************************************\
 | PointSymmetry class                                                         |
@@ -85,7 +88,5 @@ public:
   PointSymmetry        higher(const int min_order=0)                      const;
 };
 
-
-
-
+} // namespace brille
 #endif

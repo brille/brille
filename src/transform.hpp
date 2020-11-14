@@ -21,6 +21,8 @@
 
 #include "array_latvec.hpp" // defines bArray
 
+namespace brille {
+
 using Ptype = PrimitiveTraits::P;
 using invPtype = PrimitiveTraits::invP;
 
@@ -148,5 +150,5 @@ bArray<S> hkl_to_xyz(const Reciprocal& lat, const bArray<T>& hkl){
   return xyz;
 }
 
-
+} // end namespace brille
 #endif

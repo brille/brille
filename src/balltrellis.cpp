@@ -18,6 +18,8 @@
 #include "balltrellis.hpp"
 #include "debug.hpp"
 
+using namespace brille;
+
 /* A note about the directions chosen for binning the leaves:
   A better way of doing this would be to compute the covariance and/or
   correlation matrix for the leaf centres, e.g.,

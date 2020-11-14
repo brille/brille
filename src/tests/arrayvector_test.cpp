@@ -6,6 +6,7 @@
 // array_latvec.hpp defines a bArray<T> as one or the other:
 #include "array_latvec.hpp"
 
+using namespace brille;
 
 TEST_CASE("Array creation","[array]"){
   bArray<double> novalues(3,3);

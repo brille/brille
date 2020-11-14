@@ -31,6 +31,8 @@
 #ifndef _INTERPOLATOR_HPP_
 #define _INTERPOLATOR_HPP_
 
+namespace brille {
+
 //template<class T> using CostFunction = std::function<typename CostTraits<T>::type(ind_t, T*, T*)>;
 template<class T>
 using CostFunction = std::function<double(brille::ind_t, const T*, const T*)>;
@@ -385,4 +387,6 @@ private:
 #include "interpolator2_gamma.tpp"
 #include "interpolator2_real.tpp"
 #include "interpolator2_recip.tpp"
+
+} // namespace brille
 #endif

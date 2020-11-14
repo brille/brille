@@ -22,6 +22,7 @@
 #include "pointgroup.hpp"
 #include <algorithm>
 #include "approx.hpp"
+using namespace brille;
 /*****************************************************************************\
 | PointSymmetry class Member functions:                                       |
 \*****************************************************************************/
@@ -229,7 +230,7 @@ std::vector<int> PointSymmetry::isometries(void) const {
 }
 Vectors<int> PointSymmetry::axes(void) const {
   Vectors<int> ax;
-  for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[0]);
+  for (auto r: this->R) ax.push_back(brille::rotation_axis_and_perpendicular_vectors(r.data())[0]);
   return ax;
 }
 
@@ -267,16 +268,16 @@ int PointSymmetry::isometry(const size_t i) const {
 Vector<int> PointSymmetry::axis(const size_t i) const {
   if (i>=this->size())
     throw std::out_of_range("The requested symmetry operation is out of range");
-  return rotation_axis_and_perpendicular_vectors(this->R[i].data())[0];
+  return brille::rotation_axis_and_perpendicular_vectors(this->R[i].data())[0];
 }
 Vector<int> PointSymmetry::perpendicular_axis(const size_t i) const {
   if (i>=this->size())
     throw std::out_of_range("The requested symmetry operation is out of range");
-  return rotation_axis_and_perpendicular_vectors(this->R[i].data())[1];
+  return brille::rotation_axis_and_perpendicular_vectors(this->R[i].data())[1];
 }
 Vectors<int> PointSymmetry::perpendicular_axes(void) const {
   Vectors<int> ax;
-  for (auto r: this->R) ax.push_back(rotation_axis_and_perpendicular_vectors(r.data())[1]);
+  for (auto r: this->R) ax.push_back(brille::rotation_axis_and_perpendicular_vectors(r.data())[1]);
   return ax;
 }
 PointSymmetry PointSymmetry::generate(void) const {

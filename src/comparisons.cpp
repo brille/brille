@@ -4,7 +4,7 @@
 namespace brille{
 
 template<>
-std::string to_string(const cmp& c){
+std::string brille::to_string(const cmp& c){
   std::string repr;
   switch(c)
   {
@@ -23,7 +23,7 @@ std::string to_string(const cmp& c){
 }
 
 template<>
-std::string to_string(const brille::ops& o){
+std::string brille::to_string(const brille::ops& o){
   std::string repr;
   switch(o)
   {

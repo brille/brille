@@ -30,6 +30,8 @@
 // #define VERBOSE_DEBUG
 // #define DEBUG // comment-out for no debugging output
 
+namespace brille {
+
 int terminal_width(void);
 int terminal_height(void);
 
@@ -370,5 +372,5 @@ public:
 };
 
 
-
+} //end namespace brille
 #endif //_DEBUG_H_

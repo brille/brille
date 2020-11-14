@@ -3,6 +3,8 @@
 #include "hall_symbol.hpp"
 #include "spg_database.hpp"
 
+using namespace brille;
+
 
 static const int ALL_SPACEGROUP_SYMMETRY_OPERATIONS[] = {
   0       ,  /* dummy */

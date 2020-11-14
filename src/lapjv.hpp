@@ -58,6 +58,8 @@
 #define restrict
 #endif
 
+namespace brille::assignment {
+
 using sidx = long long int; // in case idx is unsigned :/
 
 template <typename idx, typename cost>
@@ -526,4 +528,5 @@ cost lapjv(idx dim, const cost *restrict assign_cost, bool verbose,
   return lapcost;
 }
 
+} // end namespace brille::assignment
 #endif

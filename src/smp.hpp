@@ -21,6 +21,8 @@
 
 #include <iostream>
 
+namespace brille::assignment {
+
 template<typename T, typename P> void smp_pmat(const T dim, const P *restrict tp){
   for (T i=0; i<dim; ++i){
     for (T j=0; j<dim; ++j) std::cout << " " << std::to_string(tp[i*dim + j]);
@@ -156,4 +158,5 @@ int smp(const T dim, const P *restrict prefs, T *restrict rsol, T *restrict csol
   return 0;
 }
 
+} // end namespace brille::assignment
 #endif

@@ -1,7 +1,7 @@
 #ifndef _BRAVAIS_H_
 #define _BRAVAIS_H_
 #include <string>
-
+namespace brille {
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
 
 When the unit cell does not reflec the symmetry of the lattice, it is usual to
@@ -37,5 +37,5 @@ std::string bravais_string(const Bravais b);
 char bravais_letter(const Bravais b);
 
 bool bravais_is_known(const Bravais b);
-
+}
 #endif

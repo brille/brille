@@ -16,7 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef _SORTING_STATUS_HPP_
 #define _SORTING_STATUS_HPP_
-
+namespace brille {
 /*! \brief A type to hold sorting status information for an object
 
 Every vertex/node/etc. in a grid-like object will have sorting information
@@ -131,5 +131,5 @@ public:
 
 };
 
-
+}
 #endif

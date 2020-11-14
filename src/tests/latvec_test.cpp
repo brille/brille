@@ -3,6 +3,8 @@
 #include "lattice.hpp"
 #include "array_latvec.hpp"
 
+using namespace brille;
+
 TEST_CASE("Lattice Vector tests","[latvec]"){
   Direct d(1.,1.,1.);
   Reciprocal r = d.star();

@@ -19,6 +19,8 @@
 #ifndef _DUALINTERPOLATOR_H_
 #define _DUALINTERPOLATOR_H_
 
+namespace brille {
+
 template<class T, class R>
 class DualInterpolator{
 public:
@@ -329,4 +331,5 @@ DualInterpolator<T,R>::determine_permutation_ij(const I i, const I j, std::mutex
   return true;
 }
 
+} // namespace brille
 #endif

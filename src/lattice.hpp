@@ -25,6 +25,7 @@
 #include "basis.hpp"
 #include "array2.hpp"
 
+namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential
 class Lattice;
@@ -415,4 +416,5 @@ template<> struct LatticeTraits<Reciprocal>{
 };
 #endif
 
+}
 #endif

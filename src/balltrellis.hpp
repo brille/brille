@@ -24,6 +24,8 @@
 #ifndef _BALLTRELLIS_H_
 #define _BALLTRELLIS_H_
 
+namespace brille {
+
 class TrellisLeaf{
   std::array<double,3> _centre;
   double _squared_radius;
@@ -291,5 +293,5 @@ private:
 
 Trellis construct_trellis(const std::vector<TrellisLeaf>& leaves, const double fraction=1.);
 
-
+} // end namespace brille
 #endif

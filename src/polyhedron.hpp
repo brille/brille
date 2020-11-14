@@ -26,6 +26,8 @@
 #include "utilities.hpp"
 #include "approx.hpp"
 
+namespace brille {
+
 template<typename T> static std::vector<T> unique(const std::vector<T>& x){
     std::vector<T> out;
     out.push_back(x[0]);
@@ -1018,4 +1020,5 @@ Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
   return Polyhedron(bArray<double>::from_std(v), vpf);
 }
 
+} // end namespace brille
 #endif // _POLYHEDRON_H_

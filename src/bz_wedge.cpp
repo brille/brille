@@ -16,6 +16,7 @@
 // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include "bz.hpp"
+using namespace brille;
 
 void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   debug_exec(std::string update_msg;)

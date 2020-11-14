@@ -23,6 +23,8 @@ typedef long slong;
 #include "bz.hpp"
 #include "mesh.hpp"
 
+namespace brille {
+
 template<class T, class S>
 class BrillouinZoneMesh3: public Mesh3<T,S>{
   using SuperClass = Mesh3<T,S>;
@@ -99,4 +101,5 @@ public:
   }
 };
 
+} // end namespace brille
 #endif // _BZ_MESH_
