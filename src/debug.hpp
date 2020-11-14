@@ -292,46 +292,7 @@ private:
   void inner_print(void){};
 };
 
-// replace GNU __PRETTY_FUNCTION__ by __FUNCSIG__ on Windows (MSVC)
-#ifdef _MSC_VER
-  #define __PRETTY_FUNCTION__ __FUNCSIG__
-#endif
-#ifdef VERBOSE_DEBUG
-  #define _MY_PRETTY_FUNC_ __PRETTY_FUNCTION__
-#else
-  #define _MY_PRETTY_FUNC_ ""
-#endif
-
-static DebugPrinter _debug_printer("");
-#define info_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-#define info_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-// #define info_update(...)
-
-#if defined(VERBOSE_DEBUG) || defined(DEBUG)
-  #define debug_exec(...) __VA_ARGS__
-  #define debug_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define debug_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-#else
-  #define debug_update_if(...)
-  #define debug_update(...)
-  #define debug_exec(...)
-#endif
-#ifdef VERBOSE_DEBUG
-  #define verbose_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define verbose_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-#else
-  #define verbose_update(...)
-  #define verbose_update_if(...)
-#endif
-
-#if defined(PROFILING)
-  //_debug_printer.datetime(true); // profiling needs timing information
-  #define profile_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define profile_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-#else
-  #define profile_update(...)
-  #define profile_update_if(...)
-#endif
+static DebugPrinter printer("");
 
 template<typename TimeT = std::chrono::milliseconds>
 class Stopwatch{
@@ -373,4 +334,43 @@ public:
 
 
 } //end namespace brille
+
+// replace GNU __PRETTY_FUNCTION__ by __FUNCSIG__ on Windows (MSVC)
+#ifdef _MSC_VER
+  #define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+#ifdef VERBOSE_DEBUG
+  #define _MY_PRETTY_FUNC_ __PRETTY_FUNCTION__
+#else
+  #define _MY_PRETTY_FUNC_ ""
+#endif
+
+#define info_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+#define info_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+
+#if defined(VERBOSE_DEBUG) || defined(DEBUG)
+  #define debug_exec(...) __VA_ARGS__
+  #define debug_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define debug_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+#else
+  #define debug_update_if(...)
+  #define debug_update(...)
+  #define debug_exec(...)
+#endif
+#ifdef VERBOSE_DEBUG
+  #define verbose_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define verbose_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+#else
+  #define verbose_update(...)
+  #define verbose_update_if(...)
+#endif
+
+#if defined(PROFILING)
+  #define profile_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  #define profile_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+#else
+  #define profile_update(...)
+  #define profile_update_if(...)
+#endif
+
 #endif //_DEBUG_H_
