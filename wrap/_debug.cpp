@@ -3,7 +3,7 @@
 
 void wrap_debug(pybind11::module &m){
     using namespace pybind11::literals;
-
+    using namespace brille;
     m.def("emit", [&](){return !_debug_printer.silenced();});
     m.def("emit", [&](const bool emt){
       bool orig = !_debug_printer.silenced();

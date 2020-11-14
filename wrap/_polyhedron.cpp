@@ -22,6 +22,7 @@
 
 void wrap_polyhedron(pybind11::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<Polyhedron> cls(m, "Polyhedron");
 
   cls.def(pybind11::init([](py::array_t<double> pyv){

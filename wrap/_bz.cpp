@@ -23,6 +23,7 @@ namespace py = pybind11;
 
 void wrap_brillouinzone(py::module & m){
   using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
+  using namespace brille;
   using CLS = BrillouinZone;
   py::class_<CLS> cls(m,"BrillouinZone");
   cls.def(py::init<Reciprocal,bool,int,bool,bool>(),

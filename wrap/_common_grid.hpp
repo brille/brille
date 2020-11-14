@@ -16,18 +16,21 @@
 #include "utilities.hpp"
 
 namespace py = pybind11;
-typedef long slong;
+namespace br = brille;
 
 template<template<class, class> class Grid, class T, class R>
 void def_grid_fill(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
+  using namespace brille;
   using Class = Grid<T,R>;
 
-  cls.def("fill",[](Class& cobj,
+  cls.def("fill",
+  [](Class& cobj,
     py::array_t<T> pyvals, py::array_t<int, py::array::c_style> pyvalelrl,
     py::array_t<R> pyvecs, py::array_t<int, py::array::c_style> pyvecelrl,
     bool sort
   ){
+    using namespace brille;
     profile_update("Start of 'fill' operation");
     size_t count = cobj.vertex_count();
     Interpolator<T> vals = fill_check(pyvals,pyvalelrl,count);
@@ -85,7 +88,8 @@ R"pbdoc(
 )pbdoc");
 
 
-  cls.def("fill",[](Class& cobj,
+  cls.def("fill",
+  [](Class& cobj,
     py::array_t<T> pyvals, py::array_t<int> pyvalel, py::array_t<double> pyvalwght,
     py::array_t<R> pyvecs, py::array_t<int> pyvecel, py::array_t<double> pyvecwght,
     bool sort
@@ -178,10 +182,12 @@ template<template<class, class> class Grid, class T, class R>
 void def_grid_ir_interpolate(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
   using Class = Grid<T,R>;
-  cls.def("ir_interpolate_at",[](Class& cobj,
-                           py::array_t<double> pyX,
-                           const bool& useparallel,
-                           const int& threads, const bool& no_move){
+  cls.def("ir_interpolate_at",
+  [](
+    Class& cobj, py::array_t<double> pyX, const bool& useparallel,
+    const int& threads, const bool& no_move
+  ){
+    using namespace brille;
     profile_update("Start of 'ir_interpolate_at' operation");
     brille::Array2<double> bX = brille::py2a2(pyX);
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
@@ -233,11 +239,12 @@ R"pbdoc(
   respectively.
 )pbdoc");
 
-  cls.def("ir_interpolate_at_dw",[](Class& cobj,
-                           py::array_t<double> pyX,
-                           py::array_t<double> pyM, double temp_k,
-                           const bool& useparallel,
-                           const int& threads, const bool& no_move){
+  cls.def("ir_interpolate_at_dw",
+  [](
+    Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM,
+    double temp_k, const bool& useparallel, const int& threads, const bool& no_move
+  ){
+    using namespace brille;
     profile_update("Start of 'ir_interpolate_at_dw' operation");
     brille::Array2<double> bX = brille::py2a2(pyX);
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
@@ -296,10 +303,12 @@ template<template<class, class> class Grid, class T, class R>
 void def_grid_interpolate(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
   using Class = Grid<T,R>;
-  cls.def("interpolate_at",[](Class& cobj,
-                           py::array_t<double> pyX,
-                           const bool& useparallel,
-                           const int& threads, const bool& no_move){
+  cls.def("interpolate_at",
+  [](
+    Class& cobj, py::array_t<double> pyX, const bool& useparallel,
+    const int& threads, const bool& no_move
+  ){
+    using namespace brille;
     profile_update("Start of 'interpolate_at' operation");
     brille::Array2<double> bX = brille::py2a2(pyX);
     LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
@@ -354,6 +363,7 @@ R"pbdoc(
 template<template<class, class> class Grid, class T, class R>
 void def_grid_sort(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
+  using namespace brille;
   using Class = Grid<T,R>;
 
   cls.def("sort",&Class::sort);
@@ -417,6 +427,7 @@ void def_grid_sort(py::class_<Grid<T,R>>& cls){
 template<template<class, class> class Grid, class T, class R>
 void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
   using namespace pybind11::literals;
+  using namespace brille;
   using Class = Grid<T,R>;
 
   cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){

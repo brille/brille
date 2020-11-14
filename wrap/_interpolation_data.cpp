@@ -27,6 +27,7 @@ namespace py = pybind11;
 
 void wrap_interpolationdata(py::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   py::enum_<RotatesLike> enm(m,"RotatesLike",
   R"pbdoc(
     Enumeration indicating how vector and matrix values transform
@@ -53,6 +54,7 @@ std::tuple<RotatesLike, int, int, std::array<double,3>>
 set_check(
   py::array_t<int> pyflg, py::array_t<double> pywght
 ){
+  using namespace brille;
   py::buffer_info bi;
   bi = pyflg.request();
   if (bi.ndim != 1) throw std::runtime_error("flags must be a 1-D array");

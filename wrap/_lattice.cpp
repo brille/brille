@@ -21,6 +21,7 @@ namespace py = pybind11;
 
 void wrap_lattice(py::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   // Declare the interface to the superclass Lattice
   py::class_<Lattice> cls(m,"Lattice");
 

@@ -57,8 +57,7 @@
 #ifndef __pointgroup_H__
 #define __pointgroup_H__
 
-// #include <vector>
-// #include <array>
+#include <string>
 #include "symmetry.hpp"
 #include "pointsymmetry.hpp"
 

@@ -19,6 +19,7 @@
 
 void wrap_hallsymbol(pybind11::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<HallSymbol> cls(m, "HallSymbol", R"pbdoc(
     A crystallographic spacegroup's symmetries encoded in Hall's notation
 

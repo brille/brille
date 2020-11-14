@@ -27,12 +27,13 @@
 #define __NEST_H
 
 namespace py = pybind11;
-typedef long slong; // ssize_t is only defined for gcc?
-typedef unsigned long element_t;
+// typedef long slong; // ssize_t is only defined for gcc?
+// typedef unsigned long element_t;
 
 template<class T, class R>
 void declare_bznestq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
+  using namespace brille;
   using Class = BrillouinZoneNest3<T,R>;
   std::string pyclass_name = std::string("BZNestQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());

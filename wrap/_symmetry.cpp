@@ -26,6 +26,7 @@ The symmetry operations of a spacegroup
 */
 void wrap_symmetry(pybind11::module & m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<Symmetry> cls(m, "Symmetry");
 
   cls.def(pybind11::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),"Hall number"_a);

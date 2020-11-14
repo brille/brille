@@ -20,6 +20,7 @@
 
 void wrap_primitivetransform(pybind11::module & m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<PrimitiveTransform> cls(m,"PrimitiveTransform");
 
   cls.def(pybind11::init<int>(),"Hall number"_a);

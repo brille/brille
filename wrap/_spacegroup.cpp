@@ -19,7 +19,7 @@
 
 void wrap_spacegroup(pybind11::module & m){
   using namespace pybind11::literals;
-
+  using namespace brille;
   pybind11::class_<Spacegroup> cls(m,"Spacegroup");
 
   cls.def(pybind11::init<int>(),"Hall number"_a);

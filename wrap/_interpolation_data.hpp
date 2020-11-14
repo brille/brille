@@ -12,6 +12,7 @@ namespace py = pybind11;
 template<class T>
 std::tuple< brille::Array<T>, std::array<brille::ind_t,3>, RotatesLike >
 fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
+  using namespace brille;
   // this will probably be a problem if I don't figure out a way to add to the python reference count
   brille::Array<T> data = brille::py2a(pyarray);
   if (count != data.size(0)){
@@ -47,6 +48,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
 template<class T>
 std::tuple< brille::Array<T>, std::array<brille::ind_t,3>, RotatesLike, int, int, std::array<double,3> >
 fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> pywght, const size_t count){
+  using namespace brille;
   // copy-over the N-D array information
   // this will probably be a problem if I don't figure out a way to add to the python reference count
   brille::Array<T> data = brille::py2a(pyarray);

@@ -20,6 +20,7 @@
 namespace py = pybind11;
 
 void wrap_bravais(py::module &m){
+  using namespace brille;
   py::enum_<Bravais>(m, "Bravais")
     .value("invalid", Bravais::_)
     .value("P", Bravais::P)

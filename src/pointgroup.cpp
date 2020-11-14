@@ -114,7 +114,7 @@ static PointgroupType pointgroup_data[33] = {
   {/*32*/{0,6,8,9,1,1,9,8,6,0},"m-3m" ,"Oh" ,Holohedry::cubic     ,Laue::_m3m ,}
 };
 
-std::string my_to_string(const Holohedry& h){
+std::string brille::my_to_string(const Holohedry& h){
   std::string str;
   switch(h){
     case Holohedry::triclinic:  str = "triclinic";  break;
@@ -128,7 +128,7 @@ std::string my_to_string(const Holohedry& h){
   }
   return str;
 }
-std::string my_to_string(const Laue& l){
+std::string brille::my_to_string(const Laue& l){
   std::string str;
   switch(l){
     case Laue::_1:    str="1";    break;

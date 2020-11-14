@@ -18,6 +18,7 @@
 #include "pointgroup.hpp"
 
 void wrap_pointgroup(pybind11::module & m){
+  using namespace brille;
   pybind11::class_<Pointgroup> cls(m, "Pointgroup");
   cls.def(pybind11::init<int>(), pybind11::arg("Pointgroup number"));
   cls.def_property_readonly("number",&Pointgroup::get_number);

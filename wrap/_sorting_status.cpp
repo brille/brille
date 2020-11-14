@@ -19,6 +19,7 @@
 
 void wrap_sortingstatus(pybind11::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<SortingStatus> cls(m, "SortingStatus", R"pbdoc(
     An object representing the status of a single object under sorting.
 

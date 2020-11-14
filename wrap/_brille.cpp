@@ -40,7 +40,7 @@ void wrap_version(pybind11::module & m){
   m.attr("__version__") = version_number;
   std::string v = version_number;
   if (!std::string(git_revision).empty()){
-    v += "-" + std::string(git_branch);
+    v += "+" + std::string(git_branch);
     v += "." + std::string(git_revision).substr(0,7);
   }
   m.attr("version") = v;

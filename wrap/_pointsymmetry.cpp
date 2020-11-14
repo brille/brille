@@ -21,6 +21,7 @@
 
 void wrap_pointsymmetry(pybind11::module & m){
   using namespace pybind11::literals;
+  using namespace brille;
   pybind11::class_<PointSymmetry> cls(m, "PointSymmetry");
 
   cls.def(pybind11::init([](int hall, int time_reversal){
