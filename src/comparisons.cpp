@@ -1,10 +1,9 @@
 #include <string>
 #include "comparisons.hpp"
 
-namespace brille{
-
 template<>
 std::string brille::to_string(const cmp& c){
+  using namespace brille;
   std::string repr;
   switch(c)
   {
@@ -24,6 +23,7 @@ std::string brille::to_string(const cmp& c){
 
 template<>
 std::string brille::to_string(const brille::ops& o){
+  using namespace brille;
   std::string repr;
   switch(o)
   {
@@ -35,6 +35,4 @@ std::string brille::to_string(const brille::ops& o){
   default: repr = "unknown operator";
   }
   return repr;
-}
-
 }
