@@ -30,6 +30,14 @@
 #include "debug.hpp"
 #include "approx.hpp"
 
+// We include numeric for std::gcd in C++17 (are we using it for anything else?)
+/* Pre-C++17 gcd was not part of the standard but may be present in an
+// experimental header -- which of course doesn't exist for MSVC
+*/
+#if defined(__cplusplus) && __cplusplus > 201700L
+  #define STD_GCD
+#endif
+
 namespace brille{
   const double             pi = 3.14159265358979323846;
   const double         halfpi = 1.57079632679489661923;
@@ -45,13 +53,6 @@ namespace brille{
   // const double            ln2 = 0.693147180559945309417;
   // const double           ln10 = 2.30258509299404568402;
   namespace utils{
-// We include numeric for std::gcd in C++17 (are we using it for anything else?)
-/* Pre-C++17 gcd was not part of the standard but may be present in an
-// experimental header -- which of course doesn't exist for MSVC
-*/
-#if defined(__cplusplus) && __cplusplus > 201700L
-  #define STD_GCD
-#endif
 
 //! trace of a square matrix
 template<typename T, int N=3> T trace(const T *M);

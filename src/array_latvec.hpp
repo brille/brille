@@ -134,7 +134,7 @@ public:
   {
     this->check_array();
   }
-  template<class R, class Q>
+  template<class R>
   LDVec(const LDVec<R>& other)
   : bArray<T>(other.get_hkl()), lattice(other.get_lattice())
   {
