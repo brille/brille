@@ -5,6 +5,8 @@
 #include "debug.hpp"
 #include "bz_trellis.hpp"
 
+using namespace brille;
+
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
   // The conventional cell for Nb
   Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);

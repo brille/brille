@@ -2,8 +2,13 @@ cmake_minimum_required(VERSION 3.13) # tested working 3.13.0, 3.13.4, 3.14.5
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
 project(brille)
+set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
-set(TESTING_TARGET run_tests)
+set(BRILLE_SINGLE_HEADER brille.h) # must match template file in project root
+SET(BRILLE_LIB_DESTINATION lib)
+SET(BRILLE_BIN_DESTINATION bin)
+SET(BRILLE_INCLUDE_DESTINATION include)
+set(TESTING_TARGET tester)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -148,12 +153,25 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from version_info import versio
 # So that we can print it to the console along with the specified build type
 message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
+# Create a header file with information about the last time tye python module was built
+# This file will be updated even if no other source files are modified but it does not
+# cause relinking the module (if it is the *only* file which changes)
+add_custom_target(write_version_info
+  COMMAND ${PYTHON_EXECUTABLE} version_info.py src/version.hpp
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# Create a single header by contatenating all headers in src/
+add_custom_target(single_header
+  COMMAND ${PYTHON_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  DEPENDS write_version_info
+)
 
 # We will always build the python module
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
 
 if(BRILLE_BUILD_TESTING)
-  list(APPEND CXX_TARGETS ${TESTING_TARGET}) # Include the C++ test target
   enable_testing() # allows registration of Python tests in wrap/
 endif()
 
@@ -162,18 +180,25 @@ pybind11_add_module(${BRILLE_PYTHON_MODULE} MODULE)
 add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)
+  list(APPEND CXX_TARGETS ${TESTING_TARGET}) # Include the C++ test target
   # target for Catch2 based tests
   add_executable(${TESTING_TARGET})
+endif()
+add_subdirectory(lib)
+
+# target for C++ shared library
+add_library(${BRILLE_LIBRARY_TARGET})
+list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
+
+# add the dependencies and include directories for all CXX targets:
+add_subdirectory(src)  # important
+
+if(BRILLE_BUILD_TESTING)
   target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
   include(CTest)
   include(Catch)
   catch_discover_tests(${TESTING_TARGET})
 endif()
-add_subdirectory(lib)
-
-# (eventually) target for C++ shared library
-# [goes here]
-add_subdirectory(src)  # important
 
 # OpenMP support:
 find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
@@ -224,3 +249,14 @@ else (DOXYGEN_FOUND)
   message(STATUS "Install Doxygen to build documentation")
 endif (DOXYGEN_FOUND)
 endif()
+
+install(
+  TARGETS ${BRILLE_LIBRARY_TARGET}
+  ARCHIVE DESTINATION ${BRILLE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${BRILLE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${BRILLE_BIN_DESTINATION}
+)
+install(
+  FILES "${CMAKE_BINARY_DIR}/${BRILLE_SINGLE_HEADER}"
+  DESTINATION ${BRILLE_INCLUDE_DESTINATION}
+)

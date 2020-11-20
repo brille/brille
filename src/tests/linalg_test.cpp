@@ -2,6 +2,8 @@
 #include "utilities.hpp"
 #include "approx.hpp"
 
+
+using namespace brille;
 using namespace brille::utils;
 
 TEST_CASE("trace","[linalg]"){

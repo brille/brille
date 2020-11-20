@@ -1,6 +1,21 @@
-#ifndef SUBSCRIPT_HPP
-#define SUBSCRIPT_HPP
+/* This file is part of brille.
 
+Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef BRILLE_SUBSCRIPT_HPP_
+#define BRILLE_SUBSCRIPT_HPP_
 #include <algorithm>
 #include <array>
 #include <vector>
@@ -8,6 +23,7 @@
 #include <iostream>
 #include <tuple>
 #include <numeric>
+namespace brille {
 
 template<class I1, class I2>
 std::enable_if_t<std::is_unsigned<I1>::value, bool>
@@ -486,4 +502,5 @@ I offset_sub2lin(const std::array<I,2>& off, const I s0, const I s1, const std::
   return (off[0]+s0)*str[0] + (off[1]+s1)*str[1];
 }
 
+} // end namespace brille
 #endif

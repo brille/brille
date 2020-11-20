@@ -3,6 +3,8 @@
 #include <catch2/catch.hpp>
 #include "bz.hpp"
 
+using namespace brille;
+
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[brillouinzone]"){
   Direct d(2*brille::pi,2*brille::pi,2*brille::pi,90.,90.,90.);
   Reciprocal r = d.star();

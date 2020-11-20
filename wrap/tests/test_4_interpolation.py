@@ -3,23 +3,28 @@
 import os
 import sys
 import unittest
-from importlib.util import find_spec
 import numpy as np
+from pathlib import Path
+from importlib.util import find_spec
+addpaths = [Path(), Path('..')] # we might be in .../build/wrap/
+config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
+if config:
+  for path in addpaths:
+    if Path(path, config).exists():
+      addpaths.append(Path(path,config))
+# reverse before adding to ensure we put the new directories first
+sys.path.reverse()
+for path in addpaths:
+  sys.path.append(str(path.absolute()))
+sys.path.reverse()
 
-# Try to find the brille module:
-# It might be in the current directory, or a sub-directory called, e.g., Debug
-ADDPATH = os.getcwd()
-if os.path.exists('Debug'):
-    ADDPATH += "\\Debug"
-sys.path.append(ADDPATH)
-# Now the actual search for the module, preferring a local build
 if find_spec('_brille') is not None:
     import _brille as s
 elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
     import brille as s
 else:
-    raise Exception("Required brille module not found!")
-
+    abspaths = [str(path.absolute()) for path in addpaths]
+    raise Exception("brille module not found in {}!".format(abspaths))
 
 def sqwfunc_ones(Q):
     """S(Q,W) function that is all ones."""

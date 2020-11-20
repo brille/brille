@@ -2,6 +2,8 @@
 #include <tuple>
 #include "bz_nest.hpp"
 
+using namespace brille;
+
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   // The conventional cell for Nb
   Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);

@@ -4,6 +4,8 @@
 #include "bz_mesh.hpp"
 #include "interpolation.hpp"
 
+using namespace brille;
+
 /* Direct entry of the information required to construct a Mesh3 object would be
    less than fun. Instead skip to using a BrillouinZone object to do the heavy
    lifting for us.

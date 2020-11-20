@@ -1,40 +1,35 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-#ifndef __TRELLIS_H
-#define __TRELLIS_H
+/* This file is part of brille.
+
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include <iostream>
-
 #include <pybind11/pybind11.h>
-
 #include "_common_grid.hpp"
-
 #include "trellis.hpp"
 #include "bz_trellis.hpp"
 
+#ifndef WRAP_BRILLE_TRELLIS_HPP_
+#define WRAP_BRILLE_TRELLIS_HPP_
 
 namespace py = pybind11;
-
-typedef long slong; // ssize_t is only defined for gcc?
-typedef unsigned long element_t;
 
 template<class T,class R>
 void declare_bztrellisq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
+  using namespace brille;
   using Class = BrillouinZoneTrellis3<T,R>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());

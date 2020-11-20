@@ -1,19 +1,19 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
+
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 /* This file has evolved from spg_database.cpp distributed as part of spglib.
    Changes have been made to introduce C++ style classes as well as other
@@ -58,7 +58,7 @@
 #include <cstring>
 #include "spg_database.hpp"
 #include "hall_symbol.hpp"
-
+using namespace brille;
 
 /* Modifications from spglib original:
 ' CENTERING_ERROR' --> 'Bravais::_'
@@ -609,9 +609,9 @@ static const Spacegroup ALL_SPACEGROUPS[] = {
   {230, "Oh^10" , "-I 4bd 2c 3"     , "I a -3 d"                       , "I 4_1/a -3 2/d"     , "Ia-3d"     , ""     , Bravais::I, 32, 530},
 };
 
-bool hall_number_ok(const int h) {return h>0 && h<531;}
+bool brille::hall_number_ok(const int h) {return h>0 && h<531;}
 
-int international_number_to_hall_number(const int n, const std::string& c){
+int brille::international_number_to_hall_number(const int n, const std::string& c){
 	if (n>=0 && n<230) for (int i=1; i<531; i++){
 		Spacegroup spg(ALL_SPACEGROUPS[i]);
     if (n==spg.number && (0==c.size() || 0==c.compare(spg.choice))) return i;
@@ -619,7 +619,7 @@ int international_number_to_hall_number(const int n, const std::string& c){
 	return -1;
 }
 
-int international_string_to_hall_number(const std::string& n, const std::string& c){
+int brille::international_string_to_hall_number(const std::string& n, const std::string& c){
   for (int i=1; i<531; i++) {
 	  Spacegroup spg(ALL_SPACEGROUPS[i]);
 	  // now check for matching international table names
@@ -632,7 +632,7 @@ int international_string_to_hall_number(const std::string& n, const std::string&
   return 0; // no matching strings
 }
 
-int hall_symbol_to_hall_number(const std::string& hsymbol){
+int brille::hall_symbol_to_hall_number(const std::string& hsymbol){
   for (int i=1; i<531; i++){
     Spacegroup spg(ALL_SPACEGROUPS[i]);
     // only accept exact matches
@@ -643,14 +643,14 @@ int hall_symbol_to_hall_number(const std::string& hsymbol){
 
 // When we don't know if we're searching for a Hall Symbol or
 // International Table Name/Symbol search for either, starting with Hall symbols
-int string_to_hall_number(const std::string& str, const std::string& ch){
-  int tmp = hall_symbol_to_hall_number(str);
-  if (!tmp) tmp = international_string_to_hall_number(str, ch);
+int brille::string_to_hall_number(const std::string& str, const std::string& ch){
+  int tmp = brille::hall_symbol_to_hall_number(str);
+  if (!tmp) tmp = brille::international_string_to_hall_number(str, ch);
   return tmp;
 }
 
 void Spacegroup::set_from_hall_number(const int hn){
-  Spacegroup spg(ALL_SPACEGROUPS[hall_number_ok(hn) ? hn : 0]);
+  Spacegroup spg(ALL_SPACEGROUPS[brille::hall_number_ok(hn) ? hn : 0]);
   this->number              = spg.number;
   this->schoenflies         = spg.schoenflies;
   this->hall_symbol         = spg.hall_symbol;

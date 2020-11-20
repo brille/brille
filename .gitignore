@@ -38,32 +38,5 @@ api/
 *build
 *dist
 
-# autotools
-AUTHORS
-INSTALL
-NEWS
-README
-aclocal.m4
-autom4te.cache/
-compile
-config.guess
-config.h.in
-config.sub
-install-sh
-missing
-Makefile.in
-config.log
-config.status
-configure
-depcomp
-ltmain.sh
-m4/
-src/Makefile.in
-Makefile
-config.h
-libtool
-src/Makefile
-stamp-h1
-autoscan.log
-configure.scan
-test-driver
+# Built version header
+src/version.hpp

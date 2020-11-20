@@ -1,4 +1,4 @@
-# Copyright 2020 Greg Tucker
+# Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 #
 # This file is part of brille.
 #

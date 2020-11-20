@@ -1,22 +1,22 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
-#ifndef _TRIANGULATION_H_
-#define _TRIANGULATION_H_
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
+#ifndef BRILLE_TRIANGULATION_HPP_
+#define BRILLE_TRIANGULATION_HPP_
 #include <set>
 #include <vector>
 #include <array>
@@ -28,6 +28,7 @@
 #include "debug.hpp"
 #include "polyhedron.hpp"
 #include "approx.hpp"
+namespace brille {
 
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);
@@ -555,4 +556,5 @@ triangulate(const bArray<T>& verts,
   return TetTri(layers);
 }
 
+} // end namespace brille
 #endif // _TRIANGULATION_H_

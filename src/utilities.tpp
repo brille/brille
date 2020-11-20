@@ -1,21 +1,19 @@
-/* Copyright 2019-2020 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
-template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 // trace of a square matrix
 template<typename T, int N> T trace(const T *M){
@@ -611,9 +609,13 @@ S coth_over_en(const std::complex<T> en, const R beta){
   return S(1)/den;
 }
 
-template<class T> enable_if_t<std::is_unsigned<T>::value, T>
+template<class T>
+std::enable_if_t<std::is_unsigned<T>::value, T>
 gcd(const T a, const T b){
-  #ifdef STD_GCD
+  // We include numeric for std::gcd in C++17
+  /* Pre-C++17 gcd was not part of the standard but may be present in an
+  // experimental header -- which of course doesn't exist for MSVC        */
+  #if defined(__cplusplus) && __cplusplus > 201700L
     return std::gcd(a,b);
   #else
     if (b==0) return a;
@@ -622,7 +624,7 @@ gcd(const T a, const T b){
 }
 
 template<class T, class R>
-enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
+std::enable_if_t<std::is_unsigned<T>::value&&std::is_unsigned<R>::value, unsigned long long>
 binomial_coefficient(const T n, const R k){
   unsigned long long ans{1}, num{1}, den{1}, comdiv;
   if (k>n){

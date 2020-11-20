@@ -22,8 +22,8 @@ AUTHOR_NAME="$(git show --format=%an -s)"
 AUTHOR_EMAIL="$(git show --format=%ae -s)"
 DOCS_SHA8="$(echo ${GITHUB_SHA} | cut -c 1-8)"
 # Determine the tag name or branch name -- nevermind, tag or 'latest'
-#: "${named:=$(git describe --tags)}" "${named:=$(git describe --all)}"
-: "${named:=$(git describe --tags)}" "${named:=latest}"
+# only match 'version' tags, e.g., vM.m.p, and keep only up to the second period
+: "${named:=$(git describe --tags --match 'v*'| cut -d'.' -f1-2)}" "${named:=latest}"
 echo "::set-output name=name::"${AUTHOR_NAME}""
 echo "::set-output name=email::"$AUTHOR_EMAIL}""
 echo "::set-output name=docs_sha::$(echo ${GITHUB_SHA})"
@@ -77,7 +77,7 @@ for val in $INPUT_PAGES_DIR; do
 	# Add all changes to the gh_pages branch
 	echo_run git add .
 	echo ::endgroup::
-	
+
 	echo ::group::Commit to repository and push
 	echo_run git commit --date="$(date)" --message='Auto commit from Versioned Sphinx GH-Pages Action'
 	echo_run git push

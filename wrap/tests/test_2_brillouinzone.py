@@ -1,32 +1,36 @@
 #!/usr/bin/env python3
 """Run tests of Brillouin zone creation."""
-from importlib import util
 import os
 import sys
 import unittest
 import numpy as np
+from pathlib import Path
+from importlib.util import find_spec
+addpaths = [Path(), Path('..')] # we might be in .../build/wrap/
+config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
+if config:
+  for path in addpaths:
+    if Path(path, config).exists():
+      addpaths.append(Path(path,config))
+# reverse before adding to ensure we put the new directories first
+sys.path.reverse()
+for path in addpaths:
+  sys.path.append(str(path.absolute()))
+sys.path.reverse()
 
-# We need to tell Python where it can find the brille module.
-ADDPATH = os.getcwd()
-# It's either in the working directory where python was called or in
-# a sub-directory (called Debug using Visual Studio under Windows)
-if os.path.exists('Debug'):
-    ADDPATH += "\\Debug"
-sys.path.append(ADDPATH)
-
-if util.find_spec('brille') is not None and util.find_spec('brille._brille') is not None:
-    import brille as s
-elif util.find_spec('_brille') is not None:
-    # pylint: disable=e0401
+if find_spec('_brille') is not None:
     import _brille as s
+elif find_spec('brille') is not None and find_spec('brille._brille') is not None:
+    import brille as s
 else:
-    raise Exception("brille module not found!")
+    abspaths = [str(path.absolute()) for path in addpaths]
+    raise Exception("brille module not found in {}!".format(abspaths))
 
-HASMPL = util.find_spec('matplotlib') is not None
-HASMPL &= util.find_spec('mpl_toolkits') is not None
+HASMPL = find_spec('matplotlib') is not None
+HASMPL &= find_spec('mpl_toolkits') is not None
 # protect against trying to load a submodule of a non-existant module
 if HASMPL:
-    HASMPL &= util.find_spec('mpl_toolkits.mplot3d') is not None
+    HASMPL &= find_spec('mpl_toolkits.mplot3d') is not None
 if HASMPL:
     import matplotlib.pyplot as pp
     from mpl_toolkits.mplot3d.axes3d import Axes3D
@@ -115,24 +119,24 @@ class BrillouinZone (unittest.TestCase):
         # the first Brillouin zone of this unit-cube is bounded by
         # {(00̄1),(0̄10),(̄100),(100),(010),(001)}/2
         face_centres = np.array([ [-1, 0, 0], [0,-1, 0], [0, 0,-1], [0, 0, 1], [0, 1, 0], [1, 0, 0] ], dtype='double')/2
-        self.assertTrue( (bz.isinside(face_centres)).all() )
+        self.assertTrue( np.all(bz.isinside(face_centres)) )
         # including the vertices (since they are the corners of the zone)
         corners = np.array([[-1,-1,-1], [-1,-1, 1], [-1, 1,-1], [-1, 1, 1], [1,-1,-1], [1,-1, 1], [1, 1,-1], [1, 1, 1]], dtype='double')/2
-        self.assertTrue( (bz.isinside(corners)).all() )
+        self.assertTrue( np.all(bz.isinside(corners)) )
         # so all points with h, k, and l in the range [-0.5, 0.5] are in the zone
         Q = np.random.rand(100, 3) - 0.5 # this is a uniform distribution over [-0.5, 0.5) -- close enough
-        self.assertTrue( bz.isinside(Q).all() )
-        self.assertFalse( bz.isinside(Q+5).all() )
+        self.assertTrue( np.all(bz.isinside(Q)) )
+        self.assertFalse( np.all(bz.isinside(Q+5)) )
 
     def test_c_moveinto_unit_cube(self):
         d, r = make_dr(1, 1, 1)
         bz = s.BrillouinZone(r)
         Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
-        if bz.isinside(Q).all(): # this is vanishingly-unlikely
+        if np.all(bz.isinside(Q)): # this is vanishingly-unlikely
             Q += 100.0
-        self.assertFalse( bz.isinside(Q).all() )
+        self.assertFalse( np.all(bz.isinside(Q)) )
         (q, tau) = bz.moveinto(Q)
-        self.assertTrue( bz.isinside(q).all() )
+        self.assertTrue( np.all(bz.isinside(q)) )
         self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
 #
 #
@@ -162,7 +166,7 @@ class BrillouinZone (unittest.TestCase):
         self.assertTrue(vector_lists_match(p, expected/2))
         n_compare = np.array([x/np.max(np.abs(x)) for x in n])
         self.assertTrue(vector_lists_match(n_compare, expected))
-        self.assertTrue( (bz.isinside(expected/2)).all() )
+        self.assertTrue( np.all(bz.isinside(expected/2)) )
         #
         # the vertices of the first Brillouin zone are the 12 corners of the hexagonal-prism:
         expected = np.array([[-4, 2,-3],[-2,-2,-3],[-4, 2, 3],[-2,-2, 3],[-2, 4,-3],[-2, 4, 3],
@@ -172,7 +176,7 @@ class BrillouinZone (unittest.TestCase):
         self.assertEqual(verts.shape[0], 12)
         self.assertEqual(verts.shape[1], 3)
         self.assertTrue(vector_lists_match(verts, expected))
-        self.assertTrue( (bz.isinside(expected)).all() )
+        self.assertTrue( np.all(bz.isinside(expected)) )
 
     def test_b_isinside_hexagonal(self):
         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
@@ -191,11 +195,11 @@ class BrillouinZone (unittest.TestCase):
         d, r = make_dr(3, 3, 9, np.pi/2, np.pi/2, np.pi*2/3)
         bz = s.BrillouinZone(r)
         Q = (np.random.rand(100, 3)-0.5) * 10 # this is a uniform distribution over [-5, 5)
-        if bz.isinside(Q).all(): # this is vanishingly-unlikely
+        if np.all(bz.isinside(Q)): # this is vanishingly-unlikely
             Q += 100.0
-        self.assertFalse( bz.isinside(Q).all() )
+        self.assertFalse( np.all(bz.isinside(Q)) )
         (q, tau) = bz.moveinto(Q)
-        self.assertTrue( bz.isinside(q).all() )
+        self.assertTrue( np.all(bz.isinside(q)) )
         self.assertAlmostEqual( np.abs(Q-q-tau).sum(), 0)
 
     def test_d_all_hallgroups(self):
@@ -283,14 +287,14 @@ class BrillouinZone (unittest.TestCase):
 
         if failed > 0:
             print("\nFailed to find irreducible Brillouin zone for",failed,"out of",tested,"(max 530) Hall groups")
-            # for spg, ptg, lat, rat in zip(failed_spg, failed_ptg, failed_lat, failed_ratio):
-            #     print(spg,ptg,lat,rat)
+            for spg, ptg, lat, rat in zip(failed_spg, failed_ptg, failed_lat, failed_ratio):
+                print(spg,ptg,lat,rat)
         if errored > 0:
             print("\nException raised for",errored,"out of",tested,"(max 530) Hall Groups")
-            # for spg, ptg, lat, arg in zip(errored_spg, errored_ptg, errored_lat, errored_arg):
-            #     print(arg)
-            #     print(spg,ptg,lat)
-        # self.assertTrue(errored == 0)
+            for spg, ptg, lat, arg in zip(errored_spg, errored_ptg, errored_lat, errored_arg):
+                print(arg)
+                print(spg,ptg,lat)
+        self.assertTrue(errored == 0)
 
 
 if __name__ == '__main__':

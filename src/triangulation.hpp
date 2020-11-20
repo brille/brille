@@ -1,5 +1,5 @@
 /*
-// Copyright 2019 Greg Tucker
+// Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 //
 // This file is part of brille.
 //
@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with brille. If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef _TRIANGULATION_H_
-#define _TRIANGULATION_H_
 
+#ifndef BRILLE_TRIANGULATION_HPP_
+#define BRILLE_TRIANGULATION_HPP_
 #include <vector>
 #include <array>
 #include <cassert>
@@ -28,6 +28,7 @@
 #include "debug.hpp"
 #include "balltrellis.hpp"
 #include "approx.hpp"
+namespace brille {
 
 template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
   auto at = std::find(x.begin(), x.end(), val);
@@ -460,4 +461,5 @@ triangulate(
   return TetTri(tgo, fraction);
 }
 
+} // end namespace brille
 #endif // _TRIANGULATION_H_

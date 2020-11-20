@@ -1,3 +1,20 @@
+/* This file is part of brille.
+
+Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
 template<class T>
 Array2<T> Array2<T>::view() const{
   return Array2<T>(_data,_num,_shift,_own,_ref,_shape,_stride,false);
@@ -483,8 +500,7 @@ ARRAY_ELEMENTWISE_INT_TRANSFORM(ceil)
 template<class T>
 Array2<T>
 Array2<T>::sum(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
@@ -504,8 +520,7 @@ Array2<T>::sum(const ind_t dim) const{
 template<class T>
 Array2<T>
 Array2<T>::prod(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness
@@ -525,8 +540,7 @@ Array2<T>::prod(const ind_t dim) const{
 template<class T>
 Array2<T>
 Array2<T>::min(const ind_t dim) const{
-  size_t ndim = _shape.size();
-  assert(dim < ndim);
+  assert(dim < _shape.size());
   shape_t osize = this->shape();
   osize[dim] = 1u;
   shape_t ostride = this->calculate_stride(osize); // preserve orderness

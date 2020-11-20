@@ -1,6 +1,8 @@
-/* This file is part of brille.
+// This is a generated file, do not edit it directly.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+/* This file is part of brille {{revision}}.
+
+{{copyright}}
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -14,10 +16,18 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-#include <pybind11/pybind11.h>
-#include "_trellis.hpp"
-void wrap_trellis(pybind11::module & m){
-  declare_bztrellisq<double,double>(m,"dd");
-  declare_bztrellisq<double,std::complex<double>>(m,"dc");
-  declare_bztrellisq<std::complex<double>,std::complex<double>>(m,"cc");
-}
+
+// {{includes}}
+
+#pragma ACME comments off
+#pragma ACME disable DOXYGEN_GENERATING_OUTPUT
+
+#pragma ACME path src
+#pragma ACME path lib/tetgen
+
+#include "version.hpp"
+#include "bz_mesh.hpp"
+#include "bz_nest.hpp"
+#include "bz_trellis.hpp"
+#include "hall_symbol.hpp"
+#include "triangulation.hpp"

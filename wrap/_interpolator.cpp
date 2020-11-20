@@ -1,19 +1,19 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
+
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/complex.h>
@@ -24,9 +24,11 @@
 #include "_interpolator.hpp"
 
 namespace py = pybind11;
+namespace br = brille;
 
 void wrap_interpolator(py::module &m){
   using namespace pybind11::literals;
+  using namespace brille;
   py::enum_<RotatesLike> enm(m,"RotatesLike",
   R"pbdoc(
     Enumeration indicating how vector and matrix values transform
@@ -49,10 +51,11 @@ void wrap_interpolator(py::module &m){
   enm.value("Gamma", RotatesLike::Gamma);
 }
 
-std::tuple<RotatesLike, int, int, std::array<double,3>>
+std::tuple<br::RotatesLike, int, int, std::array<double,3>>
 set_check(
   py::array_t<int> pyflg, py::array_t<double> pywght
 ){
+  using namespace brille;
   py::buffer_info bi;
   bi = pyflg.request();
   if (bi.ndim != 1) throw std::runtime_error("flags must be a 1-D array");

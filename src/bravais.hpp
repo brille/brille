@@ -1,7 +1,23 @@
-#ifndef _BRAVAIS_H_
-#define _BRAVAIS_H_
-#include <string>
+/* This file is part of brille.
 
+Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef BRILLE_BRAVAIS_HPP_
+#define BRILLE_BRAVAIS_HPP_
+#include <string>
+namespace brille {
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
 
 When the unit cell does not reflec the symmetry of the lattice, it is usual to
@@ -37,5 +53,5 @@ std::string bravais_string(const Bravais b);
 char bravais_letter(const Bravais b);
 
 bool bravais_is_known(const Bravais b);
-
+}
 #endif

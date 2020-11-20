@@ -1,6 +1,6 @@
 /* This file is part of brille.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -14,10 +14,18 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-#include <pybind11/pybind11.h>
-#include "_trellis.hpp"
-void wrap_trellis(pybind11::module & m){
-  declare_bztrellisq<double,double>(m,"dd");
-  declare_bztrellisq<double,std::complex<double>>(m,"dc");
-  declare_bztrellisq<std::complex<double>,std::complex<double>>(m,"cc");
-}
+#ifndef COMMON_SYMMETRY_HPP
+#define COMMON_SYMMETRY_HPP
+
+#include <array>
+#include <vector>
+
+namespace brille {
+
+template<class T> using Matrix = std::array<T,9>;
+template<class T> using Vector = std::array<T,3>;
+template<class T> using Matrices = std::vector<Matrix<T>>;
+template<class T> using Vectors = std::vector<Vector<T>>;
+
+} //end namespace brille
+#endif // COMMON_SYMMETRY_HPP

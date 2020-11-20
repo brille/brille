@@ -71,9 +71,9 @@ class CMakeBuild(build_ext):
         cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                        '-DPYTHON_EXECUTABLE=' + sys.executable]
 
-        # cfg = 'Debug' if self.debug else 'Release'
-        cfg = 'Debug' if self.debug else 'RelWithDebInfo'
-        build_args = ['--config', cfg]
+        cfg = 'Debug' if self.debug else 'Release'
+        # cfg = 'Debug' if self.debug else 'RelWithDebInfo'
+        build_args = ['--config', cfg, '--target', '_brille']
 
         # make sure all library files end up in one place
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]

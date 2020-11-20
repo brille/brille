@@ -27,13 +27,14 @@ if __name__ =="__main__":
 
     output_file = sys.argv[1]
     with open(output_file, "w") as fout:
-        fout.write("""#pragma once
-namespace brille{{ namespace version{{
+        fout.write("""#ifndef BRILLE_VERSION_HPP_
+#define BRILLE_VERSION_HPP_
+namespace brille::version{{
     auto constexpr git_revision = u8"{0}";
     auto constexpr git_branch = u8"{1}";
     auto constexpr build_datetime = u8"{2}";
     auto constexpr version_number = u8"{3}";
     auto constexpr build_hostname = u8"{4}";
-}} }}
-
+}}
+#endif
 """.format(*version_info()))

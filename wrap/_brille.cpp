@@ -1,20 +1,20 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-#include "version_info.hpp"
+/* This file is part of brille.
+
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#include "version.hpp"
 
 #include <pybind11/pybind11.h>
 
@@ -22,7 +22,6 @@ void wrap_bravais(pybind11::module &);
 void wrap_brillouinzone(pybind11::module &);
 void wrap_debug(pybind11::module &);
 void wrap_hallsymbol(pybind11::module &);
-//void wrap_interpolationdata(pybind11::module &);
 void wrap_lattice(pybind11::module &);
 void wrap_mesh(pybind11::module &);
 void wrap_nest(pybind11::module &);
@@ -40,7 +39,7 @@ void wrap_version(pybind11::module & m){
   m.attr("__version__") = version_number;
   std::string v = version_number;
   if (!std::string(git_revision).empty()){
-    v += "-" + std::string(git_branch);
+    v += "+" + std::string(git_branch);
     v += "." + std::string(git_revision).substr(0,7);
   }
   m.attr("version") = v;
@@ -79,7 +78,6 @@ PYBIND11_MODULE(_brille, m){
   wrap_pointsymmetry(m);
   wrap_polyhedron(m);
   wrap_hallsymbol(m);
-  //wrap_interpolationdata(m);
   wrap_bravais(m);
   wrap_debug(m);
 }

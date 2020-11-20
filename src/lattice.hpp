@@ -1,29 +1,29 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
-#ifndef _LATTICE_CLASS_H_
-#define _LATTICE_CLASS_H_
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
+
+#ifndef BRILLE_LATTICE_CLASS_H_
+#define BRILLE_LATTICE_CLASS_H_
 #include <assert.h>
 #include <vector>
-// #include "utilities.hpp"
 #include "primitive.hpp"
 #include "basis.hpp"
-
+#include "array2.hpp"
+namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential
 class Lattice;
@@ -38,12 +38,16 @@ template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, con
   for (int i=0; i<3; ++i)  for (int j=0; j<3; ++j)  len[i] += latmat[i*c+j*r]*latmat[i*c+j*r];
   // the lattice vector lengths are the square root of this
   for (int i=0; i<3; ++i) len[i] = std::sqrt(len[i]);
-  // normalize the row vectors, leaving only angle information
-  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*c+j*r] = latmat[i*c+j*r]/len[i];
+  // normalize the row vectors, leaving only angle information (n is contiguous but latmat may not be!)
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) n[i*3+j] = latmat[i*c+j*r]/len[i];
   // take the dot product between cyclically permuted rows: 0=1⋅2, 1=2⋅0, 2=0⋅1
-  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j)  ang[i] += n[c*((i+1)%3)+j*r]*n[c*((i+2)%3)+j*r];
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j)  ang[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
   // the lattice angles are the arccosines of these dot products of normalized lattice vectors
   for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
+}
+template<class T> void latmat_to_lenang(const brille::Array2<T>& lm, T* len, T* ang){
+  auto st = lm.stride();
+  latmat_to_lenang(lm.ptr(0), st[0], st[1], len, ang);
 }
 
 /*! \brief A class to hold information about a space-spanning lattice in three dimensions
@@ -106,6 +110,16 @@ public:
     }
   //! Construct the Lattice from a matrix of the basis vectors
   Lattice(const double *, const int h=1);
+  //! Construct the Lattice from an Array2 3x3 basis vector matrix, plus basis and symmetry information
+  Lattice(const brille::Array2<double>& latmat, const std::vector<std::array<double,3>>& pos, const std::vector<unsigned long>& typ, const Symmetry& sym){
+    double l[3]={0,0,0}, a[3]={0,0,0};
+    latmat_to_lenang(latmat,l,a);
+    this->set_len_pointer(l,1);
+    this->set_ang_pointer(a,1, AngleUnit::radian);
+    this->volume=this->calculatevolume();
+    this->set_basis(pos,typ);
+    this->set_spacegroup_symmetry(sym);
+  }
   //! Construct the Lattice from a possibly-not-contiguous matrix of the basis vectors
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
   Lattice(const double * latmat, std::vector<I>& strides, const int h){
@@ -400,4 +414,5 @@ template<> struct LatticeTraits<Reciprocal>{
 };
 #endif
 
+}
 #endif
