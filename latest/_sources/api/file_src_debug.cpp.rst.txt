@@ -39,12 +39,3 @@ Includes
 
 
 
-
-Functions
----------
-
-
-- :ref:`exhale_function_debug_8cpp_1a8e74dfc92a7960dee8846c4ca8b36e49`
-
-- :ref:`exhale_function_debug_8cpp_1a27fe47130ea545d2352dfb27d897668b`
-

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1TrellisLeaf:
+
+Class TrellisLeaf
+=================
+
+- Defined in :ref:`file_src_balltrellis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::TrellisLeaf
+   :members:
+   :protected-members:
+   :undoc-members:

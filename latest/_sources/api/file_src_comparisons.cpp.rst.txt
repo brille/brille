@@ -37,19 +37,3 @@ Includes
 
 
 
-
-Namespaces
-----------
-
-
-- :ref:`namespace_brille`
-
-
-Functions
----------
-
-
-- :ref:`exhale_function_comparisons_8cpp_1ae773cb1b70eb4c8abf136928c7eef9d9`
-
-- :ref:`exhale_function_comparisons_8cpp_1a001897a517be61dc8cfaddb1e8710ec5`
-

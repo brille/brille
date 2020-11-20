@@ -10,9 +10,26 @@ Program Listing for File hall_symbol.cpp
 
 .. code-block:: cpp
 
+   /* This file is part of brille.
+   
+   Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    
    #include "hall_symbol.hpp"
    #include "bravais.hpp" // for bravais_letter
+   using namespace brille;
    
    bool HallSymbol::from_ascii(const std::string& s){
      char c;
@@ -99,7 +116,7 @@ Program Listing for File hall_symbol.cpp
    
    bool HallSymbol::validate(){
      // verify that everything went ok
-     bool ok = bravais_is_known(this->L);
+     bool ok = brille::bravais_is_known(this->L);
      for (auto ss: this->symbols) ok &= ss.validate();
      // further validation could be possible by finding the full spacegroup
      return ok;
@@ -157,7 +174,7 @@ Program Listing for File hall_symbol.cpp
    std::string HallSymbol::to_ascii() const {
      std::string s;
      if (this->centrosymmetric) s += "-";
-     s += bravais_letter(this->L);
+     s += brille::bravais_letter(this->L);
      for (auto z: this->symbols) s += " " + z.to_ascii();
      return s;
    }

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1NodeContainer:
+
+Class NodeContainer
+===================
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::NodeContainer
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1ad3a4b18fa7a887d42739d09ff3bbbea9:
+
+Template Function brille::abs(const L<T>&)
+==========================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::abs(const L<T>&)

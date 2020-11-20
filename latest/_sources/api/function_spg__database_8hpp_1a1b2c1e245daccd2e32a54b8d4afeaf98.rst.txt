@@ -1,0 +1,13 @@
+.. _exhale_function_spg__database_8hpp_1a1b2c1e245daccd2e32a54b8d4afeaf98:
+
+Function brille::hall_symbol_to_hall_number
+===========================================
+
+- Defined in :ref:`file_src_spg_database.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::hall_symbol_to_hall_number(const std::string&)

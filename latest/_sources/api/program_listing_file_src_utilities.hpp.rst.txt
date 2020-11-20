@@ -10,37 +10,36 @@ Program Listing for File utilities.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019-2020 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
    
-   #ifndef _UTILITIES_H_
-   #define _UTILITIES_H_
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
    
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #ifndef BRILLE_UTILITIES_HPP_
+   #define BRILLE_UTILITIES_HPP_
    #include <cmath>
    #include <type_traits>
    #include <limits>
    #include <stdexcept>  // for std::overflow_error
    #include <string>
    #include <math.h>
-   // #include <complex> // included by debug
    #include <numeric>
    #include <iostream>
    #include "debug.hpp"
    #include "approx.hpp"
+   
    
    namespace brille{
      const double             pi = 3.14159265358979323846;
@@ -57,13 +56,6 @@ Program Listing for File utilities.hpp
      // const double            ln2 = 0.693147180559945309417;
      // const double           ln10 = 2.30258509299404568402;
      namespace utils{
-   // We include numeric for std::gcd in C++17 (are we using it for anything else?)
-   /* Pre-C++17 gcd was not part of the standard but may be present in an
-   // experimental header -- which of course doesn't exist for MSVC
-   */
-   #if defined(__cplusplus) && __cplusplus > 201700L
-     #define STD_GCD
-   #endif
    
    template<typename T, int N=3> T trace(const T *M);
    

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1PrimitiveTransform:
+
+Class PrimitiveTransform
+========================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::PrimitiveTransform
+   :members:
+   :protected-members:
+   :undoc-members:

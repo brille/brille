@@ -45,7 +45,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Template Function brille::abs(const T)" href="function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd.html" />
-    <link rel="prev" title="Function bravais_string(const Bravais)" href="function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd.html" /> 
+    <link rel="prev" title="Function all_from_extent" href="function_neighbours_8cpp_1a8e7d14d19774d2182b743a185b93b1bb.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -185,7 +185,9 @@
 <p>doxygenfunction: Unable to resolve multiple matches for function “brille::abs” with arguments (const T) in doxygen xml output for project “brille” from directory: _build/doxygenxml/.
 Potential matches:
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>- template&lt;typename T&gt; std::enable_if_t&lt;!std::is_unsigned_v&lt;T&gt;, T&gt; abs(const T x)
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>- template&lt;class T, template&lt;class&gt; class L&gt; std::enable_if_t&lt;isBareArray&lt;T, L&gt;, L&lt;T&gt;&gt; abs(const L&lt;T&gt; &amp;a)
+- template&lt;class T, template&lt;class&gt; class L&gt; std::enable_if_t&lt;isLatVec&lt;T, L&gt;, L&lt;T&gt;&gt; abs(const L&lt;T&gt; &amp;a)
+- template&lt;typename T&gt; std::enable_if_t&lt;!std::is_unsigned_v&lt;T&gt;, T&gt; abs(const T x)
 - template&lt;typename T&gt; std::enable_if_t&lt;std::is_unsigned_v&lt;T&gt;, T&gt; abs(const T x)
 </pre></div>
 </div>
@@ -204,7 +206,7 @@ Potential matches:
         <a href="function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd.html" class="btn btn-neutral float-right" title="Template Function brille::abs(const T)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd.html" class="btn btn-neutral float-left" title="Function bravais_string(const Bravais)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="function_neighbours_8cpp_1a8e7d14d19774d2182b743a185b93b1bb.html" class="btn btn-neutral float-left" title="Function all_from_extent" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

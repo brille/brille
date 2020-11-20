@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1HallSymbol:
+
+Class HallSymbol
+================
+
+- Defined in :ref:`file_src_hall_symbol.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::HallSymbol
+   :members:
+   :protected-members:
+   :undoc-members:

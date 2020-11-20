@@ -50,24 +50,31 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classSpacegroup`
+- :ref:`exhale_class_classbrille_1_1Spacegroup`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_spg__database_8hpp_1a1d331ed75ad8d0c0f29ae2d0010b0674`
+- :ref:`exhale_function_spg__database_8hpp_1aef29ea990705bb802287540da4512406`
 
-- :ref:`exhale_function_spg__database_8hpp_1af16de9b2344523308d97d5d728b5bdd2`
+- :ref:`exhale_function_spg__database_8hpp_1a1b2c1e245daccd2e32a54b8d4afeaf98`
 
-- :ref:`exhale_function_spg__database_8hpp_1abd66fc0768afd1ad4aca5fc81fbda335`
+- :ref:`exhale_function_spg__database_8hpp_1ab7271b2a606ebc4347180b3676849b4c`
 
-- :ref:`exhale_function_spg__database_8hpp_1adbc01f31d611bda498d39caa97735215`
+- :ref:`exhale_function_spg__database_8hpp_1af1b43446221a8daaf63d1455d9722f94`
 
-- :ref:`exhale_function_spg__database_8hpp_1aa8907e6195a903a1331d3b23c9bb9211`
+- :ref:`exhale_function_spg__database_8hpp_1aeb7c15885d67cc7c50f62c64e9db8790`
 

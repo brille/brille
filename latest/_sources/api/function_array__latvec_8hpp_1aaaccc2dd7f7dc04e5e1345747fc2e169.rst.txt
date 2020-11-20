@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1aaaccc2dd7f7dc04e5e1345747fc2e169:
+
+Template Function brille::equal_shapes(const std::array<T, Nel>&, const std::array<T, Nel>&)
+============================================================================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::equal_shapes(const std::array<T, Nel>&, const std::array<T, Nel>&)

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Stopwatch:
+
+Template Class Stopwatch
+========================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Stopwatch
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a7ab109081968e79356c5c4e4bdd83551:
+
+Template Function brille::triangle_area_squared
+===============================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::triangle_area_squared(const T, const T, const T)

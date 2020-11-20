@@ -10,25 +10,25 @@ Program Listing for File triangulation_simple.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
    
-   #ifndef _TRIANGULATION_SIMPLE_H_
-   #define _TRIANGULATION_SIMPLE_H_
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #ifndef BRILLE_TRIANGULATION_SIMPLE_HPP_
+   #define BRILLE_TRIANGULATION_SIMPLE_HPP_
    #include <vector>
    #include <array>
    #include <cassert>
@@ -37,6 +37,7 @@ Program Listing for File triangulation_simple.hpp
    #include "tetgen.h"
    #include "debug.hpp"
    #include "approx.hpp"
+   namespace brille {
    
    class SimpleTet{
      using ind_t = brille::ind_t;
@@ -202,4 +203,6 @@ Program Listing for File triangulation_simple.hpp
        vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
      }
    };
+   
+   } // end namespace brille
    #endif // _TRIANGULATION_H_

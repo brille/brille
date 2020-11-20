@@ -29,6 +29,8 @@ Includes
 --------
 
 
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
 - ``assert.h``
 
 - ``basis.hpp`` (:ref:`file_src_basis.hpp`)
@@ -50,33 +52,42 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_struct_structLatticeTraits`
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits`
 
-- :ref:`exhale_struct_structLatticeTraits_3_01Direct_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01Direct_01_4`
 
-- :ref:`exhale_struct_structLatticeTraits_3_01Reciprocal_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01Reciprocal_01_4`
 
-- :ref:`exhale_class_classDirect`
+- :ref:`exhale_class_classbrille_1_1Direct`
 
-- :ref:`exhale_class_classLattice`
+- :ref:`exhale_class_classbrille_1_1Lattice`
 
-- :ref:`exhale_class_classReciprocal`
+- :ref:`exhale_class_classbrille_1_1Reciprocal`
 
 
 Enums
 -----
 
 
-- :ref:`exhale_enum_lattice_8hpp_1a70ab36d1d4920fdd314279845af152c5`
+- :ref:`exhale_enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_lattice_8hpp_1a4925107d36c2f138b7fd8a6136c3d4f4`
+- :ref:`exhale_function_lattice_8hpp_1a11effa0e26084638971c2698a86bfbb9`
+
+- :ref:`exhale_function_lattice_8hpp_1a3c6e33f9a28639ee6514ae3ccc1d1ae3`
 

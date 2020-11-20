@@ -155,22 +155,7 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_src_inner_interpolation_data.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_src_interpolation.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolation_data.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator.hpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -206,36 +191,6 @@ Files
    :maxdepth: 5
 
    file_src_interpolator2_recip.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_at.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_axial.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_cost.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_gamma.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_real.tpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_src_interpolator_recip.tpp.rst
 
 .. toctree::
    :maxdepth: 5
@@ -340,11 +295,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_src_sharedspan.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_src_smp.hpp.rst
 
 .. toctree::
@@ -376,6 +326,11 @@ Files
    :maxdepth: 5
 
    file_src_symmetry.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry_common.hpp.rst
 
 .. toctree::
    :maxdepth: 5

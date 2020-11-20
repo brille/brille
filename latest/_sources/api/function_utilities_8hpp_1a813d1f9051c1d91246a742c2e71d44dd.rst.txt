@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a813d1f9051c1d91246a742c2e71d44dd:
+
+Template Function brille::utils::gcd
+====================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::gcd(const T, const T)

@@ -10,24 +10,24 @@ Program Listing for File bz_wedge.cpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
    
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    #include "bz.hpp"
+   using namespace brille;
    
    void BrillouinZone::wedge_search(const bool pbv, const bool pok){
      debug_exec(std::string update_msg;)
@@ -257,7 +257,13 @@ Program Listing for File bz_wedge.cpp
      bArray<bool> keep;
    
      // Keep track of *which* normals go into determining the irreducible wedge:
-     LQVec<double> cutting_normals(this->outerlattice, ps.size());
+     // count how many normals we might need
+     // 2-folds divide space with one normal
+     // 3-, 4-, 6-folds need two normals
+     size_t n_expected{0};
+     for (size_t i=0; i<ps.size(); ++i)
+       n_expected += (ps.order(i)==2) ? 1u : 2u;
+     LQVec<double> cutting_normals(this->outerlattice, n_expected);
      size_t n_cut{0};
    
      std::vector<bool> sym_unused(ps.size(), true);

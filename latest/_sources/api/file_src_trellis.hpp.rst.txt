@@ -82,40 +82,40 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classCubeNode`
+- :ref:`exhale_class_classbrille_1_1CubeNode`
 
-- :ref:`exhale_class_classNodeContainer`
+- :ref:`exhale_class_classbrille_1_1NodeContainer`
 
-- :ref:`exhale_class_classNullNode`
+- :ref:`exhale_class_classbrille_1_1NullNode`
 
-- :ref:`exhale_class_classPolyhedronTrellis`
+- :ref:`exhale_class_classbrille_1_1PolyhedronTrellis`
 
-- :ref:`exhale_class_classPolyNode`
+- :ref:`exhale_class_classbrille_1_1PolyNode`
 
 
 Enums
 -----
 
 
-- :ref:`exhale_enum_trellis_8hpp_1acac9cbaeea226ed297804c012dc12b16`
+- :ref:`exhale_enum_trellis_8hpp_1ace397180bb92d8a2863b6c65d9fef79a`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_trellis_8hpp_1ad5a23b4e24cb923eb93e9a96edbbcaa6`
+- :ref:`exhale_function_trellis_8hpp_1a62a5fafea9cfe021ce53ec52ac6599cb`
 
-- :ref:`exhale_function_trellis_8hpp_1a40114278482bff18c09703b1b82ccb35`
-
-
-Defines
--------
-
-
-- :ref:`exhale_define_trellis_8hpp_1a013a23ae25cfe5e1fdb57950b5b48e08`
+- :ref:`exhale_function_trellis_8hpp_1ac74d24b83f98c87c34b74bcbe9a38959`
 

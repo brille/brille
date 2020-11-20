@@ -1,0 +1,13 @@
+.. _exhale_function_lapjv_8hpp_1a45014a3ac4354c6bac048140f1b65122:
+
+Template Function brille::assignment::lapjv
+===========================================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::assignment::lapjv(idx, const cost *restrict, bool, idx *restrict, idx *restrict, cost *restrict, cost *restrict)

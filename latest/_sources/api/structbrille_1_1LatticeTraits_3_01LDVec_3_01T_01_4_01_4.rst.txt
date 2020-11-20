@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1LatticeTraits_3_01LDVec_3_01T_01_4_01_4:
+
+Template Struct LatticeTraits< LDVec< T > >
+===========================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::LatticeTraits< LDVec< T > >
+   :members:
+   :protected-members:
+   :undoc-members:

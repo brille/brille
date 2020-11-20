@@ -10,22 +10,22 @@ Program Listing for File pointgroup.cpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
+   
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    
    /* This file has evolved from pointgroup.cpp distributed as part of spglib.
       Changes have been made to introduce C++ style classes as well as other
@@ -79,7 +79,7 @@ Program Listing for File pointgroup.cpp
    #define NUM_ROT_AXES 73
    #define ZERO_PREC 1e-10
    
-   //using namespace rsm;
+   using namespace brille;
    
    typedef struct {
      int table[10];
@@ -126,7 +126,7 @@ Program Listing for File pointgroup.cpp
      {/*32*/{0,6,8,9,1,1,9,8,6,0},"m-3m" ,"Oh" ,Holohedry::cubic     ,Laue::_m3m ,}
    };
    
-   std::string my_to_string(const Holohedry& h){
+   std::string brille::my_to_string(const Holohedry& h){
      std::string str;
      switch(h){
        case Holohedry::triclinic:  str = "triclinic";  break;
@@ -140,7 +140,7 @@ Program Listing for File pointgroup.cpp
      }
      return str;
    }
-   std::string my_to_string(const Laue& l){
+   std::string brille::my_to_string(const Laue& l){
      std::string str;
      switch(l){
        case Laue::_1:    str="1";    break;
@@ -192,7 +192,7 @@ Program Listing for File pointgroup.cpp
    static int get_pointgroup_number(const PointSymmetry & pointsym);
    static int get_pointgroup_class_table(int table[10], const PointSymmetry & pointsym);
    static int isometry_type(const int *rot);
-   int rotation_order(const int *rot);
+   // int rotation_order(const int *rot);
    static int get_rotation_axis(const int *rot);
    static int get_orthogonal_axis(int ortho_axes[], const int *proper_rot, const int rot_order);
    static int laue2m(int axes[3], const PointSymmetry & pointsym);
@@ -204,7 +204,7 @@ Program Listing for File pointgroup.cpp
    
    
    /* Retrun pointgroup.number = 0 if failed */
-   Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations)
+   Pointgroup brille::ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations)
    {
      int i, pg_num;
      int axes[3];
@@ -215,7 +215,7 @@ Program Listing for File pointgroup.cpp
      pg_num = get_pointgroup_number_by_rotations(rotations, num_rotations);
      pointgroup = Pointgroup(pg_num);
      if (pg_num > 0) {
-       pointsym = ptg_get_pointsymmetry(rotations, num_rotations);
+       pointsym = brille::ptg_get_pointsymmetry(rotations, num_rotations);
        get_axes(axes, pointgroup.laue, pointsym);
        set_transformation_matrix(transform_mat, axes);
      }
@@ -231,7 +231,7 @@ Program Listing for File pointgroup.cpp
      this->laue = pgt.laue;
    }
    
-   PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
+   PointSymmetry brille::ptg_get_pointsymmetry(const int *rotations, const int num_rotations)
    {
      PointSymmetry pointsym(0);
      // copy the first rotation matrix
@@ -251,7 +251,7 @@ Program Listing for File pointgroup.cpp
    
    static int get_pointgroup_number_by_rotations(const int *rotations, const int num_rotations)
    {
-       PointSymmetry psym = ptg_get_pointsymmetry(rotations, num_rotations);
+       PointSymmetry psym = brille::ptg_get_pointsymmetry(rotations, num_rotations);
      return get_pointgroup_number(psym);
    }
    
@@ -306,12 +306,12 @@ Program Listing for File pointgroup.cpp
      }
      return rot_type;
    }
-   int isometry_value(const int *rot){
+   int brille::isometry_value(const int *rot){
        int values[] = {-6,-4,-3,-2,-1,1,2,3,4,6};
        int isometry = isometry_type(rot);
        return (isometry>=0) ? values[isometry] : 0;
    }
-   int rotation_order(const int *rot){
+   int brille::rotation_order(const int *rot){
        int orders[] = {6,4,3,2,1,1,2,3,4,6};
        int isometry = isometry_type(rot);
        return (isometry>=0) ? orders[isometry] : 0;
@@ -568,7 +568,7 @@ Program Listing for File pointgroup.cpp
    }
    
    
-   std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
+   std::vector<std::array<int,9>> brille::get_unique_rotations(const std::vector<std::array<int,9>>& rotations, const int is_time_reversal)
    {
        const size_t N = rotations.size();
        std::vector<std::array<int,9>> rot_tmp;
@@ -608,7 +608,7 @@ Program Listing for File pointgroup.cpp
    
    static int _internal_pointgroup_rotations(int *rotations, const int max_size, const std::vector<std::array<int,9>>& all_rots, const int is_time_reversal)
    {
-     std::vector<std::array<int,9>> unq_rots = get_unique_rotations(all_rots,is_time_reversal);
+     std::vector<std::array<int,9>> unq_rots = brille::get_unique_rotations(all_rots,is_time_reversal);
        if (unq_rots.size() > static_cast<size_t>(max_size)){
        std::string msg = "Indicated maximum size " + std::to_string(max_size);
        msg += " is less than number of unique rotations (";
@@ -621,13 +621,13 @@ Program Listing for File pointgroup.cpp
        return static_cast<int>(unq_rots.size());
    }
    
-   int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
+   int brille::get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal){
        Symmetry sym = Spacegroup(hall_number).get_spacegroup_symmetry();
        int num_unique = _internal_pointgroup_rotations(rotations, max_size, sym.getallr(), is_time_reversal);
        return num_unique;
    }
    
-   std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot){
+   std::array<std::array<int,3>,3> brille::rotation_axis_and_perpendicular_vectors(const int* rot){
        int prop_rot[9];
        std::array<std::array<int,3>,3> out {{ {{0, 0, 0}}, {{0, 0, 0}}, {{0, 0, 0}} }};
    

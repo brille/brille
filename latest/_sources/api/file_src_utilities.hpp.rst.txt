@@ -77,8 +77,6 @@ Included By
 
 - :ref:`file_src_trellis.hpp`
 
-- :ref:`file_src_interpolator.hpp`
-
 - :ref:`file_src_pointgroup.cpp`
 
 
@@ -114,7 +112,9 @@ Functions
 
 - :ref:`exhale_function_utilities_8hpp_1ad44988c88deafb3ba37dc8418f0f915f`
 
-- :ref:`exhale_function_utilities_8hpp_1a6fc828085a244b5b283af8b5d5a1f1e6`
+- :ref:`exhale_function_utilities_8hpp_1a8f5da0120bd90d0dce8628b5869b000a`
+
+- :ref:`exhale_function_utilities_8hpp_1a0e1632f4581c5f8cc8414fbaf0c10e74`
 
 - :ref:`exhale_function_utilities_8hpp_1ad0c75e6bf2d7f55339d5418c110777cb`
 
@@ -143,8 +143,6 @@ Functions
 - :ref:`exhale_function_utilities_8hpp_1abc17d1397519599cf970c8b1fb90d855`
 
 - :ref:`exhale_function_utilities_8hpp_1a1212b62eae3fabc2dc6a6f022003a0bd`
-
-- :ref:`exhale_function_utilities_8hpp_1a3e2f3ad853552c5d9e0115c2b2389e79`
 
 - :ref:`exhale_function_utilities_8hpp_1a280c3c2bbdd03ea7a736eb065ca51850`
 
@@ -257,13 +255,6 @@ Functions
 - :ref:`exhale_function_utilities_8hpp_1a4b78055c8ba014a9ce0ac7c26eac41ac`
 
 - :ref:`exhale_function_utilities_8hpp_1addd0dd89994ff2d373eec8236f619bb5`
-
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_utilities_8hpp_1a683cc847e63a90ba7d096573a33b9842`
 
 
 Variables

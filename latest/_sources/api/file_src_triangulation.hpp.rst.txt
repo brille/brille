@@ -52,18 +52,25 @@ Includes
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classTetTri`
+- :ref:`exhale_class_classbrille_1_1TetTri`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_triangulation_8hpp_1a4f22d6b04f2d20e0da05c7cf05fc2d6a`
+- :ref:`exhale_function_triangulation_8hpp_1af05ea98e399f9b193912393913626f07`
 
-- :ref:`exhale_function_triangulation_8hpp_1abcce9b393684314ba5321484e76f7ab0`
+- :ref:`exhale_function_triangulation_8hpp_1af8ee89917711815db0097def67ee642e`
 

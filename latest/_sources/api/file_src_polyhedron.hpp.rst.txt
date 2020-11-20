@@ -60,40 +60,47 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classPolyhedron`
+- :ref:`exhale_class_classbrille_1_1Polyhedron`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_polyhedron_8hpp_1a35d07b728fe4e42d91b6395a55164f3a`
+- :ref:`exhale_function_polyhedron_8hpp_1a44c13bbf9610ded37e0b513bf7ce7955`
 
-- :ref:`exhale_function_polyhedron_8hpp_1ac6a789b445b0b68cc2baa536f785ab7b`
+- :ref:`exhale_function_polyhedron_8hpp_1aa523c0458f4aa30109036b189ce78fcc`
 
-- :ref:`exhale_function_polyhedron_8hpp_1acc473a5a311e2b25c12ae7ecdce226bc`
+- :ref:`exhale_function_polyhedron_8hpp_1ab9abc4a9b28935e46f0dedf0e7f05ff8`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a5122b5827af9cbf50cd16988a1d504c2`
+- :ref:`exhale_function_polyhedron_8hpp_1a6f53ac80703694382efa7189e83e61f2`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a4dd81928550fdfddbb11dce98cf65df4`
+- :ref:`exhale_function_polyhedron_8hpp_1a4a0bf2aa7002e1c41e0db97cd531f324`
 
-- :ref:`exhale_function_polyhedron_8hpp_1abd47780016412b8211514af179e837c0`
+- :ref:`exhale_function_polyhedron_8hpp_1a83ec9d068e738249aef00ad69f080e5e`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a904db5af5b19a80c559f3237f79a7614`
+- :ref:`exhale_function_polyhedron_8hpp_1ac6d630929a50dc46b55eeb5b2e902004`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a937aa145c046c9592aea06c15d58b8f4`
+- :ref:`exhale_function_polyhedron_8hpp_1a56e6ed1757fc36c1e962072bf55c4ec9`
 
-- :ref:`exhale_function_polyhedron_8hpp_1abf010f04fed345c7c192fdd07b3d0766`
+- :ref:`exhale_function_polyhedron_8hpp_1a3774fa99ee421ff76a48cd3b9d688f57`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a3de0e349882577ac6085e871ac41fc49`
+- :ref:`exhale_function_polyhedron_8hpp_1abcca2dbc090903b1fff5a4427b587cba`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a3fc88fbbaf1d54ff4ca6bebb6becf4f4`
+- :ref:`exhale_function_polyhedron_8hpp_1a1f2d2b47058924e5ce91d20bb760df98`
 
-- :ref:`exhale_function_polyhedron_8hpp_1aeabaf6cd0b6c5728e3d3f1d7be42c006`
+- :ref:`exhale_function_polyhedron_8hpp_1a7ab109081968e79356c5c4e4bdd83551`
 
-- :ref:`exhale_function_polyhedron_8hpp_1a8ec3f10ea346100853167f3d3160106c`
+- :ref:`exhale_function_polyhedron_8hpp_1a4344802bb44638ecac9226681be9aaff`
 

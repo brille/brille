@@ -10,25 +10,24 @@ Program Listing for File debug.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
    
-   #ifndef _DEBUG_H_
-   #define _DEBUG_H_
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   #ifndef BRILLE_DEBUG_HPP_
+   #define BRILLE_DEBUG_HPP_
    #include <stdio.h>
    #include <sstream>
    #include <iomanip>
@@ -38,9 +37,9 @@ Program Listing for File debug.hpp
    #include <vector>
    #include <complex>
    #include <chrono>
-   
    // #define VERBOSE_DEBUG
    // #define DEBUG // comment-out for no debugging output
+   namespace brille {
    
    int terminal_width(void);
    int terminal_height(void);
@@ -302,46 +301,7 @@ Program Listing for File debug.hpp
      void inner_print(void){};
    };
    
-   // replace GNU __PRETTY_FUNCTION__ by __FUNCSIG__ on Windows (MSVC)
-   #ifdef _MSC_VER
-     #define __PRETTY_FUNCTION__ __FUNCSIG__
-   #endif
-   #ifdef VERBOSE_DEBUG
-     #define _MY_PRETTY_FUNC_ __PRETTY_FUNCTION__
-   #else
-     #define _MY_PRETTY_FUNC_ ""
-   #endif
-   
-   static DebugPrinter _debug_printer("");
-   #define info_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-   #define info_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-   // #define info_update(...)
-   
-   #if defined(VERBOSE_DEBUG) || defined(DEBUG)
-     #define debug_exec(...) __VA_ARGS__
-     #define debug_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-     #define debug_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-   #else
-     #define debug_update_if(...)
-     #define debug_update(...)
-     #define debug_exec(...)
-   #endif
-   #ifdef VERBOSE_DEBUG
-     #define verbose_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-     #define verbose_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-   #else
-     #define verbose_update(...)
-     #define verbose_update_if(...)
-   #endif
-   
-   #if defined(PROFILING)
-     //_debug_printer.datetime(true); // profiling needs timing information
-     #define profile_update(...) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-     #define profile_update_if(tf, ...) if (tf) _debug_printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-   #else
-     #define profile_update(...)
-     #define profile_update_if(...)
-   #endif
+   static DebugPrinter printer("");
    
    template<typename TimeT = std::chrono::milliseconds>
    class Stopwatch{
@@ -382,5 +342,44 @@ Program Listing for File debug.hpp
    };
    
    
+   } //end namespace brille
+   
+   // replace GNU __PRETTY_FUNCTION__ by __FUNCSIG__ on Windows (MSVC)
+   #ifdef _MSC_VER
+     #define __PRETTY_FUNCTION__ __FUNCSIG__
+   #endif
+   #ifdef VERBOSE_DEBUG
+     #define _MY_PRETTY_FUNC_ __PRETTY_FUNCTION__
+   #else
+     #define _MY_PRETTY_FUNC_ ""
+   #endif
+   
+   #define info_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #define info_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   
+   #if defined(VERBOSE_DEBUG) || defined(DEBUG)
+     #define debug_exec(...) __VA_ARGS__
+     #define debug_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+     #define debug_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #else
+     #define debug_update_if(...)
+     #define debug_update(...)
+     #define debug_exec(...)
+   #endif
+   #ifdef VERBOSE_DEBUG
+     #define verbose_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+     #define verbose_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #else
+     #define verbose_update(...)
+     #define verbose_update_if(...)
+   #endif
+   
+   #if defined(PROFILING)
+     #define profile_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+     #define profile_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+   #else
+     #define profile_update(...)
+     #define profile_update_if(...)
+   #endif
    
    #endif //_DEBUG_H_

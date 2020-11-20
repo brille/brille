@@ -172,29 +172,27 @@
   <div class="section" id="program-listing-for-file-interpolation-hpp">
 <span id="program-listing-file-src-interpolation-hpp"></span><h1>Program Listing for File interpolation.hpp<a class="headerlink" href="#program-listing-for-file-interpolation-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_interpolation.hpp.html#file-src-interpolation-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/interpolation.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
-<span class="cm">//</span>
-<span class="cm">// This file is part of brille.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
-<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
-<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
-<span class="cm">// any later version.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
-<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
-<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
-<span class="cm">// See the GNU Affero General Public License for more details.</span>
-<span class="cm">//</span>
-<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
-<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
-<span class="cp">#ifndef _INTERPOLATION_H_</span>
-<span class="cp">#define _INTERPOLATION_H_</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
 
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef BRILLE_INTERPOLATION_H_</span>
+<span class="cp">#define BRILLE_INTERPOLATION_H_</span>
 <span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
-
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="kt">int</span> <span class="n">corners_and_weights</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;*</span> <span class="n">that</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">zero</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span><span class="o">*</span> <span class="n">step</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">ijk</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">dirs</span><span class="p">){</span>
     <span class="kt">size_t</span> <span class="n">ndims</span> <span class="o">=</span> <span class="n">dirs</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>

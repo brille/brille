@@ -48,16 +48,25 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__assignment`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classMunkres`
+- :ref:`exhale_class_classbrille_1_1assignment_1_1Munkres`
 
 
 Enums
 -----
 
 
-- :ref:`exhale_enum_munkres_8hpp_1a13369eabab3d7ad2773a340258a8fc43`
+- :ref:`exhale_enum_munkres_8hpp_1a6ea63ee5916feedfc1036fd0d760269b`
 

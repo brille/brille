@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Pointgroup &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class PointSymmetry" href="classbrille_1_1PointSymmetry.html" />
+    <link rel="prev" title="Class PermutationTable" href="classbrille_1_1PermutationTable.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Pointgroup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Pointgroup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-pointgroup">
+<span id="exhale-class-classbrille-1-1pointgroup"></span><h1>Class Pointgroup<a class="headerlink" href="#class-pointgroup" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_pointgroup.hpp.html#file-src-pointgroup-hpp"><span class="std std-ref">File pointgroup.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille10PointgroupE">
+<span id="_CPPv3N6brille10PointgroupE"></span><span id="_CPPv2N6brille10PointgroupE"></span><span id="brille::Pointgroup"></span><span class="target" id="classbrille_1_1Pointgroup"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Pointgroup</code><a class="headerlink" href="#_CPPv4N6brille10PointgroupE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Pointgroup10PointgroupEv">
+<span id="_CPPv3N6brille10Pointgroup10PointgroupEv"></span><span id="_CPPv2N6brille10Pointgroup10PointgroupEv"></span><span id="brille::Pointgroup::Pointgroup"></span><span class="target" id="classbrille_1_1Pointgroup_1a4b0e71762dba0ad89941d8aa7c4a7000"></span><code class="sig-name descname">Pointgroup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Pointgroup10PointgroupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Pointgroup10PointgroupEKi">
+<span id="_CPPv3N6brille10Pointgroup10PointgroupEKi"></span><span id="_CPPv2N6brille10Pointgroup10PointgroupEKi"></span><span id="brille::Pointgroup::Pointgroup__iC"></span><span class="target" id="classbrille_1_1Pointgroup_1a3cbe08ece44ba456cb43945d30354756"></span><code class="sig-name descname">Pointgroup</code><span class="sig-paren">(</span><em class="property">const</em> int <em>no</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Pointgroup10PointgroupEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Pointgroup10PointgroupEKiRKNSt6stringERKNSt6stringERK9HolohedryRK4Laue">
+<span id="_CPPv3N6brille10Pointgroup10PointgroupEKiRKNSt6stringERKNSt6stringERK9HolohedryRK4Laue"></span><span id="_CPPv2N6brille10Pointgroup10PointgroupEKiRKNSt6stringERKNSt6stringERK9HolohedryRK4Laue"></span><span id="brille::Pointgroup::Pointgroup__iC.ssCR.ssCR.HolohedryCR.LaueCR"></span><span class="target" id="classbrille_1_1Pointgroup_1a61060528687f56e857f9a86a5a24f513"></span><code class="sig-name descname">Pointgroup</code><span class="sig-paren">(</span><em class="property">const</em> int <em>no</em>, <em class="property">const</em> std::string &amp;<em>sym</em>, <em class="property">const</em> std::string &amp;<em>sch</em>, <em class="property">const</em> <a class="reference internal" href="enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93.html#_CPPv4N6brille9HolohedryE" title="brille::Holohedry">Holohedry</a> &amp;<em>h</em>, <em class="property">const</em> <a class="reference internal" href="enum_pointgroup_8hpp_1aefb7d4e23b90d4f0e7727c0cd90e1c2d.html#_CPPv4N6brille4LaueE" title="brille::Laue">Laue</a> &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Pointgroup10PointgroupEKiRKNSt6stringERKNSt6stringERK9HolohedryRK4Laue" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup9to_stringEv">
+<span id="_CPPv3NK6brille10Pointgroup9to_stringEv"></span><span id="_CPPv2NK6brille10Pointgroup9to_stringEv"></span><span id="brille::Pointgroup::to_string__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1aeb83ff70328b171ad61f7a6ea2f276b8"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup10get_numberEv">
+<span id="_CPPv3NK6brille10Pointgroup10get_numberEv"></span><span id="_CPPv2NK6brille10Pointgroup10get_numberEv"></span><span id="brille::Pointgroup::get_number__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1aa86a9abc211d69be949acf0e623679ef"></span>int <code class="sig-name descname">get_number</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup10get_numberEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup10get_symbolEv">
+<span id="_CPPv3NK6brille10Pointgroup10get_symbolEv"></span><span id="_CPPv2NK6brille10Pointgroup10get_symbolEv"></span><span id="brille::Pointgroup::get_symbol__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a319fb82b11aa8701e9b402224ccfe581"></span>std::string <code class="sig-name descname">get_symbol</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup10get_symbolEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup15get_schoenfliesEv">
+<span id="_CPPv3NK6brille10Pointgroup15get_schoenfliesEv"></span><span id="_CPPv2NK6brille10Pointgroup15get_schoenfliesEv"></span><span id="brille::Pointgroup::get_schoenflies__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a5a9d2fd42236d144fd99dd8178966ca7"></span>std::string <code class="sig-name descname">get_schoenflies</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup15get_schoenfliesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup13get_holohedryEv">
+<span id="_CPPv3NK6brille10Pointgroup13get_holohedryEv"></span><span id="_CPPv2NK6brille10Pointgroup13get_holohedryEv"></span><span id="brille::Pointgroup::get_holohedry__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a1d30c66ecdfc1c72dc6d41c622190235"></span><a class="reference internal" href="enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93.html#_CPPv4N6brille9HolohedryE" title="brille::Holohedry">Holohedry</a> <code class="sig-name descname">get_holohedry</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup13get_holohedryEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup8get_laueEv">
+<span id="_CPPv3NK6brille10Pointgroup8get_laueEv"></span><span id="_CPPv2NK6brille10Pointgroup8get_laueEv"></span><span id="brille::Pointgroup::get_laue__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a8ed8e5201ec21b2baaed439588f7f2db"></span><a class="reference internal" href="enum_pointgroup_8hpp_1aefb7d4e23b90d4f0e7727c0cd90e1c2d.html#_CPPv4N6brille4LaueE" title="brille::Laue">Laue</a> <code class="sig-name descname">get_laue</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup8get_laueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup20get_holohedry_stringEv">
+<span id="_CPPv3NK6brille10Pointgroup20get_holohedry_stringEv"></span><span id="_CPPv2NK6brille10Pointgroup20get_holohedry_stringEv"></span><span id="brille::Pointgroup::get_holohedry_string__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a740cea345d5db29a52832d4b77e14bb3"></span>std::string <code class="sig-name descname">get_holohedry_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup20get_holohedry_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Pointgroup15get_laue_stringEv">
+<span id="_CPPv3NK6brille10Pointgroup15get_laue_stringEv"></span><span id="_CPPv2NK6brille10Pointgroup15get_laue_stringEv"></span><span id="brille::Pointgroup::get_laue_string__voidC"></span><span class="target" id="classbrille_1_1Pointgroup_1a33917de6f8399a243b3cf3e536526494"></span>std::string <code class="sig-name descname">get_laue_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Pointgroup15get_laue_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Pointgroup6numberE">
+<span id="_CPPv3N6brille10Pointgroup6numberE"></span><span id="_CPPv2N6brille10Pointgroup6numberE"></span><span id="brille::Pointgroup::number__i"></span><span class="target" id="classbrille_1_1Pointgroup_1a382e016a2ff5b5db9edaaf6541d718a2"></span>int <code class="sig-name descname">number</code><a class="headerlink" href="#_CPPv4N6brille10Pointgroup6numberE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Pointgroup6symbolE">
+<span id="_CPPv3N6brille10Pointgroup6symbolE"></span><span id="_CPPv2N6brille10Pointgroup6symbolE"></span><span id="brille::Pointgroup::symbol__ss"></span><span class="target" id="classbrille_1_1Pointgroup_1a8ad4a644edb7bf32db18a0f5f4a07748"></span>std::string <code class="sig-name descname">symbol</code><a class="headerlink" href="#_CPPv4N6brille10Pointgroup6symbolE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Pointgroup11schoenfliesE">
+<span id="_CPPv3N6brille10Pointgroup11schoenfliesE"></span><span id="_CPPv2N6brille10Pointgroup11schoenfliesE"></span><span id="brille::Pointgroup::schoenflies__ss"></span><span class="target" id="classbrille_1_1Pointgroup_1adde6be3ac23f47e7734eed15333ef7b8"></span>std::string <code class="sig-name descname">schoenflies</code><a class="headerlink" href="#_CPPv4N6brille10Pointgroup11schoenfliesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Pointgroup9holohedryE">
+<span id="_CPPv3N6brille10Pointgroup9holohedryE"></span><span id="_CPPv2N6brille10Pointgroup9holohedryE"></span><span id="brille::Pointgroup::holohedry__Holohedry"></span><span class="target" id="classbrille_1_1Pointgroup_1abb18f1bbbad98ee79e207b9e123b27cf"></span><a class="reference internal" href="enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93.html#_CPPv4N6brille9HolohedryE" title="brille::Holohedry">Holohedry</a> <code class="sig-name descname">holohedry</code><a class="headerlink" href="#_CPPv4N6brille10Pointgroup9holohedryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Pointgroup4laueE">
+<span id="_CPPv3N6brille10Pointgroup4laueE"></span><span id="_CPPv2N6brille10Pointgroup4laueE"></span><span id="brille::Pointgroup::laue__Laue"></span><span class="target" id="classbrille_1_1Pointgroup_1a493719c03c0d90fb3c243480223537b6"></span><a class="reference internal" href="enum_pointgroup_8hpp_1aefb7d4e23b90d4f0e7727c0cd90e1c2d.html#_CPPv4N6brille4LaueE" title="brille::Laue">Laue</a> <code class="sig-name descname">laue</code><a class="headerlink" href="#_CPPv4N6brille10Pointgroup4laueE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Pointgroup5setupEv">
+<span id="_CPPv3N6brille10Pointgroup5setupEv"></span><span id="_CPPv2N6brille10Pointgroup5setupEv"></span><span id="brille::Pointgroup::setup__void"></span><span class="target" id="classbrille_1_1Pointgroup_1a3797939173660beeb78b99bb27509c3f"></span>void <code class="sig-name descname">setup</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Pointgroup5setupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1PointSymmetry.html" class="btn btn-neutral float-right" title="Class PointSymmetry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1PermutationTable.html" class="btn btn-neutral float-left" title="Class PermutationTable" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

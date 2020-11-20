@@ -1,0 +1,13 @@
+.. _exhale_define_array__latvec_8hpp_1a4226469d7311759ea4f4af631df3187e:
+
+Define LATVEC_ARRAY_BINARY_OP
+=============================
+
+- Defined in :ref:`file_src_array_latvec.tpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: LATVEC_ARRAY_BINARY_OP

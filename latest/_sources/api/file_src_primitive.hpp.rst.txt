@@ -42,18 +42,25 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_struct_structPrimitiveTraits`
+- :ref:`exhale_struct_structbrille_1_1PrimitiveTraits`
 
-- :ref:`exhale_class_classPrimitiveTransform`
+- :ref:`exhale_class_classbrille_1_1PrimitiveTransform`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_primitive_8hpp_1ad314be19b7395a2fdf878a7737abffe6`
+- :ref:`exhale_function_primitive_8hpp_1af003ee699aa372b31131deb8cfcc0e5e`
 

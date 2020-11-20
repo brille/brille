@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1aa5e4757c2dfc5c99550e8633eaaa6e60:
+
+Template Function brille::star
+==============================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::star(const L<T>&)

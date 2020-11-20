@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a0e1632f4581c5f8cc8414fbaf0c10e74:
+
+Template Function brille::utils::binomial_coefficient(const T, const R)
+=======================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::binomial_coefficient(const T, const R)

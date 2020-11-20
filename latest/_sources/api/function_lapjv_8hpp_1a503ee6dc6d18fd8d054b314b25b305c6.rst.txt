@@ -1,0 +1,13 @@
+.. _exhale_function_lapjv_8hpp_1a503ee6dc6d18fd8d054b314b25b305c6:
+
+Template Function brille::assignment::find_umins_plain
+======================================================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::assignment::find_umins_plain(idx, idx, const cost *restrict, const cost *restrict)

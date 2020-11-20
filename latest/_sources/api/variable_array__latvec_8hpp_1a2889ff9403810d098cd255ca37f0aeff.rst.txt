@@ -1,0 +1,13 @@
+.. _exhale_variable_array__latvec_8hpp_1a2889ff9403810d098cd255ca37f0aeff:
+
+Variable brille::bothLatVecs
+============================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: brille::bothLatVecs

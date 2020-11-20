@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1LatticeTraits_3_01Reciprocal_01_4:
+
+Template Struct LatticeTraits< Reciprocal >
+===========================================
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::LatticeTraits< Reciprocal >
+   :members:
+   :protected-members:
+   :undoc-members:

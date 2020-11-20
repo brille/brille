@@ -1,0 +1,13 @@
+.. _exhale_function_permutation__table_8hpp_1abdabdf1bdad9df8ef8f7fb7fce96128c:
+
+Template Function brille::permutation_table_keys_from_indicies
+==============================================================
+
+- Defined in :ref:`file_src_permutation_table.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::permutation_table_keys_from_indicies(Itr, Itr, const size_t)

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1PermutationTable:
+
+Class PermutationTable
+======================
+
+- Defined in :ref:`file_src_permutation_table.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::PermutationTable
+   :members:
+   :protected-members:
+   :undoc-members:

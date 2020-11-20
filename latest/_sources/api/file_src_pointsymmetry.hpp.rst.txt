@@ -31,6 +31,8 @@ Includes
 
 - ``algorithm``
 
+- ``symmetry_common.hpp`` (:ref:`file_src_symmetry_common.hpp`)
+
 - ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
 
 
@@ -50,22 +52,16 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classPointSymmetry`
-
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_pointsymmetry_8hpp_1afcd610157c7da68729320cef638a084b`
-
-- :ref:`exhale_typedef_pointsymmetry_8hpp_1a7422197b16cc51e45a272f56a98a5bef`
-
-- :ref:`exhale_typedef_pointsymmetry_8hpp_1a2b8a7995f8d9cc961c01001ce885484a`
-
-- :ref:`exhale_typedef_pointsymmetry_8hpp_1af38183e237898f6af653810bc4c95c79`
+- :ref:`exhale_class_classbrille_1_1PointSymmetry`
 

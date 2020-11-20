@@ -1,0 +1,13 @@
+.. _exhale_enum_munkres_8hpp_1a6ea63ee5916feedfc1036fd0d760269b:
+
+Enum marker
+===========
+
+- Defined in :ref:`file_src_munkres.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::assignment::marker

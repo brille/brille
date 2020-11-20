@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Spacegroup:
+
+Class Spacegroup
+================
+
+- Defined in :ref:`file_src_spg_database.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Spacegroup
+   :members:
+   :protected-members:
+   :undoc-members:

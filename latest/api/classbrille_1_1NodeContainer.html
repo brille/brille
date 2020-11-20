@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class NodeContainer &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class NullNode" href="classbrille_1_1NullNode.html" />
+    <link rel="prev" title="Class NestNode" href="classbrille_1_1NestNode.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class NodeContainer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1NodeContainer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-nodecontainer">
+<span id="exhale-class-classbrille-1-1nodecontainer"></span><h1>Class NodeContainer<a class="headerlink" href="#class-nodecontainer" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille13NodeContainerE">
+<span id="_CPPv3N6brille13NodeContainerE"></span><span id="_CPPv2N6brille13NodeContainerE"></span><span id="brille::NodeContainer"></span><span class="target" id="classbrille_1_1NodeContainer"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">NodeContainer</code><a class="headerlink" href="#_CPPv4N6brille13NodeContainerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille13NodeContainer5ind_tE">
+<span id="_CPPv3N6brille13NodeContainer5ind_tE"></span><span id="_CPPv2N6brille13NodeContainer5ind_tE"></span><span class="target" id="classbrille_1_1NodeContainer_1a5ca4b22224dea3245f68b392156cae8d"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><a class="headerlink" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer4sizeEv">
+<span id="_CPPv3NK6brille13NodeContainer4sizeEv"></span><span id="_CPPv2NK6brille13NodeContainer4sizeEv"></span><span id="brille::NodeContainer::size__voidC"></span><span class="target" id="classbrille_1_1NodeContainer_1aeb310c616d8fef57065e549c5152c4c6"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer10cube_countEv">
+<span id="_CPPv3NK6brille13NodeContainer10cube_countEv"></span><span id="_CPPv2NK6brille13NodeContainer10cube_countEv"></span><span id="brille::NodeContainer::cube_countC"></span><span class="target" id="classbrille_1_1NodeContainer_1a38fe571b4b4f20ef9038266fb3271bbf"></span>size_t <code class="sig-name descname">cube_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer10cube_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer10poly_countEv">
+<span id="_CPPv3NK6brille13NodeContainer10poly_countEv"></span><span id="_CPPv2NK6brille13NodeContainer10poly_countEv"></span><span id="brille::NodeContainer::poly_countC"></span><span class="target" id="classbrille_1_1NodeContainer_1a7aa8e2d8686922754b05270bcbf6beb9"></span>size_t <code class="sig-name descname">poly_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer10poly_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer10null_countEv">
+<span id="_CPPv3NK6brille13NodeContainer10null_countEv"></span><span id="_CPPv2NK6brille13NodeContainer10null_countEv"></span><span id="brille::NodeContainer::null_countC"></span><span class="target" id="classbrille_1_1NodeContainer_1a064542639d97d9f5a22f096f80dc6982"></span>size_t <code class="sig-name descname">null_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer10null_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille13NodeContainer9push_backERK8CubeNode">
+<span id="_CPPv3N6brille13NodeContainer9push_backERK8CubeNode"></span><span id="_CPPv2N6brille13NodeContainer9push_backERK8CubeNode"></span><span id="brille::NodeContainer::push_back__CubeNodeCR"></span><span class="target" id="classbrille_1_1NodeContainer_1ac3e20ed743fde3973aa29208b900c140"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1CubeNode.html#_CPPv4N6brille8CubeNodeE" title="brille::CubeNode">CubeNode</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille13NodeContainer9push_backERK8CubeNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille13NodeContainer9push_backERK8PolyNode">
+<span id="_CPPv3N6brille13NodeContainer9push_backERK8PolyNode"></span><span id="_CPPv2N6brille13NodeContainer9push_backERK8PolyNode"></span><span id="brille::NodeContainer::push_back__PolyNodeCR"></span><span class="target" id="classbrille_1_1NodeContainer_1a32a39b6178ad60611d4fbe786c303239"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1PolyNode.html#_CPPv4N6brille8PolyNodeE" title="brille::PolyNode">PolyNode</a> &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille13NodeContainer9push_backERK8PolyNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille13NodeContainer9push_backERK8NullNode">
+<span id="_CPPv3N6brille13NodeContainer9push_backERK8NullNode"></span><span id="_CPPv2N6brille13NodeContainer9push_backERK8NullNode"></span><span id="brille::NodeContainer::push_back__NullNodeCR"></span><span class="target" id="classbrille_1_1NodeContainer_1ab4a4c58c9d43dcda38ccad9f71d57bc7"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1NullNode.html#_CPPv4N6brille8NullNodeE" title="brille::NullNode">NullNode</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille13NodeContainer9push_backERK8NullNode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer4typeEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer4typeEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer4typeEK5ind_t"></span><span id="brille::NodeContainer::type__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a048e992d87b69068e42c8ff487eb0afd"></span><a class="reference internal" href="enum_trellis_8hpp_1ace397180bb92d8a2863b6c65d9fef79a.html#_CPPv4N6brille8NodeTypeE" title="brille::NodeType">NodeType</a> <code class="sig-name descname">type</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer4typeEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer7is_cubeEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer7is_cubeEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer7is_cubeEK5ind_t"></span><span id="brille::NodeContainer::is_cube__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a1ab6f7c05f7cb8f1450e167f8bc8371a"></span>bool <code class="sig-name descname">is_cube</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer7is_cubeEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer7is_polyEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer7is_polyEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer7is_polyEK5ind_t"></span><span id="brille::NodeContainer::is_poly__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a0a6bf2103a393d6011d43aa079968dec"></span>bool <code class="sig-name descname">is_poly</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer7is_polyEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer7is_nullEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer7is_nullEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer7is_nullEK5ind_t"></span><span id="brille::NodeContainer::is_null__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a1deb1c751629db0b07f27f56217a073a"></span>bool <code class="sig-name descname">is_null</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer7is_nullEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer7cube_atEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer7cube_atEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer7cube_atEK5ind_t"></span><span id="brille::NodeContainer::cube_at__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1ada4baceebbb0533aa2602a0734e2843a"></span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1CubeNode.html#_CPPv4N6brille8CubeNodeE" title="brille::CubeNode">CubeNode</a> &amp;<code class="sig-name descname">cube_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer7cube_atEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer7poly_atEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer7poly_atEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer7poly_atEK5ind_t"></span><span id="brille::NodeContainer::poly_at__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1ae34838969897442e67f8a740ec723ddd"></span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1PolyNode.html#_CPPv4N6brille8PolyNodeE" title="brille::PolyNode">PolyNode</a> &amp;<code class="sig-name descname">poly_at</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer7poly_atEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer12vertex_countEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer12vertex_countEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer12vertex_countEK5ind_t"></span><span id="brille::NodeContainer::vertex_count__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a7c44c1785f8df692910c13d330f63dc3"></span><a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <code class="sig-name descname">vertex_count</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer12vertex_countEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer8verticesEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer8verticesEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer8verticesEK5ind_t"></span><span id="brille::NodeContainer::vertices__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1af5c4b92e769f183272fad1e9b59b2afb"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a>&gt; <code class="sig-name descname">vertices</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer8verticesEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer24vertices_per_tetrahedronEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer24vertices_per_tetrahedronEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer24vertices_per_tetrahedronEK5ind_t"></span><span id="brille::NodeContainer::vertices_per_tetrahedron__ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a771ebbcc358aeed8bede99f2f85b69fc"></span>std::vector&lt;std::array&lt;<a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a>, 4&gt;&gt; <code class="sig-name descname">vertices_per_tetrahedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer24vertices_per_tetrahedronEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer15indices_weightsEK5ind_tRK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE">
+<span id="_CPPv3NK6brille13NodeContainer15indices_weightsEK5ind_tRK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE"></span><span id="_CPPv2NK6brille13NodeContainer15indices_weightsEK5ind_tRK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE"></span><span id="brille::NodeContainer::indices_weights__ind_tC.bArray:double:CR.bArray:double:CR.std::vector:std::pair:ind_t.double::RC"></span><span class="target" id="classbrille_1_1NodeContainer_1aadbcbcb11afca449f85341a101a99475"></span>bool <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a>, double&gt;&gt; &amp;<em>iw</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer15indices_weightsEK5ind_tRK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille13NodeContainer6volumeERK6bArrayIdEK5ind_t">
+<span id="_CPPv3NK6brille13NodeContainer6volumeERK6bArrayIdEK5ind_t"></span><span id="_CPPv2NK6brille13NodeContainer6volumeERK6bArrayIdEK5ind_t"></span><span id="brille::NodeContainer::volume__bArray:double:CR.ind_tCC"></span><span class="target" id="classbrille_1_1NodeContainer_1a6a05f4a6822d4d773eec7cfa2a456602"></span>double <code class="sig-name descname">volume</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>verts</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille13NodeContainer5ind_tE" title="brille::NodeContainer::ind_t">ind_t</a> <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille13NodeContainer6volumeERK6bArrayIdEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1NullNode.html" class="btn btn-neutral float-right" title="Class NullNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1NestNode.html" class="btn btn-neutral float-left" title="Class NestNode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

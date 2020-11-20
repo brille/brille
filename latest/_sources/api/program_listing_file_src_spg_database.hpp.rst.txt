@@ -10,22 +10,22 @@ Program Listing for File spg_database.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
+   
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    
    /* This file has evolved from spg_database.h distributed as part of spglib.
       Changes have been made to introduce C++ style classes as well as other
@@ -66,15 +66,12 @@ Program Listing for File spg_database.hpp
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE. */
    
-   #ifndef __spg_database_H__
-   #define __spg_database_H__
-   
-   // #include<iostream>
-   // #include<string>
-   #include<cstring>
+   #ifndef BRILLE_SPACEGROUP_DATABASE_HPP_
+   #define BRILLE_SPACEGROUP_DATABASE_HPP_
+   #include <cstring>
    #include "bravais.hpp"
-   // #include "symmetry.hpp"
    #include "pointgroup.hpp"
+   namespace brille {
    
    class Spacegroup{
    public:
@@ -147,4 +144,5 @@ Program Listing for File spg_database.hpp
    int hall_symbol_to_hall_number(const std::string& hsymbol);
    int string_to_hall_number(const std::string&, const std::string& choice="");
    
+   } // end namespace brille
    #endif

@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1a1a69c221ba01c2d5f38e6ae08bfd38e6:
+
+Template Function brille::same_lattice_dot
+==========================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::same_lattice_dot(const A<R>&, const A<T>&, const std::vector<S>&, const std::vector<S>&)

@@ -1,0 +1,49 @@
+
+.. _namespace_brille__assignment:
+
+Namespace brille::assignment
+============================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1assignment_1_1Munkres`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_munkres_8hpp_1a6ea63ee5916feedfc1036fd0d760269b`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_lapjv_8hpp_1a503ee6dc6d18fd8d054b314b25b305c6`
+
+- :ref:`exhale_function_lapjv_8hpp_1a45014a3ac4354c6bac048140f1b65122`
+
+- :ref:`exhale_function_smp_8hpp_1a639a10420a057122f0d8dbe0c8f02dc1`
+
+- :ref:`exhale_function_smp_8hpp_1a54c8111548fa8693e55956f1554a2afb`
+
+- :ref:`exhale_function_smp_8hpp_1a0a2d9d099b021f0709b7709732344b47`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_lapjv_8hpp_1a4fb4d98acdbe0f543e81c61dae8c6e46`

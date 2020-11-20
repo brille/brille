@@ -1,0 +1,13 @@
+.. _exhale_function_triangulation__layers_8hpp_1af05ea98e399f9b193912393913626f07:
+
+Template Function brille::find_first(const std::array<T, N>&, const T)
+======================================================================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::find_first(const std::array<T, N>&, const T)

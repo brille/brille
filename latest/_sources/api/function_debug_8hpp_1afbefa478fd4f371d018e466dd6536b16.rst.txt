@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8hpp_1afbefa478fd4f371d018e466dd6536b16:
+
+Function brille::terminal_width
+===============================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::terminal_width(void)

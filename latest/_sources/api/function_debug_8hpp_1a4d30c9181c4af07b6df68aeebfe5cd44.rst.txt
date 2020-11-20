@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8hpp_1a4d30c9181c4af07b6df68aeebfe5cd44:
+
+Function brille::terminal_height
+================================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::terminal_height(void)

@@ -12,8 +12,8 @@ Inheritance Relationships
 Derived Types
 *************
 
-- ``public LDVec< T >`` (:ref:`exhale_class_classLDVec`)
-- ``public LQVec< T >`` (:ref:`exhale_class_classLQVec`)
+- ``public brille::LDVec< T >`` (:ref:`exhale_class_classbrille_1_1LDVec`)
+- ``public brille::LQVec< T >`` (:ref:`exhale_class_classbrille_1_1LQVec`)
 
 
 Class Documentation

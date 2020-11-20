@@ -40,16 +40,16 @@ Includes
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classBrillouinZoneNest3`
-
-
-Typedefs
---------
-
-
-- :ref:`exhale_typedef_bz__nest_8hpp_1ab362a895437fff981d5ce7b48b2afd0e`
+- :ref:`exhale_class_classbrille_1_1BrillouinZoneNest3`
 

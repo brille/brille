@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a3774fa99ee421ff76a48cd3b9d688f57:
+
+Template Function brille::polyhedron_box
+========================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::polyhedron_box(std::array<T, 3>&, std::array<T, 3>&)

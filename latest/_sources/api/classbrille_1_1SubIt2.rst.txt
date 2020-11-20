@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1SubIt2:
+
+Template Class SubIt2
+=====================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::SubIt2
+   :members:
+   :protected-members:
+   :undoc-members:

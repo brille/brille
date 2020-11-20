@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1PointSymmetry:
+
+Class PointSymmetry
+===================
+
+- Defined in :ref:`file_src_pointsymmetry.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::PointSymmetry
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_triangulation_8hpp_1af8ee89917711815db0097def67ee642e:
+
+Template Function brille::triangulate(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const double, const double, const double, const int, const double)
+==============================================================================================================================================================================
+
+- Defined in :ref:`file_src_triangulation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::triangulate(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const double, const double, const double, const int, const double)

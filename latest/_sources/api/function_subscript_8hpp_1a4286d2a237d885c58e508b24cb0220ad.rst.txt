@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1a4286d2a237d885c58e508b24cb0220ad:
+
+Template Function brille::is_fixed(I1, I2)
+==========================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::is_fixed(I1, I2)

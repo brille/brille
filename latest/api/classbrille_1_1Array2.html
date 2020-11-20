@@ -183,8 +183,8 @@
 <div class="section" id="derived-types">
 <h3>Derived Types<a class="headerlink" href="#derived-types" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">LDVec&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classLDVec.html#exhale-class-classldvec"><span class="std std-ref">Template Class LDVec</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">LQVec&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classLQVec.html#exhale-class-classlqvec"><span class="std std-ref">Template Class LQVec</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::LDVec&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classbrille_1_1LDVec.html#exhale-class-classbrille-1-1ldvec"><span class="std std-ref">Template Class LDVec</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::LQVec&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classbrille_1_1LQVec.html#exhale-class-classbrille-1-1lqvec"><span class="std std-ref">Template Class LQVec</span></a>)</p></li>
 </ul>
 </div>
 </div>
@@ -196,7 +196,7 @@
 <dd><p>A multidimensional shared data array with operator overloads. </p>
 <p>The <code class="docutils literal notranslate"><a class="reference internal" href="#classbrille_1_1Array2"><span class="std std-ref"><span class="pre">Array2</span></span></a><span class="pre">&lt;T&gt;</span></code>` object holds a multidimensional shared data object plus information necessary to index into that array with an offset, different shape, and/or different stride than the underlying data contains.</p>
 <p>The <code class="docutils literal notranslate"><a class="reference internal" href="#classbrille_1_1Array2"><span class="std std-ref"><span class="pre">Array2</span></span></a><span class="pre">&lt;T&gt;</span></code> object provides overloads for basic operations, a number of utility methods, and methods to create offset and/or reduced-range mutable or immutable views into the shared array. </p>
-<p>Subclassed by <a class="reference internal" href="classLDVec.html#classLDVec"><span class="std std-ref">LDVec&lt; T &gt;</span></a>, <a class="reference internal" href="classLQVec.html#classLQVec"><span class="std std-ref">LQVec&lt; T &gt;</span></a></p>
+<p>Subclassed by <a class="reference internal" href="classbrille_1_1LDVec.html#classbrille_1_1LDVec"><span class="std std-ref">brille::LDVec&lt; T &gt;</span></a>, <a class="reference internal" href="classbrille_1_1LQVec.html#classbrille_1_1LQVec"><span class="std std-ref">brille::LQVec&lt; T &gt;</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
 <dl class="cpp type">
@@ -211,12 +211,12 @@
 
 <dl class="cpp type">
 <dt id="_CPPv4N6brille6Array24bItrE">
-<span id="_CPPv3N6brille6Array24bItrE"></span><span id="_CPPv2N6brille6Array24bItrE"></span><span class="target" id="classbrille_1_1Array2_1a0ac8eebfdf35c1dbfe99fbdfe3e678f7"></span><em class="property">using </em><code class="sig-name descname">bItr</code> = <a class="reference internal" href="classBroadcastIt2.html#_CPPv4I0E12BroadcastIt2" title="BroadcastIt2">BroadcastIt2</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille6Array24bItrE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6brille6Array24bItrE"></span><span id="_CPPv2N6brille6Array24bItrE"></span><span class="target" id="classbrille_1_1Array2_1a0ac8eebfdf35c1dbfe99fbdfe3e678f7"></span><em class="property">using </em><code class="sig-name descname">bItr</code> = <a class="reference internal" href="classbrille_1_1BroadcastIt2.html#_CPPv4I0EN6brille12BroadcastIt2E" title="brille::BroadcastIt2">BroadcastIt2</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille6Array24bItrE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp type">
 <dt id="_CPPv4N6brille6Array24sItrE">
-<span id="_CPPv3N6brille6Array24sItrE"></span><span id="_CPPv2N6brille6Array24sItrE"></span><span class="target" id="classbrille_1_1Array2_1a02f44bb35646f04baa4b29d05543242d"></span><em class="property">using </em><code class="sig-name descname">sItr</code> = <a class="reference internal" href="classSubIt2.html#_CPPv4I0E6SubIt2" title="SubIt2">SubIt2</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille6Array24sItrE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6brille6Array24sItrE"></span><span id="_CPPv2N6brille6Array24sItrE"></span><span class="target" id="classbrille_1_1Array2_1a02f44bb35646f04baa4b29d05543242d"></span><em class="property">using </em><code class="sig-name descname">sItr</code> = <a class="reference internal" href="classbrille_1_1SubIt2.html#_CPPv4I0EN6brille6SubIt2E" title="brille::SubIt2">SubIt2</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt;<a class="headerlink" href="#_CPPv4N6brille6Array24sItrE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp type">

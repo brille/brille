@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a279171c35f83a357eb25969979ffa022:
+
+Function brille::get_unique_rotations
+=====================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::get_unique_rotations(const std::vector<std::array<int, 9>>&, const int)

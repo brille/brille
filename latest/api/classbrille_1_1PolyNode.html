@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class PolyNode &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class PrimitiveTransform" href="classbrille_1_1PrimitiveTransform.html" />
+    <link rel="prev" title="Template Class PolyhedronTrellis" href="classbrille_1_1PolyhedronTrellis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class PolyNode</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1PolyNode.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-polynode">
+<span id="exhale-class-classbrille-1-1polynode"></span><h1>Class PolyNode<a class="headerlink" href="#class-polynode" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_trellis.hpp.html#file-src-trellis-hpp"><span class="std std-ref">File trellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::NullNode</span></code> (<a class="reference internal" href="classbrille_1_1NullNode.html#exhale-class-classbrille-1-1nullnode"><span class="std std-ref">Class NullNode</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille8PolyNodeE">
+<span id="_CPPv3N6brille8PolyNodeE"></span><span id="_CPPv2N6brille8PolyNodeE"></span><span id="brille::PolyNode"></span><span class="target" id="classbrille_1_1PolyNode"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">PolyNode</code> : <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1NullNode.html#_CPPv4N6brille8NullNodeE" title="brille::NullNode">NullNode</a><a class="headerlink" href="#_CPPv4N6brille8PolyNodeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8PolyNode8PolyNodeEv">
+<span id="_CPPv3N6brille8PolyNode8PolyNodeEv"></span><span id="_CPPv2N6brille8PolyNode8PolyNodeEv"></span><span id="brille::PolyNode::PolyNode"></span><span class="target" id="classbrille_1_1PolyNode_1a57b76a962caea78288ab8230d044cd88"></span><code class="sig-name descname">PolyNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8PolyNode8PolyNodeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI5ind_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE">
+<span id="_CPPv3N6brille8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI5ind_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE"></span><span id="_CPPv2N6brille8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI5ind_tX4EEEEERKNSt6vectorINSt5arrayIdX4EEEEERKNSt6vectorIdEE"></span><span id="brille::PolyNode::PolyNode__std::vector:std::array:ind_t.4::CR.std::vector:std::array:double.4::CR.std::vector:double:CR"></span><span class="target" id="classbrille_1_1PolyNode_1ac8f6c53a2d878887c51326c949574650"></span><code class="sig-name descname">PolyNode</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, 4&gt;&gt; &amp;<em>vit</em>, <em class="property">const</em> std::vector&lt;std::array&lt;double, 4&gt;&gt; &amp;<em>cit</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>volt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8PolyNode8PolyNodeERKNSt6vectorINSt5arrayI5ind_tXL4EEEEEERKNSt6vectorINSt5arrayIdXL4EEEEEERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode16tetrahedra_countEv">
+<span id="_CPPv3NK6brille8PolyNode16tetrahedra_countEv"></span><span id="_CPPv2NK6brille8PolyNode16tetrahedra_countEv"></span><span id="brille::PolyNode::tetrahedra_countC"></span><span class="target" id="classbrille_1_1PolyNode_1a5a153397304db542f2c04b5bd7812dd6"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">tetrahedra_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode16tetrahedra_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode12vertex_countEv">
+<span id="_CPPv3NK6brille8PolyNode12vertex_countEv"></span><span id="_CPPv2NK6brille8PolyNode12vertex_countEv"></span><span id="brille::PolyNode::vertex_countC"></span><span class="target" id="classbrille_1_1PolyNode_1a2943ecc56a50b5bcc3d4782f8b8d8583"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">vertex_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode12vertex_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode8verticesEv">
+<span id="_CPPv3NK6brille8PolyNode8verticesEv"></span><span id="_CPPv2NK6brille8PolyNode8verticesEv"></span><span id="brille::PolyNode::vertices__voidC"></span><span class="target" id="classbrille_1_1PolyNode_1a4422f82b042c8f0e3f20d012bd0de0b6"></span>std::vector&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; <code class="sig-name descname">vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode8verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode24vertices_per_tetrahedronEv">
+<span id="_CPPv3NK6brille8PolyNode24vertices_per_tetrahedronEv"></span><span id="_CPPv2NK6brille8PolyNode24vertices_per_tetrahedronEv"></span><span id="brille::PolyNode::vertices_per_tetrahedron__voidC"></span><span class="target" id="classbrille_1_1PolyNode_1aa0110533597a530c3e7e652638764182"></span>std::vector&lt;std::array&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, 4&gt;&gt; <code class="sig-name descname">vertices_per_tetrahedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode24vertices_per_tetrahedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode15indices_weightsERK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE">
+<span id="_CPPv3NK6brille8PolyNode15indices_weightsERK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE"></span><span id="_CPPv2NK6brille8PolyNode15indices_weightsERK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE"></span><span id="brille::PolyNode::indices_weights__bArray:double:CR.bArray:double:CR.std::vector:std::pair:ind_t.double::RC"></span><span class="target" id="classbrille_1_1PolyNode_1a32e8fed15b9534b43e09ba585a48445f"></span>bool <code class="sig-name descname">indices_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>vertices</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;std::pair&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, double&gt;&gt; &amp;<em>iw</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode15indices_weightsERK6bArrayIdERK6bArrayIdERNSt6vectorINSt4pairI5ind_tdEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8PolyNode6volumeERK6bArrayIdE">
+<span id="_CPPv3NK6brille8PolyNode6volumeERK6bArrayIdE"></span><span id="_CPPv2NK6brille8PolyNode6volumeERK6bArrayIdE"></span><span id="brille::PolyNode::volume__bArray:double:CRC"></span><span class="target" id="classbrille_1_1PolyNode_1ab064b365bbb50bcbf5b30e664dce4c21"></span>double <code class="sig-name descname">volume</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8PolyNode6volumeERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1PrimitiveTransform.html" class="btn btn-neutral float-right" title="Class PrimitiveTransform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1PolyhedronTrellis.html" class="btn btn-neutral float-left" title="Template Class PolyhedronTrellis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_function_spg__database_8hpp_1aef29ea990705bb802287540da4512406:
+
+Function brille::hall_number_ok
+===============================
+
+- Defined in :ref:`file_src_spg_database.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::hall_number_ok(const int)

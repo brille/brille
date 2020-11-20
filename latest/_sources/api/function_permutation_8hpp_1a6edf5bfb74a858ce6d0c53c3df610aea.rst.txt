@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1a6edf5bfb74a858ce6d0c53c3df610aea:
+
+Template Function brille::jv_permutation_fill(const std::vector<T>&, std::vector<I>&)
+=====================================================================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::jv_permutation_fill(const std::vector<T>&, std::vector<I>&)

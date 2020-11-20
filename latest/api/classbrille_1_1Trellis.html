@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Trellis &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class TrellisLeaf" href="classbrille_1_1TrellisLeaf.html" />
+    <link rel="prev" title="Class TetTriLayer" href="classbrille_1_1TetTriLayer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Trellis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Trellis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-trellis">
+<span id="exhale-class-classbrille-1-1trellis"></span><h1>Class Trellis<a class="headerlink" href="#class-trellis" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_balltrellis.hpp.html#file-src-balltrellis-hpp"><span class="std std-ref">File balltrellis.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille7TrellisE">
+<span id="_CPPv3N6brille7TrellisE"></span><span id="_CPPv2N6brille7TrellisE"></span><span id="brille::Trellis"></span><span class="target" id="classbrille_1_1Trellis"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Trellis</code><a class="headerlink" href="#_CPPv4N6brille7TrellisE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis7TrellisEv">
+<span id="_CPPv3N6brille7Trellis7TrellisEv"></span><span id="_CPPv2N6brille7Trellis7TrellisEv"></span><span id="brille::Trellis::Trellis"></span><span class="target" id="classbrille_1_1Trellis_1ac538fe8c28fa1e8fc2009ffb2f9634f2"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis7TrellisEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE">
+<span id="_CPPv3N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE"></span><span id="_CPPv2N6brille7Trellis7TrellisERKNSt5arrayIdX9EEERKNSt5arrayINSt6vectorIdEEX3EEE"></span><span id="brille::Trellis::Trellis__std::array:double.9:CR.std::array:std::vector:double:.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1ad6f5455a8f49c7dba492c5dd8d87a077"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>abc</em>, <em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>bounds</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N6brille7Trellis7TrellisERKNSt5arrayIdX9EEERKNSt5arrayINSt6vectorIdEEX3EEERKNSt6vectorI11TrellisLeafEE"></span><span id="brille::Trellis::Trellis__std::array:double.9:CR.std::array:std::vector:double:.3:CR.std::vector:TrellisLeaf:CR"></span><span class="target" id="classbrille_1_1Trellis_1acc1a08c5916300d10793ad2a067b0e5d"></span><code class="sig-name descname">Trellis</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>abc</em>, <em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>bounds</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>leaves</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis7TrellisERKNSt5arrayIdXL9EEEERKNSt5arrayINSt6vectorIdEEXL3EEEERKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis10node_countEv">
+<span id="_CPPv3N6brille7Trellis10node_countEv"></span><span id="_CPPv2N6brille7Trellis10node_countEv"></span><span id="brille::Trellis::node_count"></span><span class="target" id="classbrille_1_1Trellis_1afa3bf6732ebea6965ed73ccc48790e05"></span>size_t <code class="sig-name descname">node_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis10node_countEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis4sizeEv">
+<span id="_CPPv3NK6brille7Trellis4sizeEv"></span><span id="_CPPv2NK6brille7Trellis4sizeEv"></span><span id="brille::Trellis::sizeC"></span><span class="target" id="classbrille_1_1Trellis_1a359a145701ca1128044e2bbd11bf8cec"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis4spanEv">
+<span id="_CPPv3NK6brille7Trellis4spanEv"></span><span id="_CPPv2NK6brille7Trellis4spanEv"></span><span id="brille::Trellis::spanC"></span><span class="target" id="classbrille_1_1Trellis_1adac992a2420600786169b050aa1b4550"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">span</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis4spanEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE">
+<span id="_CPPv3N6brille7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE"></span><span id="_CPPv2N6brille7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEX3EEE"></span><span id="brille::Trellis::boundaries__std::array:std::vector:double:.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1a99f94dcc692ad22956e0f04181abe004"></span>size_t <code class="sig-name descname">boundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;std::vector&lt;double&gt;, 3&gt; &amp;<em>xyzb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis10boundariesERKNSt5arrayINSt6vectorIdEEXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE">
+<span id="_CPPv3N6brille7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE"></span><span id="_CPPv2N6brille7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE"></span><span id="brille::Trellis::boundaries__std::vector:double:CR.std::vector:double:CR.std::vector:double:CR"></span><span class="target" id="classbrille_1_1Trellis_1a13a90a6d2d957994ade759aa1a8061f8"></span>size_t <code class="sig-name descname">boundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>xb</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>yb</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>zb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis10boundariesERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis11xboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N6brille7Trellis11xboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N6brille7Trellis11xboundariesERKNSt6vectorIdEE"></span><span id="brille::Trellis::xboundaries__std::vector:double:CR"></span><span class="target" id="classbrille_1_1Trellis_1ac1a26c309320fb2a0eb5608c50744c90"></span>size_t <code class="sig-name descname">xboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>xb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis11xboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis11yboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N6brille7Trellis11yboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N6brille7Trellis11yboundariesERKNSt6vectorIdEE"></span><span id="brille::Trellis::yboundaries__std::vector:double:CR"></span><span class="target" id="classbrille_1_1Trellis_1a1373a4986a843f3a20836d97b6668021"></span>size_t <code class="sig-name descname">yboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>yb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis11yboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis11zboundariesERKNSt6vectorIdEE">
+<span id="_CPPv3N6brille7Trellis11zboundariesERKNSt6vectorIdEE"></span><span id="_CPPv2N6brille7Trellis11zboundariesERKNSt6vectorIdEE"></span><span id="brille::Trellis::zboundaries__std::vector:double:CR"></span><span class="target" id="classbrille_1_1Trellis_1acce1a86acb6a1affae1411a4bfa5e0d7"></span>size_t <code class="sig-name descname">zboundaries</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>zb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis11zboundariesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis1xEv">
+<span id="_CPPv3NK6brille7Trellis1xEv"></span><span id="_CPPv2NK6brille7Trellis1xEv"></span><span id="brille::Trellis::xC"></span><span class="target" id="classbrille_1_1Trellis_1a675de8d6e1d306b5c2623bed37b4ed09"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">x</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis1xEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis1yEv">
+<span id="_CPPv3NK6brille7Trellis1yEv"></span><span id="_CPPv2NK6brille7Trellis1yEv"></span><span id="brille::Trellis::yC"></span><span class="target" id="classbrille_1_1Trellis_1ad38566bb717e0ceaa370f485d51ee7f4"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">y</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis1yEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis1zEv">
+<span id="_CPPv3NK6brille7Trellis1zEv"></span><span id="_CPPv2NK6brille7Trellis1zEv"></span><span id="brille::Trellis::zC"></span><span class="target" id="classbrille_1_1Trellis_1afbffc9bb886cf1d976e1531b0cb08d39"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">z</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis1zEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis1xERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N6brille7Trellis1xERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N6brille7Trellis1xERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::x__std::array:double.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1abac9f5aa06a9fdb8e8948dea43b79c49"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">x</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis1xERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis1yERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N6brille7Trellis1yERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N6brille7Trellis1yERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::y__std::array:double.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1a5c61db7d6abf13461165889b3d16c497"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">y</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis1yERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis1zERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N6brille7Trellis1zERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N6brille7Trellis1zERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::z__std::array:double.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1a53dd0f9f6032f3e1b47f31ad5c559864"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">z</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis1zERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis3xyzEv">
+<span id="_CPPv3NK6brille7Trellis3xyzEv"></span><span id="_CPPv2NK6brille7Trellis3xyzEv"></span><span id="brille::Trellis::xyzC"></span><span class="target" id="classbrille_1_1Trellis_1a2f4d1b33f4c00a07c8e5234e1d8167b0"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis3xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL9EEEE">
+<span id="_CPPv3N6brille7Trellis3xyzERKNSt5arrayIdXL9EEEE"></span><span id="_CPPv2N6brille7Trellis3xyzERKNSt5arrayIdX9EEE"></span><span id="brille::Trellis::xyz__std::array:double.9:CR"></span><span class="target" id="classbrille_1_1Trellis_1a55f27b78f082a02c0e44590a0f6db144"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL9EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N6brille7Trellis3xyzERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::xyz__std::array:double.3:CR.std::array:double.3:CR.std::array:double.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1a51271b31e67ee9fcfdf4ac15fff27171"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nx</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>ny</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nz</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2N6brille7Trellis3xyzERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::xyz__std::array:double.3:CR.std::array:double.3:CR"></span><span class="target" id="classbrille_1_1Trellis_1a7deb311eb1c0bbe4c720ad0bca459863"></span><em class="property">const</em> std::array&lt;double, 9&gt; &amp;<code class="sig-name descname">xyz</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>nx</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>ny</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis3xyzERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3NK6brille7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2NK6brille7Trellis14node_subscriptERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::node_subscript__std::array:double.3:CRC"></span><span class="target" id="classbrille_1_1Trellis_1a5f3114341d3daa33e1110203655d1bbb"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis14node_subscriptERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis14node_subscriptERK6bArrayIdE">
+<span id="_CPPv3NK6brille7Trellis14node_subscriptERK6bArrayIdE"></span><span id="_CPPv2NK6brille7Trellis14node_subscriptERK6bArrayIdE"></span><span id="brille::Trellis::node_subscript__bArray:double:CRC"></span><span class="target" id="classbrille_1_1Trellis_1a3542903a64b603a9c25e35bbc3059f67"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis14node_subscriptERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis14node_subscriptERK11TrellisLeaf">
+<span id="_CPPv3NK6brille7Trellis14node_subscriptERK11TrellisLeaf"></span><span id="_CPPv2NK6brille7Trellis14node_subscriptERK11TrellisLeaf"></span><span id="brille::Trellis::node_subscript__TrellisLeafCRC"></span><span class="target" id="classbrille_1_1Trellis_1afcced4fa6b5cc52132b75981aebf1e87"></span>std::array&lt;size_t, 3&gt; <code class="sig-name descname">node_subscript</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a> &amp;<em>l</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis14node_subscriptERK11TrellisLeaf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille7Trellis10node_indexE6size_tRK1T">
+<span id="_CPPv3I0ENK6brille7Trellis10node_indexERK1T"></span><span id="_CPPv2I0ENK6brille7Trellis10node_indexERK1T"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Trellis_1af26e6df29de7503287262337df106dc9"></span>size_t <code class="sig-name descname">node_index</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK6brille7Trellis10node_indexE6size_tRK1T" title="brille::Trellis::node_index::T">T</a> &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille7Trellis10node_indexE6size_tRK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis11node_leavesEK6size_t">
+<span id="_CPPv3NK6brille7Trellis11node_leavesEK6size_t"></span><span id="_CPPv2NK6brille7Trellis11node_leavesEK6size_t"></span><span id="brille::Trellis::node_leaves__sCC"></span><span class="target" id="classbrille_1_1Trellis_1ab2e45e65b8fd13090d76a73375a1e7c8"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis11node_leavesEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N6brille7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N6brille7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE"></span><span id="brille::Trellis::node_leaves__sC.std::vector:TrellisLeaf:CR"></span><span class="target" id="classbrille_1_1Trellis_1a9540e580474c6b9992f1ecc93080a94e"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>idx</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis11node_leavesEK6size_tRKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis11node_leavesERKNSt5arrayIdXL3EEEE">
+<span id="_CPPv3NK6brille7Trellis11node_leavesERKNSt5arrayIdXL3EEEE"></span><span id="_CPPv2NK6brille7Trellis11node_leavesERKNSt5arrayIdX3EEE"></span><span id="brille::Trellis::node_leaves__std::array:double.3:CRC"></span><span class="target" id="classbrille_1_1Trellis_1a27719cbf4ce2f35b2adc3e7b75b63d14"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis11node_leavesERKNSt5arrayIdXL3EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis11node_leavesERK6bArrayIdE">
+<span id="_CPPv3NK6brille7Trellis11node_leavesERK6bArrayIdE"></span><span id="_CPPv2NK6brille7Trellis11node_leavesERK6bArrayIdE"></span><span id="brille::Trellis::node_leaves__bArray:double:CRC"></span><span class="target" id="classbrille_1_1Trellis_1a5bb658ff5b9524ec86c48e5b41346c34"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<code class="sig-name descname">node_leaves</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis11node_leavesERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis8add_leafERK11TrellisLeaf">
+<span id="_CPPv3N6brille7Trellis8add_leafERK11TrellisLeaf"></span><span id="_CPPv2N6brille7Trellis8add_leafERK11TrellisLeaf"></span><span id="brille::Trellis::add_leaf__TrellisLeafCR"></span><span class="target" id="classbrille_1_1Trellis_1a64694a455d1b9b4ffef0cf89c2dc6bc7"></span>bool <code class="sig-name descname">add_leaf</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a> &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis8add_leafERK11TrellisLeaf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE">
+<span id="_CPPv3N6brille7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE"></span><span id="_CPPv2N6brille7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE"></span><span id="brille::Trellis::add_leaves__std::vector:TrellisLeaf:CR"></span><span class="target" id="classbrille_1_1Trellis_1a743981e62b6d1d7039fe4575c9b6817c"></span>bool <code class="sig-name descname">add_leaves</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TrellisLeaf.html#_CPPv4N6brille11TrellisLeafE" title="brille::TrellisLeaf">TrellisLeaf</a>&gt; &amp;<em>leaves</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Trellis10add_leavesERKNSt6vectorI11TrellisLeafEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T">
+<span id="_CPPv3I0ENK6brille7Trellis15nodes_to_searchERK1T"></span><span id="_CPPv2I0ENK6brille7Trellis15nodes_to_searchERK1T"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Trellis_1a18a8016ed1014fc4277ab0a9357cc0b0"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">nodes_to_search</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0ENK6brille7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T" title="brille::Trellis::nodes_to_search::T">T</a> &amp;<em>p</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille7Trellis15nodes_to_searchENSt6vectorI6size_tEERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Trellis9to_stringEv">
+<span id="_CPPv3NK6brille7Trellis9to_stringEv"></span><span id="_CPPv2NK6brille7Trellis9to_stringEv"></span><span id="brille::Trellis::to_string__voidC"></span><span class="target" id="classbrille_1_1Trellis_1a8e708a5c8cd6013f7fbb699aade0e34e"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Trellis9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1TrellisLeaf.html" class="btn btn-neutral float-right" title="Class TrellisLeaf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1TetTriLayer.html" class="btn btn-neutral float-left" title="Class TetTriLayer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

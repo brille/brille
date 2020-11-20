@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1af40b492fad2142c9267b33c33e7a8670:
+
+Template Function brille::operator\*(const std::array<R, 9>&, const L<T>&)
+==========================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::operator*(const std::array<R, 9>&, const L<T>&)

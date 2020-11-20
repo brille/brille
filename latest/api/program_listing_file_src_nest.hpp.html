@@ -172,23 +172,25 @@
   <div class="section" id="program-listing-for-file-nest-hpp">
 <span id="program-listing-file-src-nest-hpp"></span><h1>Program Listing for File nest.hpp<a class="headerlink" href="#program-listing-for-file-nest-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_nest.hpp.html#file-src-nest-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/nest.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
-<span class="cm">//</span>
-<span class="cm">// This file is part of brille.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
-<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
-<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
-<span class="cm">// any later version.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
-<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
-<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
-<span class="cm">// See the GNU Affero General Public License for more details.</span>
-<span class="cm">//</span>
-<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
-<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
 
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef BRILLE_NEST_H_</span>
+<span class="cp">#define BRILLE_NEST_H_</span>
 <span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
@@ -198,17 +200,14 @@
 <span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;array.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;array2.hpp&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;array_latvec.hpp&quot; // defines bArray</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;array_latvec.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;polyhedron.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;utilities.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;triangulation_simple.hpp&quot;</span><span class="cp"></span>
-<span class="c1">// #include &quot;interpolation_data.hpp&quot;</span>
 <span class="cp">#include</span> <span class="cpf">&quot;interpolatordual.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
-
-<span class="cp">#ifndef _NEST_H_</span>
-<span class="cp">#define _NEST_H_</span>
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span><span class="kt">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
 <span class="k">static</span> <span class="kt">bool</span> <span class="n">none_negative</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">){</span>
@@ -515,6 +514,7 @@
 <span class="p">};</span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;nest.tpp&quot;</span><span class="cp"></span>
+<span class="p">}</span> <span class="c1">// namespace brille</span>
 <span class="cp">#endif</span>
 </pre></div>
 </div>

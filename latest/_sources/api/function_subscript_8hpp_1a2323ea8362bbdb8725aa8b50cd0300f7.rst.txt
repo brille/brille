@@ -1,0 +1,13 @@
+.. _exhale_function_subscript_8hpp_1a2323ea8362bbdb8725aa8b50cd0300f7:
+
+Template Function brille::offset_sub2lin(const std::array<I, 2>&, const std::array<I, 2>&, const std::array<I, 2>&)
+===================================================================================================================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::offset_sub2lin(const std::array<I, 2>&, const std::array<I, 2>&, const std::array<I, 2>&)

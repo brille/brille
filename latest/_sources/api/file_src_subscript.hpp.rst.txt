@@ -53,45 +53,50 @@ Included By
 
 - :ref:`file_src_array2.hpp`
 
-- :ref:`file_src_sharedspan.hpp`
 
 
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
 
 
 Classes
 -------
 
 
-- :ref:`exhale_class_classBroadcastIt`
+- :ref:`exhale_class_classbrille_1_1BroadcastIt`
 
-- :ref:`exhale_class_classBroadcastIt2`
+- :ref:`exhale_class_classbrille_1_1BroadcastIt2`
 
-- :ref:`exhale_class_classSubIt`
+- :ref:`exhale_class_classbrille_1_1SubIt`
 
-- :ref:`exhale_class_classSubIt2`
+- :ref:`exhale_class_classbrille_1_1SubIt2`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_subscript_8hpp_1a96f92e0eff9086780d47de6c68ab9b14`
+- :ref:`exhale_function_subscript_8hpp_1a1e0e75ea2a3447045ded6b44235930f2`
 
-- :ref:`exhale_function_subscript_8hpp_1aecea65effca66f48b3f25cb5c5a11a99`
+- :ref:`exhale_function_subscript_8hpp_1a4286d2a237d885c58e508b24cb0220ad`
 
-- :ref:`exhale_function_subscript_8hpp_1a41e3a87e9a6719045ce59f1219375f8c`
+- :ref:`exhale_function_subscript_8hpp_1aaffc965496cc61505812f7c0a4e3a19a`
 
-- :ref:`exhale_function_subscript_8hpp_1ac63782ded11ef9fd9deeadd68d287414`
+- :ref:`exhale_function_subscript_8hpp_1ab7c0bfa722edfa388e0249532cec6c62`
 
-- :ref:`exhale_function_subscript_8hpp_1ac2a219900fa7ebbd127ad7e528cd26dd`
+- :ref:`exhale_function_subscript_8hpp_1acac203ff514c42b7023ed079a26f5936`
 
-- :ref:`exhale_function_subscript_8hpp_1a30710e5ec222c05abd4a52fe511755c1`
+- :ref:`exhale_function_subscript_8hpp_1a2323ea8362bbdb8725aa8b50cd0300f7`
 
-- :ref:`exhale_function_subscript_8hpp_1a9a11145301442c0b8eb8fd9d2559fe46`
+- :ref:`exhale_function_subscript_8hpp_1a7e7fc8d4ca14ba29421ab165005790d5`
 
-- :ref:`exhale_function_subscript_8hpp_1a9e0a4428e99f6fe6217b4f0b89b1ed25`
+- :ref:`exhale_function_subscript_8hpp_1ac88ecd3e884f6ff94f092f09265ff23f`
 
-- :ref:`exhale_function_subscript_8hpp_1a432e3502f7e9dc0b72db07b4a7486703`
+- :ref:`exhale_function_subscript_8hpp_1a8fb9671dc01949ba507157ed4bdb9c7c`
 
-- :ref:`exhale_function_subscript_8hpp_1a64ce3aba0211b4d3acf2d579d8bcc924`
+- :ref:`exhale_function_subscript_8hpp_1ae830dd7405c1946fbd9623ace6c21e02`
 

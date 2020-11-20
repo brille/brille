@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1a86d93b0a84a0ed9201aad0ec95462d6b:
+
+Template Function brille::operator-(const L<T>&)
+================================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::operator-(const L<T>&)

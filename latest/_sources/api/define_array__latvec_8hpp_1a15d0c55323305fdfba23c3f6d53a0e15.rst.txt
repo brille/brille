@@ -1,0 +1,13 @@
+.. _exhale_define_array__latvec_8hpp_1a15d0c55323305fdfba23c3f6d53a0e15:
+
+Define ARRAY_STDA_OP
+====================
+
+- Defined in :ref:`file_src_array_latvec.tpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ARRAY_STDA_OP

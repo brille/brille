@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class LDVec &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class LQVec" href="classbrille_1_1LQVec.html" />
+    <link rel="prev" title="Class LatVec" href="classbrille_1_1LatVec.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class LDVec</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1LDVec.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-ldvec">
+<span id="exhale-class-classbrille-1-1ldvec"></span><h1>Template Class LDVec<a class="headerlink" href="#template-class-ldvec" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_array_latvec.hpp.html#file-src-array-latvec-hpp"><span class="std std-ref">File array_latvec.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-types">
+<h3>Base Types<a class="headerlink" href="#base-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::LatVec</span></code> (<a class="reference internal" href="classbrille_1_1LatVec.html#exhale-class-classbrille-1-1latvec"><span class="std std-ref">Class LatVec</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::Array2&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span></code> (<a class="reference internal" href="classbrille_1_1Array2.html#exhale-class-classbrille-1-1array2"><span class="std std-ref">Template Class Array2</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I0EN6brille5LDVecE">
+<span id="_CPPv3I0EN6brille5LDVecE"></span><span id="_CPPv2I0EN6brille5LDVecE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">LDVec</code> : <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1LatVec.html#_CPPv4N6brille6LatVecE" title="brille::LatVec">LatVec</a>, <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1Array2.html#_CPPv4I0EN6brille6Array2E" title="brille::Array2">Array2</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0EN6brille5LDVecE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>3-vector(s) expressed in units of a <a class="reference internal" href="classbrille_1_1Direct.html#classbrille_1_1Direct"><span class="std std-ref">Direct</span></a> lattice </p>
+<p>By adding a <a class="reference internal" href="classbrille_1_1Direct.html#classbrille_1_1Direct"><span class="std std-ref">Direct</span></a> lattice to a 3-element bArray this class represents one or more 3-vector in units of a real-space-spanning lattice. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5LDVec5LDVecERK6Direct">
+<span id="_CPPv3N6brille5LDVec5LDVecERK6Direct"></span><span id="_CPPv2N6brille5LDVec5LDVecERK6Direct"></span><span id="brille::LDVec::LDVec__DirectCR"></span><span class="target" id="classbrille_1_1LDVec_1a8c6b3582db7f2cd73d67f1f45b3f1e11"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> &amp;<em>lat</em> = <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a>()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5LDVec5LDVecERK6Direct" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN6brille5LDVec5LDVecERK6DirectDp4Args">
+<span id="_CPPv3IDpEN6brille5LDVec5LDVecERK6DirectDp4Args"></span><span id="_CPPv2IDpEN6brille5LDVec5LDVecERK6DirectDp4Args"></span>template&lt;typename ...<code class="sig-name descname">Args</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a141630f7ed8b222701fb122477ef9cb3"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> &amp;<em>lat</em>, <a class="reference internal" href="#_CPPv4IDpEN6brille5LDVec5LDVecERK6DirectDp4Args" title="brille::LDVec::LDVec::Args">Args</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN6brille5LDVec5LDVecERK6DirectDp4Args" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>integer number of three-vector constructor (macroed as templates can’t be distinguished) </p>
+<p>Fowarding constructor to let bArray deal with everything else </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5LDVec5LDVecERK5LDVecI1RE">
+<span id="_CPPv3I0EN6brille5LDVec5LDVecERK5LDVecI1RE"></span><span id="_CPPv2I0EN6brille5LDVec5LDVecERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1ab1a0225b35a6be7ad687a32cf1308106"></span><code class="sig-name descname">LDVec</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVec5LDVecERK5LDVecI1RE" title="brille::LDVec::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVec5LDVecERK5LDVecI1RE" title="brille::LDVec::LDVec::R">R</a>&gt; &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5LDVec5LDVecERK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec11get_latticeEv">
+<span id="_CPPv3NK6brille5LDVec11get_latticeEv"></span><span id="_CPPv2NK6brille5LDVec11get_latticeEv"></span><span id="brille::LDVec::get_latticeC"></span><span class="target" id="classbrille_1_1LDVec_1a0d4837c32ccf319ba903ee71eec6dfde"></span><a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> <code class="sig-name descname">get_lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec11get_latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11samelatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11samelatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a9dab83d792d48d576b1ab6a2e16741fc"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LDVecI1RE" title="brille::LDVec::samelattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11samelatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11samelatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a6aa9d92401e129120ce9a1f1e012767f"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LQVecI1RE" title="brille::LDVec::samelattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LDVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11starlatticeEPK5LDVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11starlatticeEPK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1af49f24596e122a0b4b92af7faa9d4b46"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LDVecI1RE" title="brille::LDVec::starlattice::R">R</a>&gt;*<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LQVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11starlatticeEPK5LQVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11starlatticeEPK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1ae95d04a8bc21c2da90f7ede99055c4e9"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LQVecI1RE" title="brille::LDVec::starlattice::R">R</a>&gt; *<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbPK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11samelatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11samelatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a0d8bf46f6c56a8d5939776f5bace8766"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LDVecI1RE" title="brille::LDVec::samelattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11samelatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11samelatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1ad9bb45c45a8475ae402741457b9ef0a5"></span>bool <code class="sig-name descname">samelattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LQVecI1RE" title="brille::LDVec::samelattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11samelatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LDVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11starlatticeERK5LDVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11starlatticeERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a108f0d0cc1b2be3f34c00ccba6dc77e8"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LDVecI1RE" title="brille::LDVec::starlattice::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LQVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec11starlatticeERK5LQVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec11starlatticeERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a73acc7abd6e197a17dedbbde945efce0"></span>bool <code class="sig-name descname">starlattice</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LQVecI1RE" title="brille::LDVec::starlattice::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec11starlatticeEbRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK6brille5LDVec4viewE5LDVecI1TEDp1A">
+<span id="_CPPv3IDpENK6brille5LDVec4viewEDp1A"></span><span id="_CPPv2IDpENK6brille5LDVec4viewEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a50c52f7cecf9b60e76c14c837198f60a"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec::T">T</a>&gt; <code class="sig-name descname">view</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK6brille5LDVec4viewE5LDVecI1TEDp1A" title="brille::LDVec::view::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK6brille5LDVec4viewE5LDVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a non-copying view into the <a class="reference internal" href="#classbrille_1_1LDVec"><span class="std std-ref">LDVec</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpENK6brille5LDVec7extractE5LDVecI1TEDp1A">
+<span id="_CPPv3IDpENK6brille5LDVec7extractEDp1A"></span><span id="_CPPv2IDpENK6brille5LDVec7extractEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a0e4f1eea2bb1c84360ed503368d0c117"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec::T">T</a>&gt; <code class="sig-name descname">extract</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpENK6brille5LDVec7extractE5LDVecI1TEDp1A" title="brille::LDVec::extract::A">A</a>... <em>args</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK6brille5LDVec7extractE5LDVecI1TEDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a copied subset of the <a class="reference internal" href="#classbrille_1_1LDVec"><span class="std std-ref">LDVec</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec7get_hklEv">
+<span id="_CPPv3NK6brille5LDVec7get_hklEv"></span><span id="_CPPv2NK6brille5LDVec7get_hklEv"></span><span id="brille::LDVec::get_hklC"></span><span class="target" id="classbrille_1_1LDVec_1af15256f7261a9fce6186d4647e31c4e0"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec::T">T</a>&gt; <code class="sig-name descname">get_hkl</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec7get_hklEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract just the coordinates in units of the <a class="reference internal" href="classbrille_1_1Direct.html#classbrille_1_1Direct"><span class="std std-ref">Direct</span></a> lattice (strip off the lattice information) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec7get_xyzEv">
+<span id="_CPPv3NK6brille5LDVec7get_xyzEv"></span><span id="_CPPv2NK6brille5LDVec7get_xyzEv"></span><span id="brille::LDVec::get_xyzC"></span><span class="target" id="classbrille_1_1LDVec_1a238f16e3459ced4f0bf801e40bba16a7"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec7get_xyzEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extract the coordinates in <em>an</em> orthonormal frame. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec4starEv">
+<span id="_CPPv3NK6brille5LDVec4starEv"></span><span id="_CPPv2NK6brille5LDVec4starEv"></span><span id="brille::LDVec::starC"></span><span class="target" id="classbrille_1_1LDVec_1a885092031d57e3cc21cb78a99036a0dc"></span><a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;double&gt; <code class="sig-name descname">star</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec4starEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the vector(s) expressed in units of the <a class="reference internal" href="classbrille_1_1Reciprocal.html#classbrille_1_1Reciprocal"><span class="std std-ref">Reciprocal</span></a> lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec3dotEK6size_tK6size_t">
+<span id="_CPPv3NK6brille5LDVec3dotEK6size_tK6size_t"></span><span id="_CPPv2NK6brille5LDVec3dotEK6size_tK6size_t"></span><span id="brille::LDVec::dot__sC.sCC"></span><span class="target" id="classbrille_1_1LDVec_1a8edf0fd255498e19bc6aaade8f29d354"></span>double <code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec3dotEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the scalar product between two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec4normEK6size_t">
+<span id="_CPPv3NK6brille5LDVec4normEK6size_t"></span><span id="_CPPv2NK6brille5LDVec4normEK6size_t"></span><span id="brille::LDVec::norm__sCC"></span><span class="target" id="classbrille_1_1LDVec_1a000b464ba7285f34779b1ab101212e81"></span>double <code class="sig-name descname">norm</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec4normEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the absolute length of a vector in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec5crossEK6size_tK6size_t">
+<span id="_CPPv3NK6brille5LDVec5crossEK6size_tK6size_t"></span><span id="_CPPv2NK6brille5LDVec5crossEK6size_tK6size_t"></span><span id="brille::LDVec::cross__sC.sCC"></span><span class="target" id="classbrille_1_1LDVec_1a9370d40b26bd5b05ec02f3445580bfe2"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;double&gt; <code class="sig-name descname">cross</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em>, <em class="property">const</em> size_t <em>j</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec5crossEK6size_tK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the cross product of two vectors in the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LDVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec22binary_operation_checkERK5LDVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec22binary_operation_checkERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1aa83934bff9a904a21aa58f08e9ed6d09"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LDVecI1RE" title="brille::LDVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LQVecI1RE">
+<span id="_CPPv3I0ENK6brille5LDVec22binary_operation_checkERK5LQVecI1RE"></span><span id="_CPPv2I0ENK6brille5LDVec22binary_operation_checkERK5LQVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1afd15e4fd0b589f7f7e4873a6d30be94d"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1LQVec.html#_CPPv4I0EN6brille5LQVecE" title="brille::LQVec">LQVec</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LQVecI1RE" title="brille::LDVec::binary_operation_check::R">R</a>&gt; &amp;<em>b</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille5LDVec22binary_operation_checkEvRK5LQVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE">
+<span id="_CPPv3I0I0E00ENK6brille5LDVec22binary_operation_checkERK1AI1RE"></span><span id="_CPPv2I0I0E00ENK6brille5LDVec22binary_operation_checkERK1AI1RE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">A</code>, typename = <em class="property">typename</em> std::enable_if&lt;!std::is_base_of&lt;<a class="reference internal" href="classbrille_1_1LatVec.html#_CPPv4N6brille6LatVecE" title="brille::LatVec">LatVec</a>, <a class="reference internal" href="#_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE" title="brille::LDVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE" title="brille::LDVec::binary_operation_check::R">R</a>&gt;&gt;::value&gt;::type&gt;<br /><span class="target" id="classbrille_1_1LDVec_1aa5f0b59667255f81a0f83cc79d65f7d1"></span>void <code class="sig-name descname">binary_operation_check</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE" title="brille::LDVec::binary_operation_check::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE" title="brille::LDVec::binary_operation_check::R">R</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0I0E00ENK6brille5LDVec22binary_operation_checkEvRK1AI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille5LDVec2isEbRK5LDVecI1RE">
+<span id="_CPPv3I0EN6brille5LDVec2isERK5LDVecI1RE"></span><span id="_CPPv2I0EN6brille5LDVec2isERK5LDVecI1RE"></span>template&lt;class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1LDVec_1a5c4c3fedbece0c83f06625da69f03f93"></span>bool <code class="sig-name descname">is</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVec2isEbRK5LDVecI1RE" title="brille::LDVec::is::R">R</a>&gt; &amp;<em>that</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille5LDVec2isEbRK5LDVecI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check whether a second <a class="reference internal" href="#classbrille_1_1LDVec"><span class="std std-ref">LDVec</span></a> is approximately the same as this object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec5roundEv">
+<span id="_CPPv3NK6brille5LDVec5roundEv"></span><span id="_CPPv2NK6brille5LDVec5roundEv"></span><span id="brille::LDVec::roundC"></span><span class="target" id="classbrille_1_1LDVec_1a33b9d097b47de0bbd380256a61ba2ebf"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;int&gt; <code class="sig-name descname">round</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec5roundEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Round all elements using std::round. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec5floorEv">
+<span id="_CPPv3NK6brille5LDVec5floorEv"></span><span id="_CPPv2NK6brille5LDVec5floorEv"></span><span id="brille::LDVec::floorC"></span><span class="target" id="classbrille_1_1LDVec_1a0bb00f409121dbd514b297b521149335"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;int&gt; <code class="sig-name descname">floor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec5floorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the floor of all elements using std::floor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille5LDVec4ceilEv">
+<span id="_CPPv3NK6brille5LDVec4ceilEv"></span><span id="_CPPv2NK6brille5LDVec4ceilEv"></span><span id="brille::LDVec::ceilC"></span><span class="target" id="classbrille_1_1LDVec_1a5437ab3806a546e16e40d790542d7d09"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;int&gt; <code class="sig-name descname">ceil</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille5LDVec4ceilEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the ceiling of all elements using std::ceil. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5LDVec8decoupleEv">
+<span id="_CPPv3N6brille5LDVec8decoupleEv"></span><span id="_CPPv2N6brille5LDVec8decoupleEv"></span><span id="brille::LDVec::decouple"></span><span class="target" id="classbrille_1_1LDVec_1a2aa9e9552c171c9060ea4a0f981838c7"></span><a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec::T">T</a>&gt; <code class="sig-name descname">decouple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5LDVec8decoupleEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille5LDVec11check_arrayEv">
+<span id="_CPPv3N6brille5LDVec11check_arrayEv"></span><span id="_CPPv2N6brille5LDVec11check_arrayEv"></span><span id="brille::LDVec::check_array"></span><span class="target" id="classbrille_1_1LDVec_1aebaa318e5f89c763f33fc8395c2a7572"></span>void <code class="sig-name descname">check_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille5LDVec11check_arrayEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1LQVec.html" class="btn btn-neutral float-right" title="Template Class LQVec" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1LatVec.html" class="btn btn-neutral float-left" title="Class LatVec" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

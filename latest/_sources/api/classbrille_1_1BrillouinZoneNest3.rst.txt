@@ -1,0 +1,25 @@
+.. _exhale_class_classbrille_1_1BrillouinZoneNest3:
+
+Template Class BrillouinZoneNest3
+=================================
+
+- Defined in :ref:`file_src_bz_nest.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public brille::Nest< T, S >`` (:ref:`exhale_class_classbrille_1_1Nest`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::BrillouinZoneNest3
+   :members:
+   :protected-members:
+   :undoc-members:

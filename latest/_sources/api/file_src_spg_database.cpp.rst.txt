@@ -42,21 +42,6 @@ Includes
 
 
 
-Functions
----------
-
-
-- :ref:`exhale_function_spg__database_8cpp_1a57c0a95c3f9fe439fb08700967a9adac`
-
-- :ref:`exhale_function_spg__database_8cpp_1af16de9b2344523308d97d5d728b5bdd2`
-
-- :ref:`exhale_function_spg__database_8cpp_1a74bfdd4a4b4cea202d2806e92404af48`
-
-- :ref:`exhale_function_spg__database_8cpp_1ab67fd08cabd0407087e47b6c5eb9fa9b`
-
-- :ref:`exhale_function_spg__database_8cpp_1a8ff7d53a99bc05c46e0e1b26d30e6b20`
-
-
 Variables
 ---------
 

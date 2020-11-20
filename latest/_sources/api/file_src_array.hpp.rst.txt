@@ -81,10 +81,6 @@ Included By
 
 - :ref:`file_src_trellis.hpp`
 
-- :ref:`file_src_inner_interpolation_data.hpp`
-
-- :ref:`file_src_interpolator.hpp`
-
 
 
 

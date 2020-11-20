@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1aa523c0458f4aa30109036b189ce78fcc:
+
+Template Function brille::face_has_area
+=======================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::face_has_area(const bArray<T>&)

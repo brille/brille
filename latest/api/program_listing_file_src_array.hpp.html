@@ -172,9 +172,25 @@
   <div class="section" id="program-listing-for-file-array-hpp">
 <span id="program-listing-file-src-array-hpp"></span><h1>Program Listing for File array.hpp<a class="headerlink" href="#program-listing-for-file-array-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_array.hpp.html#file-src-array-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>#ifndef ARRAY_HPP
-#define ARRAY_HPP
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>/* This file is part of brille.
 
+Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */
+
+#ifndef BRILLE_ARRAY_HPP_
+#define BRILLE_ARRAY_HPP_
 #include &lt;functional&gt;
 #include &lt;algorithm&gt;
 #include &lt;numeric&gt;
@@ -185,7 +201,6 @@
 #include &lt;iostream&gt;
 #include &lt;memory&gt;
 #include &lt;string&gt;
-
 #include &quot;subscript.hpp&quot;
 #include &quot;utilities.hpp&quot;
 #include &quot;comparisons.hpp&quot;
@@ -193,7 +208,6 @@
 #include &quot;types.hpp&quot;
 #include &quot;array_.hpp&quot;
 #include &quot;array2.hpp&quot;
-
 namespace brille {
 template&lt;class T&gt; class Array{
 public:

@@ -68,9 +68,16 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classMesh3`
+- :ref:`exhale_class_classbrille_1_1Mesh3`
 

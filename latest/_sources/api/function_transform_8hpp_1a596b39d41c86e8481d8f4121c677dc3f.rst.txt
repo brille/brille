@@ -1,0 +1,13 @@
+.. _exhale_function_transform_8hpp_1a596b39d41c86e8481d8f4121c677dc3f:
+
+Template Function brille::transform_from_primitive(const Direct&, const LDVec<T>&)
+==================================================================================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::transform_from_primitive(const Direct&, const LDVec<T>&)

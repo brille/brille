@@ -1,0 +1,13 @@
+.. _exhale_typedef_symmetry__common_8hpp_1a94cfc0163f6819f061b74be9ef3e044c:
+
+Typedef brille::Vector
+======================
+
+- Defined in :ref:`file_src_symmetry_common.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::Vector

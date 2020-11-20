@@ -1,0 +1,13 @@
+.. _exhale_typedef_lapjv_8hpp_1a4fb4d98acdbe0f543e81c61dae8c6e46:
+
+Typedef brille::assignment::sidx
+================================
+
+- Defined in :ref:`file_src_lapjv.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::assignment::sidx

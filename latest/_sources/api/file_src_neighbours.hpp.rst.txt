@@ -44,13 +44,20 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Functions
 ---------
 
 
-- :ref:`exhale_function_neighbours_8hpp_1ac1836aeded46d0800bb27556bc8ad125`
+- :ref:`exhale_function_neighbours_8hpp_1a04f2f94ca31b6a1fe9f07492c6b10dc8`
 
-- :ref:`exhale_function_neighbours_8hpp_1aa8d35095cf703027439b3015b4222103`
+- :ref:`exhale_function_neighbours_8hpp_1aca3eac0472a24f9251134013b98d4b31`
 
-- :ref:`exhale_function_neighbours_8hpp_1a93338b61468fad398f61ee93ba578bec`
+- :ref:`exhale_function_neighbours_8hpp_1a76a7ee32aa5c051000151c4c1287cdd0`
 

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1TetTri:
+
+Class TetTri
+============
+
+- Defined in :ref:`file_src_triangulation.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::TetTri
+   :members:
+   :protected-members:
+   :undoc-members:

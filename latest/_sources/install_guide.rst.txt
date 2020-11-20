@@ -19,6 +19,21 @@ This will download a precompiled binary of the latest released version of the
 module or download its source code and compile the module if a precompiled
 binary does not exist for your system.
 
+Note:
+  Windows systems must have the Microsoft Visual C++ Redistributable binaries in
+  order to load the PyPI distributed :py:mod:`brille` module.
+  If you are faced with the error
+
+  .. code-block:: python
+
+    >>> import brille
+
+    ImportError: DLL load failed while importing _brille: The specified module could not be found
+
+  please install the latest x64 Visual C++ redistributable package from
+  `Microsoft <https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads>`_.
+
+
 
 source
 ======
@@ -44,7 +59,7 @@ Note:
 development
 -----------
 If you plan to modify the pure Python submodules, e.g.,
-:py:mod:`brille.plotting` or :py:mod:`brille.euphonic`, you may benefit from
+:py:mod:`brille.plotting`, you may benefit from
 constructing from source using the ``develop`` option.
 
 .. code-block:: bash

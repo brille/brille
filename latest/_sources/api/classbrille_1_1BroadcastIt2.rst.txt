@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1BroadcastIt2:
+
+Template Class BroadcastIt2
+===========================
+
+- Defined in :ref:`file_src_subscript.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::BroadcastIt2
+   :members:
+   :protected-members:
+   :undoc-members:

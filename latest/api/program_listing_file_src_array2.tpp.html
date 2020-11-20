@@ -172,7 +172,24 @@
   <div class="section" id="program-listing-for-file-array2-tpp">
 <span id="program-listing-file-src-array2-tpp"></span><h1>Program Listing for File array2.tpp<a class="headerlink" href="#program-listing-for-file-array2-tpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_array2.tpp.html#file-src-array2-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array2.tpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">view</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
   <span class="k">return</span> <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_data</span><span class="p">,</span><span class="n">_num</span><span class="p">,</span><span class="n">_shift</span><span class="p">,</span><span class="n">_own</span><span class="p">,</span><span class="n">_ref</span><span class="p">,</span><span class="n">_shape</span><span class="p">,</span><span class="n">_stride</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
 <span class="p">}</span>
@@ -657,8 +674,7 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">dim</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
-  <span class="kt">size_t</span> <span class="n">ndim</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">ndim</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
   <span class="n">shape_t</span> <span class="n">osize</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">();</span>
   <span class="n">osize</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
   <span class="n">shape_t</span> <span class="n">ostride</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">calculate_stride</span><span class="p">(</span><span class="n">osize</span><span class="p">);</span> <span class="c1">// preserve orderness</span>
@@ -678,8 +694,7 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">prod</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">dim</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
-  <span class="kt">size_t</span> <span class="n">ndim</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">ndim</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
   <span class="n">shape_t</span> <span class="n">osize</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">();</span>
   <span class="n">osize</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
   <span class="n">shape_t</span> <span class="n">ostride</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">calculate_stride</span><span class="p">(</span><span class="n">osize</span><span class="p">);</span> <span class="c1">// preserve orderness</span>
@@ -699,8 +714,7 @@
 <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
 <span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">(</span><span class="k">const</span> <span class="n">ind_t</span> <span class="n">dim</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
-  <span class="kt">size_t</span> <span class="n">ndim</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">ndim</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
   <span class="n">shape_t</span> <span class="n">osize</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">();</span>
   <span class="n">osize</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
   <span class="n">shape_t</span> <span class="n">ostride</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">calculate_stride</span><span class="p">(</span><span class="n">osize</span><span class="p">);</span> <span class="c1">// preserve orderness</span>

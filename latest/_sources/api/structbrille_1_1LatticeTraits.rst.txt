@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1LatticeTraits:
+
+Template Struct LatticeTraits
+=============================
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::LatticeTraits
+   :members:
+   :protected-members:
+   :undoc-members:

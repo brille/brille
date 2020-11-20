@@ -1,0 +1,13 @@
+.. _exhale_typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4:
+
+Typedef brille::Matrix
+======================
+
+- Defined in :ref:`file_src_symmetry_common.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::Matrix

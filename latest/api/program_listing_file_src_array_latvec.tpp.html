@@ -172,11 +172,29 @@
   <div class="section" id="program-listing-for-file-array-latvec-tpp">
 <span id="program-listing-file-src-array-latvec-tpp"></span><h1>Program Listing for File array_latvec.tpp<a class="headerlink" href="#program-listing-for-file-array-latvec-tpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_array_latvec.tpp.html#file-src-array-latvec-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array_latvec.tpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// In order to overload operations between bArrays and LatVecs unambiguously</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="c1">// In order to overload operations between bArrays and LatVecs unambiguously</span>
 <span class="c1">// these definitions can only be made after all types have been defined:</span>
 
 <span class="c1">// &#39;pure&#39; bArray&lt;T&gt; [+-*/] &#39;pure&#39; bArray&lt;R&gt;</span>
 <span class="c1">// (or derived classes with only extra static properties or methods)</span>
+
 <span class="cp">#define ARRAY_ARRAY_OP(X) template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
 <span class="cp">std::enable_if_t&lt;bareArrays&lt;T,A,R,A&gt;, A&lt;S&gt;&gt;\</span>
 <span class="cp">operator X (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){\</span>

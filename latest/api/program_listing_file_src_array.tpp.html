@@ -172,7 +172,24 @@
   <div class="section" id="program-listing-for-file-array-tpp">
 <span id="program-listing-file-src-array-tpp"></span><h1>Program Listing for File array.tpp<a class="headerlink" href="#program-listing-for-file-array-tpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_array.tpp.html#file-src-array-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array.tpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>template&lt;class T&gt;
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>/* This file is part of brille.
+
+Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */
+
+template&lt;class T&gt;
 Array&lt;T&gt; Array&lt;T&gt;::view() const{
   // return Array&lt;T&gt;(_data,_num,_own,_ref,_offset,_shape,_stride,false);
   return Array&lt;T&gt;(_data, _num, _shift, _own, _ref, _shape, _stride, false);

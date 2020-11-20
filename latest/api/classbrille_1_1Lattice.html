@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Lattice &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class LatVec" href="classbrille_1_1LatVec.html" />
+    <link rel="prev" title="Template Class Interpolator" href="classbrille_1_1Interpolator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Lattice</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Lattice.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-lattice">
+<span id="exhale-class-classbrille-1-1lattice"></span><h1>Class Lattice<a class="headerlink" href="#class-lattice" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_lattice.hpp.html#file-src-lattice-hpp"><span class="std std-ref">File lattice.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="derived-types">
+<h3>Derived Types<a class="headerlink" href="#derived-types" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::Direct</span></code> (<a class="reference internal" href="classbrille_1_1Direct.html#exhale-class-classbrille-1-1direct"><span class="std std-ref">Class Direct</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::Reciprocal</span></code> (<a class="reference internal" href="classbrille_1_1Reciprocal.html#exhale-class-classbrille-1-1reciprocal"><span class="std std-ref">Class Reciprocal</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille7LatticeE">
+<span id="_CPPv3N6brille7LatticeE"></span><span id="_CPPv2N6brille7LatticeE"></span><span id="brille::Lattice"></span><span class="target" id="classbrille_1_1Lattice"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Lattice</code><a class="headerlink" href="#_CPPv4N6brille7LatticeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A class to hold information about a space-spanning lattice in three dimensions. </p>
+<p>A space-spanning lattice in N dimensions has N basis vectors which can be described fully by their N lengths and the <code class="docutils literal notranslate"><span class="pre">sum(1:N-1)</span></code> angles between each set of basis vectors, or <code class="docutils literal notranslate"><span class="pre">sum(1:N)</span></code> scalars in total. Storing only their lengths and angles is therefore always more efficient than storing all N² components of the basis vectors in an orthonormal frame. This class stores the 3 lengths and 3 angles required to describe a 3 dimensional space-spanning lattice, plus the volume of the lattice unit cell and an optional Hall number if a non-Primitive lattice is desired. </p>
+<p>Subclassed by <a class="reference internal" href="classbrille_1_1Direct.html#classbrille_1_1Direct"><span class="std std-ref">brille::Direct</span></a>, <a class="reference internal" href="classbrille_1_1Reciprocal.html#classbrille_1_1Reciprocal"><span class="std std-ref">brille::Reciprocal</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis">
+<span id="_CPPv3N6brille7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis"></span><span id="_CPPv2N6brille7Lattice7LatticeERKNSt5arrayIdX3EEERKNSt5arrayIdX3EEEK7BravaisK8SymmetryK13PointSymmetryK5Basis"></span><span id="brille::Lattice::Lattice__std::array:double.3:CR.std::array:double.3:CR.BravaisC.SymmetryC.PointSymmetryC.BasisC"></span><span class="target" id="classbrille_1_1Lattice_1a22ce84ca3b4e0cb940bc16ab5c44181b"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>l</em>, <em class="property">const</em> std::array&lt;double, 3&gt; &amp;<em>a</em>, <em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <em>b</em>, <em class="property">const</em> <a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <em>sgs</em>, <em class="property">const</em> <a class="reference internal" href="classbrille_1_1PointSymmetry.html#_CPPv4N6brille13PointSymmetryE" title="brille::PointSymmetry">PointSymmetry</a> <em>pgs</em>, <em class="property">const</em> <a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> <em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeERKNSt5arrayIdXL3EEEERKNSt5arrayIdXL3EEEEK7BravaisK8SymmetryK13PointSymmetryK5Basis" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from its components, excluding the volume which is calculated. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEPKdKi">
+<span id="_CPPv3N6brille7Lattice7LatticeEPKdKi"></span><span id="_CPPv2N6brille7Lattice7LatticeEPKdKi"></span><span id="brille::Lattice::Lattice__doubleCP.iC"></span><span class="target" id="classbrille_1_1Lattice_1af1e451edd14879b0b11a6e0f10146da2"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double*, <em class="property">const</em> int <em>h</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEPKdKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from a matrix of the basis vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeERKN6brille6Array2IdEERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEERK8Symmetry">
+<span id="_CPPv3N6brille7Lattice7LatticeERKN6brille6Array2IdEERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEERK8Symmetry"></span><span id="_CPPv2N6brille7Lattice7LatticeERKN6brille6Array2IdEERKNSt6vectorINSt5arrayIdX3EEEEERKNSt6vectorImEERK8Symmetry"></span><span id="brille::Lattice::Lattice__brille::Array2:double:CR.std::vector:std::array:double.3::CR.std::vector:unsigned-l:CR.SymmetryCR"></span><span class="target" id="classbrille_1_1Lattice_1a5846e4f5aedbaaaf2d317848ae1d87bb"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> brille::<a class="reference internal" href="classbrille_1_1Array2.html#_CPPv4I0EN6brille6Array2E" title="brille::Array2">Array2</a>&lt;double&gt; &amp;<em>latmat</em>, <em class="property">const</em> std::vector&lt;std::array&lt;double, 3&gt;&gt; &amp;<em>pos</em>, <em class="property">const</em> std::vector&lt;unsigned long&gt; &amp;<em>typ</em>, <em class="property">const</em> <a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> &amp;<em>sym</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeERKN6brille6Array2IdEERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEERK8Symmetry" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from an <a class="reference internal" href="classbrille_1_1Array2.html#classbrille_1_1Array2"><span class="std std-ref">Array2</span></a> 3x3 basis vector matrix, plus basis and symmetry information. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEKi">
+<span id="_CPPv3I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEKi"></span><span id="_CPPv2I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEKi"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1aa19cc39bf9ee64c63e509a1cf5f3ce84"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>latmat</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEKi" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>strides</em>, <em class="property">const</em> int <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from a possibly-not-contiguous matrix of the basis vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit">
+<span id="_CPPv3I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit"></span><span id="_CPPv2I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1a4484e480ed3e740f00f95461d01189eb"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>lengths</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>lenstrides</em>, <em class="property">const</em> double *<em>angles</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>angstrides</em>, <em class="property">const</em> int <em>h</em>, <em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a> <em>au</em> = <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a>::<a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnit12not_providedE" title="brille::AngleUnit::not_provided">not_provided</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEEKiK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the lattice from two vectors of the lengths and angles. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lengths</span></code>: A pointer to the first of three basis vector lengths in arbitrary length units </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lenstrides</span></code>: The first element must contain the stride in bytes between basis vector lenght entries </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angles</span></code>: A pointer to the first of three inter-basis-vector angles in units of pi, radian, or degree </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angstrides</span></code>: The first element must contain the stride in bytes between angle entries </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span></code>: The hall number specifying the lattice symmetries </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">au</span></code>: An enum which identifies which units the provided angles use. If omitted or AngleUnit::not_provided, an attempt is made to guess the units. If all provided angles have values less than π then they are assumed to be in units of radian, otherwise they are assumed to be in units of degrees. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEPKdPKdKiK9AngleUnit">
+<span id="_CPPv3N6brille7Lattice7LatticeEPKdPKdKiK9AngleUnit"></span><span id="_CPPv2N6brille7Lattice7LatticeEPKdPKdKiK9AngleUnit"></span><span id="brille::Lattice::Lattice__doubleCP.doubleCP.iC.AngleUnitC"></span><span class="target" id="classbrille_1_1Lattice_1a5b568a618735fa8d379244c9497a1dc9"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double*, <em class="property">const</em> double*, <em class="property">const</em> int <em>h</em> = 1, <em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a> <em>au</em> = <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a>::<a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnit12not_providedE" title="brille::AngleUnit::not_provided">not_provided</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEPKdPKdKiK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from a vector of the basis vector lengths and a vector of the basis vector angles. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEKdKdKdKdKdKdKi">
+<span id="_CPPv3N6brille7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="_CPPv2N6brille7Lattice7LatticeEKdKdKdKdKdKdKi"></span><span id="brille::Lattice::Lattice__doubleC.doubleC.doubleC.doubleC.doubleC.doubleC.iC"></span><span class="target" id="classbrille_1_1Lattice_1a0a047d59f9f43c580a0fa851ed5f0cf8"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double <em>la</em> = 1.0, <em class="property">const</em> double <em>lb</em> = 1.0, <em class="property">const</em> double <em>lc</em> = 1.0, <em class="property">const</em> double <em>al</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> double <em>bl</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> double <em>cl</em> = brille::<a class="reference internal" href="variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488.html#_CPPv4N6brille6halfpiE" title="brille::halfpi">halfpi</a>, <em class="property">const</em> int <em>h</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEKdKdKdKdKdKdKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from the three scalar lengths and three scalar angles. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEPKdRKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N6brille7Lattice7LatticeEPKdRKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N6brille7Lattice7LatticeEPKdRKNSt6stringERKNSt6stringE"></span><span id="brille::Lattice::Lattice__doubleCP.ssCR.ssCR"></span><span class="target" id="classbrille_1_1Lattice_1ad1b1cee9455bedff7d3f46476cdb678c"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double*, <em class="property">const</em> std::string&amp;, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEPKdRKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEPKdPKdRKNSt6stringERKNSt6stringEK9AngleUnit">
+<span id="_CPPv3N6brille7Lattice7LatticeEPKdPKdRKNSt6stringERKNSt6stringEK9AngleUnit"></span><span id="_CPPv2N6brille7Lattice7LatticeEPKdPKdRKNSt6stringERKNSt6stringEK9AngleUnit"></span><span id="brille::Lattice::Lattice__doubleCP.doubleCP.ssCR.ssCR.AngleUnitC"></span><span class="target" id="classbrille_1_1Lattice_1aef37d85f5fc610c1d913c0ba1d8b4fb8"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double*, <em class="property">const</em> double*, <em class="property">const</em> std::string&amp;, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;, <em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a> <em>au</em> = <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a>::<a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnit12not_providedE" title="brille::AngleUnit::not_provided">not_provided</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEPKdPKdRKNSt6stringERKNSt6stringEK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringE"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1ae677031e30cd39d7696ba95041ce5971"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>latmat</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringE" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>strides</em>, <em class="property">const</em> std::string &amp;<em>itname</em>, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit">
+<span id="_CPPv3I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit"></span><span id="_CPPv2I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1a451162c72cde0ad6b3fc628d89962450"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>lengths</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>lenstrides</em>, <em class="property">const</em> double *<em>angles</em>, std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit" title="brille::Lattice::Lattice::I">I</a>&gt; &amp;<em>angstrides</em>, <em class="property">const</em> std::string &amp;<em>itname</em>, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;, <em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a> <em>au</em> = <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a>::<a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnit12not_providedE" title="brille::AngleUnit::not_provided">not_provided</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice7LatticeEPKdRNSt6vectorI1IEEPKdRNSt6vectorI1IEERKNSt6stringERKNSt6stringEK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the lattice from two possibly-not-contiguous vectors of the lengths and angles. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice7LatticeEKdKdKdKdKdKdRKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N6brille7Lattice7LatticeEKdKdKdKdKdKdRKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N6brille7Lattice7LatticeEKdKdKdKdKdKdRKNSt6stringERKNSt6stringE"></span><span id="brille::Lattice::Lattice__doubleC.doubleC.doubleC.doubleC.doubleC.doubleC.ssCR.ssCR"></span><span class="target" id="classbrille_1_1Lattice_1ac9d0b50592eb5e1d84f910d03284e2cc"></span><code class="sig-name descname">Lattice</code><span class="sig-paren">(</span><em class="property">const</em> double, <em class="property">const</em> double, <em class="property">const</em> double, <em class="property">const</em> double, <em class="property">const</em> double, <em class="property">const</em> double, <em class="property">const</em> std::string&amp;, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice7LatticeEKdKdKdKdKdKdRKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7LatticeD0Ev">
+<span id="_CPPv3N6brille7LatticeD0Ev"></span><span id="_CPPv2N6brille7LatticeD0Ev"></span><span id="brille::Lattice::~Lattice"></span><span class="target" id="classbrille_1_1Lattice_1ac935544980d133295e22eccbcb3f7a54"></span><code class="sig-name descname">~Lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N6brille7LatticeD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice5get_aEv">
+<span id="_CPPv3NK6brille7Lattice5get_aEv"></span><span id="_CPPv2NK6brille7Lattice5get_aEv"></span><span id="brille::Lattice::get_aC"></span><span class="target" id="classbrille_1_1Lattice_1a395935060fb9d1d279e27c73a871cdad"></span>double <code class="sig-name descname">get_a</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice5get_aEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the first basis vector length. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice5get_bEv">
+<span id="_CPPv3NK6brille7Lattice5get_bEv"></span><span id="_CPPv2NK6brille7Lattice5get_bEv"></span><span id="brille::Lattice::get_bC"></span><span class="target" id="classbrille_1_1Lattice_1ab327678ebd81c5664fcfa83f5373bda1"></span>double <code class="sig-name descname">get_b</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice5get_bEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the second basis vector length. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice5get_cEv">
+<span id="_CPPv3NK6brille7Lattice5get_cEv"></span><span id="_CPPv2NK6brille7Lattice5get_cEv"></span><span id="brille::Lattice::get_cC"></span><span class="target" id="classbrille_1_1Lattice_1a8beee8c04e6f59493970c84a7ef03f07"></span>double <code class="sig-name descname">get_c</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice5get_cEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the third basis vector length. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice9get_alphaEv">
+<span id="_CPPv3NK6brille7Lattice9get_alphaEv"></span><span id="_CPPv2NK6brille7Lattice9get_alphaEv"></span><span id="brille::Lattice::get_alphaC"></span><span class="target" id="classbrille_1_1Lattice_1affe4a5c4b154bb029385aaa10a7b134a"></span>double <code class="sig-name descname">get_alpha</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice9get_alphaEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the angle between the second and third basis vectors in radian. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice8get_betaEv">
+<span id="_CPPv3NK6brille7Lattice8get_betaEv"></span><span id="_CPPv2NK6brille7Lattice8get_betaEv"></span><span id="brille::Lattice::get_betaC"></span><span class="target" id="classbrille_1_1Lattice_1a284665ca7d9a4bb5f2013ba4f966e912"></span>double <code class="sig-name descname">get_beta</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice8get_betaEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the angle between the first and third basis vectors in radian. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice9get_gammaEv">
+<span id="_CPPv3NK6brille7Lattice9get_gammaEv"></span><span id="_CPPv2NK6brille7Lattice9get_gammaEv"></span><span id="brille::Lattice::get_gammaC"></span><span class="target" id="classbrille_1_1Lattice_1aa47dfde4986f766fbee450e5f66ff101"></span>double <code class="sig-name descname">get_gamma</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice9get_gammaEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the angle between the first and second basis vectors in radian. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice10get_volumeEv">
+<span id="_CPPv3NK6brille7Lattice10get_volumeEv"></span><span id="_CPPv2NK6brille7Lattice10get_volumeEv"></span><span id="brille::Lattice::get_volumeC"></span><span class="target" id="classbrille_1_1Lattice_1a7e804e71760dcc61bc12216f7b2e4786"></span>double <code class="sig-name descname">get_volume</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice10get_volumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the volume of the parallelpiped unit cell formed by the basis vectors. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice15calculatevolumeEv">
+<span id="_CPPv3N6brille7Lattice15calculatevolumeEv"></span><span id="_CPPv2N6brille7Lattice15calculatevolumeEv"></span><span id="brille::Lattice::calculatevolume"></span><span class="target" id="classbrille_1_1Lattice_1a8fa991a01d01d809c551954412945484"></span>double <code class="sig-name descname">calculatevolume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice15calculatevolumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate and return the unit cell volume. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice17get_metric_tensorEPd">
+<span id="_CPPv3NK6brille7Lattice17get_metric_tensorEPd"></span><span id="_CPPv2NK6brille7Lattice17get_metric_tensorEPd"></span><span id="brille::Lattice::get_metric_tensor__doublePC"></span><span class="target" id="classbrille_1_1Lattice_1ab571d207f67ce93aa19283fc2c0c5b52"></span>void <code class="sig-name descname">get_metric_tensor</code><span class="sig-paren">(</span>double *<em>mt</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice17get_metric_tensorEPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">mt</span></code>: Pointer to memory which can store 9 doubles </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice27get_covariant_metric_tensorEPd">
+<span id="_CPPv3NK6brille7Lattice27get_covariant_metric_tensorEPd"></span><span id="_CPPv2NK6brille7Lattice27get_covariant_metric_tensorEPd"></span><span id="brille::Lattice::get_covariant_metric_tensor__doublePC"></span><span class="target" id="classbrille_1_1Lattice_1a95415c47181f011ee875bcf6ebfad888"></span>void <code class="sig-name descname">get_covariant_metric_tensor</code><span class="sig-paren">(</span>double *<em>mt</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice27get_covariant_metric_tensorEPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the covariant metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>  this is typically referred to as <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">mt</span></code>: Pointer to memory which can store 9 doubles </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice31get_contravariant_metric_tensorEPd">
+<span id="_CPPv3NK6brille7Lattice31get_contravariant_metric_tensorEPd"></span><span id="_CPPv2NK6brille7Lattice31get_contravariant_metric_tensorEPd"></span><span id="brille::Lattice::get_contravariant_metric_tensor__doublePC"></span><span class="target" id="classbrille_1_1Lattice_1a2e2473febea1deff04d5e13c85c9cdfa"></span>void <code class="sig-name descname">get_contravariant_metric_tensor</code><span class="sig-paren">(</span>double *<em>mt</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice31get_contravariant_metric_tensorEPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the contravariant metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>  the inverse of <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">mt</span></code>: Pointer to memory which can store 9 doubles </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice17get_metric_tensorEv">
+<span id="_CPPv3NK6brille7Lattice17get_metric_tensorEv"></span><span id="_CPPv2NK6brille7Lattice17get_metric_tensorEv"></span><span id="brille::Lattice::get_metric_tensorC"></span><span class="target" id="classbrille_1_1Lattice_1a8ed859d4388494c1b42ecd4c44074c25"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice17get_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice27get_covariant_metric_tensorEv">
+<span id="_CPPv3NK6brille7Lattice27get_covariant_metric_tensorEv"></span><span id="_CPPv2NK6brille7Lattice27get_covariant_metric_tensorEv"></span><span id="brille::Lattice::get_covariant_metric_tensorC"></span><span class="target" id="classbrille_1_1Lattice_1af87cb259f8f0f03639cc2f54da858896"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_covariant_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice27get_covariant_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the covariant metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>  this is typically referred to as <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice31get_contravariant_metric_tensorEv">
+<span id="_CPPv3NK6brille7Lattice31get_contravariant_metric_tensorEv"></span><span id="_CPPv2NK6brille7Lattice31get_contravariant_metric_tensorEv"></span><span id="brille::Lattice::get_contravariant_metric_tensorC"></span><span class="target" id="classbrille_1_1Lattice_1a47a6625abfee5d5649d5ba54bef22f59"></span>std::vector&lt;double&gt; <code class="sig-name descname">get_contravariant_metric_tensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice31get_contravariant_metric_tensorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the contravariant metric tensor of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>  the inverse of <strong>the</strong> metric tensor <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A std::vector of the row-ordered matrix </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice6issameERK7Lattice">
+<span id="_CPPv3NK6brille7Lattice6issameERK7Lattice"></span><span id="_CPPv2NK6brille7Lattice6issameERK7Lattice"></span><span id="brille::Lattice::issame__LatticeCRC"></span><span class="target" id="classbrille_1_1Lattice_1a7667076513e3ca1e1d5c4bb9f6284742"></span>bool <code class="sig-name descname">issame</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille7LatticeE" title="brille::Lattice">Lattice</a>&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice6issameERK7Lattice" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if the passed <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> represents the same space-spanning lattice. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice8isapproxERK7Lattice">
+<span id="_CPPv3NK6brille7Lattice8isapproxERK7Lattice"></span><span id="_CPPv2NK6brille7Lattice8isapproxERK7Lattice"></span><span id="brille::Lattice::isapprox__LatticeCRC"></span><span class="target" id="classbrille_1_1Lattice_1a1de08991375ccde3abfef9ed29aaa52e"></span>bool <code class="sig-name descname">isapprox</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille7LatticeE" title="brille::Lattice">Lattice</a>&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice8isapproxERK7Lattice" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if the passed <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> represents an equivalent space-spanning lattice within the specified tolerance. Simultaneous permutations of lengths and angles are considered as equivalent  e.g., (a,b,c)(α,β,γ) ≡ (b,c,a)(β,γ,α) ≡ (c,a,b)(γ,α,β), as are antipermutations, e.g., (a,b,c)(α,β,γ) ≡ (a,c,b)(α,γ,β) ≡ (c,b,a)(γ,β,α) ≡ (b,a,c)(β,α,γ). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice13ispermutationERK7Lattice">
+<span id="_CPPv3NK6brille7Lattice13ispermutationERK7Lattice"></span><span id="_CPPv2NK6brille7Lattice13ispermutationERK7Lattice"></span><span id="brille::Lattice::ispermutation__LatticeCRC"></span><span class="target" id="classbrille_1_1Lattice_1a776e7a9fd52dfcfdc1c0713fa2a14f9e"></span>int <code class="sig-name descname">ispermutation</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille7LatticeE" title="brille::Lattice">Lattice</a>&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice13ispermutationERK7Lattice" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine if the passed <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> is a permutation of the space-spanning lattice within the specified tolerance. The equivalence is encoded in a signed integer:</p>
+<p></p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice5printEv">
+<span id="_CPPv3N6brille7Lattice5printEv"></span><span id="_CPPv2N6brille7Lattice5printEv"></span><span id="brille::Lattice::print"></span><span class="target" id="classbrille_1_1Lattice_1a4a0a18c8ccf1ff745265e9b54789fa1b"></span>void <code class="sig-name descname">print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice5printEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the basis vector lengths and angles to the console. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice11string_reprEv">
+<span id="_CPPv3N6brille7Lattice11string_reprEv"></span><span id="_CPPv2N6brille7Lattice11string_reprEv"></span><span id="brille::Lattice::string_repr"></span><span class="target" id="classbrille_1_1Lattice_1a5b308352d445a64b6ef2ddd7ad3c5910"></span>std::string <code class="sig-name descname">string_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice11string_reprEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a string representation of the basis vector lengths and angles. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice16get_bravais_typeEv">
+<span id="_CPPv3NK6brille7Lattice16get_bravais_typeEv"></span><span id="_CPPv2NK6brille7Lattice16get_bravais_typeEv"></span><span id="brille::Lattice::get_bravais_typeC"></span><span class="target" id="classbrille_1_1Lattice_1a41c47669294e29862ae5c65fbd3b329e"></span><a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <code class="sig-name descname">get_bravais_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice16get_bravais_typeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the Bravais centring of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice16set_bravais_typeEK7Bravais">
+<span id="_CPPv3N6brille7Lattice16set_bravais_typeEK7Bravais"></span><span id="_CPPv2N6brille7Lattice16set_bravais_typeEK7Bravais"></span><span id="brille::Lattice::set_bravais_type__BravaisC"></span><span class="target" id="classbrille_1_1Lattice_1afe2471b73f782cb1cc47a59e123050de"></span><a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <code class="sig-name descname">set_bravais_type</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice16set_bravais_typeEK7Bravais" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Bravais centring of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice23get_spacegroup_symmetryEKi">
+<span id="_CPPv3NK6brille7Lattice23get_spacegroup_symmetryEKi"></span><span id="_CPPv2NK6brille7Lattice23get_spacegroup_symmetryEKi"></span><span id="brille::Lattice::get_spacegroup_symmetry__iCC"></span><span class="target" id="classbrille_1_1Lattice_1aa8b47c2ee128cb21fb8cac2da6033499"></span><a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <code class="sig-name descname">get_spacegroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice23get_spacegroup_symmetryEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the <a class="reference internal" href="classbrille_1_1Spacegroup.html#classbrille_1_1Spacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operation object of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice23set_spacegroup_symmetryERK8Symmetry">
+<span id="_CPPv3N6brille7Lattice23set_spacegroup_symmetryERK8Symmetry"></span><span id="_CPPv2N6brille7Lattice23set_spacegroup_symmetryERK8Symmetry"></span><span id="brille::Lattice::set_spacegroup_symmetry__SymmetryCR"></span><span class="target" id="classbrille_1_1Lattice_1a74d41e52270c9f4f5f90cebb4baff18b"></span><a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <code class="sig-name descname">set_spacegroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> &amp;<em>gens</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice23set_spacegroup_symmetryERK8Symmetry" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the <a class="reference internal" href="classbrille_1_1Spacegroup.html#classbrille_1_1Spacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operation object  also sets <a class="reference internal" href="classbrille_1_1PointSymmetry.html#classbrille_1_1PointSymmetry"><span class="std std-ref">PointSymmetry</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice23get_pointgroup_symmetryEKi">
+<span id="_CPPv3NK6brille7Lattice23get_pointgroup_symmetryEKi"></span><span id="_CPPv2NK6brille7Lattice23get_pointgroup_symmetryEKi"></span><span id="brille::Lattice::get_pointgroup_symmetry__iCC"></span><span class="target" id="classbrille_1_1Lattice_1a998b7f7b9c4c9172ad056835e954ca53"></span><a class="reference internal" href="classbrille_1_1PointSymmetry.html#_CPPv4N6brille13PointSymmetryE" title="brille::PointSymmetry">PointSymmetry</a> <code class="sig-name descname">get_pointgroup_symmetry</code><span class="sig-paren">(</span><em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice23get_pointgroup_symmetryEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the <a class="reference internal" href="classbrille_1_1Pointgroup.html#classbrille_1_1Pointgroup"><span class="std std-ref">Pointgroup</span></a> <a class="reference internal" href="classbrille_1_1Symmetry.html#classbrille_1_1Symmetry"><span class="std std-ref">Symmetry</span></a> operation object of the <a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice19has_space_inversionEv">
+<span id="_CPPv3NK6brille7Lattice19has_space_inversionEv"></span><span id="_CPPv2NK6brille7Lattice19has_space_inversionEv"></span><span id="brille::Lattice::has_space_inversionC"></span><span class="target" id="classbrille_1_1Lattice_1add51ec84420feff8e0d06448de898efb"></span>bool <code class="sig-name descname">has_space_inversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice19has_space_inversionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check whether the pointgroup has the space-inversion operator, ̄1. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice9get_basisEv">
+<span id="_CPPv3NK6brille7Lattice9get_basisEv"></span><span id="_CPPv2NK6brille7Lattice9get_basisEv"></span><span id="brille::Lattice::get_basisC"></span><span class="target" id="classbrille_1_1Lattice_1a0bad1db4e23803a6577de9d3ff685e0e"></span><a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> <code class="sig-name descname">get_basis</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice9get_basisEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice9set_basisERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEE">
+<span id="_CPPv3N6brille7Lattice9set_basisERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEE"></span><span id="_CPPv2N6brille7Lattice9set_basisERKNSt6vectorINSt5arrayIdX3EEEEERKNSt6vectorImEE"></span><span id="brille::Lattice::set_basis__std::vector:std::array:double.3::CR.std::vector:unsigned-l:CR"></span><span class="target" id="classbrille_1_1Lattice_1ac92216cfa24957a244f8816ff9a7f053"></span><a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> <code class="sig-name descname">set_basis</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;double, 3&gt;&gt; &amp;<em>pos</em>, <em class="property">const</em> std::vector&lt;unsigned long&gt; &amp;<em>typ</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice9set_basisERKNSt6vectorINSt5arrayIdXL3EEEEEERKNSt6vectorImEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice9set_basisERK5Basis">
+<span id="_CPPv3N6brille7Lattice9set_basisERK5Basis"></span><span id="_CPPv2N6brille7Lattice9set_basisERK5Basis"></span><span id="brille::Lattice::set_basis__BasisCR"></span><span class="target" id="classbrille_1_1Lattice_1acc1eab5a6d74973408e7deabc82b269a"></span><a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> <code class="sig-name descname">set_basis</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> &amp;<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice9set_basisERK5Basis" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice10unitvolumeEv">
+<span id="_CPPv3NK6brille7Lattice10unitvolumeEv"></span><span id="_CPPv2NK6brille7Lattice10unitvolumeEv"></span><span id="brille::Lattice::unitvolumeC"></span><span class="target" id="classbrille_1_1Lattice_1a94a22b02b47fb7566dbc29567ab604c6"></span>double <code class="sig-name descname">unitvolume</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice10unitvolumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille7Lattice10inner_starEv">
+<span id="_CPPv3NK6brille7Lattice10inner_starEv"></span><span id="_CPPv2NK6brille7Lattice10inner_starEv"></span><span id="brille::Lattice::inner_starC"></span><span class="target" id="classbrille_1_1Lattice_1a2aa806ce383b09c21667068f99cb2822"></span><a class="reference internal" href="#_CPPv4N6brille7LatticeE" title="brille::Lattice">Lattice</a> <code class="sig-name descname">inner_star</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille7Lattice10inner_starEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice15set_len_pointerEvPKdK1I">
+<span id="_CPPv3I0EN6brille7Lattice15set_len_pointerEPKdK1I"></span><span id="_CPPv2I0EN6brille7Lattice15set_len_pointerEPKdK1I"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1a7bbce0b5c7605a8f4030b8498127322d"></span>void <code class="sig-name descname">set_len_pointer</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>lvec</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille7Lattice15set_len_pointerEvPKdK1I" title="brille::Lattice::set_len_pointer::I">I</a> <em>span</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice15set_len_pointerEvPKdK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille7Lattice15set_ang_pointerEvPKdK1IK9AngleUnit">
+<span id="_CPPv3I0EN6brille7Lattice15set_ang_pointerEPKdK1IK9AngleUnit"></span><span id="_CPPv2I0EN6brille7Lattice15set_ang_pointerEPKdK1IK9AngleUnit"></span>template&lt;class <code class="sig-name descname">I</code>&gt;<br /><span class="target" id="classbrille_1_1Lattice_1af991131af7e867e52cdc47ff80e8952e"></span>void <code class="sig-name descname">set_ang_pointer</code><span class="sig-paren">(</span><em class="property">const</em> double *<em>avec</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille7Lattice15set_ang_pointerEvPKdK1IK9AngleUnit" title="brille::Lattice::set_ang_pointer::I">I</a> <em>span</em>, <em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a> <em>angle_unit</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille7Lattice15set_ang_pointerEvPKdK1IK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice9check_angEK9AngleUnit">
+<span id="_CPPv3N6brille7Lattice9check_angEK9AngleUnit"></span><span id="_CPPv2N6brille7Lattice9check_angEK9AngleUnit"></span><span id="brille::Lattice::check_ang__AngleUnitC"></span><span class="target" id="classbrille_1_1Lattice_1a737778e3769535d967ce2e1cfa6349ce"></span>void <code class="sig-name descname">check_ang</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f.html#_CPPv4N6brille9AngleUnitE" title="brille::AngleUnit">AngleUnit</a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice9check_angEK9AngleUnit" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice17check_hall_numberEKi">
+<span id="_CPPv3N6brille7Lattice17check_hall_numberEKi"></span><span id="_CPPv2N6brille7Lattice17check_hall_numberEKi"></span><span id="brille::Lattice::check_hall_number__iC"></span><span class="target" id="classbrille_1_1Lattice_1ab3ccdb6ccd1c555a7a645359d898801d"></span>void <code class="sig-name descname">check_hall_number</code><span class="sig-paren">(</span><em class="property">const</em> int <em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice17check_hall_numberEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille7Lattice13check_IT_nameERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N6brille7Lattice13check_IT_nameERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N6brille7Lattice13check_IT_nameERKNSt6stringERKNSt6stringE"></span><span id="brille::Lattice::check_IT_name__ssCR.ssCR"></span><span class="target" id="classbrille_1_1Lattice_1a9bf8f1af7c1ef04edfbf51b6ed518b9c"></span>void <code class="sig-name descname">check_IT_name</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>itname</em>, <em class="property">const</em> std::string &amp;<em>choice</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille7Lattice13check_IT_nameERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice3lenE">
+<span id="_CPPv3N6brille7Lattice3lenE"></span><span id="_CPPv2N6brille7Lattice3lenE"></span><span id="brille::Lattice::len__std::array:double.3:"></span><span class="target" id="classbrille_1_1Lattice_1ac4a7a3b2e5d04a5c8d9c18bf6787ad94"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">len</code><a class="headerlink" href="#_CPPv4N6brille7Lattice3lenE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>basis vector lengths </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice3angE">
+<span id="_CPPv3N6brille7Lattice3angE"></span><span id="_CPPv2N6brille7Lattice3angE"></span><span id="brille::Lattice::ang__std::array:double.3:"></span><span class="target" id="classbrille_1_1Lattice_1ae34d2c1a7f0219bced377f6eac2234fc"></span>std::array&lt;double, 3&gt; <code class="sig-name descname">ang</code><a class="headerlink" href="#_CPPv4N6brille7Lattice3angE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice6volumeE">
+<span id="_CPPv3N6brille7Lattice6volumeE"></span><span id="_CPPv2N6brille7Lattice6volumeE"></span><span id="brille::Lattice::volume__double"></span><span class="target" id="classbrille_1_1Lattice_1aba61798a6e4801b028f24e4edf8852ea"></span>double <code class="sig-name descname">volume</code><a class="headerlink" href="#_CPPv4N6brille7Lattice6volumeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>volume of the unit cell formed by the basis vectors </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice7bravaisE">
+<span id="_CPPv3N6brille7Lattice7bravaisE"></span><span id="_CPPv2N6brille7Lattice7bravaisE"></span><span id="brille::Lattice::bravais__Bravais"></span><span class="target" id="classbrille_1_1Lattice_1af8d69dd4599ca0c547b921176dff8af4"></span><a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <code class="sig-name descname">bravais</code><a class="headerlink" href="#_CPPv4N6brille7Lattice7bravaisE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="#classbrille_1_1Lattice"><span class="std std-ref">Lattice</span></a> centring type. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice6spgsymE">
+<span id="_CPPv3N6brille7Lattice6spgsymE"></span><span id="_CPPv2N6brille7Lattice6spgsymE"></span><span id="brille::Lattice::spgsym__Symmetry"></span><span class="target" id="classbrille_1_1Lattice_1a44a4dfb6ad269a93b233f5f578b27868"></span><a class="reference internal" href="classbrille_1_1Symmetry.html#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <code class="sig-name descname">spgsym</code><a class="headerlink" href="#_CPPv4N6brille7Lattice6spgsymE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="classbrille_1_1Spacegroup.html#classbrille_1_1Spacegroup"><span class="std std-ref">Spacegroup</span></a> symmetry operators. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice6ptgsymE">
+<span id="_CPPv3N6brille7Lattice6ptgsymE"></span><span id="_CPPv2N6brille7Lattice6ptgsymE"></span><span id="brille::Lattice::ptgsym__PointSymmetry"></span><span class="target" id="classbrille_1_1Lattice_1a9161210b4ca8307d50d963f79ab5dc5e"></span><a class="reference internal" href="classbrille_1_1PointSymmetry.html#_CPPv4N6brille13PointSymmetryE" title="brille::PointSymmetry">PointSymmetry</a> <code class="sig-name descname">ptgsym</code><a class="headerlink" href="#_CPPv4N6brille7Lattice6ptgsymE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><a class="reference internal" href="classbrille_1_1Pointgroup.html#classbrille_1_1Pointgroup"><span class="std std-ref">Pointgroup</span></a> symmetry operators. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille7Lattice5basisE">
+<span id="_CPPv3N6brille7Lattice5basisE"></span><span id="_CPPv2N6brille7Lattice5basisE"></span><span id="brille::Lattice::basis__Basis"></span><span class="target" id="classbrille_1_1Lattice_1a30795b75af455c62cd97df97feb6200f"></span><a class="reference internal" href="classbrille_1_1Basis.html#_CPPv4N6brille5BasisE" title="brille::Basis">Basis</a> <code class="sig-name descname">basis</code><a class="headerlink" href="#_CPPv4N6brille7Lattice5basisE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The positions of all atoms within the unit cell. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1LatVec.html" class="btn btn-neutral float-right" title="Class LatVec" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1Interpolator.html" class="btn btn-neutral float-left" title="Template Class Interpolator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

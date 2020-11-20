@@ -1,0 +1,13 @@
+.. _exhale_typedef_array__latvec_8hpp_1a236e265c8ab8e8c5b4432859fde67109:
+
+Typedef brille::LatVecType
+==========================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::LatVecType

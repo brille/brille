@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1a6f5fae55e11a9944eb5f58c77566c587:
+
+Template Function brille::munkres_permutation
+=============================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::munkres_permutation(const T *, const T *, const std::array<I, 3>&, const R, const R, const R, const size_t, const size_t, bArray<size_t>&, const size_t, const size_t, const int)

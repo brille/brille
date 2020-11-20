@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a46ec9bcfd1b7621060cd1613b5ae1698:
+
+Function brille::rotation_axis_and_perpendicular_vectors
+========================================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::rotation_axis_and_perpendicular_vectors(const int *)

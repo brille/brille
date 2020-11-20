@@ -57,43 +57,46 @@ Included By
 
 - :ref:`file_src_trellis.hpp`
 
-- :ref:`file_src_inner_interpolation_data.hpp`
-
-- :ref:`file_src_interpolator.hpp`
 
 
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
 
 
 Classes
 -------
 
 
-- :ref:`exhale_struct_structCostTraits`
+- :ref:`exhale_struct_structbrille_1_1CostTraits`
 
-- :ref:`exhale_struct_structCostTraits_3_01std_1_1complex_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1CostTraits_3_01std_1_1complex_3_01T_01_4_01_4`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_permutation_8hpp_1a4a87d9aab424e45ece64ca20a4cfef88`
+- :ref:`exhale_function_permutation_8hpp_1a5268e8bc5fa4a85a08ad2e28c5183f49`
 
-- :ref:`exhale_function_permutation_8hpp_1a0095bb2ef5966c7e781a2a6e01f4bf78`
+- :ref:`exhale_function_permutation_8hpp_1ad041ab1d610c93e6953fed2590ace446`
 
-- :ref:`exhale_function_permutation_8hpp_1a9719f5d7aafae5e39fc35a55dd55d9a3`
+- :ref:`exhale_function_permutation_8hpp_1a28863da448a93cf389ddc98ac0d54067`
 
-- :ref:`exhale_function_permutation_8hpp_1ac49786d3941915eb23005899e7576f87`
+- :ref:`exhale_function_permutation_8hpp_1a198cf435ef922378b4a67f41f8329719`
 
-- :ref:`exhale_function_permutation_8hpp_1ab6270ac83366d21ae16bb1e693dd4dea`
+- :ref:`exhale_function_permutation_8hpp_1a655e38d15bad1f83d7ab48622ceb8620`
 
-- :ref:`exhale_function_permutation_8hpp_1ab5a34620fda3929341661795398b2ae1`
+- :ref:`exhale_function_permutation_8hpp_1a4319b8831957b134db80dc4627bd8899`
 
-- :ref:`exhale_function_permutation_8hpp_1a4d3bd3fb82cffda7184b384db05ccf03`
+- :ref:`exhale_function_permutation_8hpp_1a6edf5bfb74a858ce6d0c53c3df610aea`
 
-- :ref:`exhale_function_permutation_8hpp_1a3e94727d4e5e3b7901ef3f5582e0da4b`
+- :ref:`exhale_function_permutation_8hpp_1a1d8ccfa1b714ed65e0615019c6d5e77a`
 
-- :ref:`exhale_function_permutation_8hpp_1a81058d742f4c63a0eb361053a94fd4e7`
+- :ref:`exhale_function_permutation_8hpp_1a6f5fae55e11a9944eb5f58c77566c587`
 
-- :ref:`exhale_function_permutation_8hpp_1a751d2edb0f6df721f06d5fcc60b22827`
+- :ref:`exhale_function_permutation_8hpp_1ab74968f22b09bd0f354f933c02d9145e`
 

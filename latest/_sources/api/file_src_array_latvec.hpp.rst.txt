@@ -73,55 +73,76 @@ Included By
 
 - :ref:`file_src_trellis.hpp`
 
-- :ref:`file_src_inner_interpolation_data.hpp`
-
-- :ref:`file_src_interpolator.hpp`
-
 - :ref:`file_src_triangulation.hpp`
 
 
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
 
 
 Classes
 -------
 
 
-- :ref:`exhale_struct_structArrayTraits`
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits`
 
-- :ref:`exhale_struct_structArrayTraits_3_01bArray_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01bArray_3_01T_01_4_01_4`
 
-- :ref:`exhale_struct_structArrayTraits_3_01LDVec_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LDVec_3_01T_01_4_01_4`
 
-- :ref:`exhale_struct_structArrayTraits_3_01LQVec_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LQVec_3_01T_01_4_01_4`
 
-- :ref:`exhale_struct_structLatticeTraits_3_01LDVec_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LDVec_3_01T_01_4_01_4`
 
-- :ref:`exhale_struct_structLatticeTraits_3_01LQVec_3_01T_01_4_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LQVec_3_01T_01_4_01_4`
 
-- :ref:`exhale_struct_structLatVecTraits`
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits`
 
-- :ref:`exhale_struct_structLatVecTraits_3_01Direct_00_01S_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Direct_00_01S_01_4`
 
-- :ref:`exhale_struct_structLatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4`
 
-- :ref:`exhale_struct_structLatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4`
 
-- :ref:`exhale_struct_structLatVecTraits_3_01Reciprocal_00_01S_01_4`
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Reciprocal_00_01S_01_4`
 
-- :ref:`exhale_class_classLatVec`
+- :ref:`exhale_class_classbrille_1_1LatVec`
 
-- :ref:`exhale_class_classLDVec`
+- :ref:`exhale_class_classbrille_1_1LDVec`
 
-- :ref:`exhale_class_classLQVec`
+- :ref:`exhale_class_classbrille_1_1LQVec`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_array__latvec_8hpp_1a2b8d8b119a80ed372fc62843914fc17c`
+- :ref:`exhale_function_array__latvec_8hpp_1abd5582a8b12368f8c4104f745fecd13d`
 
-- :ref:`exhale_function_array__latvec_8hpp_1a325533c5743834e5edfeec84879c1919`
+- :ref:`exhale_function_array__latvec_8hpp_1a4d6da971a3a1b490538dca8fb7f6d8bf`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ab7553634cfdf60d4c8d9cfdb4b75be56`
+
+- :ref:`exhale_function_array__latvec_8hpp_1abe802108112d7e575f0003971adcabe7`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a5662457cbcef4efc735daf0dce7cd19a`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aaaccc2dd7f7dc04e5e1345747fc2e169`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a88cdcbd06bdd8251c50f507692e6a431`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1e4ba36a72ce6edc234a945627a48551`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1c1968bf07123fe5e05254a5c5354f0c`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a86d93b0a84a0ed9201aad0ec95462d6b`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aa5e4757c2dfc5c99550e8633eaaa6e60`
 
 
 Defines
@@ -141,24 +162,24 @@ Typedefs
 
 - :ref:`exhale_typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361`
 
-- :ref:`exhale_typedef_array__latvec_8hpp_1a66933152b88f049d9fff5c76f960a38e`
+- :ref:`exhale_typedef_array__latvec_8hpp_1a53389782169d3455f06c87b66b7bd9cb`
 
-- :ref:`exhale_typedef_array__latvec_8hpp_1a88e3f30b3c3714f61dad3de2dbaa52a3`
+- :ref:`exhale_typedef_array__latvec_8hpp_1a236e265c8ab8e8c5b4432859fde67109`
 
 
 Variables
 ---------
 
 
-- :ref:`exhale_variable_array__latvec_8hpp_1a34f040f284f91eff0572fe5e5b509485`
+- :ref:`exhale_variable_array__latvec_8hpp_1a6ce7704572a21dd99cee52ea4e02a70e`
 
-- :ref:`exhale_variable_array__latvec_8hpp_1a2c6536d7ee0ccd793cab69fb3fa8f023`
+- :ref:`exhale_variable_array__latvec_8hpp_1a674dc7fe85df9751bf92e17fafcc61d0`
 
-- :ref:`exhale_variable_array__latvec_8hpp_1a96eff26c7178c3d62a223eb163324cbf`
+- :ref:`exhale_variable_array__latvec_8hpp_1a2889ff9403810d098cd255ca37f0aeff`
 
-- :ref:`exhale_variable_array__latvec_8hpp_1a4d14210f871237604e0e473c2b77547e`
+- :ref:`exhale_variable_array__latvec_8hpp_1a51ac2156da30ae888a5af64dcfc1d8f9`
 
-- :ref:`exhale_variable_array__latvec_8hpp_1a80ab419f9be986076026e67fa1af56fc`
+- :ref:`exhale_variable_array__latvec_8hpp_1a36dafbace3b8d5c06c9dbecb67b0c668`
 
-- :ref:`exhale_variable_array__latvec_8hpp_1ae9f03c3fa4d22142daf2f215ed630d5e`
+- :ref:`exhale_variable_array__latvec_8hpp_1a5d7f1a6357f1b06f237e82d6dcc59f85`
 

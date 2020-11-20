@@ -42,13 +42,22 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__assignment`
+
+
 Functions
 ---------
 
 
-- :ref:`exhale_function_smp_8hpp_1a04eec8df2a2bf0272788b9b1b446eb24`
+- :ref:`exhale_function_smp_8hpp_1a639a10420a057122f0d8dbe0c8f02dc1`
 
-- :ref:`exhale_function_smp_8hpp_1a80a5a10b7764a237af1bba812a308f66`
+- :ref:`exhale_function_smp_8hpp_1a54c8111548fa8693e55956f1554a2afb`
 
-- :ref:`exhale_function_smp_8hpp_1aaac9c4d7bd60bad9e4a5a04990e6ddff`
+- :ref:`exhale_function_smp_8hpp_1a0a2d9d099b021f0709b7709732344b47`
 

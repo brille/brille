@@ -74,27 +74,27 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classNest`
+- :ref:`exhale_class_classbrille_1_1Nest`
 
-- :ref:`exhale_class_classNestLeaf`
+- :ref:`exhale_class_classbrille_1_1NestLeaf`
 
-- :ref:`exhale_class_classNestNode`
+- :ref:`exhale_class_classbrille_1_1NestNode`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_nest_8hpp_1a7e4706e6b32b7e80b3b5e389ee8154fe`
-
-
-Defines
--------
-
-
-- :ref:`exhale_define_nest_8hpp_1a6f70a24b3b81083e8d382c1370791347`
+- :ref:`exhale_function_nest_8hpp_1a430ab5c8915a8abefc6bbd11c055d4cc`
 

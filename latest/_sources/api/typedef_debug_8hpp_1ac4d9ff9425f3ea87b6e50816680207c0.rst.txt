@@ -1,0 +1,13 @@
+.. _exhale_typedef_debug_8hpp_1ac4d9ff9425f3ea87b6e50816680207c0:
+
+Typedef brille::enable_if_t
+===========================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::enable_if_t

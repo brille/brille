@@ -10,26 +10,25 @@ Program Listing for File mesh.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
    
-   #ifndef _MESH_H_
-   #define _MESH_H_
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
    
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   
+   #ifndef BRILLE_MESH_H_
+   #define BRILLE_MESH_H_
    #include <set>
    #include "array.hpp"
    #include "array2.hpp"
@@ -38,13 +37,12 @@ Program Listing for File mesh.hpp
    #include <array>
    #include <omp.h>
    #include "interpolation.hpp"
-   // #include "interpolation_data.hpp"
    #include "interpolatordual.hpp"
    #include "utilities.hpp"
    #include "permutation.hpp"
    #include <queue>
    #include "triangulation_layers.hpp"
-   
+   namespace brille {
    
    template<class T, class S>
    class Mesh3{
@@ -110,9 +108,9 @@ Program Listing for File mesh.hpp
        return str;
      }
      void sort() {data_.sort();}
-   private:
    };
    
    #include "mesh.tpp"
    
+   } // namespace brille
    #endif // _MESH_H_

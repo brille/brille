@@ -48,13 +48,22 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__assignment`
+
+
 Functions
 ---------
 
 
-- :ref:`exhale_function_lapjv_8hpp_1ac9edf9cda6f1621e06d49f48f1c60ce0`
+- :ref:`exhale_function_lapjv_8hpp_1a503ee6dc6d18fd8d054b314b25b305c6`
 
-- :ref:`exhale_function_lapjv_8hpp_1aba8c19ca4c04f4a17671d835e3039b5e`
+- :ref:`exhale_function_lapjv_8hpp_1a45014a3ac4354c6bac048140f1b65122`
 
 
 Defines
@@ -72,5 +81,5 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_lapjv_8hpp_1aca7783c049f660b93ed1338110b37d93`
+- :ref:`exhale_typedef_lapjv_8hpp_1a4fb4d98acdbe0f543e81c61dae8c6e46`
 

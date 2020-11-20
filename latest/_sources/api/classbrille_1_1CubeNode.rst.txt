@@ -1,0 +1,25 @@
+.. _exhale_class_classbrille_1_1CubeNode:
+
+Class CubeNode
+==============
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public brille::NullNode`` (:ref:`exhale_class_classbrille_1_1NullNode`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::CubeNode
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Motion:
+
+Template Class Motion
+=====================
+
+- Defined in :ref:`file_src_symmetry.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Motion
+   :members:
+   :protected-members:
+   :undoc-members:

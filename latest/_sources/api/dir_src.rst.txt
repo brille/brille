@@ -38,10 +38,7 @@ Files
 - :ref:`file_src_debug.hpp`
 - :ref:`file_src_hall_symbol.cpp`
 - :ref:`file_src_hall_symbol.hpp`
-- :ref:`file_src_inner_interpolation_data.hpp`
 - :ref:`file_src_interpolation.hpp`
-- :ref:`file_src_interpolation_data.hpp`
-- :ref:`file_src_interpolator.hpp`
 - :ref:`file_src_interpolator2.hpp`
 - :ref:`file_src_interpolator2_at.tpp`
 - :ref:`file_src_interpolator2_axial.tpp`
@@ -49,12 +46,6 @@ Files
 - :ref:`file_src_interpolator2_gamma.tpp`
 - :ref:`file_src_interpolator2_real.tpp`
 - :ref:`file_src_interpolator2_recip.tpp`
-- :ref:`file_src_interpolator_at.tpp`
-- :ref:`file_src_interpolator_axial.tpp`
-- :ref:`file_src_interpolator_cost.tpp`
-- :ref:`file_src_interpolator_gamma.tpp`
-- :ref:`file_src_interpolator_real.tpp`
-- :ref:`file_src_interpolator_recip.tpp`
 - :ref:`file_src_interpolatordual.hpp`
 - :ref:`file_src_lapjv.hpp`
 - :ref:`file_src_lattice.cpp`
@@ -75,7 +66,6 @@ Files
 - :ref:`file_src_pointsymmetry.hpp`
 - :ref:`file_src_polyhedron.hpp`
 - :ref:`file_src_primitive.hpp`
-- :ref:`file_src_sharedspan.hpp`
 - :ref:`file_src_smp.hpp`
 - :ref:`file_src_sorting_status.hpp`
 - :ref:`file_src_spg_database.cpp`
@@ -83,6 +73,7 @@ Files
 - :ref:`file_src_subscript.hpp`
 - :ref:`file_src_symmetry.cpp`
 - :ref:`file_src_symmetry.hpp`
+- :ref:`file_src_symmetry_common.hpp`
 - :ref:`file_src_transform.hpp`
 - :ref:`file_src_trellis.hpp`
 - :ref:`file_src_trellis.tpp`

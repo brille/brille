@@ -31,6 +31,8 @@ Includes
 
 - ``pointsymmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
 
+- ``string``
+
 - ``symmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
 
 
@@ -50,41 +52,48 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classPointgroup`
+- :ref:`exhale_class_classbrille_1_1Pointgroup`
 
 
 Enums
 -----
 
 
-- :ref:`exhale_enum_pointgroup_8hpp_1afb7670c9af88ff4483b56dfa699d310f`
+- :ref:`exhale_enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93`
 
-- :ref:`exhale_enum_pointgroup_8hpp_1a2ff7f4e050e54da4affe0636a5a8ee9c`
+- :ref:`exhale_enum_pointgroup_8hpp_1aefb7d4e23b90d4f0e7727c0cd90e1c2d`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_pointgroup_8hpp_1a157a71d24fc4b00411e095f89924d453`
+- :ref:`exhale_function_pointgroup_8hpp_1a40fcf68fb0ca8b74dd3051d0b665d738`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a181b10350a67b91154943c74f03283aa`
+- :ref:`exhale_function_pointgroup_8hpp_1a279171c35f83a357eb25969979ffa022`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a2ddf892e62fccffedeca040c8ecdb4f9`
+- :ref:`exhale_function_pointgroup_8hpp_1af612a0d0f40a3945afb5617fb370d505`
 
-- :ref:`exhale_function_pointgroup_8hpp_1ab0fc3acbc9016f3ee3ba75ba892235cc`
+- :ref:`exhale_function_pointgroup_8hpp_1ab4c1b83ead13fc8f4dc2da2ee076e606`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a06053e7847646559b7735566d68516c7`
+- :ref:`exhale_function_pointgroup_8hpp_1a4b9c4dab6d6528d13cafe5fa7c7e4403`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a11fc284d8c077ba887d54c1164f8098c`
+- :ref:`exhale_function_pointgroup_8hpp_1a066790381771c86eec20b0187b54aaa6`
 
-- :ref:`exhale_function_pointgroup_8hpp_1ad08abd9f7f45c68ee852504b9afeafa2`
+- :ref:`exhale_function_pointgroup_8hpp_1afa6cb4ae509cf50bcd7107af2e01c188`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a725220077e7877c4550ca9aa6285840e`
+- :ref:`exhale_function_pointgroup_8hpp_1a46ec9bcfd1b7621060cd1613b5ae1698`
 
-- :ref:`exhale_function_pointgroup_8hpp_1a11f82a4ea69025d95e62c3e5f41dfe6b`
+- :ref:`exhale_function_pointgroup_8hpp_1a697a0ca42bb73a2c48ec684769df35c7`
 

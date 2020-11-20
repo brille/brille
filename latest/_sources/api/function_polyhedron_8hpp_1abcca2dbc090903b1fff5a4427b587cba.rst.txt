@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1abcca2dbc090903b1fff5a4427b587cba:
+
+Template Function brille::reverse
+=================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::reverse(const std::vector<T>&)

@@ -1,7 +1,7 @@
 .. _exhale_function_comparisons_8hpp_1a5b56249445137c718122268db20178b0:
 
-Template Function brille::to_string(const T&)
-=============================================
+Template Function brille::to_string
+===================================
 
 - Defined in :ref:`file_src_comparisons.hpp`
 

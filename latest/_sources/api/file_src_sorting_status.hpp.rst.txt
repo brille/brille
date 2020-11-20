@@ -36,9 +36,16 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classSortingStatus`
+- :ref:`exhale_class_classbrille_1_1SortingStatus`
 

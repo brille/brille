@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a066790381771c86eec20b0187b54aaa6:
+
+Function brille::ptg_get_pointsymmetry
+======================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::ptg_get_pointsymmetry(const int *, const int)

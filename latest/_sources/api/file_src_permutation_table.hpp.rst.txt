@@ -49,23 +49,26 @@ Included By
 
 - :ref:`file_src_interpolator2.hpp`
 
-- :ref:`file_src_inner_interpolation_data.hpp`
-
-- :ref:`file_src_interpolator.hpp`
 
 
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
 
 
 Classes
 -------
 
 
-- :ref:`exhale_class_classPermutationTable`
+- :ref:`exhale_class_classbrille_1_1PermutationTable`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_permutation__table_8hpp_1a73c637c2e9ebf7417aed00b003f665a1`
+- :ref:`exhale_function_permutation__table_8hpp_1abdabdf1bdad9df8ef8f7fb7fce96128c`
 

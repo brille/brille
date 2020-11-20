@@ -1,0 +1,13 @@
+.. _exhale_function_primitive_8hpp_1af003ee699aa372b31131deb8cfcc0e5e:
+
+Template Function brille::transpose
+===================================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::transpose(const std::array<T, 9>&)

@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class PrimitiveTransform &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class RawBinaryOperator" href="classbrille_1_1RawBinaryOperator.html" />
+    <link rel="prev" title="Class PolyNode" href="classbrille_1_1PolyNode.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class PrimitiveTransform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1PrimitiveTransform.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-primitivetransform">
+<span id="exhale-class-classbrille-1-1primitivetransform"></span><h1>Class PrimitiveTransform<a class="headerlink" href="#class-primitivetransform" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_primitive.hpp.html#file-src-primitive-hpp"><span class="std std-ref">File primitive.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille18PrimitiveTransformE">
+<span id="_CPPv3N6brille18PrimitiveTransformE"></span><span id="_CPPv2N6brille18PrimitiveTransformE"></span><span id="brille::PrimitiveTransform"></span><span class="target" id="classbrille_1_1PrimitiveTransform"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">PrimitiveTransform</code><a class="headerlink" href="#_CPPv4N6brille18PrimitiveTransformE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A class to hold transformation matricies and their inverse, with the matrix stored in an object determined by a provided BravaisLetter type. </p>
+<p>For each centred real-space-filling lattice there is a transformation matrix P which converts its basis vectors into those of an equivalent primitive space-filling lattice via, (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P</p>
+<p>The components of a real-space vector expressed in units of the conventional cell vectors transforms to the primitive cell expression by xₚ = P⁻¹xₛ this can be shown by considering Aₛ = (aₛ,bₛ,cₛ) and Aₚ = (aₚ,bₚ,cₚ) then Aₚ = Aₛ P and noting that the vector expressed in either lattice remains unchanged Aₚ xₚ = Aₛ xₛ (Aₛ P) xₚ = Aₛ xₛ P xₚ = xₛ xₚ = P⁻¹ xₛ</p>
+<p>If we express the reciprocal lattice vectors as the columns of a matrix B, then Aₛ Bₛᵀ ≡ 2π 𝟙 from which, we can derive the transformation of the reciprocal lattice vectors Aₚ Bₚᵀ = Aₛ Bₛᵀ Aₛ P Bₚᵀ = Aₛ Bₛᵀ Bₚᵀ = P⁻¹ Bₛᵀ Bₚ = Bₛ (P⁻¹)ᵀ and a reciprocal lattice vector qₛ can be expressed in the primitive reciprocal lattice since Bₚ qₚ = Bₛ qₛ Bₛ (P⁻¹)ᵀ qₚ = Bₛ qₛ (Pᵀ)⁻¹ qₚ = qₛ qₚ = Pᵀ qₛ where the commutability of the inverse and transpose, (Pᵀ)⁻¹ ≡ (P⁻¹)ᵀ, has been utilized.</p>
+<p>This class holds P and P⁻¹ for a given centering type. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformEK7Bravais">
+<span id="_CPPv3N6brille18PrimitiveTransform18PrimitiveTransformEK7Bravais"></span><span id="_CPPv2N6brille18PrimitiveTransform18PrimitiveTransformEK7Bravais"></span><span id="brille::PrimitiveTransform::PrimitiveTransform__BravaisC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1ad476882201300f4e8bcbb9bb547b56d6"></span><code class="sig-name descname">PrimitiveTransform</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformEK7Bravais" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformERK10Spacegroup">
+<span id="_CPPv3N6brille18PrimitiveTransform18PrimitiveTransformERK10Spacegroup"></span><span id="_CPPv2N6brille18PrimitiveTransform18PrimitiveTransformERK10Spacegroup"></span><span id="brille::PrimitiveTransform::PrimitiveTransform__SpacegroupCR"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1ab4ff0498a751e6cf74e10410711080db"></span><code class="sig-name descname">PrimitiveTransform</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Spacegroup.html#_CPPv4N6brille10SpacegroupE" title="brille::Spacegroup">Spacegroup</a> &amp;<em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformERK10Spacegroup" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformEKi">
+<span id="_CPPv3N6brille18PrimitiveTransform18PrimitiveTransformEKi"></span><span id="_CPPv2N6brille18PrimitiveTransform18PrimitiveTransformEKi"></span><span id="brille::PrimitiveTransform::PrimitiveTransform__iC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a027d0723173872a2717095e7313c6a19"></span><code class="sig-name descname">PrimitiveTransform</code><span class="sig-paren">(</span><em class="property">const</em> int <em>hall</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille18PrimitiveTransform18PrimitiveTransformEKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform5get_PEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform5get_PEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform5get_PEv"></span><span id="brille::PrimitiveTransform::get_P__voidC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a8f8b2d1ea20f6066a2b64ecf8902a00b"></span>std::array&lt;double, 9&gt; <code class="sig-name descname">get_P</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform5get_PEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform8get_invPEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform8get_invPEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform8get_invPEv"></span><span id="brille::PrimitiveTransform::get_invP__voidC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a5a5f8bafe1ffdc5092403001b24291d3"></span>std::array&lt;int, 9&gt; <code class="sig-name descname">get_invP</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform8get_invPEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform6get_PtEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform6get_PtEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform6get_PtEv"></span><span id="brille::PrimitiveTransform::get_Pt__voidC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a41a80c086f9a3a7d2c82215ec4ea7b6c"></span>std::array&lt;double, 9&gt; <code class="sig-name descname">get_Pt</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform6get_PtEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform9get_invPtEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform9get_invPtEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform9get_invPtEv"></span><span id="brille::PrimitiveTransform::get_invPt__voidC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1afa520aba405cfbddbe47477337f83c68"></span>std::array&lt;int, 9&gt; <code class="sig-name descname">get_invPt</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform9get_invPtEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille18PrimitiveTransform5printEv">
+<span id="_CPPv3N6brille18PrimitiveTransform5printEv"></span><span id="_CPPv2N6brille18PrimitiveTransform5printEv"></span><span id="brille::PrimitiveTransform::print"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a3b69e9115bd90edd1c4efe05dc3b95d2"></span>void <code class="sig-name descname">print</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille18PrimitiveTransform5printEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform13does_anythingEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform13does_anythingEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform13does_anythingEv"></span><span id="brille::PrimitiveTransform::does_anythingC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1adea3cc1f3f9f9a743fb99826a08704eb"></span>bool <code class="sig-name descname">does_anything</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform13does_anythingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A check if the Matrices <em>should</em> do anything, that <em>is not</em> if the centering is Primitive. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform12does_nothingEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform12does_nothingEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform12does_nothingEv"></span><span id="brille::PrimitiveTransform::does_nothingC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1a716649687e0c3f3a03ebe2c886f5c3cb"></span>bool <code class="sig-name descname">does_nothing</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform12does_nothingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A check if the Matrices <em>shouldn’t</em> do anything, that <em>is</em> if the centering is Primitive. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille18PrimitiveTransform11string_reprEv">
+<span id="_CPPv3NK6brille18PrimitiveTransform11string_reprEv"></span><span id="_CPPv2NK6brille18PrimitiveTransform11string_reprEv"></span><span id="brille::PrimitiveTransform::string_reprC"></span><span class="target" id="classbrille_1_1PrimitiveTransform_1ab7ad8331ed2d6a002227e3d59b48f610"></span>std::string <code class="sig-name descname">string_repr</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille18PrimitiveTransform11string_reprEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1RawBinaryOperator.html" class="btn btn-neutral float-right" title="Template Class RawBinaryOperator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1PolyNode.html" class="btn btn-neutral float-left" title="Class PolyNode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

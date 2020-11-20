@@ -50,20 +50,27 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Enums
 -----
 
 
-- :ref:`exhale_enum_bravais_8hpp_1a573c3b9574b1807347bd63872f070dcf`
+- :ref:`exhale_enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_bravais_8hpp_1a6e9c4dbe929f1a8fb9fdacfd14ec1fca`
+- :ref:`exhale_function_bravais_8hpp_1a89574e39177521ef59910a4b4f141f88`
 
-- :ref:`exhale_function_bravais_8hpp_1a96a2f0327107e0e0be0be9a97e91cd87`
+- :ref:`exhale_function_bravais_8hpp_1ae8945e040d69a1a6ed2da0883538f150`
 
-- :ref:`exhale_function_bravais_8hpp_1a45870576401424f3a427f4987448c1cd`
+- :ref:`exhale_function_bravais_8hpp_1a875ea2eff59d3b5241624f049ead811d`
 

@@ -10,26 +10,28 @@ Program Listing for File neighbours.cpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019-2020 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
+   
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    
    #include "neighbours.hpp"
    #include <array>
    #include <vector>
+   
+   using namespace brille;
    
    static std::vector<int> all_from_extent(const int extent){
      int min = -extent, max = extent+1;
@@ -38,7 +40,7 @@ Program Listing for File neighbours.cpp
      return vec;
    }
    
-   bArray<int> make_relative_neighbour_indices(const int extent){
+   bArray<int> brille::make_relative_neighbour_indices(const int extent){
      auto vec = all_from_extent(extent);
      size_t num = vec.size();
      size_t n{0};
@@ -48,7 +50,7 @@ Program Listing for File neighbours.cpp
      return bArray<int>::from_std(o);
    }
    
-   bArray<int> make_relative_neighbour_indices_prime(const int extent){
+   bArray<int> brille::make_relative_neighbour_indices_prime(const int extent){
      auto vec = all_from_extent(extent);
      size_t num = vec.size();
      size_t n{0};
@@ -67,7 +69,7 @@ Program Listing for File neighbours.cpp
      return bArray<int>::from_std(o);
    }
    
-   bArray<int> make_relative_neighbour_indices4(const int extent){
+   bArray<int> brille::make_relative_neighbour_indices4(const int extent){
      auto v = all_from_extent(extent);
      std::vector<std::array<int,4>> o;
      for (auto i: v) for (auto j: v) for (auto k: v) for (auto l: v)

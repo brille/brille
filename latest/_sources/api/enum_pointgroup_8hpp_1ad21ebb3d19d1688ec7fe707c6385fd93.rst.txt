@@ -1,0 +1,13 @@
+.. _exhale_enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93:
+
+Enum Holohedry
+==============
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::Holohedry

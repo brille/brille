@@ -172,32 +172,32 @@
   <div class="section" id="program-listing-for-file-lattice-hpp">
 <span id="program-listing-file-src-lattice-hpp"></span><h1>Program Listing for File lattice.hpp<a class="headerlink" href="#program-listing-for-file-lattice-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_lattice.hpp.html#file-src-lattice-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/lattice.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>/* This file is part of brille.
 
-#ifndef _LATTICE_CLASS_H_
-#define _LATTICE_CLASS_H_
+Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;
 
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */
+
+
+#ifndef BRILLE_LATTICE_CLASS_H_
+#define BRILLE_LATTICE_CLASS_H_
 #include &lt;assert.h&gt;
 #include &lt;vector&gt;
-// #include &quot;utilities.hpp&quot;
 #include &quot;primitive.hpp&quot;
 #include &quot;basis.hpp&quot;
-
+#include &quot;array2.hpp&quot;
+namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential
 class Lattice;
@@ -212,12 +212,16 @@ template&lt;class T, class I&gt; void latmat_to_lenang(const T* latmat, const I 
   for (int i=0; i&lt;3; ++i)  for (int j=0; j&lt;3; ++j)  len[i] += latmat[i*c+j*r]*latmat[i*c+j*r];
   // the lattice vector lengths are the square root of this
   for (int i=0; i&lt;3; ++i) len[i] = std::sqrt(len[i]);
-  // normalize the row vectors, leaving only angle information
-  for (int i=0; i&lt;3; ++i) for (int j=0; j&lt;3; ++j) n[i*c+j*r] = latmat[i*c+j*r]/len[i];
+  // normalize the row vectors, leaving only angle information (n is contiguous but latmat may not be!)
+  for (int i=0; i&lt;3; ++i) for (int j=0; j&lt;3; ++j) n[i*3+j] = latmat[i*c+j*r]/len[i];
   // take the dot product between cyclically permuted rows: 0=1⋅2, 1=2⋅0, 2=0⋅1
-  for (int i=0; i&lt;3; ++i) for (int j=0; j&lt;3; ++j)  ang[i] += n[c*((i+1)%3)+j*r]*n[c*((i+2)%3)+j*r];
+  for (int i=0; i&lt;3; ++i) for (int j=0; j&lt;3; ++j)  ang[i] += n[3*((i+1)%3)+j]*n[3*((i+2)%3)+j];
   // the lattice angles are the arccosines of these dot products of normalized lattice vectors
   for (int i=0; i&lt;3; ++i) ang[i] = std::acos(ang[i]);
+}
+template&lt;class T&gt; void latmat_to_lenang(const brille::Array2&lt;T&gt;&amp; lm, T* len, T* ang){
+  auto st = lm.stride();
+  latmat_to_lenang(lm.ptr(0), st[0], st[1], len, ang);
 }
 
 class Lattice{
@@ -267,6 +271,15 @@ public:
       this-&gt;volume = this-&gt;calculatevolume();
     }
   Lattice(const double *, const int h=1);
+  Lattice(const brille::Array2&lt;double&gt;&amp; latmat, const std::vector&lt;std::array&lt;double,3&gt;&gt;&amp; pos, const std::vector&lt;unsigned long&gt;&amp; typ, const Symmetry&amp; sym){
+    double l[3]={0,0,0}, a[3]={0,0,0};
+    latmat_to_lenang(latmat,l,a);
+    this-&gt;set_len_pointer(l,1);
+    this-&gt;set_ang_pointer(a,1, AngleUnit::radian);
+    this-&gt;volume=this-&gt;calculatevolume();
+    this-&gt;set_basis(pos,typ);
+    this-&gt;set_spacegroup_symmetry(sym);
+  }
   template&lt;class I&gt;//, typename=typename std::enable_if&lt;std::is_integral&lt;I&gt;::value&gt;::type&gt;
   Lattice(const double * latmat, std::vector&lt;I&gt;&amp; strides, const int h){
     double l[3]={0,0,0}, a[3]={0,0,0};
@@ -436,6 +449,7 @@ template&lt;&gt; struct LatticeTraits&lt;Reciprocal&gt;{
 };
 #endif
 
+}
 #endif
 </pre></div>
 </div>

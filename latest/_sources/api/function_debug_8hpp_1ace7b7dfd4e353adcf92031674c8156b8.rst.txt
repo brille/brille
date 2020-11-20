@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8hpp_1ace7b7dfd4e353adcf92031674c8156b8:
+
+Template Function brille::max_element_length(const T&)
+======================================================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::max_element_length(const T&)

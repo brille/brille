@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Symmetry &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class TetTri" href="classbrille_1_1TetTri.html" />
+    <link rel="prev" title="Template Class SubIt2" href="classbrille_1_1SubIt2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Symmetry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Symmetry.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-symmetry">
+<span id="exhale-class-classbrille-1-1symmetry"></span><h1>Class Symmetry<a class="headerlink" href="#class-symmetry" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_symmetry.hpp.html#file-src-symmetry-hpp"><span class="std std-ref">File symmetry.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille8SymmetryE">
+<span id="_CPPv3N6brille8SymmetryE"></span><span id="_CPPv2N6brille8SymmetryE"></span><span id="brille::Symmetry"></span><span class="target" id="classbrille_1_1Symmetry"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Symmetry</code><a class="headerlink" href="#_CPPv4N6brille8SymmetryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille8Symmetry7MotionsE">
+<span id="_CPPv3N6brille8Symmetry7MotionsE"></span><span id="_CPPv2N6brille8Symmetry7MotionsE"></span><span class="target" id="classbrille_1_1Symmetry_1a9c0cd54211520970fb8d780a80b6fa83"></span><em class="property">using </em><code class="sig-name descname">Motions</code> = std::vector&lt;<a class="reference internal" href="classbrille_1_1Motion.html#_CPPv4I00EN6brille6MotionE" title="brille::Motion">Motion</a>&lt;int, double&gt;&gt;<a class="headerlink" href="#_CPPv4N6brille8Symmetry7MotionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry8SymmetryE6size_t">
+<span id="_CPPv3N6brille8Symmetry8SymmetryE6size_t"></span><span id="_CPPv2N6brille8Symmetry8SymmetryE6size_t"></span><span id="brille::Symmetry::Symmetry__s"></span><span class="target" id="classbrille_1_1Symmetry_1a1939a70c5b4bf68903046f69703642e3"></span><code class="sig-name descname">Symmetry</code><span class="sig-paren">(</span>size_t <em>n</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry8SymmetryE6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry8SymmetryERK7Motions">
+<span id="_CPPv3N6brille8Symmetry8SymmetryERK7Motions"></span><span id="_CPPv2N6brille8Symmetry8SymmetryERK7Motions"></span><span id="brille::Symmetry::Symmetry__MotionsCR"></span><span class="target" id="classbrille_1_1Symmetry_1af8decdf980a481d49828f2d5702a2117"></span><code class="sig-name descname">Symmetry</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille8Symmetry7MotionsE" title="brille::Symmetry::Motions">Motions</a> &amp;<em>m</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry8SymmetryERK7Motions" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry8SymmetryERKNSt6stringE">
+<span id="_CPPv3N6brille8Symmetry8SymmetryERKNSt6stringE"></span><span id="_CPPv2N6brille8Symmetry8SymmetryERKNSt6stringE"></span><span id="brille::Symmetry::Symmetry__ssCR"></span><span class="target" id="classbrille_1_1Symmetry_1adf91abf96e439d7d4bfc0b1081882619"></span><code class="sig-name descname">Symmetry</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>strrep</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry8SymmetryERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry11getcentringEv">
+<span id="_CPPv3NK6brille8Symmetry11getcentringEv"></span><span id="_CPPv2NK6brille8Symmetry11getcentringEv"></span><span id="brille::Symmetry::getcentringC"></span><span class="target" id="classbrille_1_1Symmetry_1a58e71a3b4108949a744930a20e22ddb2"></span><a class="reference internal" href="enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3.html#_CPPv4N6brille7BravaisE" title="brille::Bravais">Bravais</a> <code class="sig-name descname">getcentring</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry11getcentringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry7getallmEv">
+<span id="_CPPv3NK6brille8Symmetry7getallmEv"></span><span id="_CPPv2NK6brille8Symmetry7getallmEv"></span><span id="brille::Symmetry::getallmC"></span><span class="target" id="classbrille_1_1Symmetry_1a538b7294c97e6182f9649ef65c8ce14f"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille8Symmetry7MotionsE" title="brille::Symmetry::Motions">Motions</a> &amp;<code class="sig-name descname">getallm</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry7getallmEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry7getallrEv">
+<span id="_CPPv3NK6brille8Symmetry7getallrEv"></span><span id="_CPPv2NK6brille8Symmetry7getallrEv"></span><span id="brille::Symmetry::getallrC"></span><span class="target" id="classbrille_1_1Symmetry_1a31bd54abfb164b0482ae5e499df260b6"></span><a class="reference internal" href="typedef_symmetry__common_8hpp_1a134cf54ebefe233d48803fabf1844cf5.html#_CPPv4I0EN6brille8MatricesE" title="brille::Matrices">Matrices</a>&lt;int&gt; <code class="sig-name descname">getallr</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry7getallrEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry7getalltEv">
+<span id="_CPPv3NK6brille8Symmetry7getalltEv"></span><span id="_CPPv2NK6brille8Symmetry7getalltEv"></span><span id="brille::Symmetry::getalltC"></span><span class="target" id="classbrille_1_1Symmetry_1ad5e75ef324f2c5a1a0fab2757681986a"></span><a class="reference internal" href="typedef_symmetry__common_8hpp_1aef37685751c9afa1e780443d274f3533.html#_CPPv4I0EN6brille7VectorsE" title="brille::Vectors">Vectors</a>&lt;double&gt; <code class="sig-name descname">getallt</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry7getalltEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry4sizeEv">
+<span id="_CPPv3NK6brille8Symmetry4sizeEv"></span><span id="_CPPv2NK6brille8Symmetry4sizeEv"></span><span id="brille::Symmetry::sizeC"></span><span class="target" id="classbrille_1_1Symmetry_1a0d93af0eb627c89f56d1778aa94d1a69"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry6resizeEK6size_t">
+<span id="_CPPv3N6brille8Symmetry6resizeEK6size_t"></span><span id="_CPPv2N6brille8Symmetry6resizeEK6size_t"></span><span id="brille::Symmetry::resize__sC"></span><span class="target" id="classbrille_1_1Symmetry_1a2b46e860ca00d6b36dd2561915dfe30c"></span>size_t <code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry6resizeEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry3addEPKiPKd">
+<span id="_CPPv3N6brille8Symmetry3addEPKiPKd"></span><span id="_CPPv2N6brille8Symmetry3addEPKiPKd"></span><span id="brille::Symmetry::add__iCP.doubleCP"></span><span class="target" id="classbrille_1_1Symmetry_1abdf77f56516964d0502bebba148577d8"></span>size_t <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="property">const</em> int *<em>r</em>, <em class="property">const</em> double *<em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry3addEPKiPKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry3addERK6MatrixIiERK6VectorIdE">
+<span id="_CPPv3N6brille8Symmetry3addERK6MatrixIiERK6VectorIdE"></span><span id="_CPPv2N6brille8Symmetry3addERK6MatrixIiERK6VectorIdE"></span><span id="brille::Symmetry::add__Matrix:i:CR.Vector:double:CR"></span><span class="target" id="classbrille_1_1Symmetry_1aee603de4d1b61c5e64893cdcc0981ed6"></span>size_t <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4.html#_CPPv4I0EN6brille6MatrixE" title="brille::Matrix">Matrix</a>&lt;int&gt;&amp;, <em class="property">const</em> <a class="reference internal" href="typedef_symmetry__common_8hpp_1a94cfc0163f6819f061b74be9ef3e044c.html#_CPPv4I0EN6brille6VectorE" title="brille::Vector">Vector</a>&lt;double&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry3addERK6MatrixIiERK6VectorIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry3addERK6MotionIidE">
+<span id="_CPPv3N6brille8Symmetry3addERK6MotionIidE"></span><span id="_CPPv2N6brille8Symmetry3addERK6MotionIidE"></span><span id="brille::Symmetry::add__Motion:i.double:CR"></span><span class="target" id="classbrille_1_1Symmetry_1a71c94fc39ce035c3d050490062b05be1"></span>size_t <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Motion.html#_CPPv4I00EN6brille6MotionE" title="brille::Motion">Motion</a>&lt;int, double&gt;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry3addERK6MotionIidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry3addERKNSt6stringE">
+<span id="_CPPv3N6brille8Symmetry3addERKNSt6stringE"></span><span id="_CPPv2N6brille8Symmetry3addERKNSt6stringE"></span><span id="brille::Symmetry::add__ssCR"></span><span class="target" id="classbrille_1_1Symmetry_1a35dba971a2a5ac2d67843b4f8b1ad9d3"></span>size_t <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="property">const</em> std::string&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry3addERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry10from_asciiERKNSt6stringE">
+<span id="_CPPv3N6brille8Symmetry10from_asciiERKNSt6stringE"></span><span id="_CPPv2N6brille8Symmetry10from_asciiERKNSt6stringE"></span><span id="brille::Symmetry::from_ascii__ssCR"></span><span class="target" id="classbrille_1_1Symmetry_1acbab1d4cc7d634a23aff846e056135a2"></span>bool <code class="sig-name descname">from_ascii</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry10from_asciiERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry5eraseEK6size_t">
+<span id="_CPPv3N6brille8Symmetry5eraseEK6size_t"></span><span id="_CPPv2N6brille8Symmetry5eraseEK6size_t"></span><span id="brille::Symmetry::erase__sC"></span><span class="target" id="classbrille_1_1Symmetry_1a817348795ea2508af793befb05211fed"></span>size_t <code class="sig-name descname">erase</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry5eraseEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille8Symmetry3popEK6size_t">
+<span id="_CPPv3N6brille8Symmetry3popEK6size_t"></span><span id="_CPPv2N6brille8Symmetry3popEK6size_t"></span><span id="brille::Symmetry::pop__sC"></span><span class="target" id="classbrille_1_1Symmetry_1a44a873390984e24d18328cfdbeec5fbb"></span><a class="reference internal" href="classbrille_1_1Motion.html#_CPPv4I00EN6brille6MotionE" title="brille::Motion">Motion</a>&lt;int, double&gt; <code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille8Symmetry3popEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry3hasERK6MotionIidE">
+<span id="_CPPv3NK6brille8Symmetry3hasERK6MotionIidE"></span><span id="_CPPv2NK6brille8Symmetry3hasERK6MotionIidE"></span><span id="brille::Symmetry::has__Motion:i.double:CRC"></span><span class="target" id="classbrille_1_1Symmetry_1ada2b15d33a04414025204c4e488c46c6"></span>bool <code class="sig-name descname">has</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Motion.html#_CPPv4I00EN6brille6MotionE" title="brille::Motion">Motion</a>&lt;int, double&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry3hasERK6MotionIidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry4getrEK6size_t">
+<span id="_CPPv3NK6brille8Symmetry4getrEK6size_t"></span><span id="_CPPv2NK6brille8Symmetry4getrEK6size_t"></span><span id="brille::Symmetry::getr__sCC"></span><span class="target" id="classbrille_1_1Symmetry_1a1a1d32311e6347fb5bd5f300ec5a5f4d"></span><a class="reference internal" href="typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4.html#_CPPv4I0EN6brille6MatrixE" title="brille::Matrix">Matrix</a>&lt;int&gt; <code class="sig-name descname">getr</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry4getrEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry4gettEK6size_t">
+<span id="_CPPv3NK6brille8Symmetry4gettEK6size_t"></span><span id="_CPPv2NK6brille8Symmetry4gettEK6size_t"></span><span id="brille::Symmetry::gett__sCC"></span><span class="target" id="classbrille_1_1Symmetry_1aa3b1c9028f4d07640806ab3e7088d2a0"></span><a class="reference internal" href="typedef_symmetry__common_8hpp_1a94cfc0163f6819f061b74be9ef3e044c.html#_CPPv4I0EN6brille6VectorE" title="brille::Vector">Vector</a>&lt;double&gt; <code class="sig-name descname">gett</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry4gettEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry4getmEK6size_t">
+<span id="_CPPv3NK6brille8Symmetry4getmEK6size_t"></span><span id="_CPPv2NK6brille8Symmetry4getmEK6size_t"></span><span id="brille::Symmetry::getm__sCC"></span><span class="target" id="classbrille_1_1Symmetry_1a725ca379ef5391d522ed1f3e64eeb56c"></span><a class="reference internal" href="classbrille_1_1Motion.html#_CPPv4I00EN6brille6MotionE" title="brille::Motion">Motion</a>&lt;int, double&gt; <code class="sig-name descname">getm</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry4getmEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry5orderEK6size_t">
+<span id="_CPPv3NK6brille8Symmetry5orderEK6size_t"></span><span id="_CPPv2NK6brille8Symmetry5orderEK6size_t"></span><span id="brille::Symmetry::order__sCC"></span><span class="target" id="classbrille_1_1Symmetry_1ae9004cf225a78882673fe99ba8d584cc"></span>int <code class="sig-name descname">order</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>i</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry5orderEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry6ordersEv">
+<span id="_CPPv3NK6brille8Symmetry6ordersEv"></span><span id="_CPPv2NK6brille8Symmetry6ordersEv"></span><span id="brille::Symmetry::orders__voidC"></span><span class="target" id="classbrille_1_1Symmetry_1a1356cea136c1eb0e0f345eb95be219c4"></span>std::vector&lt;int&gt; <code class="sig-name descname">orders</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry6ordersEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry8generateEv">
+<span id="_CPPv3NK6brille8Symmetry8generateEv"></span><span id="_CPPv2NK6brille8Symmetry8generateEv"></span><span id="brille::Symmetry::generate__voidC"></span><span class="target" id="classbrille_1_1Symmetry_1a867da9c938eebaa1e579ebd545bfcee4"></span><a class="reference internal" href="#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <code class="sig-name descname">generate</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry8generateEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry10generatorsEv">
+<span id="_CPPv3NK6brille8Symmetry10generatorsEv"></span><span id="_CPPv2NK6brille8Symmetry10generatorsEv"></span><span id="brille::Symmetry::generators__voidC"></span><span class="target" id="classbrille_1_1Symmetry_1a90fc252deaee39eb08970c202050682d"></span><a class="reference internal" href="#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> <code class="sig-name descname">generators</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry10generatorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8SymmetryeqERK8Symmetry">
+<span id="_CPPv3NK6brille8SymmetryeqERK8Symmetry"></span><span id="_CPPv2NK6brille8SymmetryeqERK8Symmetry"></span><span id="brille::Symmetry::eq-operator__SymmetryCRC"></span><span class="target" id="classbrille_1_1Symmetry_1a95d6750e3d4c2c77d864f41962d986a9"></span>bool <code class="sig-name descname">operator==</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8SymmetryeqERK8Symmetry" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8SymmetryneERK8Symmetry">
+<span id="_CPPv3NK6brille8SymmetryneERK8Symmetry"></span><span id="_CPPv2NK6brille8SymmetryneERK8Symmetry"></span><span id="brille::Symmetry::neq-operator__SymmetryCRC"></span><span class="target" id="classbrille_1_1Symmetry_1aee82110b5ee4b377b0d5ee0b5cd38b01"></span>bool <code class="sig-name descname">operator!=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille8SymmetryE" title="brille::Symmetry">Symmetry</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8SymmetryneERK8Symmetry" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry19has_space_inversionEv">
+<span id="_CPPv3NK6brille8Symmetry19has_space_inversionEv"></span><span id="_CPPv2NK6brille8Symmetry19has_space_inversionEv"></span><span id="brille::Symmetry::has_space_inversionC"></span><span class="target" id="classbrille_1_1Symmetry_1ad6188b29d93189f9b9c45a5de2595054"></span>bool <code class="sig-name descname">has_space_inversion</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry19has_space_inversionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille8Symmetry17find_matrix_indexERK6MatrixIiE">
+<span id="_CPPv3NK6brille8Symmetry17find_matrix_indexERK6MatrixIiE"></span><span id="_CPPv2NK6brille8Symmetry17find_matrix_indexERK6MatrixIiE"></span><span id="brille::Symmetry::find_matrix_index__Matrix:i:CRC"></span><span class="target" id="classbrille_1_1Symmetry_1a6f30cc5501af4ea4294c89c27f08fac9"></span>size_t <code class="sig-name descname">find_matrix_index</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4.html#_CPPv4I0EN6brille6MatrixE" title="brille::Matrix">Matrix</a>&lt;int&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille8Symmetry17find_matrix_indexERK6MatrixIiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1TetTri.html" class="btn btn-neutral float-right" title="Class TetTri" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1SubIt2.html" class="btn btn-neutral float-left" title="Template Class SubIt2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -193,6 +193,19 @@ or by compiling the source after downloading it from the <a class="reference ext
 <p>This will download a precompiled binary of the latest released version of the
 module or download its source code and compile the module if a precompiled
 binary does not exist for your system.</p>
+<dl>
+<dt>Note:</dt><dd><p>Windows systems must have the Microsoft Visual C++ Redistributable binaries in
+order to load the PyPI distributed <a class="reference internal" href="brille.html#module-brille" title="brille"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille</span></code></a> module.
+If you are faced with the error</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">brille</span>
+
+<span class="go">ImportError: DLL load failed while importing _brille: The specified module could not be found</span>
+</pre></div>
+</div>
+<p>please install the latest x64 Visual C++ redistributable package from
+<a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft</a>.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="source">
 <h2>source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
@@ -213,7 +226,7 @@ automatically from their respective Github repositories.</p>
 <div class="section" id="development">
 <h3>development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h3>
 <p>If you plan to modify the pure Python submodules, e.g.,
-<a class="reference internal" href="plotting.html#module-brille.plotting" title="brille.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille.plotting</span></code></a> or <code class="xref py py-mod docutils literal notranslate"><span class="pre">brille.euphonic</span></code>, you may benefit from
+<a class="reference internal" href="plotting.html#module-brille.plotting" title="brille.plotting"><code class="xref py py-mod docutils literal notranslate"><span class="pre">brille.plotting</span></code></a>, you may benefit from
 constructing from source using the <code class="docutils literal notranslate"><span class="pre">develop</span></code> option.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/brille/brille
 <span class="nb">cd</span> brille

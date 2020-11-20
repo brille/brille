@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1CostTraits:
+
+Template Struct CostTraits
+==========================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::CostTraits
+   :members:
+   :protected-members:
+   :undoc-members:

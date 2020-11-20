@@ -172,37 +172,31 @@
   <div class="section" id="program-listing-for-file-bz-hpp">
 <span id="program-listing-file-src-bz-hpp"></span><h1>Program Listing for File bz.hpp<a class="headerlink" href="#program-listing-for-file-bz-hpp" title="Permalink to this headline">¶</a></h1>
 <p>↰ <a class="reference internal" href="file_src_bz.hpp.html#file-src-bz-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bz.hpp</span></code>)</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Copyright 2019 Greg Tucker</span>
-<span class="cm">//</span>
-<span class="cm">// This file is part of brille.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is free software: you can redistribute it and/or modify it under the</span>
-<span class="cm">// terms of the GNU Affero General Public License as published by the Free</span>
-<span class="cm">// Software Foundation, either version 3 of the License, or (at your option)</span>
-<span class="cm">// any later version.</span>
-<span class="cm">//</span>
-<span class="cm">// brille is distributed in the hope that it will be useful, but</span>
-<span class="cm">// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
-<span class="cm">// or FITNESS FOR A PARTICULAR PURPOSE.</span>
-<span class="cm">// See the GNU Affero General Public License for more details.</span>
-<span class="cm">//</span>
-<span class="cm">// You should have received a copy of the GNU Affero General Public License</span>
-<span class="cm">// along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
 
-<span class="cp">#ifndef _BZ_CLASS_H_</span>
-<span class="cp">#define _BZ_CLASS_H_</span>
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
 
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef BRILLE_BZ_CLASS_H_</span>
+<span class="cp">#define BRILLE_BZ_CLASS_H_</span>
 <span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;neighbours.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;transform.hpp&quot;</span><span class="cp"></span>
-<span class="c1">// #include &quot;pointgroup.hpp&quot;</span>
-<span class="c1">// #include &lt;iostream&gt;</span>
-<span class="c1">// #include &lt;algorithm&gt;</span>
-<span class="c1">// #include &lt;vector&gt;</span>
 <span class="cp">#include</span> <span class="cpf">&quot;polyhedron.hpp&quot;</span><span class="cp"></span>
-<span class="c1">// #include &quot;debug.hpp&quot;</span>
 <span class="cp">#include</span> <span class="cpf">&quot;phonon.hpp&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
 
 <span class="k">class</span> <span class="nc">BrillouinZone</span> <span class="p">{</span>
   <span class="n">Reciprocal</span> <span class="n">lattice</span><span class="p">;</span>
@@ -785,7 +779,7 @@
         <span class="k">auto</span> <span class="n">isin</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside</span><span class="p">(</span><span class="n">vrt</span><span class="p">);</span>
         <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;and retaining &quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">isin</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">isin</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">),</span> <span class="s">&quot; inside vertices&quot;</span><span class="p">);</span>
         <span class="n">vrt</span> <span class="o">=</span> <span class="n">vrt</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">isin</span><span class="p">);</span>
-        <span class="n">ijk</span> <span class="o">=</span> <span class="n">vrt</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">isin</span><span class="p">);</span>
+        <span class="n">ijk</span> <span class="o">=</span> <span class="n">ijk</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">isin</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -822,6 +816,7 @@
 <span class="kt">double</span>
 <span class="nf">normals_matrix_determinant</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">c</span><span class="p">);</span>
 
+<span class="p">}</span> <span class="c1">// end namespace brille</span>
 <span class="cp">#endif</span>
 </pre></div>
 </div>

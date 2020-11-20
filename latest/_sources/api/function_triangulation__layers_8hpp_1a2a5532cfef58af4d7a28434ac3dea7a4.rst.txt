@@ -1,0 +1,13 @@
+.. _exhale_function_triangulation__layers_8hpp_1a2a5532cfef58af4d7a28434ac3dea7a4:
+
+Template Function brille::triangulate_one_layer
+===============================================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::triangulate_one_layer(const bArray<T>&, const std::vector<std::vector<int>>&, const double, const int)

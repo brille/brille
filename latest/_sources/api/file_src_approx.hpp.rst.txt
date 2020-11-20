@@ -83,10 +83,6 @@ Included By
 
 - :ref:`file_src_trellis.hpp`
 
-- :ref:`file_src_inner_interpolation_data.hpp`
-
-- :ref:`file_src_interpolator.hpp`
-
 - :ref:`file_src_lattice.cpp`
 
 - :ref:`file_src_pointsymmetry.cpp`
@@ -115,13 +111,13 @@ Functions
 
 - :ref:`exhale_function_approx_8hpp_1a62cc037dd78d1d23c4494fc74644510e`
 
-- :ref:`exhale_function_approx_8hpp_1aa8208de1f7cf17c5e9973ba79363c3b3`
+- :ref:`exhale_function_approx_8hpp_1a91c57121b7e924b2a033a014c1cdc50f`
 
 - :ref:`exhale_function_approx_8hpp_1a36fcd700b1f5c494cae717e01dd607f9`
 
-- :ref:`exhale_function_approx_8hpp_1ad04345f9f9ceecf0605d4284c80261f8`
+- :ref:`exhale_function_approx_8hpp_1aa8208de1f7cf17c5e9973ba79363c3b3`
 
-- :ref:`exhale_function_approx_8hpp_1a91c57121b7e924b2a033a014c1cdc50f`
+- :ref:`exhale_function_approx_8hpp_1ad04345f9f9ceecf0605d4284c80261f8`
 
 - :ref:`exhale_function_approx_8hpp_1a4cd1a6941a631fc6bf935a9915e6648c`
 

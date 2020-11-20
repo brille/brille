@@ -1,0 +1,13 @@
+.. _exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf:
+
+Function brille::intersect_at(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, LQVec<double>&, const int)
+================================================================================================================================================
+
+- Defined in :ref:`file_src_bz.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::intersect_at(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, const LQVec<double>&, LQVec<double>&, const int)

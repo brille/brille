@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Basis:
+
+Class Basis
+===========
+
+- Defined in :ref:`file_src_basis.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Basis
+   :members:
+   :protected-members:
+   :undoc-members:

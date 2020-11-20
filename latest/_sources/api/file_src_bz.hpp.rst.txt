@@ -60,24 +60,31 @@ Included By
 
 
 
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
 Classes
 -------
 
 
-- :ref:`exhale_class_classBrillouinZone`
+- :ref:`exhale_class_classbrille_1_1BrillouinZone`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_bz_8hpp_1a420a3ad8100b7cc7423656c6dcde433e`
+- :ref:`exhale_function_bz_8hpp_1a5069d82dece04dea6bf7e4f1934b2b05`
 
-- :ref:`exhale_function_bz_8hpp_1adf94fc99f077a349f5f996b2ece44182`
+- :ref:`exhale_function_bz_8hpp_1a1dc005c81b7abdf42b7ee19c48bf943e`
 
-- :ref:`exhale_function_bz_8hpp_1a747d3e85ef77e760d5ae4aa702cf5bd2`
+- :ref:`exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf`
 
-- :ref:`exhale_function_bz_8hpp_1a944bff6029393cd34068ab139d528f10`
+- :ref:`exhale_function_bz_8hpp_1abb24d8cc7ad34b4bb7a755472d2330d3`
 
-- :ref:`exhale_function_bz_8hpp_1a23be76b01bbec23dc9d346c27d0f926a`
+- :ref:`exhale_function_bz_8hpp_1ada408494d835a033877331102fcd0a19`
 

@@ -10,22 +10,24 @@ Program Listing for File interpolator2.hpp
 
 .. code-block:: cpp
 
-   /* Copyright 2019 Greg Tucker
-   //
-   // This file is part of brille.
-   //
-   // brille is free software: you can redistribute it and/or modify it under the
-   // terms of the GNU Affero General Public License as published by the Free
-   // Software Foundation, either version 3 of the License, or (at your option)
-   // any later version.
-   //
-   // brille is distributed in the hope that it will be useful, but
-   // WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-   // or FITNESS FOR A PARTICULAR PURPOSE.
-   // See the GNU Affero General Public License for more details.
-   //
-   // You should have received a copy of the GNU Affero General Public License
-   // along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   /* This file is part of brille.
+   
+   Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+   
+   brille is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Affero General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+   
+   brille is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU Affero General Public License for more details.
+   
+   You should have received a copy of the GNU Affero General Public License
+   along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+   #ifndef BRILLE_INTERPOLATOR_HPP_
+   #define BRILLE_INTERPOLATOR_HPP_
    #include <vector>
    #include <array>
    #include <utility>
@@ -39,9 +41,7 @@ Program Listing for File interpolator2.hpp
    #include "permutation_table.hpp"
    #include "approx.hpp"
    #include "utilities.hpp"
-   
-   #ifndef _INTERPOLATOR_HPP_
-   #define _INTERPOLATOR_HPP_
+   namespace brille {
    
    //template<class T> using CostFunction = std::function<typename CostTraits<T>::type(ind_t, T*, T*)>;
    template<class T>
@@ -397,4 +397,6 @@ Program Listing for File interpolator2.hpp
    #include "interpolator2_gamma.tpp"
    #include "interpolator2_real.tpp"
    #include "interpolator2_recip.tpp"
+   
+   } // namespace brille
    #endif

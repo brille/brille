@@ -1,0 +1,13 @@
+.. _exhale_function_lattice_8hpp_1a11effa0e26084638971c2698a86bfbb9:
+
+Template Function brille::latmat_to_lenang(const T \*, const I, const I, T \*, T \*)
+====================================================================================
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::latmat_to_lenang(const T *, const I, const I, T *, T *)
