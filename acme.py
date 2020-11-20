@@ -5,6 +5,8 @@
 #       - UTF-8 encoded output files
 #       - 0+ space characters before 'Copyright ©'
 #       - search all include paths for 'local' header files
+#       - use rstrip() to remove trailing carriage return character from regular
+#         expression capture 'value' on Windows (which strips \n but not \r)
 #
 # Used by CMake make single header suitable for install from brille.h template.
 
@@ -530,7 +532,7 @@ def acme(toplevel_file, output) -> List[str]:
                 match = acme_pragma_rx.match(line)
                 if match:
                     what = match.group('what')
-                    value = match.group('value')
+                    value = match.group('value').rstrip()
                     if what == 'enable':
                         forced_defines[value] = True
                     elif what == 'disable':

@@ -8,7 +8,7 @@ set(BRILLE_SINGLE_HEADER brille.h) # must match template file in project root
 SET(BRILLE_LIB_DESTINATION lib)
 SET(BRILLE_BIN_DESTINATION bin)
 SET(BRILLE_INCLUDE_DESTINATION include)
-set(TESTING_TARGET run_tests)
+set(TESTING_TARGET tester)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -172,7 +172,6 @@ add_custom_target(single_header
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
 
 if(BRILLE_BUILD_TESTING)
-  list(APPEND CXX_TARGETS ${TESTING_TARGET}) # Include the C++ test target
   enable_testing() # allows registration of Python tests in wrap/
 endif()
 
@@ -181,12 +180,9 @@ pybind11_add_module(${BRILLE_PYTHON_MODULE} MODULE)
 add_subdirectory(wrap)
 
 if(BRILLE_BUILD_TESTING)
+  list(APPEND CXX_TARGETS ${TESTING_TARGET}) # Include the C++ test target
   # target for Catch2 based tests
   add_executable(${TESTING_TARGET})
-  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
-  include(CTest)
-  include(Catch)
-  catch_discover_tests(${TESTING_TARGET})
 endif()
 add_subdirectory(lib)
 
@@ -196,6 +192,13 @@ list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
 
 # add the dependencies and include directories for all CXX targets:
 add_subdirectory(src)  # important
+
+if(BRILLE_BUILD_TESTING)
+  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
+  include(CTest)
+  include(Catch)
+  catch_discover_tests(${TESTING_TARGET})
+endif()
 
 # OpenMP support:
 find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
