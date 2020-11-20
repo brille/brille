@@ -1,30 +1,28 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
-#ifndef _LATTICE_CLASS_H_
-#define _LATTICE_CLASS_H_
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
+
+#ifndef BRILLE_LATTICE_CLASS_H_
+#define BRILLE_LATTICE_CLASS_H_
 #include <assert.h>
 #include <vector>
-// #include "utilities.hpp"
 #include "primitive.hpp"
 #include "basis.hpp"
 #include "array2.hpp"
-
 namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential

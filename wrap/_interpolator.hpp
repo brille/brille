@@ -1,5 +1,3 @@
-#ifndef __INTERPOLATOR_HPP_
-#define __INTERPOLATOR_HPP_
 
 #include <pybind11/pybind11.h>
 #include "interpolatordual.hpp"
@@ -7,6 +5,8 @@
 #include "utilities.hpp"
 #include "_array.hpp"
 
+#ifndef WRAP_BRILLE_INTERPOLATOR_HPP_
+#define WRAP_BRILLE_INTERPOLATOR_HPP_
 namespace py = pybind11;
 namespace br = brille;
 

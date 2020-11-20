@@ -1,13 +1,6 @@
 #set(python_module_name _brille)
 #pybind11_add_module(${python_module_name} MODULE _brille.cpp "")
 
-# Create a header file with information about the last time tye python module was built
-# This file will be updated even if no other source files are modified but it does not
-# cause relinking the module (if it is the *only* file which changes)
-add_custom_target(write_version_info
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
 add_dependencies(${BRILLE_PYTHON_MODULE} write_version_info)
 #execute_process(
 #  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp

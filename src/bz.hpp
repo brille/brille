@@ -1,35 +1,27 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
-#ifndef _BZ_CLASS_H_
-#define _BZ_CLASS_H_
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
 
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef BRILLE_BZ_CLASS_H_
+#define BRILLE_BZ_CLASS_H_
 #include <omp.h>
 #include "neighbours.hpp"
 #include "transform.hpp"
-// #include "pointgroup.hpp"
-// #include <iostream>
-// #include <algorithm>
-// #include <vector>
 #include "polyhedron.hpp"
-// #include "debug.hpp"
 #include "phonon.hpp"
 #include "approx.hpp"
-
 namespace brille {
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice

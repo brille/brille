@@ -1,29 +1,27 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
 
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
+#ifndef BRILLE_BALLTRELLIS_H_
+#define BRILLE_BALLTRELLIS_H_
 #include <vector>
 #include <array>
 #include <algorithm>
-#include "array_latvec.hpp" // defines bArray
+#include "array_latvec.hpp"
 #include "approx.hpp"
-
-#ifndef _BALLTRELLIS_H_
-#define _BALLTRELLIS_H_
-
 namespace brille {
 
 class TrellisLeaf{

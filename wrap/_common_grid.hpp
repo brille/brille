@@ -1,5 +1,3 @@
-#ifndef __COMMON_GRID_HPP
-#define __COMMON_GRID_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -14,6 +12,8 @@
 #include "bz.hpp"
 #include "utilities.hpp"
 
+#ifndef WRAP_BRILLE_COMMON_GRID_HPP_
+#define WRAP_BRILLE_COMMON_GRID_HPP_
 namespace py = pybind11;
 namespace br = brille;
 

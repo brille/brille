@@ -1,19 +1,19 @@
-/* Copyright 2019 Greg Tucker
-//
-// This file is part of brille.
-//
-// brille is free software: you can redistribute it and/or modify it under the
-// terms of the GNU Affero General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// brille is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-// or FITNESS FOR A PARTICULAR PURPOSE.
-// See the GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/* This file is part of brille.
+
+Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+
+brille is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+brille is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 /* This file has evolved from pointgroup.h distributed as part of spglib.
    Changes have been made to introduce C++ style classes as well as other
@@ -54,13 +54,11 @@
  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE. */
 
-#ifndef __pointgroup_H__
-#define __pointgroup_H__
-
+#ifndef BRILLE_POINTGROUP_HPP_
+#define BRILLE_POINTGROUP_HPP_
 #include <string>
 #include "symmetry.hpp"
 #include "pointsymmetry.hpp"
-
 namespace brille {
 
 enum class Holohedry {_, triclinic, monoclinic, orthogonal, tetragonal, trigonal, hexagonal, cubic};
