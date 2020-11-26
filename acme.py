@@ -210,6 +210,7 @@ copyright_rc = re.compile(r'^\s*Copyright © \d{4}.+$')
 blockcomment_start_rx = re.compile(r'^\s*/\*.*\s*$')
 blockcomment_end_rx = re.compile(r'^\s*.*\*/\s*$')
 acme_pragma_rx = re.compile(r'^#pragma\s+ACME\s+(?P<what>[^\s]+)\s*(?P<value>[^\s]?.*)\s*$')
+tpp_filename = re.compile("""\.tpp$""")
 
 def acme(toplevel_file, output) -> List[str]:
     base_directory = os.path.dirname(toplevel_file)
@@ -490,7 +491,7 @@ def acme(toplevel_file, output) -> List[str]:
                             # before this file contents to avoid nested include
                             # guards.
                             parsed_file = parse(absolute_include, level + 1)
-                            if toplevel_file == file:
+                            if toplevel_file == file or tpp_filename.search(absolute_include):
                                 out += parsed_file
                             else:
                                 includes_out += parsed_file
