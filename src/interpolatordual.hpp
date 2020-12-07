@@ -362,9 +362,9 @@ DualInterpolator<T,R>::debye_waller(const A<double>& Qpts, const std::vector<dou
 
 
 // template<class T, class R> template<typename I, typename>
-// std::vector<PermutationTable::ind_t>
+// std::vector<ind_t>
 // DualInterpolator<T,R>::get_permutation(const I i, const I j) const {
-//   std::vector<PermutationTable::ind_t> perm;
+//   std::vector<ind_t> perm;
 //   /*
 //   Since missing permutations are added, and might be the same for two threads,
 //   we can not allow multiple threads to perform their get call at the same time
@@ -395,7 +395,7 @@ DualInterpolator<T,R>::get_permutation(const I i, const I j) const {
 template<class T, class R> template<typename I, typename>
 std::vector<std::vector<ind_t>>
 DualInterpolator<T,R>::get_permutations(const std::vector<I>& indices) const {
-  std::vector<std::vector<PermutationTable::ind_t>> perms;
+  std::vector<std::vector<ind_t>> perms;
   // find the minimum index so that permutation(pvt,idx) is always ordered
   I pvt{indices[0]};
   //for (const I idx: indices) if (idx < pvt) pvt = idx;
