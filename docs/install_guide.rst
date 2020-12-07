@@ -91,3 +91,30 @@ or
 .. code-block:: bash
 
   python setup.py --user install
+
+
+legacy linux systems
+====================
+If the available compiler and ``pip`` versions are too old and can not be upgraded
+you may find that ``pip`` reports that the available manylinux2010 versions available
+on PyPI are incompatible with your system and building from source may also fail.
+This is known to apply to RHEL7 based systems but may affect others as well.
+
+In such a case you can produce a suitable installable package on another system by
+replicating the manylinux build system.
+For the specific case of RHEL7, starting on a system with `devtoolset-7` installed run
+
+.. code-block:: bash
+
+    scl enable devtoolset-7 bash
+    git clone https://github.com/brille/brille.git
+    python3 -m pip wheel -w wheelhouse brille
+
+which produces a file like ``brille-0.5.0-cp36-cp36m-linux_x86_64.whl`` that can be copied to the target system.
+To install the `brille` package on the target machine one then runs
+
+.. code-block:: bash
+
+    pip install --user brille-0.5.0-cp36-cp36m-linux_x86_64.whl
+
+or similar.
