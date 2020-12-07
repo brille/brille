@@ -74,7 +74,8 @@ for val in $INPUT_PAGES_DIR; do
 		echo_run unlink stable
 		echo_run ln -s ${named} stable
 	fi
-	# Add all changes to the gh_pages branch
+	echo ::endgroup::
+	echo ::group::Add all changes to the repository
 	echo_run git add .
 	echo ::endgroup::
 
