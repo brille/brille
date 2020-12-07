@@ -272,7 +272,8 @@ private:
       if (mask[rowcol[0]*N+rowcol[1]] == whichmark[i]){
         path.push_front({rowcol[0],rowcol[1]});
         i = (i+1)&1;    // switch between row and col, and between STARED and PRIMED
-        rowcol[i] = -1; // exploit unsiged integer roll-over, and that
+        rowcol[i] = 0; // (setting to -1 directly raises compiler warnings)
+        --rowcol[i]; // exploit unsiged integer roll-over, and that
       }
     }
 

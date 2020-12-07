@@ -26,22 +26,22 @@ void wrap_primitivetransform(pybind11::module & m){
   cls.def(pybind11::init<int>(),"Hall number"_a);
 
   cls.def_property_readonly("P",[](const PrimitiveTransform &p){
-    std::vector<ssize_t> sz={3,3};
+    std::vector<ssize_t> sz{3u,3u};
     return sa2np(sz,p.get_P());
   });
 
   cls.def_property_readonly("invP",[](const PrimitiveTransform &p){
-    std::vector<ssize_t> sz={3,3};
+    std::vector<ssize_t> sz{3u,3u};
     return sa2np(sz,p.get_invP());
   });
 
   cls.def_property_readonly("Pt",[](const PrimitiveTransform &p){
-    std::vector<ssize_t> sz={3,3};
+    std::vector<ssize_t> sz{3u,3u};
     return sa2np(sz,p.get_Pt());
   });
 
   cls.def_property_readonly("invPt",[](const PrimitiveTransform &p){
-    std::vector<ssize_t> sz={3,3};
+    std::vector<ssize_t> sz{3u,3u};
     return sa2np(sz,p.get_invPt());
   });
 

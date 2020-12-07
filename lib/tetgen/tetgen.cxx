@@ -7581,8 +7581,12 @@ int tetgenmesh::report_selfint_edge(point e1, point e2, face *iedge,
 // segment or an edge of another facet.                                      //
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
-
-int tetgenmesh::report_selfint_face(point p1, point p2, point p3, face* sface,
+#ifndef TETLIBRARY
+  int
+#else
+  void
+#endif
+tetgenmesh::report_selfint_face(point p1, point p2, point p3, face* sface,
   triface* iedge, int intflag, int* types, int* poss)
 {
   face iface;
@@ -20144,7 +20148,10 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
                     (types[0] == (int) ACROSSEDGE)) {
                   // Check if [e,d] is a segment.
                   if (issubseg(flipedge)) {
-                    return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+                    #ifndef TETLIBRARY
+                      return
+                    #endif
+                    report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                                intflag, types, poss);
 		          } else {
 				    // Check if [e,d] is an edge of a subface.
@@ -20156,7 +20163,10 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
 					}
 					if (issubface(chkface)) {
 					  // Two subfaces are intersecting.
-					  return report_selfint_face(pa, pb, pc,searchsh,&chkface,
+            #ifndef TETLIBRARY
+					  return
+            #endif
+            report_selfint_face(pa, pb, pc,searchsh,&chkface,
                                                  intflag, types, poss);
 					}
 				  }
@@ -20207,13 +20217,19 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
 					return 1;
                   } else {
 				    // Other cases may be due to a bug or a PLC error.
-					return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+          #ifndef TETLIBRARY
+					return
+          #endif
+          report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                                intflag, types, poss);
 				  }
                 } else {
                   // The other intersection types: ACROSSVERT, TOUCHEDGE,
                   // SHAREVERTEX should not be possible or due to a PLC error.
-                  return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+                  #ifndef TETLIBRARY
+                  return
+                  #endif
+                  report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                              intflag, types, poss);
                 }
               } // if (searchsh != NULL)

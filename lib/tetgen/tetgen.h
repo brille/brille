@@ -1679,7 +1679,12 @@ public:
   void report_overlapping_facets(face*, face*, REAL dihedang = 0.0);
   int report_selfint_edge(point, point, face* sedge, triface* searchtet,
                           enum interresult);
-  int report_selfint_face(point, point, point, face* sface, triface* iedge,
+  #ifndef TETLIBRARY
+    int
+  #else
+    void
+  #endif
+  report_selfint_face(point, point, point, face* sface, triface* iedge,
                           int intflag, int* types, int* poss);
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -31,7 +31,7 @@ void wrap_pointsymmetry(pybind11::module & m){
   cls.def_property_readonly("size",&PointSymmetry::size);
 
   cls.def_property_readonly("W",[](PointSymmetry& ps){
-    std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3, 3};
+    std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3u, 3u};
     return sva2np(sz, ps.getall());
   });
 
@@ -46,7 +46,7 @@ void wrap_pointsymmetry(pybind11::module & m){
   });
 
   cls.def_property_readonly("axis",[](PointSymmetry& ps){
-    std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3};
+    std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3u};
     return sva2np(sz, ps.axes());
   });
 

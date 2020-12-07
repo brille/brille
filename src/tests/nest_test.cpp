@@ -10,16 +10,16 @@ TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
-  size_t number_rho = 100;
-  size_t max_branchings = 5;
+  ind_t number_rho = 100;
+  ind_t max_branchings = 5;
   BrillouinZoneNest3<double,double> bzn0(bz, number_rho, max_branchings);
   BrillouinZoneNest3<double,double> bzn1(bz, max_volume, max_branchings);
 }
 TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
   Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
   BrillouinZone bz(d.star());
-  size_t number_rho = 1000;
-  size_t max_branchings = 5;
+  ind_t number_rho = 1000;
+  ind_t max_branchings = 5;
   BrillouinZoneNest3<double,double> bzn(bz, number_rho, max_branchings);
 
   SECTION("get_xyz"){auto verts = bzn.get_xyz(); REQUIRE(verts.size(0) > 0u);}
@@ -34,7 +34,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
-  size_t max_branchings = 5;
+  ind_t max_branchings = 5;
   BrillouinZoneNest3<double,double> bzn(bz, max_volume, max_branchings);
 
   auto Qmap = bzn.get_hkl();
@@ -55,13 +55,13 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   // interpolate at points within the irreducible meshed volume.
   // So let's stick to points that are random linear interpolations between
   // neighbouring mesh vertices
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(0.,1.);
 
   brille::ind_t nQmap = Qmap.size(0), nQ = 10;//10000;
   LQVec<double> Q(r,nQ);
   double rli;
-  for (size_t i=0; i<nQ; ++i){
+  for (ind_t i=0; i<nQ; ++i){
     rli = distribution(generator);
     Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
   }
@@ -77,13 +77,13 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
 
   auto diff = intres - antres;
 
-  if (!diff.round().all(brille::cmp::eq, 0.)) for (size_t i = 0; i < nQ; ++i) {
-      info_update_if(!diff.view(i).round().all(0.,0),
+  if (!(diff.round().all(brille::cmp::eq, 0))) for (ind_t i = 0; i < nQ; ++i) {
+      info_update_if(!(diff.view(i).round().all(0,0)),
         "The interpolation point Q = ", Q.to_string(i),
         "            returned result ", intres.to_string(i),
         "                 instead of ", antres.to_string(i));
   }
-  REQUIRE( diff.round().all(brille::cmp::eq, 0.) ); // this is not a great test :(
+  REQUIRE( diff.round().all(brille::cmp::eq, 0) ); // this is not a great test :(
   for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);
 }
 
@@ -137,12 +137,12 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
   // info_update("\nRounded difference:\n",diff.to_string());
 
-  if (!diff.round().all(0.,0)) for (size_t i = 0; i < nQ; ++i) {
-      info_update_if(!diff.view(i).round().all(0.,0),
+  if (!diff.round().all(0,0)) for (ind_t i = 0; i < nQ; ++i) {
+      info_update_if(!diff.view(i).round().all(0,0),
         "\nThe interpolation point Q = ", Q.to_string(i),
         "\n            returned result ", intres.to_string(i),
         "\n                 instead of ", antres.to_string(i), "\n");
   }
-  REQUIRE( diff.round().all(0.,0.) ); // this is not a great test :(
+  REQUIRE( diff.round().all(0,0) ); // this is not a great test :(
   for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-10);
 }

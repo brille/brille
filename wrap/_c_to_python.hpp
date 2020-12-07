@@ -27,11 +27,18 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef WRAP_BRILLE_C_TO_PYTHON_HPP_
 #define WRAP_BRILLE_C_TO_PYTHON_HPP_
 
+template<class T>
+static size_t determine_numel(const std::vector<T>& sz){
+  size_t numel{1u};
+  for (auto x: sz) numel *= static_cast<size_t>(x);
+  return numel;
+}
+
 namespace py = pybind11;
 template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& sz, const std::array<T,N>& sv){
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel =determine_numel(sz);
   if (N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -46,7 +53,7 @@ template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& 
 template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const std::vector<T>& sv){
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel =determine_numel(sz);
   if (sv.size() != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -64,7 +71,7 @@ py::array_t<T> sva2np(const std::vector<ssize_t>&sz,
 {
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel =determine_numel(sz);
   if (sva.size()*N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";

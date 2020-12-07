@@ -45,7 +45,7 @@ TEST_CASE("Array creation","[array]"){
   idx=0;
   for(auto x: to_be_assigned.valItr()) REQUIRE(x == tmp[idx++]);
 
-  for (size_t i = 0; i<to_be_assigned.size(0); ++i){
+  for (ind_t i = 0; i<to_be_assigned.size(0); ++i){
     auto just_one = withvalue.view(i);
     REQUIRE(just_one.ndim() == 2);
     REQUIRE(just_one.numel() == 3);
@@ -61,7 +61,7 @@ TEST_CASE("Array scalar math operations","[array]"){
   bArray<double> x(values, 9, /*owns*/ false, {3,3}, {3,1});
   auto orig = bArray<double>(x).decouple(); // make a distinct copy
 
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(1.0,100.0);
   double rval = distribution(generator);
   size_t idx{0};
@@ -92,7 +92,7 @@ TEST_CASE("Array Array math operations","[array]"){
   bArray<double> x(values, 9, /*owns*/ false, {3,3}, {3,1});
   auto orig = bArray<double>(x).decouple(); // make a distinct copy
 
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(1.0,100.0);
 
   bArray<double>::shape_t sp({3,3});
@@ -119,7 +119,7 @@ TEST_CASE("Array Array math operations","[array]"){
   SECTION("Array + Array is element-wise and scales-up single vectors"){
     bArray<double> z = x+y;
     for (auto i: x.subItr()) REQUIRE(z[i] == x[i]+y[i]);
-    for (size_t j=0; j<y.size(0); ++j){
+    for (ind_t j=0; j<y.size(0); ++j){
       auto yj = y.view(j);
       REQUIRE(yj.ndim() == 2);
       REQUIRE(yj.size(0) == 1);
@@ -135,7 +135,7 @@ TEST_CASE("Array Array math operations","[array]"){
   SECTION("Array - Array is element-wise and scales-up single vectors"){
     bArray<double> z = x-y;
     for (auto i: x.subItr()) REQUIRE(z[i] == x[i]-y[i]);
-    for (size_t j=0; j<y.size(0); ++j){
+    for (ind_t j=0; j<y.size(0); ++j){
       auto yj = y.view(j);
       REQUIRE(yj.ndim() == 2);
       REQUIRE(yj.size(0) == 1);
@@ -151,7 +151,7 @@ TEST_CASE("Array Array math operations","[array]"){
   SECTION("Array * Array is element-wise and scales-up single vectors"){
     bArray<double> z = x*y;
     for (auto i: x.subItr()) REQUIRE(z[i] == x[i]*y[i]);
-    for (size_t j=0; j<y.size(0); ++j){
+    for (ind_t j=0; j<y.size(0); ++j){
       auto yj = y.view(j);
       REQUIRE(yj.ndim() == 2);
       REQUIRE(yj.size(0) == 1);
@@ -167,7 +167,7 @@ TEST_CASE("Array Array math operations","[array]"){
   SECTION("Array / Array is element-wise and scales-up single vectors"){
     bArray<double> z = x/y;
     for (auto i: x.subItr()) REQUIRE(z[i] == x[i]/y[i]);
-    for (size_t j=0; j<y.size(0); ++j){
+    for (ind_t j=0; j<y.size(0); ++j){
       auto yj = y.view(j);
       REQUIRE(yj.ndim() == 2);
       REQUIRE(yj.size(0) == 1);
@@ -194,6 +194,6 @@ TEST_CASE("Append Array(s)","[array]"){
   REQUIRE(z.ndim() == 2);
   REQUIRE(z.size(0) == expected[0]);
   REQUIRE(z.size(1) == expected[1]);
-  for (brille::ind_t i=0; i<12; ++i)
+  for (ind_t i=0; i<12; ++i)
     REQUIRE(z[i] == Approx(static_cast<double>(i)));
 }

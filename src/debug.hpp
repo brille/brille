@@ -32,6 +32,50 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #define VERBOSE_DEBUG
 // #define DEBUG // comment-out for no debugging output
 namespace brille {
+// brille::abs (defined here instead of approx to avoid circular referencing)
+#if defined(DOXYGEN_SHOULD_SKIP_THIS)
+  /*! \brief Absolute value of signed or unsigned values
+
+  \param x A scalar value
+  \returns |x|, the absolute value of x
+
+  `std::abs()` is not guaranteed to be defined for unsigned integers.
+  This overloaded template function returns its input for unsigned `T` or
+  reutrns `std::abs(x)` for signed T.
+  */
+  template<class T> T abs(const T x);
+#endif
+#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
+  /* Absolute value of not-unsigned scalars */
+  template<typename T>
+  std::enable_if_t<!std::is_unsigned_v<T>, T>
+  abs(const T x){ return std::abs(x); }
+  /* Absolute value of unsigned scalars (non-op) */
+  template<typename T>
+  std::enable_if_t<std::is_unsigned_v<T>, T>
+  abs(const T x){ return x; }
+#endif
+
+#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
+  template<class T>
+  std::enable_if_t<!std::is_unsigned_v<T>, bool>
+  is_negative(const T x){ return x < 0; }
+  template<class T>
+  std::enable_if_t<std::is_unsigned_v<T>, bool>
+  is_negative(const T){ return false; }
+#endif
+#if defined(DOXYGEN_SHOULD_SKIP_THIS)
+  /*! \brief Return the if a scalar is negative
+
+  \param x A scalar value
+  \return The equivalent of `x < 0`
+
+  Some compilers complain about the comparison `x<0` for unsigned integer x.
+  This function has been overloaded to avoid that comparison through template
+  substitution failure.
+  */
+  template<class T> bool is_negative(const T x);
+#endif
 
 /*! \brief Determine the width of the current terminal window
 

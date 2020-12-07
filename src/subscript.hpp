@@ -619,10 +619,10 @@ I sub2lin(const I s0, const I s1, const std::array<I,2>& str){
   return s0*str[0] + s1*str[1];
 }
 
-////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-// These were used when the Array class contained a subscripted offset vector \\
-// but are no longer needed now that the offset is in the linear index.       \\
-////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////////////////////////////////////////////////
+// These were used when the Array class contained a subscripted offset vector //
+// but are no longer needed now that the offset is in the linear index.       //
+////////////////////////////////////////////////////////////////////////////////
 // template <class I>
 // I offset_sub2lin(const std::vector<I>& off, const std::vector<I>& sub, const std::vector<I>& str){
 //   I lin{0};

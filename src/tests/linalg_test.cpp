@@ -31,7 +31,7 @@ TEST_CASE("approx","[approx]"){
   // *of* 1e-7 and was only deemed approximately the same because a check was made whether
   // the result was less than 0.002384, which is not particularly useful.
   // Switching this 1e-7 to 1e-9 checks whether (1e-9 - 1e-15) < 3e-9, the absolute tolerance
-  float  f[16] = {1e-9,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
+  float  f[16] = {1e-9f,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
   double d[16] ={1e-15,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
   SECTION("brille::approx::scalar"){ for (int i=0; i<16; i++) REQUIRE( brille::approx::scalar(f[i],d[i]) ); }
   SECTION("brille::approx::array"){  REQUIRE( brille::approx::array<float,double,2,8>(f,d) ); }
