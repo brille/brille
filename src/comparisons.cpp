@@ -18,6 +18,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <string>
 #include "comparisons.hpp"
 
+/* \brief Produce a std::string representation of an enumerated comparison
+
+\param c A brille::cmp enumerated value
+\return A string representation of c
+*/
 template<>
 std::string brille::to_string(const cmp& c){
   using namespace brille;
@@ -38,6 +43,11 @@ std::string brille::to_string(const cmp& c){
   return repr;
 }
 
+/* \brief Produce a std::string representation of an enumerated operation
+
+\param o A brille::ops enumerated value
+\return A string representation of o
+*/
 template<>
 std::string brille::to_string(const brille::ops& o){
   using namespace brille;

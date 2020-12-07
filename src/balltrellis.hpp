@@ -17,11 +17,17 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_BALLTRELLIS_H_
 #define BRILLE_BALLTRELLIS_H_
-#include <vector>
-#include <array>
-#include <algorithm>
+/*! \file
+    \author Greg Tucker
+    \brief A class grouping the individual tetrahedra of a triangulated
+          tetrahedral mesh into cells by binning their centers of mass and
+          circumpsheres into a regular grid
+*/
+// #include <vector>
+// #include <array>
+// #include <algorithm>
 #include "array_latvec.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 namespace brille {
 
 class TrellisLeaf{
@@ -40,7 +46,7 @@ public:
   double radius() const { return std::sqrt(_squared_radius); }
   const std::array<double,3>& centre() const {return _centre; }
   bool fuzzy_contains(const bArray<double>& x) const {
-    assert(x.size() == 3u);
+    assert(x.size(0) == 1u && x.size(1) == 3u);
     double d=0;
     for (size_t i=0; i<3u; ++i){
       double tmp = x[i]-_centre[i];
@@ -150,7 +156,7 @@ public:
     return sub;
   }
   std::array<size_t,3> node_subscript(const bArray<double>& p) const {
-    assert(p.size() == 3u);
+    assert(p.size(0) == 1u && p.size(1) == 3u);
     std::array<size_t,3> sub{{0,0,0}}, sz=this->size();
     for (size_t dim=0; dim<3u; ++dim){
       double p_dot_e = 0;

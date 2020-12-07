@@ -29,15 +29,15 @@ void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, c
   // copy-over the vertices of the root node
   vertices_ = root_tet.get_vertices();
   // we need to make a guess about how many vertices we'll need:
-  size_t number_density = static_cast<size_t>(poly.get_volume()/max_volume); // shockingly, this is about right for total number of vertices!
-  size_t nVerts = vertices_.size(0);
+  ind_t number_density = static_cast<ind_t>(poly.get_volume()/max_volume); // shockingly, this is about right for total number of vertices!
+  ind_t nVerts = vertices_.size(0);
   vertices_.resize(number_density + nVerts);
   // copy over the per-tetrahedron vertex indices to the root's branches
   const auto& tvi{root_tet.get_vertices_per_tetrahedron()};
-  for (brille::ind_t i=0; i<tvi.size(0); ++i)
+  for (ind_t i=0; i<tvi.size(0); ++i)
   {
-    std::array<brille::ind_t,4> single;
-    for (brille::ind_t j=0; j<4u; ++j)
+    std::array<ind_t,4> single;
+    for (ind_t j=0; j<4u; ++j)
       single[j] = tvi.val(i,j); // no need to adjust indices at this stage
     // create a branch for this tetrahedron
     NestNode branch(single, root_tet.circumsphere_info(i), root_tet.volume(i));
@@ -54,16 +54,16 @@ void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, c
 template<class T,class S>
 void Nest<T,S>::subdivide(
   NestNode& node, const size_t nBr, const size_t maxBr,
-  const double max_volume, const double exp, size_t& nVerts
+  const double max_volume, const double exp, ind_t& nVerts
 ){
   if (!node.is_leaf()) return; // return node; // we can only branch un-branched nodes
   Polyhedron poly(vertices_.extract(node.boundary().vertices()));
   double mult = (maxBr > nBr) ? std::pow(static_cast<double>(maxBr-nBr),exp) : 1.0;
   SimpleTet node_tet(poly, max_volume*mult);
   // add any new vertices to the object's array, keep a mapping for all:
-  std::vector<size_t> map;
+  std::vector<ind_t> map;
   const auto& ntv{node_tet.get_vertices()};
-  for (size_t i=0; i<ntv.size(0); ++i){
+  for (ind_t i=0; i<ntv.size(0); ++i){
     const auto vi{ntv.view(i)};
     // If we're clever we can possibly simplify this
     bool notfound{true};
@@ -85,10 +85,10 @@ void Nest<T,S>::subdivide(
   }
   // copy over the per-tetrahedron vertex indices, applying the mapping as we go
   const auto& tvi{node_tet.get_vertices_per_tetrahedron()};
-  for (brille::ind_t i=0; i<tvi.size(0); ++i)
+  for (ind_t i=0; i<tvi.size(0); ++i)
   {
-    std::array<brille::ind_t,4> single;
-    for (brille::ind_t j=0; j<4u; ++j)
+    std::array<ind_t,4> single;
+    for (ind_t j=0; j<4u; ++j)
       single[j] = map[tvi.val(i,j)];
     // create a branch for this tetrahedron
     NestNode branch(single, node_tet.circumsphere_info(i), node_tet.volume(i));

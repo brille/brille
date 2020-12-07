@@ -30,4 +30,3 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "bz_nest.hpp"
 #include "bz_trellis.hpp"
 #include "hall_symbol.hpp"
-#include "triangulation.hpp"

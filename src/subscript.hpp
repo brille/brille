@@ -16,6 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_SUBSCRIPT_HPP_
 #define BRILLE_SUBSCRIPT_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief Classes for implementing automatic for loops with subscripted indices
+*/
 #include <algorithm>
 #include <array>
 #include <vector>
@@ -25,6 +29,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <numeric>
 namespace brille {
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class I1, class I2>
 std::enable_if_t<std::is_unsigned<I1>::value, bool>
 is_fixed(I1 i, I2 n){
@@ -36,8 +41,36 @@ is_fixed(I1 i, I2 n){
   if (i<0) return false;
   return static_cast<I2>(i)<n;
 }
+#else
+/*! \brief A utility function for the subscript iterators to decide if an
+           input index represents a fixed value for a dimension.
+
+\param i The index provided for a dimension
+\param n The size of the array along the same dimension which will be iterated
+\return `true` if `i` represents a value which should not be varied
+
+The subscript iterators SubIt and SubIt2 can be provided with two sets of
+integers when constructed. The first set is the shape of the array to iterate
+over and the (optional) second set is used to indicate fixed subscripts which
+are not iterated.
+
+Any valid subscript index into an array with the specified shape indicates that
+the iterator should not vary along a dimension. Therefore if a dimension
+*should* be iterated over the provided value of `i` must be greater or equal
+to the size of the array along that dimension.
+*/
+template<class Integer1, class Integer2> bool is_fixed(Integer1 i, Integer2 n);
+#endif
 
 
+/*! \brief An N-dimensional subscript iterator class
+
+From an input shape and, optionally, set of fixed indices an interator
+is created which is suitable to use with the shorthand for loop notation.
+
+The subscript incides are iterated in row-order starting from (0,0,0) and
+ending with (N,0,0) for an (N,M,L) shaped array.
+*/
 template<class T> class SubIt {
 public:
   typedef std::vector<T> holder;
@@ -150,7 +183,14 @@ public:
   }
 };
 
+/*! \brief An 2-dimensional subscript iterator class
 
+From an input shape and, optionally, set of fixed indices an interator
+is created which is suitable to use with the shorthand for loop notation.
+
+The subscript incides are iterated in row-order starting from (0,0) and
+ending with (N,0) for an (N,M) shaped array.
+*/
 template<class T> class SubIt2 {
 public:
   typedef std::array<T,2> holder;
@@ -249,6 +289,37 @@ public:
   }
 };
 
+/*! \brief An N-dimensional broadcasting subscript iterator class
+
+From an two input shapes an iterator is created which is suitable to use with
+the shorthand for loop notation.
+
+```
+for (auto [outer_idx, a_idx, b_idx] : BroadcastIt(a_shape, b_shape)){
+  …
+}
+```
+
+If the shapes of A and B are consistent then they have the same number of
+dimensions and either matching sizes along all dimensions or one has a
+singleton dimension at any mismatch.
+
+For consistent a_shape and b_shape (1,3,2) and (2,3,1), respectively the
+iterator iterates over the values
+
+  1.  [(0,0,0), (0,0,0), (0,0,0)]
+  2.  [(0,0,1), (0,0,1), (0,0,0)]
+  3.  [(0,1,0), (0,1,0), (0,1,0)]
+  4.  [(0,1,1), (0,1,1), (0,1,0)]
+  5.  [(0,2,0), (0,2,0), (0,2,0)]
+  6.  [(0,2,1), (0,2,1), (0,2,0)]
+  7.  [(1,0,0), (0,0,0), (1,0,0)]
+  8.  [(1,0,1), (0,0,1), (1,0,0)]
+  9.  [(1,1,0), (0,1,0), (1,1,0)]
+  10. [(1,1,1), (0,1,1), (1,1,0)]
+  11. [(1,2,0), (0,2,0), (1,2,0)]
+  12. [(1,2,1), (0,2,1), (1,2,0)]
+*/
 template<class T> class BroadcastIt{
 public:
   typedef std::vector<T> holder;
@@ -346,6 +417,31 @@ protected:
   const holder& outer() const {return _subO;}
 };
 
+/*! \brief A 2-dimensional broadcasting subscript iterator class
+
+From an two input shapes an iterator is created which is suitable to use with
+the shorthand for loop notation.
+
+```
+for (auto [outer_idx, a_idx, b_idx] : BroadcastIt(a_shape, b_shape)){
+  …
+}
+```
+
+If the shapes of A and B are consistent then they have the same number of
+dimensions and either matching sizes along all dimensions or one has a
+singleton dimension at any mismatch.
+
+For consistent a_shape and b_shape (1,3) and (2,3), respectively the
+iterator iterates over the values
+
+  1. [(0,0), (0,0), (0,0)]
+  2. [(0,1), (0,1), (0,1)]
+  3. [(0,2), (0,2), (0,2)]
+  4. [(1,0), (0,0), (1,0)]
+  5. [(1,1), (0,1), (1,1)]
+  6. [(1,2), (0,2), (1,2)]
+*/
 template<class T> class BroadcastIt2{
 public:
   typedef std::array<T,2> holder;
@@ -422,7 +518,14 @@ protected:
 };
 
 
+/*! \brief Return the subscript index for an element of an Array from its linear index
 
+\param l       the linear index to the element of the Array
+\param stride  the stride detailing how far apart consecutive subcript indexed
+               elements are in their linear index along all dimensions of the
+               related Array.
+\returns the subscript indexes
+*/
 template <class I>
 std::vector<I> lin2sub(I l, const std::vector<I>& stride){
   std::vector<I> sub;
@@ -443,7 +546,14 @@ std::vector<I> lin2sub(I l, const std::vector<I>& stride){
   }
   return sub;
 }
+/*! \brief Return the subscript index for an element of an Array2 from its linear index
 
+\param l       the linear index to the element of the Array2
+\param stride  the stride detailing how far apart consecutive subcript indexed
+               elements are in their linear index along both dimensions of the
+               related Array2.
+\returns the subscript indexes
+*/
 template <class I>
 std::array<I,2> lin2sub(I l, const std::array<I,2>& stride){
   std::array<I,2> sub;
@@ -469,38 +579,65 @@ std::array<I,2> lin2sub(I l, const std::array<I,2>& stride){
 // #endif
 // }
 
+/*! \brief Return a linear index from its subscript and Array stride
+
+\param sub the subscript index
+\param str the stride detailing how far apart consecutive subscript indexed
+           elements are in their linear index along all dimensions of the
+           related Array.
+\returns the linear index
+*/
 template <class I>
 I sub2lin(const std::vector<I>& sub, const std::vector<I>& str){
   I lin{0};
   for (size_t i=0; i<sub.size(); ++i) lin += sub[i]*str[i];
   return lin;
 }
+/*! \brief Return a linear index from its subscript and Array2 stride
 
+\param sub the subscript index
+\param str the stride detailing how far apart consecutive subscript indexed
+           elements are in their linear index along both dimensions of the
+           related Array2.
+\returns the linear index
+*/
 template <class I>
 I sub2lin(const std::array<I,2>& sub, const std::array<I,2>& str){
   return sub[0]*str[0] + sub[1]*str[1];
 }
+/*! \brief Return a linear index from its explicit subscript and Array2 stride
 
+\param s0 the subscript index in the first dimension
+\param s1 the subscript index in the second dimension
+\param str the stride detailing how far apart consecutive subscript indexed
+           elements are in their linear index along both dimensions of the
+           related Array2.
+\returns the linear index
+*/
 template <class I>
 I sub2lin(const I s0, const I s1, const std::array<I,2>& str){
   return s0*str[0] + s1*str[1];
 }
 
-template <class I>
-I offset_sub2lin(const std::vector<I>& off, const std::vector<I>& sub, const std::vector<I>& str){
-  I lin{0};
-  for (size_t i=0; i<sub.size(); ++i) lin += (off[i]+sub[i])*str[i];
-  return lin;
-}
-
-template <class I>
-I offset_sub2lin(const std::array<I,2>& off, const std::array<I,2>& sub, const std::array<I,2>& str){
-  return (off[0]+sub[0])*str[0] + (off[1]+sub[1])*str[1];
-}
-template <class I>
-I offset_sub2lin(const std::array<I,2>& off, const I s0, const I s1, const std::array<I,2>& str){
-  return (off[0]+s0)*str[0] + (off[1]+s1)*str[1];
-}
+////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+// These were used when the Array class contained a subscripted offset vector \\
+// but are no longer needed now that the offset is in the linear index.       \\
+////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+// template <class I>
+// I offset_sub2lin(const std::vector<I>& off, const std::vector<I>& sub, const std::vector<I>& str){
+//   I lin{0};
+//   for (size_t i=0; i<sub.size(); ++i) lin += (off[i]+sub[i])*str[i];
+//   return lin;
+// }
+//
+// template <class I>
+// I offset_sub2lin(const std::array<I,2>& off, const std::array<I,2>& sub, const std::array<I,2>& str){
+//   return (off[0]+sub[0])*str[0] + (off[1]+sub[1])*str[1];
+// }
+// template <class I>
+// I offset_sub2lin(const std::array<I,2>& off, const I s0, const I s1, const std::array<I,2>& str){
+//   return (off[0]+s0)*str[0] + (off[1]+s1)*str[1];
+// }
 
 } // end namespace brille
 #endif

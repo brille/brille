@@ -19,15 +19,30 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_PRIMITIVE_HPP_
 #define BRILLE_PRIMITIVE_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief Defines a class to hold transformation matrices between conventional
+           and primitive lattices for seven centring types.
+*/
 #include "spg_database.hpp"
 namespace brille {
 
+/*! \brief Transpose a flattened matrix
+
+A square matrix can be indexed by its row and column or by a linear index
+starting from the first row and first column. This function takes an array
+of the linear-indexed elements of a 3x3 square matrix and returns another
+such array with the row and column indices switched.
+
+\param a the flattened-3x3 matrix to transpose
+\returns aᵀ in flattened form
+*/
 template<class T> std::array<T,9> transpose(const std::array<T,9>& a){
   return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
 }
 
 /*! \brief A class to hold transformation matricies and their inverse, with the matrix
-stored in an object determined by a provided BravaisLetter type.
+stored in an object determined by a provided Bravais centring type.
 
 For each centred real-space-filling lattice there is a transformation matrix P
 which converts its basis vectors into those of an equivalent primitive
@@ -66,12 +81,24 @@ class PrimitiveTransform{
 private:
   Bravais bravais;    //!< The Bravais enum value
 public:
+  //! Construct from the centring type of the conventional lattice
   PrimitiveTransform(const Bravais c): bravais{c} {}
   [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
   [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const int hall){
     Spacegroup s(hall);
     this->bravais = s.bravais;
   }
+  /*! \brief Return the transformation matrix P
+
+  P converts the conventional basis vectors into those of an equivalent
+  primitive space-filling lattice via
+
+      (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P
+
+  for (x,y,z) a matrix with its columns the indicated vectors.
+
+  \returns a flattened-3x3 representation of the matrix
+  */
   std::array<double,9> get_P(void) const {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
@@ -84,6 +111,17 @@ public:
       default: return {  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
     }
   }
+  /*! \brief Return the inverse of the transformation matrix P
+
+  The components of a real-space vector expressed in units of the conventional
+  cell vectors transforms to the primitive cell expression by
+
+      xₚ = P⁻¹xₛ
+
+  where the vectors xᵢ are column vectors.
+
+  \returns a flattened-3x3 representation of the matrix
+  */
   std::array<int,9> get_invP(void) const {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
@@ -96,7 +134,27 @@ public:
       default: return { 1, 0, 0,  0, 1, 0,  0, 0, 1};
     }
   }
+  /*! \brief Return the transpose of the transformation matrix P
+
+  A vector expressed in the conventional reciprocal lattice units can be
+  expressed in the primitive reciprocal lattice by means of the transformation
+
+    qₚ = Pᵀ qₛ
+
+  where the qᵢ are column vectors.
+
+  \returns a flattened-3x3 representation of the matrix
+  */
   std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }
+  /*! \brief Return the transpose of the inverse of the transformation matrix P
+
+  If the conventional reciprocal lattice basis vectors form the rows of a matrix
+  Bₛ then the primitive reciprocal lattice basis vectors are related via P as
+
+    Bₚ = Bₛ (P⁻¹)ᵀ
+
+  \returns a flattened-3x3 representation of the matrix
+  */
   std::array<int,9> get_invPt(void) const { return transpose(this->get_invP());}
   void print(){
     std::array<double,9> M = this->get_P();
@@ -109,10 +167,11 @@ public:
       printf("\n");
     }
   }
-  //! A check if the Matrices *should* do anything, that *is not* if the centering is Primitive
+  //! A check if the Matrices *should* do anything, if the centring *is not* Primitive
   bool does_anything() const { return (bravais!=Bravais::P);}
-  //! A check if the Matrices *shouldn't* do anything, that *is* if the centering is Primitive
+  //! A check if the Matrices *shouldn't* do anything, if the centring *is* Primitive
   bool does_nothing() const { return (bravais==Bravais::P);}
+  //! Return a basic string representation of the object
   std::string string_repr() const {
     std::string repr = "<" + bravais_string(bravais) + " PrimitiveTransform object>";
     return repr;

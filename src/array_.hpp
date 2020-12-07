@@ -17,6 +17,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_ARRAY__HPP_
 #define BRILLE_ARRAY__HPP_
+/*! \file
+    \brief Forward declarations for Array* classes which can be constructed
+           from each other.
+*/
 
 namespace brille {
   // declare both Array and Array2 so that they can each contain conversion

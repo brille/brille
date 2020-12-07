@@ -46,10 +46,14 @@ void def_grid_fill(py::class_<Grid<T,R>>& cls){
   "vectors_data"_a, "vectors_elements"_a,
   "sort"_a=false,
 R"pbdoc(
-  Provide data required for interpolation to the grid without cost information
+  Descripton
+  ----------
+  Provide data required for interpolation to the grid without cost information.
 
-  This method should probably be followed by `set_cost_info` prior to any
-  attempt to interpolate the data in the grid.
+  Note
+  ----
+  This method should probably be followed by :py:meth:`set_cost_info` prior to
+  any attempt to interpolate the data in the grid.
 
   Parameters
   ----------
@@ -60,15 +64,19 @@ R"pbdoc(
     and concatenated into (scalars, vectors, matrices) -- in that order.
     If more than two dimensional, the second dimension indexes modes and
     higher dimensions will be flattend *as if row ordered* and must flatten into
-    a concatenated list of (scalars, vectors, matrices)
+    a concatenated list of (scalars, vectors, matrices).
+    If the provided array can be interpreted as a contiguous row-ordered two
+    dimensional array it will be used in place, otherwise a copy will be made.
   values_elements: integer vector-like
     A multi-purpose vector containing, in order,
-      - the number of scalar-like eigenvalue elements
-      - the number of vector-like eigenvalue *elements* (must be :math:`3\times N`)
-      - the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`)
-      - *how* the vector-like and matrix-like parts transform under application
-        of a symmetry operation, see the note about `RotatesLike` below
-    Extra entries are ignored
+    the number of scalar-like eigenvalue elements,
+    the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
+    the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
+    and
+    *how* the vector-like and matrix-like parts transform under application
+    of a symmetry operation,
+    See the note below fore the meaning of the last three value.
+    Any extra entries are ignored.
   vectors_data : :py:class:`numpy.ndarray`
     The eigenvector data to be stored in the grid. Same shape restrictions as
     `values_data`
@@ -81,9 +89,22 @@ R"pbdoc(
 
   Note
   ----
-  Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
-    {0: Real, 1: Reciprocal, 2: Axial, 3: Gamma}
-  Integer values outside of the mapped range (or missing) are replaced by 0.
+    Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
+
+    +-------+---------------------------------------+
+    | value | :py:mod:`~brille._brille.RotatesLike` |
+    +=======+=======================================+
+    |   0   |                `Real`                 |
+    +-------+---------------------------------------+
+    |   1   |             `Reciprocal`              |
+    +-------+---------------------------------------+
+    |   2   |               `Axial`                 |
+    +-------+---------------------------------------+
+    |   3   |               `Gamma`                 |
+    +-------+---------------------------------------+
+
+    Integer values outside of the mapped range (or missing) are replaced by 0.
+
 )pbdoc");
 
 
@@ -120,16 +141,19 @@ R"pbdoc(
     and concatenated into (scalars, vectors, matrices) -- in that order.
     If more than two dimensional, the second dimension indexes modes and
     higher dimensions will be flattend *as if row ordered* and must flatten into
-    a concatenated list of (scalars, vectors, matrices)
+    a concatenated list of (scalars, vectors, matrices).
+    If the provided array can be interpreted as a contiguous row-ordered two
+    dimensional array it will be used in place, otherwise a copy will be made.
   values_elements: integer vector-like
     A multi-purpose vector containing, in order,
-      - the number of scalar-like eigenvalue elements
-      - the number of vector-like eigenvalue *elements* (must be :math:`3\times N`)
-      - the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`)
-      - *how* the vector-like and matrix-like parts transform under application
-        of a symmetry operation, see the note about `RotatesLike` below
-      - which scalar cost function should be used, see note below
-      - which vector cost function should be used, see note below
+    the number of scalar-like eigenvalue elements,
+    the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
+    the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
+    *how* the vector-like and matrix-like parts transform under application
+    of a symmetry operation,
+    which scalar cost function should be used,
+    and which vector cost function should be used.
+    See the note below fore the meaning of the last three values.
   values_weights : float, vector-like
     The relative cost weights between scalar-, vector-, and matrix- like
     eigenvalue elements stored in the grid
@@ -148,15 +172,46 @@ R"pbdoc(
 
   Note
   ----
-  Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
-    {0: Real, 1: Reciprocal, 2: Axial, 3: Gamma}
-  Mapping of integers to scalar cost function:
-    {0: magnitude(x-y), }
-  Mapping of integers to vector cost function:
-    {0: sin(brille::utils::hermitian_angle(x, y)),  1: brille::utils::vector_distance(x, y),
-     2: 1-brille::utils::vector_product(x, y),      3: brille::utils::vector_angle(x, y),
-     4:(brille::utils::hermitian_angle(x, y), }
-  Integer values outside of the mapped range (or missing) are replaced by 0.
+    Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
+
+    +-------+---------------------------------------+
+    | value | :py:mod:`~brille._brille.RotatesLike` |
+    +=======+=======================================+
+    |   0   |                `Real`                 |
+    +-------+---------------------------------------+
+    |   1   |             `Reciprocal`              |
+    +-------+---------------------------------------+
+    |   2   |               `Axial`                 |
+    +-------+---------------------------------------+
+    |   3   |               `Gamma`                 |
+    +-------+---------------------------------------+
+
+    Mapping of integers to scalar cost function:
+
+    +-------+----------------+
+    | value | function(x,y)  |
+    +=======+================+
+    |   0   | magnitude(x-y) |
+    +-------+----------------+
+
+    Mapping of integers to vector cost function:
+
+    +-------+------------------------------------+
+    | value | function(vec_x, vec_y)             |
+    +=======+====================================+
+    |   0   | sin(hermitian_angle(vec_x, vec_y)) |
+    +-------+------------------------------------+
+    |   1   | vector_distance(vec_x, vec_y)      |
+    +-------+------------------------------------+
+    |   2   | 1 - vector_product(vec_x, vec_y)   |
+    +-------+------------------------------------+
+    |   3   | vector_angle(vec_x, vec_y)         |
+    +-------+------------------------------------+
+    |   4   | hermitian_angle(vec_x, vec_y)      |
+    +-------+------------------------------------+
+
+    Integer values outside of the mapped range (or missing) are replaced by 0.
+
 )pbdoc");
 
   cls.def_property_readonly("bytes_per_point", &Class::bytes_per_point,R"pbdoc(
@@ -212,14 +267,15 @@ R"pbdoc(
   Parameters
   ----------
   Q : :py:class:`numpy.ndarray`
-    A 2+ dimensional array with `Q.shape[-1] == 3` of the positions at which an
-    interpolated result is required, expressed in units of the reciprocal lattice.
-  useparallel : logical (default: False)
+    A two dimensional array with `Q.shape[1] == 3` containing the positions at
+    which an interpolated result is required, expressed in units of the
+    reciprocal lattice.
+  useparallel : bool, optional
     Whether a serial or parallel code should be utilised
-  threads : int (default: -1)
+  threads : int, optional
     How many OpenMP workers should be utilised; if this value is less than one
     the environment variable `OMP_NUM_THREADS` will be used.
-  do_not_move_points: logical (default: false)
+  do_not_move_points: bool, optional
     If `True` the provided `Q` points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any `Q` lie outside
     of the gridded volume out-of-bounds errors may result in bad data or runtime
@@ -227,15 +283,16 @@ R"pbdoc(
 
   Returns
   -------
-  A `tuple` of interpolated eigenvalues and eigenvectors at the equivalent
-  irreducible first Brillouin zone points.
-  The shape of each output will depend on the shape of the data provided to the
-  `fill` method. If the filled eigenvalues were of shape
-  `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
-  `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
-  `[x, y, ..., z, 3]` then the output shapes will be `[x, y, ..., z, A, ..., B]`
-  and `[x, y, ..., z, C, ..., D]` for the eigenvalues and eigenvectors,
-  respectively.
+  tuple
+      The interpolated eigenvalues and eigenvectors at the equivalent
+      irreducible first Brillouin zone points.
+      The shape of each output will depend on the shape of the data provided to
+      the `fill` method. If the filled eigenvalues were of shape
+      `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
+      `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
+      `[N_Q_points, 3]` then the output shapes will be
+      `[N_Q_points, N_modes, A, ..., B]` and `[N_Q_points, N_modes, C, ..., D]`
+      for the eigenvalues and eigenvectors, respectively.
 )pbdoc");
 
   cls.def("ir_interpolate_at_dw",
@@ -266,18 +323,19 @@ R"pbdoc(
   Parameters
   ----------
   Q : :py:class:`numpy.ndarray`
-    A 2+ dimensional array with `Q.shape[-1] == 3` of the positions at which an
-    interpolated result is required, expressed in units of the reciprocal lattice.
+    A two dimensional array with `Q.shape[1] == 3` containing the positions at
+    which an interpolated result is required, expressed in units of the
+    reciprocal lattice.
   M : vector like
     The masses of atoms in the lattice basis in Atomic Mass Units (amu)
   temperature : float
     The temperature at which to perform the Debye Waller calculation
-  useparallel : logical (default: False)
+  useparallel : bool, optional
     Whether a serial or parallel code should be utilised
-  threads : int (default: -1)
+  threads : int, optional
     How many OpenMP workers should be utilised; if this value is less than one
     the environment variable `OMP_NUM_THREADS` will be used.
-  do_not_move_points: logical (default: false)
+  do_not_move_points: bool, optional
     If `True` the provided `Q` points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any `Q` lie outside
     of the gridded volume out-of-bounds errors may result in bad data or runtime
@@ -285,16 +343,18 @@ R"pbdoc(
 
   Returns
   -------
-  A `tuple` of interpolated eigenvalues and eigenvectors at the equivalent
-  irreducible first Brillouin zone points, plus the result of the Debye Waller
-  calculation at the input Q points.
-  The shape of each output will depend on the shape of the data provided to the
-  `fill` method. If the filled eigenvalues were of shape
-  `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
-  `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
-  `[x, y, ..., z, 3]` then the output shapes will be `[x, y, ..., z, A, ..., B]`
-  and `[x, y, ..., z, C, ..., D]` for the eigenvalues and eigenvectors,
-  respectively.
+  tuple
+      The interpolated eigenvalues and eigenvectors at the equivalent
+      irreducible first Brillouin zone points, and the result of the
+      Debye-Waller calculation at the input Q points.
+      The shape of each output will depend on the shape of the data provided to
+      the `fill` method. If the filled eigenvalues were of shape
+      `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
+      `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
+      `[N_Q_points, 3]` then the output shapes will be
+      `[N_Q_points, N_modes, A, ..., B]` and `[N_Q_points, N_modes, C, ..., D]`
+      for the eigenvalues and eigenvectors, respectively.
+      The Debye Waller result is always a `[N_Q_points]` vector.
 )pbdoc");
 }
 
@@ -333,14 +393,15 @@ R"pbdoc(
   Parameters
   ----------
   Q : :py:class:`numpy.ndarray`
-    A 2+ dimensional array with `Q.shape[-1] == 3` of the positions at which an
-    interpolated result is required, expressed in units of the reciprocal lattice.
-  useparallel : logical (default: False)
+    A two dimensional array with `Q.shape[1] == 3` containing the positions at
+    which an interpolated result is required, expressed in units of the
+    reciprocal lattice.
+  useparallel : bool, optional
     Whether a serial or parallel code should be utilised
-  threads : int (default: -1)
+  threads : int, optional
     How many OpenMP workers should be utilised; if this value is less than one
     the environment variable `OMP_NUM_THREADS` will be used.
-  do_not_move_points: logical (default: false)
+  do_not_move_points: bool, optional
     If `True` the provided `Q` points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any `Q` lie outside
     of the gridded volume out-of-bounds errors may result in bad data or runtime
@@ -348,14 +409,16 @@ R"pbdoc(
 
   Returns
   -------
-  A `tuple` of interpolated eigenvalues and eigenvectors at the equivalent first
-  Brillouin zone points. The shape of each output will depend on the shape of
-  the data provided to the `fill` method. If the filled eigenvalues were of
-  shape `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
-  `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
-  `[x, y, ..., z, 3]` then the output shapes will be `[x, y, ..., z, A, ..., B]`
-  and `[x, y, ..., z, C, ..., D]` for the eigenvalues and eigenvectors,
-  respectively.
+  tuple
+      The interpolated eigenvalues and eigenvectors at the equivalent
+      first Brillouin zone points.
+      The shape of each output will depend on the shape of the data provided to
+      the `fill` method. If the filled eigenvalues were of shape
+      `[N_grid_points, N_modes, A, ..., B]`, the eigenvectors were of shape
+      `[N_grid_points, N_modes, C, ..., D]`, and the provided points of shape
+      `[N_Q_points, 3]` then the output shapes will be
+      `[N_Q_points, N_modes, A, ..., B]` and `[N_Q_points, N_modes, C, ..., D]`
+      for the eigenvalues and eigenvectors, respectively.
 )pbdoc");
 }
 
@@ -404,22 +467,52 @@ void def_grid_sort(py::class_<Grid<T,R>>& cls){
   vectors_weights : float, vector-like
     The relative cost weights between scalar-, vector-, and matrix- like
     eigenvector elements stored in the grid
-  sort : logical (default False)
+  sort : bool, optional
     Whether the equivalent-mode permutations should be (re)determined following
     the update to the flags and weights.
 
 
   Note
   ----
-  Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
-    {0: Real, 1: Reciprocal, 2: Axial, 3: Gamma}
-  Mapping of integers to scalar cost function:
-    {0: magnitude(x-y), }
-  Mapping of integers to vector cost function:
-    {0: sin(brille::utils::hermitian_angle(x, y)),  1: brille::utils::vector_distance(x, y),
-     2: 1-brille::utils::vector_product(x, y),      3: brille::utils::vector_angle(x, y),
-     4:(brille::utils::hermitian_angle(x, y), }
-  Integer values outside of the mapped range (or missing) are replaced by 0.
+    Mapping of integers to :py:mod:`~brille._brille.RotatesLike` values:
+
+    +-------+---------------------------------------+
+    | value | :py:mod:`~brille._brille.RotatesLike` |
+    +=======+=======================================+
+    |   0   |                `Real`                 |
+    +-------+---------------------------------------+
+    |   1   |             `Reciprocal`              |
+    +-------+---------------------------------------+
+    |   2   |               `Axial`                 |
+    +-------+---------------------------------------+
+    |   3   |               `Gamma`                 |
+    +-------+---------------------------------------+
+
+    Mapping of integers to scalar cost function:
+
+    +-------+----------------+
+    | value | function(x,y)  |
+    +=======+================+
+    |   0   | magnitude(x-y) |
+    +-------+----------------+
+
+    Mapping of integers to vector cost function:
+
+    +-------+------------------------------------+
+    | value | function(vec_x, vec_y)             |
+    +=======+====================================+
+    |   0   | sin(hermitian_angle(vec_x, vec_y)) |
+    +-------+------------------------------------+
+    |   1   | vector_distance(vec_x, vec_y)      |
+    +-------+------------------------------------+
+    |   2   | 1 - vector_product(vec_x, vec_y)   |
+    +-------+------------------------------------+
+    |   3   | vector_angle(vec_x, vec_y)         |
+    +-------+------------------------------------+
+    |   4   | hermitian_angle(vec_x, vec_y)      |
+    +-------+------------------------------------+
+
+    Integer values outside of the mapped range (or missing) are replaced by 0.
   )pbdoc");
 }
 
@@ -436,7 +529,28 @@ void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
-  }, "Q"_a, "masses"_a, "Temperature_in_K"_a);
+  }, "Q"_a, "masses"_a, "Temperature_in_K"_a,
+  R"pbdoc(
+  Calculate the Debye-Waller factor by integrating over the Brillouin zone grid
+
+  Parameters
+  ----------
+  pyX : float, array_like
+    A two dimensional array with `Q.shape[1] == 3` containing the positions at
+    which to calculate the Debye-Waller factor
+  pyM : float, array_like
+    The atom masses in Atomic Mass Units, matching the atom types provided to
+    the :py:class:`Direct` constructor for the crystal basis
+  temp_K : float
+    The temperature at which to calculate the Debye-Waller factor in Kelvin
+
+
+  Returns
+  -------
+  :py:class:`numpy.ndarray`
+    A one-dimensional array of the Debye-Waller factor evaluated at each input
+
+  )pbdoc");
 }
 
 

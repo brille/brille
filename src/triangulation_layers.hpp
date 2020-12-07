@@ -17,27 +17,31 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_TRIANGULATION_HPP_
 #define BRILLE_TRIANGULATION_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief The tetrahedral hierarchy for Mesh3
+*/
 #include <set>
-#include <vector>
-#include <array>
+// #include <vector>
+// #include <array>
 #include <omp.h>
-#include <cassert>
-#include <algorithm>
+// #include <cassert>
+// #include <algorithm>
 #include "array_latvec.hpp" // defines bArray
 #include "tetgen.h"
-#include "debug.hpp"
+// #include "debug.hpp"
 #include "polyhedron.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 namespace brille {
 
-template<class T, size_t N> static size_t find_first(const std::array<T,N>& x, const T val){
-  auto at = std::find(x.begin(), x.end(), val);
-  if (at == x.end()) throw std::logic_error("Value not found?!");
-  return std::distance(x.begin(), at);
-}
+/*! \brief A single triangulated layer of the hierarchy for Mesh3
 
+Containing the vertices and tetrahedra found by TetGen along with relational
+information of vertices to contributing tetrahedra and tetrahedra to their
+face-sharing neighbours.
+The circumsphere centre of each tetrahedra and its radius are also stored.
+*/
 class TetTriLayer{
-  using ind_t = brille::ind_t;
   ind_t nVertices;
   ind_t nTetrahedra;
   bArray<double> vertex_positions; // (nVertices, 3)
@@ -297,8 +301,14 @@ protected:
 // If we ever get around to *saving* the mesh to file, we will only need to save
 // the *lowest* layer since we can produce a (possibly suboptimal) strata of
 // meshes by taking convex-hull of the saved mesh and working down from there.
+
+/*! \brief The triangulated hiearchy used by Mesh3
+
+Contains all triangulated TetTriLayer layers of the hierarchy along with
+relational data for each layer connecting each tetrahedron in the layer to a
+list of tetrahedra that it contains in the next-lower layer.
+*/
 class TetTri{
-  using ind_t = brille::ind_t;
   typedef std::vector<ind_t> TetSet;
   // typedef std::map<size_t, TetSet> TetMap;
   typedef std::vector<TetSet> TetMap;
@@ -387,7 +397,7 @@ private:
     Stopwatch<> stopwatch;
     stopwatch.tic();
     TetMap map(layers[high].number_of_tetrahedra());
-    long mapsize = brille::utils::u2s<long, ind_t>(map.size());
+    long long mapsize = brille::utils::u2s<long long, size_t>(map.size());
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
 // this version is necessary with g++ <= 8.3.0
 #pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)
@@ -396,7 +406,7 @@ private:
 #pragma omp parallel for default(none) shared(map, mapsize, high, low) schedule(dynamic)
 #endif
     for (long ui=0; ui<mapsize; ++ui){
-      ind_t i = brille::utils::s2u<ind_t, long>(ui);
+      ind_t i = brille::utils::s2u<ind_t, long long>(ui);
       // initialize the map
       map[i] = TetSet();
       auto cchi = layers[high].get_circum_centres().view(i);
@@ -432,6 +442,7 @@ private:
   }
 };
 
+//! Triangulate a single layer of the TetTri hierarchy
 template <typename T>
 TetTriLayer
 triangulate_one_layer(const bArray<T>& verts,
@@ -474,7 +485,6 @@ triangulate_one_layer(const bArray<T>& verts,
   tgi.pointmarkerlist = nullptr;
   tgi.pointmarkerlist = new int[tgi.numberofpoints];
   //tgi.point2tetlist = new int[tgi.numberofpoints];
-  using ind_t = brille::ind_t;
   int idx=0;
   for (ind_t i=0; i<verts.size(0); ++i){
     tgi.pointmarkerlist[i] = static_cast<int>(i);
@@ -514,6 +524,7 @@ triangulate_one_layer(const bArray<T>& verts,
   return TetTriLayer(tgo);
 }
 
+//! Triangulate all layers of the TetTri hierarchy
 template <typename T>
 TetTri
 triangulate(const bArray<T>& verts,

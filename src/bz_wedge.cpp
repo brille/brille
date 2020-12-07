@@ -63,7 +63,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // Find ̂zᵢ⋅ẑⱼ
   std::vector<std::vector<int>> dotij(z.size(0));
   double dottmp;
-  for (size_t i=0; i<z.size(0); ++i) for (size_t j=0; j<z.size(0); ++j){
+  for (ind_t i=0; i<z.size(0); ++i) for (ind_t j=0; j<z.size(0); ++j){
     dottmp = std::abs(z.dot(i,j)/z.norm(i)/z.norm(j));
     dotij[i].push_back( brille::approx::scalar(dottmp,0.) ? -1: brille::approx::scalar(dottmp, 1.) ? 1 : 0);
   }
@@ -73,7 +73,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   // LQVec<double> x(this->outerlattice, bArray<double>(rotps.perpendicular_axes()));
   LQVec<double> x(this->outerlattice, bArray<int>::from_std(rotps.perpendicular_axes()));
   // or pick one of the BZ facet-points if the basis vector preffered flag
-  if (pbv) for (size_t i=0; i<x.size(0); ++i) for (size_t j=0; j<xyz.size(0); ++j)
+  if (pbv) for (ind_t i=0; i<x.size(0); ++i) for (ind_t j=0; j<xyz.size(0); ++j)
   if (dot(xyz.view(j), z.view(i)).all(brille::cmp::eq, 0.)){
     x.set(i, xyz.view(j));
     break;
@@ -84,7 +84,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   */
   std::vector<bool> handled(z.size(0), false);
   bool flag;
-  for (size_t i=0; i<z.size(0)-1; ++i) for (size_t j=i+1; j<z.size(0); ++j)
+  for (ind_t i=0; i<z.size(0)-1; ++i) for (ind_t j=i+1; j<z.size(0); ++j)
   // if zᵢ and zⱼ are neither parallel or perpendicular
   if (0 == dotij[i][j]){
     if (!handled[i]){
@@ -116,7 +116,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
      For the normal vectors to point the right way, we need to know if it is. */
   std::vector<bool> is_right_handed(z.size(0), true);
   auto Rv = y.extract(0); // to ensure we have the same lattice, make a copy
-  for (size_t i=0; i<z.size(0); ++i) if (rotps.order(i)>2){
+  for (ind_t i=0; i<z.size(0); ++i) if (rotps.order(i)>2){
     brille::utils::multiply_matrix_vector(Rv.ptr(0), rotps.data(i), x.ptr(i));
     if (dot(y.view(i), Rv).all(brille::cmp::lt, 0.))
       is_right_handed[i] = false;
@@ -128,8 +128,8 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
      normals. We should find one normal for each 2-fold axis and two normals
      for each 3-, 4-, and 6-fold axis. Plus we need space for one extra normal
      if there is only one rotation axis and the pointgroup has inversion.     */
-  size_t found=0, expected = (rotps.size()==1) ? 1 : 0;
-  for (size_t i=0; i<rotps.size(); ++i) expected += (rotps.order(i)>2) ? 2 : 1;
+  ind_t found{0}, expected = (rotps.size()==1) ? 1 : 0;
+  for (ind_t i=0; i<rotps.size(); ++i) expected += (rotps.order(i)>2) ? 2 : 1;
   LQVec<double> normals(this->outerlattice, expected);
   if (rotps.size() == 1){
     // We are assuming the system has inversion symmetry. We handle the case
@@ -143,7 +143,7 @@ void BrillouinZone::wedge_search(const bool pbv, const bool pok){
   int order;
   LQVec<double> vi(this->outerlattice, max_order), zi(this->outerlattice, 1u);
   LQVec<double> vxz, zxv;
-  for (size_t i=0; i<rotps.size(); ++i){
+  for (ind_t i=0; i<rotps.size(); ++i){
     zi = is_right_handed[i] ? z.view(i) : -z.extract(i);
     order = rotps.order(i);
     debug_update("\nOrder ",order,", z=",zi.to_string());
@@ -189,12 +189,12 @@ bArray<bool> keep_if(const LQVec<double>& normals, const LQVec<double>& points){
   // normal, but if all normals contribute to reduce the remaining points to
   // lie in a single plane we instead want to keep all points.
   std::vector<size_t> nop(normals.size(0), 0); // number of not-on-plane points
-  for (size_t i=0; i<normals.size(0); ++i)
+  for (ind_t i=0; i<normals.size(0); ++i)
     nop[i] = dot(normals.view(i), points).is(brille::cmp::gt,0.).count();
   // If there are no planes with 0 off-plane points, divide the space
   bArray<bool> keep(points.size(0), 1u, true);
   if (std::find(nop.begin(),nop.end(),0u)==nop.end())
-    for (size_t i=0; i<points.size(0); ++i)
+    for (ind_t i=0; i<points.size(0); ++i)
       keep[i] = dot(normals, points.view(i)).all(brille::cmp::ge,0.);
   return keep;
 }
@@ -252,7 +252,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   for (size_t i=0; i<ps.size(); ++i)
     n_expected += (ps.order(i)==2) ? 1u : 2u;
   LQVec<double> cutting_normals(this->outerlattice, n_expected);
-  size_t n_cut{0};
+  ind_t n_cut{0};
 
   std::vector<bool> sym_unused(ps.size(), true);
   // deal with any two-fold axes along êᵢ first:
@@ -272,7 +272,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     is_nth_ei = norm(cross(eis, vec.star())).is(brille::cmp::eq, 0.).first();
     if (is_nth_ei < 9 /* This is less than great practice */){
       debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
-      size_t e1, e2;
+      ind_t e1, e2;
       switch (is_nth_ei){
         case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
         case 1: /* (010)⋆ */ e1=0; e2=1; /* n = (100)×(010)⋆ */ break;
@@ -335,19 +335,19 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   }
   debug_update("Now figure out how all special points are related for each symmetry operation");
   // Find which points are mapped onto equivalent points by each symmetry operation
-  std::vector<std::vector<size_t>> one_sym;
-  std::vector<size_t> one_type, type_order;
+  std::vector<std::vector<ind_t>> one_sym;
+  std::vector<ind_t> one_type, type_order;
   std::vector<bool> unfound(special.size(0), true), type_unfound;
-  for (size_t i=0; i<ps.size(); ++i) if (sym_unused[i]){
+  for (ind_t i=0; i<ps.size(); ++i) if (sym_unused[i]){
     debug_update("Unused symmetry ",i," with order ", ps.order(i));
     debug_update(ps.get(i));
     one_sym.clear();
     for (auto b: unfound) b = true;
-    for (size_t j=0; j<special.size(0); ++j) if (unfound[j]){
+    for (ind_t j=0; j<special.size(0); ++j) if (unfound[j]){
       one_type.clear();
       one_type.push_back(j);
       unfound[j] = false;
-      for (size_t k=j+1; k<special.size(0); ++k)
+      for (ind_t k=j+1; k<special.size(0); ++k)
       if (unfound[k] && special.match(k, j, transpose(ps.get(i)), -ps.order(i))){ // -order checks all possible rotations
       // if (unfound[k] && special.match(k, j, transpose(ps.get_proper(i)), -ps.order(i))){ // -order checks all possible rotations
         one_type.push_back(k);
@@ -360,7 +360,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       type_order.insert(type_order.begin(), ps.order(i), special.size(0)); // set default to (non-indexable) size of the special array
       type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
       for (int o=0; o<ps.order(i); ++o)
-      for (size_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
+      for (ind_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
         if (special.match(one_type[k], j, transpose(ps.get(i)), o)){
         // if (special.match(one_type[k], j, transpose(ps.get_proper(i)), o)){
           type_order[o] = one_type[k];
@@ -374,7 +374,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     // sort one_sym by the number of valid (indexable) equivalent points
     if (sort_one_sym){
       std::sort(one_sym.begin(), one_sym.end(),
-        [&](std::vector<size_t>& a, std::vector<size_t>& b){
+        [&](std::vector<ind_t>& a, std::vector<ind_t>& b){
           size_t as = a.size() - std::count(a.begin(), a.end(), special.size(0));
           size_t bs = b.size() - std::count(b.begin(), b.end(), special.size(0));
           return as > bs;
@@ -432,7 +432,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
             debug_update("Keeping ",keep.to_string()," of special points:\n",special.to_string());
             special = special.extract(keep);
             sym_unused[i]=false;
-            for (size_t nc=0; nc<nrm.size(0); ++nc)
+            for (ind_t nc=0; nc<nrm.size(0); ++nc)
                 cutting_normals.set(n_cut++, nrm.view(nc));
           }
         }
@@ -481,7 +481,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // auto wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong
       auto wg_n = this->get_ir_polyhedron_wedge_normals(); // This pulls directly from the ir_polyhedron
       bArray<double> gamma({1u,3u}, 0.);
-      for (size_t i=0; i<bz_n.size(0); ++i){
+      for (ind_t i=0; i<bz_n.size(0); ++i){
         div = this->ir_polyhedron.divide(bz_n.view(i).get_xyz(), gamma);
         if (brille::approx::scalar(div.get_volume(), goal_volume)){
           // set div to be the ir_polyhedron
@@ -499,8 +499,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         bool proceed=true;
         // check for other dividing planes :/
         //LQVec<double> cij(this->outerlattice, 1u);
-        for (size_t i=0; proceed && i<bz_n.size(0)-1; ++i)
-        for (size_t j=i+1; proceed && j<bz_n.size(0); ++j){
+        for (ind_t i=0; proceed && i<bz_n.size(0)-1; ++i)
+        for (ind_t j=i+1; proceed && j<bz_n.size(0); ++j){
           div = this->ir_polyhedron.divide(bz_n.cross(i,j).get_xyz(), gamma);
           if (brille::approx::scalar(div.get_volume(), goal_volume)){
             this->ir_polyhedron = div;

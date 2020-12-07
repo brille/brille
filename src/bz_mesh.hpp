@@ -14,20 +14,30 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
+/*! \file
+    \author Greg Tucker
+    \brief Defines a class to extend `Mesh3` with `BrillouinZone` information.
+*/
 #ifndef BRILLE_BZ_MESH_
 #define BRILLE_BZ_MESH_
 #include "bz.hpp"
 #include "mesh.hpp"
 namespace brille {
+/*! \brief A Mesh3 in a BrillouinZone
 
+The first or irreducible Brillouin zone Polyhedron contained in a BrillouinZone
+object can be used to define the domain of a Mesh3 triangulation.
+The symmetries of the Brillouin zone can then be used to interpolate at any
+point in reciprocal space by finding an equivalent point within the triangulated
+domain.
+*/
 template<class T, class S>
 class BrillouinZoneMesh3: public Mesh3<T,S>{
   using SuperClass = Mesh3<T,S>;
 protected:
   BrillouinZone brillouinzone;
 public:
-  /*! Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
+  /* Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
       instead of a orthogonal grid.
       @param bz The BrillouinZone object
       @param vol The maximum tetrahedron volume
@@ -39,13 +49,19 @@ public:
   //   Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
   //   brillouinzone(bz) {}
   // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
+  /*! \brief Construct a `BrillouinZoneMesh3` from a `BrillouinZone` and variable arguments
+
+  All arguments beyond the `BrillouinZone` are passed to the `Mesh3` constructor.
+  \param bz the `BrillouinZone` used to define the boundaries of the `Mesh3`
+  \param args the construction arguments for `Mesh3`
+  */
   template<typename... A>
   BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
     SuperClass(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
     brillouinzone(bz) {}
-  // get the BrillouinZone object
+  //! \brief Return the BrillouinZone object
   BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
-  // get the mesh vertices in relative lattice units
+  //! Return the mesh vertices in relative lattice units
   bArray<double> get_mesh_hkl(void) const {
     auto xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
@@ -55,7 +71,7 @@ public:
     auto shape = xyz.shape();
     bArray<double> hkl(shape);
     std::vector<double> tmp(3);
-    for (size_t i=0; i<shape[0]; ++i){
+    for (ind_t i=0; i<shape[0]; ++i){
       auto vxyz = xyz.view(i).to_std();
       brille::utils::multiply_matrix_vector<double,double,double,3>(tmp.data(), fromxyz, vxyz.data());
       hkl.set(i, tmp);
@@ -63,6 +79,28 @@ public:
     return hkl;
   }
 
+  /*! \brief Interpolate at an equivalent irreducible reciprocal lattice point
+
+  \param x        One or more points expressed in the same reciprocal lattice as
+                  the stored `BrillouinZone`
+  \param nthreads the number of parallel OpenMP workers to utilize
+  \param no_move  If all provided points are *already* within the irreducible
+                  Brillouin zone this optional parameter can be used to skip a
+                  call to `BrillouinZone::ir_moveinto`.
+  \return a tuple of the interpolated eigenvalues and eigenvectors
+
+  The interpolation is performed by `Mesh3::interpolate_at` and then
+  corrected for the pointgroup operation by `Interpolator::rotate_in_place`.
+  If the stored data has the same behaviour under application of the pointgroup
+  operation as Phonon eigenvectors, then the appropriate `GammaTable` is
+  constructed and used as well.
+
+  \warning The last parameter should only be used with extreme caution as no
+           check is performed to ensure that the points are actually in the
+           irreducible Brillouin zone. If this condition is not true and the
+           parameter is set to true, the subsequent interpolation call may raise
+           an error or access unassigned memory and will produce garbage output.
+  */
   template<class R>
   std::tuple<brille::Array<T>,brille::Array<S>>
   ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {

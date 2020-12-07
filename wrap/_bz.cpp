@@ -25,7 +25,29 @@ void wrap_brillouinzone(py::module & m){
   using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
   using namespace brille;
   using CLS = BrillouinZone;
-  py::class_<CLS> cls(m,"BrillouinZone");
+  py::class_<CLS> cls(m,"BrillouinZone",R"pbdoc(
+    Construct and hold a first and, optionally, irreducible Brillouin zone.
+
+    The region closer to a given lattice point than to any other is the
+    Wigner-Seitz cell of the lattice. The same construction is one possible
+    first Brillouin zone of a reciprocal lattice and is used within `brille`.
+
+    Since all physical properties of a crystal must have the same periodicity
+    as its lattice, the powerful feature of the first Brillouin zone is that it
+    fully encompases a region of reciprocal space which must fully represent all
+    of reciprocal space.
+
+    Most crystals contain rotational or rotoinversion symmetries in addition to
+    the translational ones which give rise to the first Brillouin zone. These
+    symmetries are the pointgroup of the lattice enforce that the properties of
+    the crystal also have the same symmetry. The the first Brillouin zone,
+    therefore, typically contains redundant information.
+
+    An irreducible Brillouin zone is a subsection of the first Brillouin zone
+    which contains the minimal part required to have only unique crystal
+    properties. This class can find an irreducible Brillouin zone for any
+    crystal lattice.
+  )pbdoc");
   cls.def(py::init<Reciprocal,bool,int,bool,bool>(),
           "lattice"_a, "use_primitive"_a=true, "search_length"_a=1,
           "time_reversal_symmetry"_a=false, "wedge_search"_a=true);
@@ -86,13 +108,13 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
       units of the reciprocal lattice.
 
     Returns
     -------
     :py:class:`numpy.ndarray`
-      Logical array with one less dimension than `Q` and shape `Q.shape[0:-1]`
+      One dimensional logical array with `True` indicating 'inside'
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -112,9 +134,9 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
       units of the reciprocal lattice.
-    threads : integer, optional (default 0)
+    threads : integer, optional
       The number of parallel threads that should be used. If this value is less
       than one the maximum number of OpenMP threads will be used -- this value
       can be controled by the environment variable `OMP_NUM_THREADS` and is
@@ -122,8 +144,9 @@ void wrap_brillouinzone(py::module & m){
 
     Returns
     -------
-    :py:class:`numpy.ndarray`
-      The array of equivalent irreducible points for all Q.
+    tuple
+      Containing the floating point array of equivalent reduced q points for all
+      Q, and an integer array filled with tau = Q-q.
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -167,9 +190,9 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
       units of the reciprocal lattice.
-    threads : integer, optional (default 0)
+    threads : integer, optional
       The number of parallel threads that should be used. If this value is less
       than one the maximum number of OpenMP threads will be used -- this value
       can be controled by the environment variable `OMP_NUM_THREADS` and is
@@ -177,8 +200,10 @@ void wrap_brillouinzone(py::module & m){
 
     Returns
     -------
-    :py:class:`numpy.ndarray`
-      The array of equivalent irreducible points for all Q.
+    tuple
+      Comprised of the array of equivalent irreducible q_ir points for all Q;
+      the closest reciprocal lattice vector, tau, to each Q; and the pointgroup
+      symmetry operation and its inverse which obey Q = R⁻¹q_ir + tau.
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
@@ -216,7 +241,7 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2+ dimensional array of three-vectors (`Q.shape[-1]==3`) expressed in
+      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
       units of the reciprocal lattice.
     threads : integer, optional (default 0)
       The number of parallel threads that should be used. If this value is less
@@ -227,6 +252,7 @@ void wrap_brillouinzone(py::module & m){
     Returns
     -------
     :py:class:`numpy.ndarray`
-      The array of equivalent in-wedge points for all Q
+      The array of equivalent in-wedge Q_ir points for all Q, and the pointgroup
+      operation fulfilling Q_ir = R Q.
   )pbdoc");
 }

@@ -55,7 +55,7 @@ PYBIND11_MODULE(_brille, m){
     This module provides the interface to the C++ library.
 
     All of the symbols defined within ``_brille`` are imported by ``brille`` to
-    make using them that much easier. If in doubt, the interfaced classes can be
+    make using them easier. If in doubt, the interfaced classes can be
     accessed via their submodule syntax ``brille._brille``.
 
     .. currentmodule:: brille._brille

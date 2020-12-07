@@ -1221,6 +1221,12 @@ SCALAR_INPLACE_OP(*=)
 SCALAR_INPLACE_OP(/=)
 #undef SCALAR_INPLACE_OP
 
+/*! \brief Verify that two Array shapes can be broadcast together
+
+\param a The shape of the first Array
+\param b The shape of the second Array
+\return true if all dimensions match or either `a` or `b` is singleton
+*/
 template<class T>
 bool broadcast_shape_check(const std::vector<T>& a, const std::vector<T>&b){
   bool ok = a.size() == b.size();

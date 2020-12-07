@@ -16,8 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_PHONON_HPP_
 #define BRILLE_PHONON_HPP_
-#include <array>
-#include <tuple>
+/*! \file
+    \author Greg Tucker
+    \brief Classes for the effect of symmetry on phonon eigenvectors
+*/
 #include "array_latvec.hpp" // defines bArray
 namespace brille {
 
@@ -71,8 +73,8 @@ The LDVec *could* contain only unique (R⁻¹ ⃗rₗ - ⃗rₖ) values, but thi
 a future exercise if it becomes necessary.
 */
 class GammaTable: public RotateTable {
-public:
-  using ind_t = unsigned;
+// public:
+//   using ind_t = unsigned;
 private:
   std::vector<ind_t> point2space_; //! maps Rᵣ to Sᵣ
   // use std::vectors instead of std::map for the mapping since we know the
@@ -97,8 +99,8 @@ public:
     Symmetry spgsym = dlat.get_spacegroup_symmetry(time_reversal);
     Basis bs = dlat.get_basis();
     // resize all vectors/arrays
-    n_atoms = bs.size();
-    n_sym_ops = ps.size();
+    n_atoms = static_cast<ind_t>(bs.size());
+    n_sym_ops = static_cast<ind_t>(ps.size());
     point2space_.resize(n_sym_ops);
     l_mapping.resize(n_atoms*n_sym_ops);
     v_mapping.resize(n_atoms*n_sym_ops);
@@ -107,7 +109,7 @@ public:
     // -- this mapping is likely not invertable, but it shouldn't (doesn't?)
     //    matter. I think.
     for (ind_t i=0; i<ps.size(); ++i){
-      point2space_[i] = spgsym.find_matrix_index(ps.get(i));
+      point2space_[i] = static_cast<ind_t>(spgsym.find_matrix_index(ps.get(i)));
       if (point2space_[i]>=spgsym.size()){
         info_update("The point group operation\n",ps.get(i),"was not found in the spacegroup!");
         throw std::runtime_error("Something has gone wrong with the correspondence of spacegroup to pointgroup");

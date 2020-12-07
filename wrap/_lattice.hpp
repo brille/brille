@@ -71,7 +71,7 @@ void declare_lattice_mat_init(py::class_<T,br::Lattice> &pclass, const std::stri
 
 template<class R, class T>
 void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std::string &argname, const R defarg){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const R groupid){
+  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const R groupid){
     py::buffer_info info = vecs.request();
     if ( info.ndim!=2 )
       throw std::runtime_error("Number of dimensions must be two");
@@ -96,7 +96,7 @@ void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std
 
 template<class T>
 void declare_lattice_mat_basis_sym_init(py::class_<T,br::Lattice> &pclass){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const br::Symmetry& sym){
+  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const br::Symmetry& sym){
     py::buffer_info info = vecs.request();
     if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
       throw std::runtime_error("Basis vectors must be a 3x3 array");

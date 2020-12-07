@@ -14,13 +14,16 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/*! \file
+    \author Greg Tucker
+*/
 #ifndef BRILLE_BRAVAIS_HPP_
 #define BRILLE_BRAVAIS_HPP_
 #include <string>
 namespace brille {
 /*! \brief A Bravais letter indicating a centering of a lattice whose conventional cell is centred.
 
-When the unit cell does not reflec the symmetry of the lattice, it is usual to
+When the unit cell does not reflect the symmetry of the lattice, it is usual to
 refer to a 'conventional' crystallographic basis, (aₛ bₛ cₛ), instead of a
 primitive basis, (aₚ bₚ cₚ).
 Such a conventional basis has "extra" lattice points added at the centre of the
@@ -45,13 +48,16 @@ A subset of the 10 possible Bravais letters is used herein:
 | F | all-face centred | ½bₛ+½cₛ, ½cₛ+½aₛ, ½aₛ+½bₛ |
 | R | rhombohedrally centred (hexagonal axes) | ⅔aₛ+⅓bₛ+⅓cₛ, ⅓aₛ+⅓bₛ+⅔c |
 
-For further details, see http://reference.iucr.org/dictionary/Centred_lattice
+For further details, see the
+[IUCr Online Dictionary of Crystallography](http://reference.iucr.org/dictionary/Centred_lattice).
 */
 enum class Bravais {_, P, A, B, C, I, F, R};
 
+//! Return a string representation of the Bravais type
 std::string bravais_string(const Bravais b);
+//! Return a single character representation of the Bravais type
 char bravais_letter(const Bravais b);
-
+//! Check if the provided enumerated value is a Bravais type
 bool bravais_is_known(const Bravais b);
 }
 #endif

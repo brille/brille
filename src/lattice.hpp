@@ -14,12 +14,14 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
-
 #ifndef BRILLE_LATTICE_CLASS_H_
 #define BRILLE_LATTICE_CLASS_H_
+/*! \file
+    \author Greg Tucker
+    \brief Classes representing real space and reciprocal space lattices
+*/
 #include <assert.h>
-#include <vector>
+// #include <vector>
 #include "primitive.hpp"
 #include "basis.hpp"
 #include "array2.hpp"
@@ -30,8 +32,48 @@ class Lattice;
 class Direct;
 class Reciprocal;
 
+/*! \brief The units of anglular quantities supplied to some Lattice methods
+
+The value of a measured angle can be expressed in a variety of different units
+which prevents unambiguous calculations involving the magnitude of angles if
+their unit is not also specified.
+
+Common units used to measure angles include the radian and the degree which,
+for most crystallographic systems, do not have overlapping magnitude ranges.
+The radian is a measurement of the arclength swept by an angle divided by the
+radius of the arc and a full circle, having circumference 2πr, has an internal
+angle of 2π radian.
+The degree is defined as 1/360ᵗʰ of a circle's arc so that a circle has an
+internal angle of 360°.
+Most lattices have basis vectors with relative angles more than 2π° ≈ 6.283°
+and less than π radian ≈ 3.141 radian. Therefore, if the magnitude of a lattice's
+angles are known but not whether they are expressed in radian or degrees we can
+infer the unit based on which section of the positive numberline the three
+magnitudes fall in: [(0,3.14159): radian, (6.283, 180): degree]
+
+This enum exists in case an ambiguous case is found. In such a case the unit
+can be provided and no inferrence will be used.
+
+An third angle unit is understood -- multiples of π radian -- 'pi'.
+*/
 enum class AngleUnit { not_provided, radian, degree, pi };
 
+/*! \brief Calculate the basis vector lengths and angles from a matrix of three vectors
+
+Some libraries utilize a matrix of the basis vectors, which has the advantage of
+defining the absolute orientation of the lattice in an external reference frame
+and the disadvantage of requiring nine floating point values when only six are
+required if the absolute orientation is not imporant.
+
+This function takes a matrix where the rows represent basis vectors and
+calculates the basis vector lengths and three inter-basis-vector angles
+
+\param[in]  latmat A pointer to the fist element of the matrix
+\param[in]  c      The column stride of the matrix array
+\param[in]  r      The row stride of the matrix array
+\param[out] len    A pointer to a 3-element array to store the lengths
+\param[out] ang    A pointer to a 3-element array to store the angles
+*/
 template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, const I r, T* len, T* ang){
   T n[9];
   // compute the dot product of each row with itself
@@ -45,6 +87,12 @@ template<class T, class I> void latmat_to_lenang(const T* latmat, const I c, con
   // the lattice angles are the arccosines of these dot products of normalized lattice vectors
   for (int i=0; i<3; ++i) ang[i] = std::acos(ang[i]);
 }
+/*! \brief Calculate basis vector lengths and angles from an Array2 of the vectors
+
+\param[in]  lm  The lattice basis vectors as the rows (should be 3x3)
+\param[out] len A pointer to a 3-element array to store the lengths
+\param[out] ang A pointer to a 3-element array to store the angles
+*/
 template<class T> void latmat_to_lenang(const brille::Array2<T>& lm, T* len, T* ang){
   auto st = lm.stride();
   latmat_to_lenang(lm.ptr(0), st[0], st[1], len, ang);
@@ -111,7 +159,7 @@ public:
   //! Construct the Lattice from a matrix of the basis vectors
   Lattice(const double *, const int h=1);
   //! Construct the Lattice from an Array2 3x3 basis vector matrix, plus basis and symmetry information
-  Lattice(const brille::Array2<double>& latmat, const std::vector<std::array<double,3>>& pos, const std::vector<unsigned long>& typ, const Symmetry& sym){
+  Lattice(const brille::Array2<double>& latmat, const std::vector<std::array<double,3>>& pos, const std::vector<ind_t>& typ, const Symmetry& sym){
     double l[3]={0,0,0}, a[3]={0,0,0};
     latmat_to_lenang(latmat,l,a);
     this->set_len_pointer(l,1);
@@ -296,7 +344,7 @@ public:
   bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
   Basis get_basis() const {return basis; }
   //template <class R, class II>
-  Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<unsigned long>& typ) {
+  Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<ind_t>& typ) {
     this->basis = Basis(pos, typ);
     return this->get_basis();
   }

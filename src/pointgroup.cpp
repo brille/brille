@@ -69,6 +69,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 using namespace brille;
 
+//! Information relating different descriptions of a Pointgroup and group properties
 typedef struct {
   int table[10];
   std::string symbol;

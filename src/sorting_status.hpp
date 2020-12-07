@@ -16,6 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_SORTING_STATUS_HPP_
 #define BRILLE_SORTING_STATUS_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief Unused type to hold varied sorting status information compactly
+*/
 namespace brille {
 /*! \brief A type to hold sorting status information for an object
 

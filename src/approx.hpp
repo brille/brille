@@ -14,6 +14,10 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/*! \file
+    \author Greg Tucker
+    \brief Approximate floating point matching methods
+*/
 
 #ifndef BRILLE_APPROX_HPP_
 #define BRILLE_APPROX_HPP_
@@ -23,23 +27,58 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <type_traits>
 #include <limits>
 #include <stdexcept>  // for std::overflow_error
-#include <string>
 #include <math.h>
-// #include <complex> // included by debug
 #include <numeric>
-#include <iostream>
 #include "debug.hpp"
 
 
 namespace brille{
-  template<typename T>
-  std::enable_if_t<!std::is_unsigned_v<T>, T>
-  abs(const T x){ return std::abs(x); }
+  #if defined(DOXYGEN_SHOULD_SKIP_THIS)
+    /*! \brief Absolute value of signed or unsigned values
 
-  template<typename T>
-  std::enable_if_t<std::is_unsigned_v<T>, T>
-  abs(const T x){ return x; }
+    \param x A scalar value
+    \returns |x|, the absolute value of x
 
+    `std::abs()` is not guaranteed to be defined for unsigned integers.
+    This overloaded template function returns its input for unsigned `T` or
+    reutrns `std::abs(x)` for signed T.
+    */
+    template<class T> T abs(const T x);
+  #endif
+  #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
+    /* Absolute value of not-unsigned scalars */
+    template<typename T>
+    std::enable_if_t<!std::is_unsigned_v<T>, T>
+    abs(const T x){ return std::abs(x); }
+    /* Absolute value of unsigned scalars (non-op) */
+    template<typename T>
+    std::enable_if_t<std::is_unsigned_v<T>, T>
+    abs(const T x){ return x; }
+  #endif
+
+  #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
+    template<class T>
+    std::enable_if_t<!std::is_unsigned_v<T>, bool>
+    is_negative(const T x){ return x < 0; }
+    template<class T>
+    std::enable_if_t<std::is_unsigned_v<T>, bool>
+    is_negative(const T){ return false; }
+  #endif
+  #if defined(DOXYGEN_SHOULD_SKIP_THIS)
+    /*! \brief Return the if a scalar is negative
+
+    \param x A scalar value
+    \return The equivalent of `x < 0`
+
+    Some compilers complain about the comparison `x<0` for unsigned integer x.
+    This function has been overloaded to avoid that comparison through template
+    substitution failure.
+    */
+    template<class T> bool is_negative(const T x);
+  #endif
+
+
+  /*! \brief Approximate equal comparisons */
   namespace approx{
     // // courtesy of https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
     // template<class T>
@@ -52,8 +91,8 @@ namespace brille{
     //     || std::fabs(x-y) < std::numeric_limits<T>::min();
     // }
 
-
-    // A mulitplier for the approximate-comparison tolerance
+    #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
+    /*! \brief A mulitplier for the approximate-comparison tolerance */
     // 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
     // but setting it any lower (9000 tried) causes other test lattices, namely,
     // (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
@@ -61,6 +100,7 @@ namespace brille{
     const int TOL_MULT=20000;
     #else
     const int TOL_MULT=10000;
+    #endif
     #endif
 
     /* isfpT | isfpR | which? | why?
@@ -71,12 +111,16 @@ namespace brille{
          1       0      Trel     Rrel is 0, so use Trel
     */
 
-    /*! \brief Returns tuple of tolerance information for approximate comparisons for two datatypes, T and R
+    /*! \brief Returns tuple of tolerance information for approximate comparisons for two datatypes, `T` and `R`
 
-    The tuple contains four elements, the first is true if either T or R is an integer or if R can be converted to T.
-    The second is true if T is a floating point datatype.
-    The third is proportional to epsilon of the datatype T.
-    The fourth is proportional to epsilon of the datatype R.
+    \param tol An optional tolerance multiplier defaulting to 1
+    \return A tuple containing
+    -# `boolean`, true if either `T` or `R` is an integer or if `R` can be converted to `T`
+    -# `boolean`, true if `T` is a floating point datatype
+    -# `Trel`, proportional to epsilon of the datatype `T`
+    -# `Rrel`, proportional to epsilon of the datatype `R`.
+    -# `Tabs`, a small value `T(5e-9)`
+    -# `Rabs`, a small value `R(5e-9)`
     */
     template<class T, class R>
     std::tuple<bool,bool,T,R,T,R> tols(const int tol=1){
@@ -91,59 +135,119 @@ namespace brille{
       return std::make_tuple(TorRisInteger, TisFloatingPt, Trel, Rrel, Tabs, Rabs);
     }
 
+    #if defined(DOXYGEN_SHOULD_SKIP_THIS)
+      /*! \brief Approximate equivalency of two scalars `a ≈ b`
 
+      For relative tolerance \f$r\f$ and absolute tolerance \f$\delta\f$
+      determine whether \f$ |a-b| <= \delta + r |a+b| \f$.
 
-    /* \NOTE For future Greg:
-    The following _* templates *CAN NOT BE PREDECLARED* in the hpp file.
-    Doing so may not upset the compiler -- after all, it finds a suitable
-    definition of _* for every call -- but will anger the linker since the
-    actual definitions get overlooked entirely and the symbols never get built.
+      Overloaded to handle comparisons between
+      - integer, integer
+      - integer, floating point
+      - floating point, integer
+      - floating point, floating point
 
-    Leave these templates alone if you can. If you can't try not to be clever.
-    */
-    // Catchall case to capture unsigned T and unsigned R
-    template<typename T, typename R>
-    std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<R>, bool>
-    _scalar(const T a, const R b, const bool, const T, const R, const T, const R){
-      return a==b;
-    }
-    // Integral T and Floating Point R
-    template<typename T, typename R>
-    std::enable_if_t<std::is_integral_v<T> && !std::is_integral_v<R>, bool>
-    _scalar(const T a, const R b, const bool, const T, const R Rrel, const T, const R Rabs){
-      // if ( a == T(0) && brille::abs(b) <= Rrel ) return true;
-      auto x = brille::abs(a-b);
-      return x <= Rabs + Rrel*brille::abs(a+b) || x < std::numeric_limits<R>::min();
-    }
-    // Floating Point T and Integral R
-    template<typename T, typename R>
-    std::enable_if_t<!std::is_integral_v<T> && std::is_integral_v<R>, bool>
-    _scalar(const T a, const R b, const bool, const T Trel, const R, const T Tabs, const R){
-      // if ( brille::abs(a) <= Trel && b == R(0) ) return true;
-      auto x = brille::abs(a-b);
-      return x <= Tabs + Trel*brille::abs(a+b) || x < std::numeric_limits<T>::min();
-    }
-    // Floating Point T and R
-    template<typename T, typename R>
-    std::enable_if_t<!std::is_integral_v<T> && !std::is_integral_v<R>, bool>
-    _scalar(const T a, const R b, const bool useT, const T Trel, const R Rrel, const T Tabs, const R Rabs){
-      // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
-      auto x = brille::abs(a-b);
-      // if ( brille::abs(a) <= Trel && brille::abs(b) <= Rrel )
-      //   return x <= (useTrel ? Trel :Rrel);
-      if (useT)
-        return x <= Tabs + Trel*brille::abs(a+b) || x < std::numeric_limits<T>::min();
-      else
+      \param a    the first value to compare, datatype `T`
+      \param b    the second value to compare, datatype `R`
+      \param useT whether `T` tolerances should be used
+      \param Trel A relative difference tolerance in datatype `T`
+      \param Rrel A relative difference tolerance in datatype `R`
+      \param Tabs An absolute difference tolerance in datatype `T`
+      \param Rabs An absolute difference tolerance in datatype `R`
+      \return boolean
+
+      You must determine `useT`, `Trel`, `Rrel`, `Tabs` and `Rabs` before you
+      can use this overloaded function. You may note that those are the exact
+      outputs of `brille::approx::tols`.
+      If you intend to compare many values of the same type, e.g., the elements
+      of two arrays, it may be advantageous to use this function directly;
+      otherwise you can save yourself a bit of headache by using the wrapper
+      `brille::approx::scalar`.
+
+      \see scalar, tols
+      */
+      template<typename T, typename R>
+      bool
+      _scalar(const T a, const R b, const bool useT, const T Trel, const R Rrel, const T Tabs, const R Rabs);
+
+    #else
+      /*************************************************************************
+      *                          Future developers:                            *
+      **************************************************************************
+      * The templates comprising this function *CAN NOT BE PREDECLARED* in the *
+      * header file. Doing so may not upset the compiler -- after all, it      *
+      * finds a suitable definition for every call -- but will anger the       *
+      * linker since the actual definitions get overlooked entirely and the    *
+      * symbols never get built.                                               *
+      * Leave the templates alone if you can. Otherwise try not to be clever.  *
+      *************************************************************************/
+      // Catchall case to capture unsigned T and unsigned R
+      template<typename T, typename R>
+      std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<R>, bool>
+      _scalar(const T a, const R b, const bool, const T, const R, const T, const R){
+        return a==b;
+      }
+      // Integral T and Floating Point R
+      template<typename T, typename R>
+      std::enable_if_t<std::is_integral_v<T> && !std::is_integral_v<R>, bool>
+      _scalar(const T a, const R b, const bool, const T, const R Rrel, const T, const R Rabs){
+        // if ( a == T(0) && brille::abs(b) <= Rrel ) return true;
+        auto x = brille::abs(a-b);
         return x <= Rabs + Rrel*brille::abs(a+b) || x < std::numeric_limits<R>::min();
-    }
+      }
+      // Floating Point T and Integral R
+      template<typename T, typename R>
+      std::enable_if_t<!std::is_integral_v<T> && std::is_integral_v<R>, bool>
+      _scalar(const T a, const R b, const bool, const T Trel, const R, const T Tabs, const R){
+        // if ( brille::abs(a) <= Trel && b == R(0) ) return true;
+        auto x = brille::abs(a-b);
+        return x <= Tabs + Trel*brille::abs(a+b) || x < std::numeric_limits<T>::min();
+      }
+      // Floating Point T and R
+      template<typename T, typename R>
+      std::enable_if_t<!std::is_integral_v<T> && !std::is_integral_v<R>, bool>
+      _scalar(const T a, const R b, const bool useT, const T Trel, const R Rrel, const T Tabs, const R Rabs){
+        // if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail
+        auto x = brille::abs(a-b);
+        // if ( brille::abs(a) <= Trel && brille::abs(b) <= Rrel )
+        //   return x <= (useTrel ? Trel :Rrel);
+        if (useT)
+          return x <= Tabs + Trel*brille::abs(a+b) || x < std::numeric_limits<T>::min();
+        else
+          return x <= Rabs + Rrel*brille::abs(a+b) || x < std::numeric_limits<R>::min();
+      }
+    #endif
 
+    /*! \brief Gateway function to determine approximate equivalency of two scalars `a ≈ b`
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param a the first value to compare, datatype `T`
+    \param b the second value to compare, datatype `R`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _scalar
+    */
     template<class T, class R>
     bool scalar(const T a, const R b, const int tol=1){
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
       return convertible && _scalar(a, b, useT, Trel, Rrel, Tabs, Rabs);
     }
 
-    //! The array comparitor with meta information predetermined
+    /*! \brief Approximate equivalency of two arrays
+
+    \param NM   the number of array elements to compare
+    \param a    a pointer to the first value to compare, datatype `T*`
+    \param b    a pointer to the second value to compare, datatype `R*`
+    \param useT whether `T` tolerances should be used
+    \param Trel A relative difference tolerance in datatype `T`
+    \param Rrel A relative difference tolerance in datatype `R`
+    \param Tabs An absolute difference tolerance in datatype `T`
+    \param Rabs An absolute difference tolerance in datatype `R`
+    \return boolean
+    */
     template<class T, class R>
     bool _array(const size_t NM, const T* a, const R* b, const bool useT, const T Trel, const R Rrel, const T Tabs, const R Rabs){
       bool answer=true;
@@ -168,21 +272,58 @@ namespace brille{
       return answer;
     }
 
-    //! Compare N by M arrays for approximate equivalency
+    /*! \brief Gateway function to determine approximate equivalency of two arrays
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param N the first array dimension size
+    \param M the second array dimension size
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array
+    */
     template<class T, class R>
     bool array(const size_t N, const size_t M,const T *a, const R *b, const int tol=1){
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
       return convertible && _array(N*M, a, b, useT, Trel, Rrel, Tabs, Rabs);
     }
 
-    //! Compare N by N matrices for approximate equivalency
+    /*! \brief Gateway function to determine approximate equivalency of two matrices
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param N the first and second array dimension size
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array
+    */
     template<class T, class R>
     bool matrix(const size_t N, const T *a, const R *b, const int tol=1){
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
       return convertible && _array(N*N, a, b, useT, Trel, Rrel, Tabs, Rabs);
     }
 
-    //! Compare length N vectors for approximate equivalency
+    /*! \brief Gateway function to determine approximate equivalency of two vectors
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param N the vector size
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array
+    */
     template<class T, class R>
     bool vector(const size_t N, const T *a, const R *b, const int tol=1){
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
@@ -190,17 +331,58 @@ namespace brille{
     }
 
 
-    //! Compare N by M arrays when the size is known at compilation-time
+    /*! \brief Gateway function to determine approximate equivalency of two arrays
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array, array
+    \deprecated As no benefit is provided by knowing the array size at
+                compile-time, this function should probably not be used.
+    */
     template<class T, class R, size_t N, size_t M>
     bool array(const T *a, const R *b, const int tol=1){
       return brille::approx::array(N,M,a,b,tol);
     }
-    //! Compare N by N matrices when the size is known at compilation-time, defaulting to N=3
+    /*! \brief Gateway function to determine approximate equivalency of two matrices
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array, matrix
+    \deprecated As no benefit is provided by knowing the matrix size at
+                compile-time, this function should probably not be used unless
+                if using the default size of \f$ 3 \times 3 \f$.
+    */
     template<class T, class R, size_t N=3>
     bool matrix(const T *a, const R *b, const int tol=1){
       return brille::approx::matrix(N,a,b,tol);
     }
-    //! Compare length N vectors when the size is known at compilation-time, defaulting to N=3
+    /*! \brief Gateway function to determine approximate equivalency of two vectors
+
+    Determine appropriate absolute and relative tolerances for the datatypes `T`
+    and `R`, then compare whether `a` and `b` are approximately the same.
+
+    \param a a pointer to the first value to compare, datatype `T*`
+    \param b a pointer to the second value to compare, datatype `R*`
+    \param tol an optional tolerance multiplier
+    \return boolean
+
+    \see tols, _array, vector
+    \deprecated As no benefit is provided by knowing the vector size at
+                compile-time, this function should probably not be used unless
+                if using the default size of \f$ 3 \f$.
+    */
     template<class T, class R, size_t N=3>
     bool vector(const T *a, const R *b, const int tol=1){
       return brille::approx::vector(N,a,b,tol);

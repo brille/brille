@@ -33,11 +33,15 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
-    'breathe',
+    # 'breathe',
     'sphinxcontrib.katex',
     'sphinxcontrib.tikz',
-    'exhale',
+    # 'exhale',
 ]
+
+napoleon_use_ivar = True
+napoleon_use_param = False
+napoleon_use_admonition_for_notes = True
 
 tikz_proc_suite = 'GhostScript'
 

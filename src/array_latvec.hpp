@@ -14,20 +14,23 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
+/*! \file
+    \author Greg Tucker
+    \brief Lattice vector class definitions
+*/
 #ifndef BRILLE_LATVEC_CLASS_H_
 #define BRILLE_LATVEC_CLASS_H_
 
 #include <typeinfo> // for std::bad_cast
 #include <exception>
 #include "lattice.hpp"
-#include "array2.hpp"
+// #include "array2.hpp"
 
+//! An alias used while deciding between Array and Array2 for data storage
 template<class T>
 using bArray = brille::Array2<T>;
 
 namespace brille {
-
 
 /*! \brief Superclass to identify both LDVec and LQVec
 
@@ -41,10 +44,17 @@ class LatVec{};
 template<class T> class LDVec;
 template<class T> class LQVec;
 
+/*! \brief Templated struct to help differentiate between Array2 and its derived
+           classes LQVec and LDVec
 
+Since the derived classes add Lattice information some functions behave
+differently for 'raw' Array2 versus LQVec or LDVec objects.
+This struct is used in template arguments to cause substitution failure-based
+differentiation of otherwise identical function signatures.
+*/
 template<class... T> struct ArrayTraits{
-  static constexpr bool array = false;
-  static constexpr bool latvec = false;
+  static constexpr bool array = false;  //!< is this an Array2, LQVec, or LDVec
+  static constexpr bool latvec = false; //!< is this an LQVec or LDVec
 };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T> struct ArrayTraits<bArray<T>>{
@@ -61,32 +71,59 @@ template<class T> struct ArrayTraits<LQVec<T>>{
 };
 #endif
 
+/*! Easier access to ArrayTraits for template substitution
 
+true for Array2, LQVec, LDVec
+*/
 template<class T, template<class> class A>
 inline constexpr bool isArray = ArrayTraits<A<T>>::array;
+/*! Easier access to ArrayTraits for template substitution
+
+true for LQVec, LDVec
+*/
 template<class T, template<class> class A>
 inline constexpr bool isLatVec = ArrayTraits<A<T>>::latvec;
+/*! Easier access to ArrayTraits for template substitution
+
+true for Array2
+*/
 template<class T, template<class> class A>
 inline constexpr bool isBareArray = isArray<T,A> && !isLatVec<T,A>;
 
+/*! Easier access to ArrayTraits for double template substitution
+
+true for any combination of two Array2, LQVec, LDVec objects
+*/
 template<class T, template<class> class A, class R, template<class> class B>
 inline constexpr bool bothArrays = isArray<T,A> && isArray<R,B>;
+/*! Easier access to ArrayTraits for double template substitution
+
+true for two Array2 objects
+*/
 template<class T, template<class> class A, class R, template<class> class B>
 inline constexpr bool bareArrays = isBareArray<T,A> && isBareArray<R,B>;
+/*! Easier access to ArrayTraits for double template substitution
+
+true for any combination of two LQVec, LDVec objects
+*/
 template<class T, template<class> class A, class R, template<class> class B>
 inline constexpr bool bothLatVecs = isLatVec<T,A> && isLatVec<R,B>;
 
+//! Check if both vectors are the same
 template<class T>
 bool equal_shapes(const std::vector<T>& a, const std::vector<T>&b){
   bool ok = a.size() == b.size();
   if (ok) ok = std::equal(a.begin(), a.end(), b.begin());
   return ok;
 }
+//! Check if both arrays are the same
 template<class T, size_t Nel>
 bool equal_shapes(const std::array<T,Nel>& a, const std::array<T,Nel>&b){
   return std::equal(a.begin(), a.end(), b.begin());
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+// these are all undef'd later:
 #define LVEC_SCALAR_INPLACE_OP_DEF(L,X) \
 L <T>&\
 operator X (const T& v){\
@@ -102,10 +139,10 @@ operator X (const A<T>& b){\
   for (auto [ox, ax, bx]: itr) this->_data[this->s2l_d(ax)] X b[bx];\
   return *this;\
 }
-
 #define LVEC_INIT_INT(N,L,X) N(const L &lat, const X &n)\
 : bArray<T>(static_cast<brille::ind_t>(n),3), lattice(lat)\
 {}
+#endif
 
 /*! \brief 3-vector(s) expressed in units of a Direct lattice
 
@@ -121,7 +158,8 @@ public:
   : bArray<T>(0,3), lattice(lat)
   {
   }
-  //! integer number of three-vector constructor (macroed as templates can't be distinguished)
+  // (macroed as templates can't be distinguished)
+  //! integer number of three-vector constructor
   LVEC_INIT_INT(LDVec,Direct,int)
   LVEC_INIT_INT(LDVec,Direct,long)
   LVEC_INIT_INT(LDVec,Direct,long long)
@@ -139,7 +177,6 @@ public:
   : bArray<T>(other.get_hkl()), lattice(other.get_lattice())
   {
   }
-
 
   Direct get_lattice() const { return lattice; }
   template<class R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
@@ -163,11 +200,11 @@ public:
   LQVec<double> star() const;
 
   //! Determine the scalar product between two vectors in the object
-  double dot(const size_t i, const size_t j) const;
+  double dot(const ind_t i, const ind_t j) const;
   //! Determine the absolute length of a vector in the object
-  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
+  double norm(const ind_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object
-  LDVec<double> cross(const size_t i, const size_t j) const;
+  LDVec<double> cross(const ind_t i, const ind_t j) const;
 
   // LDVec<T>& operator-=(const LDVec<T>& av);
   // LDVec<T>& operator+=(const LDVec<T>& av);
@@ -256,28 +293,6 @@ public:
   {
   }
 
-  //! Explicit copy constructor: required in gcc 9+ since we define our own operator= below:
-  // LQVec(const LQVec<T>& other, const bool m, const bool d): bArray<T>(other.get_hkl(), m, d), lattice{other.get_lattice()} {}
-  // LQVec(const LQVec<T>& other, const bool m=false, const bool d=false): bArray<T>(other.get_hkl(),m,d), lattice(other.get_lattice()) {}
-
-  // //! Type conversion assignment:
-  // template<class R> LQVec<T>& operator=(const LQVec<R>& other){
-  //   this->lattice = other.get_lattice();
-  //   *this = bArray<T>(other.get_hkl());
-  //   return *this;
-  // }
-  //! Assignment operator reusing data if we can
-  // LQVec<T>& operator=(const LQVec<T>& other){
-  //   if (this != &other){ // do nothing if called by, e.g., a = a;
-  //     this->lattice = other.get_lattice();
-  //     this->bArray<T>::operator=(other);
-  //   }
-  //   return *this;
-  // }
-  // LQVec<T>& operator=(LQVec<T>&& other) noexcept {
-  //
-  // }
-
   Reciprocal get_lattice() const { return lattice; }
   template<class R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
   template<class R> bool samelattice(const LDVec<R> *)    const { return false; }
@@ -303,11 +318,11 @@ public:
   LDVec<double> star() const;
 
   //! Determine the scalar product between two vectors in the object.
-  double dot(const size_t i, const size_t j) const;
+  double dot(const ind_t i, const ind_t j) const;
   //! Determine the absolute length of a vector in the object.
-  double norm(const size_t i) const { return sqrt(this->dot(i,i)); }
+  double norm(const ind_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object.
-  LQVec<double> cross(const size_t i, const size_t j) const;
+  LQVec<double> cross(const ind_t i, const ind_t j) const;
 
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,+=)
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,-=)
@@ -426,8 +441,15 @@ template <class S> struct LatVecTraits<Reciprocal,S>{
   using star = LDVec<S>;
 };
 #endif
+/*! \brief Easier access to LatVecTraits defined types
 
+Is the Lattice vector type associated with the object
+*/
 template<class... T> using LatVecType = typename LatVecTraits<T...>::type;
+/*! \brief Easier access to LatVecTraits defined types
+
+Is the Lattice vector type associated with the dual/inverse of the object
+*/
 template<class... T> using LatVecStar = typename LatVecTraits<T...>::star;
 
 #include "array_latvec.tpp"

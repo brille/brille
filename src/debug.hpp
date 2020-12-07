@@ -16,6 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_DEBUG_HPP_
 #define BRILLE_DEBUG_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief Defines utilities for simple logging output to stdout
+*/
 #include <stdio.h>
 #include <sstream>
 #include <iomanip>
@@ -29,42 +33,55 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #define DEBUG // comment-out for no debugging output
 namespace brille {
 
+/*! \brief Determine the width of the current terminal window
+
+\return The terminal width in characters or 2¹⁵ if the terminal width is zero.
+*/
 int terminal_width(void);
+/*! \brief Determine the height of the current terminal window
+
+\return The terminal height in lines or 2¹⁵ if the terminal height is zero.
+*/
 int terminal_height(void);
 
+/*! \brief A utility structure to identify containers in templates
+
+The `value` type is true for `std::vector` and `std::array` and otherwise false.
+*/
 template <typename T> struct is_container {
   enum { value = false };
 };
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template <typename T> struct is_container<std::vector<T>> {
   enum { value = true };
 };
 template <typename T, size_t N> struct is_container<std::array<T, N>> {
   enum { value = true };
 };
-
 template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::type;
-template<typename T> static enable_if_t< std::is_integral<T>::value && std::is_unsigned<T>::value, T> local_abs(T x) { return x; }
-template<typename T> static enable_if_t<!std::is_integral<T>::value ||   std::is_signed<T>::value, T> local_abs(T x) { return std::abs(x); }
+#endif
 
+/*! \brief Construct a string representation of non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
 const std::string my_to_string(const T x, const size_t width=0){
   std::ostringstream streamobj;
   size_t w{width};
-  if (!std::is_integral<T>::value){
+  if constexpr (!std::is_integral<T>::value){
     streamobj << std::fixed;
     streamobj << std::setprecision(4);
     if (w>4) w -= 5u; // account for the decimal mark and four places
   }
   // char may or may not be signed, depending on the system
-  if (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
+  if constexpr (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
     if (w) streamobj << std::setw(w);
     streamobj << x;
   } else {
     if (w) streamobj << std::setw(w-1); // -1 to account for the sign
-    streamobj << (x<0 ? "-" : " ") << local_abs(x);
+    streamobj << (brille::is_negative(x) ? "-" : " ") << brille::abs(x);
   }
   return streamobj.str();
 }
+/*! \brief Construct a string representation of complex non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
 const std::string my_to_string(const std::complex<T> x, const size_t width=0){
   T r = std::real(x), i=std::imag(x);
@@ -77,14 +94,15 @@ const std::string my_to_string(const std::complex<T> x, const size_t width=0){
   }
   if (!std::is_integral<T>::value || std::is_signed<T>::value){
     if (w>3) streamobj << std::setw(w-3); // -3 for -±i
-    streamobj << (r<0 ? "-" : " ") << local_abs(r);
-    streamobj << (std::signbit(i) ? "-i" : "+i") << local_abs(i);
+    streamobj << (brille::is_negative(r) ? "-" : " ") << brille::abs(r);
+    streamobj << (brille::is_negative(i) ? "-i" : "+i") << brille::abs(i);
   } else {
     if (w>2) streamobj << std::setw(w-2); // -2 for +i
     streamobj << r << "+i" << i;
   }
   return streamobj.str();
 }
+/*! \brief Construct a string representation of a vector of containers */
 template<typename T, template<class> class C,
         typename=typename std::enable_if<!is_container<T>::value>::type,
         typename=typename std::enable_if<is_container<C<T>>::value>::type>
@@ -93,6 +111,7 @@ const std::string my_to_string(const std::vector<C<T>>& v, const size_t){
   for (C<T> x: v) s += my_to_string(x) + "\n";
   return s;
 }
+/*! \brief Construct a string representation of a container input */
 template<typename T, typename=typename std::enable_if<is_container<T>::value>::type>
 const std::string my_to_string(const T & a, const size_t w=0){
   std::string s;
@@ -100,18 +119,39 @@ const std::string my_to_string(const T & a, const size_t w=0){
   return s;
 }
 
-template<typename T> static enable_if_t<!is_container<T>::value, size_t> max_element_length(const T& v){
-  return my_to_string(v).size();
-}
-template<typename T> static enable_if_t<is_container<T>::value, size_t> max_element_length(const T& v){
-  size_t l=0;
-  for (auto x: v){
-    size_t t = max_element_length(x);
-    if (t > l) l = t;
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+  /*! The length of the string representation of a scalar */
+  template<typename T>
+  static enable_if_t<!is_container<T>::value, size_t>
+  max_element_length(const T& v){
+    return my_to_string(v).size();
   }
-  return l;
-}
+  /* The longest string representation of the elements of a container */
+  template<typename T>
+  static enable_if_t<is_container<T>::value, size_t>
+  max_element_length(const T& v){
+    size_t l=0;
+    for (auto x: v){
+      size_t t = max_element_length(x);
+      if (t > l) l = t;
+    }
+    return l;
+  }
+#else
+  /*! \brief Find the maximum string-representation length of a scalar or element
 
+  \param soc A single scalar value or a container of scalars
+  \return The length of the longest string representation of the scalar(s)
+  */
+  template<class T>
+  static size_t max_element_length(const T& soc);
+#endif
+
+/*! \brief Construct a timestamp string
+
+\param time The `time_point` to produce a string timestamp from
+\return A string of the form `"[YYYY-MM-DD HH:MM:SS:mmm]"`
+*/
 template<typename T>
 std::string time_to_string(std::chrono::time_point<T> time) {
   using namespace std;
@@ -131,6 +171,13 @@ std::string time_to_string(std::chrono::time_point<T> time) {
   return buffer.str();
 }
 
+/*! \brief A class for simple standard output logging
+
+Provides variable input argument methods for displaying simple logging messages.
+\note A single namespace-wide object is used in conjunction with vararg macros.
+\see info_update, info_update_if, debug_update_if, debug_update, verbose_update
+\see verbose_update_if, profile_update, profile_update_if
+*/
 class DebugPrinter{
   std::string last_function; // replace this with the stack?
   bool _silenced;
@@ -289,8 +336,15 @@ private:
   void inner_print(void){};
 };
 
+//! The single namespace wide `DebugPrinter` used with the logging macros.
 static DebugPrinter printer("");
 
+/*! \brief A simple timer for use in debugging and profiling
+
+A resetable stopwatch which can be used to repeatedly time the same operation
+and easily provide average per-operation time as well as uncertainty in the
+computed average.
+*/
 template<typename TimeT = std::chrono::milliseconds>
 class Stopwatch{
   typedef std::chrono::high_resolution_clock ClockT;
@@ -298,28 +352,46 @@ private:
     std::chrono::time_point<ClockT> _start, _end, _split;
     size_t presses;
 public:
+  /*! \brief Initialize and start the timer */
     Stopwatch(): presses(0u){
       tic();
     }
+  /*! \brief Reset the timer
+
+  Sets the start and end time of the timer to now, and resets the number of
+  timed iterations to zero.
+  */
     void tic(){
       presses = 0u;
-      _start = _end = ClockT::now();
+      _start = _end = _split = ClockT::now();
     }
+  /*! \brief Stop the timer
+
+  Sets the end timepoint of the timer, increments the number of iterations
+  timed, and returns the difference between the end and start times.
+  */
     double toc(){
       _end = ClockT::now();
       ++presses;
       return elapsed();
     }
+    /*! \brief Calculate the time elapsed betwen starting and stopping the timer */
     double elapsed() const {
       auto delta = std::chrono::duration_cast<TimeT>(_end - _start);
       return static_cast<double>(delta.count());
     }
+    /*! \brief Calculate the average time per iteration of the timer */
     double average() const {
       return elapsed()/static_cast<double>(presses);
     }
+    /*! \brief Calculate the uncertainty in the average time per iteration */
     double jitter() const {
       return std::sqrt(elapsed())/static_cast<double>(presses);
     }
+    /*! \brief Return the time since the timer started or last split call
+
+    Increments the iteration counter but does not set the timer end timepoint.
+    */
     double split(){
       auto new_split = ClockT::now();
       auto delta = std::chrono::duration_cast<TimeT>(new_split - _split);
@@ -337,36 +409,54 @@ public:
   #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 #ifdef VERBOSE_DEBUG
-  #define _MY_PRETTY_FUNC_ __PRETTY_FUNCTION__
+  //! Prepend the containing function name to logging messages when in VERBOSE_DEBUG mode
+  #define PREPEND_LOG __PRETTY_FUNCTION__
 #else
-  #define _MY_PRETTY_FUNC_ ""
+  //! Prepend nothing before logging messages if not in VERBOSE_DEBUG mode
+  #define PREPEND_LOG ""
 #endif
 
-#define info_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-#define info_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+//! A macro for informational logging to standard output
+#define info_update(...) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
+//! A macro for conditional informational logging to standard output
+#define info_update_if(condition, ...) if (condition) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
 
 #if defined(VERBOSE_DEBUG) || defined(DEBUG)
+  //! A macro to execute instructions when in DEBUG mode
   #define debug_exec(...) __VA_ARGS__
-  #define debug_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define debug_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  //! A macro for debug logging to standard output
+  #define debug_update(...) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
+  //! A macro for conditional debug logging to standard output
+  #define debug_update_if(condition, ...) if (condition) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
 #else
+  //! A macro to elide instructions when not in DEBUG mode
   #define debug_update_if(...)
+  //! A macro to elide debug logging when not in DEBUG mode
   #define debug_update(...)
+  //! A macro to elide conditional debug logging when not in DEBUG mode
   #define debug_exec(...)
 #endif
 #ifdef VERBOSE_DEBUG
-  #define verbose_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define verbose_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  //! A macro for verbose debug logging to standard output
+  #define verbose_update(...) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
+  //! A macro for conditional verbose debug logging to standard output
+  #define verbose_update_if(condition, ...) if (condition) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
 #else
+  //! A macro to elide verbose debug logging when not in VERBOSE_DEBUG mode
   #define verbose_update(...)
+  //! A macro to elide conditional verbose debug logging when not in VERBOSE_DEBUG mode
   #define verbose_update_if(...)
 #endif
 
 #if defined(PROFILING)
-  #define profile_update(...) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
-  #define profile_update_if(tf, ...) if (tf) brille::printer.println(_MY_PRETTY_FUNC_, __VA_ARGS__)
+  //! A macro for printing profiling messages to standard output
+  #define profile_update(...) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
+  //! A macro for conditionally printing profiling messages to standard output
+  #define profile_update_if(condition, ...) if (condition) brille::printer.println(PREPEND_LOG, __VA_ARGS__)
 #else
+  //! A macro to elide profiling output when not in PROFILING mode
   #define profile_update(...)
+  //! A macro to elide conditional profiling output when not in PROFILING mode
   #define profile_update_if(...)
 #endif
 

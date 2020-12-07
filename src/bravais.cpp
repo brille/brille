@@ -60,5 +60,4 @@ bool brille::bravais_is_known(const Bravais b){
     default:
       return false;
   }
-  return false;
 }

@@ -87,7 +87,7 @@ namespace brille {
     // of elements. This IS NOT the allocated size of the array unless it is
     // contiguous. For non-contiguous arrays the allocated memory will fill
     // max(shape[i]*stride[i])
-    ind_t num = info.size;
+    ind_t num = brille::utils::s2u<ind_t,ssize_t>(info.size);
     for (ssize_t i=0; i<info.ndim; ++i){
       shape.push_back(static_cast<ind_t>(info.shape[i]));
       stride.push_back(static_cast<ind_t>(info.strides[i]/sizeof(T)));
@@ -132,7 +132,7 @@ namespace brille {
     if (info.ndim != 2)
       throw std::runtime_error("brille::Array2 objects require 2D input!");
     std::array<ind_t,2> shape, stride;
-    ind_t num = info.size;
+    ind_t num = brille::utils::s2u<ind_t,ssize_t>(info.size);
     for (ssize_t i=0; i<info.ndim; ++i){
       shape[i] = static_cast<ind_t>(info.shape[i]);
       stride[i] = static_cast<ind_t>(info.strides[i]/sizeof(T));

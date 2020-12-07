@@ -13,7 +13,19 @@ void wrap_debug(pybind11::module &m){
       info_update_if( emt && !orig, "Printing turned on");
       info_update_if(!emt && !orig, "Keeping printing off"); // never printed
       return !printer.silenced();
-    }, "brille::printer emit status"_a);
+    }, "brille::printer emit status"_a,R"pbdoc(
+      Modify the output status of the `brille` status printer.
+
+      Parameters
+      ----------
+      emt : bool, optional
+        Control whether status messages are printed to STDOUT
+
+      Returns
+      -------
+      bool
+        The value of the status printer STDOUT switch.
+    )pbdoc");
 
     m.def("emit_datetime", [&](){return printer.datetime();});
     m.def("emit_datetime", [&](const bool emt){
@@ -24,5 +36,17 @@ void wrap_debug(pybind11::module &m){
       info_update_if( emt && !orig, "Datetime printing turned on");
       info_update_if(!emt && !orig, "Keeping datetime printing off");
       return printer.datetime();
-    }, "brille::printer emit datetime status"_a);
+    }, "brille::printer emit datetime status"_a, R"pbdoc(
+      Modify the timestamp output status of the `brille` status printer.
+
+      Parameters
+      ----------
+      emt : bool, optional
+        Control whether a timestamp preceeds every status message
+
+      Returns
+      -------
+      bool
+        The value of the status printer timestamp switch
+    )pbdoc");
 }

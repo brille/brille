@@ -16,7 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef TYPES_HPP
 #define TYPES_HPP
-
+/*! \file
+    \author Greg Tucker
+    \brief Namespace type definitions
+*/
 #include <vector>
 
 // the number of nodes we might hold determines what type we need to store
@@ -29,7 +32,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // 65k is not enough. 4B *should* always be sufficient -- each node would
 // occupy a fractional volume of ~2×10⁻¹⁰ of the polyhedron, which is overkill.
 namespace brille {
+  //! The integer type used to index arrays
   using ind_t = unsigned;
+  //! A general container type for holding array shapes and subscript indices
   using shape_t = std::vector<ind_t>;
 }
 

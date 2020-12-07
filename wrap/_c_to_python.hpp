@@ -31,7 +31,7 @@ namespace py = pybind11;
 template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& sz, const std::array<T,N>& sv){
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -46,7 +46,7 @@ template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& 
 template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const std::vector<T>& sv){
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (sv.size() != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";
@@ -64,7 +64,7 @@ py::array_t<T> sva2np(const std::vector<ssize_t>&sz,
 {
   // size_t numel = 1;
   // for (ssize_t i: sz) numel *= i;
-  size_t numel = brille::utils::s2u<size_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
+  size_t numel = brille::utils::s2u<size_t,ssize_t>(std::accumulate(sz.begin(), sz.end(), 1, std::multiplies<ssize_t>()));
   if (sva.size()*N != numel){
     std::string msg = "Inconsistent required shape ( ";
     for (ssize_t i: sz) msg += std::to_string(i) + " ";

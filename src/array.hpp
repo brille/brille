@@ -14,26 +14,29 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
+/*! \file
+    \author Greg Tucker
+    \brief N-dimensional shared memory Array class definition
+*/
 #ifndef BRILLE_ARRAY_HPP_
 #define BRILLE_ARRAY_HPP_
-#include <functional>
-#include <algorithm>
-#include <numeric>
-#include <vector>
-#include <array>
-#include <math.h>
-#include <cassert>
-#include <iostream>
+// #include <functional>
+// #include <algorithm>
+// #include <numeric>
+// #include <vector>
+// #include <array>
+// #include <math.h>
+// #include <cassert>
+// #include <iostream>
 #include <memory>
-#include <string>
+// #include <string>
 #include "subscript.hpp"
 #include "utilities.hpp"
 #include "comparisons.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 #include "types.hpp"
 #include "array_.hpp"
-#include "array2.hpp"
+// #include "array2.hpp"
 namespace brille {
 /*! \brief A multidimensional shared data array with operator overloads
 
@@ -48,7 +51,6 @@ or immutable views into the shared array.
 template<class T> class Array{
 public:
   using ref_t = std::shared_ptr<void>;
-  using shape_t = brille::shape_t;
   using bItr = BroadcastIt<ind_t>;
   using sItr = SubIt<ind_t>;
   using aItr = ArrayIt<T>;
@@ -76,7 +78,7 @@ public:
   ref_t ref() const {return _ref;}
   bool  ismutable(void) const {return _mutable;}
   bool  isconst(void) const {return !_mutable;}
-  ind_t ndim(void) const {return _shape.size();}
+  ind_t ndim(void) const {return static_cast<ind_t>(_shape.size());}
   ind_t numel(void) const {
     auto nel = std::accumulate(_shape.begin(), _shape.end(), 1, std::multiplies<>());
     return this->ndim() ? static_cast<ind_t>(nel) : 0u;
@@ -539,48 +541,74 @@ public:
     // compare the base pointer to see if two arrays share heap memory
     return other.data() == _data;
   }
-  // ^^^^^^^^^^ IMPLEMENTED  ^^^^^^^^^^^vvvvvvvvv TO IMPLEMENT vvvvvvvvvvvvvvvvv
-
 };
 
+/*!\brief An iterator for the Array class
+
+A simple iterator class to handle the abbreviated for loop syntax to iterate
+over all elements of an Array object.
+*/
 template<class T>
 class ArrayIt {
 public:
-  Array<T> array;
-  SubIt<ind_t> subit;
+  Array<T> array;     //!< The Array to be iterated
+  SubIt<ind_t> subit; //!< The subscript iterator of the Array
 public:
-  // constructing with array(a) does not copy the underlying data:
+  //! Explicit empty constructor
   explicit ArrayIt()
   : array(), subit()
   {}
+  /*! \brief Constructor taking all parameters
+
+  \param a The Array to be iterated
+  \param s The subscript iterator which performs the iteration
+  */
   ArrayIt(const Array<T>& a, const SubIt<ind_t>& s)
   : array(a), subit(s)
   {}
+  /*! \brief Construct from the Array only
+
+  The subscript iterator is constructed from the shape of the passed Array.
+
+  \param a The Array to be iterated
+  */
   ArrayIt(const Array<T>& a)
   : array(a), subit(a.shape()) // initialises to first element, e.g., {0,…,0}
   {}
-  //
+  //! Return this ArrayIt with the iterator starting at index 0
   ArrayIt<T> begin() const {
     return ArrayIt(array);
   }
+  //! Return this ArrayIt with the iterator at its end (one beyond the last valid subscript)
   ArrayIt<T> end() const {
     return ArrayIt(array, subit.end());
   }
+  //! Increment the iterator
   ArrayIt<T>& operator++() {
     ++subit;
     return *this;
   }
+  //! Return the subscript iterator
   const SubIt<ind_t>& iterator() const {return subit;}
+  /*!\brief Check for subscript iterator equivalency
+
+  \note There is no check for held Array equivalency
+  */
   bool operator==(const ArrayIt<T>& other) const {
     // add checking to ensure array and other.array point to the same data?
     return subit == other.iterator();
   }
+  //! Check for subscript iterator inequivalency
   bool operator!=(const ArrayIt<T>& other) const {
     return subit != other.iterator();
   }
+  //! Return a constant reference to the Array value at the current subscript index
   const T& operator*()  const {return array[*subit];}
+  //! Return a constant pointer to the Array element at the current subscript index
   const T* operator->() const {return &(array[*subit]);}
+  //! Return a reference to the Array value at the current subscript index
   T& operator*()  {return array[*subit];}
+  //! Return a pointer to the Array element at the current subscript index
   T* operator->() {return &(array[*subit]);}
 };
 

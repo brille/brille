@@ -14,26 +14,29 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
+/*! \file
+    \author Greg Tucker
+    \brief Two dimensional shared memory Array2 class definition.
+*/
 #ifndef BRILLE_ARRAY2_HPP
 #define BRILLE_ARRAY2_HPP
-#include <functional>
-#include <algorithm>
-#include <numeric>
-#include <vector>
-#include <array>
-#include <math.h>
-#include <cassert>
-#include <iostream>
+// #include <functional>
+// #include <algorithm>
+// #include <numeric>
+// #include <vector>
+// #include <array>
+// #include <math.h>
+// #include <cassert>
+// #include <iostream>
 #include <memory>
-#include <string>
+// #include <string>
 #include "subscript.hpp"
 #include "utilities.hpp"
 #include "comparisons.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 #include "types.hpp"
 #include "array_.hpp"
-#include "array.hpp"
+// #include "array.hpp"
 namespace brille {
 /*! \brief A multidimensional shared data array with operator overloads
 
@@ -480,48 +483,74 @@ public:
 
   Array2<T> contiguous_copy() const;
   Array2<T> contiguous_row_ordered_copy() const;
-  // ^^^^^^^^^^ IMPLEMENTED  ^^^^^^^^^^^vvvvvvvvv TO IMPLEMENT vvvvvvvvvvvvvvvvv
-
 };
 
+/*!\brief An iterator for the Array2 class
+
+A simple iterator class to handle the abbreviated for loop syntax to iterate
+over all elements of an Array object.
+*/
 template<class T>
 class Array2It {
 public:
-  Array2<T> array;
-  SubIt2<ind_t> subit;
+  Array2<T> array;     //!< The Array2 to be iterated
+  SubIt2<ind_t> subit; //!< The subscript iterator of the Array
 public:
-  // constructing with array(a) does not copy the underlying data:
+  //! Explicit empty constructor
   explicit Array2It()
   : array(), subit()
   {}
+  /*! \brief Constructor taking all parameters
+
+  \param a The Array2 to be iterated
+  \param s The subscript iterator which performs the iteration
+  */
   Array2It(const Array2<T>& a, const SubIt2<ind_t>& s)
   : array(a), subit(s)
   {}
+  /*! \brief Construct from the Array2 only
+
+  The subscript iterator is constructed from the shape of the passed Array2.
+
+  \param a The Array2 to be iterated
+  */
   Array2It(const Array2<T>& a)
   : array(a), subit(a.shape()) // initialises to first element, e.g., {0,…,0}
   {}
-  //
+  //! Return this ArrayIt with the iterator starting at index {0,0}
   Array2It<T> begin() const {
     return Array2It(array);
   }
+  //! Return this ArrayIt with the iterator at its end {array.size(0),0}
   Array2It<T> end() const {
     return Array2It(array, subit.end());
   }
+  //! Increment the iterator
   Array2It<T>& operator++() {
     ++subit;
     return *this;
   }
+  //! Return the subscript iterator
   const SubIt2<ind_t>& iterator() const {return subit;}
+  /*!\brief Check for subscript iterator equivalency
+
+  \note There is no check for held Array2 equivalency
+  */
   bool operator==(const Array2It<T>& other) const {
     // add checking to ensure array and other.array point to the same data?
     return subit == other.iterator();
   }
+  //! Check for subscript iterator inequivalency
   bool operator!=(const Array2It<T>& other) const {
     return subit != other.iterator();
   }
+  //! Return a constant reference to the Array2 value at the current subscript index
   const T& operator*()  const {return array[*subit];}
+  //! Return a constant pointer to the Array2 element at the current subscript index
   const T* operator->() const {return &(array[*subit]);}
+  //! Return a reference to the Array2 value at the current subscript index
   T& operator*()  {return array[*subit];}
+  //! Return a pointer to the Array2 element at the current subscript index
   T* operator->() {return &(array[*subit]);}
 };
 

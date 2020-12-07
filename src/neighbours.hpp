@@ -17,21 +17,55 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_NEIGHBOURS_H_
 #define BRILLE_NEIGHBOURS_H_
+/*! \file
+    \author Greg Tucker
+    \brief Functions to build lists of neighbour subscripted indices
+*/
 #include "array_latvec.hpp" // defines bArray
 namespace brille {
 
-/*! Construct an bArray with 3 elements per array of all (2N+1)³-1
+/*! \brief Build a list of relative neighbour subscripted indices
+
+\param extent The magnitude of the relative extent to include
+
+Construct an Array2 with 3 elements per array of all (2N+1)³-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
 
 Typically `extent`=1 and the returned bArray is
 [(-1,-1,-1,),(-1,-1,0),(-1,-1,1),(-1,0,-1),…,(0,0,-1),(0,0,1),…,(1,0,1),(1,1,-1),(1,1,0),(1,1,1)]
 */
 bArray<int> make_relative_neighbour_indices(const int extent=1);
-/*! Construct an bArray with 4 elements per array of all (2N+1)⁴-1
+/*! \brief Build a 4-D list of relative neighbour subscripted indices
+
+\param extent The magnitude of the relative extent to include
+
+Construct an Array2 with 4 elements per array of all (2N+1)⁴-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0,0).
 */
 bArray<int> make_relative_neighbour_indices4(const int extent=1);
+/*! \brief Build a special list of relative neighbour subscripted indices
 
+\param extent The maginitude of the relative extent to include
+
+Starting with the neighbours differing in one index only:
+  [(-1,0,0),(1,0,0),(0,-1,0),(0,1,0),(0,0,-1),(0,0,1)]
+
+then those differing in two indices:
+  [(-1,-1,0),(-1,1,0),(1,-1,0),(1,1,0), (-1,0,-1),...(1,0,1), (0,-1,-1),...,(0,1,1)]
+
+and finally the remaining neighbours differing in all three indices
+  [(-1,-1,-1),(-1,-1,1),(-1,1,-1),(-1,1,1),...,(1,1,1)]
+
+build up a list of all (2N+1)³-1
+combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
+
+\note This function was intended to help produce first Brillouin zones faster
+      by providing the list of neighbouring reciprocal lattice points in a
+      specific order. As the voro_search algorithm sorts the neighbour list this
+      special ordering is no longer necessary so this function should typically
+      not be used.
+\see make_relative_neighbour_indices
+*/
 bArray<int> make_relative_neighbour_indices_prime(const int extent=1);
 
 } // namespace brille

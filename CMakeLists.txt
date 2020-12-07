@@ -47,6 +47,8 @@ set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 if (MSVC)
     # warning level 4 -- add /WX for all warnings as errors
     add_compile_options(/W4)
+    # suppress MSVC warning C4996 about 'localtime' vs 'localtime_s'
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 else()
     # lots of warnings -- add -Werror for  all warnings as errors
     add_compile_options(-Wall -Wextra -pedantic)
@@ -167,6 +169,9 @@ add_custom_target(single_header
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   DEPENDS write_version_info
 )
+
+add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
+
 
 # We will always build the python module
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})

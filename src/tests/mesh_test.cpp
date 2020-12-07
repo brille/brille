@@ -2,23 +2,8 @@
 
 #include "mesh.hpp"
 #include "bz_mesh.hpp"
-#include "interpolation.hpp"
 
 using namespace brille;
-
-/* Direct entry of the information required to construct a Mesh3 object would be
-   less than fun. Instead skip to using a BrillouinZone object to do the heavy
-   lifting for us.
-*/
-// TEST_CASE("Mesh3 instantiation","[mesh]"){
-//   MapGrid3<int> a;
-//   REQUIRE(a.numel() == 0);
-//   size_t n[3] = {3,4,5};
-//   MapGrid3<double> b(n);
-//   for (int i=0; i<3; i++) REQUIRE( b.size(i) == n[i] );
-//   MapGrid3<double> c(b);
-//   for (int i=0; i<3; i++) REQUIRE( c.size(i) == n[i] );
-// }
 
 TEST_CASE("BrillouinZoneMesh3 instantiation","[mesh]"){
   // The conventional cell for Nb

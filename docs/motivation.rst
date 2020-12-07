@@ -356,9 +356,8 @@ primitive cubic, primitive tetragonal, and primitive orthorhombic space groups.
 When the grid is not commensurate with the polyhedron it is likely to introduce
 unmanageable artifacts in any interpolation result.
 
-The class :py:class:`BZGridQ` implements a cartesian grid in three dimensions
-which fills, and may extend beyond, the boundaries of a [irreducible]
-Brillouin zone.
+The disadvantages of the basic Cartesian grid are so restrictive that
+:py:mod:`brille` does not implement a three-dimensional Cartesian grid object.
 
 :math:`n`-simplex grid
 ----------------------
@@ -369,11 +368,11 @@ Creating such a tiling with nice properties is nontrivial, so brille uses the
 `TetGen <http://tetgen.org>`_ library to do the heavy lifting.
 
 Tetrahedral tilings have the advantage that they can be made commensurate with
-any polyhedron, and therefore never introduce unmanageable artifacts when
+any polyhedron, and therefore never introduce unmanageable artefacts when
 interpolating near their surfaces.
 But they lack the ability to calculate which tetrahedron contains a specified
 point.
-So interpolating with a tetrahedral tiling is either slow or required
+So interpolating with a tetrahedral tiling is either slow or requires
 substantial metainformation to be determined in advance.
 
 The class :py:class:`BZMeshQ` implements a 3-D :math:`n`-simplex grid which

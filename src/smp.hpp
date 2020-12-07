@@ -20,9 +20,14 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_SMP_HPP_
 #define BRILLE_SMP_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief A function to solve the Stable Marriage Problem
+*/
 #include <iostream>
 namespace brille::assignment {
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename T, typename P> void smp_pmat(const T dim, const P *restrict tp){
   for (T i=0; i<dim; ++i){
     for (T j=0; j<dim; ++j) std::cout << " " << std::to_string(tp[i*dim + j]);
@@ -33,7 +38,18 @@ template<typename T, typename P> void smp_pvec(const T dim, const P *restrict tp
   for (T j=0; j<dim; ++j) std::cout << " " << std::to_string(tp[j]);
   std::cout << std::endl;
 }
+#endif
 
+/*! \brief Solve the Stable Marriage Problem
+
+\param dim     the dimension of the problem
+\param prefs   a pointer to the first preference value, which is a `dim`*`dim`
+               array analagous to the 'cost' in other assignment problems
+\param rsol    the found row solutions will be set here
+\param csol    the found column solutions will be set here
+\param verbose provide status information while solving if true
+\returns   0   (because it always succeeds? ...)
+*/
 template<typename T, typename P>
 int smp(const T dim, const P *restrict prefs, T *restrict rsol, T *restrict csol, const bool verbose){
   T nsel=0;

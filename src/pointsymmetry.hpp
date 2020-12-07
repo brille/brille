@@ -19,16 +19,12 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_POINTSYMMETRY_H_
 #define BRILLE_POINTSYMMETRY_H_
-#include <algorithm>
-#include "utilities.hpp"
+/*! \file
+    \author Greg Tucker
+    \brief Classes for a lattice pointgroup symmetry operations
+*/
 #include "symmetry_common.hpp" // defines Matrix, Vector, Matrices, Vectors
 namespace brille {
-
-// template<class T> using Matrix = std::array<T,9>;
-// template<class T> using Vector = std::array<T,3>;
-// template<class T> using Matrices = std::vector<Matrix<T>>;
-// template<class T> using Vectors = std::vector<Vector<T>>;
-
 /*****************************************************************************\
 | PointSymmetry class                                                         |
 |-----------------------------------------------------------------------------|
@@ -41,6 +37,7 @@ namespace brille {
 |            -- this causes a memory copy if the old and new sizes are finite.|
 |   size     return the number of rotations the object can/does store.        |
 \*****************************************************************************/
+/*! \brief Holds N 3x3 rotation matrices R which comprise a point group symmetry. */
 class PointSymmetry{
   Matrices<int> R;
 public:
