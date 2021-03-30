@@ -168,3 +168,11 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproj
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/4));
 }
+
+TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[brillouinzone]"){
+  double a{3.5}, c{12.9}, alpha{90}, gamma{120};
+  std::string spacegroup = "P 4";
+  Direct dlat(a,a,c, alpha,alpha,gamma, spacegroup);
+  Reciprocal rlat = dlat.star();
+  REQUIRE_THROWS_WITH( BrillouinZone(rlat), "Failed to find an irreducible Brillouin zone."); 
+}
