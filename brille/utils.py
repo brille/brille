@@ -40,9 +40,12 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
     lens : (3,) :py:class:`numpy.ndarray` or list
         Lattice parameters as a 3-element array or list
     alpha, beta, gamma : float
-        Lattice angles in degrees as separate floating point values
+        Lattice angles in degrees or radians as separate floating point values
+        Brille tries to determine if the input is in degrees or radians
+        by looking at its magnitude. If the values are all less than PI it
+        assumes the angles are in radians otherwise it assumes degrees
     angs : (3,) :py:class:`numpy.ndarray` or list
-        Lattice angles in degrees as a 3-element array or list
+        Lattice angles in degrees or radians as a 3-element array or list
     lattice_vectors : (3, 3) :py:class:`numpy.ndarray` or list of list
         The lattice vectors as a 3x3 matrix, array or list of list
     spacegroup: str or int
@@ -119,10 +122,21 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
             lattice = brille.Direct(lens, angs, spacegroup)
         lattice = lattice.star
 
-    return brille.BrillouinZone(lattice, use_primitive=use_primitive,
-                                search_length=search_length,
-                                time_reversal_symmetry=time_reversal_symmetry,
-                                wedge_search=wedge_search)
+    try:
+        return brille.BrillouinZone(lattice, use_primitive=use_primitive,
+                                    search_length=search_length,
+                                    time_reversal_symmetry=time_reversal_symmetry,
+                                    wedge_search=wedge_search)
+    except RuntimeError as e0:
+        # We set wedge_search=True by default so add a hint here.
+        if 'Failed to find an irreducible Brillouin zone' in str(e0):
+            e1 = RuntimeError(str(e0) + ' You can try again with wedge_search=False ' \
+                            'to calculate with just the first Brillouin zone')
+            e1.__suppress_context__ = True
+            e1.__traceback__ = e0.__traceback__
+            raise e1
+        else:
+            raise e0
 
 
 def create_grid(bz, complex_values=False, complex_vectors=False,
@@ -152,9 +166,9 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     nest: bool, optional (default: False)
         Whether to construct a BZNestQ instead of a BZTrellisQ grid
 
-    Note that if both `mesh` and `nest` are True, a BZTrellisQ grid
-    will be constructed. Additional keyword parameters will be passed
-    to the relevant grid constructors. They are:
+    Note that setting both `mesh` and `nest` to True gives an error
+    Additional keyword parameters will be passed to the relevant
+    grid constructors. They are:
 
     BZTrellisQ Parameters
     ---------------------
@@ -197,7 +211,7 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     if not isinstance(bz, brille._brille.BrillouinZone):
         raise ValueError('The `bz` input parameter is not a BrillouinZone object')
     if nest and mesh:
-        nest, mesh = False, False
+        raise ValueError('Both nest=True and mesh=True is set. Please use one or the other')
 
     def constructor(grid_type):
         if complex_values and complex_vectors:
@@ -208,6 +222,10 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
             return getattr(brille, grid_type+'dd')
  
     if nest:
+        if any([v in kwargs for v in ['node_volume_fraction', 'always_triangulate']]):
+            raise ValueError('Parameters given are consistent with a trellis grid but nest=True')
+        if any([v in kwargs for v in ['max_size', 'num_levels', 'max_points']]):
+            raise ValueError('Parameters given are consistent with a mesh grid but mesh=False')
         if 'max_volume' in kwargs:
             return constructor('BZNestQ')(bz, float(kwargs['max_volume']),
                                           kwargs.pop('max_branchings', 5))
@@ -217,10 +235,18 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
         else:
             raise ValueError('Neither `max_volume` nor `number_density` provided')
     elif mesh:
+        if any([v in kwargs for v in ['node_volume_fraction', 'always_triangulate']]):
+            raise ValueError('Parameters given are consistent with a trellis grid but mesh=True')
+        if any([v in kwargs for v in ['max_volume', 'max_branchings']]):
+            raise ValueError('Parameters given are consistent with a nested grid but nest=False')
         return constructor('BZMeshQ')(bz, float(kwargs.pop('max_size', -1.0)),
                                       int(kwargs.pop('num_levels', 3)),
                                       int(kwargs.pop('max_points', -1)))
     else:
+        if any([v in kwargs for v in ['max_volume', 'max_branchings']]):
+            raise ValueError('Parameters given are consistent with a nested grid but nest=False')
+        if any([v in kwargs for v in ['max_size', 'num_levels', 'max_points']]):
+            raise ValueError('Parameters given are consistent with a mesh grid but mesh=False')
         return constructor('BZTrellisQ')(bz, float(kwargs.pop('node_volume_fraction', 1.e-5)),
                                          bool(kwargs.pop('always_triangulate', False)))
 

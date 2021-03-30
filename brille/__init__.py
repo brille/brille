@@ -39,3 +39,4 @@ connected point network.
 #     print("Error importing compiled brille package")
 
 from ._brille import *
+from . import utils, plotting
