@@ -208,7 +208,7 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     Note that one of either the `max_volume` or `number_density` parameters
     must be provided to construct a BZNestQ.
     """
-    if not isinstance(bz, brille._brille.BrillouinZone):
+    if not isinstance(bz, brille.BrillouinZone):
         raise ValueError('The `bz` input parameter is not a BrillouinZone object')
     if nest and mesh:
         raise ValueError('Both nest=True and mesh=True is set. Please use one or the other')

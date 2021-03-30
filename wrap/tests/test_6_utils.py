@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
+import os
+import sys
 import unittest
-import brille
 import numpy as np
+from pathlib import Path
 
+addpaths = [Path(), Path('..'), Path('../..')] # need outer nest too
+config = os.environ.get('CMAKE_CONFIG_TYPE') # set by ctest -C <cfg>
+if config:
+  for path in addpaths:
+    if Path(path, config).exists():
+      addpaths.append(Path(path,config))
+sys.path[:0] = [str(path.absolute()) for path in addpaths]
+
+import brille 
 
 def get_latvec(lens, angs):
     # Calculates the lattice vectors after the convention of self.spglib
@@ -72,13 +83,13 @@ class UtilsTestBZ (unittest.TestCase):
 
 
 class UtilsTestGrid (unittest.TestCase):
+    # Tests create_grid routines
     bz = brille.utils.create_bz(4, 4, 6, 90, 90, 110, 'P 2')
 
     def check_type(self, expected_type, *args, **kwargs):
         obj = brille.utils.create_grid(self.bz, *args, **kwargs)
         self.assertTrue(isinstance(obj, expected_type))
 
-    # Tests create_grid routines
     def test_expected_types(self):
         # Checks the input arguments results in the correct grid types
         self.check_type(brille.BZTrellisQdd, node_volume_fraction=0.1)
@@ -107,7 +118,5 @@ class UtilsTestGrid (unittest.TestCase):
             brille.utils.create_grid(self.bz, nest=True) 
 
 
-
 if __name__ == '__main__':
   unittest.main()
-
