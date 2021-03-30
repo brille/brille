@@ -50,6 +50,9 @@ class UtilsTestBZ (unittest.TestCase):
     def test_separate_latpars(self):
         bz = brille.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, self.spg)
         self.check_lattice(bz)
+        # Again with keywords
+        bz = brille.utils.create_bz(a=self.a, b=self.b, c=self.c, alpha=self.alpha, beta=self.beta, gamma=self.gamma, spacegroup=self.spg)
+        self.check_lattice(bz)
 
     def test_separate_latpars_degrees(self):
         alf, bet, gam = np.array([self.alpha, self.beta, self.gamma]) / np.pi * 180
@@ -58,6 +61,9 @@ class UtilsTestBZ (unittest.TestCase):
 
     def test_lengths_angles(self):
         bz = brille.utils.create_bz([self.a, self.b, self.c], [self.alpha, self.beta, self.gamma], self.spg)
+        self.check_lattice(bz)
+        # With keywords
+        bz = brille.utils.create_bz(lens=[self.a, self.b, self.c], angs=[self.alpha, self.beta, self.gamma], spacegroup=self.spg)
         self.check_lattice(bz)
 
     def test_lengths_angles_degrees(self):
@@ -80,6 +86,31 @@ class UtilsTestBZ (unittest.TestCase):
         # Tests for physically impossible lattice
         with self.assertRaises(ValueError):
             bz = brille.utils.create_bz([4, 5, 6], [30, 30, 90], 'P 6')
+
+    def test_no_spacegroup(self):
+        # Tests if no spacegroup is given
+        with self.assertRaises(ValueError):
+            bz = brille.utils.create_bz([4, 5, 6], [90, 90, 90])
+
+    def test_spacegroup_number(self):
+        # Tests for a spacegroup / Hall number instead of a Hall symbol
+        bz = brille.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, 1)
+        self.check_lattice(bz)
+
+    def test_invalid_spacegroups(self):
+        # Tests for invalid spacegroups given
+        with self.assertRaises(ValueError):
+            # Must be a string or number
+            bz = brille.utils.create_bz([4, 5, 6], [90, 90, 90], [])
+        with self.assertRaises(RuntimeError):
+            # "Unknown lattice type"
+            bz = brille.utils.create_bz([4, 5, 6], [90, 90, 90], -1)
+
+    def test_using_reciprocal(self):
+        # Test with reciprocal lattice
+        latvec = get_latvec([self.a, self.b, self.c], [self.alpha, self.beta, self.gamma])
+        bz = brille.utils.create_bz(2 * np.pi * np.linalg.inv(latvec).T, self.spg, is_reciprocal=True)
+        self.check_lattice(bz)
 
 
 class UtilsTestGrid (unittest.TestCase):

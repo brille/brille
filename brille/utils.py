@@ -108,7 +108,13 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         else:
             raise ValueError('Spacegroup not given')
     if not isinstance(spacegroup, str):
-        spacegroup = int(spacegroup)
+        try:
+            spacegroup = int(spacegroup)
+        except TypeError as e0:
+            e1 = ValueError('Invalid spacegroup input. It must be a string or number')
+            e1.__suppress_context__ = True
+            e1.__traceback__ = e0.__traceback__
+            raise e1
 
     if is_reciprocal:
         if lattice_vectors is not None:
