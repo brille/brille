@@ -12,11 +12,7 @@ if config:
   for path in addpaths:
     if Path(path, config).exists():
       addpaths.append(Path(path,config))
-# reverse before adding to ensure we put the new directories first
-sys.path.reverse()
-for path in addpaths:
-  sys.path.append(str(path.absolute()))
-sys.path.reverse()
+sys.path[:0] = [str(path.absolute()) for path in addpaths]
 
 if find_spec('_brille') is not None:
     import _brille as s
