@@ -250,7 +250,7 @@
       <span class="c1">// other combinations of special_2_folds, special_mirrors,</span>
       <span class="c1">// and sort_by_length are possible but not necessarily useful.</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span>
-        <span class="n">info_update</span><span class="p">(</span><span class="s">&quot;Failed to find an irreducible Brillouin zone.&quot;</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Failed to find an irreducible Brillouin zone.&quot;</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;  End of BrillouinZone construction&quot;</span><span class="p">);</span>
   <span class="p">}</span>

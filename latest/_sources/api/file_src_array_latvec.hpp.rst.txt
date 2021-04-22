@@ -126,9 +126,9 @@ Functions
 
 - :ref:`exhale_function_array__latvec_8hpp_1a4d6da971a3a1b490538dca8fb7f6d8bf`
 
-- :ref:`exhale_function_array__latvec_8hpp_1ab7553634cfdf60d4c8d9cfdb4b75be56`
-
 - :ref:`exhale_function_array__latvec_8hpp_1abe802108112d7e575f0003971adcabe7`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ab7553634cfdf60d4c8d9cfdb4b75be56`
 
 - :ref:`exhale_function_array__latvec_8hpp_1a5662457cbcef4efc735daf0dce7cd19a`
 

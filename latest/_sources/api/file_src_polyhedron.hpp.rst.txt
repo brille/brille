@@ -82,9 +82,9 @@ Functions
 
 - :ref:`exhale_function_polyhedron_8hpp_1aa523c0458f4aa30109036b189ce78fcc`
 
-- :ref:`exhale_function_polyhedron_8hpp_1ab9abc4a9b28935e46f0dedf0e7f05ff8`
-
 - :ref:`exhale_function_polyhedron_8hpp_1a6f53ac80703694382efa7189e83e61f2`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ab9abc4a9b28935e46f0dedf0e7f05ff8`
 
 - :ref:`exhale_function_polyhedron_8hpp_1a4a0bf2aa7002e1c41e0db97cd531f324`
 
