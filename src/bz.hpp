@@ -93,7 +93,7 @@ public:
       // other combinations of special_2_folds, special_mirrors,
       // and sort_by_length are possible but not necessarily useful.
       if (!success)
-        info_update("Failed to find an irreducible Brillouin zone.");
+        throw std::runtime_error("Failed to find an irreducible Brillouin zone.");
     }
     profile_update("  End of BrillouinZone construction");
   }
