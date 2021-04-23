@@ -34,13 +34,15 @@ will be useful to have a dummy empty table.
 */
 class RotateTable{};
 
-/*! \brief A convenient store for (F₀(k,R), ⃗rₖ - R ⃗rₗ) pairs
+/*! \brief A convenient store for
+           \f$\left(F_0(k,R), \mathbf{r}_k - R \mathbf{r}_l\right)\f$ pairs
 
 The application of a symmetry operation to a crystal strcture leaves its total
 energy unchanged. The same is true for the total potential energy of the crystal.
 The force constant matrix, howerever, which is the combination of all forces
-acting on atom k for a displacement of atom l, is not invariant but instead
-the atom labels are permuted and individual-pairs are transformed as tensors.
+acting on atom \f$k\f$ for a displacement of atom \f$l\f$, is not invariant but
+instead the atom labels are permuted and individual-pairs are transformed
+as tensors.
 
 The dynamical matrix is the mass noramalised form of the Fourier transform of the
 force constant matrix. In addition to the atom label permutation application of
@@ -52,25 +54,36 @@ Phonons are the solutions to the equations of motion described by the dynamical
 matrix. The solutions make use of the dynamical matrix eigenvectors_ which also
 acquire a per-atom phase factor upon operation of a symmetry element.
 The phase factor is
-    exp[i ⃗Q⋅( ⃗rₖ - R ⃗rₗ )] = exp[i R ⃗q ⋅ ( ⃗rₗ - R ⃗rₖ)]
-                          = exp[i ⃗q ⋅ (R⁻¹ ⃗rₗ - ⃗rₖ)]
-where l is the equivalent atom which R transforms k to
-    l = F₀(k,R)
+@f[
+e^{i \mathbf{Q}\cdot\left(\mathbf{r}_k - R \mathbf{r}_l\right)}
+= e^{i R \mathbf{q} \cdot \left(\mathbf{r}_l - R \mathbf{r}_k\right)}
+= e^{i \mathbf{q} \cdot \left( R^{-1} \mathbf{r}_l - \mathbf{r}_k\right)}
+@f]
+where \f$l\f$ is the equivalent atom which \f$R\f$ transforms \f$k\f$ to
+\f$l = F_0(k,R)\f$
 
-brille uses only the point group operations to find equivalent qᵢᵣ to q = Q - τ
-A pointgroup never contains more than 48 elements, and for each the permutation
-and vector are unique.
-This class is designed to hold the Nₚ × Nₐ values of F₀(k,R) and (R⁻¹ ⃗rₖ - ⃗rₗ)
-where there are Nₚ pointgroup operations and Nₐ atoms in the Basis.
+brille uses only the point group operations to find equivalent
+\f$\mathbf{q}_i\f$ to \f$\mathbf{q} = \mathbf{Q} - \mathbf{\tau}\f$.
+A pointgroup never contains more than \f$48\f$ elements, and for each
+the permutation and vector are unique.
+This class is designed to hold the \f$N_p \times N_a\f$ values of \f$F_0(k,R)\f$
+and \f$\left(R^{-1}\mathbf{r}_k - \mathbf{r}_l\right)\f$ where there are
+\f$N_p\f$ pointgroup operations and \f$N_a\f$ atoms in the Basis.
 
-Rather than storing a 2D array of F₀(k,R) and a 2D array of (R⁻¹ ⃗rₖ - ⃗rₗ),
-let the standard template library do the heavy lifting.
-If k ∈ {0, Nₐ-1} and r ∈ {0, Nₚ-1} index a std::map with keys that are
-the pairs (k,r); and use the values to store (N₀(k,Rᵣ), v)
-where v is an index into a LDVec of the (R⁻¹ ⃗rₗ - ⃗rₖ).
 
-The LDVec *could* contain only unique (R⁻¹ ⃗rₗ - ⃗rₖ) values, but this is left for
-a future exercise if it becomes necessary.
+Rather than storing a 2D array of \f$F_0(k,R)\f$ and a 2D array of
+\f$\left(R^{-1}\mathbf{r}_k - \mathbf{r}_l\right)\f$,
+the standard template library does the heavy lifting in GammaTable.
+If \f$ k \in (0, N_a-1)\f$ and \f$r \in (0,N_p-1)\f$ index a `std::map`
+with keys that are the pairs \f$(k,r)\f$ then the mapped values are
+\f$\left(N_0(k,R_r), v\right)\f$ where \f$v\f$ is an index into an
+LDVec of all \f$\left(R^{-1} \mathbf{r}_l - \mathbf{r}_k\right)\f$.
+
+
+The LDVec *could* contain only unique
+\f$\left(R^{-1} \mathbf{r}_l - \mathbf{r}_k\right)\f$
+but this is left for a future exercise if it becomes necessary.
+
 */
 class GammaTable: public RotateTable {
 // public:

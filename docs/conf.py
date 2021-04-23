@@ -36,7 +36,7 @@ extensions = [
     'breathe',
     'sphinxcontrib.katex',
     'sphinxcontrib.tikz',
-    'exhale',
+    # 'exhale',
 ]
 
 napoleon_use_ivar = True
@@ -49,24 +49,26 @@ breathe_projects = {'brille' : '_build/doxygenxml/'}
 breathe_default_project = 'brille'
 breathe_domain_by_extension = {'h': 'cpp', 'h': 'hpp', 'h': 'tpp'}
 
-# setup the exhale extension
-exhale_args = {
-    # required arguments first:
-    "containmentFolder": "./api",
-    "rootFileName": "library_root.rst",
-    "rootFileTitle": "C++ Library API",
-    "doxygenStripFromPath": "..",
-    # Suggested optional arguments
-    "createTreeView": True,
-    # TIP: if using the sphinx-bootstrap-theme, you also need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": True,
-    #"exhaleSilentDoxygen": True,
-    "exhaleUseDoxyfile": True,
-    # "exhaleDoxygenStdin": "INPUT = ../wrap/", # "INPUT = ../src/",
-}
+# # setup the exhale extension
+# exhale_args = {
+#     # required arguments first:
+#     "containmentFolder": "./api",
+#     "rootFileName": "library_root.rst",
+#     "rootFileTitle": "C++ Library API",
+#     "doxygenStripFromPath": "..",
+#     # Suggested optional arguments
+#     "createTreeView": True,
+#     # TIP: if using the sphinx-bootstrap-theme, you also need
+#     # "treeViewIsBootstrap": True,
+#     "exhaleExecutesDoxygen": True,
+#     #"exhaleSilentDoxygen": True,
+#     "exhaleUseDoxyfile": True,
+#     # "exhaleDoxygenStdin": "INPUT = ../wrap/", # "INPUT = ../src/",
+# }
 
 autosummary_generate = True
+
+autoclass_content = 'both'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -77,7 +79,8 @@ master_doc = 'index'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+#exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['Thumbs.db', '.DS_Store']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -104,20 +107,25 @@ html_logo = '../brille.svg'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+def call_and_check(command, **kwds):
+    from subprocess import call, CalledProcessError
+    try:
+        retcode = call(command, **kwds)
+        if retcode < 0:
+            sys.stderr.write('{} error code: {}\n'.format(call, -retcode))
+    except (CalledProcessError, OSError) as e:
+        sys.stderr.write('{} execution failed: {}\n'.format(call, e))
+
 # again, following from github.com/pybind/pybind11/blob/stable/docs/conf.py:
 def generate_doxygen_xml(app):
     build_dir = os.path.join(app.confdir, '_build')
     if not os.path.exists(build_dir):
         os.mkdir(build_dir)
 
-    try:
-        subprocess.call(['doxygen', '--version'])
-        retcode = subprocess.call(['doxygen'], cwd=app.confdir)
-        if retcode < 0:
-            sys.stderr.write("doxygen error code: {}\n".format(-retcode))
-    except OSError as e:
-        sys.stderr.write("doxygen execution failed: {}\n".format(e))
+    call_and_check('doxygen', cwd=app.confdir)
+    call_and_check(['breathe-apidoc','--output-dir=_build/breathe','-f',
+                    '-g','class,namespace','_build/doxygenxml/'])
 
 def setup(app):
     """Add hook for building Doxygen xml when needed"""
-    #app.connect("builder-inited", generate_doxygen_xml)
+    app.connect("builder-inited", generate_doxygen_xml)

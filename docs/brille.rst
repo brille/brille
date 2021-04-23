@@ -3,7 +3,24 @@
   :undoc-members:
   :show-inheritance:
 
-.. automodule:: brille._brille
-  :members:
-  :undoc-members:
-  :show-inheritance:
+
+
+Documented thus far:
+^^^^^^^^^^^^^^^^^^^^
+The pybind-wrapped objects fully documented (in C++ doc strings) thus far are
+
+:py:class:`~brille._brille.Bravais`
+:py:class:`~brille._brille.Lattice`
+
+.. .. automodule:: brille._brille
+..   :members:
+..   :undoc-members:
+..   :show-inheritance:
+
+.. toctree::
+  :maxdepth: 1
+  :caption: Index
+
+  module/lattice
+  module/debug
+  module/everything

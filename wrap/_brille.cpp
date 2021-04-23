@@ -50,13 +50,24 @@ void wrap_version(pybind11::module & m){
 
 PYBIND11_MODULE(_brille, m){
   m.doc() = R"pbdoc(
-    pybind11 module ``brille._brille``
-    ---------------------------
+    pybind11 module :py:mod:`brille._brille`
+    ----------------------------------------
     This module provides the interface to the C++ library.
 
-    All of the symbols defined within ``_brille`` are imported by ``brille`` to
-    make using them easier. If in doubt, the interfaced classes can be
-    accessed via their submodule syntax ``brille._brille``.
+    All of the symbols defined within :py:mod:`brille._brille` are imported by
+    :py:mod:`brille` to make using them easier.
+    If in doubt, the interfaced classes can be accessed via their submodule
+    syntax.
+
+    .. code-block:: python
+
+      from brille._brille import Direct, BrilloinZone
+      from brille import plotting as bplot
+
+      direct_lattice = Direct((3.95, 3.95, 3.95, 12.9), (90, 90, 90), 'I4/mmm')
+      brillouin_zone = BrillouinZone(direct_lattice.star)
+
+      bplot(brillouin_zone)
 
     .. currentmodule:: brille._brille
 
