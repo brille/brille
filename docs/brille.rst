@@ -23,4 +23,5 @@ The pybind-wrapped objects fully documented (in C++ doc strings) thus far are
 
   module/lattice
   module/debug
+  module/bz
   module/everything

@@ -132,7 +132,7 @@ void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::strin
     Return the dual lattice
 
     A lattice described by the basis vectors :math:`\mathbf{a}_1`,
-    :math:`\mathbf{a}_2`, and :math:`\mathbf{a}_3` has a unit cell get_volume
+    :math:`\mathbf{a}_2`, and :math:`\mathbf{a}_3` has a unit cell volume
     given by :math:`V = \mathbf{a}_1 \cdot (\mathbf{a}_2\times\mathbf{a}_3)`.
     It's dual lattice is defined by the basis vectors :math:`\mathbf{b}_1`,
     :math:`\mathbf{b}_2`, and :math:`\mathbf{b}_3` with the relationship
