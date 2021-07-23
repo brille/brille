@@ -607,9 +607,8 @@ This function finds and returns \f$e^{-i\theta}\f$ for
 which can be used to produce a new vector \f$ \vec{p} = e^{-i\theta} \vec{b} \f$
 which has a purely-real Hermitian product with \f$\vec{a}\f$.
 
-\param n the dimensionality of the complex vector space
-\param[in] a pointer to the first element of a complex-valued `n` vector
-\param[in] b pointer to the first element of a complex-valued `n` vector
+\param[in] a the first complex-valued `n` vector
+\param[in] b the second complex-valued `n` vector
 \returns e⁻ⁱᶿ
 \note Thie function broadcasts over all dimensions of the input Array or Array2
       objects to find the generalised dot product. If `a` and `b` are not the

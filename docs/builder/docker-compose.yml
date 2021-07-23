@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  sphinx:
+    build: ./
+    environment:
+      - GITHUB_WORKSPACE=/github/workspace
+      - INPUT_SOURCE_DIR=/.
+      - INPUT_CREATE_README=true
+      - INPUT_PAGES_DIR=pages
+      - INPUT_UPDATE_GIT=false
+    volumes:
+      - ../../:/github/workspace:Z

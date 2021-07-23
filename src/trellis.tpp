@@ -14,7 +14,9 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include <cassert>
+#endif
 
 template<class T, class R>
 PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)

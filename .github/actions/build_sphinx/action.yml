@@ -17,6 +17,9 @@ inputs:
   is_release:
     description: 'Whether this is a release documentation build'
     default: false
+  update_git:
+    description: 'Update and push the $\{{ pages_dir }} git repositories. `false` is useful for local testing'
+    default: true
 outputs:
   name:
     description: 'Author name'

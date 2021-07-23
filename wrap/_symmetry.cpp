@@ -27,7 +27,43 @@ The symmetry operations of a spacegroup
 void wrap_symmetry(pybind11::module & m){
   using namespace pybind11::literals;
   using namespace brille;
-  pybind11::class_<Symmetry> cls(m, "Symmetry");
+  pybind11::class_<Symmetry> cls(m, "Symmetry", R"pbdoc(
+  One or more symmetry operations of a space group.
+
+  A symmetry operation is the combination of a generalised rotation, :math:`W`,
+  and translation, :math:`\mathbf{w}`.
+  For any position in space, :math:`\mathbf{x}`, the operation transforms it to another equivalent position
+
+  .. math::
+    \mathbf{x}' = W \mathbf{x} + \mathbf{w}
+
+  and can equivalently be expressed as :math:`\mathbf{x}' = \mathscr{M}\mathbf{x}`.
+  
+  Crystallographic symmetry operations have an order, :math:`o`, 
+  for which :math:`\mathscr{M}^o = \mathscr{E}` repeated applications of the operation
+  is equivalent to the identity operator.
+
+  A set of symmetry operations can form a group, :math:`\mathbb{G}`, with the property that
+  :math:`\mathscr{M}_k = \mathscr{M}_i \mathscr{M}_j` with :math:`\mathscr{M}_i,\mathscr{M}_j,\mathscr{M}_k \in \mathbb{G}`.
+  
+  This class can be used to hold any number of related symmetry operators, and to generate all spacegroup operators from those stored.
+  
+  Parameters
+  ----------
+  hall : int
+    The integer Hall number for the desired space group operations [[deprecated]].
+  W : arraylike, int
+    The generalised rotation (matrix) part of the symmetry operator(s)
+  w : arraylike, float
+    The translation (vector) part of the symmetry operator(s)
+  cifxyz : str
+    The symmetry operator(s) encoded in CIF xyz format
+
+  Note
+  ----
+  The overloaded forms of `__init__` take one of `hall`, `(W, w)`, **or** `cifxyz`.
+  )pbdoc");
+  
 
   cls.def(pybind11::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),"Hall number"_a);
 

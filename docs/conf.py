@@ -21,6 +21,9 @@ sys.path.insert(0, os.path.abspath('.'))
 project = 'brille'
 copyright = '2020, Gregory Tucker'
 author = 'Gregory Tucker'
+import brille._brille as brille_module
+version = brille_module.__version__ # just the 'short' version
+release = brille_module.version # the 'full' version information
 
 
 # -- General configuration ---------------------------------------------------

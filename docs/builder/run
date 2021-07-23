@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+podman-compose up
+podman pod stop builder
+podman pod rm builder

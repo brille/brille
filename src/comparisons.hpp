@@ -235,12 +235,10 @@ template<class T>
 std::string to_string(const T& x){
   return std::to_string(x);
 }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<>
 std::string to_string<cmp>(const cmp& c);
 template<>
 std::string to_string<ops>(const ops& o);
-#endif
 
 } // namespace brille
 

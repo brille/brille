@@ -33,6 +33,8 @@ nosetests.xml
 .doctrees
 *.db
 api/
+.doctree
+pages/
 
 # Various build directories
 *build
@@ -40,3 +42,7 @@ api/
 
 # Built version header
 src/version.hpp
+
+# Pipenv environment files
+Pipfile
+Pipfile.lock

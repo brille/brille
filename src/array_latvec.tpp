@@ -190,21 +190,21 @@ ARRAY_LATVEC_BINARY_OP(/)
 #else
   /*! \brief Find the cross product of two Array2 or LatVec arrays
 
-  \param a The first Array2 or LatVec array, with shape `(Na, 3)`
-  \param b The second Array2 or LatVec array, with shape `(Nb, 3)`
+  \param first The first Array2 or LatVec array, with shape `(Na, 3)`
+  \param second The second Array2 or LatVec array, with shape `(Nb, 3)`
 
   Both arrays must hold the same number of 3-vectors, `Na = Nb`, or either `Na`
   or `Nb` must be one.
   Singleton vectors are broadcast across the other array.
 
-  If `a` and `b` are LatVec arrays, they must either represent vectors in the
+  If both inputs are LatVec arrays, they must either represent vectors in the
   same lattice.
 
-  \return An array of the same type as `a` and `b` with shape `(N,3)`
+  \return An array of the same data type as input with shape `(N,3)`
           where `N = max(Na, Nb)`
   */
   template<class T, class R, template<class> class A>
-  Array2<double> dot(const A<T>& a, const A<R>& b);
+  Array2<double> dot(const A<T>& first, const A<R>& second);
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -277,23 +277,23 @@ dot(const L1<T> &a, const L2<R> &b){
   }
   return oarray;
 }
-#else
+// #else
   /*! \brief Find the dot product of two Array2 or LatVec arrays
 
-  \param a The first Array2 or LatVec array, with shape `(Na, M)`
-  \param b The second Array2 or LatVec array, with shape `(Nb, M)`
+  \param first The first Array2 or LatVec array, with shape `(Na, M)`
+  \param second The second Array2 or LatVec array, with shape `(Nb, M)`
 
   Both arrays must have the same number of elements per vector, `M`, and either
   the same number of vectors, `Na = Nb`, or either `Na` or `Nb` must be one.
   Singleton vectors are broadcast across the other array.
 
-  If `a` and `b` are LatVec arrays, they must either represent vectors in the
+  If the inputs are LatVec arrays, they must either represent vectors in the
   same lattice or in lattices which are mutually dual.
 
   \return An Array2 with shape `(N,1)` where `N = max(Na, Nb)`
   */
-  template<class T, class R, template<class> class A>
-  Array2<double> dot(const A<T>& a, const A<R>& b);
+  /* template<class T, class R, template<class> class A> */
+  /* Array2<double> dot(const A<T>& first, const A<R>& second); */
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
