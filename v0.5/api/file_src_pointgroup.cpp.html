@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>File pointgroup.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>File pointgroup.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/file_src_pointgroup.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="file-pointgroup-cpp">
+<span id="file-src-pointgroup-cpp"></span><h1>File pointgroup.cpp<a class="headerlink" href="#file-pointgroup-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-pointgroup-cpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/pointgroup.cpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id4">Functions</a></p></li>
+<li><p><a class="reference internal" href="#defines" id="id5">Defines</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id6">Variables</a></p></li>
+</ul>
+</div>
+<div class="section" id="definition-src-pointgroup-cpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/pointgroup.cpp</span></code>)<a class="headerlink" href="#definition-src-pointgroup-cpp" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_src_pointgroup.cpp.html">Program Listing for File pointgroup.cpp</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pointgroup.hpp</span></code> (<a class="reference internal" href="file_src_pointgroup.hpp.html#file-src-pointgroup-hpp"><span class="std std-ref">File pointgroup.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pointsymmetry.hpp</span></code> (<a class="reference internal" href="file_src_pointsymmetry.hpp.html#file-src-pointsymmetry-hpp"><span class="std std-ref">File pointsymmetry.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spg_database.hpp</span></code> (<a class="reference internal" href="file_src_spg_database.hpp.html#file-src-spg-database-hpp"><span class="std std-ref">File spg_database.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdio.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdlib.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">symmetry.hpp</span></code> (<a class="reference internal" href="file_src_pointsymmetry.hpp.html#file-src-pointsymmetry-hpp"><span class="std std-ref">File pointsymmetry.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utilities.hpp</span></code> (<a class="reference internal" href="file_src_utilities.hpp.html#file-src-utilities-hpp"><span class="std std-ref">File utilities.hpp</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structPointgroupType.html#exhale-struct-structpointgrouptype"><span class="std std-ref">Struct PointgroupType</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d.html#exhale-function-pointgroup-8cpp-1adead6d23616744cf978d06d3a6438f6d"><span class="std std-ref">Function _internal_pointgroup_rotations</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1ae2daa86c31cef3276236932f5b0ee4ae.html#exhale-function-pointgroup-8cpp-1ae2daa86c31cef3276236932f5b0ee4ae"><span class="std std-ref">Function get_axes</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e.html#exhale-function-pointgroup-8cpp-1afb98d0d04f7c6d094291826f4e55042e"><span class="std std-ref">Function get_orthogonal_axis</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856.html#exhale-function-pointgroup-8cpp-1a87c33eda207c05ede423c5a15f0d6856"><span class="std std-ref">Function get_pointgroup_class_table</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a20629ee7a060d8188bc8bb50d45bcb35.html#exhale-function-pointgroup-8cpp-1a20629ee7a060d8188bc8bb50d45bcb35"><span class="std std-ref">Function get_pointgroup_number</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a3e2feb5bef72434f5f9698b960a4b3a2.html#exhale-function-pointgroup-8cpp-1a3e2feb5bef72434f5f9698b960a4b3a2"><span class="std std-ref">Function get_pointgroup_number_by_rotations</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a87d769efbc4d11ac95675e7d6d33add1.html#exhale-function-pointgroup-8cpp-1a87d769efbc4d11ac95675e7d6d33add1"><span class="std std-ref">Function get_proper_rotation</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a21d3bdcefe1c40f935b36cbd024ae453.html#exhale-function-pointgroup-8cpp-1a21d3bdcefe1c40f935b36cbd024ae453"><span class="std std-ref">Function get_rotation_axis</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10.html#exhale-function-pointgroup-8cpp-1ac0f4b1eeee35c6bfec921c25b4bdbe10"><span class="std std-ref">Function isometry_type</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a9efb4e6014d8d854ad3288b9009a2753.html#exhale-function-pointgroup-8cpp-1a9efb4e6014d8d854ad3288b9009a2753"><span class="std std-ref">Function laue2m</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1ac266489cc0bcb36b85a351cb4bfacb8f.html#exhale-function-pointgroup-8cpp-1ac266489cc0bcb36b85a351cb4bfacb8f"><span class="std std-ref">Function laue_one_axis</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1.html#exhale-function-pointgroup-8cpp-1a042b6c25619bb7922f12c008074b80e1"><span class="std std-ref">Function lauennn</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75.html#exhale-function-pointgroup-8cpp-1a86512b762120a94e87c3756d71a59b75"><span class="std std-ref">Function orthogonal_to_axis</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b.html#exhale-function-pointgroup-8cpp-1a38ba5e08de24b8f9bca73510bba46d4b"><span class="std std-ref">Function set_transformation_matrix(int *, const int)</span></a></p></li>
+<li><p><a class="reference internal" href="function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa.html#exhale-function-pointgroup-8cpp-1aead292fc0291f0342a018c9d196660aa"><span class="std std-ref">Function set_transformation_matrix(int *, const int *)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1.html#exhale-define-pointgroup-8cpp-1a66faf05e0e2fbaebecc2f0e696fba7b1"><span class="std std-ref">Define NUM_ROT_AXES</span></a></p></li>
+<li><p><a class="reference internal" href="define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f.html#exhale-define-pointgroup-8cpp-1aa40c7f9169efb27ddcdb07c7f3f9aa3f"><span class="std std-ref">Define ZERO_PREC</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a.html#exhale-variable-pointgroup-8cpp-1a154d93beaeea0529c6014df3c8dc1a0a"><span class="std std-ref">Variable identity</span></a></p></li>
+<li><p><a class="reference internal" href="variable_pointgroup_8cpp_1a8e05c5c58b7447fc592389d86b14d037.html#exhale-variable-pointgroup-8cpp-1a8e05c5c58b7447fc592389d86b14d037"><span class="std std-ref">Variable inversion</span></a></p></li>
+<li><p><a class="reference internal" href="variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d.html#exhale-variable-pointgroup-8cpp-1a240e8e2764b7ef8073bb71c0c3a8e28d"><span class="std std-ref">Variable pointgroup_data</span></a></p></li>
+<li><p><a class="reference internal" href="variable_pointgroup_8cpp_1acc89e2b03f55ac3cfc5c6eaca4d83e03.html#exhale-variable-pointgroup-8cpp-1acc89e2b03f55ac3cfc5c6eaca4d83e03"><span class="std std-ref">Variable rot_axes</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

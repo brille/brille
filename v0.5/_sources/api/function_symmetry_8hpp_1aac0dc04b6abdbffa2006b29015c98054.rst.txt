@@ -1,0 +1,13 @@
+.. _exhale_function_symmetry_8hpp_1aac0dc04b6abdbffa2006b29015c98054:
+
+Template Function brille::operator\*(const Motion<T, T>&, const Motion<R, T>&)
+==============================================================================
+
+- Defined in :ref:`file_src_symmetry.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::operator*(const Motion<T, T>&, const Motion<R, T>&)

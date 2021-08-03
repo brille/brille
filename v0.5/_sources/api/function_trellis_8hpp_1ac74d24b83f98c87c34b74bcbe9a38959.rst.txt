@@ -1,0 +1,13 @@
+.. _exhale_function_trellis_8hpp_1ac74d24b83f98c87c34b74bcbe9a38959:
+
+Template Function brille::on_boundary
+=====================================
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::on_boundary(const std::vector<T>&, const T, const size_t)

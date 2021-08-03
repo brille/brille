@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1is__complex:
+
+Template Struct is_complex
+==========================
+
+- Defined in :ref:`file_src_interpolator2.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::is_complex
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a1f38059ec5f6cf7e90fc47194f48a4f4:
+
+Template Function brille::approx::vector(const size_t, const T \*, const R \*, const int)
+=========================================================================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::approx::vector(const size_t, const T *, const R *, const int)

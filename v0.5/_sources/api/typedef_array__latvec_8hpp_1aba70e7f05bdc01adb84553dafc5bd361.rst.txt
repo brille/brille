@@ -1,0 +1,13 @@
+.. _exhale_typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361:
+
+Typedef bArray
+==============
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: bArray

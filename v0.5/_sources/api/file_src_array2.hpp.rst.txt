@@ -1,0 +1,103 @@
+
+.. _file_src_array2.hpp:
+
+File array2.hpp
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/array2.hpp``)
+-------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_array2.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array2.tpp`` (:ref:`file_src_array2.tpp`)
+
+- ``array_.hpp`` (:ref:`file_src_array_.hpp`)
+
+- ``cassert``
+
+- ``comparisons.hpp`` (:ref:`file_src_comparisons.hpp`)
+
+- ``functional``
+
+- ``iostream``
+
+- ``math.h``
+
+- ``memory``
+
+- ``numeric``
+
+- ``string``
+
+- ``subscript.hpp`` (:ref:`file_src_subscript.hpp`)
+
+- ``types.hpp`` (:ref:`file_src_types.hpp`)
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_array.hpp`
+
+- :ref:`file_src_lattice.hpp`
+
+- :ref:`file_src_array_latvec.hpp`
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1Array2`
+
+- :ref:`exhale_class_classbrille_1_1Array2It`
+

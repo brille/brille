@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1af612a0d0f40a3945afb5617fb370d505:
+
+Function brille::isometry_value
+===============================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::isometry_value(const int *)

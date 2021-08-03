@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a24c086886784a752620ce99e37cfcdea:
+
+Template Function brille::utils::magnitude(const T)
+===================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::magnitude(const T)

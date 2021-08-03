@@ -1,0 +1,13 @@
+.. _exhale_define_array_8hpp_1af0a23dd3a815dfdbee68f1c50aa7e268:
+
+Define ARRAY_ARRAY_OP
+=====================
+
+- Defined in :ref:`file_src_array.tpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ARRAY_ARRAY_OP

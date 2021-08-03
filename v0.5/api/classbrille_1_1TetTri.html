@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class TetTri &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class TetTriLayer" href="classbrille_1_1TetTriLayer.html" />
+    <link rel="prev" title="Class Symmetry" href="classbrille_1_1Symmetry.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class TetTri</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1TetTri.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-tettri">
+<span id="exhale-class-classbrille-1-1tettri"></span><h1>Class TetTri<a class="headerlink" href="#class-tettri" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_triangulation.hpp.html#file-src-triangulation-hpp"><span class="std std-ref">File triangulation.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille6TetTriE">
+<span id="_CPPv3N6brille6TetTriE"></span><span id="_CPPv2N6brille6TetTriE"></span><span id="brille::TetTri"></span><span class="target" id="classbrille_1_1TetTri"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">TetTri</code><a class="headerlink" href="#_CPPv4N6brille6TetTriE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp enum">
+<dt id="_CPPv4N6brille6TetTri11Locate_TypeE">
+<span id="_CPPv3N6brille6TetTri11Locate_TypeE"></span><span id="_CPPv2N6brille6TetTri11Locate_TypeE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478"></span><em class="property">enum </em><code class="sig-name descname">Locate_Type</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_TypeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N6brille6TetTri11Locate_Type6VERTEXE">
+<span id="_CPPv3N6brille6TetTri11Locate_Type6VERTEXE"></span><span id="_CPPv2N6brille6TetTri11Locate_Type6VERTEXE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478a4e4cb6c2f54567a15aaa82f935af8eb7"></span><em class="property">enumerator </em><code class="sig-name descname">VERTEX</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_Type6VERTEXE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N6brille6TetTri11Locate_Type4EDGEE">
+<span id="_CPPv3N6brille6TetTri11Locate_Type4EDGEE"></span><span id="_CPPv2N6brille6TetTri11Locate_Type4EDGEE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478a97b8a750a3af2efc735157fc6670ff02"></span><em class="property">enumerator </em><code class="sig-name descname">EDGE</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_Type4EDGEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N6brille6TetTri11Locate_Type5FACETE">
+<span id="_CPPv3N6brille6TetTri11Locate_Type5FACETE"></span><span id="_CPPv2N6brille6TetTri11Locate_Type5FACETE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478affe979188dcfd8a784530a4f997a44cb"></span><em class="property">enumerator </em><code class="sig-name descname">FACET</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_Type5FACETE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N6brille6TetTri11Locate_Type4CELLE">
+<span id="_CPPv3N6brille6TetTri11Locate_Type4CELLE"></span><span id="_CPPv2N6brille6TetTri11Locate_Type4CELLE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478a3fb09a664b2bc8cfe6d4f4c14efde495"></span><em class="property">enumerator </em><code class="sig-name descname">CELL</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_Type4CELLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt id="_CPPv4N6brille6TetTri11Locate_Type19OUTSIDE_CONVEX_HULLE">
+<span id="_CPPv3N6brille6TetTri11Locate_Type19OUTSIDE_CONVEX_HULLE"></span><span id="_CPPv2N6brille6TetTri11Locate_Type19OUTSIDE_CONVEX_HULLE"></span><span class="target" id="classbrille_1_1TetTri_1abf9f4b0455ec1cf44f08d2898bc29478a5455935790496c0d39b43ceb66911dcc"></span><em class="property">enumerator </em><code class="sig-name descname">OUTSIDE_CONVEX_HULL</code><a class="headerlink" href="#_CPPv4N6brille6TetTri11Locate_Type19OUTSIDE_CONVEX_HULLE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri18number_of_verticesEv">
+<span id="_CPPv3NK6brille6TetTri18number_of_verticesEv"></span><span id="_CPPv2NK6brille6TetTri18number_of_verticesEv"></span><span id="brille::TetTri::number_of_vertices__voidC"></span><span class="target" id="classbrille_1_1TetTri_1aa079de3eaf0df9c2c0aa2e5a4b9b2152"></span>size_t <code class="sig-name descname">number_of_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri18number_of_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri20number_of_tetrahedraEv">
+<span id="_CPPv3NK6brille6TetTri20number_of_tetrahedraEv"></span><span id="_CPPv2NK6brille6TetTri20number_of_tetrahedraEv"></span><span id="brille::TetTri::number_of_tetrahedra__voidC"></span><span class="target" id="classbrille_1_1TetTri_1a1a2e43155b502cb164296b5e0c7dc5c3"></span>size_t <code class="sig-name descname">number_of_tetrahedra</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri20number_of_tetrahedraEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri20get_vertex_positionsEv">
+<span id="_CPPv3NK6brille6TetTri20get_vertex_positionsEv"></span><span id="_CPPv2NK6brille6TetTri20get_vertex_positionsEv"></span><span id="brille::TetTri::get_vertex_positions__voidC"></span><span class="target" id="classbrille_1_1TetTri_1a20121b909a9fec3c5d11dafc6086ab12"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<code class="sig-name descname">get_vertex_positions</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri20get_vertex_positionsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri28get_vertices_per_tetrahedronEv">
+<span id="_CPPv3NK6brille6TetTri28get_vertices_per_tetrahedronEv"></span><span id="_CPPv2NK6brille6TetTri28get_vertices_per_tetrahedronEv"></span><span id="brille::TetTri::get_vertices_per_tetrahedron__voidC"></span><span class="target" id="classbrille_1_1TetTri_1a300ef35bffa47e3a50b4f7e4c8212e68"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;size_t&gt; &amp;<code class="sig-name descname">get_vertices_per_tetrahedron</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri28get_vertices_per_tetrahedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri6TetTriEv">
+<span id="_CPPv3N6brille6TetTri6TetTriEv"></span><span id="_CPPv2N6brille6TetTri6TetTriEv"></span><span id="brille::TetTri::TetTri__void"></span><span class="target" id="classbrille_1_1TetTri_1ab69237f07fa52ffb3dc84d025eaccbf8"></span><code class="sig-name descname">TetTri</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri6TetTriEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri6TetTriERK8tetgenioKd">
+<span id="_CPPv3N6brille6TetTri6TetTriERK8tetgenioKd"></span><span id="_CPPv2N6brille6TetTri6TetTriERK8tetgenioKd"></span><span id="brille::TetTri::TetTri__tetgenioCR.doubleC"></span><span class="target" id="classbrille_1_1TetTri_1a5afadb8800ab39495b93a17bf1caa517"></span><code class="sig-name descname">TetTri</code><span class="sig-paren">(</span><em class="property">const</em> tetgenio &amp;<em>tgio</em>, <em class="property">const</em> double <em>fraction</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri6TetTriERK8tetgenioKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri9to_stringEv">
+<span id="_CPPv3NK6brille6TetTri9to_stringEv"></span><span id="_CPPv2NK6brille6TetTri9to_stringEv"></span><span id="brille::TetTri::to_string__voidC"></span><span class="target" id="classbrille_1_1TetTri_1ae9de766a605f21cd269f2c9d770c0f83"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri10old_locateERK6bArrayIdER11Locate_TypeR6size_tR6size_t">
+<span id="_CPPv3NK6brille6TetTri10old_locateERK6bArrayIdER11Locate_TypeR6size_tR6size_t"></span><span id="_CPPv2NK6brille6TetTri10old_locateERK6bArrayIdER11Locate_TypeR6size_tR6size_t"></span><span id="brille::TetTri::old_locate__bArray:double:CR.Locate_TypeR.sR.sRC"></span><span class="target" id="classbrille_1_1TetTri_1abd7365e6d2973c6e03f3e5a78c494969"></span>size_t <code class="sig-name descname">old_locate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, <a class="reference internal" href="#_CPPv4N6brille6TetTri11Locate_TypeE" title="brille::TetTri::Locate_Type">Locate_Type</a> &amp;<em>type</em>, size_t &amp;<em>v0</em>, size_t &amp;<em>v1</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri10old_locateERK6bArrayIdER11Locate_TypeR6size_tR6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Locate which tetrahedron contains a specified point. </p>
+<p>By comparing distances between all tetrehedron vertices and a test point find the vertex closest to the point. Then check all tetrahedra containing the closest vertex to see whether the test point is within or on the surface of the tetrahedron. The second check is performed by constructing four new tetrahedra by replacing each of the source tetrahedron’s vertices by the test point in turn and then comparing their volumes. If all four tetrahedra have positive volumes the test point is inside the source tetrahedron. If any one has negative volume the test point is outside of the source tetrahedron. If one has zero volume the test point lies on one of the faces of the source tetrahedron. If two have zero volume the test point lies on one of the source tetrahedron edges. And if three have zero volume the test point is one of the source tetrahedron’s vertices. This function indicates which type of relationship the test point has to the returned tetrahedron (index) by use of an enumeration. Depending on which relationship is present further information is conveyed by up to two unsigned integers.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The index of the found tetrahedron</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: A single three-element <a class="reference internal" href="classbrille_1_1Array.html#classbrille_1_1Array"><span class="std std-ref">Array</span></a> that is the test point </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">type</span></code>: The relationship between the test point and tetrahedron </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">v0</span></code>: The first integer conveying relational information </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">v1</span></code>: The second integer conveying relational information </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>When this method becomes a bottleneck (when the number of vertices in the mesh becomes too large) a large performance benefit can be had at the expense of preprocessing and memory use for metadata. As written now the method requires nVertices distance calculations to locate the vertex closest to the supplied point. One way to reduce this is to be able to quickly narrow-down the number of vertices which must be checked by, e.g., dividing the vertices into 3D bins. Bin dimesnions can be chosen to keep a similar number of vertices in each bin. The metadata we need to maintain are the bin boundaries, and either a linked list of the vertices in each bin or (after sorting the vertices) a list of the bin boundaries in the vertices (first vertex in each bin), e.g., [0, first vertex in second bin, first vertex in third bin, …]. Then, to locate a point’s closest vertex, we first find which bin it falls into and then only check its distance to vertices in that bin and its neighbours, 3³ = 27 bins in total. If we choose an 8×8×8 binning we have 512 total bins to keep track of and would only need to check 5.3% of the total vertices; for 16×16×16 we would have 4096 bins and would only need to check 0.66% of all vertices. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEERNSt6vectorIdEE">
+<span id="_CPPv3NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEERNSt6vectorIdEE"></span><span id="_CPPv2NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEERNSt6vectorIdEE"></span><span id="brille::TetTri::locate__bArray:double:CR.std::vector:s:R.std::vector:double:RC"></span><span class="target" id="classbrille_1_1TetTri_1ae2678bc431bb0996c7a65d23bd26fc74"></span>size_t <code class="sig-name descname">locate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;size_t&gt; &amp;<em>v</em>, std::vector&lt;double&gt; &amp;<em>w</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEERNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEE">
+<span id="_CPPv3NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEE"></span><span id="_CPPv2NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEE"></span><span id="brille::TetTri::locate__bArray:double:CR.std::vector:s:RC"></span><span class="target" id="classbrille_1_1TetTri_1a0acac6e906b71fc164d69f29b878168e"></span>size_t <code class="sig-name descname">locate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, std::vector&lt;size_t&gt; &amp;<em>v</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri6locateERK6bArrayIdERNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri10neighboursERK6bArrayIdE">
+<span id="_CPPv3NK6brille6TetTri10neighboursERK6bArrayIdE"></span><span id="_CPPv2NK6brille6TetTri10neighboursERK6bArrayIdE"></span><span id="brille::TetTri::neighbours__bArray:double:CRC"></span><span class="target" id="classbrille_1_1TetTri_1a5ca0299f2d4c084ffe2e0506527c1dee"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">neighbours</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri10neighboursERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri10neighboursEK6size_t">
+<span id="_CPPv3NK6brille6TetTri10neighboursEK6size_t"></span><span id="_CPPv2NK6brille6TetTri10neighboursEK6size_t"></span><span id="brille::TetTri::neighbours__sCC"></span><span class="target" id="classbrille_1_1TetTri_1abe1fde797ef3234f34db1ae256a388ba"></span>std::vector&lt;size_t&gt; <code class="sig-name descname">neighbours</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>vert</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri10neighboursEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri6volumeEK6size_t">
+<span id="_CPPv3NK6brille6TetTri6volumeEK6size_t"></span><span id="_CPPv2NK6brille6TetTri6volumeEK6size_t"></span><span id="brille::TetTri::volume__sCC"></span><span class="target" id="classbrille_1_1TetTri_1adec0ee99f8e2b7fd1a74fb86b26e1681"></span>double <code class="sig-name descname">volume</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>tet</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri6volumeEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri13might_containEK6size_tRK6bArrayIdE">
+<span id="_CPPv3NK6brille6TetTri13might_containEK6size_tRK6bArrayIdE"></span><span id="_CPPv2NK6brille6TetTri13might_containEK6size_tRK6bArrayIdE"></span><span id="brille::TetTri::might_contain__sC.bArray:double:CRC"></span><span class="target" id="classbrille_1_1TetTri_1a0c1d19c416e7e7e14cdde242fa129e75"></span>bool <code class="sig-name descname">might_contain</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>tet</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri13might_containEK6size_tRK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri6TetTriEv">
+<span id="_CPPv3N6brille6TetTri6TetTriEv"></span><span id="_CPPv2N6brille6TetTri6TetTriEv"></span><span id="brille::TetTri::TetTri"></span><span class="target" id="classbrille_1_1TetTri_1a7307090d5dbe8b0824546d7fd1b87526"></span><code class="sig-name descname">TetTri</code><span class="sig-paren">(</span><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri6TetTriERKNSt6vectorI11TetTriLayerEE">
+<span id="_CPPv3N6brille6TetTri6TetTriERKNSt6vectorI11TetTriLayerEE"></span><span id="_CPPv2N6brille6TetTri6TetTriERKNSt6vectorI11TetTriLayerEE"></span><span id="brille::TetTri::TetTri__std::vector:TetTriLayer:CR"></span><span class="target" id="classbrille_1_1TetTri_1ad6344d2c61641babba5cb57eab3876c2"></span><code class="sig-name descname">TetTri</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="classbrille_1_1TetTriLayer.html#_CPPv4N6brille11TetTriLayerE" title="brille::TetTriLayer">TetTriLayer</a>&gt; &amp;<em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri6TetTriERKNSt6vectorI11TetTriLayerEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri16find_connectionsEK6size_t">
+<span id="_CPPv3N6brille6TetTri16find_connectionsEK6size_t"></span><span id="_CPPv2N6brille6TetTri16find_connectionsEK6size_t"></span><span id="brille::TetTri::find_connections__sC"></span><span class="target" id="classbrille_1_1TetTri_1a3e5ee3ceec06491d7a0638a09cb093b7"></span>void <code class="sig-name descname">find_connections</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>highest</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri16find_connectionsEK6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri6locateERK6bArrayIdE">
+<span id="_CPPv3NK6brille6TetTri6locateERK6bArrayIdE"></span><span id="_CPPv2NK6brille6TetTri6locateERK6bArrayIdE"></span><span id="brille::TetTri::locate__bArray:double:CRC"></span><span class="target" id="classbrille_1_1TetTri_1a9fdbf7c906415c165ad305f6d838370d"></span>std::vector&lt;std::pair&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>, double&gt;&gt; <code class="sig-name descname">locate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri6locateERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri10neighboursERK6bArrayIdE">
+<span id="_CPPv3NK6brille6TetTri10neighboursERK6bArrayIdE"></span><span id="_CPPv2NK6brille6TetTri10neighboursERK6bArrayIdE"></span><span class="target" id="classbrille_1_1TetTri_1ae3842258ed649bccc50b4c2324efb502"></span>std::vector&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; <code class="sig-name descname">neighbours</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri10neighboursEK5ind_t">
+<span id="_CPPv3NK6brille6TetTri10neighboursEK5ind_t"></span><span id="_CPPv2NK6brille6TetTri10neighboursEK5ind_t"></span><span id="brille::TetTri::neighbours__ind_tCC"></span><span class="target" id="classbrille_1_1TetTri_1a22e5d15b25a125994f1cb6d9f4e84831"></span>std::vector&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; <code class="sig-name descname">neighbours</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <em>v</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri10neighboursEK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri9to_stringEv">
+<span id="_CPPv3NK6brille6TetTri9to_stringEv"></span><span id="_CPPv2NK6brille6TetTri9to_stringEv"></span><span id="brille::TetTri::to_stringC"></span><span class="target" id="classbrille_1_1TetTri_1a0d2845d72af5fd6ea73ffe9dad38dfae"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri20number_of_tetrahedraEv">
+<span id="_CPPv3NK6brille6TetTri20number_of_tetrahedraEv"></span><span id="_CPPv2NK6brille6TetTri20number_of_tetrahedraEv"></span><span id="brille::TetTri::number_of_tetrahedraC"></span><span class="target" id="classbrille_1_1TetTri_1a0aa3753ef3987f5691d5388f5b91e81e"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">number_of_tetrahedra</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri18number_of_verticesEv">
+<span id="_CPPv3NK6brille6TetTri18number_of_verticesEv"></span><span id="_CPPv2NK6brille6TetTri18number_of_verticesEv"></span><span id="brille::TetTri::number_of_verticesC"></span><span class="target" id="classbrille_1_1TetTri_1a93baaf25c01df55f8a40ffe635c4ad4a"></span><a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a> <code class="sig-name descname">number_of_vertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri20get_vertex_positionsEv">
+<span id="_CPPv3NK6brille6TetTri20get_vertex_positionsEv"></span><span id="_CPPv2NK6brille6TetTri20get_vertex_positionsEv"></span><span id="brille::TetTri::get_vertex_positionsC"></span><span class="target" id="classbrille_1_1TetTri_1a62e2f2a6390505d0b31f8e3c1629b21a"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<code class="sig-name descname">get_vertex_positions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri28get_vertices_per_tetrahedronEv">
+<span id="_CPPv3NK6brille6TetTri28get_vertices_per_tetrahedronEv"></span><span id="_CPPv2NK6brille6TetTri28get_vertices_per_tetrahedronEv"></span><span id="brille::TetTri::get_vertices_per_tetrahedronC"></span><span class="target" id="classbrille_1_1TetTri_1a5efb3329b1b9f5207147d55f5cab53bc"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a>&gt; &amp;<code class="sig-name descname">get_vertices_per_tetrahedron</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri12collect_keysEv">
+<span id="_CPPv3NK6brille6TetTri12collect_keysEv"></span><span id="_CPPv2NK6brille6TetTri12collect_keysEv"></span><span id="brille::TetTri::collect_keysC"></span><span class="target" id="classbrille_1_1TetTri_1a2fc6ded4be7082946b4cb46f17dd8408"></span>std::set&lt;size_t&gt; <code class="sig-name descname">collect_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri12collect_keysEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri20unsafe_might_containEK6size_tRK6bArrayIdE">
+<span id="_CPPv3NK6brille6TetTri20unsafe_might_containEK6size_tRK6bArrayIdE"></span><span id="_CPPv2NK6brille6TetTri20unsafe_might_containEK6size_tRK6bArrayIdE"></span><span id="brille::TetTri::unsafe_might_contain__sC.bArray:double:CRC"></span><span class="target" id="classbrille_1_1TetTri_1a834b8dc973f58c77c553887093611dbd"></span>bool <code class="sig-name descname">unsafe_might_contain</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>tet</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri20unsafe_might_containEK6size_tRK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille6TetTri7weightsEK6size_tRK6bArrayIdERNSt5arrayIdXL4EEEE">
+<span id="_CPPv3NK6brille6TetTri7weightsEK6size_tRK6bArrayIdERNSt5arrayIdXL4EEEE"></span><span id="_CPPv2NK6brille6TetTri7weightsEK6size_tRK6bArrayIdERNSt5arrayIdX4EEE"></span><span id="brille::TetTri::weights__sC.bArray:double:CR.std::array:double.4:RC"></span><span class="target" id="classbrille_1_1TetTri_1ae9b64332a2ea1ead3aef6f05f07bf399"></span>void <code class="sig-name descname">weights</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>tet</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em>, std::array&lt;double, 4&gt; &amp;<em>w</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille6TetTri7weightsEK6size_tRK6bArrayIdERNSt5arrayIdXL4EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri34correct_tetrahedra_vertex_orderingEv">
+<span id="_CPPv3N6brille6TetTri34correct_tetrahedra_vertex_orderingEv"></span><span id="_CPPv2N6brille6TetTri34correct_tetrahedra_vertex_orderingEv"></span><span id="brille::TetTri::correct_tetrahedra_vertex_ordering__void"></span><span class="target" id="classbrille_1_1TetTri_1a6a2987716b25873d15f4d0fa2166f390"></span>void <code class="sig-name descname">correct_tetrahedra_vertex_ordering</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri34correct_tetrahedra_vertex_orderingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille6TetTri13make_balltreeEKd">
+<span id="_CPPv3N6brille6TetTri13make_balltreeEKd"></span><span id="_CPPv2N6brille6TetTri13make_balltreeEKd"></span><span id="brille::TetTri::make_balltree__doubleC"></span><span class="target" id="classbrille_1_1TetTri_1a1c18e86ead144fe14cc3f6c825a14858"></span>void <code class="sig-name descname">make_balltree</code><span class="sig-paren">(</span><em class="property">const</em> double <em>fraction</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille6TetTri13make_balltreeEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1TetTriLayer.html" class="btn btn-neutral float-right" title="Class TetTriLayer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1Symmetry.html" class="btn btn-neutral float-left" title="Class Symmetry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

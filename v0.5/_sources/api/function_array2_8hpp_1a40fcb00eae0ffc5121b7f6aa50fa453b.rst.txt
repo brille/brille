@@ -1,0 +1,13 @@
+.. _exhale_function_array2_8hpp_1a40fcb00eae0ffc5121b7f6aa50fa453b:
+
+Template Function brille::mutable_check
+=======================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::mutable_check(const Array2<T>&)

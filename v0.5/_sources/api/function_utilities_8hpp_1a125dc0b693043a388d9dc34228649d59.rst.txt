@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a125dc0b693043a388d9dc34228649d59:
+
+Template Function brille::utils::multiply_vector_matrix
+=======================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::multiply_vector_matrix(T *, const R *, const S *)

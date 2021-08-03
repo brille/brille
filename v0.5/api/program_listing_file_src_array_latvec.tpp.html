@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File array_latvec.tpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File array_latvec.tpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_array_latvec.tpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-array-latvec-tpp">
+<span id="program-listing-file-src-array-latvec-tpp"></span><h1>Program Listing for File array_latvec.tpp<a class="headerlink" href="#program-listing-for-file-array-latvec-tpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_array_latvec.tpp.html#file-src-array-latvec-tpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/array_latvec.tpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="c1">// In order to overload operations between bArrays and LatVecs unambiguously</span>
+<span class="c1">// these definitions can only be made after all types have been defined:</span>
+
+<span class="c1">// &#39;pure&#39; bArray&lt;T&gt; [+-*/] &#39;pure&#39; bArray&lt;R&gt;</span>
+<span class="c1">// (or derived classes with only extra static properties or methods)</span>
+
+<span class="cp">#define ARRAY_ARRAY_OP(X) template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;bareArrays&lt;T,A,R,A&gt;, A&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){\</span>
+<span class="cp">  auto itr = a.broadcastItr(b);\</span>
+<span class="cp">  A&lt;S&gt; out(itr.shape());\</span>
+<span class="cp">  for (auto [ox, ax, bx]: itr) out[ox] = a[ax] X b[bx];\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">/</span><span class="p">)</span>
+<span class="cp">#undef ARRAY_ARRAY_OP</span>
+
+<span class="c1">// LatVec [+-*/] LatVec</span>
+<span class="c1">// (or derived classes with only extra static properties or methods)</span>
+<span class="cp">#define ARRAY_ARRAY_OP(X) template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;bothLatVecs&lt;T,A,R,A&gt;, A&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){\</span>
+<span class="cp">  assert(a.samelattice(b));\</span>
+<span class="cp">  auto itr = a.broadcastItr(b);\</span>
+<span class="cp">  A&lt;S&gt; out(a.get_lattice(), itr.shape());\</span>
+<span class="cp">  for (auto [ox, ax, bx]: itr) out[ox] = a[ax] X b[bx];\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">ARRAY_ARRAY_OP</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="c1">//ARRAY_ARRAY_OP(*)</span>
+<span class="c1">//ARRAY_ARRAY_OP(/)</span>
+<span class="cp">#undef ARRAY_ARRAY_OP</span>
+
+<span class="c1">// The old calling syntax (which only partly worked?)</span>
+<span class="c1">// A&lt;S&gt; out(a, /*mutable*/ true, /*decouple*/ true);</span>
+<span class="c1">// replaced by</span>
+<span class="c1">// A&lt;S&gt; out = A&lt;S&gt;(a).decouple();</span>
+<span class="c1">// below</span>
+
+<span class="c1">// any derived bArray&lt;T&gt; class with a copy constructor [+-*/] scalar:</span>
+<span class="cp">#define ARRAY_SCALAR_OP(X,Y) template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;isArray&lt;T,A&gt;, A&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const A&lt;T&gt;&amp; a, const R b){\</span>
+<span class="cp">  A&lt;S&gt; out = A&lt;S&gt;(a).decouple(); \</span>
+<span class="cp">  out Y b;\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">ARRAY_SCALAR_OP</span><span class="p">(</span><span class="o">+</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+<span class="n">ARRAY_SCALAR_OP</span><span class="p">(</span><span class="o">-</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+<span class="n">ARRAY_SCALAR_OP</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+<span class="n">ARRAY_SCALAR_OP</span><span class="p">(</span><span class="o">/</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+<span class="cp">#undef ARRAY_SCALAR_OP</span>
+
+<span class="c1">// scalar [+-*] any derived bArray&lt;T&gt; class with a copy constructor:</span>
+<span class="cp">#define SCALAR_ARRAY_OP(X,Y) template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;isArray&lt;T,A&gt;, A&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const R b, const A&lt;T&gt;&amp; a){\</span>
+<span class="cp">  A&lt;S&gt; out = A&lt;S&gt;(a).decouple();\</span>
+<span class="cp">  out Y b;\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">SCALAR_ARRAY_OP</span><span class="p">(</span><span class="o">+</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+<span class="n">SCALAR_ARRAY_OP</span><span class="p">(</span><span class="o">-</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+<span class="n">SCALAR_ARRAY_OP</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+<span class="cp">#undef SCALAR_ARRAY_OP</span>
+
+<span class="c1">// any derived bArray&lt;T&gt; with a copy constructor [+-*/] std::array&lt;R,N&gt;</span>
+<span class="c1">// broadcasts the std::array but only if N matches the size of the last dimension of the bArray</span>
+<span class="cp">#define ARRAY_STDA_OP(X,Y) template&lt;class T, template&lt;class&gt; class A, class R, class S = std::common_type_t&lt;T,R&gt;, size_t Nel&gt;\</span>
+<span class="cp">std::enable_if_t&lt;isArray&lt;T,A&gt;, A&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const A&lt;T&gt;&amp; a, const std::array&lt;R,Nel&gt;&amp; b){\</span>
+<span class="cp">  assert(a.shape().back() == Nel);\</span>
+<span class="cp">  A&lt;S&gt; out = A&lt;S&gt;(a).decouple();\</span>
+<span class="cp">  auto sh = a.shape();\</span>
+<span class="cp">  sh.back()=0;</span><span class="cm">/*fix the last dimension of the iterator*/</span><span class="cp">\</span>
+<span class="cp">  for (auto x: out.subItr(sh)) for (size_t i=0; i&lt;Nel; ++i){\</span>
+<span class="cp">    x.back() = static_cast&lt;brille::ind_t&gt;(i);\</span>
+<span class="cp">    out[x] Y b[i];\</span>
+<span class="cp">  }\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">ARRAY_STDA_OP</span><span class="p">(</span><span class="o">+</span><span class="p">,</span><span class="o">+=</span><span class="p">)</span>
+<span class="n">ARRAY_STDA_OP</span><span class="p">(</span><span class="o">-</span><span class="p">,</span><span class="o">-=</span><span class="p">)</span>
+<span class="n">ARRAY_STDA_OP</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*=</span><span class="p">)</span>
+<span class="n">ARRAY_STDA_OP</span><span class="p">(</span><span class="o">/</span><span class="p">,</span><span class="o">/=</span><span class="p">)</span>
+<span class="cp">#undef ARRAY_STDA_OP</span>
+
+
+<span class="c1">// LatVec {+,-,*,/} &#39;pure&#39; bArray</span>
+<span class="cp">#define LATVEC_ARRAY_BINARY_OP(X) \</span>
+<span class="cp">template&lt;class T, class R, template&lt;class&gt; class L, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;(isLatVec&lt;T,L&gt;&amp;&amp;isBareArray&lt;R,A&gt;), L&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const L&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b){\</span>
+<span class="cp">  auto itr = a.broadcastItr(b);\</span>
+<span class="cp">  L&lt;S&gt; out(a.get_lattice(), itr.shape());\</span>
+<span class="cp">  for (auto [ox, ax, bx]: itr) out[ox] = a[ax] X b[bx];\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">LATVEC_ARRAY_BINARY_OP</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">LATVEC_ARRAY_BINARY_OP</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">LATVEC_ARRAY_BINARY_OP</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="n">LATVEC_ARRAY_BINARY_OP</span><span class="p">(</span><span class="o">/</span><span class="p">)</span>
+<span class="cp">#undef LATVEC_ARRAY_BINARY_OP</span>
+
+<span class="c1">// bArray {+,-,*,/} LatVec</span>
+<span class="cp">#define ARRAY_LATVEC_BINARY_OP(X) \</span>
+<span class="cp">template&lt;class T, class R, template&lt;class&gt; class L, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;\</span>
+<span class="cp">std::enable_if_t&lt;(isLatVec&lt;T,L&gt;&amp;&amp;isBareArray&lt;R,A&gt;), L&lt;S&gt;&gt;\</span>
+<span class="cp">operator X (const A&lt;R&gt;&amp; b, const L&lt;T&gt;&amp; a){\</span>
+<span class="cp">  auto itr = b.broadcastItr(a);\</span>
+<span class="cp">  L&lt;S&gt; out(a.get_lattice(), itr.shape());\</span>
+<span class="cp">  for (auto [ox, bx, ax]: itr) out[ox] = b[bx] X a[ax];\</span>
+<span class="cp">  return out;\</span>
+<span class="cp">}</span>
+<span class="n">ARRAY_LATVEC_BINARY_OP</span><span class="p">(</span><span class="o">+</span><span class="p">)</span>
+<span class="n">ARRAY_LATVEC_BINARY_OP</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">ARRAY_LATVEC_BINARY_OP</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ARRAY_LATVEC_BINARY_OP</span><span class="p">(</span><span class="o">/</span><span class="p">)</span>
+<span class="cp">#undef ARRAY_LATVEC_BINARY_OP</span>
+
+<span class="c1">// // cross (LatVec × LatVec)</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class L&gt;</span>
+<span class="c1">// std::enable_if_t&lt;bothLatVecs&lt;T,L,R,L&gt;, L&lt;double&gt;&gt;</span>
+<span class="c1">// cross(const L&lt;T&gt;&amp; a, const L&lt;R&gt;&amp; b) {</span>
+<span class="c1">//   assert( a.samelattice(b) &amp;&amp; a.ndim() == b.ndim());</span>
+<span class="c1">//   assert( a.size(a.ndim()-1) == 3 &amp;&amp; b.size(b.ndim()-1)==3 );</span>
+<span class="c1">//   assert( a.is_row_ordered() &amp;&amp; b.is_row_ordered() &amp;&amp; a.is_contiguous() &amp;&amp; b.is_contiguous() );</span>
+<span class="c1">//   auto ashape = a.shape(); // (N,M,…,3)</span>
+<span class="c1">//   auto bshape = b.shape(); // (O,P,…,3) (N≡O unless N≡1 or O≡1, M≡P unless M≡1 or P≡1, etc.)</span>
+<span class="c1">//   // verify that broadcasting is possible and find the outer array shape</span>
+<span class="c1">//   auto itr = a.broadcastItr(b);</span>
+<span class="c1">//   auto oshape = itr.shape();</span>
+<span class="c1">//   // to use brille::utils::vector_cross we need to iterate over all but the last dimension:</span>
+<span class="c1">//   ashape.pop_back();</span>
+<span class="c1">//   bshape.pop_back();</span>
+<span class="c1">//   auto realitr = L&lt;T&gt;::bItr(ashape, bshape);</span>
+<span class="c1">//   // perform the cross product storing the result into a temporary array</span>
+<span class="c1">//   bArray&lt;double&gt; oarray(oshape); // row-ordered contiguous</span>
+<span class="c1">//   for (auto [ox, ax, bx]: realitr)</span>
+<span class="c1">//     brille::utils::vector_cross&lt;double,T,R,3&gt;(oarray.ptr(ox), a.ptr(ax), b.ptr(bx));</span>
+<span class="c1">//   // setup the output array</span>
+<span class="c1">//   auto lat = a.get_lattice();</span>
+<span class="c1">//   typename LatVecTraits&lt;L&lt;T&gt;, double&gt;::star cross_star(lat.star(), oarray);</span>
+<span class="c1">//   cross_star *= lat.get_volume()/2.0/brille::pi;</span>
+<span class="c1">//   return cross_star.star();</span>
+<span class="c1">// }</span>
+<span class="c1">// // cross (Array × Array)</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class L&gt;</span>
+<span class="c1">// std::enable_if_t&lt;bareArrays&lt;T,L,R,L&gt;, L&lt;double&gt;&gt;</span>
+<span class="c1">// cross(const L&lt;T&gt;&amp; a, const L&lt;R&gt;&amp; b) {</span>
+<span class="c1">//   assert( a.ndim() == b.ndim() );</span>
+<span class="c1">//   assert( a.size(a.ndim()-1) == 3 &amp;&amp; b.size(b.ndim()-1)==3 );</span>
+<span class="c1">//   assert( a.is_row_ordered() &amp;&amp; b.is_row_ordered() &amp;&amp; a.is_contiguous() &amp;&amp; b.is_contiguous() );</span>
+<span class="c1">//   auto ashape = a.shape(); // (N,M,…,3)</span>
+<span class="c1">//   auto bshape = b.shape(); // (O,P,…,3) (N≡O unless N≡1 or O≡1, M≡P unless M≡1 or P≡1, etc.)</span>
+<span class="c1">//   // verify that broadcasting is possible and find the outer array shape</span>
+<span class="c1">//   auto itr = L&lt;T&gt;::bItr(ashape, bshape);</span>
+<span class="c1">//   auto oshape = itr.shape();</span>
+<span class="c1">//   // to use brille::utils::vector_cross we need to iterate over all but the last dimension:</span>
+<span class="c1">//   ashape.pop_back();</span>
+<span class="c1">//   bshape.pop_back();</span>
+<span class="c1">//   auto realitr = L&lt;T&gt;::bItr(ashape, bshape);</span>
+<span class="c1">//   // perform the cross product storing the result into a temporary array</span>
+<span class="c1">//   bArray&lt;double&gt; oarray(oshape); // row-ordered contiguous</span>
+<span class="c1">//   for (auto [ox, ax, bx]: realitr)</span>
+<span class="c1">//     brille::utils::vector_cross&lt;double,T,R,3&gt;(oarray.ptr(ox), a.ptr(ax), b.ptr(bx));</span>
+<span class="c1">//   return oarray;</span>
+<span class="c1">// }</span>
+<span class="c1">// // dot (Array ⋅ Array)</span>
+<span class="c1">// // this version requires equal last dimension size</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A&gt;</span>
+<span class="c1">// std::enable_if_t&lt;bareArrays&lt;T,A,R,A&gt;, A&lt;double&gt;&gt;</span>
+<span class="c1">// dot(const A&lt;T&gt;&amp; a, const A&lt;R&gt;&amp; b) {</span>
+<span class="c1">//   assert( a.ndim() == b.ndim() );</span>
+<span class="c1">//   assert( a.size(a.ndim()-1) == b.size(b.ndim()-1) );</span>
+<span class="c1">//   assert( a.is_row_ordered() &amp;&amp; b.is_row_ordered() &amp;&amp; a.is_contiguous() &amp;&amp; b.is_contiguous() );</span>
+<span class="c1">//   auto ashape = a.shape(); // (N,M,…,3)</span>
+<span class="c1">//   auto bshape = b.shape(); // (O,P,…,3) (N≡O unless N≡1 or O≡1, M≡P unless M≡1 or P≡1, etc.)</span>
+<span class="c1">//   auto ndot = ashape.back();</span>
+<span class="c1">//   ashape.back()=1;</span>
+<span class="c1">//   bshape.back()=1;</span>
+<span class="c1">//   // verify that broadcasting is possible and find the outer array shape</span>
+<span class="c1">//   auto itr = A&lt;T&gt;::bItr(ashape, bshape);</span>
+<span class="c1">//   auto oshape = itr.shape();</span>
+<span class="c1">//   // perform the dot product storing the result into a temporary array</span>
+<span class="c1">//   A&lt;double&gt; oarray(oshape); // row-ordered contiguous</span>
+<span class="c1">//   for (auto [ox, ax, bx]: itr)</span>
+<span class="c1">//     oarray[ox] = brille::utils::vector_dot&lt;double,T,R&gt;(ndot, a.ptr(ax), b.ptr(bx));</span>
+<span class="c1">//   return oarray;</span>
+<span class="c1">// }</span>
+<span class="c1">// // // [bArray] dot</span>
+<span class="c1">// // // this version broadcasts over the last dimension, which seems like a bad idea</span>
+<span class="c1">// // template&lt;class T, class R, template&lt;class&gt; class A, class S = std::common_type_t&lt;T,R&gt;&gt;</span>
+<span class="c1">// // std::enable_if_t&lt;bareArrays&lt;T,A,R,A&gt;, A&lt;S&gt;&gt;</span>
+<span class="c1">// // dot(const A&lt;T&gt; &amp;a, const A&lt;R&gt; &amp;b){</span>
+<span class="c1">// //   auto itr = A&lt;T&gt;::bItr(a.shape(), b.shape());</span>
+<span class="c1">// //   auto outshape = itr.shape();</span>
+<span class="c1">// //   size_t last = outshape.size()-1;</span>
+<span class="c1">// //   outshape[last] = 1u;</span>
+<span class="c1">// //   A&lt;S&gt; out(outshape, S(0));</span>
+<span class="c1">// //   for (auto [ix, ax, bx]: itr){</span>
+<span class="c1">// //     ix[last] = 0u;</span>
+<span class="c1">// //     out[last] += a[ax]*b[bx];</span>
+<span class="c1">// //   }</span>
+<span class="c1">// //   return out;</span>
+<span class="c1">// // }</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class A, class S&gt;</span>
+<span class="c1">// std::enable_if_t&lt;bothArrays&lt;T,A,R,A&gt;, double&gt;</span>
+<span class="c1">// same_lattice_dot(const A&lt;R&gt;&amp; x, const A&lt;T&gt;&amp; y, const std::vector&lt;S&gt;&amp; len, const std::vector&lt;S&gt;&amp; ang){</span>
+<span class="c1">//   brille::shape_t a{0,0}, b{0,1}, c{0,2};</span>
+<span class="c1">//   S x0{static_cast&lt;S&gt;(x[a])}, x1{static_cast&lt;S&gt;(x[b])}, x2{static_cast&lt;S&gt;(x[c])};</span>
+<span class="c1">//   S y0{static_cast&lt;S&gt;(y[a])}, y1{static_cast&lt;S&gt;(y[b])}, y2{static_cast&lt;S&gt;(y[c])};</span>
+<span class="c1">//   S out = x0*y0*len[0]*len[0] + x1*y1*len[1]*len[1] + x2*y2*len[2]*len[2]</span>
+<span class="c1">//         + (x0*y1+x1*y0)*len[0]*len[1]*cos(ang[2])</span>
+<span class="c1">//         + (x1*y2+x2*y1)*len[1]*len[2]*cos(ang[0])</span>
+<span class="c1">//         + (x2*y0+x0*y2)*len[2]*len[0]*cos(ang[1]);</span>
+<span class="c1">//   return out;</span>
+<span class="c1">// }</span>
+<span class="c1">// dot [LatVec ⋅ LatVec]</span>
+<span class="c1">// template&lt;class T, class R, template&lt;class&gt; class L1, template&lt;class&gt; class L2&gt;</span>
+<span class="c1">// std::enable_if_t&lt;bothLatVecs&lt;T,L1,R,L2&gt;, bArray&lt;double&gt;&gt;</span>
+<span class="c1">// dot(const L1&lt;T&gt; &amp;a, const L2&lt;R&gt; &amp;b){</span>
+<span class="c1">//   bool issame = a.samelattice(b);</span>
+<span class="c1">//   if (!( issame || a.starlattice(b) )){</span>
+<span class="c1">//     debug_update(&quot;Incompatible lattices\n&quot;,a.get_lattice().string_repr(),&quot;\n&quot;,b.get_lattice().string_repr());</span>
+<span class="c1">//     throw std::runtime_error(&quot;the dot product between Lattice Vectors requires same or starred lattices&quot;);</span>
+<span class="c1">//   }</span>
+<span class="c1">//   if (!issame){</span>
+<span class="c1">//     auto out = dot(a.get_hkl(), b.get_hkl());</span>
+<span class="c1">//     out *= 2*brille::pi; // to avoid making a copy of the array, compared to 2π*dot(...)</span>
+<span class="c1">//     return out;</span>
+<span class="c1">//   }</span>
+<span class="c1">//   assert( a.ndim() == b.ndim());</span>
+<span class="c1">//   assert( a.size(a.ndim()-1) == 3 &amp;&amp; b.size(b.ndim()-1)==3 );</span>
+<span class="c1">//   assert( a.is_row_ordered() &amp;&amp; b.is_row_ordered() &amp;&amp; a.is_contiguous() &amp;&amp; b.is_contiguous() );</span>
+<span class="c1">//   auto ashape = a.shape(); // (N,M,…,3)</span>
+<span class="c1">//   auto bshape = b.shape(); // (O,P,…,3) (N≡O unless N≡1 or O≡1, M≡P unless M≡1 or P≡1, etc.)</span>
+<span class="c1">//   // to use same_lattice_dot we need to iterate over all but the last dimension:</span>
+<span class="c1">//   ashape.back()=1;</span>
+<span class="c1">//   bshape.back()=1;</span>
+<span class="c1">//   auto itr = L1&lt;T&gt;::bItr(ashape, bshape);</span>
+<span class="c1">//   auto oshape = itr.shape();</span>
+<span class="c1">//   // perform the dot product storing the result into the output</span>
+<span class="c1">//   bArray&lt;double&gt; oarray(oshape); // row-ordered contiguous</span>
+<span class="c1">//   auto lat = a.get_lattice();</span>
+<span class="c1">//   std::vector&lt;double&gt; len{lat.get_a(), lat.get_b(), lat.get_c()};</span>
+<span class="c1">//   std::vector&lt;double&gt; ang{lat.get_alpha(), lat.get_beta(), lat.get_gamma()};</span>
+<span class="c1">//   for (auto [ox, ax, bx]: itr)</span>
+<span class="c1">//     oarray[ox] = same_lattice_dot(a.view(ax), b.view(bx), len, ang);</span>
+<span class="c1">//   return oarray;</span>
+<span class="c1">// }</span>
+
+<span class="cm">/*==============================================================================</span>
+<span class="cm">  The broadcasting of cross is intimately dependent on the implementation of</span>
+<span class="cm">  the Array class. If Array2 is used then pop() is not a method of shape_t!</span>
+<span class="cm">  So this variant must be used instead:</span>
+<span class="cm">==============================================================================*/</span>
+<span class="c1">// cross (Array × Array)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bareArrays</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span> <span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">aN</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">bN</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="mi">1u</span><span class="o">==</span><span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span><span class="o">==</span><span class="n">bN</span> <span class="o">||</span> <span class="n">aN</span><span class="o">==</span><span class="n">bN</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">oO</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1u</span> <span class="o">==</span> <span class="n">aN</span><span class="p">)</span> <span class="o">?</span> <span class="nl">bN</span> <span class="p">:</span> <span class="n">aN</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">oarray</span><span class="p">(</span><span class="n">oO</span><span class="p">,</span> <span class="mi">3u</span><span class="p">);</span> <span class="c1">// row-ordered contiguous</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span> <span class="o">==</span> <span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span> <span class="o">==</span> <span class="n">bN</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span> <span class="o">==</span> <span class="n">aN</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">bN</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">vector_cross</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">oarray</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">vector_cross</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">oarray</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="n">vector_cross</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">oarray</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">oarray</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// cross (LatVec × LatVec)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bothLatVecs</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">samelattice</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">);</span>
+  <span class="k">auto</span> <span class="n">oarray</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">());</span>
+  <span class="c1">// setup the output array</span>
+  <span class="k">auto</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">();</span>
+  <span class="k">typename</span> <span class="n">LatVecTraits</span><span class="o">&lt;</span><span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;::</span><span class="n">star</span> <span class="n">cross_star</span><span class="p">(</span><span class="n">lat</span><span class="p">.</span><span class="n">star</span><span class="p">(),</span> <span class="n">oarray</span><span class="p">);</span>
+  <span class="n">cross_star</span> <span class="o">*=</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_volume</span><span class="p">()</span><span class="o">/</span><span class="mf">2.0</span><span class="o">/</span><span class="n">brille</span><span class="o">::</span><span class="n">pi</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">cross_star</span><span class="p">.</span><span class="n">star</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="c1">// dot (Array2 ⋅ Array2)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bareArrays</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">A</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">dot</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">aN</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">bN</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">d</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="mi">1u</span><span class="o">==</span><span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span><span class="o">==</span><span class="n">bN</span> <span class="o">||</span> <span class="n">aN</span><span class="o">==</span><span class="n">bN</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">oO</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1u</span> <span class="o">==</span> <span class="n">aN</span><span class="p">)</span> <span class="o">?</span> <span class="nl">bN</span> <span class="p">:</span> <span class="n">aN</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">oarray</span><span class="p">(</span><span class="n">oO</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span><span class="o">==</span><span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span><span class="o">==</span><span class="n">bN</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span><span class="o">==</span><span class="n">aN</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">bN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector_dot</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector_dot</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector_dot</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">oarray</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bothArrays</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>
+<span class="n">same_lattice_dot</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">y</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">len</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&amp;</span> <span class="n">ang</span><span class="p">){</span>
+  <span class="n">S</span> <span class="n">x0</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))},</span> <span class="n">x1</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))},</span> <span class="n">x2</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))};</span>
+  <span class="n">S</span> <span class="n">y0</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))},</span> <span class="n">y1</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))},</span> <span class="n">y2</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))};</span>
+  <span class="n">S</span> <span class="n">out</span> <span class="o">=</span> <span class="n">x0</span><span class="o">*</span><span class="n">y0</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1</span><span class="o">*</span><span class="n">y1</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x2</span><span class="o">*</span><span class="n">y2</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">x0</span><span class="o">*</span><span class="n">y1</span><span class="o">+</span><span class="n">x1</span><span class="o">*</span><span class="n">y0</span><span class="p">)</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">x1</span><span class="o">*</span><span class="n">y2</span><span class="o">+</span><span class="n">x2</span><span class="o">*</span><span class="n">y1</span><span class="p">)</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="o">+</span> <span class="p">(</span><span class="n">x2</span><span class="o">*</span><span class="n">y0</span><span class="o">+</span><span class="n">x0</span><span class="o">*</span><span class="n">y2</span><span class="p">)</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// dot [LatVec ⋅ LatVec]</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L1</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L2</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bothLatVecs</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L1</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">L2</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">dot</span><span class="p">(</span><span class="k">const</span> <span class="n">L1</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">L2</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">){</span>
+  <span class="kt">bool</span> <span class="n">issame</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">samelattice</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="n">issame</span> <span class="o">||</span> <span class="n">a</span><span class="p">.</span><span class="n">starlattice</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">)){</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Incompatible lattices</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">string_repr</span><span class="p">(),</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">b</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">string_repr</span><span class="p">());</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;the dot product between Lattice Vectors requires same or starred lattices&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">issame</span><span class="p">){</span>
+    <span class="k">auto</span> <span class="n">out</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">());</span>
+    <span class="n">out</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">pi</span><span class="p">;</span> <span class="c1">// to avoid making a copy of the array, compared to 2π*dot(...)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span> <span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="n">a</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">aN</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">bN</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span> <span class="mi">1u</span><span class="o">==</span><span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span><span class="o">==</span><span class="n">bN</span> <span class="o">||</span> <span class="n">aN</span><span class="o">==</span><span class="n">bN</span> <span class="p">);</span>
+  <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">oO</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1u</span> <span class="o">==</span> <span class="n">aN</span><span class="p">)</span> <span class="o">?</span> <span class="nl">bN</span> <span class="p">:</span> <span class="n">aN</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">oarray</span><span class="p">(</span><span class="n">oO</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">len</span><span class="p">{</span><span class="n">lat</span><span class="p">.</span><span class="n">get_a</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_b</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_c</span><span class="p">()};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ang</span><span class="p">{</span><span class="n">lat</span><span class="p">.</span><span class="n">get_alpha</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_beta</span><span class="p">(),</span> <span class="n">lat</span><span class="p">.</span><span class="n">get_gamma</span><span class="p">()};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span><span class="o">==</span><span class="n">aN</span> <span class="o">||</span> <span class="mi">1u</span><span class="o">==</span><span class="n">bN</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">1u</span><span class="o">==</span><span class="n">aN</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">bN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">same_lattice_dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">len</span><span class="p">,</span> <span class="n">ang</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">same_lattice_dot</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">b</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">ang</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">aN</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">oarray</span><span class="p">.</span><span class="n">val</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">same_lattice_dot</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">b</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">len</span><span class="p">,</span> <span class="n">ang</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">oarray</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// [bArray] norm</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">norm</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">){</span>
+  <span class="n">L</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">out</span><span class="p">.</span><span class="n">valItr</span><span class="p">())</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// [LatVec] norm</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span>
+<span class="n">norm</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">){</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">x</span><span class="p">:</span> <span class="n">out</span><span class="p">.</span><span class="n">valItr</span><span class="p">())</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// [LatVec],[Array] cat</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">LV</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">BA</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="p">(</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">LV</span><span class="o">&gt;&amp;&amp;</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">BA</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">cat</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">LV</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">){</span>
+  <span class="c1">// BA&lt;S&gt; to ensure type conversion happens *before* the append</span>
+  <span class="k">return</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">()).</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// [Array],[LatVec] cat</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">LV</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">BA</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="p">(</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">LV</span><span class="o">&gt;&amp;&amp;</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="n">BA</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">cat</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">LV</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">BA</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">decouple</span><span class="p">()).</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="c1">// [bArray],[bArray] cat</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bareArrays</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">cat</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">decouple</span><span class="p">()).</span><span class="n">append</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// [LatVec] cat</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bothLatVecs</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">cat</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">){</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="p">.</span><span class="n">samelattice</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;LatVec cat requires vectors in the same lattice.&quot;</span><span class="p">);</span>
+  <span class="c1">// use cat([Array],[Array]) to handle possible type-conversion</span>
+  <span class="k">return</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">cat</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">()));</span>
+<span class="p">}</span>
+<span class="c1">// poor-man&#39;s variadic Array concatenation</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">class</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">bothArrays</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="n">cat</span><span class="p">(</span><span class="k">const</span> <span class="n">brille</span><span class="o">::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">,</span> <span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="n">Args</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">cat</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">cat</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">args</span><span class="p">...);</span>
+<span class="p">}</span>
+<span class="c1">// star</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">LatVecStar</span><span class="o">&lt;</span><span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&gt;</span>
+<span class="n">star</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">cvmt</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">get_covariant_metric_tensor</span><span class="p">(</span><span class="n">cvmt</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+  <span class="n">LatVecStar</span><span class="o">&lt;</span><span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vstar</span><span class="p">(</span> <span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">star</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()</span> <span class="p">);</span>
+  <span class="k">auto</span> <span class="n">vsh</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+  <span class="n">vsh</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">v</span><span class="p">.</span><span class="n">subItr</span><span class="p">(</span><span class="n">vsh</span><span class="p">))</span> <span class="c1">// iterate over all but the last dimension</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">vstar</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cvmt</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="k">return</span> <span class="n">vstar</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// Matrix * LatVec</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="p">(</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">is_floating_point</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">),</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+<span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">R</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;&amp;</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">){</span>
+  <span class="k">auto</span> <span class="n">ashape</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">is_row_ordered</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">ashape</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="n">L</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">ashape</span><span class="p">);</span>
+  <span class="n">ashape</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">a</span><span class="p">.</span><span class="n">subItr</span><span class="p">(</span><span class="n">ashape</span><span class="p">))</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="o">&lt;</span><span class="n">S</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">out</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">m</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// -LatVec</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">){</span>
+  <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="o">-</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">()));</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// -(&#39;pure&#39; brille:Array)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="p">(</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;&amp;&amp;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="k">operator</span><span class="o">-</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">){</span>
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// sum(bArray)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="n">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">typename</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// sum(LatVec)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="n">sum</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">typename</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">ind_t</span> <span class="n">dim</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">A</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="p">));</span>
+<span class="p">}</span>
+
+
+<span class="c1">// abs(bArray)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isBareArray</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="n">abs</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">){</span>
+  <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">a</span><span class="p">.</span><span class="n">subItr</span><span class="p">())</span> <span class="n">out</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">magnitude</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// abs(LatVec)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">template</span><span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">L</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">isLatVec</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">L</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span>
+<span class="n">abs</span><span class="p">(</span><span class="k">const</span> <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">){</span>
+  <span class="n">L</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">());</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">a</span><span class="p">.</span><span class="n">subItr</span><span class="p">())</span> <span class="n">out</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">magnitude</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

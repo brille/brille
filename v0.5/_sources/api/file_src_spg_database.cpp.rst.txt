@@ -1,0 +1,50 @@
+
+.. _file_src_spg_database.cpp:
+
+File spg_database.cpp
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/spg_database.cpp``)
+-------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_spg_database.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``cstring``
+
+- ``hall_symbol.hpp`` (:ref:`file_src_hall_symbol.hpp`)
+
+- ``spg_database.hpp`` (:ref:`file_src_spg_database.hpp`)
+
+- ``stdlib.h``
+
+
+
+
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_spg__database_8cpp_1a578037fa51efca00d3055071a91f456a`
+

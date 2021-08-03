@@ -1,0 +1,25 @@
+.. _exhale_class_classbrille_1_1BrillouinZoneTrellis3:
+
+Template Class BrillouinZoneTrellis3
+====================================
+
+- Defined in :ref:`file_src_bz_trellis.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public brille::PolyhedronTrellis< T, R >`` (:ref:`exhale_class_classbrille_1_1PolyhedronTrellis`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::BrillouinZoneTrellis3
+   :members:
+   :protected-members:
+   :undoc-members:

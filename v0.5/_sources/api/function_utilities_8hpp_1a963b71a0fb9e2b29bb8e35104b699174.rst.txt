@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a963b71a0fb9e2b29bb8e35104b699174:
+
+Template Function brille::utils::complex_prod(const std::complex<T>&, T)
+========================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::complex_prod(const std::complex<T>&, T)

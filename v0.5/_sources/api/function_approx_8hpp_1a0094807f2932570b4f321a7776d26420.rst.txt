@@ -1,0 +1,13 @@
+.. _exhale_function_approx_8hpp_1a0094807f2932570b4f321a7776d26420:
+
+Template Function brille::approx::matrix(const T \*, const R \*, const int)
+===========================================================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::approx::matrix(const T *, const R *, const int)

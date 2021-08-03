@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1ArrayTraits:
+
+Template Struct ArrayTraits
+===========================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::ArrayTraits
+   :members:
+   :protected-members:
+   :undoc-members:

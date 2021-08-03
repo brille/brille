@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1ac7a01ffea985d6e73e93eee1c9fb7db4:
+
+Template Function brille::cat(const brille::ind_t, const L<T>&, const L<R>&)
+============================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::cat(const brille::ind_t, const L<T>&, const L<R>&)

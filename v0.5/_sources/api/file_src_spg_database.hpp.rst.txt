@@ -1,0 +1,80 @@
+
+.. _file_src_spg_database.hpp:
+
+File spg_database.hpp
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/spg_database.hpp``)
+-------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_spg_database.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bravais.hpp`` (:ref:`file_src_bravais.hpp`)
+
+- ``cstring``
+
+- ``pointgroup.hpp`` (:ref:`file_src_pointgroup.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_primitive.hpp`
+
+- :ref:`file_src_pointgroup.cpp`
+
+- :ref:`file_src_spg_database.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1Spacegroup`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_spg__database_8hpp_1aef29ea990705bb802287540da4512406`
+
+- :ref:`exhale_function_spg__database_8hpp_1a1b2c1e245daccd2e32a54b8d4afeaf98`
+
+- :ref:`exhale_function_spg__database_8hpp_1ab7271b2a606ebc4347180b3676849b4c`
+
+- :ref:`exhale_function_spg__database_8hpp_1af1b43446221a8daaf63d1455d9722f94`
+
+- :ref:`exhale_function_spg__database_8hpp_1aeb7c15885d67cc7c50f62c64e9db8790`
+

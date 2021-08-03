@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1abe802108112d7e575f0003971adcabe7:
+
+Template Function brille::dot(const A<T>&, const A<R>&)
+=======================================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::dot(const A<T>&, const A<R>&)

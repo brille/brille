@@ -1,0 +1,13 @@
+.. _exhale_function_transform_8hpp_1a9f240be7356f291e3ada98ef330ec18b:
+
+Template Function brille::hkl_to_xyz
+====================================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::hkl_to_xyz(const Reciprocal&, const bArray<T>&)

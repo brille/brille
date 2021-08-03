@@ -1,0 +1,13 @@
+.. _exhale_function_neighbours_8hpp_1a04f2f94ca31b6a1fe9f07492c6b10dc8:
+
+Function brille::make_relative_neighbour_indices
+================================================
+
+- Defined in :ref:`file_src_neighbours.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::make_relative_neighbour_indices(const int)

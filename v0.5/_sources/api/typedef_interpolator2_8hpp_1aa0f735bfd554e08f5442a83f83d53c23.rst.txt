@@ -1,0 +1,13 @@
+.. _exhale_typedef_interpolator2_8hpp_1aa0f735bfd554e08f5442a83f83d53c23:
+
+Typedef brille::CostFunction
+============================
+
+- Defined in :ref:`file_src_interpolator2.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::CostFunction

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a70d2570547daf422c9ef7c97c055d7f2:
+
+Template Function brille::utils::make_vector
+============================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::make_vector(Ts&&...)

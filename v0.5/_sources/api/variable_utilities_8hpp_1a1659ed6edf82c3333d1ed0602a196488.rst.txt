@@ -1,0 +1,13 @@
+.. _exhale_variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488:
+
+Variable brille::halfpi
+=======================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: brille::halfpi

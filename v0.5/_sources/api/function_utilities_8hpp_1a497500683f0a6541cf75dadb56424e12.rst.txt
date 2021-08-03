@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a497500683f0a6541cf75dadb56424e12:
+
+Template Function brille::utils::make_array
+===========================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::make_array(Ts&&...)

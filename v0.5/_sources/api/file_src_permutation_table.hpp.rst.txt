@@ -1,0 +1,74 @@
+
+.. _file_src_permutation_table.hpp:
+
+File permutation_table.hpp
+==========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/permutation_table.hpp``)
+------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_permutation_table.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``map``
+
+- ``set``
+
+- ``tuple``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_interpolator2.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1PermutationTable`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_permutation__table_8hpp_1abdabdf1bdad9df8ef8f7fb7fce96128c`
+

@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1is__container:
+
+Template Struct is_container
+============================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::is_container
+   :members:
+   :protected-members:
+   :undoc-members:

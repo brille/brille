@@ -1,0 +1,61 @@
+
+.. _file_src_types.hpp:
+
+File types.hpp
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/types.hpp``)
+------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_types.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_array.hpp`
+
+- :ref:`file_src_array2.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5`
+
+- :ref:`exhale_typedef_types_8hpp_1afb26ed66827f17ec93e3bd6c25570cf3`
+

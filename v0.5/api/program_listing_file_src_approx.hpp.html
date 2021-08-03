@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File approx.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File approx.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_approx.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-approx-hpp">
+<span id="program-listing-file-src-approx-hpp"></span><h1>Program Listing for File approx.hpp<a class="headerlink" href="#program-listing-for-file-approx-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_approx.hpp.html#file-src-approx-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/approx.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef BRILLE_APPROX_HPP_</span>
+<span class="cp">#define BRILLE_APPROX_HPP_</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;tuple&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;type_traits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;limits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdexcept&gt;  // for std::overflow_error</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="c1">// #include &lt;complex&gt; // included by debug</span>
+<span class="cp">#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
+
+
+<span class="k">namespace</span> <span class="n">brille</span><span class="p">{</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">abs</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="p">}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="n">abs</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="k">namespace</span> <span class="n">approx</span><span class="p">{</span>
+    <span class="c1">// // courtesy of https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon</span>
+    <span class="c1">// template&lt;class T&gt;</span>
+    <span class="c1">// std::enable_if_t&lt;!std::numeric_limits&lt;T&gt;::is_integer, bool&gt;</span>
+    <span class="c1">// almost_equal(T x, T y, int ulp){</span>
+    <span class="c1">// // the machine epsilon has to be scaled to the magnitude of the values used</span>
+    <span class="c1">// // and multiplied by the desired precision in ULPs (units in the last place)</span>
+    <span class="c1">// return std::fabs(x-y) &lt;= std::numeric_limits&lt;T&gt;::epsilon() * std::fabs(x+y) * ulp</span>
+    <span class="c1">//     // unless the result is subnormal</span>
+    <span class="c1">//     || std::fabs(x-y) &lt; std::numeric_limits&lt;T&gt;::min();</span>
+    <span class="c1">// }</span>
+
+
+    <span class="c1">// A mulitplier for the approximate-comparison tolerance</span>
+    <span class="c1">// 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),&#39;C -2y&#39;</span>
+    <span class="c1">// but setting it any lower (9000 tried) causes other test lattices, namely,</span>
+    <span class="c1">// (7.189, 4.407, 5.069) (90,90.04,90) &#39;-C 2y&#39; to throw a runtime error</span>
+    <span class="cp">#if defined(_MSC_VER) || defined(__MINW32__)</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">TOL_MULT</span><span class="o">=</span><span class="mi">20000</span><span class="p">;</span>
+    <span class="cp">#else</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">TOL_MULT</span><span class="o">=</span><span class="mi">10000</span><span class="p">;</span>
+    <span class="cp">#endif</span>
+
+    <span class="cm">/* isfpT | isfpR | which? | why?</span>
+<span class="cm">       ------|-------|--------|-----</span>
+<span class="cm">         0       0     either    both Trel and Rrel are 0</span>
+<span class="cm">         1       1      Trel     R is convertible to T</span>
+<span class="cm">         0       1      Rrel     Trel is 0, so use Rrel</span>
+<span class="cm">         1       0      Trel     Rrel is 0, so use Trel</span>
+<span class="cm">    */</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="kt">bool</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">tols</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="n">T</span> <span class="n">Trel</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">epsilon</span><span class="p">();</span> <span class="c1">// zero for integer-type T</span>
+      <span class="n">R</span> <span class="n">Rrel</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">epsilon</span><span class="p">();</span> <span class="c1">// zero for integer-type R</span>
+      <span class="n">T</span> <span class="n">Tabs</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">1000000000</span><span class="p">;</span> <span class="c1">// 0 or 5e-9</span>
+      <span class="n">R</span> <span class="n">Rabs</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">1000000000</span><span class="p">;</span> <span class="c1">// 0 or 5e-9</span>
+      <span class="kt">bool</span> <span class="n">TorRisInteger</span> <span class="o">=</span> <span class="n">Trel</span><span class="o">*</span><span class="n">Rrel</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">std</span><span class="o">::</span><span class="n">is_convertible</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">;</span>
+      <span class="kt">bool</span> <span class="n">TisFloatingPt</span> <span class="o">=</span> <span class="n">Trel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">Trel</span> <span class="o">*=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span><span class="o">*</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TOL_MULT</span><span class="p">);</span>
+      <span class="n">Rrel</span> <span class="o">*=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span><span class="o">*</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TOL_MULT</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">TorRisInteger</span><span class="p">,</span> <span class="n">TisFloatingPt</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+
+    <span class="cm">/* \NOTE For future Greg:</span>
+<span class="cm">    The following _* templates *CAN NOT BE PREDECLARED* in the hpp file.</span>
+<span class="cm">    Doing so may not upset the compiler -- after all, it finds a suitable</span>
+<span class="cm">    definition of _* for every call -- but will anger the linker since the</span>
+<span class="cm">    actual definitions get overlooked entirely and the symbols never get built.</span>
+
+<span class="cm">    Leave these templates alone if you can. If you can&#39;t try not to be clever.</span>
+<span class="cm">    */</span>
+    <span class="c1">// Catchall case to capture unsigned T and unsigned R</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+    <span class="n">_scalar</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="p">){</span>
+      <span class="k">return</span> <span class="n">a</span><span class="o">==</span><span class="n">b</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Integral T and Floating Point R</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+    <span class="n">_scalar</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rrel</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rabs</span><span class="p">){</span>
+      <span class="c1">// if ( a == T(0) &amp;&amp; brille::abs(b) &lt;= Rrel ) return true;</span>
+      <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Rabs</span> <span class="o">+</span> <span class="n">Rrel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="c1">// Floating Point T and Integral R</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+    <span class="n">_scalar</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Trel</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Tabs</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="p">){</span>
+      <span class="c1">// if ( brille::abs(a) &lt;= Trel &amp;&amp; b == R(0) ) return true;</span>
+      <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Tabs</span> <span class="o">+</span> <span class="n">Trel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="c1">// Floating Point T and R</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;!</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">std</span><span class="o">::</span><span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+    <span class="n">_scalar</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">useT</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Trel</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rrel</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Tabs</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rabs</span><span class="p">){</span>
+      <span class="c1">// if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail</span>
+      <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">);</span>
+      <span class="c1">// if ( brille::abs(a) &lt;= Trel &amp;&amp; brille::abs(b) &lt;= Rrel )</span>
+      <span class="c1">//   return x &lt;= (useTrel ? Trel :Rrel);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">useT</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Tabs</span> <span class="o">+</span> <span class="n">Trel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+      <span class="k">else</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Rabs</span> <span class="o">+</span> <span class="n">Rrel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">scalar</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">auto</span> <span class="p">[</span><span class="n">convertible</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">]</span> <span class="o">=</span> <span class="n">tols</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">convertible</span> <span class="o">&amp;&amp;</span> <span class="n">_scalar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">_array</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">NM</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">useT</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Trel</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rrel</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">Tabs</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">Rabs</span><span class="p">){</span>
+      <span class="kt">bool</span> <span class="n">answer</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+      <span class="c1">// we need &lt;= in case T and R are integer, otherwise this is *always* false since 0 !&lt; 0</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">useT</span><span class="p">){</span>
+        <span class="n">T</span> <span class="n">Tmin</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">NM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+          <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+          <span class="c1">// if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail</span>
+          <span class="c1">// if ( brille::abs(a[i]) &lt;= Trel &amp;&amp; brille::abs(b[i]) &lt;= Rrel ) answer &amp;= x &lt;= Trel;</span>
+          <span class="n">answer</span> <span class="o">&amp;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Tabs</span> <span class="o">+</span> <span class="n">Trel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">Tmin</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">R</span> <span class="n">Rmin</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">NM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+          <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+          <span class="c1">// if both a and b are close to epsilon for its type, our comparison of |a-b| to |a+b| might fail</span>
+          <span class="c1">// if ( brille::abs(a[i]) &lt;= Trel &amp;&amp; brille::abs(b[i]) &lt;= Rrel ) answer &amp;= x &lt;= Rrel;</span>
+          <span class="n">answer</span> <span class="o">&amp;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">Rabs</span> <span class="o">+</span> <span class="n">Rrel</span><span class="o">*</span><span class="n">brille</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">Rmin</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="n">answer</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">array</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="k">const</span> <span class="kt">size_t</span> <span class="n">M</span><span class="p">,</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">auto</span> <span class="p">[</span><span class="n">convertible</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">]</span> <span class="o">=</span> <span class="n">tols</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">convertible</span> <span class="o">&amp;&amp;</span> <span class="n">_array</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">matrix</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">auto</span> <span class="p">[</span><span class="n">convertible</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">]</span> <span class="o">=</span> <span class="n">tols</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">convertible</span> <span class="o">&amp;&amp;</span> <span class="n">_array</span><span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">vector</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">auto</span> <span class="p">[</span><span class="n">convertible</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">]</span> <span class="o">=</span> <span class="n">tols</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tol</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">convertible</span> <span class="o">&amp;&amp;</span> <span class="n">_array</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">useT</span><span class="p">,</span> <span class="n">Trel</span><span class="p">,</span> <span class="n">Rrel</span><span class="p">,</span> <span class="n">Tabs</span><span class="p">,</span> <span class="n">Rabs</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">M</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">array</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">array</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">tol</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">matrix</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">matrix</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">tol</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">vector</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">tol</span><span class="o">=</span><span class="mi">1</span><span class="p">){</span>
+      <span class="k">return</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">vector</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">tol</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="p">}</span> <span class="c1">// approx::</span>
+<span class="p">}</span> <span class="c1">// brille::</span>
+
+<span class="cp">#endif </span><span class="c1">// _APPROX_HPP_</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

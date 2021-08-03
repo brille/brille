@@ -1,0 +1,13 @@
+.. _exhale_function_smp_8hpp_1a54c8111548fa8693e55956f1554a2afb:
+
+Template Function brille::assignment::smp_pmat
+==============================================
+
+- Defined in :ref:`file_src_smp.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::assignment::smp_pmat(const T, const P *restrict)

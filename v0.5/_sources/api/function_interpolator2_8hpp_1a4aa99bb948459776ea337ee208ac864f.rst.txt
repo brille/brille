@@ -1,0 +1,13 @@
+.. _exhale_function_interpolator2_8hpp_1a4aa99bb948459776ea337ee208ac864f:
+
+Template Function brille::e_iqd
+===============================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::e_iqd(const LQVec<T>&, const I, const bArray<R>&, const size_t)

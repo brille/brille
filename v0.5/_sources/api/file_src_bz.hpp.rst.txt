@@ -1,0 +1,90 @@
+
+.. _file_src_bz.hpp:
+
+File bz.hpp
+===========
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/bz.hpp``)
+---------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``approx.hpp`` (:ref:`file_src_approx.hpp`)
+
+- ``neighbours.hpp`` (:ref:`file_src_neighbours.hpp`)
+
+- ``omp.h``
+
+- ``phonon.hpp`` (:ref:`file_src_phonon.hpp`)
+
+- ``polyhedron.hpp`` (:ref:`file_src_polyhedron.hpp`)
+
+- ``transform.hpp`` (:ref:`file_src_transform.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.cpp`
+
+- :ref:`file_src_bz_mesh.hpp`
+
+- :ref:`file_src_bz_nest.hpp`
+
+- :ref:`file_src_bz_trellis.hpp`
+
+- :ref:`file_src_bz_wedge.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZone`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_bz_8hpp_1a5069d82dece04dea6bf7e4f1934b2b05`
+
+- :ref:`exhale_function_bz_8hpp_1a1dc005c81b7abdf42b7ee19c48bf943e`
+
+- :ref:`exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf`
+
+- :ref:`exhale_function_bz_8hpp_1abb24d8cc7ad34b4bb7a755472d2330d3`
+
+- :ref:`exhale_function_bz_8hpp_1ada408494d835a033877331102fcd0a19`
+

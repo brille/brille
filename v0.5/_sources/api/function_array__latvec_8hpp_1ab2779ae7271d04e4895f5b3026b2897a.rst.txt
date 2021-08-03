@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1ab2779ae7271d04e4895f5b3026b2897a:
+
+Template Function brille::sum(const A<T>&, typename A<T>::ind_t)
+================================================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::sum(const A<T>&, typename A<T>::ind_t)

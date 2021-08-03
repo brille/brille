@@ -1,0 +1,497 @@
+
+.. _namespace_brille:
+
+Namespace brille
+================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille__approx`
+
+- :ref:`namespace_brille__assignment`
+
+- :ref:`namespace_brille__utils`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01bArray_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1CostTraits`
+
+- :ref:`exhale_struct_structbrille_1_1CostTraits_3_01std_1_1complex_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1is__complex`
+
+- :ref:`exhale_struct_structbrille_1_1is__complex_3_01std_1_1complex_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1is__container`
+
+- :ref:`exhale_struct_structbrille_1_1is__container_3_01std_1_1array_3_01T_00_01N_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1is__container_3_01std_1_1vector_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01Direct_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01Reciprocal_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Direct_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Reciprocal_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1PrimitiveTraits`
+
+- :ref:`exhale_class_classbrille_1_1Array`
+
+- :ref:`exhale_class_classbrille_1_1Array2`
+
+- :ref:`exhale_class_classbrille_1_1Array2It`
+
+- :ref:`exhale_class_classbrille_1_1ArrayIt`
+
+- :ref:`exhale_class_classbrille_1_1Basis`
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZone`
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZoneMesh3`
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZoneNest3`
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZoneTrellis3`
+
+- :ref:`exhale_class_classbrille_1_1BroadcastIt`
+
+- :ref:`exhale_class_classbrille_1_1BroadcastIt2`
+
+- :ref:`exhale_class_classbrille_1_1Comparer`
+
+- :ref:`exhale_class_classbrille_1_1CubeNode`
+
+- :ref:`exhale_class_classbrille_1_1DebugPrinter`
+
+- :ref:`exhale_class_classbrille_1_1Direct`
+
+- :ref:`exhale_class_classbrille_1_1DualInterpolator`
+
+- :ref:`exhale_class_classbrille_1_1GammaTable`
+
+- :ref:`exhale_class_classbrille_1_1HallSymbol`
+
+- :ref:`exhale_class_classbrille_1_1Interpolator`
+
+- :ref:`exhale_class_classbrille_1_1Lattice`
+
+- :ref:`exhale_class_classbrille_1_1LatVec`
+
+- :ref:`exhale_class_classbrille_1_1LDVec`
+
+- :ref:`exhale_class_classbrille_1_1LQVec`
+
+- :ref:`exhale_class_classbrille_1_1Mesh3`
+
+- :ref:`exhale_class_classbrille_1_1Motion`
+
+- :ref:`exhale_class_classbrille_1_1Nest`
+
+- :ref:`exhale_class_classbrille_1_1NestLeaf`
+
+- :ref:`exhale_class_classbrille_1_1NestNode`
+
+- :ref:`exhale_class_classbrille_1_1NodeContainer`
+
+- :ref:`exhale_class_classbrille_1_1NullNode`
+
+- :ref:`exhale_class_classbrille_1_1PermutationTable`
+
+- :ref:`exhale_class_classbrille_1_1Pointgroup`
+
+- :ref:`exhale_class_classbrille_1_1PointSymmetry`
+
+- :ref:`exhale_class_classbrille_1_1Polyhedron`
+
+- :ref:`exhale_class_classbrille_1_1PolyhedronTrellis`
+
+- :ref:`exhale_class_classbrille_1_1PolyNode`
+
+- :ref:`exhale_class_classbrille_1_1PrimitiveTransform`
+
+- :ref:`exhale_class_classbrille_1_1RawBinaryOperator`
+
+- :ref:`exhale_class_classbrille_1_1Reciprocal`
+
+- :ref:`exhale_class_classbrille_1_1RotateTable`
+
+- :ref:`exhale_class_classbrille_1_1SeitzSymbol`
+
+- :ref:`exhale_class_classbrille_1_1SimpleTet`
+
+- :ref:`exhale_class_classbrille_1_1SortingStatus`
+
+- :ref:`exhale_class_classbrille_1_1Spacegroup`
+
+- :ref:`exhale_class_classbrille_1_1Stopwatch`
+
+- :ref:`exhale_class_classbrille_1_1SubIt`
+
+- :ref:`exhale_class_classbrille_1_1SubIt2`
+
+- :ref:`exhale_class_classbrille_1_1Symmetry`
+
+- :ref:`exhale_class_classbrille_1_1TetTri`
+
+- :ref:`exhale_class_classbrille_1_1TetTriLayer`
+
+- :ref:`exhale_class_classbrille_1_1Trellis`
+
+- :ref:`exhale_class_classbrille_1_1TrellisLeaf`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f`
+
+- :ref:`exhale_enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3`
+
+- :ref:`exhale_enum_comparisons_8hpp_1a261177af17f55bf6d7eeede9f59b333d`
+
+- :ref:`exhale_enum_pointgroup_8hpp_1ad21ebb3d19d1688ec7fe707c6385fd93`
+
+- :ref:`exhale_enum_pointgroup_8hpp_1aefb7d4e23b90d4f0e7727c0cd90e1c2d`
+
+- :ref:`exhale_enum_trellis_8hpp_1ace397180bb92d8a2863b6c65d9fef79a`
+
+- :ref:`exhale_enum_comparisons_8hpp_1a7a7a33bb906a48b0b786803b20bfccb8`
+
+- :ref:`exhale_enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_array__latvec_8hpp_1ad3a4b18fa7a887d42739d09ff3bbbea9`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a624051a8a5cd79dff0b8ef89eba8a475`
+
+- :ref:`exhale_function_approx_8hpp_1afe271acd2a3bc8bc3eb462c8aec2355e`
+
+- :ref:`exhale_function_approx_8hpp_1a02c88194e9eb1a33d3d50b661dc0bcfd`
+
+- :ref:`exhale_function_permutation_8hpp_1a5268e8bc5fa4a85a08ad2e28c5183f49`
+
+- :ref:`exhale_function_permutation_8hpp_1ad041ab1d610c93e6953fed2590ace446`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a44c13bbf9610ded37e0b513bf7ce7955`
+
+- :ref:`exhale_function_bravais_8hpp_1a89574e39177521ef59910a4b4f141f88`
+
+- :ref:`exhale_function_bravais_8hpp_1ae8945e040d69a1a6ed2da0883538f150`
+
+- :ref:`exhale_function_bravais_8hpp_1a875ea2eff59d3b5241624f049ead811d`
+
+- :ref:`exhale_function_array_8hpp_1a1407cb53e716ef5551914e4b74c167bd`
+
+- :ref:`exhale_function_array2_8hpp_1ad8c9ae16222039dd5248a352db9a032d`
+
+- :ref:`exhale_function_array__latvec_8hpp_1afe6dc8c6590e619a559fbfd13bf4fdb6`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a5b387507cf9fd71d44ba47015c6d500d`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aee99148e18f5af5ac198554d86f2e2fe`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ac7a01ffea985d6e73e93eee1c9fb7db4`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a71a597f27b71f013a4a628d41162ff9f`
+
+- :ref:`exhale_function_balltrellis_8hpp_1a8a2444a6bb7702adc6a3d41dec2943af`
+
+- :ref:`exhale_function_array__latvec_8hpp_1abd5582a8b12368f8c4104f745fecd13d`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a4d6da971a3a1b490538dca8fb7f6d8bf`
+
+- :ref:`exhale_function_array__latvec_8hpp_1abe802108112d7e575f0003971adcabe7`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ab7553634cfdf60d4c8d9cfdb4b75be56`
+
+- :ref:`exhale_function_interpolator2_8hpp_1a4aa99bb948459776ea337ee208ac864f`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a5662457cbcef4efc735daf0dce7cd19a`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aaaccc2dd7f7dc04e5e1345747fc2e169`
+
+- :ref:`exhale_function_polyhedron_8hpp_1aa523c0458f4aa30109036b189ce78fcc`
+
+- :ref:`exhale_function_trellis_8hpp_1a62a5fafea9cfe021ce53ec52ac6599cb`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1af05ea98e399f9b193912393913626f07`
+
+- :ref:`exhale_function_triangulation_8hpp_1af05ea98e399f9b193912393913626f07`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a40fcf68fb0ca8b74dd3051d0b665d738`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a279171c35f83a357eb25969979ffa022`
+
+- :ref:`exhale_function_spg__database_8hpp_1aef29ea990705bb802287540da4512406`
+
+- :ref:`exhale_function_spg__database_8hpp_1a1b2c1e245daccd2e32a54b8d4afeaf98`
+
+- :ref:`exhale_function_transform_8hpp_1a9f240be7356f291e3ada98ef330ec18b`
+
+- :ref:`exhale_function_spg__database_8hpp_1ab7271b2a606ebc4347180b3676849b4c`
+
+- :ref:`exhale_function_spg__database_8hpp_1af1b43446221a8daaf63d1455d9722f94`
+
+- :ref:`exhale_function_bz_8hpp_1a5069d82dece04dea6bf7e4f1934b2b05`
+
+- :ref:`exhale_function_bz_8hpp_1a1dc005c81b7abdf42b7ee19c48bf943e`
+
+- :ref:`exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf`
+
+- :ref:`exhale_function_bz_8hpp_1abb24d8cc7ad34b4bb7a755472d2330d3`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a6f53ac80703694382efa7189e83e61f2`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ab9abc4a9b28935e46f0dedf0e7f05ff8`
+
+- :ref:`exhale_function_subscript_8hpp_1a4286d2a237d885c58e508b24cb0220ad`
+
+- :ref:`exhale_function_subscript_8hpp_1a1e0e75ea2a3447045ded6b44235930f2`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a4a0bf2aa7002e1c41e0db97cd531f324`
+
+- :ref:`exhale_function_pointgroup_8hpp_1af612a0d0f40a3945afb5617fb370d505`
+
+- :ref:`exhale_function_permutation_8hpp_1a28863da448a93cf389ddc98ac0d54067`
+
+- :ref:`exhale_function_permutation_8hpp_1a198cf435ef922378b4a67f41f8329719`
+
+- :ref:`exhale_function_permutation_8hpp_1a655e38d15bad1f83d7ab48622ceb8620`
+
+- :ref:`exhale_function_permutation_8hpp_1a4319b8831957b134db80dc4627bd8899`
+
+- :ref:`exhale_function_permutation_8hpp_1a6edf5bfb74a858ce6d0c53c3df610aea`
+
+- :ref:`exhale_function_permutation_8hpp_1a1d8ccfa1b714ed65e0615019c6d5e77a`
+
+- :ref:`exhale_function_lattice_8hpp_1a11effa0e26084638971c2698a86bfbb9`
+
+- :ref:`exhale_function_lattice_8hpp_1a3c6e33f9a28639ee6514ae3ccc1d1ae3`
+
+- :ref:`exhale_function_subscript_8hpp_1aaffc965496cc61505812f7c0a4e3a19a`
+
+- :ref:`exhale_function_subscript_8hpp_1ab7c0bfa722edfa388e0249532cec6c62`
+
+- :ref:`exhale_function_debug_8hpp_1a626fa8c39404c6681c57ddcd5c489d54`
+
+- :ref:`exhale_function_debug_8hpp_1a7cc7fb9bd5827f0fd336d76b89cf74d2`
+
+- :ref:`exhale_function_neighbours_8hpp_1a04f2f94ca31b6a1fe9f07492c6b10dc8`
+
+- :ref:`exhale_function_neighbours_8hpp_1aca3eac0472a24f9251134013b98d4b31`
+
+- :ref:`exhale_function_neighbours_8hpp_1a76a7ee32aa5c051000151c4c1287cdd0`
+
+- :ref:`exhale_function_debug_8hpp_1afbf505321f89c3fcec9f5b7e1de58f86`
+
+- :ref:`exhale_function_debug_8hpp_1ace7b7dfd4e353adcf92031674c8156b8`
+
+- :ref:`exhale_function_permutation_8hpp_1a6f5fae55e11a9944eb5f58c77566c587`
+
+- :ref:`exhale_function_array2_8hpp_1a40fcb00eae0ffc5121b7f6aa50fa453b`
+
+- :ref:`exhale_function_debug_8hpp_1ad5ed8c6364f41ad30bb61e5702097965`
+
+- :ref:`exhale_function_pointgroup_8hpp_1ab4c1b83ead13fc8f4dc2da2ee076e606`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a4b9c4dab6d6528d13cafe5fa7c7e4403`
+
+- :ref:`exhale_function_debug_8hpp_1a2998cb7009915ec8e52f81f315034b77`
+
+- :ref:`exhale_function_debug_8hpp_1a74e3b701623ad81f22ba1d2421dd31f7`
+
+- :ref:`exhale_function_debug_8hpp_1aff3672afd8668a38ba31e9fd41a4ada4`
+
+- :ref:`exhale_function_nest_8hpp_1a430ab5c8915a8abefc6bbd11c055d4cc`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a88cdcbd06bdd8251c50f507692e6a431`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1e4ba36a72ce6edc234a945627a48551`
+
+- :ref:`exhale_function_bz_8hpp_1ada408494d835a033877331102fcd0a19`
+
+- :ref:`exhale_function_subscript_8hpp_1acac203ff514c42b7023ed079a26f5936`
+
+- :ref:`exhale_function_subscript_8hpp_1a2323ea8362bbdb8725aa8b50cd0300f7`
+
+- :ref:`exhale_function_subscript_8hpp_1a7e7fc8d4ca14ba29421ab165005790d5`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a83ec9d068e738249aef00ad69f080e5e`
+
+- :ref:`exhale_function_trellis_8hpp_1ac74d24b83f98c87c34b74bcbe9a38959`
+
+- :ref:`exhale_function_polyhedron_8hpp_1ac6d630929a50dc46b55eeb5b2e902004`
+
+- :ref:`exhale_function_array__latvec_8hpp_1af40b492fad2142c9267b33c33e7a8670`
+
+- :ref:`exhale_function_symmetry_8hpp_1a1a0fefb16cde1880ce9e20ba2c49c2c2`
+
+- :ref:`exhale_function_symmetry_8hpp_1aac0dc04b6abdbffa2006b29015c98054`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1c1968bf07123fe5e05254a5c5354f0c`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a86d93b0a84a0ed9201aad0ec95462d6b`
+
+- :ref:`exhale_function_permutation__table_8hpp_1abdabdf1bdad9df8ef8f7fb7fce96128c`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a56e6ed1757fc36c1e962072bf55c4ec9`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a3774fa99ee421ff76a48cd3b9d688f57`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a066790381771c86eec20b0187b54aaa6`
+
+- :ref:`exhale_function_pointgroup_8hpp_1afa6cb4ae509cf50bcd7107af2e01c188`
+
+- :ref:`exhale_function_polyhedron_8hpp_1abcca2dbc090903b1fff5a4427b587cba`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a1f2d2b47058924e5ce91d20bb760df98`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a46ec9bcfd1b7621060cd1613b5ae1698`
+
+- :ref:`exhale_function_pointgroup_8hpp_1a697a0ca42bb73a2c48ec684769df35c7`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1a69c221ba01c2d5f38e6ae08bfd38e6`
+
+- :ref:`exhale_function_permutation_8hpp_1ab74968f22b09bd0f354f933c02d9145e`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aa5e4757c2dfc5c99550e8633eaaa6e60`
+
+- :ref:`exhale_function_spg__database_8hpp_1aeb7c15885d67cc7c50f62c64e9db8790`
+
+- :ref:`exhale_function_subscript_8hpp_1ac88ecd3e884f6ff94f092f09265ff23f`
+
+- :ref:`exhale_function_subscript_8hpp_1ae830dd7405c1946fbd9623ace6c21e02`
+
+- :ref:`exhale_function_subscript_8hpp_1a8fb9671dc01949ba507157ed4bdb9c7c`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a577acbb8324cbfc83de0d518f9b7e9db`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ab2779ae7271d04e4895f5b3026b2897a`
+
+- :ref:`exhale_function_debug_8hpp_1a4d30c9181c4af07b6df68aeebfe5cd44`
+
+- :ref:`exhale_function_debug_8hpp_1afbefa478fd4f371d018e466dd6536b16`
+
+- :ref:`exhale_function_debug_8hpp_1af69dab2a77c851fecf7abf92f9ae99a8`
+
+- :ref:`exhale_function_comparisons_8hpp_1a5b56249445137c718122268db20178b0`
+
+- :ref:`exhale_function_comparisons_8hpp_1ae524a675a7210c6d835b66e6457e5ad1`
+
+- :ref:`exhale_function_comparisons_8hpp_1a76f319bdad39bf229d99cdddcf137c80`
+
+- :ref:`exhale_function_transform_8hpp_1a2ab17c868a618efad374c0aea75f2104`
+
+- :ref:`exhale_function_transform_8hpp_1a596b39d41c86e8481d8f4121c677dc3f`
+
+- :ref:`exhale_function_transform_8hpp_1a92d4fe47f1ae21d7848468f03a6e8627`
+
+- :ref:`exhale_function_transform_8hpp_1a1ba6c82684f1440d9a60d73e6b962bb0`
+
+- :ref:`exhale_function_primitive_8hpp_1af003ee699aa372b31131deb8cfcc0e5e`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a7ab109081968e79356c5c4e4bdd83551`
+
+- :ref:`exhale_function_triangulation_8hpp_1af8ee89917711815db0097def67ee642e`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a8d67bd7a8873c95ec2a40dc4b72d14d4`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a2a5532cfef58af4d7a28434ac3dea7a4`
+
+- :ref:`exhale_function_polyhedron_8hpp_1a4344802bb44638ecac9226681be9aaff`
+
+- :ref:`exhale_function_transform_8hpp_1aee78a610ae102e5800b43d4b0879f3a7`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_interpolator2_8hpp_1aa0f735bfd554e08f5442a83f83d53c23`
+
+- :ref:`exhale_typedef_debug_8hpp_1ac4d9ff9425f3ea87b6e50816680207c0`
+
+- :ref:`exhale_typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5`
+
+- :ref:`exhale_typedef_transform_8hpp_1a60c3fa18367abdc9ab2a117c37986ad1`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a53389782169d3455f06c87b66b7bd9cb`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a236e265c8ab8e8c5b4432859fde67109`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a134cf54ebefe233d48803fabf1844cf5`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4`
+
+- :ref:`exhale_typedef_transform_8hpp_1a5260a25daaf21ec14a6b6f71d72972af`
+
+- :ref:`exhale_typedef_types_8hpp_1afb26ed66827f17ec93e3bd6c25570cf3`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a94cfc0163f6819f061b74be9ef3e044c`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1aef37685751c9afa1e780443d274f3533`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a6ce7704572a21dd99cee52ea4e02a70e`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a674dc7fe85df9751bf92e17fafcc61d0`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a2889ff9403810d098cd255ca37f0aeff`
+
+- :ref:`exhale_variable_utilities_8hpp_1a1659ed6edf82c3333d1ed0602a196488`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a51ac2156da30ae888a5af64dcfc1d8f9`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a36dafbace3b8d5c06c9dbecb67b0c668`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a5d7f1a6357f1b06f237e82d6dcc59f85`
+
+- :ref:`exhale_variable_utilities_8hpp_1a5ba20e34189d20fb328e45611a48aa94`
+
+- :ref:`exhale_variable_debug_8hpp_1a08382bfd11784a88c73dee32ceef6069`

@@ -1,0 +1,13 @@
+.. _exhale_function_permutation_8hpp_1ad041ab1d610c93e6953fed2590ace446:
+
+Template Function brille::apply_permutation
+===========================================
+
+- Defined in :ref:`file_src_permutation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::apply_permutation(ObjItr, ObjItr, PermItr)

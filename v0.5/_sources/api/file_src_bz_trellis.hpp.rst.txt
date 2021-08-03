@@ -1,0 +1,55 @@
+
+.. _file_src_bz_trellis.hpp:
+
+File bz_trellis.hpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/bz_trellis.hpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bz_trellis.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``bz.hpp`` (:ref:`file_src_bz.hpp`)
+
+- ``phonon.hpp`` (:ref:`file_src_phonon.hpp`)
+
+- ``trellis.hpp`` (:ref:`file_src_balltrellis.hpp`)
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1BrillouinZoneTrellis3`
+

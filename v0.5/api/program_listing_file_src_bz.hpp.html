@@ -1,0 +1,872 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File bz.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File bz.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_bz.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-bz-hpp">
+<span id="program-listing-file-src-bz-hpp"></span><h1>Program Listing for File bz.hpp<a class="headerlink" href="#program-listing-for-file-bz-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_bz.hpp.html#file-src-bz-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bz.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef BRILLE_BZ_CLASS_H_</span>
+<span class="cp">#define BRILLE_BZ_CLASS_H_</span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;neighbours.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;transform.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;polyhedron.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;phonon.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
+
+<span class="k">class</span> <span class="nc">BrillouinZone</span> <span class="p">{</span>
+  <span class="n">Reciprocal</span> <span class="n">lattice</span><span class="p">;</span>
+  <span class="n">Reciprocal</span> <span class="n">outerlattice</span><span class="p">;</span>
+  <span class="n">Polyhedron</span> <span class="n">polyhedron</span><span class="p">;</span>
+  <span class="n">Polyhedron</span> <span class="n">ir_polyhedron</span><span class="p">;</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ir_wedge_normals</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">time_reversal</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">has_inversion</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">is_primitive</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">no_ir_mirroring</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">BrillouinZone</span><span class="p">(</span><span class="k">const</span> <span class="n">Reciprocal</span><span class="o">&amp;</span> <span class="n">lat</span><span class="p">,</span>
+                <span class="k">const</span> <span class="kt">bool</span> <span class="n">toprim</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span>
+                <span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="k">const</span> <span class="kt">bool</span> <span class="n">tr</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span>
+                <span class="k">const</span> <span class="kt">bool</span> <span class="n">wedge_search</span><span class="o">=</span><span class="nb">true</span>
+               <span class="p">)</span><span class="o">:</span>
+  <span class="n">lattice</span><span class="p">(</span><span class="n">toprim</span> <span class="o">?</span> <span class="n">lat</span><span class="p">.</span><span class="n">primitive</span><span class="p">()</span> <span class="o">:</span> <span class="n">lat</span><span class="p">),</span> <span class="n">outerlattice</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="n">time_reversal</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;Start of BrillouinZone construction&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">is_primitive</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">));</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">has_inversion</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span> <span class="o">||</span> <span class="n">lat</span><span class="p">.</span><span class="n">has_space_inversion</span><span class="p">();</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">no_ir_mirroring</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">old_volume</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">new_volume</span><span class="o">=</span><span class="mf">0.0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">test_extent</span> <span class="o">=</span> <span class="n">extent</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// initial test_extent based on spacegroup or pointgroup?</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">new_volume</span><span class="p">,</span> <span class="n">old_volume</span><span class="p">)){</span>
+      <span class="n">old_volume</span> <span class="o">=</span> <span class="n">new_volume</span><span class="p">;</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">voro_search</span><span class="p">(</span><span class="o">++</span><span class="n">test_extent</span><span class="p">);</span>
+      <span class="n">new_volume</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="c1">// fallback in case voro_search fails for some reason?!?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">new_volume</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)){</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;voro_search failed to produce a non-null first Brillouin zone.&quot;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;New polyhedron volume &quot;</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">());</span>
+      <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;First Brillouin zone found using extent &quot;</span><span class="p">,</span><span class="n">test_extent</span><span class="p">,</span><span class="s">&quot;, a &quot;</span><span class="p">,</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">string_repr</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="c1">// in case we&#39;ve been asked to perform a wedge search for, e.g., P1 or P-1,</span>
+    <span class="c1">// set the irreducible wedge now as the search will do nothing.</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">wedge_search</span><span class="p">){</span>
+      <span class="kt">bool</span> <span class="n">success</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">()</span>
+                  <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">)</span> <span class="c1">// no special 2-fold or mirror handling</span>
+                  <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="nb">true</span><span class="p">)</span> <span class="c1">// no special 2-fold handling (but special mirror handling)</span>
+                  <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">)</span> <span class="c1">// no special mirror handling (maybe not useful)</span>
+                  <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">)</span> <span class="c1">// last ditch effort, handle non order(2) operations in decreasing order</span>
+                  <span class="o">||</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">wedge_brute_force</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">)</span>
+                  <span class="p">;</span>
+      <span class="c1">// other combinations of special_2_folds, special_mirrors,</span>
+      <span class="c1">// and sort_by_length are possible but not necessarily useful.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Failed to find an irreducible Brillouin zone.&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;  End of BrillouinZone construction&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">check_if_mirroring_needed</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">no_ir_mirroring</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">has_inversion</span><span class="p">){</span>
+      <span class="n">PointSymmetry</span> <span class="n">ps</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">);</span>
+      <span class="kt">double</span> <span class="n">goal</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">()</span> <span class="o">/</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+      <span class="kt">double</span> <span class="n">found</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">found</span><span class="p">)){</span>
+        <span class="cm">/*The current Polyhedron at this-&gt;ir_polyhedron has half the anticipated</span>
+<span class="cm">        volume. We can &#39;fix&#39; this the easy way by mirroring the Polyhedron and</span>
+<span class="cm">        gluing it onto the current version; the resultant polyhedron will come</span>
+<span class="cm">        to a point at (0,0,0) and will not be convex. Instead, try to be clever</span>
+<span class="cm">        and look for a convex combination of the found polyhedron and its</span>
+<span class="cm">        mirror with one of the pointgroup operations applied:*/</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Polyhedron</span><span class="o">&gt;</span> <span class="n">all_unions</span><span class="p">;</span>
+        <span class="n">Polyhedron</span> <span class="n">mirrored</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">mirror</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">r</span><span class="p">:</span> <span class="n">ps</span><span class="p">.</span><span class="n">getall</span><span class="p">())</span>
+          <span class="n">all_unions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">+</span> <span class="n">mirrored</span><span class="p">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">r</span><span class="p">));</span>
+        <span class="c1">// The combination of a polyhedron and its rotated inverse which has</span>
+        <span class="c1">// the least number of vertices is (hopefully) convex.</span>
+        <span class="k">auto</span> <span class="n">min_vert_union</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min_element</span><span class="p">(</span>
+          <span class="n">all_unions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">all_unions</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+          <span class="p">[](</span><span class="k">const</span> <span class="n">Polyhedron</span> <span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">Polyhedron</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span>
+            <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">num_vertices</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">num_vertices</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">);</span>
+        <span class="c1">// Polyhedron::operator+() needs to be fixed. As of now it does not look</span>
+        <span class="c1">// for extraneous faces (like internal faces which are coplanar and</span>
+        <span class="c1">// pointing in opposite directions) or coplanar external faces which</span>
+        <span class="c1">// share an edge. Until this is fixed cross our fingers and hope that we</span>
+        <span class="c1">// created a convex polyhedron such that the convex hull of its points</span>
+        <span class="c1">// gives the same polyhedron back:</span>
+        <span class="n">Polyhedron</span> <span class="nf">mvu_convex_hull</span><span class="p">(</span><span class="n">min_vert_union</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="n">mvu_convex_hull</span><span class="p">.</span><span class="n">get_volume</span><span class="p">())){</span>
+          <span class="c1">// we found a polyhedron with the right volume which is convex!</span>
+          <span class="c1">// so we can keep this as *the* ir_polyhedron</span>
+          <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">mvu_convex_hull</span><span class="p">;</span>
+          <span class="c1">// and we need to update the found volume for the check below</span>
+          <span class="n">found</span> <span class="o">=</span> <span class="n">goal</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="c1">// if found == goal no mirroring is required.</span>
+      <span class="c1">// if found == goal/2, mirroring is required.</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">no_ir_mirroring</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="n">found</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="n">check_ir_polyhedron</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+  <span class="kt">bool</span> <span class="nf">wedge_explicit</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+  <span class="k">const</span> <span class="n">Reciprocal</span> <span class="nf">get_lattice</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">;};</span>
+  <span class="k">const</span> <span class="n">Reciprocal</span> <span class="nf">get_primitive_lattice</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">;};</span>
+  <span class="kt">size_t</span> <span class="nf">vertices_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_vertices</span><span class="p">().</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);};</span>
+  <span class="kt">size_t</span> <span class="nf">faces_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">().</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);};</span>
+  <span class="c1">// irreducible reciprocal space wedge</span>
+  <span class="kt">void</span>
+  <span class="nf">set_ir_wedge_normals</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">already_same</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">xp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">);</span>
+    <span class="n">PrimitiveTransform</span> <span class="n">PT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">transform_needed</span> <span class="o">=</span> <span class="p">(</span> <span class="n">PT</span><span class="p">.</span><span class="n">does_anything</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">())</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">already_same</span> <span class="o">||</span> <span class="n">transform_needed</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;ir_wedge_normals must be in the standard or primitive lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">transform_needed</span><span class="p">)</span>  <span class="n">xp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">xref</span> <span class="o">=</span> <span class="n">transform_needed</span> <span class="o">?</span> <span class="nl">xp</span> <span class="p">:</span> <span class="n">x</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_normals</span> <span class="o">=</span> <span class="n">xref</span><span class="p">.</span><span class="n">get_hkl</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_wedge_normals</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_primitive_ir_wedge_normals</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span>
+  <span class="kt">void</span>
+  <span class="n">set_polyhedron</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">both_same</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">both_same</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The vertices, and points of a polyhedron must all be in the same cooridinate system&quot;</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">is_outer</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">is_inner</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">),</span> <span class="n">pp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">);</span>
+    <span class="n">PrimitiveTransform</span> <span class="nf">PT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">());</span>
+    <span class="n">is_inner</span> <span class="o">&amp;=</span> <span class="n">PT</span><span class="p">.</span><span class="n">does_anything</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">is_outer</span> <span class="o">||</span> <span class="n">is_inner</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_inner</span><span class="p">){</span>
+      <span class="n">vp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+      <span class="n">pp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">vref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">vp</span> <span class="p">:</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">pref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">pp</span> <span class="p">:</span> <span class="n">p</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">polyhedron</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="p">(</span><span class="n">vref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">pref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">args</span><span class="p">...);</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span>
+  <span class="kt">void</span>
+  <span class="n">set_ir_polyhedron</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">n</span><span class="p">,</span> <span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">all_same</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">issame</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">all_same</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The vertices, points, and normals of a polyhedron must all be in the same cooridinate system&quot;</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">is_outer</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">is_inner</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">),</span> <span class="n">pp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">),</span> <span class="n">np</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">);</span>
+    <span class="n">PrimitiveTransform</span> <span class="nf">PT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">());</span>
+    <span class="n">is_inner</span> <span class="o">&amp;=</span> <span class="n">PT</span><span class="p">.</span><span class="n">does_anything</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">is_outer</span> <span class="o">||</span> <span class="n">is_inner</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_inner</span><span class="p">){</span>
+      <span class="n">vp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+      <span class="n">pp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+      <span class="n">np</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">vref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">vp</span> <span class="p">:</span> <span class="n">v</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">pref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">pp</span> <span class="p">:</span> <span class="n">p</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">nref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">np</span> <span class="p">:</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="p">(</span><span class="n">vref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">pref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">nref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">args</span><span class="p">...);</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="n">set_ir_vertices</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">){</span>
+    <span class="kt">bool</span> <span class="n">is_outer</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">is_inner</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">vp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">);</span>
+    <span class="n">PrimitiveTransform</span> <span class="nf">PT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">());</span>
+    <span class="n">is_inner</span> <span class="o">&amp;=</span> <span class="n">PT</span><span class="p">.</span><span class="n">does_anything</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">is_outer</span> <span class="o">||</span> <span class="n">is_inner</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_inner</span><span class="p">)</span>
+      <span class="n">vp</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">vref</span> <span class="o">=</span> <span class="n">is_inner</span> <span class="o">?</span> <span class="nl">vp</span> <span class="p">:</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Generate a convex polyhedron from</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">vref</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="p">(</span><span class="n">vref</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">());</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="s">&quot;Generated a &quot;</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">string_repr</span><span class="p">(),</span><span class="s">&quot; from the specified vertices&quot;</span><span class="p">);</span>
+    <span class="c1">// check that the polyhedron we&#39;ve specified has the desired properties</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">check_ir_polyhedron</span><span class="p">()){</span>
+      <span class="c1">// set the wedge normals as well</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_polyhedron_wedge_normals</span><span class="p">());</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">Polyhedron</span> <span class="n">get_polyhedron</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_half_edges</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_primitive_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_primitive_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_primitive_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">get_faces_per_vertex</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">get_vertices_per_face</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">Polyhedron</span> <span class="nf">get_ir_polyhedron</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">true_ir</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_primitive_vertices</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_primitive_points</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_primitive_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">get_ir_faces_per_vertex</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">get_ir_vertices_per_face</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">print</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">wedge_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">bool</span> <span class="n">prefer_basis_vectors</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">parallel_ok</span><span class="o">=</span><span class="nb">true</span><span class="p">);</span>
+  <span class="kt">bool</span> <span class="nf">wedge_brute_force</span><span class="p">(</span><span class="kt">bool</span> <span class="n">special_2_folds</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">special_mirrors</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">sort_by_length</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">sort_one_sym</span><span class="o">=</span><span class="nb">true</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="nf">wedge_triclinic</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="nf">irreducible_vertex_search</span><span class="p">();</span>
+  <span class="kt">void</span> <span class="nf">voro_search</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">extent</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+  <span class="kt">bool</span> <span class="nf">isprimitive</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">is_primitive</span><span class="p">;};</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span>
+  <span class="n">isinside</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">isouter</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">isinner</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isouter</span><span class="o">||</span><span class="n">isinner</span><span class="p">))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Q points must be in the standard or primitive lattice&quot;</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">,</span> <span class="n">normals</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isouter</span><span class="p">){</span>
+      <span class="n">points</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_points</span><span class="p">();</span>
+      <span class="n">normals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_normals</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">points</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_primitive_points</span><span class="p">();</span>
+      <span class="n">normals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_primitive_normals</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="n">points</span><span class="p">).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">le</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span>
+  <span class="n">isinside_wedge</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">constructing</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">isouter</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">isinner</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isouter</span><span class="o">||</span><span class="n">isinner</span><span class="p">)){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Q points provided to BrillouinZone::isinside_wedge &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;must be in the standard or primitive lattice &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;used to define the BrillouinZone object&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">normals</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isouter</span><span class="p">)</span>
+      <span class="n">normals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_ir_wedge_normals</span><span class="p">();</span>
+    <span class="k">else</span>
+      <span class="n">normals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_primitive_ir_wedge_normals</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span> <span class="c1">// with no normals *all* points are &quot;inside&quot; the wedge</span>
+      <span class="c1">// If a pointgroup has inversion symmetry then for every point, p, there is</span>
+      <span class="c1">// an equivalent point, -p. This indicates that a point p is already in</span>
+      <span class="c1">// the irreducible wedge if it has n̂ᵢ⋅p ≥ 0 for all irredudible-bounding-</span>
+      <span class="c1">// plane normals, ̂nᵢ, *or* the opposite -- n̂ᵢ⋅ p ≤ 0 for all ̂nᵢ.</span>
+      <span class="c1">// Since we are interested in enforcing a smallest-possible irreducible</span>
+      <span class="c1">// Brillouin zone, we want to exclude the all n̂ᵢ⋅ p ≤ 0 half of the</span>
+      <span class="c1">// reciprocal wedge precisely because they are equivalent.</span>
+      <span class="c1">// It is only in the case where a pointgroup *does not have* space-inversion</span>
+      <span class="c1">// symmetry and time-reversal symmetry is to be excluded that we can allow</span>
+      <span class="c1">// n̂ᵢ⋅ p ≤ 0 to be a valid in-wedge solution.</span>
+      <span class="c1">// The Array all method has a special switched execution path</span>
+      <span class="c1">// for checking whether all values are ≤ or ≥ a value simultaneously</span>
+
+      <span class="c1">// when constructing the irreducible Brillouin zone we need to only consider</span>
+      <span class="c1">// the ≥0 case so that we end up with a convex polyhedron. The ir_polyhedron</span>
+      <span class="c1">// accessor method mirrors the half-polyhedron in this case, so when</span>
+      <span class="c1">// identifying whether a point is inside of the irreducible Brillouin zone</span>
+      <span class="c1">// we must allow for the ≤0 case as well.</span>
+      <span class="n">brille</span><span class="o">::</span><span class="n">cmp</span> <span class="n">c</span> <span class="o">=</span> <span class="n">constructing</span><span class="o">||</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">no_ir_mirroring</span> <span class="o">?</span> <span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="nl">ge</span> <span class="p">:</span> <span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">le_ge</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="n">all</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span>
+  <span class="n">moveinto</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">Q</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">q</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">tau</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">threads</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">const</span>
+  <span class="p">{</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;BrillouinZone::moveinto called with &quot;</span><span class="p">,</span><span class="n">threads</span><span class="p">,</span><span class="s">&quot; threads&quot;</span><span class="p">);</span>
+    <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="p">(</span><span class="n">threads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">threads</span> <span class="p">:</span> <span class="n">omp_get_max_threads</span><span class="p">()</span> <span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">already_same</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">());</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">Qprim</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">);</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">qprim</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">);</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tauprim</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">lattice</span><span class="p">);</span>
+    <span class="n">PrimitiveTransform</span> <span class="nf">PT</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_bravais_type</span><span class="p">());</span>
+    <span class="kt">bool</span> <span class="n">transform_needed</span> <span class="o">=</span> <span class="p">(</span> <span class="n">PT</span><span class="p">.</span><span class="n">does_anything</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">())</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">already_same</span> <span class="o">||</span> <span class="n">transform_needed</span><span class="p">)){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Q points provided to BrillouinZone::moveinto must be &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;in the standard or primitive lattice used to define &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;the BrillouinZone object&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">transform_needed</span><span class="p">)</span>  <span class="n">Qprim</span> <span class="o">=</span> <span class="n">transform_to_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span><span class="n">Q</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">Qsl</span> <span class="o">=</span> <span class="n">transform_needed</span> <span class="o">?</span> <span class="nl">Qprim</span> <span class="p">:</span> <span class="n">Q</span><span class="p">;</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">qsl</span> <span class="o">=</span> <span class="n">transform_needed</span> <span class="o">?</span> <span class="nl">qprim</span> <span class="p">:</span> <span class="n">q</span><span class="p">;</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">tausl</span> <span class="o">=</span> <span class="n">transform_needed</span><span class="o">?</span> <span class="nl">tauprim</span> <span class="p">:</span> <span class="n">tau</span><span class="p">;</span>
+
+    <span class="c1">// the face centre points and normals in the primitive lattice:</span>
+    <span class="k">auto</span> <span class="n">points</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_primitive_points</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">normals</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_primitive_normals</span><span class="p">();</span>
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">normals</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">normals</span><span class="p">);</span> <span class="c1">// ensure they&#39;re normalised</span>
+    <span class="k">auto</span> <span class="n">taus</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">points</span><span class="p">).</span><span class="n">round</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">taulen</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">taus</span><span class="p">);</span>
+    <span class="kt">size_t</span> <span class="n">max_count</span> <span class="o">=</span> <span class="n">taus</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// ensure that qsl and tausl can hold each qi and taui</span>
+    <span class="n">qsl</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Qsl</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">tausl</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Qsl</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">snQ</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">u2s</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Qsl</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+  <span class="cp">#pragma omp parallel for default(none)\</span>
+<span class="cp">  shared(Qsl, tausl, qsl, points, normals, taus, taulen, snQ, max_count)\</span>
+<span class="cp">  schedule(dynamic)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">snQ</span><span class="p">;</span> <span class="n">si</span><span class="o">++</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">s2u</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+      <span class="k">auto</span> <span class="n">taui</span> <span class="o">=</span> <span class="n">Qsl</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">round</span><span class="p">();</span>
+      <span class="k">auto</span> <span class="n">qi</span> <span class="o">=</span> <span class="n">Qsl</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="n">taui</span><span class="p">;</span>
+      <span class="k">auto</span> <span class="n">last_shift</span> <span class="o">=</span> <span class="n">taui</span><span class="p">;</span>
+      <span class="kt">size_t</span> <span class="n">count</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+      <span class="k">while</span> <span class="p">(</span><span class="n">count</span><span class="o">++</span> <span class="o">&lt;</span> <span class="n">max_count</span> <span class="o">&amp;&amp;</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">,</span> <span class="n">qi</span><span class="o">-</span><span class="n">points</span><span class="p">).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span><span class="mf">0.</span><span class="p">)){</span>
+        <span class="k">auto</span> <span class="n">qi_dot_normals</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">qi</span> <span class="p">,</span> <span class="n">normals</span><span class="p">);</span>
+        <span class="k">auto</span> <span class="n">Nhkl</span> <span class="o">=</span> <span class="p">(</span><span class="n">qi_dot_normals</span><span class="o">/</span><span class="n">taulen</span><span class="p">).</span><span class="n">round</span><span class="p">().</span><span class="n">to_std</span><span class="p">();</span>
+        <span class="k">auto</span> <span class="n">qidn</span> <span class="o">=</span> <span class="n">qi_dot_normals</span><span class="p">.</span><span class="n">to_std</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">Nhkl</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">Nhkl</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">a</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;})){</span>
+          <span class="kt">int</span> <span class="n">maxnm</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+          <span class="kt">size_t</span> <span class="n">maxat</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">Nhkl</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+                                                           <span class="c1">// protect against oscillating by ±τ</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">Nhkl</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">Nhkl</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">maxnm</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="mi">0</span><span class="o">==</span><span class="n">maxnm</span> <span class="o">||</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">taus</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">+</span><span class="n">last_shift</span><span class="p">).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">gt</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">qidn</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;</span><span class="n">qidn</span><span class="p">[</span><span class="n">maxat</span><span class="p">]))){</span>
+            <span class="n">maxnm</span> <span class="o">=</span> <span class="n">Nhkl</span><span class="p">[</span><span class="n">maxat</span><span class="o">=</span><span class="n">j</span><span class="p">];</span>
+          <span class="p">}</span>
+          <span class="n">qi</span> <span class="o">-=</span> <span class="n">taus</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">maxat</span><span class="p">)</span> <span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">maxnm</span><span class="p">);</span> <span class="c1">// ensure we subtract LQVec&lt;double&gt;</span>
+          <span class="n">taui</span> <span class="o">+=</span> <span class="n">taus</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">maxat</span><span class="p">)</span> <span class="o">*</span> <span class="n">maxnm</span><span class="p">;</span> <span class="c1">// but add LQVec&lt;int&gt;</span>
+          <span class="n">last_shift</span> <span class="o">=</span> <span class="n">taus</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">maxat</span><span class="p">)</span> <span class="o">*</span> <span class="n">maxnm</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">qsl</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">qi</span><span class="p">);</span>
+      <span class="n">tausl</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">taui</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">transform_needed</span><span class="p">){</span> <span class="c1">// then we need to transform back q and tau</span>
+      <span class="n">q</span>   <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span><span class="n">qsl</span><span class="p">);</span>
+      <span class="n">tau</span> <span class="o">=</span> <span class="n">transform_from_primitive</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">,</span><span class="n">tausl</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">auto</span> <span class="n">allinside</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">allinside</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">allinside</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">false</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Q</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">allinside</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+        <span class="n">info_update</span><span class="p">(</span><span class="s">&quot;Q  =&quot;</span><span class="p">,</span><span class="n">Q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot; tau  =&quot;</span><span class="p">,</span><span class="n">tau</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot; q  =&quot;</span><span class="p">,</span><span class="n">q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+        <span class="n">info_update</span><span class="p">(</span><span class="s">&quot;Qsl=&quot;</span><span class="p">,</span><span class="n">Qsl</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">&quot; tausl=&quot;</span><span class="p">,</span><span class="n">tausl</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">&quot; qsl=&quot;</span><span class="p">,</span><span class="n">qsl</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Not all points inside Brillouin zone&quot;</span><span class="p">);</span>
+      <span class="c1">// return false;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="c1">// otherwise an error has been thrown</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span>
+  <span class="n">ir_moveinto</span><span class="p">(</span>
+    <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">Q</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">q</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">tau</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">Ridx</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&amp;</span> <span class="n">invRidx</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">threads</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">const</span> <span class="p">{</span>
+    <span class="n">profile_update</span><span class="p">(</span><span class="s">&quot;BrillouinZone::ir_moveinto called with &quot;</span><span class="p">,</span><span class="n">threads</span><span class="p">,</span><span class="s">&quot; threads&quot;</span><span class="p">);</span>
+    <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="p">(</span><span class="n">threads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">threads</span> <span class="p">:</span> <span class="n">omp_get_max_threads</span><span class="p">()</span> <span class="p">);</span>
+    <span class="cm">/* The Pointgroup symmetry information comes from, effectively, spglib which</span>
+<span class="cm">    has all rotation matrices defined in the conventional unit cell -- which is</span>
+<span class="cm">    our `outerlattice`. Consequently we must work in the outerlattice here.  */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">()))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="c1">// get the PointSymmetry object, containing all operations</span>
+    <span class="n">PointSymmetry</span> <span class="n">psym</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_pointgroup_symmetry</span><span class="p">();</span>
+    <span class="c1">// ensure q, tau, and Rm can hold one for each Q.</span>
+    <span class="kt">size_t</span> <span class="n">nQ</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">Qshape</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">q</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Qshape</span><span class="p">);</span>
+    <span class="n">tau</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Qshape</span><span class="p">);</span>
+    <span class="n">Ridx</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nQ</span><span class="p">);</span>
+    <span class="n">invRidx</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nQ</span><span class="p">);</span>
+    <span class="c1">// find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]</span>
+    <span class="c1">// such that Q = q₁ₛₜ + τ</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">moveinto</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">threads</span><span class="p">);</span>
+    <span class="c1">// by chance some first Bz points are likely already in the IR-Bz:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">in_ir</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside_wedge</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+    <span class="c1">//LQVec&lt;double&gt; qj(Q.get_lattice(), 1u);</span>
+    <span class="k">auto</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">();</span>
+    <span class="c1">// OpenMP 2 (VS) doesn&#39;t like unsigned loop counters</span>
+    <span class="kt">size_t</span> <span class="n">n_outside</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">snQ</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">u2s</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nQ</span><span class="p">);</span>
+    <span class="cp">#pragma omp parallel for default(none) shared(psym, Ridx, invRidx, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">snQ</span><span class="p">;</span> <span class="o">++</span><span class="n">si</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">s2u</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+      <span class="c1">// any q already in the irreducible zone need no rotation → identity, but we need to find the index of E</span>
+      <span class="kt">bool</span> <span class="n">outside</span><span class="o">=!</span><span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">){</span>
+        <span class="c1">// for others find the jᵗʰ operation which moves qᵢ into the irreducible zone</span>
+        <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">qj</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span> <span class="c1">// a place to hold the multiplication result</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">psym</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// The point symmetry matrices relate *real space* vectors! We must use</span>
+          <span class="c1">// their transposes&#39; to rotate reciprocal space vectors.</span>
+          <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">qj</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">transpose</span><span class="p">(</span><span class="n">psym</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">)).</span><span class="n">data</span><span class="p">(),</span> <span class="n">q</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside_wedge</span><span class="p">(</span><span class="n">qj</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">){</span> <span class="cm">/* store the result */</span>
+            <span class="c1">// and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.</span>
+            <span class="n">q</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">qj</span><span class="p">);</span> <span class="c1">// keep Rⱼᵀ⋅qᵢ as qᵢᵣ</span>
+            <span class="n">invRidx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span> <span class="c1">// Rⱼ *is* the inverse of what we want for ouput</span>
+            <span class="n">Ridx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">psym</span><span class="p">.</span><span class="n">get_inverse_index</span><span class="p">(</span><span class="n">j</span><span class="p">);</span> <span class="c1">// find the index of Rⱼ⁻¹</span>
+            <span class="n">outside</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">invRidx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ridx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">psym</span><span class="p">.</span><span class="n">find_index</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">n_outside</span><span class="p">;</span>
+        <span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n_outside</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nQ</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Q = &quot;</span> <span class="o">+</span> <span class="n">Q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; is outside of the irreducible BrillouinZone &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; : tau = &quot;</span> <span class="o">+</span> <span class="n">tau</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; , q = &quot;</span> <span class="o">+</span> <span class="n">q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="c1">// otherwise we hit the runtime error above</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span>
+  <span class="n">ir_moveinto_wedge</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">Q</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">q</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="mi">9</span><span class="o">&gt;&gt;&amp;</span> <span class="n">R</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">threads</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="p">(</span><span class="n">threads</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nl">threads</span> <span class="p">:</span> <span class="n">omp_get_max_threads</span><span class="p">()</span> <span class="p">);</span>
+    <span class="cm">/* The Pointgroup symmetry information comes from, effectively, spglib which</span>
+<span class="cm">    has all rotation matrices defined in the conventional unit cell -- which is</span>
+<span class="cm">    our `outerlattice`. Consequently we must work in the outerlattice here.  */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">issame</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">()))</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object&quot;</span><span class="p">);</span>
+    <span class="c1">// get the PointSymmetry object, containing all operations</span>
+    <span class="n">PointSymmetry</span> <span class="n">psym</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="p">);</span>
+    <span class="c1">// ensure q and R can hold one for each Q.</span>
+    <span class="kt">size_t</span> <span class="n">nQ</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">Qshape</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">q</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">Qshape</span><span class="p">);</span>
+    <span class="n">R</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nQ</span><span class="p">);</span>
+    <span class="c1">// by chance some first Bz points are likely already in the IR-wedge:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">in_ir</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside_wedge</span><span class="p">(</span><span class="n">Q</span><span class="p">);</span>
+    <span class="c1">//LQVec&lt;double&gt; qj(Q.get_lattice(), 1u);</span>
+    <span class="k">auto</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">();</span>
+    <span class="c1">// OpenMP 2 (VS) doesn&#39;t like unsigned loop counters</span>
+    <span class="kt">size_t</span> <span class="n">n_outside</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">snQ</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">u2s</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nQ</span><span class="p">);</span>
+    <span class="cp">#pragma omp parallel for default(none) shared(psym, R, q, Q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">si</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">si</span><span class="o">&lt;</span><span class="n">snQ</span><span class="p">;</span> <span class="o">++</span><span class="n">si</span><span class="p">){</span>
+      <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">s2u</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">si</span><span class="p">);</span>
+      <span class="c1">// any q already in the irreducible zone need no rotation → identity</span>
+      <span class="kt">bool</span> <span class="n">outside</span><span class="o">=!</span><span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">){</span>
+        <span class="c1">// for others find the jᵗʰ operation which moves qᵢ into the irreducible zone</span>
+        <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">qj</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="mi">1u</span><span class="p">);</span> <span class="c1">// a place to hold the multiplication result</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">psym</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// The point symmetry matrices relate *real space* vectors! We must use</span>
+          <span class="c1">// their transposes&#39; to rotate reciprocal space vectors.</span>
+          <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">qj</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">transpose</span><span class="p">(</span><span class="n">psym</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">j</span><span class="p">)).</span><span class="n">data</span><span class="p">(),</span> <span class="n">Q</span><span class="p">.</span><span class="n">ptr</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside_wedge</span><span class="p">(</span><span class="n">qj</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">){</span> <span class="cm">/* store the result */</span>
+            <span class="n">q</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">qj</span><span class="p">);</span> <span class="c1">// keep Rⱼᵀ⋅Qᵢ as qᵢᵣ</span>
+            <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">transpose</span><span class="p">(</span><span class="n">psym</span><span class="p">.</span><span class="n">get_inverse</span><span class="p">(</span><span class="n">j</span><span class="p">));</span> <span class="c1">// and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ</span>
+            <span class="n">outside</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">Q</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+        <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">outside</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">n_outside</span><span class="p">;</span>
+        <span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n_outside</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nQ</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">in_ir</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Q = &quot;</span> <span class="o">+</span> <span class="n">Q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; is outside of the irreducible reciprocal space wedge &quot;</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot; , irQ = &quot;</span> <span class="o">+</span> <span class="n">q</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="c1">// otherwise we hit the runtime error above</span>
+  <span class="p">}</span>
+
+  <span class="n">PointSymmetry</span> <span class="n">get_pointgroup_symmetry</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">outerlattice</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">int</span> <span class="n">add_time_reversal</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">time_reversal</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="kt">bool</span>
+  <span class="n">wedge_normal_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">n</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">normals</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&amp;</span> <span class="n">num</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Considering &quot;</span> <span class="o">+</span> <span class="n">n</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;... &quot;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">n</span><span class="p">).</span><span class="n">all</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;rejected; zero-length&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;accepted; first normal&quot;</span><span class="p">);</span>
+      <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+      <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// num &gt; 0 for all following views</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">),</span> <span class="n">n</span><span class="p">)).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;rejected; already present&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span>  <span class="n">n</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">))){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;accepted&quot;</span><span class="p">);</span>
+      <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="o">-</span><span class="n">n</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">))){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;accepted (*-1)&quot;</span><span class="p">);</span>
+      <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;rejected; addition causes null wedge&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">U</span><span class="o">&gt;</span>
+  <span class="kt">bool</span>
+  <span class="n">wedge_normal_check</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">n0</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">n1</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;&amp;</span> <span class="n">normals</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&amp;</span> <span class="n">num</span><span class="p">){</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Considering &quot;</span> <span class="o">+</span> <span class="n">n0</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span> <span class="s">&quot; and &quot;</span> <span class="o">+</span> <span class="n">n1</span><span class="p">.</span><span class="n">to_string</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;... &quot;</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">p0</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+      <span class="n">p0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">),</span> <span class="n">n0</span><span class="p">)).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">0.</span><span class="p">);</span>
+      <span class="n">p1</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">),</span> <span class="n">n1</span><span class="p">)).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">0.</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p0</span> <span class="o">&amp;&amp;</span> <span class="n">p1</span><span class="p">){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;rejected; already present&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">n0</span><span class="p">),</span><span class="n">n0</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">n0</span><span class="p">)).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">1.</span><span class="p">)){</span>
+      <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span>  <span class="n">n1</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">))){</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n1 accepted (n0 present)&quot;</span><span class="p">);</span>
+        <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n1 rejected (n0 present); addition causes null wedge&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dot</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">)</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">n1</span><span class="p">),</span><span class="n">n1</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="n">n1</span><span class="p">)).</span><span class="n">any</span><span class="p">(</span><span class="n">brille</span><span class="o">::</span><span class="n">cmp</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span><span class="mf">1.</span><span class="p">)){</span>
+      <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span>  <span class="n">n0</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">))){</span>
+        <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n0 accepted (n1 present)&quot;</span><span class="p">);</span>
+        <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n0 rejected (n1 present); addition causes null wedge&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">p0</span> <span class="o">||</span> <span class="n">p1</span><span class="p">)){</span>
+      <span class="n">debug_update_if</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&quot;-n0 present; addition causes null wedge)&quot;</span><span class="p">);</span>
+      <span class="n">debug_update_if</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="s">&quot;-n1 present; addition causes null wedge)&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="p">,</span>   <span class="n">n0</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">normals</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n1</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="n">normals</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">2</span><span class="p">))){</span>
+      <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n0 &amp; n1 accepted&quot;</span><span class="p">);</span>
+      <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">debug_update</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;n0 &amp; n1 rejected; adding both would cause null wedge&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">void</span>
+  <span class="n">shrink_and_prune_outside</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">vrt</span><span class="p">,</span> <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">ijk</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;shrinking to &quot;</span><span class="p">,</span><span class="n">cnt</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">vrt</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">ijk</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span>
+      <span class="n">vrt</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">cnt</span><span class="p">);</span>
+      <span class="n">ijk</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">cnt</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span><span class="p">){</span> <span class="c1">// isinside has a problem with vrt.size()==0</span>
+        <span class="k">auto</span> <span class="n">isin</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">isinside</span><span class="p">(</span><span class="n">vrt</span><span class="p">);</span>
+        <span class="n">verbose_update</span><span class="p">(</span><span class="s">&quot;and retaining &quot;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">isin</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">isin</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="nb">true</span><span class="p">),</span> <span class="s">&quot; inside vertices&quot;</span><span class="p">);</span>
+        <span class="n">vrt</span> <span class="o">=</span> <span class="n">vrt</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">isin</span><span class="p">);</span>
+        <span class="n">ijk</span> <span class="o">=</span> <span class="n">ijk</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">isin</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+  <span class="kt">bool</span>
+  <span class="n">ir_wedge_is_ok</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">normals</span><span class="p">){</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">set_ir_wedge_normals</span><span class="p">(</span><span class="n">normals</span><span class="p">);</span> <span class="c1">// assigns this-&gt;ir_wedge_normals</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">irreducible_vertex_search</span><span class="p">();</span> <span class="c1">// assigns this-&gt;ir_polyhedron</span>
+    <span class="k">return</span> <span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">approx</span><span class="o">::</span><span class="n">scalar</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">ir_polyhedron</span><span class="p">.</span><span class="n">get_volume</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_ir_polyhedron_wedge_normals</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">bool</span>
+<span class="nf">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">);</span>
+<span class="kt">bool</span>
+<span class="nf">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">);</span>
+<span class="kt">bool</span>
+<span class="nf">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">pi</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">);</span>
+<span class="kt">bool</span>
+<span class="nf">intersect_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">ni</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nj</span><span class="p">,</span>
+             <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">nk</span><span class="p">,</span>
+             <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">intersect</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">);</span>
+<span class="kt">double</span>
+<span class="nf">normals_matrix_determinant</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span><span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">c</span><span class="p">);</span>
+
+<span class="p">}</span> <span class="c1">// end namespace brille</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

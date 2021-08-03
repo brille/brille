@@ -1,0 +1,67 @@
+
+.. _file_src_symmetry_common.hpp:
+
+File symmetry_common.hpp
+========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/symmetry_common.hpp``)
+----------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_symmetry_common.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_symmetry.hpp`
+
+- :ref:`file_src_pointsymmetry.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a134cf54ebefe233d48803fabf1844cf5`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a4dec2aed7b4b0c46a23797d77db7b8b4`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1a94cfc0163f6819f061b74be9ef3e044c`
+
+- :ref:`exhale_typedef_symmetry__common_8hpp_1aef37685751c9afa1e780443d274f3533`
+

@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1afb8add91606aaf7feca8813d36c6591f:
+
+Template Function brille::utils::squared_distance(const T&, const T&)
+=====================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::squared_distance(const T&, const T&)

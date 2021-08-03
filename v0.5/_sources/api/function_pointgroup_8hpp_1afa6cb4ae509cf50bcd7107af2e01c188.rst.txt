@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1afa6cb4ae509cf50bcd7107af2e01c188:
+
+Function brille::ptg_get_transformation_matrix
+==============================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::ptg_get_transformation_matrix(int *, const int *, const int)

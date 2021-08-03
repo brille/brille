@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1a1e4ba36a72ce6edc234a945627a48551:
+
+Template Function brille::norm(const L<T>&)
+===========================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::norm(const L<T>&)

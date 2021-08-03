@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1TetTriLayer:
+
+Class TetTriLayer
+=================
+
+- Defined in :ref:`file_src_triangulation_layers.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::TetTriLayer
+   :members:
+   :protected-members:
+   :undoc-members:

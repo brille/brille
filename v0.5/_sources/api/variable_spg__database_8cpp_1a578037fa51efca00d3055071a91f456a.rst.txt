@@ -1,0 +1,13 @@
+.. _exhale_variable_spg__database_8cpp_1a578037fa51efca00d3055071a91f456a:
+
+Variable ALL_SPACEGROUPS
+========================
+
+- Defined in :ref:`file_src_spg_database.cpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: ALL_SPACEGROUPS

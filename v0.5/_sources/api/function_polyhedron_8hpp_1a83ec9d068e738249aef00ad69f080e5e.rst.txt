@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a83ec9d068e738249aef00ad69f080e5e:
+
+Function brille::ok_size
+========================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::ok_size(const size_t&, const size_t&)

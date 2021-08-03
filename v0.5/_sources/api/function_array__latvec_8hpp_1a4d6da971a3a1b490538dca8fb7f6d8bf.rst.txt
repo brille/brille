@@ -1,0 +1,13 @@
+.. _exhale_function_array__latvec_8hpp_1a4d6da971a3a1b490538dca8fb7f6d8bf:
+
+Template Function brille::cross(const L<T>&, const L<R>&)
+=========================================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::cross(const L<T>&, const L<R>&)

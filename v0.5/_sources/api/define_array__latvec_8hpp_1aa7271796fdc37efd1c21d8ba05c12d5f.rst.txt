@@ -1,0 +1,13 @@
+.. _exhale_define_array__latvec_8hpp_1aa7271796fdc37efd1c21d8ba05c12d5f:
+
+Define SCALAR_ARRAY_OP
+======================
+
+- Defined in :ref:`file_src_array_latvec.tpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: SCALAR_ARRAY_OP

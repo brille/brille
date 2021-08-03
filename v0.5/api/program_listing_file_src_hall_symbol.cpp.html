@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File hall_symbol.cpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File hall_symbol.cpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_hall_symbol.cpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-hall-symbol-cpp">
+<span id="program-listing-file-src-hall-symbol-cpp"></span><h1>Program Listing for File hall_symbol.cpp<a class="headerlink" href="#program-listing-for-file-hall-symbol-cpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_hall_symbol.cpp.html#file-src-hall-symbol-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/hall_symbol.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;hall_symbol.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;bravais.hpp&quot; // for bravais_letter</span><span class="cp"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">brille</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="n">HallSymbol</span><span class="o">::</span><span class="n">from_ascii</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">){</span>
+  <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">hassubsup</span><span class="p">;</span>
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span> <span class="o">=</span> <span class="n">Bravais</span><span class="o">::</span><span class="n">_</span><span class="p">;</span>
+  <span class="n">hassubsup</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;^&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+  <span class="n">hassubsup</span> <span class="o">|=</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;_&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+  <span class="c1">// bool hasspace = s.find(&#39; &#39;) != std::string::npos;</span>
+
+  <span class="kt">bool</span> <span class="n">isneg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="n">issup</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="n">issub</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">SeitzSymbol</span> <span class="n">ssym</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">stream</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">good</span><span class="p">()){</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="kt">char</span><span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+    <span class="c1">// if c is one of the Lattice symbols:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;PABCIRF&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">)){</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">setl</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">isneg</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="sc">&#39; &#39;</span><span class="o">==</span><span class="n">stream</span><span class="p">.</span><span class="n">peek</span><span class="p">())</span> <span class="n">c</span> <span class="o">=</span> <span class="kt">char</span><span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+      <span class="n">isneg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// the subscripts a, b, c, n, u, v, w, d, 1, 2, 3, 4, 5 are all translation</span>
+    <span class="c1">// specifications. All but 2, 3, 4 are unambiguous so add them to the</span>
+    <span class="c1">// Setiz symbol and reset the subscript flag.</span>
+    <span class="c1">// if a subscript specification has been given or the temporary Seitz symbol</span>
+    <span class="c1">// has non-zero order then a translation symbol should be added for sure</span>
+    <span class="c1">//</span>
+    <span class="c1">// non-subscripted 1, 2, 3, 4, 6 are all rotation order symbols</span>
+    <span class="c1">// they *should* specify the start of a Seitz symbol, so if the temporary</span>
+    <span class="c1">// Seitz symbol has non-zero order we should add it to the list and start a</span>
+    <span class="c1">// new temporary Setiz symbol</span>
+    <span class="c1">//</span>
+    <span class="c1">// any of x, y, z, &#39;, &quot;, or * represents an axis specification</span>
+    <span class="c1">// add the axis to the Seitz symbol and reset the superscript flag</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hassubsup</span><span class="p">){</span>
+      <span class="c1">// superscript follows -- advance to the next character</span>
+      <span class="k">if</span> <span class="p">(</span><span class="sc">&#39;^&#39;</span><span class="o">==</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="n">issup</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="n">c</span> <span class="o">=</span> <span class="kt">char</span><span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">());</span> <span class="p">}</span>
+      <span class="c1">// subscript follows -- advance to the next character</span>
+      <span class="k">if</span> <span class="p">(</span><span class="sc">&#39;_&#39;</span><span class="o">==</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span> <span class="n">issub</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="n">c</span> <span class="o">=</span> <span class="kt">char</span><span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">get</span><span class="p">());</span> <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">issub</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;abcnuvwd12345&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">ssym</span><span class="p">.</span><span class="n">add_tran</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+        <span class="n">issub</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;12346&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ssym</span><span class="p">.</span><span class="n">get_order</span><span class="p">())</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">addsymbol</span><span class="p">(</span><span class="n">ssym</span><span class="p">);</span>
+        <span class="n">ssym</span> <span class="o">=</span> <span class="n">SeitzSymbol</span><span class="p">((</span><span class="n">isneg</span><span class="o">?-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">));</span>
+        <span class="n">isneg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">issup</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">issup</span> <span class="o">&amp;&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;xyz&#39;</span><span class="se">\&quot;</span><span class="s">*&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">)){</span>
+        <span class="n">ssym</span><span class="p">.</span><span class="n">add_axis</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+        <span class="n">issup</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="cm">/* without ^ or _ we can only distinguish symbols by spaces */</span><span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">ssym</span><span class="p">.</span><span class="n">get_order</span><span class="p">()){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;abcnuvwd12345&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">))</span> <span class="n">ssym</span><span class="p">.</span><span class="n">add_tran</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;xyz&#39;</span><span class="se">\&quot;</span><span class="s">*&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">))</span> <span class="n">ssym</span><span class="p">.</span><span class="n">add_axis</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;12346&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">ssym</span> <span class="o">=</span> <span class="n">SeitzSymbol</span><span class="p">((</span><span class="n">isneg</span><span class="o">?-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">&#39;0&#39;</span><span class="p">));</span>
+        <span class="n">isneg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// capture what should have been an overbar but in ASCII is a preceeding -</span>
+    <span class="k">if</span> <span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="o">==</span><span class="n">c</span><span class="p">)</span> <span class="n">isneg</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="c1">// a space between parts of the Hall symbol signifies a completed (set of)</span>
+    <span class="c1">// Seitz matrix(s)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="sc">&#39; &#39;</span><span class="o">==</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// if the temporary Seitz symbol has non-zero order store it away</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">ssym</span><span class="p">.</span><span class="n">get_order</span><span class="p">())</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">addsymbol</span><span class="p">(</span><span class="n">ssym</span><span class="p">);</span>
+      <span class="c1">// reset everything for a possible next symbol</span>
+      <span class="n">ssym</span> <span class="o">=</span> <span class="n">SeitzSymbol</span><span class="p">();</span>
+      <span class="n">issup</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="n">issub</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="n">isneg</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="sc">&#39;(&#39;</span><span class="o">==</span><span class="n">c</span><span class="p">){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tmp</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="sc">&#39;)&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">V</span><span class="p">.</span><span class="n">from_ascii</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// At the end of the string we might still have a valid temporary Seitz symbol</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">ssym</span><span class="p">.</span><span class="n">get_order</span><span class="p">())</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">addsymbol</span><span class="p">(</span><span class="n">ssym</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">validate</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">HallSymbol</span><span class="o">::</span><span class="n">validate</span><span class="p">(){</span>
+  <span class="c1">// verify that everything went ok</span>
+  <span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">brille</span><span class="o">::</span><span class="n">bravais_is_known</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">ss</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">symbols</span><span class="p">)</span> <span class="n">ok</span> <span class="o">&amp;=</span> <span class="n">ss</span><span class="p">.</span><span class="n">validate</span><span class="p">();</span>
+  <span class="c1">// further validation could be possible by finding the full spacegroup</span>
+  <span class="k">return</span> <span class="n">ok</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Symmetry</span> <span class="n">HallSymbol</span><span class="o">::</span><span class="n">get_generators</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Symmetry</span> <span class="n">gen</span><span class="p">;</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">r</span><span class="p">{{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">}};</span>
+  <span class="n">Vectors</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">ts</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">h</span><span class="p">{</span><span class="mf">0.5</span><span class="p">},</span> <span class="n">t</span><span class="p">{</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="p">},</span> <span class="n">d</span><span class="p">{</span><span class="mf">2.</span><span class="o">/</span><span class="mf">3.</span><span class="p">};</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">L</span><span class="p">){</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">P</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">A</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">B</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">h</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">C</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">I</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">R</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="n">t</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">},{</span><span class="n">d</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">t</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">Bravais</span><span class="o">::</span><span class="nl">F</span><span class="p">:</span> <span class="n">ts</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">},{</span><span class="n">h</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">},{</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Unknown lattice type&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">onet</span><span class="p">:</span> <span class="n">ts</span><span class="p">)</span> <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">onet</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">centrosymmetric</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">{{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">}};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">onet</span><span class="p">:</span> <span class="n">ts</span><span class="p">)</span> <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">onet</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// copy the symbols and ensure all axis specifiers are explicit:</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">SeitzSymbol</span><span class="o">&gt;</span> <span class="n">expsym</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">symbols</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+    <span class="n">expsym</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">SeitzSymbol</span><span class="p">(</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">get_order</span><span class="p">(),</span> <span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">get_tran</span><span class="p">(),</span> <span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">implicit_axis</span><span class="p">()));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">symbols</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">expsym</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">SeitzSymbol</span><span class="p">(</span><span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_order</span><span class="p">(),</span> <span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_tran</span><span class="p">(),</span> <span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">implicit_axis</span><span class="p">(</span><span class="n">expsym</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])));</span>
+  <span class="p">}</span>
+  <span class="c1">// with all axis symbols now (semi) explicit we can run this more easily</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">expsym</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+    <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">expsym</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">getr</span><span class="p">(),</span> <span class="n">expsym</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">gett</span><span class="p">());</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">expsym</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">gen</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">expsym</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">getr</span><span class="p">(</span><span class="n">expsym</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">expsym</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">gett</span><span class="p">(</span><span class="n">expsym</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="c1">// perform the change of basis, if necessary:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">V</span><span class="p">.</span><span class="n">has_identity_rotation</span><span class="p">())</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">logic_error</span><span class="p">(</span><span class="s">&quot;HallSymbol can only handle origin shift change of basis, but can be extened if necessary.&quot;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">V</span><span class="p">.</span><span class="n">has_identity_translation</span><span class="p">()){</span>
+    <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">invT</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">V</span><span class="p">.</span><span class="n">gett</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">x</span><span class="p">:</span> <span class="n">invT</span><span class="p">)</span> <span class="n">x</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">Motion</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">invV</span><span class="p">(</span><span class="n">invT</span><span class="p">);</span> <span class="c1">// the rotation part is set to 𝟙</span>
+    <span class="n">Symmetry</span><span class="o">::</span><span class="n">Motions</span> <span class="n">motions</span><span class="p">;</span>
+    <span class="c1">// each motion is replaced by V M V⁻¹</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">m</span><span class="p">:</span> <span class="n">gen</span><span class="p">.</span><span class="n">getallm</span><span class="p">())</span> <span class="n">motions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">V</span><span class="o">*</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">invV</span><span class="p">));</span>
+    <span class="n">gen</span> <span class="o">=</span> <span class="n">Symmetry</span><span class="p">(</span><span class="n">motions</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">gen</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">HallSymbol</span><span class="o">::</span><span class="n">to_ascii</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">centrosymmetric</span><span class="p">)</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot;-&quot;</span><span class="p">;</span>
+  <span class="n">s</span> <span class="o">+=</span> <span class="n">brille</span><span class="o">::</span><span class="n">bravais_letter</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">z</span><span class="p">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">symbols</span><span class="p">)</span> <span class="n">s</span> <span class="o">+=</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">z</span><span class="p">.</span><span class="n">to_ascii</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">to_ascii</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">A</span> <span class="o">+</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">T</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">validate</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// If we include E and -E, N can be ±1, ±2, ±3, ±4, or ±6</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">N</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">6</span> <span class="o">||</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">6</span> <span class="o">||</span> <span class="n">N</span> <span class="o">==</span> <span class="o">-</span><span class="mi">5</span> <span class="o">||</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="c1">// check the axis specification(s)</span>
+  <span class="kt">int</span> <span class="n">primes</span><span class="p">{</span><span class="mi">0</span><span class="p">},</span> <span class="n">xyz</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">char</span> <span class="nl">c</span><span class="p">:</span> <span class="n">A</span><span class="p">)</span> <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span> <span class="n">primes</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span> <span class="k">if</span> <span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;&quot;&#39;</span><span class="o">:</span> <span class="n">primes</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">if</span> <span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;\&#39;&#39;</span><span class="o">:</span> <span class="o">++</span><span class="n">primes</span><span class="p">;</span>   <span class="k">if</span> <span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span>
+    <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="k">if</span> <span class="p">(</span><span class="n">primes</span> <span class="o">||</span> <span class="n">xyz</span><span class="o">++</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="c1">// only one x, y, or z specification allowed</span>
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// non x, y, z, &#39;, &quot;, * not allowed</span>
+  <span class="p">}</span>
+  <span class="c1">// replace valid combinations of &#39; and &quot;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">primes</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">A</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span> <span class="c1">// ensure &#39;&#39; ≡ &quot;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">primes</span><span class="o">==</span><span class="mi">3</span><span class="p">)</span> <span class="n">A</span> <span class="o">=</span> <span class="s">&quot;*&quot;</span><span class="p">;</span> <span class="c1">// and &#39;&#39;&#39; ≡ *,</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">primes</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// higher than 3 is a syntax error</span>
+  <span class="c1">// if (xyz) -- everything should be fine</span>
+
+  <span class="c1">// check the translation specification(s)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">subscripts</span> <span class="o">=</span> <span class="s">&quot;abcnuvwd12345&quot;</span><span class="p">;</span>
+  <span class="c1">// a full check isn&#39;t possible at this point due to (possibly) implied</span>
+  <span class="c1">// rotation axes. instead just ensure that there aren&#39;t multiples of any</span>
+  <span class="c1">// of the allowed subscripts</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">T</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">char</span> <span class="nl">c</span><span class="p">:</span> <span class="n">subscripts</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">count_if</span><span class="p">(</span><span class="n">T</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">T</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="n">c</span><span class="p">](</span><span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">d</span><span class="p">){</span><span class="k">return</span> <span class="n">d</span><span class="o">==</span><span class="n">c</span><span class="p">;})</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="c1">// getting this far *should* mean that the SeitzSymbol is valid</span>
+  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">getr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_getr</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">implicit_axis</span><span class="p">(),</span> <span class="sc">&#39;!&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">getr</span><span class="p">(</span><span class="k">const</span> <span class="n">SeitzSymbol</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_getr</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">implicit_axis</span><span class="p">(</span><span class="n">pre</span><span class="p">),</span> <span class="n">pre</span><span class="p">.</span><span class="n">implicit_axis</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">inner_getr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="n">ax</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">pax</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">out</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">N</span><span class="p">)){</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="c1">// the special 2 preceeded by 3 or 6 case -&gt; a-b (same as 2&#39; preceeded by z)</span>
+      <span class="k">case</span> <span class="sc">&#39;?&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;\&#39;&#39;</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">pax</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Impossible pre-axis for &#39; in Seitz symbol&quot;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;&quot;&#39;</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">pax</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Impossible pre-axis for </span><span class="se">\&quot;</span><span class="s"> in Seitz symbol&quot;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">6</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">out</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Impossible rotation order in Seitz symbol&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="c1">// space invert the rotation if necessary</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">N</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">gett</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_gett</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_order</span><span class="p">()),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">implicit_axis</span><span class="p">(),</span> <span class="sc">&#39;!&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">gett</span><span class="p">(</span><span class="k">const</span> <span class="n">SeitzSymbol</span><span class="o">&amp;</span> <span class="n">pre</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">inner_gett</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_order</span><span class="p">()),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">implicit_axis</span><span class="p">(</span><span class="n">pre</span><span class="p">),</span> <span class="n">pre</span><span class="p">.</span><span class="n">implicit_axis</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">SeitzSymbol</span><span class="o">::</span><span class="n">inner_gett</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">an</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">ax</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">pax</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}},</span> <span class="n">t</span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">T</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">T</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">char</span> <span class="n">c</span><span class="p">){</span><span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">strchr</span><span class="p">(</span><span class="s">&quot;12345&quot;</span><span class="p">,</span><span class="n">c</span><span class="p">);})){</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">ax</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;\&#39;&#39;</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">pax</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="sc">&#39;&quot;&#39;</span><span class="o">:</span> <span class="k">switch</span> <span class="p">(</span><span class="n">pax</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">&#39;x&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;y&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">&#39;z&#39;</span><span class="o">:</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span> <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kt">double</span> <span class="n">h</span><span class="p">{</span><span class="mf">0.5</span><span class="p">},</span> <span class="n">q</span><span class="p">{</span><span class="mf">0.25</span><span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span> <span class="nl">c</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="sc">&#39;a&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;b&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;c&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;n&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">h</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;u&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;v&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;w&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;d&#39;</span><span class="o">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;1&#39;</span><span class="o">:</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span>   <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">an</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;2&#39;</span><span class="o">:</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">an</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;3&#39;</span><span class="o">:</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">3</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">an</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;4&#39;</span><span class="o">:</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">4</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">an</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="sc">&#39;5&#39;</span><span class="o">:</span> <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">5</span><span class="o">*</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">an</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// translations are bounded by [0,1)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">std</span><span class="o">::</span><span class="n">floor</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="n">t</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_function_balltrellis_8hpp_1a8a2444a6bb7702adc6a3d41dec2943af:
+
+Function brille::construct_trellis
+==================================
+
+- Defined in :ref:`file_src_balltrellis.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::construct_trellis(const std::vector<TrellisLeaf>&, const double)

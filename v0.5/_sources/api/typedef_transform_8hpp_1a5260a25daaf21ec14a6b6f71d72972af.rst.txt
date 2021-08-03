@@ -1,0 +1,13 @@
+.. _exhale_typedef_transform_8hpp_1a5260a25daaf21ec14a6b6f71d72972af:
+
+Typedef brille::Ptype
+=====================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::Ptype

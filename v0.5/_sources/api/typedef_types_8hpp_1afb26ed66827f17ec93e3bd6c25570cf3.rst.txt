@@ -1,0 +1,13 @@
+.. _exhale_typedef_types_8hpp_1afb26ed66827f17ec93e3bd6c25570cf3:
+
+Typedef brille::shape_t
+=======================
+
+- Defined in :ref:`file_src_types.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::shape_t

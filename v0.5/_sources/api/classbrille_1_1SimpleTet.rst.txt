@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1SimpleTet:
+
+Class SimpleTet
+===============
+
+- Defined in :ref:`file_src_triangulation_simple.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::SimpleTet
+   :members:
+   :protected-members:
+   :undoc-members:

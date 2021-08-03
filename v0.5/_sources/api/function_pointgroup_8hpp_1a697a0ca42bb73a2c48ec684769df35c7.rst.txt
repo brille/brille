@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a697a0ca42bb73a2c48ec684769df35c7:
+
+Function brille::rotation_order
+===============================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::rotation_order(const int *)

@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Function corners_and_weights &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Function floor_corners_and_weights" href="function_interpolation_8hpp_1a090764d063aa8501ee8025ba9cadde6e.html" />
+    <link rel="prev" title="Function construct_trellis" href="function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Function corners_and_weights</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/function_interpolation_8hpp_1ad60bf2c64ec5aeb2e3153d05687f4a6f.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-function-corners-and-weights">
+<span id="exhale-function-interpolation-8hpp-1ad60bf2c64ec5aeb2e3153d05687f4a6f"></span><h1>Template Function corners_and_weights<a class="headerlink" href="#template-function-corners-and-weights" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_interpolation.hpp.html#file-src-interpolation-hpp"><span class="std std-ref">File interpolation.hpp</span></a></p></li>
+</ul>
+<div class="section" id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp function">
+<dt id="_CPPv4I0I0E0E19corners_and_weightsiPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE">
+<span id="_CPPv3I0I0E0E19corners_and_weightsPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE"></span><span id="_CPPv2I0I0E0E19corners_and_weightsPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE"></span>template&lt;class <code class="sig-name descname">R</code>, template&lt;class&gt; class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="interpolation_8hpp_1ad60bf2c64ec5aeb2e3153d05687f4a6f"></span>int <code class="sig-name descname">corners_and_weights</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0I0E0E19corners_and_weightsiPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE" title="corners_and_weights::T">T</a>&lt;<a class="reference internal" href="#_CPPv4I0I0E0E19corners_and_weightsiPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE" title="corners_and_weights::R">R</a>&gt; *<em>that</em>, <em class="property">const</em> double *<em>zero</em>, <em class="property">const</em> double *<em>step</em>, <em class="property">const</em> size_t *<em>ijk</em>, <em class="property">const</em> double *<em>x</em>, size_t *<em>c</em>, double *<em>w</em>, <em class="property">const</em> size_t <em>N</em>, <em class="property">const</em> std::vector&lt;size_t&gt; &amp;<em>dirs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0I0E0E19corners_and_weightsiPK1TI1REPKdPKdPK6size_tPKdP6size_tPdK6size_tRKNSt6vectorI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the linear index and weights of interpolation points for a given position. </p>
+<p>Linear interpolation in D dimensions requires 2ᴰ points surrounding the position where an interpolated value is to be determined. The value at each of the 2ᴰ points contributes in proportion to how close it is to the interpolation point. This function finds the linear indices for any object which has a <code class="docutils literal notranslate"><span class="pre">sub2map</span></code> method with signature <code class="docutils literal notranslate"><span class="pre">(const</span> <span class="pre">size_t*</span> <span class="pre">subscripted_index,</span> <span class="pre">size_t*</span> <span class="pre">linear_index)</span></code> and determines the appropriate normalized weights for each of the 2ᴰ points.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An unsigned integer with bits acting as flags to indicate whether a point required for the interpolation is out-of-bounds. The order of bits depends on <code class="docutils literal notranslate"><span class="pre">dirs.size()</span></code>, see the source if you need to decode this information. </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p>This function supports linear, bilinear, trilinear, and quadralinear interpolation, e.g., 1≤D≤4, in an arbitrary number of dimensions with D≤N; extending it to higher-dimensional interpolation should be possible if ever desired. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">that</span></code>: A pointer to an object with a <code class="docutils literal notranslate"><span class="pre">sub2map(const</span> <span class="pre">size_t*,</span> <span class="pre">size_t&amp;)</span></code> method: MapGrid3, MapGrid4, InterpolateGrid3, InterpolateGrid4, BrillouinZoneGrid3, BrillouinZoneGrid4, etc. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zero</span></code>: Pointer to the zero-point values of the grid, with N elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code>: Pointer to the step-size values of the grid, with N elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ijk</span></code>: Pointer to the nearest grid subscripted index to the interpolation point, with N elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: Pointer to the coordinates of the interpolation point, with N elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">c</span></code>: Pointer where the linear indices will be stored, with 2ᴺ elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[out]</span> <span class="pre">w</span></code>: Pointer where the weights will be stored, with 2ᴺ elements </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span></code>: Dimensionality of the gridded space </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dirs</span></code>: Directions in the gridded space over which interpolation is to be performed; D=1≤<code class="docutils literal notranslate"><span class="pre">dirs.size()</span></code>≤N </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="function_interpolation_8hpp_1a090764d063aa8501ee8025ba9cadde6e.html" class="btn btn-neutral float-right" title="Template Function floor_corners_and_weights" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="function_balltrellis_8cpp_1a400f886e81ceb1052390733536b6fc49.html" class="btn btn-neutral float-left" title="Function construct_trellis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1ac6d630929a50dc46b55eeb5b2e902004:
+
+Template Function brille::one_intersection
+==========================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::one_intersection(const bArray<T>&, const bArray<T>&, const bArray<T>&, const bArray<T>&, const bArray<T>&, const bArray<T>&, const bArray<T>&, const bArray<T>&)

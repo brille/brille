@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a4344802bb44638ecac9226681be9aaff:
+
+Template Function brille::unique
+================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::unique(const std::vector<T>&)

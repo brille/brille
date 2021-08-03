@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1LatVecTraits_3_01Reciprocal_00_01S_01_4:
+
+Template Struct LatVecTraits< Reciprocal, S >
+=============================================
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::LatVecTraits< Reciprocal, S >
+   :members:
+   :protected-members:
+   :undoc-members:

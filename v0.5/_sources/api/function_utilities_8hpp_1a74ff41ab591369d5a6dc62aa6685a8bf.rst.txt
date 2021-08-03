@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a74ff41ab591369d5a6dc62aa6685a8bf:
+
+Template Function brille::utils::equal_matrix
+=============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::equal_matrix(const T *, const T *, const T)

@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File bz_mesh.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File bz_mesh.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_bz_mesh.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-bz-mesh-hpp">
+<span id="program-listing-file-src-bz-mesh-hpp"></span><h1>Program Listing for File bz_mesh.hpp<a class="headerlink" href="#program-listing-for-file-bz-mesh-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_bz_mesh.hpp.html#file-src-bz-mesh-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/bz_mesh.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef BRILLE_BZ_MESH_</span>
+<span class="cp">#define BRILLE_BZ_MESH_</span>
+<span class="cp">#include</span> <span class="cpf">&quot;bz.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;mesh.hpp&quot;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">BrillouinZoneMesh3</span><span class="o">:</span> <span class="k">public</span> <span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">{</span>
+  <span class="k">using</span> <span class="n">SuperClass</span> <span class="o">=</span> <span class="n">Mesh3</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="n">BrillouinZone</span> <span class="n">brillouinzone</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// BrillouinZoneMesh3(const BrillouinZone&amp; bz, const double max_size_invA=-1., const double min_angle=20.0, const double max_angle=-1.0, const double max_ratio=-1., const int max_points=-1):</span>
+  <span class="c1">//   Mesh3&lt;T&gt;(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),</span>
+  <span class="c1">//   brillouinzone(bz) {}</span>
+  <span class="c1">// BrillouinZoneMesh3(const BrillouinZone&amp; bz) Mesh3&lt;T&gt;(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">A</span><span class="o">&gt;</span>
+  <span class="n">BrillouinZoneMesh3</span><span class="p">(</span><span class="k">const</span> <span class="n">BrillouinZone</span><span class="o">&amp;</span> <span class="n">bz</span><span class="p">,</span> <span class="n">A</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span><span class="o">:</span>
+    <span class="n">SuperClass</span><span class="p">(</span><span class="n">bz</span><span class="p">.</span><span class="n">get_ir_vertices</span><span class="p">().</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">bz</span><span class="p">.</span><span class="n">get_ir_vertices_per_face</span><span class="p">(),</span> <span class="n">args</span><span class="p">...),</span>
+    <span class="n">brillouinzone</span><span class="p">(</span><span class="n">bz</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="c1">// get the BrillouinZone object</span>
+  <span class="n">BrillouinZone</span> <span class="n">get_brillouinzone</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">brillouinzone</span><span class="p">;}</span>
+  <span class="c1">// get the mesh vertices in relative lattice units</span>
+  <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">get_mesh_hkl</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">xyz</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_mesh_xyz</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">toxyz</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">fromxyz</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+    <span class="k">const</span> <span class="n">BrillouinZone</span> <span class="n">bz</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">get_brillouinzone</span><span class="p">();</span>
+    <span class="n">bz</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">get_xyz_transform</span><span class="p">(</span><span class="n">toxyz</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">matrix_inverse</span><span class="p">(</span><span class="n">fromxyz</span><span class="p">,</span><span class="n">toxyz</span><span class="p">))</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;transform matrix toxyz has zero determinant&quot;</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">.</span><span class="n">shape</span><span class="p">();</span>
+    <span class="n">bArray</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">hkl</span><span class="p">(</span><span class="n">shape</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="k">auto</span> <span class="n">vxyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">.</span><span class="n">view</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">to_std</span><span class="p">();</span>
+      <span class="n">brille</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">multiply_matrix_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="p">,</span><span class="kt">double</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">fromxyz</span><span class="p">,</span> <span class="n">vxyz</span><span class="p">.</span><span class="n">data</span><span class="p">());</span>
+      <span class="n">hkl</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">hkl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="n">brille</span><span class="o">::</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;&gt;</span>
+  <span class="n">ir_interpolate_at</span><span class="p">(</span><span class="k">const</span> <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nthreads</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">no_move</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span> <span class="n">ir_q</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">LQVec</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tau</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">(),</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span> <span class="n">rot</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="mi">0u</span><span class="p">),</span> <span class="n">invrot</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="mi">0u</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">no_move</span><span class="p">){</span>
+      <span class="n">ir_q</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">brillouinzone</span><span class="p">.</span><span class="n">ir_moveinto</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ir_q</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">invrot</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">)){</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span><span class="p">;</span>
+      <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Moving all points into the irreducible Brillouin zone failed.&quot;</span><span class="p">;</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// perform the interpolation within the irreducible Brillouin zone</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">nthreads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="o">?</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">SuperClass</span><span class="o">::</span><span class="n">parallel_interpolate_at</span><span class="p">(</span><span class="n">ir_q</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">(),</span> <span class="n">nthreads</span><span class="p">)</span>
+        <span class="o">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">SuperClass</span><span class="o">::</span><span class="n">interpolate_at</span><span class="p">(</span><span class="n">ir_q</span><span class="p">.</span><span class="n">get_xyz</span><span class="p">());</span>
+    <span class="c1">// we always need the pointgroup operations to &#39;rotate&#39;</span>
+    <span class="n">PointSymmetry</span> <span class="n">psym</span> <span class="o">=</span> <span class="n">brillouinzone</span><span class="p">.</span><span class="n">get_pointgroup_symmetry</span><span class="p">();</span>
+    <span class="c1">// and might need the Phonon Gamma table</span>
+    <span class="n">GammaTable</span> <span class="n">pgt</span><span class="p">{</span><span class="n">GammaTable</span><span class="p">()};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">RotatesLike</span><span class="o">::</span><span class="n">Gamma</span> <span class="o">==</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">().</span><span class="n">vectors</span><span class="p">().</span><span class="n">rotateslike</span><span class="p">()){</span>
+      <span class="n">pgt</span><span class="p">.</span><span class="n">construct</span><span class="p">(</span><span class="n">brillouinzone</span><span class="p">.</span><span class="n">get_lattice</span><span class="p">().</span><span class="n">star</span><span class="p">(),</span> <span class="n">brillouinzone</span><span class="p">.</span><span class="n">add_time_reversal</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">vals2</span><span class="p">(</span><span class="n">vals</span><span class="p">);</span>
+    <span class="n">brille</span><span class="o">::</span><span class="n">Array2</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">vecs2</span><span class="p">(</span><span class="n">vecs</span><span class="p">);</span>
+    <span class="c1">// actually perform the rotation to Q</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">().</span><span class="n">values</span><span class="p">()</span> <span class="p">.</span><span class="n">rotate_in_place</span><span class="p">(</span><span class="n">vals2</span><span class="p">,</span> <span class="n">ir_q</span><span class="p">,</span> <span class="n">pgt</span><span class="p">,</span> <span class="n">psym</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">invrot</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">);</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">().</span><span class="n">vectors</span><span class="p">().</span><span class="n">rotate_in_place</span><span class="p">(</span><span class="n">vecs2</span><span class="p">,</span> <span class="n">ir_q</span><span class="p">,</span> <span class="n">pgt</span><span class="p">,</span> <span class="n">psym</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">invrot</span><span class="p">,</span> <span class="n">nthreads</span><span class="p">);</span>
+    <span class="c1">// we&#39;re done so bundle the output</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// end namespace brille</span>
+<span class="cp">#endif </span><span class="c1">// _BZ_MESH_</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

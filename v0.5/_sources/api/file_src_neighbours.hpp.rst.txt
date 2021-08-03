@@ -1,0 +1,63 @@
+
+.. _file_src_neighbours.hpp:
+
+File neighbours.hpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/neighbours.hpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_neighbours.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz.hpp`
+
+- :ref:`file_src_neighbours.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_neighbours_8hpp_1a04f2f94ca31b6a1fe9f07492c6b10dc8`
+
+- :ref:`exhale_function_neighbours_8hpp_1aca3eac0472a24f9251134013b98d4b31`
+
+- :ref:`exhale_function_neighbours_8hpp_1a76a7ee32aa5c051000151c4c1287cdd0`
+

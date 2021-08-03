@@ -1,0 +1,13 @@
+.. _exhale_function_interpolation_8hpp_1ad60bf2c64ec5aeb2e3153d05687f4a6f:
+
+Template Function corners_and_weights
+=====================================
+
+- Defined in :ref:`file_src_interpolation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: corners_and_weights(const T<R> *, const double *, const double *, const size_t *, const double *, size_t *, double *, const size_t, const std::vector<size_t>&)

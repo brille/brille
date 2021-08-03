@@ -1,0 +1,25 @@
+.. _exhale_class_classbrille_1_1GammaTable:
+
+Class GammaTable
+================
+
+- Defined in :ref:`file_src_phonon.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public brille::RotateTable`` (:ref:`exhale_class_classbrille_1_1RotateTable`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::GammaTable
+   :members:
+   :protected-members:
+   :undoc-members:

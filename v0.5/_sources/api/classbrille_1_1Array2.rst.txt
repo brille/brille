@@ -1,0 +1,26 @@
+.. _exhale_class_classbrille_1_1Array2:
+
+Template Class Array2
+=====================
+
+- Defined in :ref:`file_src_array2.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public brille::LDVec< T >`` (:ref:`exhale_class_classbrille_1_1LDVec`)
+- ``public brille::LQVec< T >`` (:ref:`exhale_class_classbrille_1_1LQVec`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Array2
+   :members:
+   :protected-members:
+   :undoc-members:

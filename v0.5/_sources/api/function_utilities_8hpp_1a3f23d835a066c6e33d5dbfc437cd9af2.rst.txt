@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a3f23d835a066c6e33d5dbfc437cd9af2:
+
+Template Function brille::utils::vector_angle(const I, const std::complex<T> \*, const std::complex<T> \*)
+==========================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::vector_angle(const I, const std::complex<T> *, const std::complex<T> *)

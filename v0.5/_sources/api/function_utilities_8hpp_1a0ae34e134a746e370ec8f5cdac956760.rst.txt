@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a0ae34e134a746e370ec8f5cdac956760:
+
+Template Function brille::utils::matrix_determinant
+===================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::matrix_determinant(const R *, const int)

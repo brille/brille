@@ -1,0 +1,13 @@
+.. _exhale_function_bz_8hpp_1ada408494d835a033877331102fcd0a19:
+
+Function brille::normals_matrix_determinant
+===========================================
+
+- Defined in :ref:`file_src_bz.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::normals_matrix_determinant(const LQVec<double>&, const LQVec<double>&, const LQVec<double>&)

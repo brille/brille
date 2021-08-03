@@ -1,0 +1,13 @@
+.. _exhale_typedef_transform_8hpp_1a60c3fa18367abdc9ab2a117c37986ad1:
+
+Typedef brille::invPtype
+========================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: brille::invPtype

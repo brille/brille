@@ -1,0 +1,13 @@
+.. _exhale_function_debug_8hpp_1af69dab2a77c851fecf7abf92f9ae99a8:
+
+Template Function brille::time_to_string
+========================================
+
+- Defined in :ref:`file_src_debug.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::time_to_string(std::chrono::time_point<T>)

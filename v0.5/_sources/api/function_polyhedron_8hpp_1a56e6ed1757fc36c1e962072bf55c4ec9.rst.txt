@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a56e6ed1757fc36c1e962072bf55c4ec9:
+
+Template Function brille::point_inside_plane
+============================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::point_inside_plane(const bArray<T>&, const bArray<T>&, const bArray<T>&)

@@ -1,0 +1,13 @@
+.. _exhale_enum_lattice_8hpp_1ab8b0d035f2ac494998105602da80149f:
+
+Enum AngleUnit
+==============
+
+- Defined in :ref:`file_src_lattice.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::AngleUnit

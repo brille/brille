@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File utilities.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File utilities.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_utilities.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-utilities-hpp">
+<span id="program-listing-file-src-utilities-hpp"></span><h1>Program Listing for File utilities.hpp<a class="headerlink" href="#program-listing-for-file-utilities-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_utilities.hpp.html#file-src-utilities-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/utilities.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2019,2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+
+<span class="cp">#ifndef BRILLE_UTILITIES_HPP_</span>
+<span class="cp">#define BRILLE_UTILITIES_HPP_</span>
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;type_traits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;limits&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdexcept&gt;  // for std::overflow_error</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;debug.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;approx.hpp&quot;</span><span class="cp"></span>
+
+
+<span class="k">namespace</span> <span class="n">brille</span><span class="p">{</span>
+  <span class="k">const</span> <span class="kt">double</span>             <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14159265358979323846</span><span class="p">;</span>
+  <span class="k">const</span> <span class="kt">double</span>         <span class="n">halfpi</span> <span class="o">=</span> <span class="mf">1.57079632679489661923</span><span class="p">;</span>
+  <span class="c1">// const double      quarterpi = 0.785398163397448309616;</span>
+  <span class="c1">// const double      inversepi = 0.318309886183790671538;</span>
+  <span class="c1">// const double      twooverpi = 0.636619772367581343076;</span>
+  <span class="c1">// const double  twooversqrtpi = 1.12837916709551257390;</span>
+  <span class="c1">// const double        sqrttwo = 1.41421356237309504880;</span>
+  <span class="c1">// const double sqrttwoovertwo = 0.707106781186547524401;</span>
+  <span class="c1">// const double              e = 2.71828182845904523536;</span>
+  <span class="c1">// const double          log2e = 1.44269504088896340736;</span>
+  <span class="c1">// const double         log10e = 0.434294481903251827651;</span>
+  <span class="c1">// const double            ln2 = 0.693147180559945309417;</span>
+  <span class="c1">// const double           ln10 = 2.30258509299404568402;</span>
+  <span class="k">namespace</span> <span class="n">utils</span><span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">trace</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">M</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">copy_array</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">D</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">S</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">copy_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">copy_vector</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">V</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">equal_array</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">equal_matrix</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">equal_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">I</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">multiply_arrays</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">multiply_matrix_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">multiply_matrix_vector</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">multiply_vector_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+
+<span class="c1">// array multiplication with specializations for complex array type(s)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">m</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+<span class="c1">// specializations for matrix*matrix, matrix*vector, and vector*matrix</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_mat_mat</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">B</span><span class="p">){</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_mat_vec</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">B</span><span class="p">){</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">I</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="p">,</span> <span class="k">class</span> <span class="nc">S</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">mul_vec_mat</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">B</span><span class="p">){</span> <span class="n">mul_arrays</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">I</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);}</span>
+
+<span class="c1">// template&lt;class T,class R,class I,class S=std::common_type_t&lt;T,R&gt;&gt;</span>
+<span class="c1">// std::enable_if_t&lt;std::is_unsigned_v&lt;I&gt;&amp;&amp;std::is_same_v&lt;S,R&gt;&gt;</span>
+<span class="c1">// mul_mat_vec_inplace(const I n, const T* A, R* B){</span>
+<span class="c1">//   S* C = new S[n]();</span>
+<span class="c1">//   mul_arrays&lt;S,T,R,I&gt;(C, n, n, I(1), A, B);</span>
+<span class="c1">//   for (I i=0; i&lt;n; ++i) B[n] = C[n];</span>
+<span class="c1">//   delete[] C;</span>
+<span class="c1">// }</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span><span class="k">class</span> <span class="nc">R</span><span class="p">,</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span><span class="k">class</span> <span class="nc">S</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">common_type_t</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="o">&gt;&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned_v</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&gt;</span>
+<span class="n">mul_mat_vec_inplace</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="n">R</span><span class="o">*</span> <span class="n">B</span><span class="p">){</span>
+  <span class="n">S</span><span class="o">*</span> <span class="n">C</span> <span class="o">=</span> <span class="k">new</span> <span class="n">S</span><span class="p">[</span><span class="n">n</span><span class="p">]();</span>
+  <span class="n">mul_arrays</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">I</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);</span>
+  <span class="c1">//for (I i=0; i&lt;n; ++i) B[n] = C[n];</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">C</span><span class="o">+</span><span class="n">n</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+  <span class="k">delete</span><span class="p">[]</span> <span class="n">C</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">add_arrays</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">add_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">subtract_arrays</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">subtract_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">my_cast</span><span class="p">(</span><span class="k">const</span> <span class="n">R</span> <span class="n">a</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">cast_array</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">cast_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">cast_vector</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">array_cofactor</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">M</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">matrix_cofactor</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">j</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="n">R</span> <span class="n">matrix_determinant</span><span class="p">(</span><span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">matrix_adjoint</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="n">R</span> <span class="n">matrix_determinant_and_inverse</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">invM</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">matrix_inverse</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">invM</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="n">R</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">similar_matrix</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">*</span><span class="n">B</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="n">tol</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">array_transpose</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">D</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">S</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">matrix_transpose</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">D</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">S</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">matrix_transpose</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">B</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">matrix_metric</span><span class="p">(</span><span class="n">R</span> <span class="o">*</span><span class="n">M</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">L</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">R</span> <span class="n">vector_norm_squared</span><span class="p">(</span><span class="k">const</span> <span class="n">R</span> <span class="o">*</span> <span class="n">v</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">vector_cross_impl</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">vector_cross</span><span class="p">(</span><span class="n">T</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The cross product is only defined for 3-vectors&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">vector_cross_impl</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">vector_cross</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="k">typename</span> <span class="n">S</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">3</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">vector_cross</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">S</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vector_cross_impl</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">N</span><span class="o">&gt;::</span><span class="n">vector_cross</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">S</span><span class="p">,</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="n">S</span> <span class="n">vector_dot</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">R</span> <span class="n">vector_dot</span><span class="p">(</span><span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="o">*</span><span class="n">b</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">mod1</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">R</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">is_int_matrix</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">tol</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">R</span><span class="o">&gt;</span> <span class="kt">bool</span> <span class="n">is_int_matrix</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">frobenius_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_angle</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_angle</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">euclidean_angle</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">hermitian_angle</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">hermitian_angle</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">hermitian_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">hermitian_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">hermitian_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">hermitian_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">vector_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">inner_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">inner_product</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">squared_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">squared_distance</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">B</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">magnitude</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">a</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">magnitude</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">size_t</span> <span class="n">encode_array_signs</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">a</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">size_t</span> <span class="n">encode_array_signs</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">a</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="n">make_eigenvectors_equivalent</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">v0</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">v1</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">int</span> <span class="n">make_eigenvectors_equivalent</span><span class="p">(</span><span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">v0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">v1</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">R</span><span class="o">&gt;</span>
+<span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">value</span><span class="o">&amp;&amp;</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="o">&gt;</span>
+<span class="n">binomial_coefficient</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="n">R</span> <span class="n">k</span><span class="p">);</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">S</span><span class="p">,</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span> <span class="n">S</span> <span class="n">u2s</span><span class="p">(</span><span class="k">const</span> <span class="n">U</span> <span class="n">u</span><span class="p">);</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="p">,</span><span class="k">typename</span> <span class="n">S</span><span class="o">&gt;</span> <span class="n">U</span> <span class="n">s2u</span><span class="p">(</span><span class="k">const</span> <span class="n">S</span> <span class="n">s</span><span class="p">);</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;utilities.tpp&quot;</span><span class="cp"></span>
+
+  <span class="p">}</span> <span class="c1">// namespace utils</span>
+<span class="p">}</span> <span class="c1">// namespace brille</span>
+
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

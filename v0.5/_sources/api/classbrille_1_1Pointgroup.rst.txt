@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1Pointgroup:
+
+Class Pointgroup
+================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::Pointgroup
+   :members:
+   :protected-members:
+   :undoc-members:

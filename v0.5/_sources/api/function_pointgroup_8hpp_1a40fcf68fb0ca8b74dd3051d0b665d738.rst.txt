@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1a40fcf68fb0ca8b74dd3051d0b665d738:
+
+Function brille::get_pointgroup_rotations_hall_number
+=====================================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::get_pointgroup_rotations_hall_number(int *, const int, const int, const int)

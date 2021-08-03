@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1SortingStatus:
+
+Class SortingStatus
+===================
+
+- Defined in :ref:`file_src_sorting_status.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::SortingStatus
+   :members:
+   :protected-members:
+   :undoc-members:

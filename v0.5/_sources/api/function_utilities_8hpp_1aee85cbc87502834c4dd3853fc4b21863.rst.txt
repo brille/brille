@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1aee85cbc87502834c4dd3853fc4b21863:
+
+Template Function brille::utils::make_eigenvectors_equivalent(const size_t, const std::complex<T> \*, std::complex<T>)
+======================================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::make_eigenvectors_equivalent(const size_t, const std::complex<T> *, std::complex<T>)

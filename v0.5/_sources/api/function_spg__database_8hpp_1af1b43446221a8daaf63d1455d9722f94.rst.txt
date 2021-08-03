@@ -1,0 +1,13 @@
+.. _exhale_function_spg__database_8hpp_1af1b43446221a8daaf63d1455d9722f94:
+
+Function brille::international_string_to_hall_number
+====================================================
+
+- Defined in :ref:`file_src_spg_database.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::international_string_to_hall_number(const std::string&, const std::string&)

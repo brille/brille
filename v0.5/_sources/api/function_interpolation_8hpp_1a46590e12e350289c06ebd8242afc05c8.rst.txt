@@ -1,0 +1,13 @@
+.. _exhale_function_interpolation_8hpp_1a46590e12e350289c06ebd8242afc05c8:
+
+Template Function tetrahedron_weights
+=====================================
+
+- Defined in :ref:`file_src_interpolation.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: tetrahedron_weights(const A<T>&, const A<T>&)

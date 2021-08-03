@@ -1,0 +1,13 @@
+.. _exhale_function_transform_8hpp_1a92d4fe47f1ae21d7848468f03a6e8627:
+
+Template Function brille::transform_to_primitive(const Reciprocal&, const LQVec<T>&)
+====================================================================================
+
+- Defined in :ref:`file_src_transform.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::transform_to_primitive(const Reciprocal&, const LQVec<T>&)

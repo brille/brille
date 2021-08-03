@@ -1,0 +1,26 @@
+.. _exhale_class_classbrille_1_1LatVec:
+
+Class LatVec
+============
+
+- Defined in :ref:`file_src_array_latvec.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Types
+*************
+
+- ``public brille::LDVec< T >`` (:ref:`exhale_class_classbrille_1_1LDVec`)
+- ``public brille::LQVec< T >`` (:ref:`exhale_class_classbrille_1_1LQVec`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::LatVec
+   :members:
+   :protected-members:
+   :undoc-members:

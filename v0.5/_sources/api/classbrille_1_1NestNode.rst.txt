@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1NestNode:
+
+Class NestNode
+==============
+
+- Defined in :ref:`file_src_nest.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::NestNode
+   :members:
+   :protected-members:
+   :undoc-members:

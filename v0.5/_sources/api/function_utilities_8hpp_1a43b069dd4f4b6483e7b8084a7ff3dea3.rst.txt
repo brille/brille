@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a43b069dd4f4b6483e7b8084a7ff3dea3:
+
+Template Function brille::utils::is_int_matrix(const T \*, const R)
+===================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::is_int_matrix(const T *, const R)

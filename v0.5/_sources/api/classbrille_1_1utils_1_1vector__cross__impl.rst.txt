@@ -1,0 +1,16 @@
+.. _exhale_class_classbrille_1_1utils_1_1vector__cross__impl:
+
+Template Class vector_cross_impl
+================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: brille::utils::vector_cross_impl
+   :members:
+   :protected-members:
+   :undoc-members:

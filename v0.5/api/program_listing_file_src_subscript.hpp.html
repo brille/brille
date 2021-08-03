@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File subscript.hpp &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File subscript.hpp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_src_subscript.hpp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-subscript-hpp">
+<span id="program-listing-file-src-subscript-hpp"></span><h1>Program Listing for File subscript.hpp<a class="headerlink" href="#program-listing-for-file-subscript-hpp" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_subscript.hpp.html#file-src-subscript-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/subscript.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This file is part of brille.</span>
+
+<span class="cm">Copyright © 2020 Greg Tucker &lt;greg.tucker@stfc.ac.uk&gt;</span>
+
+<span class="cm">brille is free software: you can redistribute it and/or modify it under the</span>
+<span class="cm">terms of the GNU Affero General Public License as published by the Free</span>
+<span class="cm">Software Foundation, either version 3 of the License, or (at your option)</span>
+<span class="cm">any later version.</span>
+
+<span class="cm">brille is distributed in the hope that it will be useful, but</span>
+<span class="cm">WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY</span>
+<span class="cm">or FITNESS FOR A PARTICULAR PURPOSE.</span>
+<span class="cm">See the GNU Affero General Public License for more details.</span>
+
+<span class="cm">You should have received a copy of the GNU Affero General Public License</span>
+<span class="cm">along with brille. If not, see &lt;https://www.gnu.org/licenses/&gt;.            */</span>
+<span class="cp">#ifndef BRILLE_SUBSCRIPT_HPP_</span>
+<span class="cp">#define BRILLE_SUBSCRIPT_HPP_</span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;tuple&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">brille</span> <span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I2</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_unsigned</span><span class="o">&lt;</span><span class="n">I1</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+<span class="n">is_fixed</span><span class="p">(</span><span class="n">I1</span> <span class="n">i</span><span class="p">,</span> <span class="n">I2</span> <span class="n">n</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">I2</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">enable_if_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">is_signed</span><span class="o">&lt;</span><span class="n">I1</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span>
+<span class="n">is_fixed</span><span class="p">(</span><span class="n">I1</span> <span class="n">i</span><span class="p">,</span> <span class="n">I2</span> <span class="n">n</span><span class="p">){</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">I2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">SubIt</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">holder</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shape</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_inpt</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">_fixed</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">_first</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="c1">// void find_first() {</span>
+  <span class="c1">//   // find the first non-fixed index (or the length of the _fixed vector)</span>
+  <span class="c1">//   auto fitr = std::find(_fixed.begin(), _fixed.end(), false);</span>
+  <span class="c1">//   if (fitr == _fixed.end())</span>
+  <span class="c1">//     throw std::runtime_error(&quot;The input subscripts have fixed all dimensions!&quot;);</span>
+  <span class="c1">//   _first = std::distance(_fixed.begin(), fitr);</span>
+  <span class="c1">// }</span>
+  <span class="kt">void</span> <span class="n">find_first</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// find the first non-fixed index or the length of the _fixed vector</span>
+    <span class="n">_first</span> <span class="o">=</span> <span class="n">_fixed</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="n">_first</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">_first</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_first</span> <span class="o">==</span> <span class="n">_fixed</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The input subscripts have fixed all dimensions!&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">SubIt</span><span class="p">()</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">({</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_inpt</span><span class="p">({</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_sub</span><span class="p">({</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_fixed</span><span class="p">({</span><span class="nb">false</span><span class="p">}),</span> <span class="n">_first</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{}</span>
+  <span class="n">SubIt</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">_inpt</span> <span class="o">=</span> <span class="n">holder</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">_sub</span>  <span class="o">=</span> <span class="n">holder</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">SubIt</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_in</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">_in</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">_inpt</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="n">_sub</span> <span class="o">=</span> <span class="n">holder</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_fixed</span><span class="p">(</span><span class="n">_inpt</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="n">_sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">?</span> <span class="n">_inpt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_first</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="n">SubIt</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_in</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_s</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&amp;</span> <span class="n">_f</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">_in</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">_s</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">_f</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_first</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="n">SubIt</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">o</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_shape</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_inpt</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_sub</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_fixed</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_first</span><span class="p">)</span>
+  <span class="p">{}</span>
+  <span class="n">SubIt</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">o</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_shape</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_inpt</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_sub</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_fixed</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">)</span>
+  <span class="p">{}</span>
+
+  <span class="n">SubIt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">o</span><span class="p">){</span>
+    <span class="n">_shape</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_shape</span><span class="p">;</span>
+    <span class="n">_inpt</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_inpt</span><span class="p">;</span>
+    <span class="n">_sub</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_sub</span><span class="p">;</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_fixed</span><span class="p">;</span>
+    <span class="n">_first</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_first</span><span class="p">;</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shape</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">ndim</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shape</span><span class="p">.</span><span class="n">size</span><span class="p">();}</span>
+  <span class="n">SubIt</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">(){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">;</span> <span class="n">dim</span><span class="o">--&gt;</span><span class="mi">0</span><span class="p">;</span> <span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_fixed</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="n">_first</span> <span class="o">&amp;&amp;</span> <span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">_shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]){</span>
+        <span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span> <span class="o">!=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">equal</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">equal</span> <span class="o">&amp;=</span> <span class="n">_sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">_sub</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">equal</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="o">==</span> <span class="n">other</span><span class="p">);</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_sub</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">_sub</span><span class="p">;}</span>
+  <span class="n">holder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">_sub</span><span class="p">;}</span>
+  <span class="n">holder</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">_sub</span><span class="p">;}</span>
+  <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">begin</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="c1">// return SubIt&lt;T&gt;(_shape, _inpt, _sub, _fixed);</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="n">holder</span> <span class="nf">sub</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">sub</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_inpt</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">_inpt</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">_fixed</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="n">holder</span> <span class="nf">val</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sub</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_first</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)</span> <span class="n">val</span><span class="p">[</span><span class="n">_first</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">[</span><span class="n">_first</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">SubIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">_inpt</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">_fixed</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">SubIt2</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">holder</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shape</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_inpt</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">_fixed</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">_first</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">find_first</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// find the first non-fixed index or the length of the _fixed vector</span>
+    <span class="n">_first</span> <span class="o">=</span> <span class="n">_fixed</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="n">_first</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">_first</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_first</span> <span class="o">==</span> <span class="n">_fixed</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+      <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;The input subscripts have fixed all dimensions!&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">SubIt2</span><span class="p">()</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_inpt</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_sub</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_fixed</span><span class="p">({</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">}),</span> <span class="n">_first</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{}</span>
+  <span class="n">SubIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">_inpt</span> <span class="o">=</span> <span class="n">holder</span><span class="p">({</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)});</span>
+    <span class="n">_sub</span>  <span class="o">=</span> <span class="n">holder</span><span class="p">({</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)});</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">({</span><span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="n">SubIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_in</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">_in</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">_sub</span>  <span class="o">=</span> <span class="n">holder</span><span class="p">({</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)});</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">({</span><span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">});</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_fixed</span><span class="p">(</span><span class="n">_inpt</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+      <span class="n">_sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fixed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">?</span> <span class="n">_inpt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_first</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="n">SubIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_sh</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_in</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">_s</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">_f</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">_sh</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">_in</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">_s</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">_f</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">find_first</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="n">SubIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">o</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_shape</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_inpt</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_sub</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_fixed</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">_first</span><span class="p">)</span>
+  <span class="p">{}</span>
+  <span class="n">SubIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;*</span> <span class="n">o</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_shape</span><span class="p">),</span> <span class="n">_inpt</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_inpt</span><span class="p">),</span> <span class="n">_sub</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_sub</span><span class="p">),</span> <span class="n">_fixed</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">_fixed</span><span class="p">),</span> <span class="n">_first</span><span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">)</span>
+  <span class="p">{}</span>
+
+  <span class="n">SubIt2</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">o</span><span class="p">){</span>
+    <span class="n">_shape</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_shape</span><span class="p">;</span>
+    <span class="n">_inpt</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_inpt</span><span class="p">;</span>
+    <span class="n">_sub</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_sub</span><span class="p">;</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_fixed</span><span class="p">;</span>
+    <span class="n">_first</span> <span class="o">=</span> <span class="n">o</span><span class="p">.</span><span class="n">_first</span><span class="p">;</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shape</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">ndim</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="mi">2</span><span class="p">;}</span>
+  <span class="n">SubIt2</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">(){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">;</span> <span class="n">dim</span><span class="o">--&gt;</span><span class="mi">0</span><span class="p">;</span> <span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_fixed</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="n">_first</span> <span class="o">&amp;&amp;</span> <span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">_shape</span><span class="p">[</span><span class="n">dim</span><span class="p">]){</span>
+        <span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">_sub</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{;</span>
+    <span class="k">return</span> <span class="n">_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">_sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">_sub</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="o">==</span> <span class="n">other</span><span class="p">);</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_sub</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">_sub</span><span class="p">;}</span>
+  <span class="n">holder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">_sub</span><span class="p">;}</span>
+  <span class="n">holder</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="o">&amp;</span><span class="n">_sub</span><span class="p">;}</span>
+  <span class="c1">// std::tuple&lt;T,T&gt; operator*() const {return std::make_tuple(_sub[0], _sub[1])};</span>
+  <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">begin</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">holder</span> <span class="n">sub</span><span class="p">({</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_inpt</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_inpt</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">_inpt</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">_fixed</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">holder</span> <span class="n">val</span><span class="p">({</span><span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">T</span><span class="p">(</span><span class="mi">0</span><span class="p">)});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sub</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_fixed</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sub</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_first</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="n">val</span><span class="p">[</span><span class="n">_first</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shape</span><span class="p">[</span><span class="n">_first</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">SubIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">_inpt</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">_fixed</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">BroadcastIt</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">holder</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">holder</span> <span class="n">_shape0</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shape1</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shapeO</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub0</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub1</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_subO</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">//</span>
+  <span class="n">BroadcastIt</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape0</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">_shape1</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">_shapeO</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="mi">0</span><span class="p">),</span> <span class="n">_sub0</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="mi">0</span><span class="p">),</span> <span class="n">_sub1</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="mi">0</span><span class="p">),</span> <span class="n">_subO</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">_shape0</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="n">_shape1</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="kt">size_t</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">_shape0</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nd</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Can not broadcast { &quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">_shape0</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;} and { &quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">_shape1</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;} to a common shape&quot;</span><span class="p">;</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">_shapeO</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">?</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">BroadcastIt</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">s0</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span> <span class="o">&amp;</span> <span class="n">sO</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">i0</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">iO</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape0</span><span class="p">(</span><span class="n">s0</span><span class="p">),</span> <span class="n">_shape1</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span> <span class="n">_shapeO</span><span class="p">(</span><span class="n">sO</span><span class="p">),</span> <span class="n">_sub0</span><span class="p">(</span><span class="n">i0</span><span class="p">),</span> <span class="n">_sub1</span><span class="p">(</span><span class="n">i1</span><span class="p">),</span> <span class="n">_subO</span><span class="p">(</span><span class="n">iO</span><span class="p">)</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+
+  <span class="n">holder</span> <span class="n">shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shapeO</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">ndim</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shapeO</span><span class="p">.</span><span class="n">size</span><span class="p">();}</span>
+  <span class="c1">//const SubIt&lt;T&gt;&amp; itr() const {return _itr;}</span>
+
+  <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">(){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">;</span> <span class="n">dim</span><span class="o">--&gt;</span><span class="mi">0</span><span class="p">;</span> <span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">_shapeO</span><span class="p">[</span><span class="n">dim</span><span class="p">]){</span>
+        <span class="n">_sub1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sub0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">_sub0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_shape1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">_sub1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">ndim</span><span class="p">()</span> <span class="o">!=</span> <span class="n">n</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">equal</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+    <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">oO</span><span class="p">{</span><span class="n">other</span><span class="p">.</span><span class="n">outer</span><span class="p">()};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">equal</span> <span class="o">&amp;=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">oO</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">equal</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="o">==</span><span class="n">other</span><span class="p">);}</span>
+
+  <span class="c1">// const subs_t&amp; operator*() const {return subs;}</span>
+  <span class="c1">// const subs_t* operator-&gt;() const {return &amp;subs;}</span>
+  <span class="c1">// subs_t&amp; operator*() {return subs;}</span>
+  <span class="c1">// subs_t* operator-&gt;() {return &amp;subs;}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="o">&gt;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">triple_subscripts</span><span class="p">();}</span>
+  <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">begin</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="n">holder</span> <span class="nf">s0</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">s1</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">sO</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape0</span><span class="p">,</span> <span class="n">_shape1</span><span class="p">,</span> <span class="n">_shapeO</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">sO</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ndim</span><span class="p">();</span>
+    <span class="n">holder</span> <span class="nf">s0</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">s1</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">sO</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shapeO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">s0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// not used in ==</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_shape1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// not used in ==</span>
+    <span class="k">return</span> <span class="n">BroadcastIt</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape0</span><span class="p">,</span> <span class="n">_shape1</span><span class="p">,</span> <span class="n">_shapeO</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">sO</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="c1">// std::tuple&lt;holder,holder,holder&gt; triple_subscripts() const {</span>
+  <span class="c1">//   holder o{*_itr};</span>
+  <span class="c1">//   holder a(o), b(o);</span>
+  <span class="c1">//   for (size_t i=0; i&lt;o.size(); ++i) if (o[i]&gt;0) {</span>
+  <span class="c1">//     if (1==_shape0[i]) a[i] = 0;</span>
+  <span class="c1">//     if (1==_shape1[i]) b[i] = 0;</span>
+  <span class="c1">//   }</span>
+  <span class="c1">//   return std::make_tuple(o,a,b);</span>
+  <span class="c1">// }</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="o">&gt;</span> <span class="n">triple_subscripts</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">_subO</span><span class="p">,</span> <span class="n">_sub0</span><span class="p">,</span> <span class="n">_sub1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">outer</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_subO</span><span class="p">;}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">BroadcastIt2</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">holder</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">holder</span> <span class="n">_shape0</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shape1</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_shapeO</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub0</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_sub1</span><span class="p">;</span>
+  <span class="n">holder</span> <span class="n">_subO</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">//</span>
+  <span class="n">BroadcastIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape0</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">_shape1</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">_shapeO</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_sub0</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_sub1</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">_subO</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">})</span>
+  <span class="p">{</span>
+    <span class="kt">size_t</span> <span class="n">nd</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nd</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Can not broadcast { &quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">_shape0</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;} and { &quot;</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">x</span><span class="p">:</span> <span class="n">_shape1</span><span class="p">)</span> <span class="n">msg</span> <span class="o">+=</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s">&quot;} to a common shape&quot;</span><span class="p">;</span>
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">_shapeO</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">?</span> <span class="n">_shape1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">_shape0</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">BroadcastIt2</span><span class="p">(</span><span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">s0</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span> <span class="o">&amp;</span> <span class="n">sO</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">i0</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">i1</span><span class="p">,</span> <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">iO</span><span class="p">)</span>
+  <span class="o">:</span> <span class="n">_shape0</span><span class="p">(</span><span class="n">s0</span><span class="p">),</span> <span class="n">_shape1</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span> <span class="n">_shapeO</span><span class="p">(</span><span class="n">sO</span><span class="p">),</span> <span class="n">_sub0</span><span class="p">(</span><span class="n">i0</span><span class="p">),</span> <span class="n">_sub1</span><span class="p">(</span><span class="n">i1</span><span class="p">),</span> <span class="n">_subO</span><span class="p">(</span><span class="n">iO</span><span class="p">)</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+
+  <span class="n">holder</span> <span class="n">shape</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_shapeO</span><span class="p">;}</span>
+  <span class="kt">size_t</span> <span class="n">ndim</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="mi">2</span><span class="p">;}</span>
+  <span class="c1">//const SubIt&lt;T&gt;&amp; itr() const {return _itr;}</span>
+
+  <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">(){</span>
+    <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">dim</span><span class="o">=</span><span class="n">n</span><span class="p">;</span> <span class="n">dim</span><span class="o">--&gt;</span><span class="mi">0</span><span class="p">;</span> <span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">_shapeO</span><span class="p">[</span><span class="n">dim</span><span class="p">]){</span>
+        <span class="n">_sub1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_sub0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">++</span><span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">_sub0</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_shape1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">_sub1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_subO</span><span class="p">[</span><span class="n">dim</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">oO</span><span class="p">{</span><span class="n">other</span><span class="p">.</span><span class="n">outer</span><span class="p">()};</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">_subO</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">oO</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">_subO</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">oO</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="o">==</span><span class="n">other</span><span class="p">);}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="p">,</span><span class="n">holder</span><span class="o">&gt;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">_subO</span><span class="p">,</span> <span class="n">_sub0</span><span class="p">,</span> <span class="n">_sub1</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">begin</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">holder</span> <span class="n">s0</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">s1</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">sO</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">});</span>
+    <span class="k">return</span> <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape0</span><span class="p">,</span> <span class="n">_shape1</span><span class="p">,</span> <span class="n">_shapeO</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">sO</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="n">holder</span> <span class="n">s0</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">s1</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}),</span> <span class="n">sO</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">});</span>
+    <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_shapeO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_shape0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">s0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// not used in ==</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_shape1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sO</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// not used in ==</span>
+    <span class="k">return</span> <span class="n">BroadcastIt2</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_shape0</span><span class="p">,</span> <span class="n">_shape1</span><span class="p">,</span> <span class="n">_shapeO</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">sO</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="k">const</span> <span class="n">holder</span><span class="o">&amp;</span> <span class="n">outer</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">_subO</span><span class="p">;}</span>
+<span class="p">};</span>
+
+
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">lin2sub</span><span class="p">(</span><span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">stride</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;</span> <span class="n">sub</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">ndim</span> <span class="o">=</span> <span class="n">stride</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">ndim</span><span class="p">)</span> <span class="n">sub</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">l</span><span class="p">);</span>
+  <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">ndim</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sub</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">ndim</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stride</span><span class="p">[</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">I</span> <span class="n">i</span><span class="o">=</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">;</span> <span class="p">){</span>
+      <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="n">l</span> <span class="o">-=</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">stride</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">I</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">ndim</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+      <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+      <span class="n">l</span> <span class="o">-=</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">stride</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">sub</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">lin2sub</span><span class="p">(</span><span class="n">I</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">stride</span><span class="p">){</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">sub</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+    <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">-</span><span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">-</span><span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">sub</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// template &lt;class I&gt;</span>
+<span class="c1">// I sub2lin(const std::vector&lt;I&gt;&amp; sub, const std::vector&lt;I&gt;&amp; stride){</span>
+<span class="c1">//   assert(sub.size() == stride.size());</span>
+<span class="c1">// #if defined(__GNUC__) &amp;&amp; (__GNUC__ &lt; 9 || (__GNUC__ == 9 &amp;&amp; __GNUC_MINOR__ &lt;= 2))</span>
+<span class="c1">//   // serial inner_product</span>
+<span class="c1">//   return std::inner_product(sub.begin(), sub.end(), stride.begin(), I(0));</span>
+<span class="c1">// #else</span>
+<span class="c1">//   // parallelized inner_product</span>
+<span class="c1">//   return std::transform_reduce(sub.begin(), sub.end(), stride.begin(), I(0));</span>
+<span class="c1">// #endif</span>
+<span class="c1">// }</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">lin</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">sub</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">lin</span> <span class="o">+=</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="n">lin</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">I</span> <span class="n">s0</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">s0</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s1</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">offset_sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">off</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">I</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="n">I</span> <span class="n">lin</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">sub</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">lin</span> <span class="o">+=</span> <span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="n">lin</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">offset_sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">off</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">sub</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">sub</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="o">&gt;</span>
+<span class="n">I</span> <span class="n">offset_sub2lin</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">off</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">s0</span><span class="p">,</span> <span class="k">const</span> <span class="n">I</span> <span class="n">s1</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="mi">2</span><span class="o">&gt;&amp;</span> <span class="n">str</span><span class="p">){</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">s0</span><span class="p">)</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">s1</span><span class="p">)</span><span class="o">*</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">}</span> <span class="c1">// end namespace brille</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

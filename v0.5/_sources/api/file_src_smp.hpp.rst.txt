@@ -1,0 +1,63 @@
+
+.. _file_src_smp.hpp:
+
+File smp.hpp
+============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/smp.hpp``)
+----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_smp.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``iostream``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_permutation.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__assignment`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_smp_8hpp_1a639a10420a057122f0d8dbe0c8f02dc1`
+
+- :ref:`exhale_function_smp_8hpp_1a54c8111548fa8693e55956f1554a2afb`
+
+- :ref:`exhale_function_smp_8hpp_1a0a2d9d099b021f0709b7709732344b47`
+

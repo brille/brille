@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class Polyhedron &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Class PolyhedronTrellis" href="classbrille_1_1PolyhedronTrellis.html" />
+    <link rel="prev" title="Class PointSymmetry" href="classbrille_1_1PointSymmetry.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class Polyhedron</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1Polyhedron.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-polyhedron">
+<span id="exhale-class-classbrille-1-1polyhedron"></span><h1>Class Polyhedron<a class="headerlink" href="#class-polyhedron" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_polyhedron.hpp.html#file-src-polyhedron-hpp"><span class="std std-ref">File polyhedron.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille10PolyhedronE">
+<span id="_CPPv3N6brille10PolyhedronE"></span><span id="_CPPv2N6brille10PolyhedronE"></span><span id="brille::Polyhedron"></span><span class="target" id="classbrille_1_1Polyhedron"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">Polyhedron</code><a class="headerlink" href="#_CPPv4N6brille10PolyhedronE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille10Polyhedron5ind_tE">
+<span id="_CPPv3N6brille10Polyhedron5ind_tE"></span><span id="_CPPv2N6brille10Polyhedron5ind_tE"></span><span class="target" id="classbrille_1_1Polyhedron_1a3fecc6f5c26198162e5aa9c0587be662"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><a class="headerlink" href="#_CPPv4N6brille10Polyhedron5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4N6brille10Polyhedron7shape_tE">
+<span id="_CPPv3N6brille10Polyhedron7shape_tE"></span><span id="_CPPv2N6brille10Polyhedron7shape_tE"></span><span class="target" id="classbrille_1_1Polyhedron_1ae06c8d0b7b68b4e17c343272e60568ef"></span><em class="property">using </em><code class="sig-name descname">shape_t</code> = <em class="property">typename</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt;::shape_t<a class="headerlink" href="#_CPPv4N6brille10Polyhedron7shape_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronEv">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronEv"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronEv"></span><span id="brille::Polyhedron::Polyhedron"></span><span class="target" id="classbrille_1_1Polyhedron_1a181748bb524e3b5847d8c8e3db1305f8"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR"></span><span class="target" id="classbrille_1_1Polyhedron_1acafa7f0bc81ec65059e90928bd41fa4e"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Create a convex-hull <a class="reference internal" href="#classbrille_1_1Polyhedron"><span class="std std-ref">Polyhedron</span></a> from a set of points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.bArray:double:CR"></span><span class="target" id="classbrille_1_1Polyhedron_1aca89276afbb8626f0922ea8766b2c113"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Build a <a class="reference internal" href="#classbrille_1_1Polyhedron"><span class="std std-ref">Polyhedron</span></a> from vertices and vectors pointing to face centres. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.bArray:double:CR.std::vector:std::vector:i::CR.std::vector:std::vector:i::CR"></span><span class="target" id="classbrille_1_1Polyhedron_1ae14d8d5d61a1952a6bb0b300afa9269e"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>fpv</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>vpf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.bArray:double:CR.bArray:double:CR"></span><span class="target" id="classbrille_1_1Polyhedron_1a4109fcd696bb05de82bb40fbfd9449cf"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Build a <a class="reference internal" href="#classbrille_1_1Polyhedron"><span class="std std-ref">Polyhedron</span></a> from vertices, on-face points, and face normals. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.bArray:double:CR.bArray:double:CR.std::vector:std::vector:i::CR.std::vector:std::vector:i::CR"></span><span class="target" id="classbrille_1_1Polyhedron_1a94080ec2a1af0612e0d3ebc0212b74ee"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>n</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>fpv</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>vpf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEERKNSt6vectorINSt6vectorIiEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.std::vector:std::vector:i::CR"></span><span class="target" id="classbrille_1_1Polyhedron_1affdfbf960fbf2fa9adaddaa00b408b11"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>vpf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE"></span><span id="brille::Polyhedron::Polyhedron__bArray:double:CR.bArray:double:CR.bArray:double:CR.std::vector:std::vector:i::CR"></span><span class="target" id="classbrille_1_1Polyhedron_1adea471c5cb9ebe5f842a51ef44ae4480"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>v</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>p</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>n</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;int&gt;&gt; &amp;<em>vpf</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK6bArrayIdERK6bArrayIdERK6bArrayIdERKNSt6vectorINSt6vectorIiEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron10PolyhedronERK10Polyhedron">
+<span id="_CPPv3N6brille10Polyhedron10PolyhedronERK10Polyhedron"></span><span id="_CPPv2N6brille10Polyhedron10PolyhedronERK10Polyhedron"></span><span id="brille::Polyhedron::Polyhedron__PolyhedronCR"></span><span class="target" id="classbrille_1_1Polyhedron_1a391157baff4b8166aed265b301a136d5"></span><code class="sig-name descname">Polyhedron</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK10Polyhedron" title="brille::Polyhedron::Polyhedron">Polyhedron</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron10PolyhedronERK10Polyhedron" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10PolyhedronaSERK10Polyhedron">
+<span id="_CPPv3N6brille10PolyhedronaSERK10Polyhedron"></span><span id="_CPPv2N6brille10PolyhedronaSERK10Polyhedron"></span><span id="brille::Polyhedron::assign-operator__PolyhedronCR"></span><span class="target" id="classbrille_1_1Polyhedron_1a1e9231e396d80abb1a2c2420aad8173c"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10PolyhedronaSERK10Polyhedron" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron6mirrorEv">
+<span id="_CPPv3NK6brille10Polyhedron6mirrorEv"></span><span id="_CPPv2NK6brille10Polyhedron6mirrorEv"></span><span id="brille::Polyhedron::mirror__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1ab8310a539fc6f46a35a7ce5e39cbb5ec"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">mirror</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron6mirrorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille10Polyhedron6rotateE10PolyhedronKNSt5arrayI1TXL9EEEE">
+<span id="_CPPv3I0ENK6brille10Polyhedron6rotateEKNSt5arrayI1TXL9EEEE"></span><span id="_CPPv2I0ENK6brille10Polyhedron6rotateEKNSt5arrayI1TX9EEE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Polyhedron_1a3b1410f2d5a0959870993a9d3fe48dae"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="property">const</em> std::array&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille10Polyhedron6rotateE10PolyhedronKNSt5arrayI1TXL9EEEE" title="brille::Polyhedron::rotate::T">T</a>, 9&gt; <em>rot</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille10Polyhedron6rotateE10PolyhedronKNSt5arrayI1TXL9EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0ENK6brille10Polyhedron9translateE10PolyhedronRK6bArrayI1TE">
+<span id="_CPPv3I0ENK6brille10Polyhedron9translateERK6bArrayI1TE"></span><span id="_CPPv2I0ENK6brille10Polyhedron9translateERK6bArrayI1TE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Polyhedron_1ada404c8a6ba5842ba0100702171eb76b"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0ENK6brille10Polyhedron9translateE10PolyhedronRK6bArrayI1TE" title="brille::Polyhedron::translate::T">T</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK6brille10Polyhedron9translateE10PolyhedronRK6bArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10PolyhedronplERK10Polyhedron">
+<span id="_CPPv3NK6brille10PolyhedronplERK10Polyhedron"></span><span id="_CPPv2NK6brille10PolyhedronplERK10Polyhedron"></span><span id="brille::Polyhedron::add-operator__PolyhedronCRC"></span><span class="target" id="classbrille_1_1Polyhedron_1af3d41593bd29d6af811e8b37c0722c65"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">operator+</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10PolyhedronplERK10Polyhedron" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron12num_verticesEv">
+<span id="_CPPv3NK6brille10Polyhedron12num_verticesEv"></span><span id="_CPPv2NK6brille10Polyhedron12num_verticesEv"></span><span id="brille::Polyhedron::num_verticesC"></span><span class="target" id="classbrille_1_1Polyhedron_1ac561f01d732c3f258f5470dc1e74d3b9"></span>size_t <code class="sig-name descname">num_vertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron12num_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron9num_facesEv">
+<span id="_CPPv3NK6brille10Polyhedron9num_facesEv"></span><span id="_CPPv2NK6brille10Polyhedron9num_facesEv"></span><span id="brille::Polyhedron::num_facesC"></span><span class="target" id="classbrille_1_1Polyhedron_1af773e242de2fbe7a5cc360a8e4718746"></span>size_t <code class="sig-name descname">num_faces</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron9num_facesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron12get_verticesEv">
+<span id="_CPPv3NK6brille10Polyhedron12get_verticesEv"></span><span id="_CPPv2NK6brille10Polyhedron12get_verticesEv"></span><span id="brille::Polyhedron::get_vertices__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a402ecb0947753f116226448555308480"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron12get_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron10get_pointsEv">
+<span id="_CPPv3NK6brille10Polyhedron10get_pointsEv"></span><span id="_CPPv2NK6brille10Polyhedron10get_pointsEv"></span><span id="brille::Polyhedron::get_points__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1ab70f4e5b7051b25602d24adb8876c136"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_points</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron10get_pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron11get_normalsEv">
+<span id="_CPPv3NK6brille10Polyhedron11get_normalsEv"></span><span id="_CPPv2NK6brille10Polyhedron11get_normalsEv"></span><span id="brille::Polyhedron::get_normals__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1af5193f8e09e50a5a9d329093a3162a95"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron11get_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron20get_faces_per_vertexEv">
+<span id="_CPPv3NK6brille10Polyhedron20get_faces_per_vertexEv"></span><span id="_CPPv2NK6brille10Polyhedron20get_faces_per_vertexEv"></span><span id="brille::Polyhedron::get_faces_per_vertex__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a75edd8d8e769ef41e15820645b075481"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_faces_per_vertex</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron20get_faces_per_vertexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron21get_vertices_per_faceEv">
+<span id="_CPPv3NK6brille10Polyhedron21get_vertices_per_faceEv"></span><span id="_CPPv2NK6brille10Polyhedron21get_vertices_per_faceEv"></span><span id="brille::Polyhedron::get_vertices_per_face__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a8e385fc7d593642542dbabc119740158"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">get_vertices_per_face</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron21get_vertices_per_faceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron14get_half_edgesEv">
+<span id="_CPPv3NK6brille10Polyhedron14get_half_edgesEv"></span><span id="_CPPv2NK6brille10Polyhedron14get_half_edgesEv"></span><span id="brille::Polyhedron::get_half_edges__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a84642fb8fdee412f13be7753ca714f6d"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_half_edges</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron14get_half_edgesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron11string_reprEv">
+<span id="_CPPv3NK6brille10Polyhedron11string_reprEv"></span><span id="_CPPv2NK6brille10Polyhedron11string_reprEv"></span><span id="brille::Polyhedron::string_repr__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a7439e43b12c68a301acdcdea814c2a72"></span>std::string <code class="sig-name descname">string_repr</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron11string_reprEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron10get_volumeEv">
+<span id="_CPPv3NK6brille10Polyhedron10get_volumeEv"></span><span id="_CPPv2NK6brille10Polyhedron10get_volumeEv"></span><span id="brille::Polyhedron::get_volume__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a17964320586500f0ec76697f3dc7574a"></span>double <code class="sig-name descname">get_volume</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron10get_volumeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron12get_centroidEv">
+<span id="_CPPv3NK6brille10Polyhedron12get_centroidEv"></span><span id="_CPPv2NK6brille10Polyhedron12get_centroidEv"></span><span id="brille::Polyhedron::get_centroid__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a224571deed3d524bcd43b100a9ffa079"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">get_centroid</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron12get_centroidEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron23get_circumsphere_radiusEv">
+<span id="_CPPv3NK6brille10Polyhedron23get_circumsphere_radiusEv"></span><span id="_CPPv2NK6brille10Polyhedron23get_circumsphere_radiusEv"></span><span id="brille::Polyhedron::get_circumsphere_radius__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1a587be3df66afe4ae7d17c7c1a988c1e3"></span>double <code class="sig-name descname">get_circumsphere_radius</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron23get_circumsphere_radiusEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron6centreEv">
+<span id="_CPPv3NK6brille10Polyhedron6centreEv"></span><span id="_CPPv2NK6brille10Polyhedron6centreEv"></span><span id="brille::Polyhedron::centre__voidC"></span><span class="target" id="classbrille_1_1Polyhedron_1ac7c8cb6dbad5b226e235275f33ec7ef9"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">centre</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron6centreEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron8containsERKNSt6vectorINSt5arrayIdXL3EEEEEE">
+<span id="_CPPv3NK6brille10Polyhedron8containsERKNSt6vectorINSt5arrayIdXL3EEEEEE"></span><span id="_CPPv2NK6brille10Polyhedron8containsERKNSt6vectorINSt5arrayIdX3EEEEE"></span><span id="brille::Polyhedron::contains__std::vector:std::array:double.3::CRC"></span><span class="target" id="classbrille_1_1Polyhedron_1aeb53fe195904ae192d1b59b2ea96a5af"></span>std::vector&lt;bool&gt; <code class="sig-name descname">contains</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::array&lt;double, 3&gt;&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron8containsERKNSt6vectorINSt5arrayIdXL3EEEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron8containsERK6bArrayIdE">
+<span id="_CPPv3NK6brille10Polyhedron8containsERK6bArrayIdE"></span><span id="_CPPv2NK6brille10Polyhedron8containsERK6bArrayIdE"></span><span id="brille::Polyhedron::contains__bArray:double:CRC"></span><span class="target" id="classbrille_1_1Polyhedron_1a5b484f0e1182b6bea5debb7fedf3ba56"></span>std::vector&lt;bool&gt; <code class="sig-name descname">contains</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron8containsERK6bArrayIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron10intersectsERK10Polyhedron">
+<span id="_CPPv3NK6brille10Polyhedron10intersectsERK10Polyhedron"></span><span id="_CPPv2NK6brille10Polyhedron10intersectsERK10Polyhedron"></span><span id="brille::Polyhedron::intersects__PolyhedronCRC"></span><span class="target" id="classbrille_1_1Polyhedron_1a380d4b191d1254a0cb1ecee1dd7335cb"></span>bool <code class="sig-name descname">intersects</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron10intersectsERK10Polyhedron" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron12intersectionERK10Polyhedron">
+<span id="_CPPv3NK6brille10Polyhedron12intersectionERK10Polyhedron"></span><span id="_CPPv2NK6brille10Polyhedron12intersectionERK10Polyhedron"></span><span id="brille::Polyhedron::intersection__PolyhedronCRC"></span><span class="target" id="classbrille_1_1Polyhedron_1af596ae8f73042171acfe64399abecaec"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">intersection</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron12intersectionERK10Polyhedron" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille10Polyhedron6divideE10PolyhedronRK6bArrayI1TERK6bArrayI1TE">
+<span id="_CPPv3I0EN6brille10Polyhedron6divideERK6bArrayI1TERK6bArrayI1TE"></span><span id="_CPPv2I0EN6brille10Polyhedron6divideERK6bArrayI1TERK6bArrayI1TE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Polyhedron_1ac3901f71b902ad41c1f6aa97cd97b252"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">divide</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille10Polyhedron6divideE10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="brille::Polyhedron::divide::T">T</a>&gt; &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille10Polyhedron6divideE10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="brille::Polyhedron::divide::T">T</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille10Polyhedron6divideE10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10Polyhedron14rand_rejectionEK6size_tKj">
+<span id="_CPPv3NK6brille10Polyhedron14rand_rejectionEK6size_tKj"></span><span id="_CPPv2NK6brille10Polyhedron14rand_rejectionEK6size_tKj"></span><span id="brille::Polyhedron::rand_rejection__sC.unsigned-iCC"></span><span class="target" id="classbrille_1_1Polyhedron_1a38252cccd2d209b96d46eca55b68ccb4"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">rand_rejection</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>n</em>, <em class="property">const</em> unsigned int <em>seed</em> = 0<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10Polyhedron14rand_rejectionEK6size_tKj" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Static Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4I0EN6brille10Polyhedron6bisectE10PolyhedronRK10PolyhedronRK6bArrayI1TERK6bArrayI1TE">
+<span id="_CPPv3I0EN6brille10Polyhedron6bisectERK10PolyhedronRK6bArrayI1TERK6bArrayI1TE"></span><span id="_CPPv2I0EN6brille10Polyhedron6bisectERK10PolyhedronRK6bArrayI1TERK6bArrayI1TE"></span>template&lt;class <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classbrille_1_1Polyhedron_1a3535cd9dd3e4d449d07d063427e1f141"></span><a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> <code class="sig-name descname">bisect</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille10PolyhedronE" title="brille::Polyhedron">Polyhedron</a> &amp;<em>pin</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille10Polyhedron6bisectE10PolyhedronRK10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="brille::Polyhedron::bisect::T">T</a>&gt; &amp;<em>n</em>, <em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;<a class="reference internal" href="#_CPPv4I0EN6brille10Polyhedron6bisectE10PolyhedronRK10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="brille::Polyhedron::bisect::T">T</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN6brille10Polyhedron6bisectE10PolyhedronRK10PolyhedronRK6bArrayI1TERK6bArrayI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find the polyhedron which results from slicing an existant polyhedron by one or more plane passing through its volume. The part closest to the origin is retained. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron20keep_unique_verticesEv">
+<span id="_CPPv3N6brille10Polyhedron20keep_unique_verticesEv"></span><span id="_CPPv2N6brille10Polyhedron20keep_unique_verticesEv"></span><span id="brille::Polyhedron::keep_unique_vertices__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a3dffabd534e696109420dda79726f66b"></span>void <code class="sig-name descname">keep_unique_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron20keep_unique_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron28special_keep_unique_verticesEv">
+<span id="_CPPv3N6brille10Polyhedron28special_keep_unique_verticesEv"></span><span id="_CPPv2N6brille10Polyhedron28special_keep_unique_verticesEv"></span><span id="brille::Polyhedron::special_keep_unique_vertices"></span><span class="target" id="classbrille_1_1Polyhedron_1a6b05cda206314af809304b2060ac7c35"></span>void <code class="sig-name descname">special_keep_unique_vertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron28special_keep_unique_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron16find_convex_hullEv">
+<span id="_CPPv3N6brille10Polyhedron16find_convex_hullEv"></span><span id="_CPPv2N6brille10Polyhedron16find_convex_hullEv"></span><span id="brille::Polyhedron::find_convex_hull__void"></span><span class="target" id="classbrille_1_1Polyhedron_1adfc48cf19d3d9321250b246db3d27286"></span>void <code class="sig-name descname">find_convex_hull</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron16find_convex_hullEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron25find_all_faces_per_vertexEv">
+<span id="_CPPv3N6brille10Polyhedron25find_all_faces_per_vertexEv"></span><span id="_CPPv2N6brille10Polyhedron25find_all_faces_per_vertexEv"></span><span id="brille::Polyhedron::find_all_faces_per_vertex__void"></span><span class="target" id="classbrille_1_1Polyhedron_1af8d416212b01eb30202a2d4aec5ab149"></span>void <code class="sig-name descname">find_all_faces_per_vertex</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron25find_all_faces_per_vertexEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron25polygon_vertices_per_faceEv">
+<span id="_CPPv3N6brille10Polyhedron25polygon_vertices_per_faceEv"></span><span id="_CPPv2N6brille10Polyhedron25polygon_vertices_per_faceEv"></span><span id="brille::Polyhedron::polygon_vertices_per_face__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a76d9d4d7c4a572a21d38ae6f4e63fe37"></span>void <code class="sig-name descname">polygon_vertices_per_face</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron25polygon_vertices_per_faceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron30purge_central_polygon_verticesEv">
+<span id="_CPPv3N6brille10Polyhedron30purge_central_polygon_verticesEv"></span><span id="_CPPv2N6brille10Polyhedron30purge_central_polygon_verticesEv"></span><span id="brille::Polyhedron::purge_central_polygon_vertices__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a427d014f13026f1d650f9e9de47a9f7c"></span>void <code class="sig-name descname">purge_central_polygon_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron30purge_central_polygon_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron19actual_vertex_purgeEv">
+<span id="_CPPv3N6brille10Polyhedron19actual_vertex_purgeEv"></span><span id="_CPPv2N6brille10Polyhedron19actual_vertex_purgeEv"></span><span id="brille::Polyhedron::actual_vertex_purge__void"></span><span class="target" id="classbrille_1_1Polyhedron_1ae92ab597433866165ea3f8ebe4de853e"></span>void <code class="sig-name descname">actual_vertex_purge</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron19actual_vertex_purgeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron13sort_polygonsEv">
+<span id="_CPPv3N6brille10Polyhedron13sort_polygonsEv"></span><span id="_CPPv2N6brille10Polyhedron13sort_polygonsEv"></span><span id="brille::Polyhedron::sort_polygons__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a064f4e6eb246bafe330d03976e91e6ec"></span>void <code class="sig-name descname">sort_polygons</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron13sort_polygonsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron20purge_extra_verticesEv">
+<span id="_CPPv3N6brille10Polyhedron20purge_extra_verticesEv"></span><span id="_CPPv2N6brille10Polyhedron20purge_extra_verticesEv"></span><span id="brille::Polyhedron::purge_extra_vertices__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a0c6aae6a76d8e0a6a8a168d65402d50e"></span>void <code class="sig-name descname">purge_extra_vertices</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron20purge_extra_verticesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10Polyhedron28find_face_points_and_normalsEv">
+<span id="_CPPv3N6brille10Polyhedron28find_face_points_and_normalsEv"></span><span id="_CPPv2N6brille10Polyhedron28find_face_points_and_normalsEv"></span><span id="brille::Polyhedron::find_face_points_and_normals__void"></span><span class="target" id="classbrille_1_1Polyhedron_1a2d6925faeff33aef63bc2eaa88e72d5e"></span>void <code class="sig-name descname">find_face_points_and_normals</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10Polyhedron28find_face_points_and_normalsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Protected Attributes</p>
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Polyhedron8verticesE">
+<span id="_CPPv3N6brille10Polyhedron8verticesE"></span><span id="_CPPv2N6brille10Polyhedron8verticesE"></span><span id="brille::Polyhedron::vertices__bArray:double:"></span><span class="target" id="classbrille_1_1Polyhedron_1a01beddd33a670a41905e4fbb978bfff1"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">vertices</code><a class="headerlink" href="#_CPPv4N6brille10Polyhedron8verticesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Polyhedron6pointsE">
+<span id="_CPPv3N6brille10Polyhedron6pointsE"></span><span id="_CPPv2N6brille10Polyhedron6pointsE"></span><span id="brille::Polyhedron::points__bArray:double:"></span><span class="target" id="classbrille_1_1Polyhedron_1a97cfc96f39a89baf39624e7d195c7aaa"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">points</code><a class="headerlink" href="#_CPPv4N6brille10Polyhedron6pointsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Polyhedron7normalsE">
+<span id="_CPPv3N6brille10Polyhedron7normalsE"></span><span id="_CPPv2N6brille10Polyhedron7normalsE"></span><span id="brille::Polyhedron::normals__bArray:double:"></span><span class="target" id="classbrille_1_1Polyhedron_1aac742087f0d82b63299452cf4bf69c91"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">normals</code><a class="headerlink" href="#_CPPv4N6brille10Polyhedron7normalsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Polyhedron16faces_per_vertexE">
+<span id="_CPPv3N6brille10Polyhedron16faces_per_vertexE"></span><span id="_CPPv2N6brille10Polyhedron16faces_per_vertexE"></span><span id="brille::Polyhedron::faces_per_vertex__std::vector:std::vector:i::"></span><span class="target" id="classbrille_1_1Polyhedron_1ac4a3f5b538e9a9ef5e1279dad79608ce"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">faces_per_vertex</code><a class="headerlink" href="#_CPPv4N6brille10Polyhedron16faces_per_vertexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt id="_CPPv4N6brille10Polyhedron17vertices_per_faceE">
+<span id="_CPPv3N6brille10Polyhedron17vertices_per_faceE"></span><span id="_CPPv2N6brille10Polyhedron17vertices_per_faceE"></span><span id="brille::Polyhedron::vertices_per_face__std::vector:std::vector:i::"></span><span class="target" id="classbrille_1_1Polyhedron_1af14de410771fe13a262db16a52f63011"></span>std::vector&lt;std::vector&lt;int&gt;&gt; <code class="sig-name descname">vertices_per_face</code><a class="headerlink" href="#_CPPv4N6brille10Polyhedron17vertices_per_faceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1PolyhedronTrellis.html" class="btn btn-neutral float-right" title="Template Class PolyhedronTrellis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1PointSymmetry.html" class="btn btn-neutral float-left" title="Class PointSymmetry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

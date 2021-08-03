@@ -1,0 +1,83 @@
+
+.. _file_src_mesh.hpp:
+
+File mesh.hpp
+=============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/mesh.hpp``)
+-----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_mesh.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``array.hpp`` (:ref:`file_src_array.hpp`)
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.hpp`` (:ref:`file_src_array_latvec.hpp`)
+
+- ``interpolation.hpp`` (:ref:`file_src_interpolation.hpp`)
+
+- ``interpolatordual.hpp`` (:ref:`file_src_interpolatordual.hpp`)
+
+- ``mesh.tpp`` (:ref:`file_src_mesh.tpp`)
+
+- ``omp.h``
+
+- ``permutation.hpp`` (:ref:`file_src_permutation.hpp`)
+
+- ``queue``
+
+- ``set``
+
+- ``triangulation_layers.hpp`` (:ref:`file_src_triangulation_layers.hpp`)
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_bz_mesh.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1Mesh3`
+

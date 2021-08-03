@@ -1,0 +1,16 @@
+.. _exhale_struct_structbrille_1_1PrimitiveTraits:
+
+Struct PrimitiveTraits
+======================
+
+- Defined in :ref:`file_src_primitive.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: brille::PrimitiveTraits
+   :members:
+   :protected-members:
+   :undoc-members:

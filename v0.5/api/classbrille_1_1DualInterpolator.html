@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template Class DualInterpolator &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class GammaTable" href="classbrille_1_1GammaTable.html" />
+    <link rel="prev" title="Class Direct" href="classbrille_1_1Direct.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Template Class DualInterpolator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1DualInterpolator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-class-dualinterpolator">
+<span id="exhale-class-classbrille-1-1dualinterpolator"></span><h1>Template Class DualInterpolator<a class="headerlink" href="#template-class-dualinterpolator" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_interpolatordual.hpp.html#file-src-interpolatordual-hpp"><span class="std std-ref">File interpolatordual.hpp</span></a></p></li>
+</ul>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4I00EN6brille16DualInterpolatorE">
+<span id="_CPPv3I00EN6brille16DualInterpolatorE"></span><span id="_CPPv2I00EN6brille16DualInterpolatorE"></span>template&lt;class <code class="sig-name descname">T</code>, class <code class="sig-name descname">R</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">DualInterpolator</code><a class="headerlink" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille16DualInterpolator5ind_tE">
+<span id="_CPPv3N6brille16DualInterpolator5ind_tE"></span><span id="_CPPv2N6brille16DualInterpolator5ind_tE"></span><span class="target" id="classbrille_1_1DualInterpolator_1ae63a7d12f8f15be43dac12f93de72e02"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = brille::<a class="reference internal" href="typedef_types_8hpp_1ab2beadaaaed85cb56ac82c08866d15e5.html#_CPPv4N6brille5ind_tE" title="brille::ind_t">ind_t</a><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt id="_CPPv4I0EN6brille16DualInterpolator9element_tE">
+<span id="_CPPv3I0EN6brille16DualInterpolator9element_tE"></span><span id="_CPPv2I0EN6brille16DualInterpolator9element_tE"></span>template&lt;class <code class="sig-name descname">Z</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1ab78e6c729e0fbd32328dc1bcd8f55b90"></span><em class="property">using </em><code class="sig-name descname">element_t</code> = std::array&lt;<a class="reference internal" href="#_CPPv4I0EN6brille16DualInterpolator9element_tE" title="brille::DualInterpolator::element_t::Z">Z</a>, 3&gt;<a class="headerlink" href="#_CPPv4I0EN6brille16DualInterpolator9element_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator16DualInterpolatorEv">
+<span id="_CPPv3N6brille16DualInterpolator16DualInterpolatorEv"></span><span id="_CPPv2N6brille16DualInterpolator16DualInterpolatorEv"></span><span id="brille::DualInterpolator::DualInterpolator"></span><span class="target" id="classbrille_1_1DualInterpolator_1a2c8ae2f20f05b78032e88586a70edb9f"></span><code class="sig-name descname">DualInterpolator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator16DualInterpolatorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE">
+<span id="_CPPv3N6brille16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="_CPPv2N6brille16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="brille::DualInterpolator::DualInterpolator__Interpolator:T:R.Interpolator:R:R"></span><span class="target" id="classbrille_1_1DualInterpolator_1aa4e4c7a0fbb651ee65d64431e2a45f3f"></span><code class="sig-name descname">DualInterpolator</code><span class="sig-paren">(</span><a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::T">T</a>&gt; &amp;<em>val</em>, <a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator16DualInterpolatorER12InterpolatorI1TER12InterpolatorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator15validate_valuesEv">
+<span id="_CPPv3N6brille16DualInterpolator15validate_valuesEv"></span><span id="_CPPv2N6brille16DualInterpolator15validate_valuesEv"></span><span id="brille::DualInterpolator::validate_values"></span><span class="target" id="classbrille_1_1DualInterpolator_1a3989456bc70e9a84942606a29f32904d"></span>void <code class="sig-name descname">validate_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator15validate_valuesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator16validate_vectorsEv">
+<span id="_CPPv3N6brille16DualInterpolator16validate_vectorsEv"></span><span id="_CPPv2N6brille16DualInterpolator16validate_vectorsEv"></span><span id="brille::DualInterpolator::validate_vectors"></span><span class="target" id="classbrille_1_1DualInterpolator_1ac65fe5bde0085a36d65000301686284b"></span>void <code class="sig-name descname">validate_vectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator16validate_vectorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator4sizeEv">
+<span id="_CPPv3NK6brille16DualInterpolator4sizeEv"></span><span id="_CPPv2NK6brille16DualInterpolator4sizeEv"></span><span id="brille::DualInterpolator::sizeC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a0476d2d601da34f85400260600a224e2"></span>size_t <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator6valuesEv">
+<span id="_CPPv3NK6brille16DualInterpolator6valuesEv"></span><span id="_CPPv2NK6brille16DualInterpolator6valuesEv"></span><span id="brille::DualInterpolator::valuesC"></span><span class="target" id="classbrille_1_1DualInterpolator_1abb244f3e1c3e95992579829f55a71707"></span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::T">T</a>&gt; &amp;<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator6valuesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator7vectorsEv">
+<span id="_CPPv3NK6brille16DualInterpolator7vectorsEv"></span><span id="_CPPv2NK6brille16DualInterpolator7vectorsEv"></span><span id="brille::DualInterpolator::vectorsC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a205641dd2472365201d85ce909c77adf"></span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::R">R</a>&gt; &amp;<code class="sig-name descname">vectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator7vectorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator8branchesEv">
+<span id="_CPPv3NK6brille16DualInterpolator8branchesEv"></span><span id="_CPPv2NK6brille16DualInterpolator8branchesEv"></span><span id="brille::DualInterpolator::branchesC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a16866aa41d5d94f1c94a0087bdb2a9f2"></span><a class="reference internal" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="brille::DualInterpolator::ind_t">ind_t</a> <code class="sig-name descname">branches</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator8branchesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike">
+<span id="_CPPv3N6brille16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike"></span><span id="_CPPv2N6brille16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike"></span><span id="brille::DualInterpolator::rotateslike__RotatesLikeC.RotatesLikeC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a63d4e2ecba8f6636b6506bc57804c54c"></span>void <code class="sig-name descname">rotateslike</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <em>values</em>, <em class="property">const</em> <a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <em>vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator11rotateslikeEK11RotatesLikeK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator18values_rotate_likeEK11RotatesLike">
+<span id="_CPPv3N6brille16DualInterpolator18values_rotate_likeEK11RotatesLike"></span><span id="_CPPv2N6brille16DualInterpolator18values_rotate_likeEK11RotatesLike"></span><span id="brille::DualInterpolator::values_rotate_like__RotatesLikeC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a600b30af2ff0083f38aff9ead6aec383"></span><a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <code class="sig-name descname">values_rotate_like</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator18values_rotate_likeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator19vectors_rotate_likeEK11RotatesLike">
+<span id="_CPPv3N6brille16DualInterpolator19vectors_rotate_likeEK11RotatesLike"></span><span id="_CPPv2N6brille16DualInterpolator19vectors_rotate_likeEK11RotatesLike"></span><span id="brille::DualInterpolator::vectors_rotate_like__RotatesLikeC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a51cf391b5136a23849d23beea825ddfb"></span><a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <code class="sig-name descname">vectors_rotate_like</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="enum_interpolator2_8hpp_1a18284df022fa4e0bd04b06b4533b7d62.html#_CPPv4N6brille11RotatesLikeE" title="brille::RotatesLike">RotatesLike</a> <em>a</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator19vectors_rotate_likeEK11RotatesLike" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK6brille16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t">
+<span id="_CPPv3II0E0ENK6brille16DualInterpolator14interpolate_atERKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t"></span><span id="_CPPv2II0E0ENK6brille16DualInterpolator14interpolate_atERKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a7ce7c72e0442696cea8a136bbd1ae30d"></span>void <code class="sig-name descname">interpolate_at</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="brille::DualInterpolator::ind_t">ind_t</a>, double&gt;&gt; &amp;<em>indices_weights</em>, <a class="reference internal" href="#_CPPv4II0E0ENK6brille16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="brille::DualInterpolator::interpolate_at::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::T">T</a>&gt; &amp;<em>values_out</em>, <a class="reference internal" href="#_CPPv4II0E0ENK6brille16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="brille::DualInterpolator::interpolate_at::A">A</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::R">R</a>&gt; &amp;<em>vectors_out</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="brille::DualInterpolator::ind_t">ind_t</a> <em>to</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK6brille16DualInterpolator14interpolate_atEvRKNSt6vectorINSt4pairI5ind_tdEEEER1AI1TER1AI1REK5ind_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I">
+<span id="_CPPv3I00ENK6brille16DualInterpolator15get_permutationEK1IK1I"></span><span id="_CPPv2I00ENK6brille16DualInterpolator15get_permutationEK1IK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="brille::DualInterpolator::get_permutation::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a06e8a12d7ac14bf7c1f1e03dee6d0147"></span>std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTableE" title="brille::PermutationTable">PermutationTable</a>::<a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTable5ind_tE" title="brille::PermutationTable::ind_t">ind_t</a>&gt; <code class="sig-name descname">get_permutation</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="brille::DualInterpolator::get_permutation::I">I</a>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="brille::DualInterpolator::get_permutation::I">I</a><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille16DualInterpolator15get_permutationENSt6vectorIN16PermutationTable5ind_tEEEK1IK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE">
+<span id="_CPPv3I00ENK6brille16DualInterpolator16get_permutationsERKNSt6vectorI1IEE"></span><span id="_CPPv2I00ENK6brille16DualInterpolator16get_permutationsERKNSt6vectorI1IEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="brille::DualInterpolator::get_permutations::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1ad1e004127f8250bb74e9eab57ef5f8d4"></span>std::vector&lt;std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTableE" title="brille::PermutationTable">PermutationTable</a>::<a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTable5ind_tE" title="brille::PermutationTable::ind_t">ind_t</a>&gt;&gt; <code class="sig-name descname">get_permutations</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="brille::DualInterpolator::get_permutations::I">I</a>&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorI1IEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE">
+<span id="_CPPv3I00ENK6brille16DualInterpolator16get_permutationsERKNSt6vectorINSt4pairI1IdEEEE"></span><span id="_CPPv2I00ENK6brille16DualInterpolator16get_permutationsERKNSt6vectorINSt4pairI1IdEEEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="brille::DualInterpolator::get_permutations::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1ace961955c4b17453fed5c0e3a98d0fd6"></span>std::vector&lt;std::vector&lt;<em class="property">typename</em> <a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTableE" title="brille::PermutationTable">PermutationTable</a>::<a class="reference internal" href="classbrille_1_1PermutationTable.html#_CPPv4N6brille16PermutationTable5ind_tE" title="brille::PermutationTable::ind_t">ind_t</a>&gt;&gt; <code class="sig-name descname">get_permutations</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::pair&lt;<a class="reference internal" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="brille::DualInterpolator::get_permutations::I">I</a>, double&gt;&gt;&amp;<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille16DualInterpolator16get_permutationsENSt6vectorINSt6vectorIN16PermutationTable5ind_tEEEEERKNSt6vectorINSt4pairI1IdEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE">
+<span id="_CPPv3N6brille16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="_CPPv2N6brille16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE"></span><span id="brille::DualInterpolator::replace_data__Interpolator:T:R.Interpolator:R:R"></span><span class="target" id="classbrille_1_1DualInterpolator_1aa5399c2fba2e1b66e557c2a8f7c9f106"></span>void <code class="sig-name descname">replace_data</code><span class="sig-paren">(</span><a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::T">T</a>&gt; &amp;<em>val</em>, <a class="reference internal" href="classbrille_1_1Interpolator.html#_CPPv4I0EN6brille12InterpolatorE" title="brille::Interpolator">Interpolator</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::R">R</a>&gt; &amp;<em>vec</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator12replace_dataER12InterpolatorI1TER12InterpolatorI1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN6brille16DualInterpolator18replace_value_dataEvDp1A">
+<span id="_CPPv3IDpEN6brille16DualInterpolator18replace_value_dataEDp1A"></span><span id="_CPPv2IDpEN6brille16DualInterpolator18replace_value_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1aeb789a8701576bd2d4b0abc44c1635b0"></span>void <code class="sig-name descname">replace_value_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN6brille16DualInterpolator18replace_value_dataEvDp1A" title="brille::DualInterpolator::replace_value_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN6brille16DualInterpolator18replace_value_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4IDpEN6brille16DualInterpolator19replace_vector_dataEvDp1A">
+<span id="_CPPv3IDpEN6brille16DualInterpolator19replace_vector_dataEDp1A"></span><span id="_CPPv2IDpEN6brille16DualInterpolator19replace_vector_dataEDp1A"></span>template&lt;typename ...<code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a28d9450345b5ae1fe7779af0d8905763"></span>void <code class="sig-name descname">replace_vector_data</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4IDpEN6brille16DualInterpolator19replace_vector_dataEvDp1A" title="brille::DualInterpolator::replace_vector_data::A">A</a>... <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IDpEN6brille16DualInterpolator19replace_vector_dataEvDp1A" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE">
+<span id="_CPPv3N6brille16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE"></span><span id="_CPPv2N6brille16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE"></span><span id="brille::DualInterpolator::initialize_permutation_table__sC.std::set:s:CR"></span><span class="target" id="classbrille_1_1DualInterpolator_1af283c4b7f4ee4c130df5720c94d36ca8"></span>void <code class="sig-name descname">initialize_permutation_table</code><span class="sig-paren">(</span><em class="property">const</em> size_t <em>nverts</em>, <em class="property">const</em> std::set&lt;size_t&gt; &amp;<em>keys</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator28initialize_permutation_tableEK6size_tRKNSt3setI6size_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator24update_permutation_tableEv">
+<span id="_CPPv3N6brille16DualInterpolator24update_permutation_tableEv"></span><span id="_CPPv2N6brille16DualInterpolator24update_permutation_tableEv"></span><span id="brille::DualInterpolator::update_permutation_table"></span><span class="target" id="classbrille_1_1DualInterpolator_1a18108da20f721e7e43ab4d37b7e0d1fc"></span>void <code class="sig-name descname">update_permutation_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator24update_permutation_tableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N6brille16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N6brille16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE"></span><span id="brille::DualInterpolator::set_value_cost_info__iC.iC.element_t:double:CR"></span><span class="target" id="classbrille_1_1DualInterpolator_1aa44bd6092c47f9d108ab2ef9f1dce05d"></span>void <code class="sig-name descname">set_value_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>csf</em>, <em class="property">const</em> int <em>cvf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille16DualInterpolator9element_tE" title="brille::DualInterpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator19set_value_cost_infoEKiKiRK9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE">
+<span id="_CPPv3N6brille16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE"></span><span id="_CPPv2N6brille16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE"></span><span id="brille::DualInterpolator::set_vector_cost_info__iC.iC.element_t:double:CR"></span><span class="target" id="classbrille_1_1DualInterpolator_1a9b4e9d7abe95c85c91951afde1d290ea"></span>void <code class="sig-name descname">set_vector_cost_info</code><span class="sig-paren">(</span><em class="property">const</em> int <em>csf</em>, <em class="property">const</em> int <em>cvf</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN6brille16DualInterpolator9element_tE" title="brille::DualInterpolator::element_t">element_t</a>&lt;double&gt; &amp;<em>elcost</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator20set_vector_cost_infoEKiKiRK9element_tIdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator9to_stringEv">
+<span id="_CPPv3NK6brille16DualInterpolator9to_stringEv"></span><span id="_CPPv2NK6brille16DualInterpolator9to_stringEv"></span><span id="brille::DualInterpolator::to_stringC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a8e271316f84d41e530f63c45e688850c"></span>std::string <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4II0E0ENK6brille16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd">
+<span id="_CPPv3II0E0ENK6brille16DualInterpolator12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span><span id="_CPPv2II0E0ENK6brille16DualInterpolator12debye_wallerERK1AIdERKNSt6vectorIdEEKd"></span>template&lt;template&lt;class&gt; class <code class="sig-name descname">A</code>&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a9b20df8400d0d5b1655287172abc38f7"></span>brille::<a class="reference internal" href="classbrille_1_1Array.html#_CPPv4I0EN6brille5ArrayE" title="brille::Array">Array</a>&lt;double&gt; <code class="sig-name descname">debye_waller</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4II0E0ENK6brille16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd" title="brille::DualInterpolator::debye_waller::A">A</a>&lt;double&gt; &amp;<em>Qpts</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>Masses</em>, <em class="property">const</em> double <em>t_K</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4II0E0ENK6brille16DualInterpolator12debye_wallerEN6brille5ArrayIdEERK1AIdERKNSt6vectorIdEEKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I">
+<span id="_CPPv3I000ENK6brille16DualInterpolator11cost_matrixEK1IK1I"></span><span id="_CPPv2I000ENK6brille16DualInterpolator11cost_matrixEK1IK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename <code class="sig-name descname">S</code> = <em class="property">typename</em> <a class="reference internal" href="structbrille_1_1CostTraits.html#_CPPv4I0EN6brille10CostTraitsE" title="brille::CostTraits">CostTraits</a>&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolatorE" title="brille::DualInterpolator::T">T</a>&gt;::type, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="brille::DualInterpolator::cost_matrix::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a212bf69a15d92f56ad57d8459ea00122"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="brille::DualInterpolator::cost_matrix::S">S</a>&gt; <code class="sig-name descname">cost_matrix</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="brille::DualInterpolator::cost_matrix::I">I</a> <em>i0</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="brille::DualInterpolator::cost_matrix::I">I</a> <em>i1</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I000ENK6brille16DualInterpolator11cost_matrixENSt6vectorI1SEEK1IK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN6brille16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE">
+<span id="_CPPv3I00EN6brille16DualInterpolator13permute_modesEK1IRKNSt6vectorI5ind_tEE"></span><span id="_CPPv2I00EN6brille16DualInterpolator13permute_modesEK1IRKNSt6vectorI5ind_tEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="brille::DualInterpolator::permute_modes::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a5fc4e8433616ca8aeac65e28f3e54db5"></span>void <code class="sig-name descname">permute_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="brille::DualInterpolator::permute_modes::I">I</a> <em>i</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="brille::DualInterpolator::ind_t">ind_t</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN6brille16DualInterpolator13permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN6brille16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE">
+<span id="_CPPv3I00EN6brille16DualInterpolator21inverse_permute_modesEK1IRKNSt6vectorI5ind_tEE"></span><span id="_CPPv2I00EN6brille16DualInterpolator21inverse_permute_modesEK1IRKNSt6vectorI5ind_tEE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="brille::DualInterpolator::inverse_permute_modes::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a8eeb1c419d03dd49010b480be23241e2"></span>void <code class="sig-name descname">inverse_permute_modes</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="brille::DualInterpolator::inverse_permute_modes::I">I</a> <em>i</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4N6brille16DualInterpolator5ind_tE" title="brille::DualInterpolator::ind_t">ind_t</a>&gt; &amp;<em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN6brille16DualInterpolator21inverse_permute_modesEvK1IRKNSt6vectorI5ind_tEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN6brille16DualInterpolator13is_degenerateEbK1I">
+<span id="_CPPv3I00EN6brille16DualInterpolator13is_degenerateEK1I"></span><span id="_CPPv2I00EN6brille16DualInterpolator13is_degenerateEK1I"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator13is_degenerateEbK1I" title="brille::DualInterpolator::is_degenerate::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1ac3467a35275a7110e630be71ae885461"></span>bool <code class="sig-name descname">is_degenerate</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator13is_degenerateEbK1I" title="brille::DualInterpolator::is_degenerate::I">I</a> <em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN6brille16DualInterpolator13is_degenerateEbK1I" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille16DualInterpolator4sortEv">
+<span id="_CPPv3N6brille16DualInterpolator4sortEv"></span><span id="_CPPv2N6brille16DualInterpolator4sortEv"></span><span id="brille::DualInterpolator::sort__void"></span><span class="target" id="classbrille_1_1DualInterpolator_1a55f001f0b6a7a4df2db14b85b764a1f3"></span>void <code class="sig-name descname">sort</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille16DualInterpolator4sortEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00EN6brille16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE">
+<span id="_CPPv3I00EN6brille16DualInterpolator24determine_permutation_ijEK1IK1IRNSt5mutexE"></span><span id="_CPPv2I00EN6brille16DualInterpolator24determine_permutation_ijEK1IK1IRNSt5mutexE"></span>template&lt;typename <code class="sig-name descname">I</code>, typename = std::enable_if_t&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="brille::DualInterpolator::determine_permutation_ij::I">I</a>&gt;::value&gt;&gt;<br /><span class="target" id="classbrille_1_1DualInterpolator_1a6ec46e3070fa9d6589749462b5aed25f"></span>bool <code class="sig-name descname">determine_permutation_ij</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="brille::DualInterpolator::determine_permutation_ij::I">I</a> <em>i</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I00EN6brille16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="brille::DualInterpolator::determine_permutation_ij::I">I</a> <em>j</em>, std::mutex &amp;<em>map_mutex</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN6brille16DualInterpolator24determine_permutation_ijEbK1IK1IRNSt5mutexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille16DualInterpolator15bytes_per_pointEv">
+<span id="_CPPv3NK6brille16DualInterpolator15bytes_per_pointEv"></span><span id="_CPPv2NK6brille16DualInterpolator15bytes_per_pointEv"></span><span id="brille::DualInterpolator::bytes_per_pointC"></span><span class="target" id="classbrille_1_1DualInterpolator_1a80d17d20a1a4d8b094d22aebdaca2e36"></span>size_t <code class="sig-name descname">bytes_per_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille16DualInterpolator15bytes_per_pointEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1GammaTable.html" class="btn btn-neutral float-right" title="Class GammaTable" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1Direct.html" class="btn btn-neutral float-left" title="Class Direct" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

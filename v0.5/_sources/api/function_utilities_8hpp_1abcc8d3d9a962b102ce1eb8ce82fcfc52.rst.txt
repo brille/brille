@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1abcc8d3d9a962b102ce1eb8ce82fcfc52:
+
+Template Function brille::utils::cast_matrix
+============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::cast_matrix(T *, const R *)

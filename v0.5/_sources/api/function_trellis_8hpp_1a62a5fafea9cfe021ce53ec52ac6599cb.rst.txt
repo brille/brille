@@ -1,0 +1,13 @@
+.. _exhale_function_trellis_8hpp_1a62a5fafea9cfe021ce53ec52ac6599cb:
+
+Template Function brille::find_bin
+==================================
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::find_bin(const std::vector<T>&, const T)

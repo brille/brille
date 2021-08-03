@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class GammaTable &mdash; brille  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        <script src="../_static/katex_autorenderer.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class HallSymbol" href="classbrille_1_1HallSymbol.html" />
+    <link rel="prev" title="Template Class DualInterpolator" href="classbrille_1_1DualInterpolator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> brille
+          
+
+          
+            
+            <img src="../_static/brille.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install_guide.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../motivation.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../memory_usage.html">Memory Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">User Guide</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html">Python module <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../brille.html#pybind11-module-brille-brille">pybind11 module <code class="docutils literal notranslate"><span class="pre">brille._brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plotting.html">Plotting utilities for <code class="docutils literal notranslate"><span class="pre">brille</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">brille</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library_root.html">C++ Library API</a> &raquo;</li>
+        
+      <li>Class GammaTable</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/classbrille_1_1GammaTable.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="class-gammatable">
+<span id="exhale-class-classbrille-1-1gammatable"></span><h1>Class GammaTable<a class="headerlink" href="#class-gammatable" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_phonon.hpp.html#file-src-phonon-hpp"><span class="std std-ref">File phonon.hpp</span></a></p></li>
+</ul>
+<div class="section" id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">brille::RotateTable</span></code> (<a class="reference internal" href="classbrille_1_1RotateTable.html#exhale-class-classbrille-1-1rotatetable"><span class="std std-ref">Class RotateTable</span></a>)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="cpp class">
+<dt id="_CPPv4N6brille10GammaTableE">
+<span id="_CPPv3N6brille10GammaTableE"></span><span id="_CPPv2N6brille10GammaTableE"></span><span id="brille::GammaTable"></span><span class="target" id="classbrille_1_1GammaTable"></span><em class="property">class </em><code class="sig-prename descclassname">brille<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">GammaTable</code> : <em class="property">public</em> brille::<a class="reference internal" href="classbrille_1_1RotateTable.html#_CPPv4N6brille11RotateTableE" title="brille::RotateTable">RotateTable</a><a class="headerlink" href="#_CPPv4N6brille10GammaTableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A convenient store for (F₀(k,R), ⃗rₖ - R ⃗rₗ) pairs. </p>
+<p>The application of a symmetry operation to a crystal strcture leaves its total energy unchanged. The same is true for the total potential energy of the crystal. The force constant matrix, howerever, which is the combination of all forces acting on atom k for a displacement of atom l, is not invariant but instead the atom labels are permuted and individual-pairs are transformed as tensors.</p>
+<p>The dynamical matrix is the mass noramalised form of the Fourier transform of the force constant matrix. In addition to the atom label permutation application of a symmetry operation to the dynamical matrix appends a per-equivalent-atom-pair phase factor due to the possibility that the operation moves equivalent atoms in one unit cell into different unit cells.</p>
+<p>Phonons are the solutions to the equations of motion described by the dynamical matrix. The solutions make use of the dynamical matrix eigenvectors_ which also acquire a per-atom phase factor upon operation of a symmetry element. The phase factor is exp[i ⃗Q⋅( ⃗rₖ - R ⃗rₗ )] = exp[i R ⃗q ⋅ ( ⃗rₗ - R ⃗rₖ)] = exp[i ⃗q ⋅ (R⁻¹ ⃗rₗ - ⃗rₖ)] where l is the equivalent atom which R transforms k to l = F₀(k,R)</p>
+<p>brille uses only the point group operations to find equivalent qᵢᵣ to q = Q - τ A pointgroup never contains more than 48 elements, and for each the permutation and vector are unique. This class is designed to hold the Nₚ × Nₐ values of F₀(k,R) and (R⁻¹ ⃗rₖ - ⃗rₗ) where there are Nₚ pointgroup operations and Nₐ atoms in the <a class="reference internal" href="classbrille_1_1Basis.html#classbrille_1_1Basis"><span class="std std-ref">Basis</span></a>.</p>
+<p>Rather than storing a 2D array of F₀(k,R) and a 2D array of (R⁻¹ ⃗rₖ - ⃗rₗ), let the standard template library do the heavy lifting. If k ∈ {0, Nₐ-1} and r ∈ {0, Nₚ-1} index a std::map with keys that are the pairs (k,r); and use the values to store (N₀(k,Rᵣ), v) where v is an index into a <a class="reference internal" href="classbrille_1_1LDVec.html#classbrille_1_1LDVec"><span class="std std-ref">LDVec</span></a> of the (R⁻¹ ⃗rₗ - ⃗rₖ).</p>
+<p>The <a class="reference internal" href="classbrille_1_1LDVec.html#classbrille_1_1LDVec"><span class="std std-ref">LDVec</span></a> <em>could</em> contain only unique (R⁻¹ ⃗rₗ - ⃗rₖ) values, but this is left for a future exercise if it becomes necessary. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="cpp type">
+<dt id="_CPPv4N6brille10GammaTable5ind_tE">
+<span id="_CPPv3N6brille10GammaTable5ind_tE"></span><span id="_CPPv2N6brille10GammaTable5ind_tE"></span><span class="target" id="classbrille_1_1GammaTable_1a0e3a73237047a3c8b0f752823ad23c92"></span><em class="property">using </em><code class="sig-name descname">ind_t</code> = unsigned<a class="headerlink" href="#_CPPv4N6brille10GammaTable5ind_tE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10GammaTable10GammaTableEv">
+<span id="_CPPv3N6brille10GammaTable10GammaTableEv"></span><span id="_CPPv2N6brille10GammaTable10GammaTableEv"></span><span id="brille::GammaTable::GammaTable"></span><span class="target" id="classbrille_1_1GammaTable_1a780c78f27e3e1b0221f6a1c19413cbdd"></span><code class="sig-name descname">GammaTable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10GammaTable10GammaTableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10GammaTable10GammaTableERK6DirectKi">
+<span id="_CPPv3N6brille10GammaTable10GammaTableERK6DirectKi"></span><span id="_CPPv2N6brille10GammaTable10GammaTableERK6DirectKi"></span><span id="brille::GammaTable::GammaTable__DirectCR.iC"></span><span class="target" id="classbrille_1_1GammaTable_1a114796c37226c5f1f598daccfc5758e7"></span><code class="sig-name descname">GammaTable</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> &amp;<em>dlat</em>, <em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10GammaTable10GammaTableERK6DirectKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4N6brille10GammaTable9constructERK6DirectKi">
+<span id="_CPPv3N6brille10GammaTable9constructERK6DirectKi"></span><span id="_CPPv2N6brille10GammaTable9constructERK6DirectKi"></span><span id="brille::GammaTable::construct__DirectCR.iC"></span><span class="target" id="classbrille_1_1GammaTable_1a1fc186eea6e7b4729609cfe49077e111"></span>bool <code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> &amp;<em>dlat</em>, <em class="property">const</em> int <em>time_reversal</em> = 0<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6brille10GammaTable9constructERK6DirectKi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille10GammaTable2F0E5ind_t2Ik2Ir">
+<span id="_CPPv3I00ENK6brille10GammaTable2F0E2Ik2Ir"></span><span id="_CPPv2I00ENK6brille10GammaTable2F0E2Ik2Ir"></span>template&lt;class <code class="sig-name descname">Ik</code>, class <code class="sig-name descname">Ir</code>&gt;<br /><span class="target" id="classbrille_1_1GammaTable_1a82bfa1251d0afc8f2c293d988ced85c2"></span><a class="reference internal" href="#_CPPv4N6brille10GammaTable5ind_tE" title="brille::GammaTable::ind_t">ind_t</a> <code class="sig-name descname">F0</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable2F0E5ind_t2Ik2Ir" title="brille::GammaTable::F0::Ik">Ik</a> <em>k</em>, <a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable2F0E5ind_t2Ik2Ir" title="brille::GammaTable::F0::Ir">Ir</a> <em>r</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille10GammaTable2F0E5ind_t2Ik2Ir" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10GammaTable7vectorsEv">
+<span id="_CPPv3NK6brille10GammaTable7vectorsEv"></span><span id="_CPPv2NK6brille10GammaTable7vectorsEv"></span><span id="brille::GammaTable::vectorsC"></span><span class="target" id="classbrille_1_1GammaTable_1a3b6c6c49fd29fb97523633aa582dde7c"></span><em class="property">const</em> <a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; &amp;<code class="sig-name descname">vectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10GammaTable7vectorsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille10GammaTable12vector_indexE5ind_t2Ik2Ir">
+<span id="_CPPv3I00ENK6brille10GammaTable12vector_indexE2Ik2Ir"></span><span id="_CPPv2I00ENK6brille10GammaTable12vector_indexE2Ik2Ir"></span>template&lt;class <code class="sig-name descname">Ik</code>, class <code class="sig-name descname">Ir</code>&gt;<br /><span class="target" id="classbrille_1_1GammaTable_1ac19731782cdb93cfd460968f4f13bb0b"></span><a class="reference internal" href="#_CPPv4N6brille10GammaTable5ind_tE" title="brille::GammaTable::ind_t">ind_t</a> <code class="sig-name descname">vector_index</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable12vector_indexE5ind_t2Ik2Ir" title="brille::GammaTable::vector_index::Ik">Ik</a> <em>k</em>, <a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable12vector_indexE5ind_t2Ik2Ir" title="brille::GammaTable::vector_index::Ir">Ir</a> <em>r</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille10GammaTable12vector_indexE5ind_t2Ik2Ir" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille10GammaTable6vectorE6bArrayIdE2Ik2Ir">
+<span id="_CPPv3I00ENK6brille10GammaTable6vectorE2Ik2Ir"></span><span id="_CPPv2I00ENK6brille10GammaTable6vectorE2Ik2Ir"></span>template&lt;class <code class="sig-name descname">Ik</code>, class <code class="sig-name descname">Ir</code>&gt;<br /><span class="target" id="classbrille_1_1GammaTable_1ab464e20d3be30545542e7983dc6ad2f3"></span><a class="reference internal" href="typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361.html#_CPPv4I0E6bArray" title="bArray">bArray</a>&lt;double&gt; <code class="sig-name descname">vector</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable6vectorE6bArrayIdE2Ik2Ir" title="brille::GammaTable::vector::Ik">Ik</a> <em>k</em>, <a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable6vectorE6bArrayIdE2Ik2Ir" title="brille::GammaTable::vector::Ir">Ir</a> <em>r</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille10GammaTable6vectorE6bArrayIdE2Ik2Ir" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4I00ENK6brille10GammaTable8ldvectorE5LDVecIdE2Ik2Ir">
+<span id="_CPPv3I00ENK6brille10GammaTable8ldvectorE2Ik2Ir"></span><span id="_CPPv2I00ENK6brille10GammaTable8ldvectorE2Ik2Ir"></span>template&lt;class <code class="sig-name descname">Ik</code>, class <code class="sig-name descname">Ir</code>&gt;<br /><span class="target" id="classbrille_1_1GammaTable_1a37dc08b89fe97dae52c8053f66bec7c8"></span><a class="reference internal" href="classbrille_1_1LDVec.html#_CPPv4I0EN6brille5LDVecE" title="brille::LDVec">LDVec</a>&lt;double&gt; <code class="sig-name descname">ldvector</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable8ldvectorE5LDVecIdE2Ik2Ir" title="brille::GammaTable::ldvector::Ik">Ik</a> <em>k</em>, <a class="reference internal" href="#_CPPv4I00ENK6brille10GammaTable8ldvectorE5LDVecIdE2Ik2Ir" title="brille::GammaTable::ldvector::Ir">Ir</a> <em>r</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I00ENK6brille10GammaTable8ldvectorE5LDVecIdE2Ik2Ir" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK6brille10GammaTable7latticeEv">
+<span id="_CPPv3NK6brille10GammaTable7latticeEv"></span><span id="_CPPv2NK6brille10GammaTable7latticeEv"></span><span id="brille::GammaTable::latticeC"></span><span class="target" id="classbrille_1_1GammaTable_1aa91c13ba3c2967bcc82439a4fee508ac"></span><em class="property">const</em> <a class="reference internal" href="classbrille_1_1Direct.html#_CPPv4N6brille6DirectE" title="brille::Direct">Direct</a> &amp;<code class="sig-name descname">lattice</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK6brille10GammaTable7latticeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classbrille_1_1HallSymbol.html" class="btn btn-neutral float-right" title="Class HallSymbol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="classbrille_1_1DualInterpolator.html" class="btn btn-neutral float-left" title="Template Class DualInterpolator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gregory Tucker
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

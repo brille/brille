@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a4a0bf2aa7002e1c41e0db97cd531f324:
+
+Template Function brille::is_not_dangling
+=========================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::is_not_dangling(const std::vector<size_t>&, const std::vector<T>&)

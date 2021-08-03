@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a44c13bbf9610ded37e0b513bf7ce7955:
+
+Template Function brille::bare_winding_angles
+=============================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::bare_winding_angles(const bArray<T>&, const size_t, const bArray<T>&)

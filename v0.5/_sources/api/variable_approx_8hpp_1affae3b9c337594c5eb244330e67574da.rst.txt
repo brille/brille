@@ -1,0 +1,13 @@
+.. _exhale_variable_approx_8hpp_1affae3b9c337594c5eb244330e67574da:
+
+Variable brille::approx::TOL_MULT
+=================================
+
+- Defined in :ref:`file_src_approx.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: brille::approx::TOL_MULT

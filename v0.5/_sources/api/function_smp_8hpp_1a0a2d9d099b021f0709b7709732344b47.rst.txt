@@ -1,0 +1,13 @@
+.. _exhale_function_smp_8hpp_1a0a2d9d099b021f0709b7709732344b47:
+
+Template Function brille::assignment::smp_pvec
+==============================================
+
+- Defined in :ref:`file_src_smp.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::assignment::smp_pvec(const T, const P *restrict)

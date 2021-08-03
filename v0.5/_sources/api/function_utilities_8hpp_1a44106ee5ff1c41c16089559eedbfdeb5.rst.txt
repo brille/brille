@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a44106ee5ff1c41c16089559eedbfdeb5:
+
+Template Function brille::utils::squared_distance(const std::complex<T>&, const std::complex<T>&)
+=================================================================================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::squared_distance(const std::complex<T>&, const std::complex<T>&)

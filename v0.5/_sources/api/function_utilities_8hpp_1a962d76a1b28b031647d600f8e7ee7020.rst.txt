@@ -1,0 +1,13 @@
+.. _exhale_function_utilities_8hpp_1a962d76a1b28b031647d600f8e7ee7020:
+
+Template Function brille::utils::matrix_metric
+==============================================
+
+- Defined in :ref:`file_src_utilities.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::utils::matrix_metric(R *, const R *)

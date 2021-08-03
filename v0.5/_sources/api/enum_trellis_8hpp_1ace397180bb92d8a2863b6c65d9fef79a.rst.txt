@@ -1,0 +1,13 @@
+.. _exhale_enum_trellis_8hpp_1ace397180bb92d8a2863b6c65d9fef79a:
+
+Enum NodeType
+=============
+
+- Defined in :ref:`file_src_trellis.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: brille::NodeType

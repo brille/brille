@@ -1,0 +1,13 @@
+.. _exhale_function_bz__wedge_8cpp_1a25a8bec4db2651d27dc05208bb7ba2b5:
+
+Function keep_if
+================
+
+- Defined in :ref:`file_src_bz_wedge.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: keep_if(const LQVec<double>&, const LQVec<double>&)

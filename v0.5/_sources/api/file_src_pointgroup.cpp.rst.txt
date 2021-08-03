@@ -1,0 +1,117 @@
+
+.. _file_src_pointgroup.cpp:
+
+File pointgroup.cpp
+===================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/pointgroup.cpp``)
+-----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_pointgroup.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``pointgroup.hpp`` (:ref:`file_src_pointgroup.hpp`)
+
+- ``pointsymmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+- ``spg_database.hpp`` (:ref:`file_src_spg_database.hpp`)
+
+- ``stdio.h``
+
+- ``stdlib.h``
+
+- ``string.h``
+
+- ``symmetry.hpp`` (:ref:`file_src_pointsymmetry.hpp`)
+
+- ``utilities.hpp`` (:ref:`file_src_utilities.hpp`)
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structPointgroupType`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_pointgroup_8cpp_1adead6d23616744cf978d06d3a6438f6d`
+
+- :ref:`exhale_function_pointgroup_8cpp_1ae2daa86c31cef3276236932f5b0ee4ae`
+
+- :ref:`exhale_function_pointgroup_8cpp_1afb98d0d04f7c6d094291826f4e55042e`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a87c33eda207c05ede423c5a15f0d6856`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a20629ee7a060d8188bc8bb50d45bcb35`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a3e2feb5bef72434f5f9698b960a4b3a2`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a87d769efbc4d11ac95675e7d6d33add1`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a21d3bdcefe1c40f935b36cbd024ae453`
+
+- :ref:`exhale_function_pointgroup_8cpp_1ac0f4b1eeee35c6bfec921c25b4bdbe10`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a9efb4e6014d8d854ad3288b9009a2753`
+
+- :ref:`exhale_function_pointgroup_8cpp_1ac266489cc0bcb36b85a351cb4bfacb8f`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a042b6c25619bb7922f12c008074b80e1`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a86512b762120a94e87c3756d71a59b75`
+
+- :ref:`exhale_function_pointgroup_8cpp_1a38ba5e08de24b8f9bca73510bba46d4b`
+
+- :ref:`exhale_function_pointgroup_8cpp_1aead292fc0291f0342a018c9d196660aa`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_pointgroup_8cpp_1a66faf05e0e2fbaebecc2f0e696fba7b1`
+
+- :ref:`exhale_define_pointgroup_8cpp_1aa40c7f9169efb27ddcdb07c7f3f9aa3f`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_pointgroup_8cpp_1a154d93beaeea0529c6014df3c8dc1a0a`
+
+- :ref:`exhale_variable_pointgroup_8cpp_1a8e05c5c58b7447fc592389d86b14d037`
+
+- :ref:`exhale_variable_pointgroup_8cpp_1a240e8e2764b7ef8073bb71c0c3a8e28d`
+
+- :ref:`exhale_variable_pointgroup_8cpp_1acc89e2b03f55ac3cfc5c6eaca4d83e03`
+

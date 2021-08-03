@@ -1,0 +1,13 @@
+.. _exhale_function_comparisons_8hpp_1ae524a675a7210c6d835b66e6457e5ad1:
+
+Function brille::to_string< cmp >
+=================================
+
+.. did not find file this was defined in
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::to_string< cmp >(const cmp&)

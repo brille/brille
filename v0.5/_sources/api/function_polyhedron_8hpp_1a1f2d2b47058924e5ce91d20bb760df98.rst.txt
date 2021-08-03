@@ -1,0 +1,13 @@
+.. _exhale_function_polyhedron_8hpp_1a1f2d2b47058924e5ce91d20bb760df98:
+
+Template Function brille::reverse_each
+======================================
+
+- Defined in :ref:`file_src_polyhedron.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::reverse_each(const std::vector<std::vector<T>>&)

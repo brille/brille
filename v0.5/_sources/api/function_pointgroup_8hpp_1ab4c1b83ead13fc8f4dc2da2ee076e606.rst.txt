@@ -1,0 +1,13 @@
+.. _exhale_function_pointgroup_8hpp_1ab4c1b83ead13fc8f4dc2da2ee076e606:
+
+Function brille::my_to_string(const Holohedry&)
+===============================================
+
+- Defined in :ref:`file_src_pointgroup.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: brille::my_to_string(const Holohedry&)

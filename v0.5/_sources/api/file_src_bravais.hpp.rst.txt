@@ -1,0 +1,76 @@
+
+.. _file_src_bravais.hpp:
+
+File bravais.hpp
+================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/bravais.hpp``)
+--------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_bravais.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_spg_database.hpp`
+
+- :ref:`file_src_symmetry.hpp`
+
+- :ref:`file_src_bravais.cpp`
+
+- :ref:`file_src_hall_symbol.hpp`
+
+- :ref:`file_src_hall_symbol.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_bravais_8hpp_1a2a73f72d08d23690e35f8bc2996e7af3`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_bravais_8hpp_1a89574e39177521ef59910a4b4f141f88`
+
+- :ref:`exhale_function_bravais_8hpp_1ae8945e040d69a1a6ed2da0883538f150`
+
+- :ref:`exhale_function_bravais_8hpp_1a875ea2eff59d3b5241624f049ead811d`
+

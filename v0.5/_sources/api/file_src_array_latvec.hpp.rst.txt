@@ -1,0 +1,185 @@
+
+.. _file_src_array_latvec.hpp:
+
+File array_latvec.hpp
+=====================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/array_latvec.hpp``)
+-------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_array_latvec.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``array2.hpp`` (:ref:`file_src_array2.hpp`)
+
+- ``array_latvec.tpp`` (:ref:`file_src_array_latvec.tpp`)
+
+- ``array_ldvec.tpp`` (:ref:`file_src_array_ldvec.tpp`)
+
+- ``array_lqvec.tpp`` (:ref:`file_src_array_lqvec.tpp`)
+
+- ``exception``
+
+- ``lattice.hpp`` (:ref:`file_src_lattice.hpp`)
+
+- ``typeinfo``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_balltrellis.hpp`
+
+- :ref:`file_src_neighbours.hpp`
+
+- :ref:`file_src_transform.hpp`
+
+- :ref:`file_src_polyhedron.hpp`
+
+- :ref:`file_src_phonon.hpp`
+
+- :ref:`file_src_mesh.hpp`
+
+- :ref:`file_src_interpolator2.hpp`
+
+- :ref:`file_src_permutation.hpp`
+
+- :ref:`file_src_triangulation_layers.hpp`
+
+- :ref:`file_src_nest.hpp`
+
+- :ref:`file_src_triangulation_simple.hpp`
+
+- :ref:`file_src_trellis.hpp`
+
+- :ref:`file_src_triangulation.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01bArray_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1ArrayTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LDVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatticeTraits_3_01LQVec_3_01T_01_4_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Direct_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LDVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01LQVec_3_01R_01_4_00_01S_01_4`
+
+- :ref:`exhale_struct_structbrille_1_1LatVecTraits_3_01Reciprocal_00_01S_01_4`
+
+- :ref:`exhale_class_classbrille_1_1LatVec`
+
+- :ref:`exhale_class_classbrille_1_1LDVec`
+
+- :ref:`exhale_class_classbrille_1_1LQVec`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_array__latvec_8hpp_1abd5582a8b12368f8c4104f745fecd13d`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a4d6da971a3a1b490538dca8fb7f6d8bf`
+
+- :ref:`exhale_function_array__latvec_8hpp_1abe802108112d7e575f0003971adcabe7`
+
+- :ref:`exhale_function_array__latvec_8hpp_1ab7553634cfdf60d4c8d9cfdb4b75be56`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a5662457cbcef4efc735daf0dce7cd19a`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aaaccc2dd7f7dc04e5e1345747fc2e169`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a88cdcbd06bdd8251c50f507692e6a431`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1e4ba36a72ce6edc234a945627a48551`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a1c1968bf07123fe5e05254a5c5354f0c`
+
+- :ref:`exhale_function_array__latvec_8hpp_1a86d93b0a84a0ed9201aad0ec95462d6b`
+
+- :ref:`exhale_function_array__latvec_8hpp_1aa5e4757c2dfc5c99550e8633eaaa6e60`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_array__latvec_8hpp_1a3d156af269eddd9918e6a24fe8984654`
+
+- :ref:`exhale_define_array__latvec_8hpp_1acc515bc6f938e2b4d78f75b2d6bb67cb`
+
+- :ref:`exhale_define_array__latvec_8hpp_1aaff8662a1963cd30170718dfc05d09cc`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1aba70e7f05bdc01adb84553dafc5bd361`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a53389782169d3455f06c87b66b7bd9cb`
+
+- :ref:`exhale_typedef_array__latvec_8hpp_1a236e265c8ab8e8c5b4432859fde67109`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a6ce7704572a21dd99cee52ea4e02a70e`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a674dc7fe85df9751bf92e17fafcc61d0`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a2889ff9403810d098cd255ca37f0aeff`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a51ac2156da30ae888a5af64dcfc1d8f9`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a36dafbace3b8d5c06c9dbecb67b0c668`
+
+- :ref:`exhale_variable_array__latvec_8hpp_1a5d7f1a6357f1b06f237e82d6dcc59f85`
+

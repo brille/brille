@@ -1,0 +1,85 @@
+
+.. _file_src_lapjv.hpp:
+
+File lapjv.hpp
+==============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/lapjv.hpp``)
+------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_lapjv.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``cassert``
+
+- ``cstdio``
+
+- ``limits``
+
+- ``memory``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_permutation.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+- :ref:`namespace_brille__assignment`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_lapjv_8hpp_1a503ee6dc6d18fd8d054b314b25b305c6`
+
+- :ref:`exhale_function_lapjv_8hpp_1a45014a3ac4354c6bac048140f1b65122`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_lapjv_8hpp_1ac620672df61cb1f3f6bf8901869b6be2`
+
+- :ref:`exhale_define_lapjv_8hpp_1aafe1ad2a3826cac1b7fb1f15d69424b0`
+
+- :ref:`exhale_define_lapjv_8hpp_1a080abdcb9c02438f1cd2bb707af25af8`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_lapjv_8hpp_1a4fb4d98acdbe0f543e81c61dae8c6e46`
+

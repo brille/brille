@@ -1,0 +1,102 @@
+
+.. _file_src_subscript.hpp:
+
+File subscript.hpp
+==================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/subscript.hpp``)
+----------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_subscript.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``algorithm``
+
+- ``array`` (:ref:`file_src_array.hpp`)
+
+- ``cassert``
+
+- ``iostream``
+
+- ``numeric``
+
+- ``tuple``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_array.hpp`
+
+- :ref:`file_src_array2.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_brille`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classbrille_1_1BroadcastIt`
+
+- :ref:`exhale_class_classbrille_1_1BroadcastIt2`
+
+- :ref:`exhale_class_classbrille_1_1SubIt`
+
+- :ref:`exhale_class_classbrille_1_1SubIt2`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_subscript_8hpp_1a1e0e75ea2a3447045ded6b44235930f2`
+
+- :ref:`exhale_function_subscript_8hpp_1a4286d2a237d885c58e508b24cb0220ad`
+
+- :ref:`exhale_function_subscript_8hpp_1aaffc965496cc61505812f7c0a4e3a19a`
+
+- :ref:`exhale_function_subscript_8hpp_1ab7c0bfa722edfa388e0249532cec6c62`
+
+- :ref:`exhale_function_subscript_8hpp_1acac203ff514c42b7023ed079a26f5936`
+
+- :ref:`exhale_function_subscript_8hpp_1a2323ea8362bbdb8725aa8b50cd0300f7`
+
+- :ref:`exhale_function_subscript_8hpp_1a7e7fc8d4ca14ba29421ab165005790d5`
+
+- :ref:`exhale_function_subscript_8hpp_1ac88ecd3e884f6ff94f092f09265ff23f`
+
+- :ref:`exhale_function_subscript_8hpp_1a8fb9671dc01949ba507157ed4bdb9c7c`
+
+- :ref:`exhale_function_subscript_8hpp_1ae830dd7405c1946fbd9623ace6c21e02`
+

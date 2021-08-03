@@ -1,0 +1,378 @@
+:orphan:
+
+
+Full API
+========
+
+Directories
+***********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_src.rst
+
+Files
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_approx.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array2.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array2.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_latvec.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_latvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_ldvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_array_lqvec.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_balltrellis.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_balltrellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_basis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bravais.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bravais.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_mesh.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_nest.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_trellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_bz_wedge.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_comparisons.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_comparisons.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_debug.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_debug.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_hall_symbol.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_hall_symbol.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_at.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_axial.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_cost.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_gamma.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_real.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolator2_recip.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_interpolatordual.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lapjv.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lattice.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_lattice.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_mesh.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_mesh.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_munkres.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_neighbours.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_neighbours.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_nest.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_nest.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_permutation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_permutation_table.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_phonon.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointgroup.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointgroup.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointsymmetry.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_pointsymmetry.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_polyhedron.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_primitive.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_smp.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_sorting_status.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_spg_database.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_spg_database.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_subscript.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry.cpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_symmetry_common.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_transform.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_trellis.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_trellis.tpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation_layers.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_triangulation_simple.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_types.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_utilities.hpp.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_src_utilities.tpp.rst
