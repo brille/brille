@@ -256,9 +256,9 @@ Functions
 
 - :ref:`exhale_function_trellis_8hpp_1a62a5fafea9cfe021ce53ec52ac6599cb`
 
-- :ref:`exhale_function_triangulation__layers_8hpp_1af05ea98e399f9b193912393913626f07`
-
 - :ref:`exhale_function_triangulation_8hpp_1af05ea98e399f9b193912393913626f07`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1af05ea98e399f9b193912393913626f07`
 
 - :ref:`exhale_function_pointgroup_8hpp_1a40fcf68fb0ca8b74dd3051d0b665d738`
 
@@ -274,11 +274,11 @@ Functions
 
 - :ref:`exhale_function_spg__database_8hpp_1af1b43446221a8daaf63d1455d9722f94`
 
-- :ref:`exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf`
-
 - :ref:`exhale_function_bz_8hpp_1a5069d82dece04dea6bf7e4f1934b2b05`
 
 - :ref:`exhale_function_bz_8hpp_1a1dc005c81b7abdf42b7ee19c48bf943e`
+
+- :ref:`exhale_function_bz_8hpp_1aec01f909a60038fa8b35de19294634cf`
 
 - :ref:`exhale_function_bz_8hpp_1abb24d8cc7ad34b4bb7a755472d2330d3`
 
@@ -286,9 +286,9 @@ Functions
 
 - :ref:`exhale_function_polyhedron_8hpp_1ab9abc4a9b28935e46f0dedf0e7f05ff8`
 
-- :ref:`exhale_function_subscript_8hpp_1a1e0e75ea2a3447045ded6b44235930f2`
-
 - :ref:`exhale_function_subscript_8hpp_1a4286d2a237d885c58e508b24cb0220ad`
+
+- :ref:`exhale_function_subscript_8hpp_1a1e0e75ea2a3447045ded6b44235930f2`
 
 - :ref:`exhale_function_polyhedron_8hpp_1a4a0bf2aa7002e1c41e0db97cd531f324`
 
@@ -332,6 +332,8 @@ Functions
 
 - :ref:`exhale_function_array2_8hpp_1a40fcb00eae0ffc5121b7f6aa50fa453b`
 
+- :ref:`exhale_function_debug_8hpp_1ad5ed8c6364f41ad30bb61e5702097965`
+
 - :ref:`exhale_function_pointgroup_8hpp_1ab4c1b83ead13fc8f4dc2da2ee076e606`
 
 - :ref:`exhale_function_pointgroup_8hpp_1a4b9c4dab6d6528d13cafe5fa7c7e4403`
@@ -341,8 +343,6 @@ Functions
 - :ref:`exhale_function_debug_8hpp_1a74e3b701623ad81f22ba1d2421dd31f7`
 
 - :ref:`exhale_function_debug_8hpp_1aff3672afd8668a38ba31e9fd41a4ada4`
-
-- :ref:`exhale_function_debug_8hpp_1ad5ed8c6364f41ad30bb61e5702097965`
 
 - :ref:`exhale_function_nest_8hpp_1a430ab5c8915a8abefc6bbd11c055d4cc`
 
@@ -434,9 +434,9 @@ Functions
 
 - :ref:`exhale_function_polyhedron_8hpp_1a7ab109081968e79356c5c4e4bdd83551`
 
-- :ref:`exhale_function_triangulation__layers_8hpp_1a8d67bd7a8873c95ec2a40dc4b72d14d4`
-
 - :ref:`exhale_function_triangulation_8hpp_1af8ee89917711815db0097def67ee642e`
+
+- :ref:`exhale_function_triangulation__layers_8hpp_1a8d67bd7a8873c95ec2a40dc4b72d14d4`
 
 - :ref:`exhale_function_triangulation__layers_8hpp_1a2a5532cfef58af4d7a28434ac3dea7a4`
 

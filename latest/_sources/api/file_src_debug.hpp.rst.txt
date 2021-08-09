@@ -110,13 +110,13 @@ Functions
 
 - :ref:`exhale_function_debug_8hpp_1ace7b7dfd4e353adcf92031674c8156b8`
 
+- :ref:`exhale_function_debug_8hpp_1ad5ed8c6364f41ad30bb61e5702097965`
+
 - :ref:`exhale_function_debug_8hpp_1a2998cb7009915ec8e52f81f315034b77`
 
 - :ref:`exhale_function_debug_8hpp_1a74e3b701623ad81f22ba1d2421dd31f7`
 
 - :ref:`exhale_function_debug_8hpp_1aff3672afd8668a38ba31e9fd41a4ada4`
-
-- :ref:`exhale_function_debug_8hpp_1ad5ed8c6364f41ad30bb61e5702097965`
 
 - :ref:`exhale_function_debug_8hpp_1a4d30c9181c4af07b6df68aeebfe5cd44`
 
