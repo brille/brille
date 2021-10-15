@@ -24,7 +24,7 @@ with the appropriate symmetry operations without also specifiying, e.g., the spa
   lattice = brille._brille.Direct(basis_lengths, basis_angles)
   lattice.spacegroup = brille._brille.Symmetry(xyz_string)
 
-in setting the lattice spacegroup, the :py:method:`~brille._brille.Symmetry.generate()` method is called,
+in setting the lattice spacegroup, the :py:meth:`~brille._brille.Symmetry.generate()` method is called,
 so the provided CIF xyz operators need only be the generators of the spacegroup.
 
 

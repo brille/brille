@@ -11,7 +11,7 @@ In two dimensions the parallel piped grid is a regular cartesian grid:
 
 .. tikz::
     :libs: calc
-     
+
     \begin{tikzpicture}[
     dot/.style = {radius=0.04}, dotfill/.style={color=black, fill},
     ]
@@ -38,7 +38,7 @@ while an irregular mesh of triangles is also possible:
 
 .. tikz::
     :libs: calc
-    
+
     \begin{tikzpicture}[%
     dot/.style = {radius=0.04},
     dotfill/.style={color=black, fill},
@@ -91,7 +91,7 @@ This is such a large restriction that regular grids are no longer supported in :
 
 .. tikz::
     :libs: calc
-     
+
     \begin{tikzpicture}[
     dot/.style = {radius=0.04}, dotfill/.style={color=black, fill},
     adot/.style = {color=red},
@@ -143,7 +143,7 @@ represent it exactly, though possibly with sub-optimal triangulated cells.
 
 .. tikz::
     :libs: calc
-    
+
     \begin{tikzpicture}[%
     dot/.style = {radius=0.04},
     afill/.style={color=purple!50!white},
@@ -188,7 +188,8 @@ represent it exactly, though possibly with sub-optimal triangulated cells.
     \end{tikzpicture}
 
 
-There are two exposed implementations of the triangulated grid.
+There are two exposed implementations of the triangulated grid,
+both detailed below under the headings `Simple`_ and `Hierarchy`_.
 
 Simple
 ^^^^^^
@@ -200,7 +201,7 @@ such as Brillouin zone integrations, but should probably be avoided when interpo
 is required.
 
 .. autoclass:: brille._brille.BZMeshQdd
-   
+
 .. autoclass:: brille._brille.BZMeshQcc
 
 .. autoclass:: brille._brille.BZMeshQdc
@@ -239,7 +240,7 @@ checks required to find the finest-tetrahedra containing any point is
 and the finest `layer` contains
 
 .. math::
-   N_\text{tetrahedra}^n = \prod_{i=1}^n \left<m\right>_i
+   N_\text{tetrahedra}^n = \prod_{i=1}^n \left< m \left>_i
 
 tetrahedra. As long as :math:`N_\text{checks} < N_\text{tetrahedra}^n` this location method will be more efficient.
 
@@ -314,10 +315,10 @@ is triangulated, subsequent fast location of the containing tetrahedron.
     % full cells
     \foreach \pt in {(g00), (g10), (g20), (g01), (g11)} { \draw[cell] \pt rectangle +(g11); }
     % triangulated cells
-    \draw [cell] (e1) -- (e0) -- (g31) -- (e1) -- (g21); 
+    \draw [cell] (e1) -- (e0) -- (g31) -- (e1) -- (g21);
     \draw [cell] (e1) -- (g22) -- (e2) -- cycle;
     \draw [cell] (e2) -- (g22) -- (g12) -- (e2) -- (e3) -- (g12) -- cycle;
-    \draw [cell] (g03) -- (g02) -- (e3) -- (g03) -- (e4) -- (e3); 
+    \draw [cell] (g03) -- (g02) -- (e3) -- (g03) -- (e4) -- (e3);
     \draw [cell] (e4) -- (g03) -- (e5) -- cycle;
     % mesh/grid points
     \foreach \pt in {(x1), (x2)} {\draw [fill=white] \pt circle[dot];}
@@ -325,7 +326,7 @@ is triangulated, subsequent fast location of the containing tetrahedron.
     \foreach \i in {0,...,3} {\draw[s\i] (r\i) circle[dot];}
     \foreach \pt in {(g00), (g30), (g31), (g01), (g02), (g22), (g03), (e0), (e1), (e4), (e5)} {\draw[fill=lightgray] \pt circle[dot];}
     \end{tikzpicture}
-     
+
 
 The three exposed hybrid grid implementations have the same set of methods and are:
 
@@ -335,4 +336,3 @@ The three exposed hybrid grid implementations have the same set of methods and a
 
 .. autoclass:: brille._brille.BZTrellisQdc
   :members:
-

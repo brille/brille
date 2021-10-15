@@ -9,3 +9,4 @@ User Guide
   :caption: Examples
 
   tutorials/tutorial_00
+  tutorials/tutorial_01

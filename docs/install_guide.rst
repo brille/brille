@@ -37,8 +37,8 @@ Note:
 
 source
 ======
-If your development environment has `git <https://git-scm.com/>`_, Python ≥ 3.4,
-a C++14 compliant compiler, and `CMake <https://cmake.org/>`_ ≥ 3.13,
+If your development environment has `git <https://git-scm.com/>`_, Python ≥ 3.6,
+a C++17 compliant compiler, and `CMake <https://cmake.org/>`_ ≥ 3.13,
 then you can build the latest version of brille from source via
 
 .. code-block:: bash
@@ -96,7 +96,7 @@ or
 legacy linux systems
 ====================
 If the available compiler and ``pip`` versions are too old and can not be upgraded
-you may find that ``pip`` reports that the available manylinux2010 versions available
+you may find that ``pip`` reports that the manylinux2010 versions available
 on PyPI are incompatible with your system and building from source may also fail.
 This is known to apply to RHEL7 based systems but may affect others as well.
 
