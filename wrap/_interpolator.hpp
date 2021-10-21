@@ -31,6 +31,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   // convert the input integer to a RotatesLike
   RotatesLike rl{RotatesLike::Real};
   if (bi.shape[0] > 3) switch(intel[3]){
+    case 4: rl = RotatesLike::Copla; break;
     case 3: rl = RotatesLike::Gamma; break;
     case 2: rl = RotatesLike::Axial; break;
     case 1: rl = RotatesLike::Reciprocal; break;
@@ -70,6 +71,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   // convert the input integer to a RotatesLike
   RotatesLike rl{RotatesLike::Real};
   if (bi.shape[0] > 3) switch(intel[3]){
+    case 4: rl = RotatesLike::Copla; break;
     case 3: rl = RotatesLike::Gamma; break;
     case 2: rl = RotatesLike::Axial; break;
     case 1: rl = RotatesLike::Reciprocal; break;

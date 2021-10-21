@@ -43,12 +43,15 @@ void wrap_interpolator(py::module &m){
       transform like an real space axial vector
     RotatesLike::Gamma
       transform like a (real space) phonon eigenvector
+    RotatesLike::Copla
+      transform like a quadratic boson eigenvector
   )pbdoc"
 );
   enm.value("Real", RotatesLike::Real);
   enm.value("Reciprocal", RotatesLike::Reciprocal);
   enm.value("Axial", RotatesLike::Axial);
   enm.value("Gamma", RotatesLike::Gamma);
+  enm.value("Copla", RotatesLike::Copla);
 }
 
 std::tuple<br::RotatesLike, int, int, std::array<double,3>>
@@ -63,6 +66,7 @@ set_check(
   // convert the input integer to a RotatesLike
   RotatesLike rl{RotatesLike::Real};
   if (bi.shape[0] > 0) switch(intel[0]){
+    case 4: rl = RotatesLike::Copla; break;
     case 3: rl = RotatesLike::Gamma; break;
     case 2: rl = RotatesLike::Axial; break;
     case 1: rl = RotatesLike::Reciprocal; break;

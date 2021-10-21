@@ -75,9 +75,13 @@ An extra enumerated value, `Gamma`, is used to indicate that a quantity
 represents an eigenvector of the grand dynamical matrix, which undergoes a
 permutation and has an additional complex phase applied when transformed by a
 spacegroup symmetry operation.
+
+The enumerated value `Copla` should be used to indicate that a quanity
+represents and eigenvector of a quadratic boson Hamiltonian as in Copla's
+method used in spinW.
 */
 enum class RotatesLike {
-  Real, Reciprocal, Axial, Gamma
+  Real, Reciprocal, Axial, Gamma, Copla
 };
 
 /*! \brief A class to hold and linearly interpolate arbitrary data
@@ -395,6 +399,7 @@ public:
       case RotatesLike::Axial:      return this->rip_axial(x,ps,r,invr,nth);
       case RotatesLike::Reciprocal: return this->rip_recip(x,ps,r,invr,nth);
       case RotatesLike::Gamma:      return this->rip_gamma(x,q,rt,ps,r,invr,nth);
+      case RotatesLike::Copla:      return this->rip_copla(x,q,rt,ps,r,invr,nth);
       default: throw std::runtime_error("Impossible RotatesLike value!");
     }
   }
@@ -584,6 +589,19 @@ private:
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 
+  template<class R>
+  bool rip_copla_complex(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class S=T>
+  enable_if_t<is_complex<S>::value, bool>
+  rip_copla(bArray<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+    return rip_copla_complex(x, q, gt, ps, r, ir, nth);
+  }
+  template<class R, class S=T>
+  enable_if_t<!is_complex<S>::value, bool>
+  rip_copla(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+    throw std::runtime_error("RotatesLike == Copla requires complex valued data!");
+  }
+
   // interpolate_at_*
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, bArray<T>&, const ind_t, const bool) const;
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, bArray<T>&, const ind_t, const bool) const;
@@ -591,6 +609,7 @@ private:
 
 #include "interpolator_at.tpp"
 #include "interpolator_axial.tpp"
+#include "interpolator_copla.tpp"
 #include "interpolator_cost.tpp"
 #include "interpolator_gamma.tpp"
 #include "interpolator_real.tpp"

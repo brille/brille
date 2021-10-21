@@ -153,7 +153,8 @@ public:
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
     GammaTable pgt{GammaTable()};
-    if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
+    auto vrl = this->data().vectors().rotateslike();
+    if (RotatesLike::Gamma == vrl || RotatesLike::Copla == vrl){
       pgt.construct(brillouinzone.get_lattice().star(), brillouinzone.add_time_reversal());
     }
     // make data-sharing Array2 objects for the rotation functions

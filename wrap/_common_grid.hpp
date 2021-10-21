@@ -75,7 +75,7 @@ R"pbdoc(
     and
     *how* the vector-like and matrix-like parts transform under application
     of a symmetry operation,
-    See the note below fore the meaning of the last three value.
+    See the note below for the meaning of the last value.
     Any extra entries are ignored.
   vectors_data : :py:class:`numpy.ndarray`
     The eigenvector data to be stored in the grid. Same shape restrictions as
@@ -101,6 +101,8 @@ R"pbdoc(
     |   2   |               `Axial`                 |
     +-------+---------------------------------------+
     |   3   |               `Gamma`                 |
+    +-------+---------------------------------------+
+    |   4   |               `Copla`                 |
     +-------+---------------------------------------+
 
     Integer values outside of the mapped range (or missing) are replaced by 0.
@@ -153,7 +155,7 @@ R"pbdoc(
     of a symmetry operation,
     which scalar cost function should be used,
     and which vector cost function should be used.
-    See the note below fore the meaning of the last three values.
+    See the note below for the meaning of the last three values.
   values_weights : float, vector-like
     The relative cost weights between scalar-, vector-, and matrix- like
     eigenvalue elements stored in the grid
@@ -184,6 +186,8 @@ R"pbdoc(
     |   2   |               `Axial`                 |
     +-------+---------------------------------------+
     |   3   |               `Gamma`                 |
+    +-------+---------------------------------------+
+    |   4   |               `Copla`                 |
     +-------+---------------------------------------+
 
     Mapping of integers to scalar cost function:

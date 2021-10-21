@@ -106,6 +106,7 @@ public:
   GammaTable(const Direct& dlat, const int time_reversal=0){
     this->construct(dlat, time_reversal);
   }
+  ind_t atom_count() const {return n_atoms;}
   bool construct(const Direct& dlat, const int time_reversal=0){
     lattice_ = dlat;
     PointSymmetry ps = dlat.get_pointgroup_symmetry(time_reversal);
