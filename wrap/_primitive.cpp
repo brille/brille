@@ -19,6 +19,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "primitive.hpp"
 
 void wrap_primitivetransform(pybind11::module & m){
+  using pybind11::ssize_t;
   using namespace pybind11::literals;
   using namespace brille;
   pybind11::class_<PrimitiveTransform> cls(m,"PrimitiveTransform");

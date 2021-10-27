@@ -399,15 +399,15 @@ void wrap_brillouinzone(py::module & m){
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    std::vector<ssize_t> sh;
-    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
+    std::vector<pybind11::ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<pybind11::ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     auto invrout = py::array_t<int, py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
     int *rptr = (int *) rout.request().ptr;
     int *iptr = (int *) invrout.request().ptr;
-    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t i=0; i<Qv.numel()/3; ++i)
     for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k) {
       rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
       iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
@@ -456,13 +456,13 @@ void wrap_brillouinzone(py::module & m){
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    std::vector<ssize_t> sh;
-    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
+    std::vector<pybind11::ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<pybind11::ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
     int *rptr = (int *) rout.request().ptr;
-    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t i=0; i<Qv.numel()/3; ++i)
     for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k)
       rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
     return py::make_tuple(brille::a2py(qv), rout);

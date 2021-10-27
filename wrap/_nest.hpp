@@ -25,8 +25,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #define WRAP_BRILLE_NEST_HPP_
 
 namespace py = pybind11;
-// typedef long slong; // ssize_t is only defined for gcc?
-// typedef unsigned long element_t;
 
 template<class T, class R>
 void declare_bznestq(py::module &m, const std::string &typestr){

@@ -25,6 +25,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 The symmetry operations of a spacegroup
 */
 void wrap_symmetry(pybind11::module & m){
+  using pybind11::ssize_t;
   using namespace pybind11::literals;
   using namespace brille;
   pybind11::class_<Symmetry> cls(m, "Symmetry", R"pbdoc(
@@ -38,16 +39,16 @@ void wrap_symmetry(pybind11::module & m){
     \mathbf{x}' = W \mathbf{x} + \mathbf{w}
 
   and can equivalently be expressed as :math:`\mathbf{x}' = \mathscr{M}\mathbf{x}`.
-  
-  Crystallographic symmetry operations have an order, :math:`o`, 
+
+  Crystallographic symmetry operations have an order, :math:`o`,
   for which :math:`\mathscr{M}^o = \mathscr{E}` repeated applications of the operation
   is equivalent to the identity operator.
 
   A set of symmetry operations can form a group, :math:`\mathbb{G}`, with the property that
   :math:`\mathscr{M}_k = \mathscr{M}_i \mathscr{M}_j` with :math:`\mathscr{M}_i,\mathscr{M}_j,\mathscr{M}_k \in \mathbb{G}`.
-  
+
   This class can be used to hold any number of related symmetry operators, and to generate all spacegroup operators from those stored.
-  
+
   Parameters
   ----------
   hall : int
@@ -63,7 +64,7 @@ void wrap_symmetry(pybind11::module & m){
   ----
   The overloaded forms of `__init__` take one of `hall`, `(W, w)`, **or** `cifxyz`.
   )pbdoc");
-  
+
 
   cls.def(pybind11::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),"Hall number"_a);
 
