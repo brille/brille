@@ -20,6 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "spg_database.hpp"
 
 void wrap_pointsymmetry(pybind11::module & m){
+  using pybind11::ssize_t;
   using namespace pybind11::literals;
   using namespace brille;
   pybind11::class_<PointSymmetry> cls(m, "PointSymmetry");

@@ -26,7 +26,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   py::buffer_info bi = pyel.request();
   if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
   int *intel = (int*) bi.ptr;
-  for (ssize_t i=0; i<bi.shape[0] && i<3; ++i)
+  for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i)
     el[i] = static_cast<br::ind_t>(intel[i]);
   // convert the input integer to a RotatesLike
   RotatesLike rl{RotatesLike::Real};
@@ -65,7 +65,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   py::buffer_info bi = pyel.request();
   if (bi.ndim != 1) throw std::runtime_error("elements must be a 1-D array");
   int *intel = (int*) bi.ptr;
-  for (ssize_t i=0; i<bi.shape[0] && i<3; ++i)
+  for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i)
     el[i] = static_cast<br::ind_t>(intel[i]);
   // convert the input integer to a RotatesLike
   RotatesLike rl{RotatesLike::Real};
@@ -85,7 +85,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   bi = pywght.request();
   if (bi.ndim != 1) throw std::runtime_error("weights must be a 1-D array");
   double *dblwght = (double*) bi.ptr;
-  for (ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
+  for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
   // tie everything up
   // return std::make_tuple(data, el, rl, csf, cvf, wght);
   return Interpolator(data, el, rl, csf, cvf, wght);

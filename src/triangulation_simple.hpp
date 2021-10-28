@@ -52,7 +52,7 @@ public:
   \param poly       the Polyhedron to triangulate
   \param max_volume The maximum tetrahedron volume allowed within the
                     triangulation, in the same units as the polyhedron volume
-  \param addGamm    If true the point (0,0,0) will be ensured to exist in the
+  \param addGamma   If true the point (0,0,0) will be ensured to exist in the
                     triangulated vertrices
   */
   SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)

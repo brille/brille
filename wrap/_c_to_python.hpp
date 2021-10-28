@@ -35,13 +35,11 @@ static size_t determine_numel(const std::vector<T>& sz){
 }
 
 namespace py = pybind11;
-template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& sz, const std::array<T,N>& sv){
-  // size_t numel = 1;
-  // for (ssize_t i: sz) numel *= i;
+template<typename I, typename T, size_t N> py::array_t<T> sa2np(const std::vector<I>& sz, const std::array<T,N>& sv){
   size_t numel =determine_numel(sz);
   if (N != numel){
     std::string msg = "Inconsistent required shape ( ";
-    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    for (I i: sz) msg += std::to_string(i) + " ";
     msg += ") and array size " + std::to_string(N);
     throw std::runtime_error(msg);
   }
@@ -50,13 +48,11 @@ template<typename T, size_t N> py::array_t<T> sa2np(const std::vector<ssize_t>& 
   for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
   return np;
 }
-template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const std::vector<T>& sv){
-  // size_t numel = 1;
-  // for (ssize_t i: sz) numel *= i;
+template<typename I, typename T> py::array_t<T> sv2np(const std::vector<I>& sz, const std::vector<T>& sv){
   size_t numel =determine_numel(sz);
   if (sv.size() != numel){
     std::string msg = "Inconsistent required shape ( ";
-    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    for (I i: sz) msg += std::to_string(i) + " ";
     msg += ") and vector size " + std::to_string(sv.size());
     throw std::runtime_error(msg);
   }
@@ -65,16 +61,14 @@ template<typename T> py::array_t<T> sv2np(const std::vector<ssize_t>& sz, const 
   for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
   return np;
 }
-template<typename T, size_t N>
-py::array_t<T> sva2np(const std::vector<ssize_t>&sz,
+template<typename I, typename T, size_t N>
+py::array_t<T> sva2np(const std::vector<I>&sz,
                       const std::vector<std::array<T,N>>& sva)
 {
-  // size_t numel = 1;
-  // for (ssize_t i: sz) numel *= i;
   size_t numel =determine_numel(sz);
   if (sva.size()*N != numel){
     std::string msg = "Inconsistent required shape ( ";
-    for (ssize_t i: sz) msg += std::to_string(i) + " ";
+    for (I i: sz) msg += std::to_string(i) + " ";
     msg += ") and vector<array<" + std::to_string(N) + "> size ";
     msg += std::to_string(sva.size()) + ".";
     throw std::runtime_error(msg);
@@ -93,7 +87,7 @@ np2sva(py::array_t<T> np){
   if (info.ndim < 2u)
     throw std::runtime_error("np2sva expects a >1-D input buffer object");
   size_t array_size{1u};
-  for (ssize_t i=1; i < info.ndim; ++i) array_size *= info.shape[i];
+  for (pybind11::ssize_t i=1; i < info.ndim; ++i) array_size *= info.shape[i];
   if (N != array_size){
     std::string msg = "wrong number of elements beyond first dimension for vector of ";
     msg += std::to_string(N) + " arrays";
@@ -106,11 +100,11 @@ np2sva(py::array_t<T> np){
 
   // find the row-ordered spans
   std::vector<size_t> spans(info.ndim, 1u);
-  for (ssize_t i=info.ndim-1u; i-->0; ) // first i in loop is ndim-2
+  for (pybind11::ssize_t i=info.ndim-1u; i-->0; ) // first i in loop is ndim-2
     spans[i] = spans[i+1]*info.shape[i+1];
   // check if input np *is* row ordered
   bool roword{true};
-  for (ssize_t i=0; i<info.ndim; ++i) roword &= info.strides[i]/sizeof(T) == spans[i];
+  for (pybind11::ssize_t i=0; i<info.ndim; ++i) roword &= info.strides[i]/sizeof(T) == spans[i];
   if (roword){
     // if it is the copying is straightforward
     for (size_t i=0; i<vlen; ++i){
@@ -128,7 +122,7 @@ np2sva(py::array_t<T> np){
         // and the linear index into ptr using the provided strides
         size_t tmp = j; // linear index jᵗʰ array entry
         size_t lin=0; // will be linear index to entry [i,j] of numpy array
-        for (ssize_t k=1; k<info.ndim; ++k){
+        for (pybind11::ssize_t k=1; k<info.ndim; ++k){
           size_t idx = tmp/spans[k]; // the subscripted index along dimension k
           tmp -= idx*spans[k]; // adjust the linear index
           lin += idx*info.strides[k]/sizeof(T);

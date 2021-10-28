@@ -209,8 +209,8 @@ Irreducible first Brillouin zone
 The first Brillouin zone may contain redundant information depending on
 the Point group symmetry of the Space group.
 If the two-dimensional hexagonal lattice above possesses a six-fold rotation
-axis perpendicular to the plane, so the information within each first Brillouin
-zone is repeated six times, so the zone can be *reduced*.
+axis perpendicular to the plane, so that the information within each first
+Brillouin zone is repeated six times, then the zone can be *reduced*.
 The definition of an irreducible zone is not unique, but one choice for
 this Reciprocal lattice is shown below
 

@@ -380,13 +380,13 @@ template<typename R, int N=3> void matrix_metric(R *M, const R *L);
 */
 template<typename R, int N=3> R vector_norm_squared(const R * v);
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename T, typename R, typename S, int N> class vector_cross_impl {
 public:
     static void vector_cross(T*, const R*, const S*) {
         throw std::runtime_error("The cross product is only defined for 3-vectors");
     }
 };
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<typename T, typename R, typename S> class vector_cross_impl<T,R,S,3>{
 public:
     static void vector_cross(T * c, const R * a, const S * b) {
@@ -396,6 +396,7 @@ public:
     }
 };
 #endif
+
 /*! \brief Take the vector cross product between two 3-vectors
 
 Perform the cross prduct betwen two vectors, \f$\vec{a} = \left(a_x, a_y, a_z\left) \f$

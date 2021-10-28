@@ -136,7 +136,34 @@ public:
     return brille::approx::vector(w.data(), i.data());
   }
   size_t from_ascii(const std::string& x, const bool cob=false);
+  std::string to_ascii() const;
 };
+
+template<class R, class T>
+std::string Motion<R,T>::to_ascii() const {
+  std::string out;
+  auto one = [](const R* e, const T v){
+    std::string lout;
+    if (v != T(0)){
+      // try finding a rational number:
+      int num{0}, den{0};
+      for (; num<256; ++num){
+        den = T(num)/v;
+        if (brille::approx::scalar(v, T(num)/T(den))) break;
+      }
+      lout += (num < 256) ? (std::to_string(num) + "/" + std::to_string(den)) : std::to_string(v);
+    }
+    std::vector<std::string> es{"x","y","z"};
+    for (int i=0; i<3; ++i) if (e[i] != 0)
+      lout += ((e[i] < 0) ? "-" + (e[i] < -1 ? std::to_string(std::abs(e[i])): "") : (lout.empty() ? "" : "+") + (e[i] > 1 ? std::to_string(e[i]) : "")) + es[i];
+    return lout;
+  }; 
+  for (int i=0; i<3; ++i){
+    out += one(W.data()+3*i, w[i]);
+    if (i < 2) out += ",";
+  }
+  return out;
+}
 
 template<class R, class T>
 size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
@@ -161,6 +188,12 @@ size_t Motion<R,T>::from_ascii(const std::string& s, const bool cob){
   while (stream.good()){
     c = char(stream.get());
     debug_update_if(special, "next character ", c);
+    if (!stream.good()){
+      // End-of-stream encountered
+      // if n==2 normal motion without a trailing ;
+      if (n==2) this->w[n] = f;
+      break;
+    }
     ++ret; // we've read another character
     switch (c){
       case ' ': // end of motion component in the special case, otherwise nothing

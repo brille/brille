@@ -26,11 +26,42 @@ void wrap_brillouinzone(py::module & m){
   using namespace brille;
   using CLS = BrillouinZone;
   py::class_<CLS> cls(m,"BrillouinZone",R"pbdoc(
-    Construct and hold a first and, optionally, irreducible Brillouin zone.
+    Construct and hold a first Brillouin zone and, optionally and by default,
+    an irreducible Brillouin zone.
 
     The region closer to a given lattice point than to any other is the
-    Wigner-Seitz cell of the lattice. The same construction is one possible
+    Wigner-Seitz cell of that lattice. The same construction is one possible
     first Brillouin zone of a reciprocal lattice and is used within `brille`.
+    For example, a two-dimensional hexagonal lattice has a first Brillouin
+    zone which is a hexagon:
+
+    .. tikz::
+        :libs: calc
+
+        \begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+        latpt/.style = {color=gray!50!white, fill},]
+        \coordinate (astar) at (1,0);
+        \coordinate (bstar) at (0.5,0.8660254037844386);
+        \clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+        %
+        \coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+        \coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+        \coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+        \coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+        \coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+        \coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+        %
+        \foreach \h in {-1,...,6}{
+        \foreach \k in {-1,...,3}{
+          \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+          \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+            -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+        }}
+        %
+        \coordinate (G) at ($(astar)+(bstar)$);
+        \draw[color=yellow!75!black, line width=1mm] (G) +(C1) -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+        \end{tikzpicture}
+
 
     Since all physical properties of a crystal must have the same periodicity
     as its lattice, the powerful feature of the first Brillouin zone is that it
@@ -39,59 +70,261 @@ void wrap_brillouinzone(py::module & m){
 
     Most crystals contain rotational or rotoinversion symmetries in addition to
     the translational ones which give rise to the first Brillouin zone. These
-    symmetries are the pointgroup of the lattice enforce that the properties of
-    the crystal also have the same symmetry. The the first Brillouin zone,
+    symmetries are the pointgroup of the lattice and enforce that the properties
+    of the crystal also have the same symmetry. The the first Brillouin zone,
     therefore, typically contains redundant information.
 
     An irreducible Brillouin zone is a subsection of the first Brillouin zone
     which contains the minimal part required to have only unique crystal
     properties. This class can find an irreducible Brillouin zone for any
-    crystal lattice.
+    crystal lattice. In the example of the hexagonal lattice there are six
+    equivalent irreducible Brillouin zones one of which is:
+
+    .. tikz::
+        :libs: calc
+
+        \begin{tikzpicture}[scale=5,dot/.style = {fill,radius=0.02},
+        latpt/.style = {color=gray!50!white, fill},]
+        \coordinate (astar) at (1,0);
+        \coordinate (bstar) at (0.5,0.8660254037844386);
+        \clip ($-0.1*(bstar)$) rectangle ($3*(astar)+2.1*(bstar)$);
+        %
+        \coordinate (C1) at ($0.3333*(astar)+0.3333*(bstar)$);
+        \coordinate (C2) at ($-0.3333*(astar)+0.6667*(bstar)$);
+        \coordinate (C3) at ($-0.6667*(astar)+0.3333*(bstar)$);
+        \coordinate (C4) at ($-0.3333*(astar)-0.3333*(bstar)$);
+        \coordinate (C5) at ($0.3333*(astar)-0.6667*(bstar)$);
+        \coordinate (C6) at ($0.6667*(astar)-0.3333*(bstar)$);
+        %
+        \foreach \h in {-1,...,6}{
+        \foreach \k in {-1,...,3}{
+          \draw[latpt] ($\h*(astar) + \k*(bstar)$) circle[dot];
+          \draw[color=yellow!75!black,dotted] ($\h*(astar)+\k*(bstar)$) +(C1)
+            -- +(C2) -- +(C3) -- +(C4) -- +(C5) -- +(C6) -- cycle;
+        }}
+        %
+        \coordinate (G) at ($(astar)+(bstar)$);
+        \draw[color=yellow!75!black,line width=1mm] (G) -- +(C4) -- +(C5) -- cycle;
+        \end{tikzpicture}
+
+    Parameters
+    ----------
+    lattice: :py:class:`brille._brille.Reciprocal`
+        The reciprocal space lattice for which a Brillouin zone will be found
+    use_primitive: bool
+        If the provided :py:class:`brille._brille.Reciprocal` lattice is a
+        conventional Bravais lattice, this parameter controls whether the
+        equivalent primitive Bravais lattice should be used to find the first
+        Brillouin zone. This is `True` by default and should only be modified
+        for testing purposes.
+    search_length: int
+        The Wigner-Seitz construction of the first Brillouin zone finds the
+        volume of space closer to a chosen reciprocal lattice point than any
+        other reciprocal lattice point. This is accomplished by successively
+        dividing the space by planes halfway between the chosen point and a
+        subset of all other planes. The subset used is controlled by
+        `search_length` and is every unique :math:`(\pm s_i\,0\,0)`,
+        :math:`(0\,\pm s_j\,0)`, :math:`(0\,0\,\pm s_k)`,
+        :math:`(\pm s_i\,\pm s_j\,0)`, :math:`(\pm s_i\,0\,\pm s_k)`,
+        :math:`(0\,\pm s_j\,\pm s_k)`, :math:`(\pm s_i\,\pm s_j\,\pm s_k)` for
+        :math:`1 \le s_\alpha \le` `search_length`.
+        If the reciprocal lattice is primitive then the default `search_length`
+        of 1 should always give the correct first Brillouin zone.
+        For extra assurance that the correct first Brillouin zone is found, the
+        proceedure is internally repeated with `search_length` incremented by
+        one and an error is raised if the two constructed polyhedra have
+        different volumes.
+    time_reversal_symmetry: bool
+        Controls whether time reversal symmetry should be added pointgroups
+        lacking space inversion. This affects the found irreducible Brillouin
+        zone for such systems. To avoid inadvertantly adding time reversal
+        symmetry when it is not appropriate, this is False by default.
+    wedge_search: bool
+        Controls whether an irreducible Brillouin zone should be found. With
+        this set to False the returned py:class:`brille._brille.BrillouinZone`
+        will only contain the first Brillouin zone. If True the pointgroup
+        symmetry operations will be used to identify *an* irreducible Brillouin
+        zone as well. If the provided lattice's parameters do not match the
+        symmetry of the pointgroup (e.g., a lattice which should be tetragonal
+        like :math:`I4/mmm` but constructed with :math:`gamma=120^\circ`) the
+        algorithm will fail to find an appropriate irreducible Brillouin zone
+        and an error will be raised.
   )pbdoc");
   cls.def(py::init<Reciprocal,bool,int,bool,bool>(),
           "lattice"_a, "use_primitive"_a=true, "search_length"_a=1,
           "time_reversal_symmetry"_a=false, "wedge_search"_a=true);
 
   // return the internal Lattice object
-  cls.def_property_readonly("lattice", [](const CLS &b){ return b.get_lattice();} );
+  cls.def_property_readonly("lattice", [](const CLS &b){ return b.get_lattice();},
+  R"pbdoc(
+  Returns the defining :py:class:`brille._brille.Reciprocal` lattice
+  )pbdoc");
 
   // access the polyhedra directly
-  cls.def_property_readonly("polyhedron",&CLS::get_polyhedron);
-  cls.def_property_readonly("ir_polyhedron",[](const CLS &b){return b.get_ir_polyhedron(true);});
-  cls.def_property_readonly("ir_polyhedron_generated",[](const CLS &b){return b.get_ir_polyhedron(false);});
+  cls.def_property_readonly("polyhedron",&CLS::get_polyhedron,
+  R"pbdoc(
+  Returns the first Brillouin zone :py:class:`brille._brille.Polyhedron`
+  )pbdoc");
+  cls.def_property_readonly("ir_polyhedron",[](const CLS &b){return b.get_ir_polyhedron(true);},
+  R"pbdoc(
+  Returns the irreducible Brillouin zone :py:class:`brille._brille.Polyhedron`
+
+  Returns
+  -------
+  :py:class:`brille._brille.Polyhedron`
+    If no irreducible Brillouin zone was requested at construction, the returned
+    polyhedron is that of the first Brillouin zone instead.
+  )pbdoc");
+  cls.def_property_readonly("ir_polyhedron_generated",[](const CLS &b){return b.get_ir_polyhedron(false);},
+  R"pbdoc(
+  Returns the found irreducible Brillouin zone :py:class:`brille._brille.Polyhedron`
+
+  If the lattice pointgroup does not contain the space inversion operator
+  the internally held 'irreducible' polyhedron is only half of the real
+  irreducible polyhedron. This method gives access to the polyhedron found by
+  the algorithm before being doubled for output.
+  )pbdoc");
 
   // first Brillouin zone polyhedron
-  cls.def_property_readonly("normals",                  [](const CLS &b){return brille::a2py(b.get_normals().get_hkl());});
-  cls.def_property_readonly("normals_invA",             [](const CLS &b){return brille::a2py(b.get_normals().get_xyz());});
-  cls.def_property_readonly("normals_primitive",        [](const CLS &b){return brille::a2py(b.get_primitive_normals().get_hkl());});
-  cls.def_property_readonly("points",                   [](const CLS &b){return brille::a2py(b.get_points().get_hkl());});
-  cls.def_property_readonly("points_invA",              [](const CLS &b){return brille::a2py(b.get_points().get_xyz());});
-  cls.def_property_readonly("points_primitive",         [](const CLS &b){return brille::a2py(b.get_primitive_points().get_hkl());});
-  cls.def_property_readonly("vertices",                 [](const CLS &b){return brille::a2py(b.get_vertices().get_hkl());});
-  cls.def_property_readonly("vertices_invA",            [](const CLS &b){return brille::a2py(b.get_vertices().get_xyz());});
-  cls.def_property_readonly("half_edge_points",         [](const CLS &b){return brille::a2py(b.get_half_edges().get_hkl());});
-  cls.def_property_readonly("half_edge_points_invA",    [](const CLS &b){return brille::a2py(b.get_half_edges().get_xyz());});
-  cls.def_property_readonly("vertices_primitive",       [](const CLS &b){return brille::a2py(b.get_primitive_vertices().get_hkl());});
-  cls.def_property_readonly("faces_per_vertex",  &CLS::get_faces_per_vertex);
-  cls.def_property_readonly("vertices_per_face", &CLS::get_vertices_per_face);
+  cls.def_property_readonly("normals",
+  [](const CLS &b){return brille::a2py(b.get_normals().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone face normals in rlu
+  )pbdoc");
+  cls.def_property_readonly("normals_invA",
+  [](const CLS &b){return brille::a2py(b.get_normals().get_xyz());},
+  R"pbdoc(
+  Return the first Brillouin zone face normals in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("normals_primitive",
+  [](const CLS &b){return brille::a2py(b.get_primitive_normals().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone face normals in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("points",
+  [](const CLS &b){return brille::a2py(b.get_points().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone face centres in rlu
+  )pbdoc");
+  cls.def_property_readonly("points_invA",
+  [](const CLS &b){return brille::a2py(b.get_points().get_xyz());},
+  R"pbdoc(
+  Return the first Brillouin zone face centres in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("points_primitive",
+  [](const CLS &b){return brille::a2py(b.get_primitive_points().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone face centres in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("vertices",
+  [](const CLS &b){return brille::a2py(b.get_vertices().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone unique face corners in rlu
+  )pbdoc");
+  cls.def_property_readonly("vertices_invA",
+  [](const CLS &b){return brille::a2py(b.get_vertices().get_xyz());},
+  R"pbdoc(
+  Return the first Brillouin zone unique face corners in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("half_edge_points",
+  [](const CLS &b){return brille::a2py(b.get_half_edges().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone face edge centres in rlu
+  )pbdoc");
+  cls.def_property_readonly("half_edge_points_invA",
+  [](const CLS &b){return brille::a2py(b.get_half_edges().get_xyz());},
+  R"pbdoc(
+  Return the first Brillouin zone face edge centres in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("vertices_primitive",
+  [](const CLS &b){return brille::a2py(b.get_primitive_vertices().get_hkl());},
+  R"pbdoc(
+  Return the first Brillouin zone unique face corners in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("faces_per_vertex",
+  &CLS::get_faces_per_vertex,
+  R"pbdoc(
+  Return the first Brillouin zone face indices for each unique face corner
+  )pbdoc");
+  cls.def_property_readonly("vertices_per_face",
+  &CLS::get_vertices_per_face,
+  R"pbdoc(
+  Return the first Brillouin zone face corner indices for each face
+  )pbdoc");
 
   // irreducible first Brillouin zone polyhedron
-  cls.def_property_readonly("ir_normals",                  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_hkl());});
-  cls.def_property_readonly("ir_normals_invA",             [](const CLS &b){return brille::a2py(b.get_ir_normals().get_xyz());});
-  cls.def_property_readonly("ir_normals_primitive",        [](const CLS &b){return brille::a2py(b.get_ir_primitive_normals().get_hkl());});
-  cls.def_property_readonly("ir_points",                   [](const CLS &b){return brille::a2py(b.get_ir_points().get_hkl());});
-  cls.def_property_readonly("ir_points_invA",              [](const CLS &b){return brille::a2py(b.get_ir_points().get_xyz());});
-  cls.def_property_readonly("ir_points_primitive",         [](const CLS &b){return brille::a2py(b.get_ir_primitive_points().get_hkl());});
-  cls.def_property_readonly("ir_vertices",                 [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_hkl());});
-  cls.def_property_readonly("ir_vertices_invA",            [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_xyz());});
-  cls.def_property_readonly("ir_vertices_primitive",       [](const CLS &b){return brille::a2py(b.get_ir_primitive_vertices().get_hkl());});
-  cls.def_property_readonly("ir_faces_per_vertex",  &CLS::get_ir_faces_per_vertex);
-  cls.def_property_readonly("ir_vertices_per_face", &CLS::get_ir_vertices_per_face);
+  cls.def_property_readonly("ir_normals",
+  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face normals in rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_normals_invA",
+  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_xyz());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face normals in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("ir_normals_primitive",
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_normals().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face normals in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_points",
+  [](const CLS &b){return brille::a2py(b.get_ir_points().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face centres in rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_points_invA",
+  [](const CLS &b){return brille::a2py(b.get_ir_points().get_xyz());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face centres in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("ir_points_primitive",
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_points().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone face centres in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_vertices",
+  [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone unique face corners in rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_vertices_invA",
+  [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_xyz());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone unique face corners in inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("ir_vertices_primitive",
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_vertices().get_hkl());},
+  R"pbdoc(
+  Return the irreducible Brillouin zone unique face corners in primitive-lattice rlu
+  )pbdoc");
+  cls.def_property_readonly("ir_faces_per_vertex",
+  &CLS::get_ir_faces_per_vertex,
+  R"pbdoc(
+  Return the irreducible Brillouin zone face index per unique face corner
+  )pbdoc");
+  cls.def_property_readonly("ir_vertices_per_face",
+  &CLS::get_ir_vertices_per_face,
+  R"pbdoc(
+  Return the irreducible Brillouin zone unique face corners per face
+  )pbdoc");
 
   // irreducible reciprocal space wedge
-  cls.def_property_readonly("wedge_normals",            [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_hkl());});
-  cls.def_property_readonly("wedge_normals_invA",       [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_xyz());});
-  cls.def_property_readonly("wedge_normals_primitive",  [](const CLS &b){return brille::a2py(b.get_primitive_ir_wedge_normals().get_hkl());});
+  cls.def_property_readonly("wedge_normals",
+  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_hkl());},
+  R"pbdoc(
+  Return the normals of the irreducible wedge rlu
+  )pbdoc");
+  cls.def_property_readonly("wedge_normals_invA",
+  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_xyz());},
+  R"pbdoc(
+  Return the normals of the irreducible wedge inverse ångstrom
+  )pbdoc");
+  cls.def_property_readonly("wedge_normals_primitive",
+  [](const CLS &b){return brille::a2py(b.get_primitive_ir_wedge_normals().get_hkl());},
+  R"pbdoc(
+  Return the normals of the irreducible wedge primitive-lattice rlu
+  )pbdoc");
 
   // check whether one or more points are inside
   cls.def("isinside",[](CLS &b, py::array_t<double> p){
@@ -144,9 +377,10 @@ void wrap_brillouinzone(py::module & m){
 
     Returns
     -------
-    tuple
-      Containing the floating point array of equivalent reduced q points for all
-      Q, and an integer array filled with tau = Q-q.
+    :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
+      The floating point array of equivalent reduced :math:`\mathbf{q}`
+      points for all :math:`\mathbf{Q}`, and an integer array filled with
+      :math:`\boldsymbol{\tau} = \mathbf{Q}-\mathbf{q}`.
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -165,15 +399,15 @@ void wrap_brillouinzone(py::module & m){
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    std::vector<ssize_t> sh;
-    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
+    std::vector<pybind11::ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<pybind11::ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     auto invrout = py::array_t<int, py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
     int *rptr = (int *) rout.request().ptr;
     int *iptr = (int *) invrout.request().ptr;
-    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t i=0; i<Qv.numel()/3; ++i)
     for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k) {
       rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
       iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
@@ -200,10 +434,13 @@ void wrap_brillouinzone(py::module & m){
 
     Returns
     -------
-    tuple
-      Comprised of the array of equivalent irreducible q_ir points for all Q;
-      the closest reciprocal lattice vector, tau, to each Q; and the pointgroup
-      symmetry operation and its inverse which obey Q = R⁻¹q_ir + tau.
+    :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
+      The array of equivalent irreducible :math:`\mathbf{q}_\text{ir}` points
+      for all :math:`\mathbf{Q}`;
+      the closest reciprocal lattice vector, :math:`\boldsymbol{\tau}`,
+      to each :math:`\mathbf{Q}`;
+      and the pointgroup symmetry operation and its inverse which obey
+      :math:`\mathbf{Q} = R^{-1} \mathbf{q}_\text{ir} + \boldsymbol{\tau}`.
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
@@ -219,13 +456,13 @@ void wrap_brillouinzone(py::module & m){
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
-    std::vector<ssize_t> sh;
-    for (auto s: Qv.shape()) sh.push_back(static_cast<ssize_t>(s));
+    std::vector<pybind11::ssize_t> sh;
+    for (auto s: Qv.shape()) sh.push_back(static_cast<pybind11::ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
     // grab pointers to the underlying data blocks
     int *rptr = (int *) rout.request().ptr;
-    for (ssize_t i=0; i<Qv.numel()/3; ++i)
+    for (size_t i=0; i<Qv.numel()/3; ++i)
     for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k)
       rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
     return py::make_tuple(brille::a2py(qv), rout);
@@ -251,8 +488,9 @@ void wrap_brillouinzone(py::module & m){
 
     Returns
     -------
-    :py:class:`numpy.ndarray`
-      The array of equivalent in-wedge Q_ir points for all Q, and the pointgroup
-      operation fulfilling Q_ir = R Q.
+    :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
+      The array of equivalent in-wedge :math:`\mathbf{Q}_\text{ir}` points
+      for all :math:`\mathbf{Q}`, and the pointgroup operation fulfilling
+      :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
   )pbdoc");
 }

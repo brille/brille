@@ -27,7 +27,7 @@ set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBU
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
 # Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.5.0)
+set(MINIMUM_PYBIND11_VERSION 2.6.2)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 set(MINIMUM_CATCH2_VERSION 2.11.3)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)

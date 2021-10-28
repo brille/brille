@@ -24,7 +24,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 \return A string representation of c
 */
 template<>
-std::string brille::to_string(const cmp& c){
+std::string brille::to_string<brille::cmp>(const brille::cmp& c){
   using namespace brille;
   std::string repr;
   switch(c)
@@ -49,7 +49,7 @@ std::string brille::to_string(const cmp& c){
 \return A string representation of o
 */
 template<>
-std::string brille::to_string(const brille::ops& o){
+std::string brille::to_string<brille::ops>(const brille::ops& o){
   using namespace brille;
   std::string repr;
   switch(o)

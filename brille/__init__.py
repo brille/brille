@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with brille. If not, see <https://www.gnu.org/licenses/>.
 
-"""Python module ``brille``
-==============================
+"""Python module :py:mod:`brille`
+=================================
 
 This module provides access to the C++ brille library which can be used to
 interact with spacegroup and pointgroup symmetry operations, to determine the
 first Brillouin zone for a given real space crystallographic lattice, to
-find _an_ irreducible polyhedron from the first Brillouin zone and the
+find *an* irreducible polyhedron from the first Brillouin zone and the
 pointgroup operations of a spacegroup, to construct polyhedron-filling connected
 point networks, and to perform linear-interpolation of user-provided data for
 any reciprocal space point at a symmetry-equivalent position within the
