@@ -14,7 +14,9 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include <cassert>
+#endif
 
 template<class T, class R>
 PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double max_volume, const bool always_triangulate)
@@ -84,7 +86,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
     std::array<ind_t,3> node_ijk = this->idx2sub(i);
     std::vector<ind_t> this_node_idx;
     for (auto ni: node_intersections){
-      size_t intersection_idx = 0;
+      ind_t intersection_idx = 0;
       for (int j=0; j<3; ++j)
         intersection_idx += (node_ijk[j]+ni[j])*intersections_span[j];
       this_node_idx.push_back(intersection_idx);
@@ -114,7 +116,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       // find which of the vertices of the this_node polyhedron are intersection
       // vertices as well.
       const auto& this_node_verts{this_node.get_vertices()};
-      for (size_t j=0; j<this_node_verts.size(0); ++j){
+      for (ind_t j=0; j<this_node_verts.size(0); ++j){
         const auto tnvj{this_node_verts.view(j)};
         verbose_update("checking vertex ", tnvj.to_string());
         auto cube_idx = norm(this_node_int-tnvj).find(brille::cmp::eq,0.);
@@ -256,7 +258,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       }
       std::vector<std::array<double,4>> cci_per_tet;
       std::vector<double> vol_per_tet;
-      for (size_t j=0; j<tri_cut.number_of_tetrahedra(); ++j){
+      for (ind_t j=0; j<tri_cut.number_of_tetrahedra(); ++j){
         cci_per_tet.push_back(tri_cut.circumsphere_info(j));
         vol_per_tet.push_back(tri_cut.volume(j));
       }
@@ -281,7 +283,7 @@ PolyhedronTrellis<T,S>::collect_keys() {
   long long nnodes = brille::utils::u2s<long long, size_t>(nodes_.size());
   #pragma omp parallel for default(none) shared(keys, nnodes)
   for (long long sni=0; sni<nnodes; ++sni){
-    size_t ni = brille::utils::s2u<size_t, long long>(sni);
+    ind_t ni = brille::utils::s2u<ind_t, long long>(sni);
     std::set<size_t> t = this->collect_keys_node(ni);
     if (t.size()){
       #pragma omp critical

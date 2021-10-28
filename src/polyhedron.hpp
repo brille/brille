@@ -17,15 +17,19 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_POLYHEDRON_H_
 #define BRILLE_POLYHEDRON_H_
+/*! \file
+    \author Greg Tucker
+    \brief A class representing convex polyhedra in three dimensions
+*/
 #include <random>
-#include <chrono>
-#include <vector>
+// #include <chrono>/
+// #include <vector>
 #include "array_latvec.hpp" // defines bArray
-#include "debug.hpp"
-#include "utilities.hpp"
-#include "approx.hpp"
+// #include "debug.hpp"
+// #include "utilities.hpp"
+// #include "approx.hpp"
 namespace brille {
-
+//! Find the unique elements elements of a vector
 template<typename T> static std::vector<T> unique(const std::vector<T>& x){
     std::vector<T> out;
     out.push_back(x[0]);
@@ -33,14 +37,15 @@ template<typename T> static std::vector<T> unique(const std::vector<T>& x){
         out.push_back(v);
     return out;
 }
+//! Determine if a facet of a Polyhedron is part of a convex volume
 template<typename T> static bool is_not_dangling(const std::vector<size_t>& adjacents, const std::vector<T>& face){
   bool not_dangling{true};
   for (auto & x: face) not_dangling &= adjacents[x] > 2u;
   return not_dangling;
 }
-
+//! Determine the winding angles for the vertices of a Polyhedron facet
 template<class T>
-std::vector<T> bare_winding_angles(const bArray<T>& vecs, const size_t i, const bArray<T>& n){
+std::vector<T> bare_winding_angles(const bArray<T>& vecs, const ind_t i, const bArray<T>& n){
   if (vecs.ndim() !=2 || vecs.size(1) != 3)
     throw std::runtime_error("Finding a winding angle requires the cross product, which is only defined in 3D");
   // vecs should be normalized already
@@ -48,7 +53,7 @@ std::vector<T> bare_winding_angles(const bArray<T>& vecs, const size_t i, const 
   T dotij, y_len, angij;
   bArray<T> x(1u,3u), y(1u,3u); // ensure all have memory allocated
   T crsij[3]; // to hold the cross product
-  for (size_t j=0; j<vecs.size(0); ++j) if (i!=j) {
+  for (ind_t j=0; j<vecs.size(0); ++j) if (i!=j) {
     dotij = vecs.dot(i,j);
     brille::utils::vector_cross(crsij, vecs.ptr(i), vecs.ptr(j));
     x = dotij * vecs.view(i);
@@ -80,10 +85,12 @@ std::vector<T> bare_winding_angles(const bArray<T>& vecs, const size_t i, const 
 //   }
 //   return angles;
 // }
+//! Determine the squared area of a triangle from the lengths of its sides
 template<class T> static T triangle_area_squared(const T a, const T b, const T c){
   T s = (a+b+c)/2;
   return s*(s-a)*(s-b)*(s-c);
 }
+//! Check whether the points defining a Polyhedron facet encompass a finite area
 template<class T>
 int face_has_area(const bArray<T>& points){
   // first verify that all points are coplanar
@@ -92,18 +99,30 @@ int face_has_area(const bArray<T>& points){
   auto p0 = points.view(0);
   T s=0;
   bArray<T> a,b;
-  for (size_t i=1; i<points.size(0)-1; ++i){
+  for (ind_t i=1; i<points.size(0)-1; ++i){
     a = points.view(i)-p0;
-    for (size_t j=i+1; j<points.size(0); ++j){
+    for (ind_t j=i+1; j<points.size(0); ++j){
       b = points.view(j)-p0;
       s += triangle_area_squared(a.norm(0), b.norm(0), (a-b).norm(0));
     }
   }
   return brille::approx::scalar(s, T(0)) ? 0 : 1;
 }
-
+//! Check whether two sizes are compatible for broadcasting
 static inline bool ok_size(const size_t& a, const size_t& b){return (a==1u)||(a==b);}
 
+/*! \brief Check if a point is 'behind' a plane
+
+\param n the plane normal
+\param p a point in the plane
+\param x the point to check
+\returns whether `x` is on or behind the plane
+
+\note A vector from any point on a plane to a test point has a positive dot
+      product with the plane normal if the test point is 'outside' of the plane,
+      zero if the test point is on the plane, and negative if it is 'behind'
+      the plane.
+*/
 template<class T>
 bArray<bool>
 point_inside_plane(
@@ -111,16 +130,33 @@ point_inside_plane(
 ){
   return dot(n, x-p).is(brille::cmp::le, 0.); // true if x is closer to the origin
 }
+/*! \brief Find the intersection point of three planes, broadcasting over inputs
+
+\param      n_i the normal to the first plane
+\param      p_i a point on the first plane
+\param      n_j the normal to the second plane
+\param      p_j a point on the second plane
+\param      n_k the normal to the third plane
+\param      p_k a point on the third plane
+\param[out] at  the intersection point of the three planes is set within, if it exists
+\returns whether each intersection exists
+
+\note If more than one plane is provided in any of the n_x, p_x combinations
+      the intersection is found for all broadcast combinations of three planes.
+      To successfully broadcast all i, j, and k planes must be singular or the
+      same number. The output array will contain the intersection point for all
+      broadcast combinations.
+*/
 template<class T>
 std::vector<bool> intersection(
-  const bArray<T>& ni, const bArray<T>& pi,
-  const bArray<T>& nj, const bArray<T>& pj,
-  const bArray<T>& nk, const bArray<T>& pk,
+  const bArray<T>& n_i, const bArray<T>& p_i,
+  const bArray<T>& n_j, const bArray<T>& p_j,
+  const bArray<T>& n_k, const bArray<T>& p_k,
   bArray<T>& at
 ){
   using namespace brille;
-  size_t num[6]{ni.size(0), pi.size(0), nj.size(0), pj.size(0), nk.size(0), pk.size(0)};
-  size_t npt=0;
+  ind_t num[6]{n_i.size(0), p_i.size(0), n_j.size(0), p_j.size(0), n_k.size(0), p_k.size(0)};
+  ind_t npt=0;
   for (int i=0; i<6; ++i) if (num[i]>npt) npt=num[i];
   for (int i=0; i<6; ++i) if (!ok_size(num[i],npt))
     throw std::runtime_error("All normals and points must be singular or equal sized");
@@ -128,18 +164,18 @@ std::vector<bool> intersection(
   std::vector<bool> out(npt, false);
   // find the scaled intersection points
   // cross, multiply, and dot scale-up singleton inputs
-  auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj) + cross(ni,nj)*dot(pk,nk);
+  auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j) + cross(n_i,n_j)*dot(p_k,n_k);
   T detM, mat[9];
-  const T *ptri=ni.ptr(0,0), *ptrj=nj.ptr(0,0), *ptrk=nk.ptr(0,0);
-  bool ui{ni.size(0) == npt}, uj{nj.size(0) == npt}, uk{nk.size(0) == npt};
+  const T *ptr_i=n_i.ptr(0,0), *ptr_j=n_j.ptr(0,0), *ptr_k=n_k.ptr(0,0);
+  bool u_i{n_i.size(0) == npt}, u_j{n_j.size(0) == npt}, u_k{n_k.size(0) == npt};
   for (ind_t a=0; a<npt; ++a){
-    if (ui) ptri = ni.ptr(a,0);
-    if (uj) ptrj = nj.ptr(a,0);
-    if (uk) ptrk = nk.ptr(a,0);
+    if (u_i) ptr_i = n_i.ptr(a,0);
+    if (u_j) ptr_j = n_j.ptr(a,0);
+    if (u_k) ptr_k = n_k.ptr(a,0);
     for (ind_t b=0; b<3; ++b){
-      mat[b  ] = ptri[b];
-      mat[b+3] = ptrj[b];
-      mat[b+6] = ptrk[b];
+      mat[b  ] = ptr_i[b];
+      mat[b+3] = ptr_j[b];
+      mat[b+6] = ptr_k[b];
     }
     detM = utils::matrix_determinant(mat);
     if (std::abs(detM) > 1e-10){
@@ -149,62 +185,99 @@ std::vector<bool> intersection(
   }
   return out;
 }
+/*! \brief Find the intersection point of three planes within a set of planes, broadcasting over inputs
+
+\param      n   the normals to the bounding plane(s)
+\param      p   a point on each of the bounding plane(s)
+\param      n_i the normal to the first plane
+\param      p_i a point on the first plane
+\param      n_j the normal to the second plane
+\param      p_j a point on the second plane
+\param      n_k the normal to the third plane
+\param      p_k a point on the third plane
+\param[out] at  the intersection point of the three planes is set within, if it exists
+\returns whether each intersection point exists and is inside of the bounding
+         plane(s).
+
+\note If more than one plane is provided in any of the n_x, p_x combinations
+      the intersection is found for all broadcast combinations of three planes.
+      To successfully broadcast all i, j, and k planes must be singular or the
+      same number. The output array will contain the intersection point for all
+      broadcast combinations.
+*/
 template<class T>
 std::vector<bool> intersection(
   const bArray<T>& n,  const bArray<T>& p,
-  const bArray<T>& ni, const bArray<T>& pi,
-  const bArray<T>& nj, const bArray<T>& pj,
-  const bArray<T>& nk, const bArray<T>& pk,
+  const bArray<T>& n_i, const bArray<T>& p_i,
+  const bArray<T>& n_j, const bArray<T>& p_j,
+  const bArray<T>& n_k, const bArray<T>& p_k,
   bArray<T>& at){
-  std::vector<bool> ok = intersection(ni, pi, nj, pj, nk, pk, at);
-  for (size_t i=0; i<ok.size(); ++i) if (ok[i]){
+  std::vector<bool> ok = intersection(n_i, p_i, n_j, p_j, n_k, p_k, at);
+  for (ind_t i=0; i<ok.size(); ++i) if (ok[i]){
     auto pip = point_inside_plane(n, p, at.view(i));
     ok[i] = pip.all();
   }
   return ok;
 }
-// template<typename... L> bool one_intersection(L... args){
-//   return intersection(args...).getvalue(0);
-// }
+/*! \brief Find the intersection point of three planes within a set of planes
+
+\param      n   the normals to the bounding plane(s)
+\param      p   a point on each of the bounding plane(s)
+\param      n_i the normal to the first plane
+\param      p_i a point on the first plane
+\param      n_j the normal to the second plane
+\param      p_j a point on the second plane
+\param      n_k the normal to the third plane
+\param      p_k a point on the third plane
+\returns the intersection point of the three planes if it exists and is inside
+         of the bounding plane(s), otherwise an empty Array2.
+*/
 template<class T>
 bArray<T>
 one_intersection(
   const bArray<T>& n,  const bArray<T>& p,
-  const bArray<T>& ni, const bArray<T>& pi,
-  const bArray<T>& nj, const bArray<T>& pj,
-  const bArray<T>& nk, const bArray<T>& pk)
+  const bArray<T>& n_i, const bArray<T>& p_i,
+  const bArray<T>& n_j, const bArray<T>& p_j,
+  const bArray<T>& n_k, const bArray<T>& p_k)
 {
   bArray<T> at(1u,3u);
-  if (intersection(n,p,ni,pi,nj,pj,nk,pk,at)[0])
+  if (intersection(n,p,n_i,p_i,n_j,p_j,n_k,p_k,at)[0])
     return at;
   else
     return bArray<T>();
 }
-
+//! Return a new vector containing the reversed elements of a vector
 template<class T> std::vector<T> reverse(const std::vector<T>& x){
   std::vector<T> r;
   for (size_t i = x.size(); i--;) r.push_back(x[i]);
   return r;
 }
+//! Return a new vector with each element-vector's elements reversed
 template<class T> std::vector<std::vector<T>> reverse_each(const std::vector<std::vector<T>>& x){
   std::vector<std::vector<T>> r;
   std::transform(x.begin(), x.end(), std::back_inserter(r), [](const std::vector<T>& y){return reverse(y);});
   // for (auto i: x) r.push_back(reverse(i));
   return r;
 }
+/*! \brief A three-dimensional convex solid with polygonal facets
 
+There is no mathematical restriction that a polygon be convex and concave
+polygons are handled by other computational geometry libraries. These libraries
+are much more complicated than is required here (as is supporting concave
+polygons), so this class is a minimal implementation of the general polygon
+tailored for `brille`.
+*/
 class Polyhedron{
 public:
-  using ind_t = brille::ind_t;
-  using shape_t = typename bArray<double>::shape_t;
+  using shape_t = typename bArray<double>::shape_t; //! The subscript index container of the vertices, points, and normals
 protected:
-  bArray<double> vertices;
-  bArray<double> points;
-  bArray<double> normals;
-  std::vector<std::vector<int>> faces_per_vertex;
-  std::vector<std::vector<int>> vertices_per_face;
+  bArray<double> vertices;  //!< The vertices of the polyhedron
+  bArray<double> points;    //!< A point on each facet of the polyhedron (extraneous, should be removed)
+  bArray<double> normals;   //!< The normal vector of each facet (extraneous, but handy)
+  std::vector<std::vector<int>> faces_per_vertex; //!< A listing for each vertex of the facets it contributes to (extraneous, should be removed)
+  std::vector<std::vector<int>> vertices_per_face;//!< A listing of the vertices bounding each facet polygon
 public:
-  // empty initializer
+  //! empty initializer
   explicit Polyhedron():
     vertices(bArray<double>()),
     points(bArray<double>()),
@@ -235,7 +308,7 @@ public:
     this->sort_polygons();
     this->purge_extra_vertices();
   }
-  // initialize from vertices, points, and all relational information
+  //! initialize from vertices, points, and all relational information
   Polyhedron(const bArray<double>& v,
              const bArray<double>& p,
              const std::vector<std::vector<int>>& fpv,
@@ -259,7 +332,7 @@ public:
     this->sort_polygons();
     this->purge_extra_vertices();
   }
-  // initialize from vertices, points, normals, and all relational information
+  //! initialize from vertices, points, normals, and all relational information
   Polyhedron(const bArray<double>& v,
              const bArray<double>& p,
              const bArray<double>& n,
@@ -268,7 +341,7 @@ public:
     vertices(v), points(p), normals(n), faces_per_vertex(fpv), vertices_per_face(vpf){
       this->special_keep_unique_vertices(); // for + below, which doesn't check for vertex uniqueness
   }
-  // initialize from vertices, and vertices_per_face
+  //! initialize from vertices, and vertices_per_face
   Polyhedron(const bArray<double>& v,
              const std::vector<std::vector<int>>& vpf):
   vertices(v), points(0,3), normals(0,3), vertices_per_face(vpf) {
@@ -276,7 +349,7 @@ public:
     this->sort_polygons();
     this->find_all_faces_per_vertex(); // do we really need this?
   }
-  // initialize from vertices, point, normals, and vertices_per_face (which needs sorting)
+  //! initialize from vertices, point, normals, and vertices_per_face (which needs sorting)
   Polyhedron(
           const bArray<double>& v,
           const bArray<double>& p,
@@ -288,14 +361,14 @@ public:
       this->find_all_faces_per_vertex();
       verbose_update("Finished constructing Polyhedron with vertices\n",vertices.to_string(),"points\n",points.to_string(),"normals\n",normals.to_string());
   }
-  // copy constructor
+  //! copy constructor
   Polyhedron(const Polyhedron& other):
     vertices(other.get_vertices()),
     points(other.get_points()),
     normals(other.get_normals()),
     faces_per_vertex(other.get_faces_per_vertex()),
     vertices_per_face(other.get_vertices_per_face()) {}
-  // assignment from another CentredPolyhedron
+  //! assignment from another CentredPolyhedron
   Polyhedron& operator=(const Polyhedron& other){
     this->vertices = other.get_vertices();
     this->points = other.get_points();
@@ -304,22 +377,25 @@ public:
     this->vertices_per_face = other.get_vertices_per_face();
     return *this;
   }
+  //! Return a space-inverted Polyhedron
   Polyhedron mirror(void) const {
     return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
 
   }
+  //! Apply the generalised rotation matrix to the returned Polyhedron
   template<class T> Polyhedron rotate(const std::array<T,9> rot) const {
     bArray<double> newv(vertices.size(0),3u);
     bArray<double> newp(points.size(0),  3u);
     bArray<double> newn(normals.size(0), 3u);
-    for (size_t i=0; i<vertices.size(0); ++i)
+    for (ind_t i=0; i<vertices.size(0); ++i)
       brille::utils::multiply_matrix_vector<double,T,double>(newv.ptr(i), rot.data(), vertices.ptr(i));
-    for (size_t i=0; i<points.size(0); ++i)
+    for (ind_t i=0; i<points.size(0); ++i)
       brille::utils::multiply_matrix_vector<double,T,double>(newp.ptr(i), rot.data(), points.ptr(i));
-    for (size_t i=0; i<normals.size(0); ++i)
+    for (ind_t i=0; i<normals.size(0); ++i)
       brille::utils::multiply_matrix_vector<double,T,double>(newn.ptr(i), rot.data(), normals.ptr(i));
     return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
   }
+  //! Move the origin of the returned Polyhedron
   template<class T> Polyhedron translate(const bArray<T>& vec) const {
     if (vec.numel() != 3)
       throw std::runtime_error("Translating a Polyhedron requires a single three-vector");
@@ -327,54 +403,62 @@ public:
     if (0==vertices.size(0)||0==points.size(0)) return Polyhedron();
     return Polyhedron(vertices+vec, points+vec, normals, this->faces_per_vertex, this->vertices_per_face);
   }
+  //! Combine two Polyhedron objects (not a true union)
   Polyhedron operator+(const Polyhedron& other) const {
     auto ndim = this->vertices.ndim();
-    size_t d = this->vertices.size(ndim-1);
+    ind_t d = this->vertices.size(ndim-1);
     if (other.vertices.ndim() != ndim || other.vertices.size(ndim-1) != d)
       throw std::runtime_error("Only equal dimensionality polyhedra can be combined.");
     // combine all vertices, points, and normals; adjusting the fpv and vpf indexing
-    int tvn = static_cast<int>(this->vertices.size(0));
-    int tfn = static_cast<int>(this->points.size(0));
-    size_t ovn = other.vertices.size(0);
-    size_t ofn = other.points.size(0);
+    ind_t tvn = this->vertices.size(0);
+    ind_t tfn = this->points.size(0);
+    ind_t ovn = other.vertices.size(0);
+    ind_t ofn = other.points.size(0);
     bArray<double> v(tvn+ovn, d);
     bArray<double> p(tfn+ofn, d), n(tfn+ofn, d);
-    for (size_t i=0; i<brille::utils::s2u<size_t>(tvn); ++i) v.set(i,     this->vertices.view(i));
-    for (size_t i=0; i<ovn; ++i)                             v.set(tvn+i, other.vertices.view(i));
-    for (size_t i=0; i<brille::utils::s2u<size_t>(tfn); ++i) p.set(i,     this->points.view(i));
-    for (size_t i=0; i<ofn; ++i)                             p.set(tfn+i, other.points.view(i));
-    for (size_t i=0; i<brille::utils::s2u<size_t>(tfn); ++i) n.set(i,     this->normals.view(i));
-    for (size_t i=0; i<ofn; ++i)                             n.set(tfn+i, other.normals.view(i));
+    for (ind_t i=0; i<tvn; ++i) v.set(i,    this->vertices.view(i));
+    for (ind_t i=0; i<ovn; ++i) v.set(tvn+i,other.vertices.view(i));
+    for (ind_t i=0; i<tfn; ++i) p.set(i,      this->points.view(i));
+    for (ind_t i=0; i<ofn; ++i) p.set(tfn+i,  other.points.view(i));
+    for (ind_t i=0; i<tfn; ++i) n.set(i,     this->normals.view(i));
+    for (ind_t i=0; i<ofn; ++i) n.set(tfn+i, other.normals.view(i));
     std::vector<std::vector<int>> fpv(this->faces_per_vertex), vpf(this->vertices_per_face);
     fpv.resize(tvn+ovn); vpf.resize(tfn+ofn);
-    for (size_t i=0; i<ovn; ++i) for (auto j: other.faces_per_vertex[i])  fpv[tvn+i].push_back(tfn+j);
-    for (size_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(tvn+j);
+    for (ind_t i=0; i<ovn; ++i) for (auto j: other.faces_per_vertex[i])  fpv[tvn+i].push_back(static_cast<int>(tfn+j));
+    for (ind_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(static_cast<int>(tvn+j));
     return Polyhedron(v,p,n, fpv, vpf);
   }
+  //! Return the number of vertices in the Polyhedron
   size_t num_vertices() const { return vertices.size(0); }
+  //! Return the number of facets in the Polyhedron
   size_t num_faces() const { return normals.size(0); }
+  //! Return the vertex positions of the Polyhedron
   bArray<double> get_vertices(void) const { return vertices; }
+  //! Return the points on each facet of the Polyhedron
   bArray<double> get_points(void) const { return points; }
+  //! Return the normals of each facet of the Polyhedron
   bArray<double> get_normals(void) const { return normals; }
+  //! Return the facets per vertex
   std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
+  //! Return the vertices per facet
   std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
-  //
+  //! Return the facet polygons middle-edge points
   bArray<double> get_half_edges(void) const{
     // for each face find the point halfway between each set of neighbouring vertices
     // Convex polyhedra always have edges neighbouring two faces, so we will
     // only ever find (∑pᵢ)>>1 half-edge points, where pᵢ are the number of
     // vertices (or edges) on the iᵗʰ face.
-    size_t nfv = 0;
-    for (auto f: vertices_per_face) nfv += f.size();
+    ind_t nfv = 0;
+    for (auto f: vertices_per_face) nfv += static_cast<ind_t>(f.size());
     // we don't care about point order, but we only want to have one copy
     // of each half-edge point. At the expense of memory, we can keep track
     // of which pairs we've already visited:
     std::vector<bool> unvisited(nfv*nfv, true);
     bArray<double> hep(nfv>>1, 3u);
-    size_t found=0, a,b;
+    ind_t found=0, a,b;
     for (auto f: vertices_per_face) for (size_t i=0; i<f.size(); ++i){
-      a = f[i];
-      b = f[(i+1)%f.size()]; // cyclic boundary condition on vertices
+      a = static_cast<ind_t>(f[i]);
+      b = static_cast<ind_t>(f[(i+1)%f.size()]); // cyclic boundary condition on vertices
       // we visit the facet vertices in an arbitrary order, so we need to keep
       // track of our progress in [a,b] and [b,a]
       if (unvisited[a*nfv+b] && unvisited[b*nfv+a]){
@@ -390,6 +474,7 @@ public:
     }
     return hep;
   }
+  //! Return a string representation of the Polyhedron
   std::string string_repr(void) const {
     size_t nv = vertices.size(0), nf=points.size(0);
     std::string repr = "Polyhedron with ";
@@ -398,6 +483,7 @@ public:
     debug_exec(repr += "; volume " +std::to_string(this->get_volume());)
     return repr;
   }
+  //! Return the volume of the Polyhedron
   double get_volume(void) const {
     /* per, e.g., http://wwwf.imperial.ac.uk/~rn/centroid.pdf
 
@@ -425,6 +511,7 @@ public:
     }
     return volume/6.0; // not-forgetting the factor of 1/6
   }
+  //! Return the centre of mass of the Polyhedron (assuming uniform density)
   bArray<double> get_centroid(void) const {
     // also following http://wwwf.imperial.ac.uk/~rn/centroid.pdf
     bArray<double> centroid({1u,3u}, 0.);
@@ -447,6 +534,7 @@ public:
     }
     return centroid/(48 * this->get_volume());
   }
+  //! Return the radius of the sphere encompassing the Polyhedron, centred on is centroid
   double get_circumsphere_radius(void) const {
     auto centroid2vertices = vertices - this->get_centroid();
     auto c2v_lengths = norm(centroid2vertices);
@@ -458,13 +546,13 @@ public:
 protected:
   void keep_unique_vertices(void){
     std::vector<bool> flg(vertices.size(0), true);
-    for (size_t i=1; i<vertices.size(0); ++i) for (size_t j=0; j<i; ++j)
+    for (ind_t i=1; i<vertices.size(0); ++i) for (ind_t j=0; j<i; ++j)
       if (flg[i] && flg[j]) flg[i] = !vertices.match(i,j);
     this->vertices = this->vertices.extract(flg);
   }
   void special_keep_unique_vertices(){
     std::vector<bool> flg(vertices.size(0), true);
-    for (size_t i=1; i<vertices.size(0); ++i) for (size_t j=0; j<i; ++j)
+    for (ind_t i=1; i<vertices.size(0); ++i) for (ind_t j=0; j<i; ++j)
       if (flg[i] && flg[j]) flg[i] = !vertices.match(i,j);
     if (std::count(flg.begin(), flg.end(), false)){
       // we need to correct vertices_per_face
@@ -472,8 +560,8 @@ protected:
       int count{0};
       for (auto f: flg) map.push_back( f ? count++ : -1);
       // find the equivalent vertices for the non-unique ones:
-      for (size_t i=0; i<vertices.size(0); ++i) if (map[i]<0)
-      for (size_t j=0; j<vertices.size(0); ++j) if (i!=j && map[j]>=0 && vertices.match(i,j)) map[i] = map[j];
+      for (ind_t i=0; i<vertices.size(0); ++i) if (map[i]<0)
+      for (ind_t j=0; j<vertices.size(0); ++j) if (i!=j && map[j]>=0 && vertices.match(i,j)) map[i] = map[j];
       for (auto & face: vertices_per_face){
           std::vector<int> one;
           for (auto & f: face) one.push_back(map[f]);
@@ -496,17 +584,17 @@ protected:
     bArray<double> n(static_cast<brille::ind_t>(bc), 3u);
     bArray<double> p(static_cast<brille::ind_t>(bc), 3u);
     bArray<double> ab(2u, 3u);
-    size_t count = 0;
+    ind_t count = 0;
     // The same algorithm without temporary nijk, vi, vj, vk arrays (utilizing
     // vertices.extract, p.extract, and n.extract instead) does not work.
     // Either the compiler optimizes something important away or there is a bug
     // in repeatedly extracting the same array from an Array. In either
     // case, vectors which should not have been zero ended up as such.
-    for (size_t i=0; i<vertices.size(0)-2; ++i){
+    for (ind_t i=0; i<vertices.size(0)-2; ++i){
       auto vi = vertices.view(i);
-      for (size_t j=i+1; j<vertices.size(0)-1; ++j){
+      for (ind_t j=i+1; j<vertices.size(0)-1; ++j){
         auto vji = vertices.view(j) - vi;
-        for (size_t k=j+1; k<vertices.size(0); ++k){
+        for (ind_t k=j+1; k<vertices.size(0); ++k){
           auto vki = vertices.view(k) - vi;
           auto nijk = cross(vji, vki);
           // increment the counter only if the new normal is not ⃗0 and partitions space
@@ -539,10 +627,10 @@ protected:
     //   for (size_t j=0; j<points.size(0); ++j) if (isonplane[j]) fpv[i].push_back(static_cast<int>(j));
     // }
     std::vector<std::vector<int>> fpv;
-    for (size_t i=0; i<vertices.size(0); ++i){
-      std::vector<brille::ind_t> onplane = dot(normals, vertices.view(i)-points).find(brille::cmp::eq,0.0);
+    for (ind_t i=0; i<vertices.size(0); ++i){
+      std::vector<ind_t> onplane = dot(normals, vertices.view(i)-points).find(brille::cmp::eq,0.0);
       std::vector<int> vind;
-      for (auto i: onplane) vind.push_back(static_cast<int>(i));
+      for (auto j: onplane) vind.push_back(static_cast<int>(j));
       fpv.push_back(vind);
     }
     verbose_update("Found faces per vertex array\n",fpv);
@@ -596,7 +684,6 @@ protected:
        a division by zero.
     */
     // Go through all faces an remove central vertices
-    std::vector<bool> is_centre;
     verbose_update("Starting vertices_per_face\n",vertices_per_face);
     for (size_t j=0; j<normals.size(0); ++j){
       //facet_normal = normals.extract(j);
@@ -633,7 +720,7 @@ protected:
       size_t count{0};
       std::vector<size_t> map;
       for (auto tf : keep) map.push_back(tf ? count++: total);
-      for (auto& fv: vertices_per_face) for (auto& v: fv) if (map[v]<total) v=map[v];
+      for (auto& fv: vertices_per_face) for (auto& v: fv) if (map[v]<total) v=static_cast<int>(map[v]);
       // Remove elements of faces_per_vertex and vertices[.extract(keep)]
       for (size_t i=keep.size(); i-- > 0; ) if (!keep[i]) faces_per_vertex.erase(faces_per_vertex.begin()+i);
       vertices = vertices.extract(keep);
@@ -641,12 +728,13 @@ protected:
   }
   void sort_polygons(void){
     std::vector<std::vector<int>> sorted_vpp;
-    std::vector<int> facet, perm, used;
+    std::vector<int> facet;
+    std::vector<ind_t> perm, used;
     std::vector<double> angles;
     double min_angle;
-    size_t min_idx;
+    ind_t min_idx;
     auto all_normals = this->get_normals();
-    for (size_t j=0; j<this->points.size(0); ++j){
+    for (ind_t j=0; j<this->points.size(0); ++j){
       facet = this->vertices_per_face[j];
       verbose_update("Sorting face ",j," which has vertices",facet);
       auto facet_normal = all_normals.view(j);
@@ -663,8 +751,8 @@ protected:
       for (size_t i=1; i<facet.size(); ++i){
         angles = bare_winding_angles(facet_verts, perm[i-1], facet_normal);
         min_angle = 1e3;
-        min_idx=facet.size()+1;
-        for (size_t k=0; k<facet.size(); ++k)
+        min_idx=static_cast<ind_t>(facet.size())+1;
+        for (ind_t k=0; k<facet.size(); ++k)
           if ( std::find(used.begin(),used.end(),k)==used.end() // ensure the point hasn't already been picked
                && !brille::approx::scalar(angles[k], 0.0) // that its not along the same line
                && angles[k] < min_angle // and that it has a smaller winding angle
@@ -684,7 +772,7 @@ protected:
           throw std::runtime_error(msg);
         }
         perm[i] = min_idx;
-        used.push_back(static_cast<int>(min_idx));
+        used.push_back(min_idx);
       }
       verbose_update("Producing sorting permutation",perm);
       std::vector<int> sorted_face_v;
@@ -701,7 +789,7 @@ protected:
       polygon_vertices_per_face, and sort_polygons have all been run as it
       assumes that the vertices per face are in increasing-winding-order.
     */
-    for (size_t n=0; n<normals.size(0); ++n){
+    for (ind_t n=0; n<normals.size(0); ++n){
       verbose_update("A face with vertices ", vertices_per_face[n]);
       for (size_t i=0, j; vertices_per_face[n].size()>3 && i<vertices_per_face[n].size();){
         // pull out the vector from the previous point to this one
@@ -729,7 +817,7 @@ protected:
     // then we require the input to be correct, and calculate points and normals
     this->points.resize(vertices_per_face.size());
     this->normals.resize(vertices_per_face.size());
-    size_t count = 0;
+    ind_t count = 0;
     for (auto face: vertices_per_face){
       // auto centre = vertices.extract(face).sum(0);
       // this->points.set(count, centre/static_cast<double>(face.size()));
@@ -745,17 +833,20 @@ protected:
     }
   }
 public:
+  //! Return a copy of this Polyhedron with its centre of mass at the origin
   Polyhedron centre(void) const {
     auto centroid = this->get_centroid();
     return Polyhedron(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
   }
+  //! Determine if each of a set of points lies within the Polyhedron
   std::vector<bool> contains(const std::vector<std::array<double,3>>& x) const {
     return this->contains(bArray<double>::from_std(x));
   }
+  //! Determine if each of a set of points lies within the Polyhedron
   std::vector<bool> contains(const bArray<double>& x) const {
     if (x.ndim()!=2 || x.size(x.ndim()-1)!=3) throw std::runtime_error("x must contain 3-vectors");
     std::vector<bool> out;
-    for (size_t i=0; i<x.size(0); ++i)
+    for (ind_t i=0; i<x.size(0); ++i)
       out.push_back(dot(normals, x.view(i)-points).all(brille::cmp::le, 0.));
     return out;
   }
@@ -767,12 +858,14 @@ public:
      the bisect algorithm assumes that the input polyhedron contains (and will
      always contain) the origin.
   */
+  //! Determine if the intersection of another Polyhedron with this one is non-null
   bool intersects(const Polyhedron& other) const {
     verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
     auto itrsct = Polyhedron::bisect(*this, other.normals, other.points);
     // If two polyhedra intersect one another, their intersection is not null.
     return !brille::approx::scalar(itrsct.get_volume(), 0.);
   }
+  //! Return the intersection of another Polyhedron and this one
   Polyhedron intersection(const Polyhedron& other) const {
     // auto centroid = this->get_centroid();
     // Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
@@ -780,6 +873,7 @@ public:
     // return Polyhedron(ipoly.vertices + centroid, ipoly.points + centroid, ipoly.normals, ipoly.faces_per_vertex, ipoly.vertices_per_face);
     return Polyhedron::bisect(*this, other.normals, other.points);
   }
+  //! Partition this Polyhedron by a plane and return the part 'behind' the plane
   template<class T>
   Polyhedron
   divide(const bArray<T>&n, const bArray<T>& p){
@@ -807,13 +901,13 @@ public:
     // move the output polyhedron to be centred on the origin -- which requires we move all cutting planes as well
     // auto origin = sum(pv)/static_cast<double>(pv.size(0));
     verbose_update("Cut a ",pout.string_repr()," by ",n.size(0)," planes");
-    for (size_t i=0; i<n.size(0); ++i){
+    for (ind_t i=0; i<n.size(0); ++i){
       if (brille::approx::scalar(pout.get_volume(), 0.)) break; // we can't do anything with an empty polyhedron
       verbose_update("Cut with a plane passing through ",p.to_string(i)," normal to ",n.to_string(i));
-      auto ni = n.view(i);
-      auto pi = p.view(i);
+      auto n_i = n.view(i);
+      auto p_i = p.view(i);
       // check whether there's anything to do
-      auto keep = point_inside_plane(ni, pi, pv).to_std(); // new keep each loop
+      auto keep = point_inside_plane(n_i, p_i, pv).to_std(); // new keep each loop
       if (std::find(keep.begin(), keep.end(), false)!=keep.end()){
         verbose_update("Pre-cut ",i," polyhedron vertices:\n",pv.to_string());
         verbose_update("Pre-cut ",i," polyhedron planes (p,n):\n",cat(1,pn,pp).to_string());
@@ -838,13 +932,13 @@ public:
         int last_face = static_cast<int>(pn.size(0)); // the to-be-index of the new facet (normal)
         unsigned new_face_vertex_count{0}, new_vertex_count{0};
         for (size_t j=0; j<cut.size()-1; ++j){
-          auto nj = pn.view(cut[j]);
-          auto pj = pp.view(cut[j]);
+          auto n_j = pn.view(cut[j]);
+          auto p_j = pp.view(cut[j]);
           for (size_t k=j+1; k<cut.size(); ++k){
-            auto nk = pn.view(cut[k]);
-            auto pk = pp.view(cut[k]);
+            auto n_k = pn.view(cut[k]);
+            auto p_k = pp.view(cut[k]);
             // check if the three planes intersect, and give a point not-outside of the polyhedron
-            auto at = one_intersection(pn,pp, ni,pi, nj,pj, nk,pk);
+            auto at = one_intersection(pn,pp, n_i,p_i, n_j,p_j, n_k,p_k);
             if ( at.size(0) == 1 ){ // there is a single intersection
               int lv;
               if (norm(pv-at).all(brille::cmp::neq, 0.)){  /* only add a point if its new */
@@ -873,13 +967,11 @@ public:
         }
         debug_update_if(new_vector.size()!=new_face_vertex_count, "New vertices is wrong size!");
         if (new_vector.size()){
-            // add the normal and point for the new face
-            // pn = cat(0, pn, ni);
-            // pp = cat(0, pp, pi);
-            pn.append(0,ni);
-            pp.append(0,pi);
-            // extend the vertices per face vector
-            vpf.push_back(new_vector);
+          // add the normal and point for the new face
+          pn.append(0,n_i);
+          pp.append(0,p_i);
+          // extend the vertices per face vector
+          vpf.push_back(new_vector);
         }
         // extend the keep std::vector<bool> to cover the new points
         for (size_t z=0; z<new_vertex_count; ++z) keep.push_back(true);
@@ -905,7 +997,7 @@ public:
         }
 
         // we need to calculate the face centres, but only for true faces (more than 2 vertices)
-        for (size_t j=0; j<vpf.size(); ++j) if(vpf[j].size()>2) {
+        for (ind_t j=0; j<vpf.size(); ++j) if(vpf[j].size()>2) {
           auto cen = pv.extract(vpf[j]);
           // store the centroid as the on-plane point
           // We need to be extra careful whenever we use Array.set since we may be sharing data with other Array(s)!!!
@@ -981,9 +1073,11 @@ public:
     }
     return pout;
   }
-  bArray<double> rand_rejection(const size_t n, const unsigned int seed=0) const {
+  //! Construst a list of random points within the volume of the Polyhedron via rejection
+  bArray<double> rand_rejection(const ind_t n, const unsigned int seed=0) const {
     // initialize the random number generator with an optional non-zero seed:
-    std::default_random_engine generator(seed>0 ? seed : std::chrono::system_clock::now().time_since_epoch().count());
+    auto tics = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed>0 ? seed : static_cast<unsigned int>(tics));
     // construct the uniform distribution spanning [0,1]
     std::uniform_real_distribution<double> distribution(0.,1.);
     // find the minimum bounding corner and the vector to the maximum bounding corner
@@ -1001,7 +1095,7 @@ public:
   }
 };
 
-
+//! Construct a Polyhedron box from its minimal and maximal vertices
 template<class T>
 Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
   std::vector<std::array<T,3>> v{

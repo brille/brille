@@ -38,7 +38,7 @@ TEST_CASE("primitive vector transforms","[transform]"){
   Direct d(1,1,1,brille::halfpi,brille::halfpi,brille::halfpi,spgr);
   Reciprocal r = d.star();
 
-  std::default_random_engine gen(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> dst(-5.0,5.0);
 
   int nQ = 33;

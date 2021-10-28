@@ -7581,8 +7581,12 @@ int tetgenmesh::report_selfint_edge(point e1, point e2, face *iedge,
 // segment or an edge of another facet.                                      //
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
-
-int tetgenmesh::report_selfint_face(point p1, point p2, point p3, face* sface,
+#ifndef TETLIBRARY
+  int
+#else
+  void
+#endif
+tetgenmesh::report_selfint_face(point p1, point p2, point p3, face* sface,
   triface* iedge, int intflag, int* types, int* poss)
 {
   face iface;
@@ -7783,8 +7787,10 @@ int tetgenmesh::report_selfint_face(point p1, point p2, point p3, face* sface,
     terminatetetgen(this, 2);
   }
 
-  terminatetetgen(this, 3);
-  return 0;
+  terminatetetgen(this, 3); // this will throw an error in library mode
+#ifndef TETLIBRARY
+  return 0; // so wrap this in a preprocessor directive to make compilers happy
+#endif
 }
 
 ////                                                                       ////
@@ -8886,7 +8892,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
   triface fliptets[3], spintet, flipedge;
   triface *tmpabtets, *parytet;
   point pa, pb, pc, pd, pe, pf;
-  REAL ori;
+  REAL ori{0};
   int hullflag, hulledgeflag;
   int reducflag, rejflag;
   int reflexlinkedgecount;
@@ -10539,7 +10545,7 @@ int tetgenmesh::insertpoint(point insertpt, triface *searchtet, face *splitsh,
     }
 
     int rejptflag = (ivf->rejflag & 4);
-    REAL rd;
+    REAL rd{0};
     pts = NULL;
 
     for (i = 0; i < cavetetvertlist->objects; i++) {
@@ -16411,7 +16417,7 @@ bool tetgenmesh::formcavity(triface* searchtet, arraypool* missingshs,
   face *parysh = NULL;
   point pa, pd, pe, *parypt;
   bool testflag, invalidflag;
-  int intflag, types[2], poss[4];
+  int intflag{0}, types[2], poss[4];
   int t1ver;
   int i, j, k;
 
@@ -20142,7 +20148,10 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
                     (types[0] == (int) ACROSSEDGE)) {
                   // Check if [e,d] is a segment.
                   if (issubseg(flipedge)) {
-                    return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+                    #ifndef TETLIBRARY
+                      return
+                    #endif
+                    report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                                intflag, types, poss);
 		          } else {
 				    // Check if [e,d] is an edge of a subface.
@@ -20154,7 +20163,10 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
 					}
 					if (issubface(chkface)) {
 					  // Two subfaces are intersecting.
-					  return report_selfint_face(pa, pb, pc,searchsh,&chkface,
+            #ifndef TETLIBRARY
+					  return
+            #endif
+            report_selfint_face(pa, pb, pc,searchsh,&chkface,
                                                  intflag, types, poss);
 					}
 				  }
@@ -20205,13 +20217,19 @@ int tetgenmesh::recoverfacebyflips(point pa, point pb, point pc,
 					return 1;
                   } else {
 				    // Other cases may be due to a bug or a PLC error.
-					return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+          #ifndef TETLIBRARY
+					return
+          #endif
+          report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                                intflag, types, poss);
 				  }
                 } else {
                   // The other intersection types: ACROSSVERT, TOUCHEDGE,
                   // SHAREVERTEX should not be possible or due to a PLC error.
-                  return report_selfint_face(pa, pb, pc, searchsh, &flipedge,
+                  #ifndef TETLIBRARY
+                  return
+                  #endif
+                  report_selfint_face(pa, pb, pc, searchsh, &flipedge,
                                              intflag, types, poss);
                 }
               } // if (searchsh != NULL)
@@ -20852,7 +20870,7 @@ int tetgenmesh::removevertexbyflips(point steinerpt)
   point lpt = NULL, rpt = NULL, apexpt; //, *parypt;
   flipconstraints fc;
   enum verttype vt;
-  enum locateresult loc;
+  enum locateresult loc{UNKNOWN};
   int valence, removeflag;
   int slawson;
   int t1ver;
@@ -23961,7 +23979,7 @@ int tetgenmesh::scoutpoint(point searchpt, triface *searchtet, int randflag)
 {
   point pa, pb, pc, pd;
   enum locateresult loc = OUTSIDE;
-  REAL vol, ori1, ori2 = 0, ori3 = 0, ori4 = 0;
+  REAL vol, ori1{0}, ori2 = 0, ori3 = 0, ori4 = 0;
   int t1ver;
 
 
@@ -25883,7 +25901,7 @@ int tetgenmesh::checktet4split(triface *chktet, int &qflag, REAL *ccent)
   REAL maxcosd, vol, volbnd, smlen = 0, rd;
   REAL A[4][4], rhs[4], D;
   int indx[4];
-  int i, j;
+  int i, j{0};
 
   if (b->convex) { // -c
     // Skip this tet if it lies in the exterior.
@@ -28927,7 +28945,7 @@ void tetgenmesh::qualitystatistics()
   REAL shortlen, longlen;
   REAL tetaspect, tetradius;
   REAL smalldiangle, bigdiangle;
-  REAL smallfaangle, bigfaangle;
+  REAL smallfaangle{1e10}, bigfaangle{0};
   unsigned long radiustable[12];
   unsigned long aspecttable[16];
   unsigned long dihedangletable[18];
@@ -29745,7 +29763,7 @@ void tetgenmesh::outnodes(tetgenio* out)
   face parentsh;
   point pointloop;
   int nextras, bmark, marker = 0, weightDT = 0;
-  int coordindex, attribindex;
+  int coordindex{0}, attribindex{0};
   int pointnumber, firstindex;
   int index, i;
 
@@ -30074,7 +30092,7 @@ void tetgenmesh::outelements(tetgenio* out)
   int *tlist = NULL;
   long ntets;
   int firstindex, shift;
-  int pointindex, attribindex;
+  int pointindex{0}, attribindex{0};
   int highorderindex = 11;
   int elementnumber;
   int eextras;
@@ -30454,7 +30472,7 @@ void tetgenmesh::outhullfaces(tetgenio* out)
   int *elist = NULL;
   int firstindex, shift;
   int facenumber;
-  int index;
+  int index{0};
 
   if (out == (tetgenio *) NULL) {
     strcpy(facefilename, b->outfilename);

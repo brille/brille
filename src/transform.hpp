@@ -19,10 +19,17 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_TRANSFORM_HPP_
 #define BRILLE_TRANSFORM_HPP_
+/*! \file
+    \author Greg Tucker
+    \brief Functions to transform Direct and Reciprocal lattice vectors between
+           primitive and conventional unit cell representations
+*/
 #include "array_latvec.hpp" // defines bArray
 namespace brille {
 
+//! The datatype of the P PrimitiveTransform matrix
 using Ptype = PrimitiveTraits::P;
+//! The datatype of the inverse P PrimitiveTransform matrix
 using invPtype = PrimitiveTraits::invP;
 
 /*! \brief transform_to_primitive(Reciprocal, LQVec)
@@ -125,7 +132,7 @@ LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
   return out;
 }
 
-// utility functions for conversion of lattice vectors where only their components are stored
+//! utility functions for conversion of lattice vectors where only their components are stored
 template<class T, typename S=typename std::common_type<T,double>::type>
 bArray<S> xyz_to_hkl(const Reciprocal& lat, const bArray<T>& xyz){
   assert(xyz.stride().back() == 1u && xyz.size(xyz.ndim()-1)==3);
@@ -137,6 +144,7 @@ bArray<S> xyz_to_hkl(const Reciprocal& lat, const bArray<T>& xyz){
     brille::utils::multiply_matrix_vector<S,double,T,3>(hkl.ptr(x), fromxyz.data(), xyz.ptr(x));
   return hkl;
 }
+//! utility functions for conversion of lattice vectors where only their components are stored
 template<class T, typename S=typename std::common_type<T,double>::type>
 bArray<S> hkl_to_xyz(const Reciprocal& lat, const bArray<T>& hkl){
   assert(hkl.stride().back() == 1u && hkl.size(hkl.ndim()-1)==3);

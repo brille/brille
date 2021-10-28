@@ -82,13 +82,13 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
   // info_update("\nRounded difference:\n",diff.to_string());
 
-  if (!diff.round().all(0.,0)) for (size_t i = 0; i < nQ; ++i) {
-      info_update_if(!diff.view(i).round().all(0.,0),
+  if (!diff.round().all(0,0)) for (ind_t i = 0; i < nQ; ++i) {
+      info_update_if(!diff.view(i).round().all(0,0),
         "\nThe interpolation point Q = ", Q.to_string(i),
         "\n            returned result ", intres.to_string(i),
         "\n                 instead of ", antres.to_string(i), "\n");
   }
-  REQUIRE( diff.round().all(0.,0) ); // this is not a great test :(
+  REQUIRE( diff.round().all(0,0) ); // this is not a great test :(
   for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-10);
 }
 
@@ -103,7 +103,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   // interpolate at points within the irreducible meshed volume.
   // So let's stick to points that are random linear interpolations between
   // neighbouring mesh vertices
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
   BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
@@ -153,7 +153,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   // interpolate at points within the irreducible meshed volume.
   // So let's stick to points that are random linear interpolations between
   // neighbouring mesh vertices
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
   BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);

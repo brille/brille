@@ -77,14 +77,14 @@ def plot(*args, **kwds):
                 brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
                 brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
                 brille.BZTrellisQdc, brille.BZTrellisQcc, brille.BZTrellisQdd)
-    if len(args) is 1:
+    if len(args) == 1:
         if isinstance(args[0], bz_types):
             return plot_bz(*args, **kwds)
         if isinstance(args[0], brille.Polyhedron):
             return plot_polyhedron(*args, **kwds)
         else:
             return plot_points(*args, **kwds)
-    if len(args) is 2:
+    if len(args) == 2:
         if (isinstance(args[1], np.ndarray)) and not issubclass(args[1].dtype.type, np.integer):
             return plot_points_with_lines(*args, **kwds)
         else:

@@ -71,7 +71,7 @@ TEST_CASE("Polyhedron random point distribution","[polyhedron]"){
   auto verts = bArray<double>::from_std(va_verts);
   Polyhedron poly(verts);
 
-  size_t seed=10, npoints=1000;
+  ind_t seed=10, npoints=1000;
   auto r0 = poly.rand_rejection(npoints, seed);
   // check that the generated points are inside the polyhedron
   auto in = poly.contains(r0);

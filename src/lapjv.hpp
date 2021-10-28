@@ -41,11 +41,20 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_LAPJV_H
 #define BRILLE_LAPJV_H
+/*! \file
+    \author source{d}
+    \author Greg Tucker
+    \brief Implementation of the Linear Assignment Problem solver
+
+    A modified version of [lap.h](https://github.com/src-d/lapjv/lap.h) making
+    use of the Jonker-Volgenant algorithm.
+*/
 #include <cassert>
 #include <cstdio>
 #include <limits>
 #include <memory>
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifdef __GNUC__
 #define always_inline __attribute__((always_inline)) inline
 #define restrict __restrict__
@@ -56,9 +65,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #define always_inline inline
 #define restrict
 #endif
+#endif
 
 namespace brille::assignment {
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 using sidx = long long int; // in case idx is unsigned :/
 
 template <typename idx, typename cost>
@@ -258,7 +268,7 @@ find_umins(
 #define find_umins find_umins_plain
 
 #endif  // __AVX__
-
+#endif // DOXYGEN_SHOULD_SKIP_THIS
 /// @brief Jonker-Volgenant algorithm.
 /// @param dim in problem size
 /// @param assign_cost in cost matrix

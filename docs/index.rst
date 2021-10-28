@@ -32,7 +32,8 @@ You can use ``brille`` to:
 
   brille
   plotting
-  api/library_root
+  doxygen
+  undoc_brille
 
 Indices and tables
 ==================

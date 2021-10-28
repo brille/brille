@@ -16,15 +16,23 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef COMMON_SYMMETRY_HPP
 #define COMMON_SYMMETRY_HPP
-
-#include <array>
-#include <vector>
+/*! \file
+    \author Greg Tucker
+    \brief Utility definitions for PointSymmetry and Symmetry
+*/
+// #include <array>
+// #include <vector>
+#include <algorithm>
+#include "utilities.hpp"
 
 namespace brille {
-
+//! A 3x3 matrix in flattened-form
 template<class T> using Matrix = std::array<T,9>;
+//! A 3 vector
 template<class T> using Vector = std::array<T,3>;
+//! A list of 3x3 flattened matrices
 template<class T> using Matrices = std::vector<Matrix<T>>;
+//! A list of 3 vectors
 template<class T> using Vectors = std::vector<Vector<T>>;
 
 } //end namespace brille

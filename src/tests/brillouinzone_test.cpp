@@ -32,7 +32,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   Reciprocal r = d.star();
   BrillouinZone bz(r);
 
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(-5.0,5.0);
 
   int nQ = 3333;

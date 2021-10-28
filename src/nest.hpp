@@ -14,25 +14,28 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
 #ifndef BRILLE_NEST_H_
 #define BRILLE_NEST_H_
-#include <set>
-#include <vector>
-#include <array>
-#include <tuple>
-#include <utility>
-#include <algorithm>
-#include <omp.h>
-#include "array.hpp"
-#include "array2.hpp"
-#include "array_latvec.hpp"
+/*! \file
+    \author Greg Tucker
+    \brief A class holding a triangulated tetrahedral mesh and data for interpolation
+*/
+// #include <set>
+// #include <vector>
+// #include <array>
+// #include <tuple>
+// #include <utility>
+// #include <algorithm>
+// #include <omp.h>
+// #include "array.hpp"
+// #include "array2.hpp"
+// #include "array_latvec.hpp"
 #include "polyhedron.hpp"
-#include "utilities.hpp"
-#include "debug.hpp"
+// #include "utilities.hpp"
+// #include "debug.hpp"
 #include "triangulation_simple.hpp"
 #include "interpolatordual.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 namespace brille {
 
 template<typename T,size_t N>
@@ -40,9 +43,17 @@ static bool none_negative(const std::array<T,N>& x){
   return !std::any_of(x.begin(), x.end(), [](T z){return z<0 && !brille::approx::scalar(z,0.);});
 }
 
+/*! \brief A single tetrahedron
+
+The NestLeaf is a single tetrahedron which holds its center of mass position,
+circumsphere radius, and volume along with the indices of its vertex positions.
+
+If provided with the list of all vertex positions and a test point it can
+determine whether the point is inside the tetrahedron and, if required, with
+what weights the vertices should be combined to produce the linear interpolation
+at the test point.
+*/
 class NestLeaf{
-public:
-  using ind_t = brille::ind_t;
 private:
   std::array<ind_t,4> vi;
   std::array<double,4> centre_radius;
@@ -106,10 +117,15 @@ private:
   }
 };
 
+/*! \brief Part of a tetrahedron hierarchy
 
+The NestNode may be any level of a tetrahedron hierarchy and always defines a
+tetrahedral region of its domain.
+If the NestNode is terminal it contains no further NetNodes, otherwise it must
+hold a list of two or more smaller NestNodes which fill the space (or nest)
+within it.
+*/
 class NestNode{
-public:
-  using ind_t = brille::ind_t;
 private:
   bool is_root_;
   NestLeaf boundary_;
@@ -122,14 +138,23 @@ public:
     const std::array<double,4>& ci,
     const double vol
   ): is_root_(false), boundary_(NestLeaf(vit,ci,vol)) {}
+  //! Return whether this NestNode is the most coarse tetrahedron
   bool is_root(void) const {return is_root_;}
+  //! Return whether this NestNode is the most precise tetrahedron
   bool is_leaf(void) const {return !is_root_ && branches_.size()==0;}
+  //! Return a reference to the NestLeaf single tetrahedron which bounds this NestNode's domain
   const NestLeaf& boundary(void) const {return boundary_;}
+  //! Return a constant reference to the NestNodes which fill this NestNode's domain
   const std::vector<NestNode>& branches(void) const {return branches_;}
+  //! Return a reference to the NestNodes which fill this NestNode's domain
   std::vector<NestNode>& branches(void) {return branches_;}
+  //! Return the volume of this NestNode's domain
   double volume(void) const {return boundary_.volume();}
+  //! Determine if a test point is inside of this NestNode's domain
   template<typename... A> bool contains(A... args) {return boundary_.contains(args...);}
+  //! Determine the relative interpolation weights for the vertices of this NestNode if it contains a test point
   template<typename... A> std::array<double,4> weights(A... args) {return boundary_.weights(args...);}
+  //! Return the indexed vertices in addition to the relative interpolation weights
   std::vector<std::pair<ind_t,double>> indices_weights(
     const bArray<double>& v, const bArray<double>& x
   ) const
@@ -137,6 +162,7 @@ public:
     std::array<double,4> w;
     return __indices_weights(v,x,w);
   }
+  //! Pull together all tetrahedra vertex indices at or below this level of the hierarchy
   std::vector<std::array<ind_t,4>> tetrahedra(void) const {
     std::vector<std::array<ind_t,4>> out;
     if (this->is_leaf()) out.push_back(boundary_.vertices());
@@ -152,6 +178,7 @@ public:
       msg += branches_[i].to_string(prefix+(not_last?"|  ":"   "),i+1!=branches_.size());
     return msg;
   }
+  //! Pull together all PermutationTable keys for the connected vertices at or below this level of the hierarchy
   std::set<size_t> collect_keys(const size_t nv) const {
     std::set<size_t> keys;
     if (this->is_leaf()){
@@ -189,10 +216,35 @@ protected:
     return empty;
   }
 };
+
+/*!
+\brief A nested triangulated tetrahedral mesh with eigenvalue and eigenvector data
+
+One way of dividing three dimensional space is to fill it with a tiling of
+tetrehedra. Each tetrahedra has four vertices and four triangular faces.
+As each face can be shared with one other tetrahedra, each tetrahedron has up
+to four neighbours (tetrahedra on the surface of a space will have one fewer
+neighbour per surface). There is no limit to how many tetrahedra any vertex
+can contribute to.
+
+If one or more values are defined for every vertex in the tetrahedral mesh then
+it can be used to perform linear interpolation for any arbitrary point within
+the bound space.
+
+With no guaranteed ordering of the tethrahedra finding which tetrahedra contains
+the interpolation point can require testing all tetrahedra for inclusion.
+As such a simple tetrahedral mesh is not well suited for *fast* interpolation.
+In order to overcome this limitation, this class uses a hierarchy of nested
+tetrahedra arranged in a tree to limit the number of inclusion tests required
+during interpolation.
+If a point is within a tetrahedron at a given depth of the hierarchy then a list
+of tetrahedra that it might be in at the next lower level is available.
+These next-lower tetrahedra have the property that they fill the higher-level
+tetrahedra.
+*/
 template<class T, class S>
 class Nest{
 public:
-  using ind_t = brille::ind_t;
   using data_t = DualInterpolator<T,S>;
   using vert_t = bArray<double>;
 private:
@@ -206,7 +258,7 @@ public:
     return tree;
   }
   // Build using maximum leaf volume
-  Nest(const Polyhedron& p, const double vol, const size_t nb=5u)
+  Nest(const Polyhedron& p, const double vol, const ind_t nb=5u)
   : root_(true), vertices_(0u,3u)
   {
     this->construct(p, nb, vol);
@@ -215,7 +267,7 @@ public:
     data_.initialize_permutation_table(nvert, root_.collect_keys(nvert));
   }
   // Build using desired leaf number density
-  Nest(const Polyhedron& p, const size_t rho, const size_t nb=5u)
+  Nest(const Polyhedron& p, const ind_t rho, const ind_t nb=5u)
   : root_(true), vertices_(0u,3u)
   {
     this->construct(p, nb, p.get_volume()/static_cast<double>(rho));
@@ -337,7 +389,7 @@ private:
   //   if (idx != nTerminal)
   //     throw std::runtime_error("This shouldn't happen");
   // }
-  void subdivide(NestNode&, const size_t, const size_t, const double, const double, size_t&);
+  void subdivide(NestNode&, const size_t, const size_t, const double, const double, ind_t&);
 };
 
 #include "nest.tpp"

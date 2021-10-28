@@ -24,7 +24,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #define WRAP_BRILLE_MESH_HPP_
 
 namespace py = pybind11;
-typedef long slong; // ssize_t is only defined for gcc?
 
 template<class T,class R>
 void declare_bzmeshq(py::module &m, const std::string &typestr){

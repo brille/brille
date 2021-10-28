@@ -56,10 +56,10 @@ namespace brille {
     std::unique_ptr<brille::Array2<T>> aptr = std::make_unique<brille::Array2<T>>(brille::Array2<T>(a));
     auto capsule = pybind11::capsule(aptr.get(), [](void *p) { std::unique_ptr<brille::Array2<T>>(reinterpret_cast<brille::Array2<T>*>(p)); });
     aptr.release();
-    std::vector<ssize_t> shape, cstride;
+    std::vector<pybind11::ssize_t> shape, cstride;
     // the shape and cstride of an Array2 are std::array<ind_t,2> but we need std::vectors
-    for (auto s: a.shape()) shape.push_back(static_cast<ssize_t>(s));
-    for (auto s: a.cstride()) cstride.push_back(static_cast<ssize_t>(s));
+    for (auto s: a.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
+    for (auto s: a.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
     return pybind11::array_t<T>(shape, cstride, a.data(), capsule);
   }
 
@@ -72,10 +72,10 @@ namespace brille {
     // At this point, transferToHeapGetRawPtr is a raw pointer to an object on the heap.
     // No unique_ptr or shared_ptr, it will have to be freed with delete to avoid a memory leak.
     auto capsule = pybind11::capsule(aptr, [](void *toFree){ delete static_cast<brille::Array2<T>*>(toFree); });
-    std::vector<ssize_t> shape, cstride;
+    std::vector<pybind11::ssize_t> shape, cstride;
     // the shape and cstride of an Array2 are std::array<ind_t,2> but we need std::vectors
-    for (auto s: a.shape()) shape.push_back(static_cast<ssize_t>(s));
-    for (auto s: a.cstride()) cstride.push_back(static_cast<ssize_t>(s));
+    for (auto s: a.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
+    for (auto s: a.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
     return pybind11::array_t<T>(shape, cstride, aptr->data(), capsule);
   }
 
@@ -87,8 +87,8 @@ namespace brille {
     // of elements. This IS NOT the allocated size of the array unless it is
     // contiguous. For non-contiguous arrays the allocated memory will fill
     // max(shape[i]*stride[i])
-    ind_t num = info.size;
-    for (ssize_t i=0; i<info.ndim; ++i){
+    ind_t num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
+    for (pybind11::ssize_t i=0; i<info.ndim; ++i){
       shape.push_back(static_cast<ind_t>(info.shape[i]));
       stride.push_back(static_cast<ind_t>(info.strides[i]/sizeof(T)));
       if (shape[i]*stride[i] > num) num = shape[i]*stride[i];
@@ -132,8 +132,8 @@ namespace brille {
     if (info.ndim != 2)
       throw std::runtime_error("brille::Array2 objects require 2D input!");
     std::array<ind_t,2> shape, stride;
-    ind_t num = info.size;
-    for (ssize_t i=0; i<info.ndim; ++i){
+    ind_t num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
+    for (pybind11::ssize_t i=0; i<info.ndim; ++i){
       shape[i] = static_cast<ind_t>(info.shape[i]);
       stride[i] = static_cast<ind_t>(info.strides[i]/sizeof(T));
       if (shape[i]*stride[i] > num) num = shape[i]*stride[i];
@@ -182,9 +182,9 @@ void declare_array2(pybind11::module &m, const std::string &typestr){
   //buffer_info
   cls.def_buffer([](Class &cobj) -> pybind11::buffer_info {
     // return brille::a2bi(cobj);
-    std::vector<ssize_t> shape, cstride;
-    for (auto s: cobj.shape()) shape.push_back(static_cast<ssize_t>(s));
-    for (auto s: cobj.cstride()) cstride.push_back(static_cast<ssize_t>(s));
+    std::vector<pybind11::ssize_t> shape, cstride;
+    for (auto s: cobj.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
+    for (auto s: cobj.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
     return pybind11::buffer_info(cobj.data(), shape, cstride, cobj.ismutable());
   });
   //initializer(s):

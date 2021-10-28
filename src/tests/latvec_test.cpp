@@ -13,14 +13,14 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
   LQVec<double> q(r, bArray<double>::from_std(values));
 
   SECTION("length via .norm(integer)"){
-    for(size_t i=0; i<3; i++)
+    for(ind_t i=0; i<3; i++)
     REQUIRE( q.norm(i) == Approx(2*brille::pi) );
   }
   SECTION("length via norm()"){
     auto normq = norm(q);
     REQUIRE( normq.size(0) == q.size(0) );
     REQUIRE( normq.size(1) == 1u );
-    for(size_t i=0; i<q.size(0); ++i)
+    for(ind_t i=0; i<q.size(0); ++i)
       REQUIRE( q.norm(i) == normq[i] );
   }
   SECTION("Single-element access via [integer] and cross product .cross(integer,integer)"){

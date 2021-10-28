@@ -157,7 +157,8 @@ Array2<T>::extract(const std::vector<bool>& i) const {
   auto count = std::count(i.begin(), i.end(), true);
   osize[0] = static_cast<ind_t>(count);
   Array2<T> out(osize);
-  ind_t n = i.size() < _shape[0] ? i.size() : _shape[0];
+  ind_t isize{static_cast<ind_t>(i.size())};
+  ind_t n = isize < _shape[0] ? isize : _shape[0];
   ind_t idx{0};
   for (ind_t j=0; j<n; ++j) if (i[j]) out.set(idx++, this->view(j));
   return out;
@@ -844,9 +845,9 @@ void Array2<T>::permute(std::vector<I>& p){
   std::sort(s.begin(), s.end());
   debug_update_if(!std::includes(o.begin(),o.end(),s.begin(),s.end()),"The permutation vector ",p," is invalid. Expected permutation of ",o);
   // get the inverse permutation to enable element swapping:
-  for (size_t i=0; i<p.size(); ++i) s[p[i]] = i;
+  for (size_t i=0; i<p.size(); ++i) s[p[i]] = static_cast<I>(i);
   // perform the swaps until we have no more to do:
-  for (size_t i=0; i<_shape[0];){
+  for (ind_t i=0; i<_shape[0];){
     if (s[i]!=i){
       this->swap(i,s[i]);
       std::swap(s[i], s[s[i]]);
@@ -1035,6 +1036,12 @@ SCALAR_INPLACE_OP(/=)
 //   return *this;
 // }
 
+/*! \brief Verify that two Array2 shapes can be broadcast together
+
+\param a The shape of the first Array2
+\param b The shape of the second Array2
+\return true if both dimensions match or either `a` or `b` is singleton
+*/
 template<class T>
 bool broadcast_shape_check(const std::array<T,2>& a, const std::array<T,2>&b){
   bool ok = (a[0]==b[0] && a[1]==b[1]);

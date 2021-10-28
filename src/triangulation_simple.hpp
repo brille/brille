@@ -17,24 +17,44 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_TRIANGULATION_SIMPLE_HPP_
 #define BRILLE_TRIANGULATION_SIMPLE_HPP_
-#include <vector>
-#include <array>
-#include <cassert>
-#include <algorithm>
+/*! \file
+    \author Greg Tucker
+    \brief A class to interact with TetGen in the simplest case
+*/
+// #include <vector>
+// #include <array>
+// #include <cassert>
+// #include <algorithm>
 #include "array_latvec.hpp" // defines bArray
 #include "tetgen.h"
-#include "debug.hpp"
-#include "approx.hpp"
+// #include "debug.hpp"
+// #include "approx.hpp"
 namespace brille {
 
+/*! \brief A class to handle interaction with `TetGen`
+
+`TetGen` is much more flexible than `brille` requires. This class exists to
+drive triangulation of a single convex polyhedron with limited control over the
+triangulation parameters.
+Following the `TetGen` `tetrahedralize` call, the resulting vertices and
+tetrahedra indexing is collected before freeing the TetGet structure.
+*/
 class SimpleTet{
-  using ind_t = brille::ind_t;
-  bArray<double> vertex_positions; // (nVertices, 3)
-  bArray<ind_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
+  bArray<double> vertex_positions;        /*!< The triangulated vertex positions */ // (nVertices, 3)
+  bArray<ind_t> vertices_per_tetrahedron; /*!< The vertices in each of the triangulated tetrahedra */ // (nTetrahedra, 4)
 public:
+  //! Explicit empty constructor
   explicit SimpleTet(void)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {}
+  /*! \brief Triangulate a convex polyhedron
+
+  \param poly       the Polyhedron to triangulate
+  \param max_volume The maximum tetrahedron volume allowed within the
+                    triangulation, in the same units as the polyhedron volume
+  \param addGamma   If true the point (0,0,0) will be ensured to exist in the
+                    triangulated vertrices
+  */
   SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {
@@ -136,6 +156,7 @@ public:
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
   }
+  //! Return the volume of the indexed tetrahedron
   double volume(const ind_t tet) const {
     double v;
     const ind_t* i = vertices_per_tetrahedron.ptr(tet);
@@ -146,6 +167,7 @@ public:
       vertex_positions.ptr(i[3]) )/6.0;
     return v;
   }
+  //! Return the volume of the largest tetrahedron
   double maximum_volume(void) const {
     double vol{0}, maxvol{0};
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){
@@ -154,11 +176,17 @@ public:
     }
     return maxvol;
   }
+  //! Return the number of triangulated vertices
   ind_t number_of_vertices(void) const {return vertex_positions.size(0);}
+  //! Return the number of triangulated tetrahedra
   ind_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size(0);}
+  //! Return a constant reference to the triangulated vertices
   const bArray<double>& get_vertices(void) const {return vertex_positions;}
+  //! Return a constant reference to the triangulated vertices
   const bArray<double>& get_vertex_positions(void) const {return vertex_positions;}
+  //! Return a constant reference to the triangulated tetrahedra vertex indices
   const bArray<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  //! Convert the tetrahedra vertex indices to a nested standard container
   std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron(void) const {
     std::vector<std::array<ind_t,4>> stdvpt;
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){
@@ -167,6 +195,16 @@ public:
     }
     return stdvpt;
   }
+  /*! \brief Use TetGen to determine circumsphere information
+
+  For any tetrahedron there exists a sphere which contains on its surface the
+  four tetrahedron vertices. The circumscribing sphere is characterised by its
+  centre and its radius, which can be used to quickly decide if a fifth point
+  in space has any chance of being *inside* the tetrahedron.
+
+  \param tet the index of the tetrahedron within all triangulated tetrahedra
+  \returns the three elements of the circumsphere centre and its radius
+  */
   std::array<double,4> circumsphere_info(const ind_t tet) const {
     if (tet < vertices_per_tetrahedron.size(0)){
       const ind_t* i = vertices_per_tetrahedron.ptr(tet);

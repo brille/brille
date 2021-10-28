@@ -17,12 +17,16 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_MUNKRES_H_
 #define BRILLE_MUNKRES_H_
+/*! \file
+    \author Greg Tucker
+    \brief A class to run the Munkres assignment algorithm
+*/
 #include <forward_list>
 #include <limits>
 #include <memory>
 #include <vector>
 namespace brille::assignment {
-
+//! Indication for whether a Munkres cost-matrix cell is stared or primed
 enum marker {
   NORMAL,
   STARED,
@@ -30,7 +34,8 @@ enum marker {
 };
 /*! \brief A single-case implementation of the Munkres' Assignment Algorithm
 
-    See, e.g., http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html
+Following the description by
+[Bob Pilgrim](http://csclab.murraystate.edu/~bob.pilgrim/445/munkres.html)
 */
 template<typename T> class Munkres{
 private:
@@ -120,6 +125,7 @@ public:
     }
     return finished;
   }
+  //! Return a string representation of the current assignment step
   std::string to_string() const {
     std::string x = "X", star = "*", prime = "'", blank = "";
     std::string repr= "step=" + std::to_string(step) + "\t";
@@ -266,7 +272,8 @@ private:
       if (mask[rowcol[0]*N+rowcol[1]] == whichmark[i]){
         path.push_front({rowcol[0],rowcol[1]});
         i = (i+1)&1;    // switch between row and col, and between STARED and PRIMED
-        rowcol[i] = -1; // exploit unsiged integer roll-over, and that
+        rowcol[i] = 0; // (setting to -1 directly raises compiler warnings)
+        --rowcol[i]; // exploit unsiged integer roll-over, and that
       }
     }
 

@@ -1,0 +1,14 @@
+rule all:
+  input: "has_ran"
+  shell: "rm has_ran"
+
+rule update_image:
+  output: touch(".status_flag_image")
+  input: "entrypoint.sh"
+  shell: "podman image rm builder_sphinx"
+
+rule run:
+  input: ".status_flag_image"
+  output: touch("has_ran")
+  shell: "podman-compose up; podman pod stop builder; podman pod rm builder"
+

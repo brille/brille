@@ -23,7 +23,7 @@ LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   auto ir_p = this->get_ir_points();
   auto bz_n = this->get_normals();
   auto bz_p = this->get_points();
-  for (size_t i=0; i<bz_n.size(0); ++i){
+  for (ind_t i=0; i<bz_n.size(0); ++i){
     // check if the irBZ face point is on a first BZ zone face too
     auto not_bz = dot(bz_n.view(i), ir_p - bz_p.view(i)).is(brille::cmp::neq, 0.);
     if (!not_bz.any())
@@ -38,8 +38,8 @@ LQVec<double> BrillouinZone::get_ir_polyhedron_wedge_normals(void) const {
   // which no finite point can be inside
   if (ir_n.size(0)%2 == 0 /* [lacks inversion] or this->no_ir_mirroring? */){
     std::vector<bool> no_inverse(ir_n.size(0), true), keep(ir_n.size(0), true);
-    for (size_t i=0; i<ir_n.size(0)-1; ++i) if (no_inverse[i])
-    for (size_t j=i+1; j<ir_n.size(0); ++j) if (no_inverse[j])
+    for (ind_t i=0; i<ir_n.size(0)-1; ++i) if (no_inverse[i])
+    for (ind_t j=i+1; j<ir_n.size(0); ++j) if (no_inverse[j])
     if ((ir_n.view(i)+ir_n.view(j)).all(brille::cmp::eq, 0.)) {
       no_inverse[i] = no_inverse[j] = keep[j] = false;
       break;
@@ -218,8 +218,8 @@ void BrillouinZone::irreducible_vertex_search(){
      1st Brillouin zone planes and one irreducible reciprocal space normal and
      two irreducible reciprocal space normals and one 1st Brillouin zone plane.
   */
-  size_t Nbz = this->get_normals().size(0);
-  size_t Nir = this->ir_wedge_normals.size(0);
+  ind_t Nbz = this->get_normals().size(0);
+  ind_t Nir = this->ir_wedge_normals.size(0);
 
   if (0==Nir){
     this->ir_polyhedron = this->polyhedron;
@@ -227,10 +227,10 @@ void BrillouinZone::irreducible_vertex_search(){
   }
 
   // for which there are M*(N*(N-1))/2 + N*(M*(M-1))/2 total possible combinations
-  size_t n21 = ((Nbz*(Nbz-1))>>1)*Nir;
-  size_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
-  size_t n03 = 0;
-  for (size_t i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
+  ind_t n21 = ((Nbz*(Nbz-1))>>1)*Nir;
+  ind_t n12 = ((Nir*(Nir-1))>>1)*Nbz;
+  ind_t n03 = 0;
+  for (ind_t i=2; i<Nir; ++i) n03 += (i*(i-1))>>1;
   verbose_update("Checking {",n21,", ",n12,", ",n03,"} {2:1, 1:2, 0:3} zone:wedge 3-plane intersection points");
 
   auto bznormals = this->get_normals();
@@ -330,8 +330,8 @@ void BrillouinZone::irreducible_vertex_search(){
   }
   for (ind_t i=0; i<i03.size(0); ++i) for (ind_t j=0; j<3u; ++j)
     ir_face_present[i03.val(i,j)] = true;
-  ind_t bz_faces = std::count(bz_face_present.begin(), bz_face_present.end(), true);
-  ind_t ir_faces = std::count(ir_face_present.begin(), ir_face_present.end(), true);
+  ind_t bz_faces = static_cast<ind_t>(std::count(bz_face_present.begin(), bz_face_present.end(), true));
+  ind_t ir_faces = static_cast<ind_t>(std::count(ir_face_present.begin(), ir_face_present.end(), true));
 
   ind_t total_verts;
   total_verts  = vertices30.size(0) + vertices12.size(0);
@@ -340,11 +340,11 @@ void BrillouinZone::irreducible_vertex_search(){
   LQVec<double> all_verts(bznormals.get_lattice(), total_verts);
   LQVec<double> all_norms(bznormals.get_lattice(), bz_faces+ir_faces);
   LQVec<double> all_point(bznormals.get_lattice(), bz_faces+ir_faces);
-  bArray<int> all_ijk(total_verts,3);
+  // bArray<int> all_ijk(total_verts,3);
 
-  std::vector<size_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
+  std::vector<ind_t> bz_face_mapped(max_bz_idx, 0u), ir_face_mapped(max_ir_idx, 0u);
 
-  size_t face_idx=0;
+  ind_t face_idx=0;
   verbose_update("Combine ", i30.size(), " 3:0 normals and plane-points");
   for (auto i: i30) for (int j: i)
     if (0==bz_face_mapped[j]){
@@ -409,30 +409,30 @@ void BrillouinZone::irreducible_vertex_search(){
   ind_t vert_idx=0;
   verbose_update("Combine ", i30.size(), " 3:0 vertices and planes-per-vertex");
   for (ind_t i=0; i<i30.size(); ++i){
-    all_ijk.val(vert_idx,0) = bz_face_mapped[i30[i][0]]-1;
-    all_ijk.val(vert_idx,1) = bz_face_mapped[i30[i][1]]-1;
-    all_ijk.val(vert_idx,2) = bz_face_mapped[i30[i][2]]-1;
+    // all_ijk.val(vert_idx,0) = bz_face_mapped[i30[i][0]]-1;
+    // all_ijk.val(vert_idx,1) = bz_face_mapped[i30[i][1]]-1;
+    // all_ijk.val(vert_idx,2) = bz_face_mapped[i30[i][2]]-1;
     all_verts.set(vert_idx++, vertices30.view(i));
   }
   verbose_update("Combine ", i21.size(0), " 2:1 vertices and planes-per-vertex");
-  for (size_t i=0; i<i21.size(0); ++i){
-    all_ijk.val(vert_idx,0) = bz_face_mapped[i21.val(i,0)]-1;
-    all_ijk.val(vert_idx,1) = bz_face_mapped[i21.val(i,1)]-1;
-    all_ijk.val(vert_idx,2) = ir_face_mapped[i21.val(i,2)]-1;
+  for (ind_t i=0; i<i21.size(0); ++i){
+    // all_ijk.val(vert_idx,0) = bz_face_mapped[i21.val(i,0)]-1;
+    // all_ijk.val(vert_idx,1) = bz_face_mapped[i21.val(i,1)]-1;
+    // all_ijk.val(vert_idx,2) = ir_face_mapped[i21.val(i,2)]-1;
     all_verts.set(vert_idx++, vertices21.view(i));
   }
   verbose_update("Combine ", i12.size(0), " 1:2 vertices and planes-per-vertex");
-  for (size_t i=0; i<i12.size(0); ++i){
-    all_ijk.val(vert_idx,0) = bz_face_mapped[i12.val(i,0)]-1;
-    all_ijk.val(vert_idx,1) = ir_face_mapped[i12.val(i,1)]-1;
-    all_ijk.val(vert_idx,2) = ir_face_mapped[i12.val(i,2)]-1;
+  for (ind_t i=0; i<i12.size(0); ++i){
+    // all_ijk.val(vert_idx,0) = bz_face_mapped[i12.val(i,0)]-1;
+    // all_ijk.val(vert_idx,1) = ir_face_mapped[i12.val(i,1)]-1;
+    // all_ijk.val(vert_idx,2) = ir_face_mapped[i12.val(i,2)]-1;
     all_verts.set(vert_idx++, vertices12.view(i));
   }
   verbose_update("Combine ", i03.size(0), " 0:3 vertices and planes-per-vertex");
-  for (size_t i=0; i<i03.size(0); ++i){
-    all_ijk.val(vert_idx,0) = ir_face_mapped[i03.val(i,0)]-1;
-    all_ijk.val(vert_idx,1) = ir_face_mapped[i03.val(i,1)]-1;
-    all_ijk.val(vert_idx,2) = ir_face_mapped[i03.val(i,2)]-1;
+  for (ind_t i=0; i<i03.size(0); ++i){
+    // all_ijk.val(vert_idx,0) = ir_face_mapped[i03.val(i,0)]-1;
+    // all_ijk.val(vert_idx,1) = ir_face_mapped[i03.val(i,1)]-1;
+    // all_ijk.val(vert_idx,2) = ir_face_mapped[i03.val(i,2)]-1;
     all_verts.set(vert_idx++, vertices03.view(i));
   }
   verbose_update("Vertices and planes-per-vertex combined");
@@ -447,7 +447,7 @@ void BrillouinZone::irreducible_vertex_search(){
   auto keep = this->isinside_wedge(all_verts, constructing);
   // and pull out those vertices and their intersecting plane indices
   all_verts = all_verts.extract(keep);
-  all_ijk   = all_ijk.extract(keep);
+  // all_ijk   = all_ijk.extract(keep);
 
   // it is imperitive that the xyz coordinate system of the irreducible
   // polyhedron is the same as that used by the Brillouin zone polyhedron.
@@ -466,10 +466,10 @@ void BrillouinZone::voro_search(const int extent){
   using namespace brille;
   std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
   LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
-  size_t ntau = primtau.size(0);
-  std::vector<size_t> perm(ntau);
+  ind_t ntau = primtau.size(0);
+  std::vector<ind_t> perm(ntau);
   std::iota(perm.begin(), perm.end(), 0u); // {0u, 1u, 2u, ..., ntau-1}
-  std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+  std::sort(perm.begin(), perm.end(), [&](ind_t a, ind_t b){
     return primtau.norm(a) < primtau.norm(b);
   });
   // verbose_update("unsorted primtau\n",primtau.to_string(),norm(primtau).to_string());
@@ -480,7 +480,7 @@ void BrillouinZone::voro_search(const int extent){
   // the first Brillouin zone polyhedron will be expressed in absolute units
   // in the xyz frame of the conventional reciprocal lattice
   auto tau = transform_from_primitive(this->outerlattice, primtau).get_xyz();
-  for (size_t i=0; i<ntau; ++i) for (size_t j=0; j<3u; ++j){
+  for (ind_t i=0; i<ntau; ++i) for (ind_t j=0; j<3u; ++j){
     if (tau.val(i,j) < bbmin[j]) bbmin[j] = tau.val(i,j);
     if (tau.val(i,j) > bbmax[j]) bbmax[j] = tau.val(i,j);
   }
@@ -500,7 +500,7 @@ void BrillouinZone::voro_search(const int extent){
 double
 brille::normals_matrix_determinant(
   const LQVec<double>& a,
-  const LQVec<double>&b,
+  const LQVec<double>& b,
   const LQVec<double>& c
 ){
   std::vector<double> metric(9);
@@ -515,14 +515,14 @@ brille::normals_matrix_determinant(
 
 bool
 brille::intersect_at(
-  const LQVec<double>& ni, const LQVec<double>& pi,
-  const LQVec<double>& nj, const LQVec<double>& pj,
-  const LQVec<double>& nk, const LQVec<double>& pk,
+  const LQVec<double>& n_i, const LQVec<double>& p_i,
+  const LQVec<double>& n_j, const LQVec<double>& p_j,
+  const LQVec<double>& n_k, const LQVec<double>& p_k,
   LQVec<double>& intersect, const int idx
 ){
-  double detM = brille::normals_matrix_determinant(ni,nj,nk);
+  double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
   if (std::abs(detM) > 1e-10){
-    auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj) + cross(ni,nj)*dot(pk,nk);
+    auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j) + cross(n_i,n_j)*dot(p_k,n_k);
     tmp /= detM;
     intersect.set(idx, tmp);
     return true;
@@ -532,14 +532,14 @@ brille::intersect_at(
 
 bool
 brille::intersect_at(
-  const LQVec<double>& ni, const LQVec<double>& pi,
-  const LQVec<double>& nj, const LQVec<double>& pj,
-  const LQVec<double>& nk,
+  const LQVec<double>& n_i, const LQVec<double>& p_i,
+  const LQVec<double>& n_j, const LQVec<double>& p_j,
+  const LQVec<double>& n_k,
   LQVec<double>& intersect, const int idx
 ){
-  double detM = brille::normals_matrix_determinant(ni,nj,nk);
+  double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
   if (std::abs(detM) > 1e-10){
-    auto tmp = cross(nj,nk)*dot(pi,ni) + cross(nk,ni)*dot(pj,nj);
+    auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j);
     tmp /= detM;
     intersect.set(idx, tmp);
     return true;
@@ -549,14 +549,14 @@ brille::intersect_at(
 
 bool
 brille::intersect_at(
-  const LQVec<double>& ni, const LQVec<double>& pi,
-  const LQVec<double>& nj,
-  const LQVec<double>& nk,
+  const LQVec<double>& n_i, const LQVec<double>& p_i,
+  const LQVec<double>& n_j,
+  const LQVec<double>& n_k,
   LQVec<double>& intersect, const int idx
 ){
-  double detM = brille::normals_matrix_determinant(ni,nj,nk);
+  double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
   if (std::abs(detM) > 1e-10){
-    auto tmp = cross(nj,nk)*dot(pi,ni);
+    auto tmp = cross(n_j,n_k)*dot(p_i,n_i);
     tmp /= detM;
     intersect.set(idx, tmp);
     return true;
@@ -566,12 +566,12 @@ brille::intersect_at(
 
 bool
 brille::intersect_at(
-  const LQVec<double>& ni,
-  const LQVec<double>& nj,
-  const LQVec<double>& nk,
+  const LQVec<double>& n_i,
+  const LQVec<double>& n_j,
+  const LQVec<double>& n_k,
   LQVec<double>& intersect, const int idx
 ){
-  if (std::abs(brille::normals_matrix_determinant(ni,nj,nk)) > 1e-10){
+  if (std::abs(brille::normals_matrix_determinant(n_i,n_j,n_k)) > 1e-10){
     intersect.set(idx, 0*intersect.view(idx));
     return true;
   }

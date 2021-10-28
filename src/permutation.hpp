@@ -19,7 +19,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
    can be used to find the sorting permutations at grid points.              */
 #ifndef BRILLE_PERMUTATION_H
 #define BRILLE_PERMUTATION_H
-#include <complex>
+/*! \file
+    \author Greg Tucker
+    \brief Various functions finding optimal permutation vectors given a cost matrix
+*/
+// #include <complex>
 #include <cstdint>
 #include "array.hpp"
 #include "array_latvec.hpp" // defines bArray
@@ -240,9 +244,7 @@ two matrices.
 
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
-@param Nel[0] The number of scalars per object
-@param Nel[1] The number of vector elements per object
-@param Nel[2] The square root of the number of matrix elements per object
+@param Nel The number of scalar, vector, and matrix elements per object
 @param Wscl The cost weight for scalar elements
 @param Wvec The cost weight for vectors
 @param Wmat The cost weight for matrices
@@ -258,6 +260,15 @@ two matrices.
                       2 --> `1-brille::utils::vector_product`
                       3 --> `vector_angle`
 @returns `true` if the permutation was assigned successfully, otherwise `false`
+@deprecated This function was created under the assumption that forcing all
+            eigenvalue and eigenvector information into a single array was a
+            good idea. When it became clear that storing real eigenvalues and
+            complex eigenvectors in one data structure was a bad idea the
+            quickest solution was to 'double' this function.
+            A more-elegant solution has since been implemented
+            whereby the object holding the interpolation data also calculates
+            the cost matrices for the equivalent mode identification.
+            This function should now be unused and can be removed.
 */
 template<class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
@@ -351,6 +362,75 @@ delete[] colsol;
 return true;
 }
 
+/*! \brief Use Junker-Volgenant algorithm to determine a permutation
+
+For two arrays of data, located in memory at `centre` and `neighbour`, and each
+representing `Nobj` sets of  `Nel[0]` scalars, `Nel[1]` eigenvector elements,
+`Nel[1]` vector elements, and `Nel[2]` matrix elements,
+determine the sorting permutation that maps the elements at `centre` onto the
+same global mapping as the sorting permutation already stored at
+`permutations[neighbour_idx]`. The resultant global permutation is stored at
+`permutations[centre_idx]`.
+
+Each array of data to be compared must be formatted as:
+
+      [ 0{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)}
+        1{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)}
+        ⋮
+        Nobj-1{(0…Nel[0]-1)(0…Nel[1]-1)(0…Nel[2]-1)} ]
+
+The function constructs an `Nobj`×`Nobj` cost matrix, where each element is
+given by
+
+      Cᵢⱼ = Wscl×∑ₖ₋₀ᴺˢᶜˡ√(centre[i,k]-neighbour[j,k])
+          + Wvec×𝔣ᵥ(centre_vec[i],neighbour_vec[j])
+          + Wmat×𝔣ₘ(centre_mat[i],neighbour_mat[j])
+
+where `Wscl`, `Wvec`, and `Wmat` are weight factors for adjusting the
+relative cost of the scalar, vector, and matrix differences,
+respectively; 𝔣ᵥ is the vector cost
+function; and 𝔣ₘ is the matrix cost function.
+
+The vector cost function is selected by `vec_cost_func` to be one of:
+the absolute value of the sine of the hermitian angle between eigenvectors,
+the distance between eigenvectors, or one minus the inner product between
+eigenvectors.
+
+The matrix cost function is the Frobenius norm of the difference between the
+two matrices.
+
+@param centre_vals The values to be sorted by the determined permutation
+@param centre_vecs The vectors to be sorted by the determined permutation
+@param neighbour_vals The values against which the `centre` values are compared
+@param neighbour_vecs The vectors against which the `centre` vectors are compared
+@param vals_Nel The number of scalar, vector, and matrix elements per values object
+@param vecs_Nel The number of scalar, vector, and matrix elements per vectors object
+@param Wscl The cost weight for scalar elements
+@param Wvec The cost weight for vectors
+@param Wmat The cost weight for matrices
+@param vals_span The number of elements per values object, `vals_Nel[0]+vals_Nel[1]+vals_Nel[2]`
+@param vecs_span The number of elements per vectors object, `vecs_Nel[0]+vecs_Nel[1]+vecs_Nel[2]`
+@param Nobj The number of objects at each of `centre` and `neighbour`
+@param[out] permutations Contains the global permutation sorting for the
+                         neighbour and is where the centre permutation is stored
+@param centre_idx The index into `permutations` where the output is stored
+@param neighbour_idx The index into `permutations` to find the neighbour permutation
+@param vec_cost_func Used to select the eigenvector cost function:
+                      0 --> `abs(sin(brille::utils::hermitian_angle))`
+                      1 --> `vector_distance`
+                      2 --> `1-brille::utils::vector_product`
+                      3 --> `vector_angle`
+@returns `true` if the permutation was assigned successfully, otherwise `false`
+@deprecated This function grew as an extension of the original jv_permutation
+            which forced all eigenvalue and eigenvector information to be
+            shoved into a single two-dimensional array. When it became clear
+            that storing real eigenvalues and complex eigenvectors in one data
+            structure was a bad idea the quickest solution was to 'double' the
+            old function. A more-elegant solution has since been implemented
+            whereby the object holding the interpolation data also calculates
+            the cost matrices for the equivalent mode identification.
+            This function should now be unused and can be removed.
+*/
 template<class S, class T, class R, class I,
           typename=typename std::enable_if<std::is_same<typename CostTraits<T>::type, R>::value>::type
         >
@@ -474,7 +554,7 @@ return true;
 /*! \brief Use Junker-Volgenant algorithm to determine a permutation from a cost matrix
 
 @param cost A square matrix held in a std::vector of the costs for each assignment
-@returns The permutation as a std::vector<size_t>
+@returns The permutation as a std::vector<I> defaulting to I=int.
 */
 template<class I, class T>
 std::vector<I> jv_permutation(const std::vector<T>& cost){
@@ -486,11 +566,19 @@ std::vector<I> jv_permutation(const std::vector<T>& cost){
   brille::assignment::lapjv(Nobj, cost.data(), false, rows.data(), cols.data(), usol.data(), vsol.data());
   return rows;
 }
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T>
 std::vector<int> jv_permutation(const std::vector<T>& cost){
   return jv_permutation<int,T>(cost);
 }
+#endif
 
+/*! \brief Use Junker-Volgenant algorithm to determine a permutation from a cost matrix
+
+@param      cost A square matrix held in a std::vector of the costs for each assignment
+@param[out] row  storage for the row assignments, will be resized to fit
+@returns    true (to indicate success...)
+*/
 template<class T, class I>
 bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
   I Nobj = static_cast<I>(std::sqrt(cost.size()));
@@ -501,6 +589,13 @@ bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row){
   brille::assignment::lapjv(Nobj, cost.data(), false, row.data(), col.data(), u.data(), v.data());
   return true;
 }
+/*! \brief Use Junker-Volgenant algorithm to determine a permutation from a cost matrix
+
+@param      cost A square matrix held in a std::vector of the costs for each assignment
+@param[out] row  storage for the row assignments, will be resized to fit
+@param[out] col  storage for the column assignments, will be resized to fit
+@returns    true (to indicate success...)
+*/
 template<class T, class I>
 bool jv_permutation_fill(const std::vector<T>& cost, std::vector<I>& row, std::vector<I>& col){
   I Nobj = static_cast<I>(std::sqrt(cost.size()));
@@ -549,9 +644,7 @@ two matrices.
 
 @param centre The values to be sorted by the determined permutation
 @param neighbour The values against which the `centre` values are compared
-@param Nel[0] The number of scalars per object
-@param Nel[1] The number of vector elements per object
-@param Nel[2] The square root of the number of matrix elements per object
+@param Nel The number of scalars, vector elements, and matrix elements per object
 @param Wscl The cost weight for scalar elements
 @param Wvec The cost weight for vectors
 @param Wmat The cost weight for matrices

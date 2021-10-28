@@ -1,0 +1,9 @@
+/*!
+\namespace brille
+\brief The `brille` library namespace
+
+All components of the `brille` library are defined within this namespace.
+Nested namespaces `brille::approx` and `brille::utils` exist to introduce some
+logical separation within the codebase.
+
+*/

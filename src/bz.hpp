@@ -16,12 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_BZ_CLASS_H_
 #define BRILLE_BZ_CLASS_H_
+/*! \file
+    \author Greg Tucker
+    \brief Defines a Brillouin zone class
+*/
 #include <omp.h>
 #include "neighbours.hpp"
 #include "transform.hpp"
 #include "polyhedron.hpp"
 #include "phonon.hpp"
-#include "approx.hpp"
+// #include "approx.hpp"
 namespace brille {
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
@@ -45,12 +49,17 @@ class BrillouinZone {
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
   bool no_ir_mirroring;
 public:
-  /*!
-  @param lat A Reciprocal lattice
-  @param toprim A flag to indicate if the primtive lattice should be used
-  @param extent An integer to control how-far the vertex-finding algorithm should
+  /*! \brief Construct a Brillouin zone object
+
+  \param lat A `Reciprocal` lattice
+  \param toprim A flag to indicate if the primtive lattice should be used
+  \param extent An integer to control how-far the vertex-finding algorithm should
                 search in τ-index. The default indicates that (̄1̄1̄1),
                 (̄1̄10), (̄1̄11), (̄10̄1), ..., (111) are included.
+  \param tr controls whether time reversal symmetry should be added if absent
+  \param wedge_search controls whether and attempt is made to find the
+                      irreducible reciprocal space wedge and, therefore, the
+                      irreducible Brillouin zone.
   */
   BrillouinZone(const Reciprocal& lat,
                 const bool toprim=true,
@@ -97,6 +106,22 @@ public:
     }
     profile_update("  End of BrillouinZone construction");
   }
+  /*! \brief Decide if the held 'irreducible' Brillouin zone polyhedron must be mirrored
+
+  The wedge searching algorithm may result in a polyhedron which is only half
+  the volume of the true irreducible Brillouin zone. This is most likely to
+  occur if the spacegroup has inversion symmetry and/or the Brillouin zone is to
+  include time reversal symmetry.
+  In the case where this is true we can regain *an* irreducible Brillouin zone
+  by finding the union of the polyhedron and its inverse, however, this union is
+  unlikely to be convex which will cause problems for other algorthims.
+
+  The solution employed here finds the union of the polyhedron and each of the
+  pointgroup operated mirrored polyhedra then selects the union with the fewest
+  unique vertices as most-likely-to-be convex. If the selected union polyhedron
+  has the same volume as the irreducible Brillouin zone it replaces the
+  polyhedron stored in this object.
+  */
   void check_if_mirroring_needed(void){
     this->no_ir_mirroring = true;
     if (!this->has_inversion){
@@ -142,7 +167,15 @@ public:
       this->no_ir_mirroring = brille::approx::scalar(goal, found);
     }
   }
+  /*! \brief Determine the validity of the stored irreducible Brillouin zone polyhedron
 
+  An irreducible Brillouin zone should have volume equal to that of the first
+  Brillouin zone divided by the number of pointgroup symmetry operations.
+  Furthermore, each pointgroup operation acting on an irreducible Brillouin zone
+  polyhedron should produce a new polyhedron will null intersection.
+
+  \return Whether both requirements are fulfilled.
+  */
   bool check_ir_polyhedron(void);
   bool wedge_explicit(void);
   //! Returns the lattice passed in at construction
@@ -151,9 +184,9 @@ public:
   //! which may be a primitive lattice depending on the flag at creation
   const Reciprocal get_primitive_lattice() const { return this->lattice;};
   //! Returns the number of vertices defining the first Brillouin zone
-  size_t vertices_count() const { return this->get_vertices().size(0);};
+  ind_t vertices_count() const { return this->get_vertices().size(0);};
   //! Returns the number of reciprocal lattice points defining the first Brillouin zone
-  size_t faces_count() const { return this->get_points().size(0);};
+  ind_t faces_count() const { return this->get_points().size(0);};
   // irreducible reciprocal space wedge
   void
   set_ir_wedge_normals(const LQVec<double>& x){
@@ -169,15 +202,20 @@ public:
   }
   LQVec<double> get_ir_wedge_normals() const;
   LQVec<double> get_primitive_ir_wedge_normals() const;
-  /*!
+  /*! \brief Set the first Brillouin zone polyhedron
+
   Set the first Brillouin zone polyhedron from its vertices, central facet plane
   points, and either the three intersecting planes which gave each vertex or
   all intersecting planes which give each vertex as well as all vertices which
   form a corner of each facet plane polygon.
-  @param vertices All vertices in the polyhedron
-  @param points All (τ/2) plane points which define the facets of the polyhedron
-  @param [optional] fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
-  @param [optional] vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
+  \param v All vertices in the polyhedron
+  \param p All (τ/2) plane points which define the facets of the polyhedron
+  \param args A variable argument input passed directly to the various
+              `Polyhedron` class constructors.
+
+  The (ordered) optional inputs in `args` are:
+  1. `fpv` A `std::vector<std::vector<int>>` with *all* facet-plane indices for each vertex
+  2. `vpf` A `std::vector<std::vector<int>>` with *all* vertex indices for each facet-plane
   */
   template<typename... A>
   void
@@ -200,16 +238,21 @@ public:
     const LQVec<double> & pref = is_inner ? pp : p;
     this->polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), args...);
   }
-  /*!
+  /*! \brief Set the irreducible Brillouin zone polyhedron
+
   Set the irreducible first Brillouin zone polyhedron from its vertices, facet
   plane points, facet plane normals, and, optionally, all intersecting planes
   which give each vertex as well as all vertices which form a corner of each
   facet plane polygon.
-  @param vertices All vertices in the polyhedron
-  @param points A point on each of the planes which define the facets of the polyhedron
-  @param normals The normal direction which, along with the on-plane-point, defines each facet plane
-  @param [optional] fpv A std::vector<std::vector<int>> with *all* facet-plane indices for each vertex
-  @param [optional] vpf A std::vector<std::vector<int>> with *all* vertex indices for each facet-plane
+  \param v All vertices in the polyhedron
+  \param p All (τ/2) plane points which define the facets of the polyhedron
+  \param n All facet normals of the polyhedron
+  \param args A variable argument input passed directly to the various
+              `Polyhedron` class constructors.
+
+  The (ordered) optional inputs in `args` are:
+  1. `fpv` A `std::vector<std::vector<int>>` with *all* facet-plane indices for each vertex
+  2. `vpf` A `std::vector<std::vector<int>>` with *all* vertex indices for each facet-plane
   */
   template<typename... A>
   void
@@ -234,15 +277,17 @@ public:
     const LQVec<double> & nref = is_inner ? np : n;
     this->ir_polyhedron = Polyhedron(vref.get_xyz(), pref.get_xyz(), nref.get_xyz(), args...);
   }
-  /*!
-  Set the irreducible first Brillouin zone polyhedron from its vertices. Since
-  no facet information is provided via this method, a convex hull of the
+  /*! \brief Set the irreducible first Brillouin zone polyhedron from its vertices
+
+  Since no facet information is provided via this method, a convex hull of the
   provided points is calculated and used as the irreducible polyhedron.
   Additionally the volume and symmetry of the calculated polyhedron is checked
   against the first Brillouin zone using the pointgroup symmetry operations.
-  @param vertices All vertices in the irreducible polyhedron
-  @returns A bool indicating if the found convex hull polyhedron is the
-           expected volume and has the expected symmetry.                     */
+
+  \param v All vertices in the irreducible polyhedron
+  \return A bool indicating if the found convex hull polyhedron is the
+          expected volume and has the expected symmetry.
+  */
   bool set_ir_vertices(const LQVec<double>& v){
     bool is_outer = this->outerlattice.issame(v.get_lattice());
     bool is_inner = this->lattice.issame(v.get_lattice());
@@ -305,7 +350,8 @@ public:
   std::vector<std::vector<int>> get_ir_vertices_per_face(void) const;
   //! Print a representation of the object to std::cout
   void print() const;
-  /*!
+  /*! \brief Attempt to find an irreducible section of reciprocal space
+
   Using the pointgroup symmetry opperations of the conventional unit cell,
   this method defines *an* irreducible section of reciprocal space.
   The irreducible section bounds a solid angle N and consequently the full
@@ -313,8 +359,78 @@ public:
   As the selected irreducible section is related by symmetry to the rest of
   reciprocal space there are (at least) 4π/N - 1 equivalent other choices for
   the irreducible wedge.
+
+  This method finds the stationary axes of the 'proper' rotation matrix of each
+  pointgroup operation (if an operation, R, is a rotoinversion, the 'proper'
+  rotation is ̄1R), collectively \f$\hat{z}_i\f$, and two right-handed
+  perpendicular axes \f$\hat{x}_i\f$ and \f$\hat{y}_i\f$.
+  It then attempts to find a combination of subsets of \f$\hat{x}_i\f$ and
+  \f$\hat{y}_i\f$ which are the normals of a convex 'wedge' (a flat-sided cone)
+  with the expected subtended solid angle.
+
+  \param prefer_basis_vectors Whether the reciprocal lattice basis vectors
+                              should be used instead of the pointgroup operator
+                              perpendicular axes when determining \f$\hat{x}\f$
+  \param parallel_ok Whether a newly found \f$\hat{x}_j\f$ is allowed to be
+                     parallel to the \f$\hat{z}_i\f$ used in its determination
+
+  \deprecated This method is less successful than wedge_brute_force
+  \see wedge_brute_force
   */
   void wedge_search(const bool prefer_basis_vectors=true, const bool parallel_ok=true);
+  /*! \brief Attempt to find an irreducible section of reciprocal space
+
+  This method collects the vertices, facet centres, and mid-edge points of the
+  first Brillouin zone polyhedron, which are all points of high symmetry, and
+  attempts to find a subset of these which are the vertices of an irreducible
+  section of the first Brillouin zone.
+
+  For each of the pointgroup operations in turn other than 1 and ̄1, the
+  high-symmetry points are collected into subsets of points which successive
+  applications of the operation map onto each other. The subsets are ordered
+  with an arbitrary first point and each successive element of the set being the
+  next application of the operation, including identification of missing subset
+  members. With all subsets found for a pointgroup operation the most-complete
+  highest-member-count subgroup is chosen to cull the list of high-symmetry
+  points. If the pointgroup operation is 2 or ̄2 then two points in the chosen
+  subset (and the Γ point) define a plane -- this plane divides space and the
+  dot product with its normal is used to determine which high-symmetry points
+  are removed (if their dot product is negative).
+  If the pointgroup operation is higher-order then two successive points in the
+  chosen subset, each combined with a point along the operations characteristic
+  axis and Γ, define two planes and high-symmetry points 'behind' either are
+  removed.
+
+  The high-symmetry points remaining after all pointgroup operations have been
+  used in this way *might* be the vertices of an irreducible section of the
+  first Brillouin zone. The method checks this by forming a Polyhedron from
+  their convex hull, verifying that it has the expected volume relative to the
+  first Brillouin zone, and then ensuring that every pointgroup operation acting
+  on the test polyhedron produces a new polyhedron which does not intersect with
+  the test polyhedron.
+
+  \param special_2_folds If true any 2 pointgroup operations are used first
+                         to cull the high-symmetry points along with preselected
+                         dividing planes which ensure the an irreducible
+                         Brillouin zone is found for high-symmetry cubic
+                         lattices
+  \param special_mirrors If true any ̄2 pointgroup operations are used directly
+                         after the special 2-fold axes with their characteristic
+                         axis choses as the dividing plane normal
+  \param sort_by_length  If true the characteristic axis length is used to sort
+                         the pointgroup operations so that, e.g., [100] is used
+                         before [111] in a cubic system; otherwise the
+                         operations are sorted by decreasing isometry:
+                         6, 4, 3, 2, -2, -3, -4, -6
+  \param sort_one_sym    If true the equivalent subsets of high-symmetry points
+                         for a given pointgroup operation are sorted by how many
+                         of the expected number were found to still remain in
+                         the list of culled high-symmetry points; otherwise the
+                         order of subsets depends on the order of the remaining
+                         high-symmetry points.
+  \return true if the found convex polyhedron has all of the expected properties
+          of an irreducible Brillouin zone polyhedron.
+  */
   bool wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true, bool sort_one_sym=true);
   void wedge_triclinic(void);
   /*!
@@ -330,24 +446,36 @@ public:
   and the (0,3) intersection points are all identically ⃗0.
   */
   void irreducible_vertex_search();
-  /*! \brief Search for the vertices defining the first Brillouin zone
+  /*! \brief Construct the first Brillouin zone Polyhedron
 
-    Search through all combinations of three planes from `extent`*(̄1̄1̄1) to
-    `extent`*(111) for three-plane intersection points, these are all the
-    vertices of *a* Brillouin zone. Sort through the intersection points to
-    find the subset that are closer to the origin than any of the
-    non-intersection-defining planes, these are vertices of the *first*
-    Brillouin zone but may not be unique. So determine a unique subset and
-    record their locations, contributing intersecting-planes, and all planes
-    which contribute to one or more vertex in the object.
+  \param scale A scale factor for the starting box
+
+  One common construction of the first Brillouin zone is the region of
+  reciprocal space closer to one primitive lattice point than any other. In this
+  construction all planes dividing space between any two primitive lattice
+  points form part of the surface of *a* Brillouin zone, but not necessarily
+  the *first* Brillouin zone. This method uses successive division of a
+  polyhedron to identify the first Brillouin zone for a primitive lattice.
+
+  The starting polyhedron is a box bounding all integer primitive lattice points
+  (`i`,`j`,`k`) where each `i`, `j`, and `k` are ∈ `-scale`,…,-1,0,1,…,`scale`.
+  Then, the (`i`,`j`,`k`) are sorted in increasing distance from (`0`,`0`,`0`)
+  and used successively to divide the polyhedron by the plane passing through
+  (`i`,`j`,`k`)/2 with normal (`i`,`j`,`k`), keeping the subpolyhedron which
+  contains (`0`,`0`,`0`). This results in the first Brillouin zone centred on
+  the origin of reciprocal space.
+
+  The algorithm used by this method has been inspired by the Voronoi cell
+  software library [Voro++]([http://math.lbl.gov/voro++/), especially
+  [voro::voronoicell_base](http://math.lbl.gov/voro++/doc/refman/classvoro_1_1voronoicell__base.html).
   */
-  void voro_search(const int extent=1);
+  void voro_search(const int scale=1);
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
   bool isprimitive(void) const {return this->is_primitive;};
 
   /*! \brief Determine whether points are inside of the first Brillouin zone
     @param p A reference to a LQVec list of Q points to be checked
-    @returns A std::vector<bool> with each element indicating if the
+    @returns A `std::vector<bool>`` with each element indicating if the
              associated Q point is inside of the Brillouin zone.
   */
   template<class T>
@@ -367,18 +495,28 @@ public:
       normals = this->get_primitive_normals();
     }
     #pragma omp parallel for default(none) shared(out, normals, p, points) schedule(dynamic)
-    for (long long i=0; i<p.size(0); ++i)
+    for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t 
       out[i] = dot(normals, p.view(i)-points).all(brille::cmp::le, 0.);
     return out;
   }
   /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
+
+  A point is within the irreducible wedge if its dot product with all wedge
+  normals is greater or equal to zero *or* if all dot products are negative or
+  equal to zero since the irreducible wedge is a flat-sided cone.
+  This method performs the dot product for the vector from the origin to each
+  provided point with all wedge normals to determine if each point is inside the
+  irreducible wedge.
+
   @param p A reference to a LQVec list of Q points to be checked
-  @returns An std::vector<bool> with each element indicating if the
+  @param pos Restrict the comparison to `dot(n,p)≥0`; useful when determining
+             the normals which define the irreducible wedge.
+  @returns An `std::vector<bool>`` with each element indicating if the
            associated Q point is inside our irreducible reciprocal space.
   */
   template<class T>
   std::vector<bool>
-  isinside_wedge(const LQVec<T> &p, const bool constructing=false) const {
+  isinside_wedge(const LQVec<T> &p, const bool pos=false) const {
     bool isouter = this->outerlattice.issame(p.get_lattice());
     bool isinner = this->lattice.issame(p.get_lattice());
     if (!(isouter||isinner)){
@@ -412,17 +550,20 @@ public:
       // accessor method mirrors the half-polyhedron in this case, so when
       // identifying whether a point is inside of the irreducible Brillouin zone
       // we must allow for the ≤0 case as well.
-      brille::cmp c = constructing||this->no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;
+      brille::cmp c = pos||this->no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;
       #pragma omp parallel for default(none) shared(out, normals, p, c) schedule(dynamic)
-      for (long long i=0; i<p.size(0); ++i)
+      for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t
         out[i] = dot(normals, p.view(i)).all(c, 0.);
     }
     return out;
   }
   /*! \brief Find q and τ such that Q=q+τ and τ is a reciprocal lattice vector
-    @param[in] Q A reference to LQVec list of Q points
-    @param[out] q The reduced reciprocal lattice vectors
-    @param[out] tau The reciprocal lattice zone centres
+    \param[in] Q A reference to LQVec list of Q points
+    \param[out] q The reduced reciprocal lattice vectors
+    \param[out] tau The reciprocal lattice zone centres
+    \param threads The number of OpenMP threads to use, if less than one the
+                   number returned by `omp_get_max_threads()` is used instead.
+    \return true
   */
   bool
   moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads=0) const
@@ -456,12 +597,12 @@ public:
     // ensure that qsl and tausl can hold each qi and taui
     qsl.resize(Qsl.size(0));
     tausl.resize(Qsl.size(0));
-    long long snQ = brille::utils::u2s<long long, size_t>(Qsl.size(0));
+    long long snQ = brille::utils::u2s<long long, ind_t>(Qsl.size(0));
   #pragma omp parallel for default(none)\
   shared(Qsl, tausl, qsl, points, normals, taus, taulen, snQ, max_count)\
   schedule(dynamic)
     for (long long si=0; si<snQ; si++){
-      size_t i = brille::utils::s2u<size_t, long long>(si);
+      ind_t i = brille::utils::s2u<ind_t, long long>(si);
       auto taui = Qsl.view(i).round();
       auto qi = Qsl.view(i) - taui;
       auto last_shift = taui;
@@ -472,8 +613,8 @@ public:
         auto qidn = qi_dot_normals.to_std();
         if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a > 0;})){
           int maxnm{0};
-          size_t maxat{0};
-          for (size_t j=0; j<Nhkl.size(); ++j)
+          ind_t maxat{0};
+          for (ind_t j=0; j<Nhkl.size(); ++j)
                                                            // protect against oscillating by ±τ
           if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus.view(j)+last_shift).all(brille::cmp::gt, 0.) && qidn[j]>qidn[maxat]))){
             maxnm = Nhkl[maxat=j];
@@ -492,7 +633,7 @@ public:
     }
     auto allinside = this->isinside(q);
     if (std::count(allinside.begin(), allinside.end(), false) > 0){
-      for (size_t i=0; i<Q.size(0); ++i) if (!allinside[i]){
+      for (ind_t i=0; i<Q.size(0); ++i) if (!allinside[i]){
         info_update("Q  =",Q.to_string(i)  ," tau  =",tau.to_string(i)  ," q  =",q.to_string(i));
         info_update("Qsl=",Qsl.to_string(i)," tausl=",tausl.to_string(i)," qsl=",qsl.to_string(i),"\n");
       }
@@ -506,11 +647,12 @@ public:
              conventional unit cell pointgroup, G.
     @param [in] Q a refernce to a LQVec list of Q points
     @param [out] q The irreducible reduced reciprocal lattice vectors
-    @param [out] τ The conventional reciprocal lattice zone centres
-    @param [out] R The pointgroup operation index for R
-    @param [out] invR The pointgroup operation index for R⁻¹
-    @param [in] nthreads An optional number of OpenMP threads to use
-    @note R and invR index the PointSymmetry object accessible via BrillouinZone::get_pointgroup_symmetry();
+    @param [out] tau The conventional reciprocal lattice zone centres
+    @param [out] Ridx The pointgroup operation index for R
+    @param [out] invRidx The pointgroup operation index for R⁻¹
+    @param [in] threads An optional number of OpenMP threads to use
+    @return the success status
+    @note `Ridx` and `invRidx` index the `PointSymmetry` object accessible via `BrillouinZone::get_pointgroup_symmetry()`;
   */
   bool
   ir_moveinto(
@@ -527,7 +669,7 @@ public:
     // get the PointSymmetry object, containing all operations
     PointSymmetry psym = this->get_pointgroup_symmetry();
     // ensure q, tau, and Rm can hold one for each Q.
-    size_t nQ = Q.size(0);
+    ind_t nQ = Q.size(0);
     auto Qshape = Q.shape();
     q.resize(Qshape);
     tau.resize(Qshape);
@@ -542,16 +684,16 @@ public:
     auto lat = Q.get_lattice();
     // OpenMP 2 (VS) doesn't like unsigned loop counters
     size_t n_outside{0};
-    long long snQ = brille::utils::u2s<long long, size_t>(nQ);
+    long long snQ = brille::utils::u2s<long long, ind_t>(nQ);
     #pragma omp parallel for default(none) shared(psym, Ridx, invRidx, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
     for (long long si=0; si<snQ; ++si){
-      size_t i = brille::utils::s2u<size_t, long long>(si);
+      ind_t i = brille::utils::s2u<ind_t, long long>(si);
       // any q already in the irreducible zone need no rotation → identity, but we need to find the index of E
       bool outside=!in_ir[i];
       if (outside){
         // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
         LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
-        for (size_t j=0; j<psym.size(); ++j) if (outside) {
+        for (ind_t j=0; j<psym.size(); ++j) if (outside) {
           // The point symmetry matrices relate *real space* vectors! We must use
           // their transposes' to rotate reciprocal space vectors.
           brille::utils::multiply_matrix_vector(qj.ptr(0), transpose(psym.get(j)).data(), q.ptr(i));
@@ -571,7 +713,7 @@ public:
         in_ir[i] = false;
       }
     }
-    if (n_outside > 0) for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+    if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!in_ir[i]){
       std::string msg = "Q = " + Q.to_string(i);
       msg += " is outside of the irreducible BrillouinZone ";
       msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
@@ -581,6 +723,12 @@ public:
     return true; // otherwise we hit the runtime error above
   }
   /*! \brief Find q and R∈G such that Q = Rᵀq such that q ∈ the irreducible wedge
+
+  \param [in] Q a refernce to a LQVec list of Q points
+  \param [out] q The irreducible reduced reciprocal lattice vectors
+  \param [out] R The pointgroup operation matrix for R
+  \param [in] threads An optional number of OpenMP threads to use
+  \return the success status
   */
   bool
   ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<std::array<int,9>>& R, const int threads=0) const {
@@ -593,7 +741,7 @@ public:
     // get the PointSymmetry object, containing all operations
     PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
     // ensure q and R can hold one for each Q.
-    size_t nQ = Q.size(0);
+    ind_t nQ = Q.size(0);
     auto Qshape = Q.shape();
     q.resize(Qshape);
     R.resize(nQ);
@@ -603,16 +751,16 @@ public:
     auto lat = Q.get_lattice();
     // OpenMP 2 (VS) doesn't like unsigned loop counters
     size_t n_outside{0};
-    long long snQ = brille::utils::u2s<long long, size_t>(nQ);
+    long long snQ = brille::utils::u2s<long long, ind_t>(nQ);
     #pragma omp parallel for default(none) shared(psym, R, q, Q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
     for (long long si=0; si<snQ; ++si){
-      size_t i = brille::utils::s2u<size_t, long long>(si);
+      ind_t i = brille::utils::s2u<ind_t, long long>(si);
       // any q already in the irreducible zone need no rotation → identity
       bool outside=!in_ir[i];
       if (outside){
         // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
         LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
-        for (size_t j=0; j<psym.size(); ++j) if (outside) {
+        for (ind_t j=0; j<psym.size(); ++j) if (outside) {
           // The point symmetry matrices relate *real space* vectors! We must use
           // their transposes' to rotate reciprocal space vectors.
           brille::utils::multiply_matrix_vector(qj.ptr(0), transpose(psym.get(j)).data(), Q.ptr(i));
@@ -631,7 +779,7 @@ public:
         in_ir[i] = false;
       }
     }
-    if (n_outside > 0) for (size_t i=0; i<nQ; ++i) if (!in_ir[i]){
+    if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!in_ir[i]){
       std::string msg = "Q = " + Q.to_string(i);
       msg += " is outside of the irreducible reciprocal space wedge ";
       msg += " , irQ = " + q.to_string(i);
@@ -652,7 +800,7 @@ public:
 private:
   template<class T, class R>
   bool
-  wedge_normal_check(const LQVec<T>& n, LQVec<R>& normals, size_t& num){
+  wedge_normal_check(const LQVec<T>& n, LQVec<R>& normals, ind_t& num){
     std::string msg = "Considering " + n.to_string(0) + "... ";
     if (norm(n).all(brille::cmp::eq, 0.0)){
       debug_update(msg, "rejected; zero-length");
@@ -686,7 +834,7 @@ private:
   }
   template<class T, class R, class U>
   bool
-  wedge_normal_check(const LQVec<T>& n0, const LQVec<R>& n1, LQVec<U>& normals, size_t& num){
+  wedge_normal_check(const LQVec<T>& n0, const LQVec<R>& n1, LQVec<U>& normals, ind_t& num){
     std::string msg = "Considering " + n0.to_string(0)+ " and " + n1.to_string(0) + "... ";
     bool p0=false, p1=false;
     if (num>0){
@@ -761,13 +909,14 @@ private:
 From the normal vector and on-plane point describing three planes, determine
 if an intersection point exists (and is not too far from the origin), if so
 calculate the intersection pointd and store it in `intersect` at `idx`.
-@param ni A LQVec<double> reference to the normal for plane `i`
-@param pi A LQVec<double> reference to the on-plane point for plane `i`
-@param nj A LQVec<double> reference to the normal for plane `j`
-@param pj A LQVec<double> reference to the on-plane point for plane `j`
-@param nk A LQVec<double> reference to the normal for plane `k`
-@param pk A LQVec<double> reference to the on-plane point for plane `k`
-@param[out] intersect A LQVec<double> reference to a list of intersection points
+@param ni A LQVec reference to the normal for plane `i`
+@param pi A LQVec reference to the on-plane point for plane `i`
+@param nj A LQVec reference to the normal for plane `j`
+@param pj A LQVec reference to the on-plane point for plane `j`
+@param nk A LQVec reference to the normal for plane `k`
+@param pk A LQVec reference to the on-plane point for plane `k`
+@param[out] intersect A LQVec reference to a list of intersection points
+@returns true if the three planes are non-degenerate and intersect
 @param idx The location in `intersect` where the found intersection point should
            be stored, if it exists and is not too far from the origin.
 */
@@ -776,14 +925,17 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj, const LQVec<double>& pj,
              const LQVec<double>& nk, const LQVec<double>& pk,
              LQVec<double>& intersect, const int idx);
-/*! \brief A specialization where one plane passes through the origin
+/*! \brief Find the intersection point of three planes, if it exists.
 
-@param ni A LQVec<double> reference to the normal for plane `i`
-@param pi A LQVec<double> reference to the on-plane point for plane `i`
-@param nj A LQVec<double> reference to the normal for plane `j`
-@param pj A LQVec<double> reference to the on-plane point for plane `j`
-@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
-@param[out] intersect A LQVec<double> reference to a list of intersection points
+A specialization where one plane passes through the origin
+
+@param ni A LQVec reference to the normal for plane `i`
+@param pi A LQVec reference to the on-plane point for plane `i`
+@param nj A LQVec reference to the normal for plane `j`
+@param pj A LQVec reference to the on-plane point for plane `j`
+@param nk A LQVec reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec reference to a list of intersection points
+@returns true if the three planes are non-degenerate and intersect
 @param idx The location in `intersect` where the found intersection point should
            be stored, if it exists and is not too far from the origin.
 */
@@ -792,13 +944,16 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj, const LQVec<double>& pj,
              const LQVec<double>& nk,
              LQVec<double>& intersect, const int idx);
-/*! \brief A specialization where two planes pass through the origin
+/*! \brief Find the intersection point of three planes, if it exists.
 
-@param ni A LQVec<double> reference to the normal for plane `i`
-@param pi A LQVec<double> reference to the on-plane point for plane `i`
-@param nj A LQVec<double> reference to the normal for plane `j`, which passes through the origin
-@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
-@param[out] intersect A LQVec<double> reference to a list of intersection points
+A specialization where two planes pass through the origin
+
+@param ni A LQVec reference to the normal for plane `i`
+@param pi A LQVec reference to the on-plane point for plane `i`
+@param nj A LQVec reference to the normal for plane `j`, which passes through the origin
+@param nk A LQVec reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec reference to a list of intersection points
+@returns true if the three planes are non-degenerate and intersect
 @param idx The location in `intersect` where the found intersection point should
            be stored, if it exists and is not too far from the origin.
 */
@@ -807,17 +962,20 @@ intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj,
              const LQVec<double>& nk,
              LQVec<double>& intersect, const int idx);
-/*! \brief A (trivial) specialization where three planes pass through the origin
+/*! \brief Find the intersection point of three planes, if it exists.
 
-@param ni A LQVec<double> reference to the normal for plane `i`, which passes through the origin
-@param nj A LQVec<double> reference to the normal for plane `j`, which passes through the origin
-@param nk A LQVec<double> reference to the normal for plane `k`, which passes through the origin
-@param[out] intersect A LQVec<double> reference to a list of intersection points
+A (trivial) specialization where three planes pass through the origin
+
+@param ni A LQVec reference to the normal for plane `i`, which passes through the origin
+@param nj A LQVec reference to the normal for plane `j`, which passes through the origin
+@param nk A LQVec reference to the normal for plane `k`, which passes through the origin
+@param[out] intersect A LQVec reference to a list of intersection points
 @param idx The location in `intersect` where the found intersection point should
            be stored, if it exists and is not too far from the origin.
-@note The intersection point of three non-degenerate planes passing through the
-      origin *is* the origin. Degenerate planes do not intersect at a point, so
-      this function will return false for degenerate inputs.
+@returns true if the three planes are non-degenerate
+@note The intersection of three planes passing through the origin is only
+      trivial if they are non-degenerate. The lack of degeneracy is confirmed
+      before setting the output intersection point to the origin.
 */
 bool
 intersect_at(const LQVec<double>& ni,

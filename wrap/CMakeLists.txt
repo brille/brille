@@ -1,11 +1,4 @@
-#set(python_module_name _brille)
-#pybind11_add_module(${python_module_name} MODULE _brille.cpp "")
-
 add_dependencies(${BRILLE_PYTHON_MODULE} write_version_info)
-#execute_process(
-#  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/version_info.py ${CMAKE_BINARY_DIR}/version_info.hpp
-#  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-#)
 
 set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
@@ -13,7 +6,6 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   _bz.cpp
   _debug.cpp
   _hall_symbol.cpp
-  #_interpolation_data.cpp
   _interpolator.cpp
   _lattice.cpp
   _mesh.cpp
@@ -29,8 +21,6 @@ set(BRILLE_PYTHON_MODULE_SOURCES
 )
 target_sources(${BRILLE_PYTHON_MODULE} PRIVATE ${BRILLE_PYTHON_MODULE_SOURCES})
 
-#include_directories(${CMAKE_BINARY_DIR})
-target_include_directories(${BRILLE_PYTHON_MODULE} PRIVATE ${CMAKE_BINARY_DIR})
 
 if(BRILLE_BUILD_TESTING)
   #ensure that the python interpreter knows how to import numpy
@@ -47,6 +37,6 @@ if(BRILLE_BUILD_TESTING)
       add_test(NAME ${python_test} COMMAND ${PYTHON_EXECUTABLE} ${python_test} )
     endforeach()
   else()
-    message(WARNING "Install numpy for ${PYTHON_EXECUTABLE} to run all tests")
+    message(WARNING "Install working numpy for ${PYTHON_EXECUTABLE} to run all tests")
   endif()
 endif()

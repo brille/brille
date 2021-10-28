@@ -17,26 +17,31 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef BRILLE_TRELLIS_HPP_
 #define BRILLE_TRELLIS_HPP_
-#include <vector>
-#include <array>
+/*! \file
+    \author Greg Tucker
+    \brief A class holding a hybrid grid of cuboid and triangulated tetrahedral
+           cells and data for interpolation
+*/
+// #include <vector>
+// #include <array>
 #include <queue>
-#include <tuple>
-#include <mutex>
+// #include <tuple>
+// #include <mutex>
 #include <condition_variable>
 #include <atomic>
-#include <algorithm>
+// #include <algorithm>
 #include <functional>
-#include <omp.h>
-#include "array.hpp"
-#include "array2.hpp"
-#include "array_latvec.hpp" // defines bArray
+// #include <omp.h>
+// #include "array.hpp"
+// #include "array2.hpp"
+// #include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
-#include "utilities.hpp"
-#include "debug.hpp"
+// #include "utilities.hpp"
+// #include "debug.hpp"
 #include "triangulation_simple.hpp"
 #include "interpolatordual.hpp"
-#include "permutation.hpp"
-#include "approx.hpp"
+// #include "permutation.hpp"
+// #include "approx.hpp"
 namespace brille {
 
 /*
@@ -77,63 +82,93 @@ static int on_boundary(const std::vector<T>& bin_edges, const T x, const size_t 
   return 0;
 }
 
+/*! \brief An enumeration to differentiate betwee Node types
+
+\see NullNode, CubeNode, PolyNode
+*/
 enum class NodeType {null, cube, poly};
 
+/*! \brief A base class for the differentiation of Node types
 
+The NullNode is not within the domain of the PolyhedronTrellis because it has
+a null intersection with the bounding Polyhedron.
+*/
 class NullNode{
 public:
-  using ind_t = brille::ind_t;
+  //! Implicit construction of an empty NullNode
   NullNode() {}
+  //! Deconstruction of a NullNode
   virtual ~NullNode() = default;
-  //
+  //! Return the type of this Node
   virtual NodeType type(void) const {return NodeType::null;}
+  //! Return the number of vertices this Node indexes
   virtual ind_t vertex_count() const {return 0u;}
+  //! Return the vertex indices of this Node
   virtual std::vector<ind_t> vertices(void) const {return std::vector<ind_t>();}
+  //! Return the triangulated tetrahedra indices of this Node
   virtual std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<ind_t,4>>();}
-  // bool indices_weights(const bArray<double>&, const bArray<double>&, std::vector<ind_t>&, std::vector<double>&) const {return false;}
+  //! Return the indices required and their weights for linear interpolation at a point
   bool indices_weights(const bArray<double>&, const bArray<double>&, std::vector<std::pair<ind_t,double>>&) const {return false;}
+  //! Return the volume of this Node
   double volume(const bArray<double>&) const {return 0.;}
 };
+/*! \brief A Node fully within the domain of the PolyhedronTrellis
+
+The eight vertices of this cuboid Node are all within the volume of the
+convex Polyhedron bounding the domain of the Polyhedrontrellis.
+It contains an ordered list of its vertex indices within the full list of
+all PolyhedronTrellis vertices.
+*/
 class CubeNode: public NullNode {
+  /*!< \brief The eight vertex indices of the Node
+
+  The vertex order is critical for the CubeNode and must be:
+    (000), (100), (110), (010), (101), (001), (011), (111)
+  */
   std::array<ind_t, 8> vertex_indices;
 public:
+  //! Implicit construction of a CubeNode with no volume
   CubeNode(): vertex_indices({{0,0,0,0,0,0,0,0}}) {}
+  //! Construct from an array
   CubeNode(const std::array<ind_t,8>& vi): vertex_indices(vi) {}
+  //! Construct from a vector with 8 elements
   CubeNode(const std::vector<ind_t>& vi): vertex_indices({{0,0,0,0,0,0,0,0}}) {
     if (vi.size() != 8) throw std::logic_error("CubeNode objects take 8 indices.");
     for (ind_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
   }
+  //! Return the number of vertices this Node indexes
   ind_t vertex_count() const { return 8u;}
+  //! Return the vertex indices of this Node
   std::vector<ind_t> vertices(void) const {
     std::vector<ind_t> out;
     for (auto v: vertex_indices) out.push_back(v);
     return out;
   }
-  // bool indices_weights(
-  //   const bArray<double>& vertices,
-  //   const bArray<double>& x,
-  //   std::vector<ind_t>& indices,
-  //   std::vector<double>& weights
-  // ) const {
-  //   // The CubeNode object contains the indices into `vertices` necessary to find
-  //   // the 8 corners of the cube. Those indices should be ordered
-  //   // (000) (100) (110) (010) (101) (001) (011) (111)
-  //   // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
-  //   auto node_verts = vertices.extract(vertex_indices);
-  //   double node_volume = abs(node_verts.view(0)-node_verts.view(7)).prod(1)[0];
-  //   auto w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
-  //   // If any normalised weights are greater than 1+eps() the point isn't in this node
-  //   if (w.any(brille::cmp::gt, 1.)) return false;
-  //   auto needed = w.is(brille::cmp::gt, 0.);
-  //   indices.clear();
-  //   weights.clear();
-  //   for (int i=0; i<8; ++i) if (needed[i]) {
-  //     // the weight corresponds to the vertex opposite the one used to find the partial volume
-  //     indices.push_back(vertex_indices[7-i]);
-  //     weights.push_back(w[i]);
-  //   }
-  //   return true;
-  // }
+  /*!\brief Return the indices required and their weights for linear
+            interpolation at a point
+
+  \param vertices all vertex positions of the PolyhedronTrellis
+  \param        x the point at which linear interpolation is required
+  \param[out]  iw the minimal number of vertex indices and their interpolation
+                  weights required for linear interpoaltion within the Node
+  \returns whether this Node contains `x` and `iw` has been set
+  If the interpolation point is
+    - one of the indexed PolyhedronTrellis points then that point index and
+      a weight of 1 are set in `iw`.
+    - on an edge of the Node the two vertices on the endpoints of the edge are
+      set in `iw` along with weights proportional to the distance from the point
+      to the *other* vertex -- that is, the line segment length with a vertex
+      replaced by the point is proportional to the interpolation weight for that
+      vertex.
+    - on a face of the Node the four vertices at the corners of the face are
+      set in `iw` with weights proportional to the area of the rectangle formed
+      by the test point and the three other face vertices.
+    - within the volume of the Node the eight corners indices are set in `iw`
+      along with weights proportional to the volume of the cuboid formed by the
+      point and the other seven Node corners.
+    - outside of the volume no inidices or weights are set and the returned bool
+      is false.
+  */
   bool indices_weights(
     const bArray<double>& vertices,
     const bArray<double>& x,
@@ -156,6 +191,14 @@ public:
     }
     return true;
   }
+  /*\brief Determine the volume of this Node
+
+  \param vertices all vertex positions of the PolyhedronTrellis which this Node
+                  indexes
+  Since the vertex indices are in a defined order the body diagonal is easily
+  extracted from two vertices and the Node volume is the product of the body
+  diagonal elements.
+  */
   double volume(const bArray<double>& vertices) const {
     // The CubeNode object contains the indices into `vertices` necessary to find
     // the 8 corners of the cube. Those indices should be ordered
@@ -164,48 +207,75 @@ public:
     return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
   }
 };
+/*! \brief A Node at least partly within the domain of the PolyhedronTrellis
+
+If any of the eight vertices of Node are outside of the bounding Polyhedron of
+the PolyhedronTrellis then the surface of the Polyhedron passes through its
+volume. Since the surface of the Polyhedron are where degeneracies are allowed
+we do not want to interpolate across the surface and instead must find the
+intersection of the Node with the bounding Polyhedron. That intersection is
+itself another Polyhedron which can then be triangulated for use in linear
+interpolation.
+
+A PolyNode is always the intersection of a Trellis Node and the bounding
+Polyhedron and typically has lower volume than the Node.
+*/
 class PolyNode: public NullNode {
-  std::vector<std::array<ind_t,4>> vi_t;  //!< vertex indices per tetrahedra
-  std::vector<std::array<double,4>> ci_t;   //!< circumsphere information per tetrahedra
-  std::vector<double> vol_t;                //!< volume per tetrahedra
+  std::vector<std::array<ind_t,4>> vi_t;  //!< vertex indices per triangulated tetrahedron
+  std::vector<std::array<double,4>> ci_t; //!< circumsphere information per triangulated tetrahedra
+  std::vector<double> vol_t;              //!< volume per triangulated tetrahedra
 public:
+  //! empty implicit constructor
   PolyNode() {};
   // actually constructing the tetrahedra from, e.g., a Polyhedron object will
   // need to be done elsewhere
+  //! Construct with all parameters defined
   PolyNode(
     const std::vector<std::array<ind_t,4>>& vit,
     const std::vector<std::array<double,4>>& cit,
     const std::vector<double>& volt
   ): vi_t(vit), ci_t(cit), vol_t(volt) {}
-  // count-up the number fo unique vertices in the tetrahedra-triangulated polyhedron
+  //! Return the number of triangulated tetrahedra in the PolyNode
   ind_t tetrahedra_count() const {return static_cast<ind_t>(vi_t.size());}
+  //! Return the number of unique vertex indices in the triangulated tetrahedra
   ind_t vertex_count() const { return static_cast<ind_t>(this->vertices().size());}
+  //! Return the unique vertex indices from all triangulated tetrahedra
   std::vector<ind_t> vertices(void) const {
     std::vector<ind_t> out;
     for (auto tet: vi_t) for (auto idx: tet)
     if (std::find(out.begin(), out.end(), idx)==out.end()) out.push_back(idx);
     return out;
   }
+  //! Return the vertex indices for each triangulated tetrahedra
   std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(void) const {return vi_t;}
-  // bool indices_weights(
-  //   const bArray<double>& vertices,
-  //   const bArray<double>& x,
-  //   std::vector<ind_t>& indices,
-  //   std::vector<double>& weights
-  // ) const {
-  //   indices.clear();
-  //   weights.clear();
-  //   std::array<double,4> w{{0,0,0,0}};
-  //   for (ind_t i=0; i<vi_t.size(); ++i)
-  //   if (this->tetrahedra_contains(i, vertices, x, w)){
-  //     for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j],0.)){
-  //       indices.push_back(vi_t[i][j]);
-  //       weights.push_back(w[j]);
-  //     }
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  /*!\brief Return the indices required and their weights for linear
+            interpolation at a point
+
+  \param vertices all vertex positions of the PolyhedronTrellis
+  \param        x the point at which linear interpolation is required
+  \param[out]  iw the minimal number of vertex indices and their interpolation
+                  weights required for linear interpoaltion within the Node
+  \returns whether a triangulated tetrahedra contains `x` and `iw` has been set
+
+  If one of the triangulated tetrahedra contains the interpolation point and it
+  is
+    - one of the indexed PolyhedronTrellis points then that point index and
+      a weight of 1 are set in `iw`.
+    - on an edge of the containing tetrahedra the two vertices on the endpoints
+      of the edge are set in `iw` along with weights proportional to the
+      distance from the point to the *other* vertex -- that is, the line segment
+      length with a vertex replaced by the point is proportional to the
+      interpolation weight for that vertex.
+    - on a face of the tetrahedra the three vertices at the corners of the face
+      are set in `iw` with weights proportional to the area of the triangle
+      formed by the test point and the two other face vertices.
+    - within the volume of the tetrahedra the four corners indices are set in
+      `iw` along with weights proportional to the volume of the tetrahedron
+      formed by the point and the other three Node corners.
+
+  If the point is not inside any of the triangulated tetrahedra no inidices
+  or weights are set and the returned bool is false.
+  */
   bool indices_weights(
     const bArray<double>& vertices,
     const bArray<double>& x,
@@ -221,6 +291,7 @@ public:
     }
     return false;
   }
+  //! Return the total triangulated volume of the PolyNode
   double volume(const bArray<double>&) const {
     return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
   }
@@ -258,49 +329,72 @@ private:
   }
 };
 
+/*! \brief A utility class to hold and index both CubeNode and PolyNode objects
+
+As both CubeNode and PolyNode are subclasses of NullNode they can not be easily
+distinguished in templates and some form of more complex differentiation is
+required.
+
+The NodeContainer contains a vector which contains the indices of all contained
+CubeNode and PolyNode objects within their respective vectors. The indexing
+vector holds at each element a pair of NodeType and index into the node type's
+vector.
+*/
 class NodeContainer{
-public:
-  using ind_t = brille::ind_t;
 private:
   std::vector<std::pair<NodeType,ind_t>> nodes_;
   std::vector<CubeNode> cube_nodes_;
   std::vector<PolyNode> poly_nodes_;
 public:
+  //! Return the total number of index nodes
   size_t size(void) const {return nodes_.size();}
+  //! Return the number of indexed CubeNode objects
   size_t cube_count() const {
     return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::cube == n.first;});
   }
+  //! Return the nuber of indexed PolyNode objects
   size_t poly_count() const {
     return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::poly == n.first;});
   }
+  //! Return the nubmer of indexed NullNode objects
   size_t null_count() const {
     return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::null == n.first;});
   }
+  //! Push a CubeNode onto the back of the container
   void push_back(const CubeNode& n){
     nodes_.emplace_back(NodeType::cube, static_cast<ind_t>(cube_nodes_.size()));
     cube_nodes_.push_back(n);
   }
+  //! Push a PolyNode onto the back of the container
   void push_back(const PolyNode& n){
     if (n.vertex_count() < 1)
       throw std::runtime_error("empty polynodes are not allowed!");
     nodes_.emplace_back(NodeType::poly, static_cast<ind_t>(poly_nodes_.size()));
     poly_nodes_.push_back(n);
   }
+  //! Push a NullNode onto the back of the container
   void push_back(const NullNode&){
     nodes_.emplace_back(NodeType::null, (std::numeric_limits<ind_t>::max)());
   }
+  //! Return the NodeType of the indexed node
   NodeType type(const ind_t i) const {
     return nodes_[i].first;
   }
+  //! Return whether the indexed node is a CubeNode
   bool is_cube(const ind_t i) const {return NodeType::cube == nodes_[i].first;}
+  //! Return whether the indexed node is a PolyNode
   bool is_poly(const ind_t i) const {return NodeType::poly == nodes_[i].first;}
+  //! Return whether the indexed node is a NullNode
   bool is_null(const ind_t i) const {return NodeType::null == nodes_[i].first;}
+  //! Return the CubeNode at index i
   const CubeNode& cube_at(const ind_t i) const {
     return cube_nodes_[nodes_[i].second];
   }
+  //! Return the PolyNode at index i
   const PolyNode& poly_at(const ind_t i) const {
     return poly_nodes_[nodes_[i].second];
   }
+  //! Return the number of vertices indexed by the node at index i
   ind_t vertex_count(const ind_t i) const {
     switch (nodes_[i].first){
       case NodeType::cube:
@@ -311,6 +405,7 @@ public:
       return 0;
     }
   }
+  //! Return the unique vertex indices in the node at index i
   std::vector<ind_t> vertices(const ind_t i) const{
     switch (nodes_[i].first){
       case NodeType::cube:
@@ -321,23 +416,23 @@ public:
       return std::vector<ind_t>();
     }
   }
+  //! Return the vertex indices for the triangulated tetrahedra held by the node at index i
   std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(const ind_t i) const{
     if (nodes_[i].first == NodeType::poly)
       return poly_nodes_[nodes_[i].second].vertices_per_tetrahedron();
     return std::vector<std::array<ind_t,4>>();
   }
-  // bool indices_weights(const ind_t i, const bArray<double>& v, const bArray<double>& x, std::vector<ind_t>& indices, std::vector<double>& weights) const{
-  //   switch (nodes_[i].first){
-  //     case NodeType::cube:
-  //     return cube_nodes_[nodes_[i].second].indices_weights(v,x,indices,weights);
-  //     case NodeType::poly:
-  //     return poly_nodes_[nodes_[i].second].indices_weights(v,x,indices,weights);
-  //     case NodeType::null:
-  //       throw std::logic_error("attempting to access null node!");
-  //     default:
-  //     return false;
-  //   }
-  // }
+  /*! Find the minimum number of vertex indices and their linear interpolation weights
+
+  \param      i  the indexed node to interogate
+  \param      v  all vertex positions of the PolyhedronTrellis
+  \param      x  the interpolation point
+  \param[out] iw the vertex indices and their linear interpolation weights
+  \returns whether node at index `i` contains sufficient information to
+           allow linear interpolation at `x`
+
+  \see CubeNode::indices_weights, PolyNode::indices_weights
+  */
   bool indices_weights(const ind_t i, const bArray<double>& v, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& iw) const{
     switch (nodes_[i].first){
       case NodeType::cube:
@@ -350,6 +445,11 @@ public:
       return false;
     }
   }
+  /*! Find the total interpolable volume of the node at index i
+
+  \param verts all vertex positions of the PolyhedronTrellis
+  \param i     the indexed node to interogate
+  */
   double volume(const bArray<double>& verts, const ind_t i) const {
     switch (nodes_[i].first){
       case NodeType::cube:
@@ -362,19 +462,55 @@ public:
   }
 };
 
+/*! \brief A class implementing a hybrid Cartesian and n-simplex grid in 3 dimensions
+
+The PolyhedronTrellis has a Polyhedron bounded domain over which it can linearly
+interpolate arbitrary data.
+
+For quick location of the vertices required for linear interpolation at an
+arbitrary point the PolyhedronTrellis defines a Cartesian grid within the
+bounding box of the Polyhedron, with intersection points defining a 'trellis'
+and each set of eight intersections bounding a 'node'.
+- If a node is wholey within the bounding Polyhedron then its vertices can be
+  used directly for linear interpolation within that node, and it is a CubeNode.
+- If a node intersects with the bounding Polyhedron surface then its
+  intersection with that Polyhedron has less volume than the node, and it is a
+  PolyNode. The vertices of a PolyNode are triangulated for use in linear
+  interpolation.
+- If a node does not intersect with the bounding Polyhedron then its vertices
+  can never be used to interpolate within the domain of the PolyhedronTrellis
+  and it is a NullNode.
+
+The node containing an interpolation point can be calculated directly from the
+its position and the spacing of the trellis. If that node is a CubeNode the
+vertices necessary to perform the interpolation are trivial to determine.
+If the node is a PolyNode a checks must be made to determine which of its
+triangulated tetrahedra contains the point but, as the number of tetrahedra is
+typically small, this is a relatively fast process; with the tetrahedra found
+the vertices and their weights required for linear interpolation are again
+trivial to determine.
+*/
 template<typename T, typename R>
 class PolyhedronTrellis{
 public:
-  using ind_t = brille::ind_t;
-  using data_t = DualInterpolator<T,R>;
-  using vert_t = bArray<double>;
+  using data_t = DualInterpolator<T,R>; //!< the container which holds the data to interpolate and performs the interpolation
+  using vert_t = bArray<double>;        //!< the container which holds the vertex positions of the PolyhedronTrellis
 private:
-  Polyhedron polyhedron_;                        //!< the Polyhedron bounding the Trellis
-  data_t data_;                  //!< [optional] data stored at each Trellis vertex
-  vert_t vertices_;               //!< The Trellis intersections inside the bounding Polyhedron
-  NodeContainer nodes_;
-  std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the Trellis intersections, which bound the Trellis nodes
+  Polyhedron polyhedron_; //!< the Polyhedron bounding the domain of the PolyhedronTrellis
+  data_t data_;           //!< data for interpolation stored for each indexed vertex of the PolyhedronT0rellis
+  vert_t vertices_;       //!< the indexed vertices of the PolyhedronTrellis
+  NodeContainer nodes_;   //!< the nodes of the trellis, indexing the vertices of the PolyhedronTrellis
+  std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the trellis intersections, which bound the nodes
 public:
+  /*! \brief Construct from a bounding Polyhedron
+
+  \param polyhedron         the boundary of the PolyhedronTrellis domain
+  \param max_volume         maximum node volume in the same units as the
+                            Polyhedron volume
+  \param always_triangulate control whether nodes fully within the domain of the
+                            PolyhedronTrellis are CubeNode (true) or PolyNode
+                            (false) objects
+  */
   explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume, const bool always_triangulate=false);
   // explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume){
   //   this->construct(polyhedron, max_volume);
@@ -383,18 +519,24 @@ public:
   //   double max_volume = polyhedron.get_volume()/static_cast<double>(number_density);
   //   this->construct(polyhedron, max_volume);
   // };
+  //! Explicit empty constructor
   explicit PolyhedronTrellis(): vertices_(0,3) {}
+  //! Return the number of trellis intersections
   ind_t expected_vertex_count() const {
     ind_t count = 1u;
     for (ind_t i=0; i<3u; ++i) count *= boundaries_[i].size();
     return count;
   }
+  //! Return the number of indexed vertices
   ind_t vertex_count() const { return static_cast<ind_t>(vertices_.size(0)); }
+  //! Return a constant reference to the indexed vertex positions
   const vert_t& vertices(void) const { return vertices_; }
+  //! Replace the indexed vertex positions
   const vert_t& vertices(const bArray<double>& v){
     if (v.ndim()==2 && v.size(1)==3) vertices_ = v;
     return vertices_;
   }
+  //! Return the vertex positions indexed by CubeNode objects
   vert_t cube_vertices(void) const {
     std::vector<bool> keep(vertices_.size(0), false);
     for (ind_t i=0; i<nodes_.size(); ++i)
@@ -402,6 +544,7 @@ public:
     for (auto idx: nodes_.vertices(i)) keep[idx] = true;
     return vertices_.extract(keep);
   }
+  //! Return the vertex positons indexed by PolyNode objects
   vert_t poly_vertices(void) const {
     std::vector<bool> keep(vertices_.size(0), false);
     for (ind_t i=0; i<nodes_.size(); ++i)
@@ -409,6 +552,11 @@ public:
     for (auto idx: nodes_.vertices(i)) keep[idx] = true;
     return vertices_.extract(keep);
   }
+  /*! Return the vertex indices of all PolyNode tetrahedra
+
+  \returns indices into the full indexed vertices of the PolyhedronTrellis
+           as returned by `PolyhedronTrellis::vertices`
+  */
   std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(void) const {
     std::vector<std::array<ind_t,4>> out;
     for (ind_t i=0; i<nodes_.size(); ++i)
@@ -416,11 +564,13 @@ public:
     for (auto tet: nodes_.vertices_per_tetrahedron(i)) out.push_back(tet);
     return out;
   }
-  // bool indices_weights(const bArray<double>& x, std::vector<ind_t>& indices, std::vector<double>& weights) const {
-  //   if (x.ndim()!=2 && x.size(0)!=1u && x.size(1)!=3u)
-  //     throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-  //   return nodes_.indices_weights(this->node_index(x), vertices_, x, indices, weights);
-  // }
+  /*! \brief Find the vertex indices and interpolation weights for a point
+
+  \param x the point at which linear interpolation is to be perfomed
+  \return The minimal list of vertex indices and weights to perform linear
+          interpolation or an empty vector if the point is not in the domain of
+          the PolyhedronTrellis.
+  */
   std::vector<std::pair<ind_t,double>>
   indices_weights(const bArray<double>& x) const {
     std::vector<std::pair<ind_t,double>> iw;
@@ -429,6 +579,7 @@ public:
     nodes_.indices_weights(this->node_index(x), vertices_, x, iw);
     return iw;
   }
+  //! Check that the held data can be used for linear interpolation
   template<class S>
   unsigned check_before_interpolating(const bArray<S>& x) const{
     unsigned int mask = 0u;
@@ -440,6 +591,13 @@ public:
       throw std::runtime_error("Contiguous vectors required for interpolation.");
     return mask;
   }
+  /*! \brief Perform linear interpolation at one or more points
+
+  \param x one or more points at which to perform linear interpolation of the
+           stored data.
+  \returns a tuple of the interpolated eigenvalues and eigenvectors for all
+           points in `x`
+  */
   std::tuple<brille::Array<T>, brille::Array<R>>
   interpolate_at(const bArray<double>& x) const {
     profile_update("Single thread interpolation at ",x.size(0)," points");
@@ -454,7 +612,7 @@ public:
     // Interpolator2::interpolate_at through the constructor:
     brille::Array2<T> vals2(vals_out);
     brille::Array2<R> vecs2(vecs_out);
-    for (size_t i=0; i<x.size(0); ++i){
+    for (ind_t i=0; i<x.size(0); ++i){
       verbose_update("Locating ",x.to_string(i));
       auto indwghts = this->indices_weights(x.view(i));
       if (indwghts.size()<1)
@@ -463,6 +621,15 @@ public:
     }
     return std::make_tuple(vals_out, vecs_out);
   }
+  /*! \brief Perform linear interpolation in parallel at one or more points
+
+  \param x       one or more points at which to perform linear interpolation of
+                 the stored data.
+  \param threads the number of OpenMP threads to use; the return value of
+                 `omp_get_max_threads()` will be used if `threads` < 1.
+  \returns a tuple of the interpolated eigenvalues and eigenvectors for all
+           points in `x`
+  */
   std::tuple<brille::Array<T>, brille::Array<R>>
   interpolate_at(const bArray<double>& x, const int threads) const {
     this->check_before_interpolating(x);
@@ -480,11 +647,11 @@ public:
     brille::Array2<T> vals2(vals_out);
     brille::Array2<R> vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-    long long xsize = brille::utils::u2s<long long, size_t>(x.size(0));
+    long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
     size_t n_unfound{0};
   #pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize) reduction(+:n_unfound) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
-      size_t i = brille::utils::s2u<size_t, long long>(si);
+      ind_t i = brille::utils::s2u<ind_t, long long>(si);
       auto indwghts = this->indices_weights(x.view(i));
       if (indwghts.size()>0) {
         data_.interpolate_at(indwghts, vals2, vecs2, i);
@@ -495,24 +662,36 @@ public:
     std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
     return std::make_tuple(vals_out, vecs_out);
   }
+  //! Return the total number of nodes within the trellis
   ind_t node_count() {
     ind_t count = 1u;
     for (ind_t i=0; i<3u; ++i) count *= static_cast<ind_t>(boundaries_[i].size()-1);
     return count;
   }
+  //! Return the number of nodes along each of the three dimensions of the trellis
   std::array<ind_t,3> size() const {
     std::array<ind_t,3> s;
     for (ind_t i=0; i<3u; ++i) s[i] = static_cast<ind_t>(boundaries_[i].size()-1);
     return s;
   }
+  //! Return the span between neighbouring nodes along each of the three dimensions of the trellis
   std::array<ind_t,3> span() const {
     std::array<ind_t,3> s{{1,0,0}}, sz=this->size();
     for (ind_t i=1; i<3; ++i) s[i] = sz[i-1]*s[i-1];
     return s;
   }
-  // const std::array<std::vector<double>,3>& boundaries(void) const {return boundaries_;}
-  //
-  // Find the appropriate node for an arbitrary point:
+  /*! \brief Find the trellis node subscript index containing an arbitrary point
+
+  \param p a point within the bounding box of the Polyhedron
+  \returns the subscript index of the trellis CubeNode or PolyNode containing
+          the point
+  \note Since a point can be on the surface of more than one trellis node and
+        two adjacent nodes do not need to be of the same type it is possible
+        that a simple indexing finds a NullNode (which can not be used for
+        linear interpolation). To overcome this the method searches the
+        neighbouring node(s) which the point is on the surface of to find a
+        non-null node subscript index.
+  */
   std::array<ind_t,3> node_subscript(const bArray<double>& p) const {
     std::array<ind_t,3> sub{{0,0,0}};
     for (ind_t dim=0; dim<3u; ++dim)
@@ -554,10 +733,16 @@ public:
     info_update_if(bad,"The node subscript ",sub," for the point ",p.to_string()," is either invalid or points to a null node!");
     return sub;
   }
-  // find the node linear index for a point
+  //! Find the trellis node linear index for an arbitrary point
   template <class S> ind_t node_index(const S& p) const { return this->sub2idx(this->node_subscript(p)); }
 
   // return a list of non-null neighbouring nodes
+  /*! \brief Return a list of all non-null nodes neighbouring a trellis node
+
+  \param idx the trellis node linear index
+  \returns the trellis node linear indices of all of the neighbouring nodes
+           which do not contain NullNode objects, up to 26 in total.
+  */
   std::vector<ind_t> node_neighbours(const ind_t idx) const {
     std::vector<ind_t> out;
     std::array<ind_t,3> sz{this->size()}, sp{this->span()}, sub;
@@ -573,17 +758,19 @@ public:
     return out;
   }
 
+  //! Return a constant reference to the CubeNode with a given trellis node linear index
   const CubeNode& cube_node(const ind_t idx) const {
     if (idx >= nodes_.size() || !nodes_.is_cube(idx))
       throw std::runtime_error("Out-of-bounds or non-cube node");
     return nodes_.cube_at(idx);
   }
+  //! Return a constant reference to the PolyNode with a given trellis node linear index
   const PolyNode& poly_node(const ind_t idx) const {
     if (idx >= nodes_.size() || !nodes_.is_poly(idx))
       throw std::runtime_error("Out-of-bounds or non-polyhedron node");
     return nodes_.poly_at(idx);
   }
-
+  //! Return a string representation of the size of the trellis
   std::string to_string(void) const {
     std::string str = "(";
     for (auto i: this->size()) str += " " + std::to_string(i);
@@ -594,9 +781,13 @@ public:
   const data_t& data(void) const {return data_;}
   //! Replace the data stored in the object
   template<typename... A> void replace_data(A... args) {data_.replace_data(args...);}
+  //! Replace the eigenvalue data stored in the object
   template<typename... A> void replace_value_data(A... args) { data_.replace_value_data(args...); }
+  //! Replace the eigenvector data stored in the object
   template<typename... A> void replace_vector_data(A... args) { data_.replace_vector_data(args...); }
+  //! Replace the eigenvalue data cost information stored in the object
   template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
+  //! Replace the eigenvector data cost information stored in the object
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
   //! Return the number of bytes used per Q point
   size_t bytes_per_point() const {return data_.bytes_per_point(); }
@@ -605,7 +796,9 @@ public:
   brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const{
     return data_.debye_waller(Qpts,Masses,t_K);
   }
+  //! Determine the sorting permutation for every connected pair of vertices in the PolyhedronTrellis
   void sort(void){ data_.sort(); }
+  //! Find the total volume of all trellis nodes
   double total_node_volume() const {
     double vol{0.};
     for (ind_t i=0; i<nodes_.size(); ++i)
@@ -693,9 +886,9 @@ private:
       intersections.push_back({x,y,z});
     return intersections;
   }
-  std::array<size_t,3> trellis_intersections_span() const {
+  std::array<ind_t,3> trellis_intersections_span() const {
     size_t bs0{boundaries_[0].size()}, bs1{boundaries_[1].size()};
-    return std::array<size_t,3>({1, bs0, bs0*bs1});
+    return std::array<ind_t,3>({1,static_cast<ind_t>(bs0),static_cast<ind_t>(bs0*bs1)});
   }
   std::vector<std::array<ind_t,3>> trellis_local_cube_indices() const {
     /* Each node with linear index idx has a subscripted index (i,j,k)

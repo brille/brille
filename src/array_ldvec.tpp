@@ -56,7 +56,7 @@ LDVec<T>::star() const {
 }
 template<class T>
 LDVec<double>
-LDVec<T>::cross(const size_t i, const size_t j) const {
+LDVec<T>::cross(const ind_t i, const ind_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   bool bothok = (i<this->size(0) && j<this->size(0));
   LDVec<double> out(this->get_lattice(), bothok? 1u : 0u, 3u);
@@ -72,7 +72,7 @@ LDVec<T>::cross(const size_t i, const size_t j) const {
 
 template<class T>
 double
-LDVec<T>::dot(const size_t i, const size_t j) const {
+LDVec<T>::dot(const ind_t i, const ind_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   if (i>=this->size(0) || j>=this->size(0))
     throw std::out_of_range("attempted out of bounds access by dot");

@@ -14,33 +14,66 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
 #ifndef BRILLE_MESH_H_
 #define BRILLE_MESH_H_
-#include <set>
-#include "array.hpp"
-#include "array2.hpp"
-#include "array_latvec.hpp" // defines bArray
-#include <vector>
-#include <array>
-#include <omp.h>
-#include "interpolation.hpp"
+/*! \file
+    \author Greg Tucker
+    \brief A class holding a triangulated tetrahedral mesh and data for interpolation
+*/
+// #include <set>
+// #include "array.hpp"
+// #include "array2.hpp"
+// #include "array_latvec.hpp" // defines bArray
+// #include <vector>
+// #include <array>
+// #include <omp.h>
 #include "interpolatordual.hpp"
-#include "utilities.hpp"
-#include "permutation.hpp"
+// #include "utilities.hpp"
+// #include "permutation.hpp"
 #include <queue>
 #include "triangulation_layers.hpp"
 namespace brille {
 
+/*!
+\brief A triangulated tetrahedral mesh with eigenvalue and eigenvector data
+
+One way of dividing three dimensional space is to fill it with a tiling of
+tetrehedra. Each tetrahedra has four vertices and four triangular faces.
+As each face can be shared with one other tetrahedra, each tetrahedron has up
+to four neighbours (tetrahedra on the surface of a space will have one fewer
+neighbour per surface). There is no limit to how many tetrahedra any vertex
+can contribute to.
+
+If one or more values are defined for every vertex in the tetrahedral mesh then
+it can be used to perform linear interpolation for any arbitrary point within
+the bound space.
+
+With no guaranteed ordering of the tethrahedra finding which tetrahedra contains
+the interpolation point can require testing all tetrahedra for inclusion.
+As such a simple tetrahedral mesh is not well suited for *fast* interpolation.
+In order to overcome this limitation, this class uses a hierarchy of overlapping
+tetrahedra arranged in layers to limit the number of inclusion tests required
+during interpolation.
+If a point is within a tetrahedron at a given layer then a list of tetrahedra
+that it might be in at the next lower layer is available. These next-lower
+tetrahedra all have the property that they have an non-null intersection with
+the connected higher-level tetrahedra.
+*/
 template<class T, class S>
 class Mesh3{
-  using ind_t = brille::ind_t;
   using data_t = DualInterpolator<T,S>;
 protected:
   TetTri mesh;
   data_t data_;
 public:
-  //constructors
+  /* \brief Triangulate a space and build a TetTri within it
+
+  \param verts the vertices bounding the space
+  \param facets the vertex lists of the surfaces of the boundary
+  \param max_volume The largest volume that a leaf tetrahedron can have
+  \param num_levels The number of branchings
+  \param max_points The largest number of triangulated vertices
+  */
   Mesh3(const bArray<double>& verts,
         const std::vector<std::vector<int>>& facets,
         const double max_volume=-1.0,

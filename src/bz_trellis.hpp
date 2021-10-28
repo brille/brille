@@ -14,18 +14,36 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+/*! \file
+    \author Greg Tucker
+    \brief Defines a class to extend `PolyhedronTrellis` with `BrillouinZone` information.
+*/
 #ifndef BRILLE_BZ_TRELLIS_
 #define BRILLE_BZ_TRELLIS_
 #include "bz.hpp"
 #include "trellis.hpp"
-#include "phonon.hpp"
+// #include "phonon.hpp"
 namespace brille {
+  /*! \brief A PolyhedronTrellis in a BrillouinZone
 
+  The first or irreducible Brillouin zone Polyhedron contained in a BrillouinZone
+  object can be used to define the domain of a PolyhedronTrellis hybrid regular
+  parallelpiped and triangulation grid.
+  The symmetries of the Brillouin zone can then be used to interpolate at any
+  point in reciprocal space by finding an equivalent point within the domain of
+  the PolyhedronTrellis.
+  */
 template<class T, class R>
 class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
   using SuperClass = PolyhedronTrellis<T,R>;
   BrillouinZone brillouinzone;
 public:
+  /*! \brief Construct a `BrillouinZoneTrellis3` from a `BrillouinZone` and variable arguments
+
+  All arguments beyond the `BrillouinZone` are passed to the `PolyhedronTrellis` constructor.
+  \param bz the `BrillouinZone` used to define the boundaries of the `Mesh3`
+  \param args the construction arguments for `PolyhedronTrellis`
+  */
   template<typename... A>
   BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
     SuperClass(bz.get_ir_polyhedron(), args...),
@@ -47,6 +65,25 @@ public:
   //! get the indices forming the faces of the tetrahedra
   std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
 
+  /*! \brief Interpolate at an equivalent first Brillouin zone reciprocal lattice point
+
+  \param x        One or more points expressed in the same reciprocal lattice as
+                  the stored `BrillouinZone`
+  \param nth      the number of parallel OpenMP workers to utilize
+  \param no_move  If all provided points are *already* within the first
+                  Brillouin zone this optional parameter can be used to skip a
+                  call to `BrillouinZone::moveinto`.
+  \return a tuple of the interpolated eigenvalues and eigenvectors
+
+  The interpolation is performed by `PolyhedronTrellis::interpolate_at` and no
+  post processing is performed.
+
+  \warning The last parameter should only be used with extreme caution as no
+           check is performed to ensure that the points are actually in the
+           first Brillouin zone. If this condition is not true and the
+           parameter is set to true, the subsequent interpolation call may raise
+           an error or access unassigned memory and will produce garbage output.
+  */
   template<class S>
   std::tuple<brille::Array<T>,brille::Array<R>>
   interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
@@ -68,6 +105,28 @@ public:
     return this->SuperClass::interpolate_at(q.get_xyz(), nth);
   }
 
+  /*! \brief Interpolate at an equivalent irreducible reciprocal lattice point
+
+  \param x        One or more points expressed in the same reciprocal lattice as
+                  the stored `BrillouinZone`
+  \param nth      the number of parallel OpenMP workers to utilize
+  \param no_move  If all provided points are *already* within the irreducible
+                  Brillouin zone this optional parameter can be used to skip a
+                  call to `BrillouinZone::ir_moveinto`.
+  \return a tuple of the interpolated eigenvalues and eigenvectors
+
+  The interpolation is performed by `PolyhedronTrellis::interpolate_at` and then
+  corrected for the pointgroup operation by `Interpolator::rotate_in_place`.
+  If the stored data has the same behaviour under application of the pointgroup
+  operation as Phonon eigenvectors, then the appropriate `GammaTable` is
+  constructed and used as well.
+
+  \warning The last parameter should only be used with extreme caution as no
+           check is performed to ensure that the points are actually in the
+           irreducible Brillouin zone. If this condition is not true and the
+           parameter is set to true, the subsequent interpolation call may raise
+           an error or access unassigned memory and will produce garbage output.
+  */
   template<class S>
   std::tuple<brille::Array<T>,brille::Array<R>>
   ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {

@@ -71,7 +71,7 @@ void declare_lattice_mat_init(py::class_<T,br::Lattice> &pclass, const std::stri
 
 template<class R, class T>
 void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std::string &argname, const R defarg){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const R groupid){
+  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const R groupid){
     py::buffer_info info = vecs.request();
     if ( info.ndim!=2 )
       throw std::runtime_error("Number of dimensions must be two");
@@ -96,7 +96,7 @@ void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std
 
 template<class T>
 void declare_lattice_mat_basis_sym_init(py::class_<T,br::Lattice> &pclass){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<unsigned long> typ, const br::Symmetry& sym){
+  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const br::Symmetry& sym){
     py::buffer_info info = vecs.request();
     if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
       throw std::runtime_error("Basis vectors must be a 3x3 array");
@@ -128,7 +128,22 @@ void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::strin
     declare_lattice_mat_basis_init(pclass,hnum,hnumdef);
     declare_lattice_mat_basis_init(pclass,hstr,hstrdef);
     declare_lattice_mat_basis_sym_init(pclass);
-    pclass.def_property_readonly("star",&T::star,"Return the dual lattice");
+    pclass.def_property_readonly("star",&T::star,R"pbdoc(
+    Return the dual lattice
+
+    A lattice described by the basis vectors :math:`\mathbf{a}_1`,
+    :math:`\mathbf{a}_2`, and :math:`\mathbf{a}_3` has a unit cell volume
+    given by :math:`V = \mathbf{a}_1 \cdot (\mathbf{a}_2\times\mathbf{a}_3)`.
+    It's dual lattice is defined by the basis vectors :math:`\mathbf{b}_1`,
+    :math:`\mathbf{b}_2`, and :math:`\mathbf{b}_3` with the relationship
+
+    .. math::
+        \mathbf{b}_i = \frac{2\pi}{V}\mathbf{a}_j\times \mathbf{a}_k
+
+    for :math:`(i,j,k) \in \left\{(1,2,3),(2,3,1),(3,1,2)\right\}`
+    and has unit cell volum :math:`V* = 2\pi/V`
+
+    )pbdoc");
     pclass.def_property_readonly("xyz_transform",[](T &d){
       auto result = py::array_t<double, py::array::c_style>({3,3});
       py::buffer_info bi = result.request();
@@ -147,7 +162,14 @@ void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::strin
     });
     pclass.def("isstar",(bool (T::*)(const Direct&    ) const) &T::isstar);
     pclass.def("isstar",(bool (T::*)(const Reciprocal&) const) &T::isstar);
-    pclass.def_property_readonly("primitive",&T::primitive,"Return the primitive lattice");
+    pclass.def_property_readonly("primitive",&T::primitive,R"pbdoc(
+    Return a primitive (non-centred) lattice equivalent to this one
+
+    Every centred lattice has any number of non-centred lattices which are
+    equally valid in that they span the same space. This method returns the
+    primitive lattice related to a centred lattice by the translation vectors
+    described in :py:class:`~brille._brille.Bravais`.
+    )pbdoc");
 }
 
 #endif
