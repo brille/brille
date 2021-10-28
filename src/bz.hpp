@@ -102,7 +102,7 @@ public:
       // other combinations of special_2_folds, special_mirrors,
       // and sort_by_length are possible but not necessarily useful.
       if (!success)
-        info_update("Failed to find an irreducible Brillouin zone.");
+        throw std::runtime_error("Failed to find an irreducible Brillouin zone.");
     }
     profile_update("  End of BrillouinZone construction");
   }
@@ -494,7 +494,8 @@ public:
       points = this->get_primitive_points();
       normals = this->get_primitive_normals();
     }
-    for (ind_t i=0; i<p.size(0); ++i)
+    #pragma omp parallel for default(none) shared(out, normals, p, points) schedule(dynamic)
+    for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t 
       out[i] = dot(normals, p.view(i)-points).all(brille::cmp::le, 0.);
     return out;
   }
@@ -550,7 +551,8 @@ public:
       // identifying whether a point is inside of the irreducible Brillouin zone
       // we must allow for the ≤0 case as well.
       brille::cmp c = pos||this->no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;
-      for (ind_t i=0; i<p.size(0); ++i)
+      #pragma omp parallel for default(none) shared(out, normals, p, c) schedule(dynamic)
+      for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t
         out[i] = dot(normals, p.view(i)).all(c, 0.);
     }
     return out;

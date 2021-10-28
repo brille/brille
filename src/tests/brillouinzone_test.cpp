@@ -69,6 +69,47 @@ TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
   REQUIRE(bz.moveinto(Q,q,tau));
 }
 
+TEST_CASE("BrillouinZone moveinto hexagonal extended","[brillouinzone][moveinto][.timing]"){
+  Direct dlat(3.,3.,9.,90.,90.,120.,1);
+  Reciprocal rlat(dlat.star());
+  BrillouinZone bz(rlat);
+  std::vector<std::array<double,3>> rawQ;
+
+  std::default_random_engine g(std::chrono::system_clock::now().time_since_epoch().count());
+  std::uniform_real_distribution<double> d(-4.0, 4.0);
+  auto random_array = [&]() -> std::array<double,3> { return {d(g), d(g), d(g)}; };
+
+  size_t count{0}, total_points{10000};
+  while (++count < total_points)
+    rawQ.push_back(random_array());
+
+  LQVec<double> Q(rlat, bArray<double>::from_std(rawQ));
+  LQVec<double> q(rlat, Q.size(0));
+  LQVec<int> tau(rlat, Q.size(0));
+  REQUIRE_NOTHROW(bz.moveinto(Q,q,tau));
+  
+  // construct a timing object, defined in debug.hpp
+  // has methods:
+  //    tic       -- start/reset the timer
+  //    toc       -- emit a split time and increment the number of splits counter
+  //    average   -- divide the total elapsed time by the number of splits
+  //    jitter    -- estimate the timing uncertainty assuming counting statistics in both timer and splits
+  auto timer = Stopwatch<>();
+  // setup explicit-number-of-threads region:
+  omp_set_dynamic(0); // disables dynamic teams
+  auto max_threads = omp_get_max_threads();
+  std::vector<double> times;
+  for (int threads=1; threads<max_threads; ++threads){
+    omp_set_num_threads(threads);
+    timer.tic();
+    bz.moveinto(Q,Q,tau);
+    times.push_back(timer.toc()); // keep the split-time (in msec)
+    info_update("brillouinzone::moveinto of ",total_points," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
+  }
+  for (size_t i=1u; i<times.size(); ++i)
+    REQUIRE(times[i] <= times[0]);
+}
+
 TEST_CASE("Irreducible Brillouin zone for mp-147","[brillouinzone][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
@@ -167,4 +208,12 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproj
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/4));
+}
+
+TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[brillouinzone]"){
+  double a{3.5}, c{12.9}, alpha{90}, gamma{120};
+  std::string spacegroup = "P 4";
+  Direct dlat(a,a,c, alpha,alpha,gamma, spacegroup);
+  Reciprocal rlat = dlat.star();
+  REQUIRE_THROWS_WITH( BrillouinZone(rlat), "Failed to find an irreducible Brillouin zone."); 
 }

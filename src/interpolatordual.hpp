@@ -399,7 +399,7 @@ DualInterpolator<T,R>::get_permutations(const std::vector<I>& indices) const {
   // find the minimum index so that permutation(pvt,idx) is always ordered
   I pvt{indices[0]};
   //for (const I idx: indices) if (idx < pvt) pvt = idx;
-  for (const I idx: indices) perms.push_back(this->get_permutation(pvt, idx));
+  for (const I & idx: indices) perms.push_back(this->get_permutation(pvt, idx));
   return perms;
 }
 template<class T, class R> template<typename I, typename>
@@ -408,7 +408,7 @@ DualInterpolator<T,R>::get_permutations(const std::vector<std::pair<I,double>>& 
   std::vector<std::vector<ind_t>> perms;
   I pvt{iw[0].first};
   //for (const auto piw: iw) if (piw.first < pvt) pvt = piw.first;
-  for (const auto piw: iw) perms.push_back(this->get_permutation(pvt, piw.first));
+  for (const auto & piw: iw) perms.push_back(this->get_permutation(pvt, piw.first));
   return perms;
 }
 

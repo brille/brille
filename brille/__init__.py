@@ -33,9 +33,16 @@ connected point network.
     :toctree: _generate
 """
 
-# try:
-#     from ._brille import *
-# except ImportError:
-#     print("Error importing compiled brille package")
+try:
+    from ._brille import *
+except ImportError:
+    # In build / tests, _brille might be in another folder on path
+    from _brille import *
 
-from ._brille import *
+from . import utils
+
+try:
+    from . import plotting
+except ModuleNotFoundError:
+    # Build servers don't have Matplotlib installed; plotting not tested
+    pass
