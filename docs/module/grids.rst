@@ -252,6 +252,8 @@ tetrahedra. As long as :math:`N_\text{checks} < N_\text{tetrahedra}^n` this loca
   :members:
 
 
+.. _hybrid-grids:
+
 Hybrid grids
 ============
 
