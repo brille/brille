@@ -30,7 +30,7 @@ rotations and rotoinversions that form a group,
     \def \mat#1#2#3#4{\begin{pmatrix} #1 & #2\\#3 & #4\end{pmatrix}}
     \mathbb{G} = \mat{1}{0}{0}{1}, \mat{0}{-1}{1}{0}, \mat{0}{1}{1}{0}, \ldots
 
-where for every element, :math:`G\in\mathbb{G}`, there exists a an equivalent
+where for every element, :math:`G\in\mathbb{G}`, there exists an equivalent
 product of elements of :math:`\mathbb{G}`. This allows a reduced representation
 of :math:`\mathbb{G}` by a minimal set of its elements, called its generators,
 which can be combined to produce all other elements.
@@ -55,11 +55,11 @@ Space groups.
 Direct lattices
 ---------------
 
-While the specific example of a Lattice given above was described in terms of
-a physical lattice, Lattices are not limited to any one space.
-To remove any ambiguity, throughout brille Lattices which describe the positions
-of atoms in real space and their properties are referred to as
-:py:class:`Direct` lattices.
+While the specific example of a :py:class:`~brille._brille.Lattice` given above
+was described in terms of a physical lattice, Lattices are not limited to any
+one space. To remove any ambiguity, throughout :py:mod:`brille` Lattices
+which describe the positions of atoms in real space and their properties are
+referred to as :py:class:`~brille._brille.Direct` lattices.
 
 Reciprocal lattices
 -------------------
@@ -72,7 +72,7 @@ found elsewhere, but importantly where a lattice can be described by the lengths
 of its basis vectors, the basis vectors of its dual lattice have units of
 inverse, or reciprocal, length.
 For this reason the dual lattice of a Direct lattice is referred to here as a
-:py:class:`Reciprocal` lattice.
+:py:class:`~brille._brille.Reciprocal` lattice.
 
 
 
@@ -267,8 +267,8 @@ Brillouin zone, and :math:`\boldsymbol{\tau}` is a Reciprocal lattice point.
 
 Since the irreducible first Brillouin zone contains all of the information about
 the physical properties of a material, it can and should be used by projects
-aiming to model those properties efficently.
-To help in this task, :py:mod:`brille` defines :py:class:`BrillouinZone` to
+aiming to model those properties efficiently.
+To help in this task, :py:mod:`brille` defines :py:class:`~brille._brille.BrillouinZone` to
 construct the first Brillouin zone and an irreducible Brillouin zone for any
 Reciprocal lattice.
 
@@ -296,8 +296,8 @@ like the Direct Geometry Time of Flight neutron spectrometer. Such instruments
 have an array of detectors at fixed positions and detect changes in the
 neutron energy by measuring the time it takes for a detected neutron to arrive
 at the detector. By knowing the neutron's initial, :math:`\mathbf{k}_\text{i}`,
-and final momenta, :math:`\mathbf{k}_\text{f}` it is
-straightforward to work out the momenta and energy transferred to the sample.
+and final momentum, :math:`\mathbf{k}_\text{f}` it is
+straightforward to work out the momentum and energy transferred to the sample.
 
 .. math::
 
@@ -328,12 +328,21 @@ constant-:math:`\mathbf{Q}`.
 calculation and interpolates their results onto the :math:`(\mathbf{Q},E)` paths
 measured during experiments.
 To accomplish this, a number of polyhedron-filling connected grids are defined;
-notably :py:class:`BZTrellisQdc` and similar variants.
+notably :py:class:`~brille._brille.BZTrellisQdc` and similar variants.
+The model calculation is evaluated for :math:`\mathbf{Q}` points defined by
+the vertices of the polyhedra which comprise the grid.
+Interpolation is done then by finding the polyhedron which encloses the desired
+point and linearly weighting the pre-calculated values at the vertices by the
+distance from the desired point to each vertex.
+
 
 Irreducible Brillouin zone interpolation
 ========================================
 
-Each of the polyhedron-filling connected grids takes a first Brillouin zone
+Since physical properties of crystalline solids are unique only within the 
+first irreducible Brillouin zone, only :math:`\mathbf{Q}` points within this
+region need be calculated by the expensive model calculation. Thus, the 
+polyhedron-filling connected grids takes a first Brillouin zone
 polyhedron or an irreducible Brillouin zone polyhedron plus, e.g., a maximum
 distance between grid nodes or a maximum grid cell volume, and define a grid.
 
@@ -393,8 +402,9 @@ point(s) can be calculated analytically. This lends itself to fast neighbour
 location and fast linear interpolation.
 
 A disadvantage to such a grid is that it can only be commensurate with
-polyhedra which are also rectangular prisms, which is not the case for all but
-primitive cubic, primitive tetragonal, and primitive orthorhombic space groups.
+polyhedra which are also rectangular prisms, which is the case only for
+irreducible first Brillouin zones of primitive cubic, primitive tetragonal, 
+and primitive orthorhombic space groups.
 When the grid is not commensurate with the polyhedron it is likely to introduce
 unmanageable artifacts in any interpolation result.
 
@@ -452,7 +462,7 @@ The disadvantages of the basic Cartesian grid are so restrictive that
 
 Another straightforward approach to defining a grid within a polyhedron is the
 use of a tetrahedral tiling. Tetrahedra being the three dimensional simplex.
-Creating such a tiling with nice properties is nontrivial, so brille uses the
+Creating such a tiling with nice properties is nontrivial, so :py:mod:`brille` uses the
 `TetGen <http://tetgen.org>`_ library to do the heavy lifting.
 
 Tetrahedral tilings have the advantage that they can be made commensurate with
@@ -461,11 +471,14 @@ interpolating near their surfaces.
 But they lack the ability to calculate which tetrahedron contains a specified
 point.
 So interpolating with a tetrahedral tiling is either slow or requires
-substantial metainformation to be determined in advance.
+substantial meta-information to be determined in advance.
 
-The class :py:class:`BZMeshQdc` implements a 3-D :math:`n`-simplex grid which
-fills and does not extend beyond the boundaries of a [irreducible] Brillouin
-zone.
+The classes :py:class:`~brille._brille.BZMeshQdc` and :py:class:`~brille._brille.BZNestQdc` 
+implement 3-D :math:`n`-simplex grids which fills and does not extend beyond
+the boundaries of a [irreducible] Brillouin zone. The differences between the
+two classes relate to how their (meta)data is stored, either in a flat or tree
+format as described in the :doc:`grids page <module/grids>`.
+
 
 Hybrid grid
 -----------
@@ -537,7 +550,7 @@ Hybrid grid
     \foreach \pt in {(g00), (g30), (g31), (g01), (g02), (g22), (g03), (e0), (e1), (e4), (e5)} {\draw[fill=lightgray] \pt circle[dot];}
     \end{tikzpicture}
 
-An alternative approach is to combine a cartesian grid with a :math:`n`-simplex
+An alternative approach is to combine a Cartesian grid with a :math:`n`-simplex
 grid. Such a grid has its rectangular-prism cells replaced by triangulated
 truncated-rectangular-prisms on the surface of the polyhedron.
 
@@ -545,6 +558,6 @@ Such a construction has the advantage of direct calculation of the cell which
 contains any given point with a much-faster search over only those tetrahedra
 within the cell if the rectangular-prism passes the surface of the polyhedron.
 
-The class :py:class:`BZTrellisQdc` implements a hybrid grid in three dimensions
+The class :py:class:`~brille._brille.BZTrellisQdc` implements a hybrid grid in three dimensions
 which fills and does not extend beyond the boundaries of a [irreducible]
 Brillouin zone.

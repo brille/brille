@@ -6,7 +6,8 @@ Sodium Chloride forms face-centred cubic crystals in Space group
 :math:`F m \bar{3} m` (Hall symbol :math:`-F 4 2 3`) with lattice
 parameter :math:`a \approx 5.69` Å.
 
-:py:mod:`Euphonic` is a project which can take force constant information at
+`Euphonic <https://euphonic.readthedocs.io>`_ is a project which can take
+force constant information at
 gridded positions in :math:`\mathbf{Q}` and use Fourier interpolation to
 approximate the dynamical matrix at arbitrary :math:`\mathbf{Q}`.
 It can then solve the eigenvalue problem to determine the eigenvalues,
@@ -55,7 +56,7 @@ in reciprocal space. One such path starts at the origin and goes to
 :math:`\mathbf{Q} = (1\,2\,3)` which is on the Brillouin zone boundary for
 :math:`\mathbf{G} = (1\,1\,3)` and passes through the
 :math:`\mathbf{G} = (1\,1\,1)` and :math:`\mathbf{G} = (0\,2\,2)`
-first Brilouin zones.
+first Brillouin zones.
 
 .. figure:: images/nacl_123_path.png
     :align: center
