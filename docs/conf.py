@@ -42,6 +42,21 @@ extensions = [
     # 'exhale',
 ]
 
+intersphinx_mapping = {
+  'euphonic': ('https://euphonic.readthedocs.io/en/stable/', None),
+  'brilleu': ('https://brille.github.io/brilleu/latest/', None),
+}
+
+# Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
+# This raises an error with the version specified in the Docker image's
+# sphinxcontrib.katex, 0.11.1, switching to v0.15.0 turns the error into
+# a warning about 'LaTeX-incompatible input' 
+# Updating the Docker image might be possible, but the exhale/breathe/sphinx
+# problem encountered outside of the Docker build would need to be avoided.
+katex_css_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.css'
+katex_js_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.js'
+katex_autorender_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/contrib/auto-render.min.js'
+
 napoleon_use_ivar = True
 napoleon_use_param = False
 napoleon_use_admonition_for_notes = True
