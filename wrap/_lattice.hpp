@@ -141,7 +141,7 @@ void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::strin
         \mathbf{b}_i = \frac{2\pi}{V}\mathbf{a}_j\times \mathbf{a}_k
 
     for :math:`(i,j,k) \in \left\{(1,2,3),(2,3,1),(3,1,2)\right\}`
-    and has unit cell volum :math:`V* = 2\pi/V`
+    and has unit cell volume :math:`V* = 2\pi/V`
 
     )pbdoc");
     pclass.def_property_readonly("xyz_transform",[](T &d){

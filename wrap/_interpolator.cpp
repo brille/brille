@@ -33,8 +33,6 @@ void wrap_interpolator(py::module &m){
   R"pbdoc(
     Enumeration indicating how vector and matrix values transform
 
-    Values
-    ------
     RotatesLike::Real
       transform like a real space vector or matrix
     RotatesLike::Reciprocal

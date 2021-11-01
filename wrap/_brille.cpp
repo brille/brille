@@ -22,6 +22,7 @@ void wrap_bravais(pybind11::module &);
 void wrap_brillouinzone(pybind11::module &);
 void wrap_debug(pybind11::module &);
 void wrap_hallsymbol(pybind11::module &);
+void wrap_interpolator(pybind11::module &);
 void wrap_lattice(pybind11::module &);
 void wrap_mesh(pybind11::module &);
 void wrap_nest(pybind11::module &);
@@ -61,8 +62,8 @@ PYBIND11_MODULE(_brille, m){
 
     .. code-block:: python
 
-      from brille._brille import Direct, BrilloinZone
-      from brille import plotting as bplot
+      from brille._brille import Direct, BrillouinZone
+      from brille.plotting import plot as bplot
 
       direct_lattice = Direct((3.95, 3.95, 3.95, 12.9), (90, 90, 90), 'I4/mmm')
       brillouin_zone = BrillouinZone(direct_lattice.star)
@@ -90,5 +91,6 @@ PYBIND11_MODULE(_brille, m){
   wrap_polyhedron(m);
   wrap_hallsymbol(m);
   wrap_bravais(m);
+  wrap_interpolator(m);
   wrap_debug(m);
 }

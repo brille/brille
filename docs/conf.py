@@ -42,9 +42,11 @@ extensions = [
     # 'exhale',
 ]
 
+# Useful mappings: https://gist.github.com/bskinn/0e164963428d4b51017cebdb6cda5209
 intersphinx_mapping = {
   'euphonic': ('https://euphonic.readthedocs.io/en/stable/', None),
   'brilleu': ('https://brille.github.io/brilleu/latest/', None),
+  'numpy': ('https://numpy.org/doc/stable/', None),
 }
 
 # Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?

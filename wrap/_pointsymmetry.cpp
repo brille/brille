@@ -23,7 +23,12 @@ void wrap_pointsymmetry(pybind11::module & m){
   using pybind11::ssize_t;
   using namespace pybind11::literals;
   using namespace brille;
-  pybind11::class_<PointSymmetry> cls(m, "PointSymmetry");
+  pybind11::class_<PointSymmetry> cls(m, "PointSymmetry", R"pbdoc(
+  Holds the :math:`3 \times 3` rotation matrices :math:`R` which comprise
+  a point group symmetry. 
+
+  TODO: Write more details
+  )pbdoc");
 
   cls.def(pybind11::init([](int hall, int time_reversal){
     return Spacegroup(hall).get_pointgroup_symmetry(time_reversal);}),

@@ -17,7 +17,39 @@
 
 """
 Utilities for ``brille``
----------------------------------
+------------------------
+
+These functions help to construct lattices and grids for brillouin zone
+interpolation.
+
+.. code-block:: python
+
+  import numpy as np
+  from brille.utils import create_bz, create_grid
+
+  def dispersion(q):
+    energies = np.sum(np.cos(np.pi * q), axis=1)
+    eigenvectors = np.sin(np.pi * q)
+    return energies, eigenvectors
+    
+  bz = create_bz([4.1, 4.1, 4.1], [90, 90, 90], spacegroup='F m -3 m')
+  grid = create_grid(bz, node_volume_fraction=1e-6)
+  energies, eigenvectors = dispersion(grid.rlu)
+  n_energies = 1     # Only one mode
+  n_eigenvectors = 3 # Three values per q
+  rotateslike = 0    # See note below
+  grid.fill(energies, [n_energies, 0, 0, rotateslike],
+            eigenvectors, [n_eigenvectors, 0, 0, rotateslike])
+
+  interp_en, interp_ev = grid.ir_interpolate_at(np.random.rand(1000, 3))
+
+Note
+----
+The ``rotateslike`` enumeration is given in :py:meth:`~brille._brille.BZMeshQdc.fill`
+and describes how the eigenvalues / eigenvectors should be treated on application of a
+symmetry operation. The *gamma* option (``rotateslike=3``) should be used for
+phonon eigenvectors.
+
 
 .. currentmodule:: brille.utils
 
@@ -68,10 +100,13 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         If true, return an irreducible first Brillouin zone,
         otherwise just return the first Brillouin zone
 
+    Note
+    ----
     Note that the required lattice parameters must be specified as:
-        EITHER create_bz(a, b, c, alpha, beta, gamma, spacegroup, ...)
-        OR     create_bz(lens, angs, spacegroup, ...)
-        OR     create_bz(lattice_vectors, spacegroup, ...)
+        - EITHER ``create_bz(a, b, c, alpha, beta, gamma, spacegroup, ...)``
+        - OR     ``create_bz(lens, angs, spacegroup, ...)``
+        - OR     ``create_bz(lattice_vectors, spacegroup, ...)``
+
     E.g. you cannot mix specifing `a`, `b`, `c`, and `angs` etc.
     """
     # Take keyword arguments in preference to positional ones
@@ -151,11 +186,11 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     Constructs an interpolation grid for a given BrillouinZone object
 
     Brille provides three different grid implementations:
-        BZTrellisQ: A hybrid Cartesian and tetrahedral grid, with 
-            tetrahedral nodes on the BZ surface and cuboids inside. 
-        BZMeshQ: A fully tetrahedral grid with a layered data structure
-        BZNestQ: A fully tetrahedral grid with a nested tree data 
-            structure.
+        - BZTrellisQ: A hybrid Cartesian and tetrahedral grid, with 
+          tetrahedral nodes on the BZ surface and cuboids inside. [Default]
+        - BZMeshQ: A fully tetrahedral grid with a flat data structure
+        - BZNestQ: A fully tetrahedral grid with a nested tree data 
+          structure.
 
     By default a BZTrellisQ grid will be used.
 
@@ -172,14 +207,20 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     nest: bool, optional (default: False)
         Whether to construct a BZNestQ instead of a BZTrellisQ grid
 
-    Note that setting both `mesh` and `nest` to True gives an error
-    Additional keyword parameters will be passed to the relevant
-    grid constructors. They are:
+    Note
+    ----
+    Note that setting both `mesh` and `nest` to True gives an error.
 
-    BZTrellisQ Parameters
-    ---------------------
+
+    Additional keyword parameters will be passed to the relevant
+    grid constructors.
+    
+    For ``BZTrellisQ``, these are:
+
+    Parameters
+    ----------
     node_volume_fraction : float, optional (default: 1e-5)
-        The fractional volume of a tetrahedron in the mesh
+        The fractional volume of a tetrahedron in the mesh.
         Smaller numbers will result in better interpolation 
         accuracy at the cost of greater computation time.
     always_triangulate : bool, optional (default: False)
@@ -189,8 +230,11 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
         cuboid and compute tetrahedrons only for points near
         the surface of the Brillouin Zone.
 
-    BZMeshQ Parameters
-    ------------------
+
+    For ``BZMeshQ``, these additional parameters are available:
+
+    Parameters
+    ----------
     max_size : float, optional (default: -1.0)
         The maximum volume of a tetrahedron in cubic reciprocal
         Angstrom. If set to a negative value, Tetgen will generate
@@ -202,8 +246,11 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
         improve the mesh quality. Setting this to -1 will allow
         Tetgen to create an unlimited number of additional points.
 
-    BZNestQ Parameters
-    ------------------
+
+    For ``BZNestQ``, these additional parameters are available:
+
+    Parameters
+    ----------
     max_volume: float
         Maximum volume of a tetrahedron in cubic reciprocal Angstrom.
     number_density: float 
@@ -211,8 +258,10 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     max_branchings: int, optional (default: 5)
         Maximum number of branchings in the tree structure
 
-    Note that one of either the `max_volume` or `number_density` parameters
-    must be provided to construct a BZNestQ.
+    Note
+    ----
+    Note that one of either the **max_volume** or **number_density**
+    parameters must be provided to construct a ``BZNestQ``.
     """
     if not isinstance(bz, brille.BrillouinZone):
         raise ValueError('The `bz` input parameter is not a BrillouinZone object')
