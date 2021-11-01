@@ -32,6 +32,7 @@ You can use ``brille`` to:
 
   brille
   plotting
+  utils
   doxygen
   undoc_brille
 

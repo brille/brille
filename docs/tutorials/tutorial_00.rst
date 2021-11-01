@@ -6,7 +6,7 @@ Sodium Chloride forms face-centred cubic crystals in Space group
 :math:`F m \bar{3} m` (Hall symbol :math:`-F 4 2 3`) with lattice
 parameter :math:`a \approx 5.69` Å.
 
-:py:mod:`Euphonic` is a project which can take force constant information at
+:doc:`Euphonic <euphonic:index>` is a project which can take force constant information at
 gridded positions in :math:`\mathbf{Q}` and use Fourier interpolation to
 approximate the dynamical matrix at arbitrary :math:`\mathbf{Q}`.
 It can then solve the eigenvalue problem to determine the eigenvalues,
@@ -20,10 +20,10 @@ In the specific case of NaCl with its basis described in the face-centred
 lattice, the dynamical matrix is a :math:`24\times24` matrix and the eigenvalue
 problem can be solved relatively quickly on a modern computer.
 Still, it may be advantageous to minimise the work performed by
-:py:mod:`Euphonic` and let :py:mod:`brille` do the heavy lifting.
+:doc:`Euphonic <euphonic:index>` and let :py:mod:`brille` do the heavy lifting.
 
-The interface between :py:mod:`brille` and :py:mod:`Euphonic` is implemented as
-a class, :py:class:`brille.euphonic.BrEu`.
+The interface between :py:mod:`brille` and :doc:`Euphonic <euphonic:index>` is implemented as
+a class :py:class:`brilleu.BrillEu` in the :doc:`brilleu <brilleu:index>` module.
 
 
 
@@ -38,9 +38,9 @@ tutorial.
 .. literalinclude:: tutorial_00.py
     :lines: 28
 
-Constructing the :py:class:`brille.euphonic.BrEu` object creates a hybrid grid
+Constructing the :py:class:`~brilleu.BrillEu` object creates a hybrid grid
 in the irreducible Brillouin zone and then uses the
-:py:class:`Euphonic.data.interpolation.InterpolationData` object to store
+:py:class:`~euphonic.force_constants.ForceConstants` object to store
 :math:`\omega_i(\mathbf{q}_\text{ir})` and
 :math:`\hat{\epsilon}_{ij}(\mathbf{q}_\text{ir})` at each grid vertex.
 The stored data are then used to determine a sorting permutation for each vertex
@@ -55,7 +55,7 @@ in reciprocal space. One such path starts at the origin and goes to
 :math:`\mathbf{Q} = (1\,2\,3)` which is on the Brillouin zone boundary for
 :math:`\mathbf{G} = (1\,1\,3)` and passes through the
 :math:`\mathbf{G} = (1\,1\,1)` and :math:`\mathbf{G} = (0\,2\,2)`
-first Brilouin zones.
+first Brillouin zones.
 
 .. figure:: images/nacl_123_path.png
     :align: center
@@ -110,7 +110,7 @@ scattering
     \end{aligned}
 
 with :math:`S_i(\mathbf{Q})` and :math:`\omega_i(\mathbf{Q})` directly calculable
-from theory via, e.g., :py:mod:`Euphonic`.
+from theory via, e.g., :py:class:`~euphonic.structure_factor.StructureFactor`.
 
 If the observations were on a regular :math:`(\mathbf{Q},E)` grid then it would
 be straightforward to calculate :math:`S_i(\mathbf{Q})` and

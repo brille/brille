@@ -1,1 +1,3 @@
-'exhale'
+exhale
+sphinxcontrib-katex
+sphinxcontrib-tikz

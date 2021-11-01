@@ -3,6 +3,7 @@
   :undoc-members:
   :show-inheritance:
 
+.. module:: brille._brille
 
 
 Documented thus far:

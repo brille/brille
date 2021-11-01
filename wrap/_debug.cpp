@@ -56,7 +56,7 @@ Modify the timestamp output status of the :py:mod:`brille` status printer.
 Parameters
 ----------
 emt : bool, optional
-    Control whether a timestamp preceeds every status message
+    Control whether a timestamp precedes every status message
 
 Returns
 -------

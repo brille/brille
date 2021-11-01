@@ -23,8 +23,17 @@ void wrap_pointsymmetry(pybind11::module & m){
   using pybind11::ssize_t;
   using namespace pybind11::literals;
   using namespace brille;
-  pybind11::class_<PointSymmetry> cls(m, "PointSymmetry");
+  pybind11::class_<PointSymmetry> cls(m, "PointSymmetry", R"pbdoc(
+  Holds the :math:`3 \times 3` rotation matrices :math:`R` which comprise
+  a point group symmetry.
 
+  A point group describes the local symmetry of a lattice point. It contains
+  all of the generalised rotations of a :py:class:`~brille._brille.Symmetry`
+  with none of its translations.
+  )pbdoc");
+
+  // TODO: As part of removing the 'Hall number' this intializer should go.
+  // But also we may not need *any* Python initializer of a Point Group Symmetry
   cls.def(pybind11::init([](int hall, int time_reversal){
     return Spacegroup(hall).get_pointgroup_symmetry(time_reversal);}),
     "Hall_number"_a,"time_reversal"_a=0);

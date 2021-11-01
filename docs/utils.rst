@@ -1,0 +1,2 @@
+.. automodule:: brille.utils
+  :members:

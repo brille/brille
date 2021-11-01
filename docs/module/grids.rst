@@ -1,13 +1,13 @@
 Grids
 -----
 There are likely myriad ways one could divide an :math:`N` dimensional
-space but the two most basic building blocks are the parallel piped
+space but the two most basic building blocks are the parallelepiped
 (or its :math:`N` dimensional equivalent) and the :math:`N`-simplex.
 An :math:`N`-simplex always requires :math:`N+1` points
-where a parallel piped requires :math:`2^N`.
+where a parallelepiped requires :math:`2^N`.
 
-The parallel piped lends itself to a regular grid while arrangements of `N`-simplexs can be regular or irregular.
-In two dimensions the parallel piped grid is a regular cartesian grid:
+The parallelepiped lends itself to a regular grid while arrangements of `N`-simplexs can be regular or irregular.
+In two dimensions the parallelepiped grid is a regular Cartesian grid:
 
 .. tikz::
     :libs: calc
@@ -84,7 +84,7 @@ and `cc` for `(std::complex<double>, std::complex<double>)`.
 Regular grids
 =============
 
-Interpolation using grids constructed of regular parallelpipeds is possible,
+Interpolation using grids constructed of regular parallelepipeds is possible,
 but will lead to artefacts near the Brillouin zone boundary if the primitive
 lattice has any non-orthogonal basis vectors.
 This is such a large restriction that regular grids are no longer supported in :py:mod:`brille._brille`
@@ -135,7 +135,7 @@ This is such a large restriction that regular grids are no longer supported in :
 Triangulated grids
 ==================
 
-An alternative to the regular parallelpiped grid which may still have some utility is the
+An alternative to the regular parallelepiped grid which may still have some utility is the
 triangulation of a bounded space.
 If the triangulated space is bounded by a polyhedron then the triangulation can always
 represent it exactly, though possibly with sub-optimal triangulated cells.
@@ -193,12 +193,11 @@ both detailed below under the headings `Simple`_ and `Hierarchy`_.
 
 Simple
 ^^^^^^
-The :py:class:`~brille._brille.BZMeshQdc` and its type-sibilings implement a simple triangulated grid.
+The :py:class:`~brille._brille.BZMeshQdc` and its type-siblings implement a simple triangulated grid.
 Locating the tetrahedron within the grid which contains a test point could require as many in-tetrahedron
 checks as there are tetrahedra in the grid.
 This class should be fine for use in applications where intra-grid-point interpolation is not required,
-such as Brillouin zone integrations, but should probably be avoided when interpolation at random points
-is required.
+such as Brillouin zone integrations, but should be avoided when interpolation at random points is required.
 
 .. autoclass:: brille._brille.BZMeshQdd
 
@@ -215,9 +214,9 @@ multiple triangulations of the Brillouin Zone of increasingly finer maximum tetr
 overlapping regions of these triangulations are identified and stored to simplify later finding
 the smallest tetrahedron containing a given point.
 
-Starting from the coarsest 'top' `layer` of tetrahedra a containing tetrahedron should be quick to locate.
+Starting from the coarsest 'top' `layer` of tetrahedra, a containing tetrahedron should be quick to locate.
 Then the list of overlapping next-finer `layer` tetrahedra can be used to locate the next containing tetrahedron.
-This process repeats until the finest `layer` tetrahedron containin the point is found.
+This process repeats until the finest `layer` tetrahedron containing the point is found.
 The total number of in-tetrahedron checks is then on the order of the sum of the average number of connected
 tetrahedra at each layer over the number of layers; which should be chosen to be smaller than the total
 number of tetrahedra at the finest layer.
@@ -230,8 +229,8 @@ number of tetrahedra at the finest layer.
    A class requiring this relationship should be able to extract memory and speed efficiencies which the
    current implementation sacrificed for greater relationsional flexibility.
 
-If any :math:`i^\text{th}` layer has tetrahedra each with an average overlapping number of tetrahedra
-in the :math:`(i+1)^\text{th}` layer :math:`\left<m\right>_i` then the typical number of in-tetrahedra
+If the :math:`i^\text{th}` layer has tetrahedra which on average contain :math:`\left<m\right>_i` overlapping 
+number of tetrahedra in the :math:`(i+1)^\text{th}` layer, then the typical number of in-tetrahedra
 checks required to find the finest-tetrahedra containing any point is
 
 .. math::
@@ -240,7 +239,7 @@ checks required to find the finest-tetrahedra containing any point is
 and the finest `layer` contains
 
 .. math::
-   N_\text{tetrahedra}^n = \prod_{i=1}^n \left< m \left>_i
+   N_\text{tetrahedra}^n = \prod_{i=1}^n \left< m \right>_i
 
 tetrahedra. As long as :math:`N_\text{checks} < N_\text{tetrahedra}^n` this location method will be more efficient.
 
@@ -257,8 +256,8 @@ tetrahedra. As long as :math:`N_\text{checks} < N_\text{tetrahedra}^n` this loca
 Hybrid grids
 ============
 
-A hybrid grid employs both a regular grid of parallelpipeds and, where the regular grid
-passes the Brillouin zone boundary, indvidually triangulated cells.
+A hybrid grid employs both a regular grid of parallelepipeds and, where the regular grid
+passes the Brillouin zone boundary, individually triangulated cells.
 This enables fast location of the cell containing any interpolation point and, if it
 is triangulated, subsequent fast location of the containing tetrahedron.
 
@@ -338,3 +337,9 @@ The three exposed hybrid grid implementations have the same set of methods and a
 
 .. autoclass:: brille._brille.BZTrellisQdc
   :members:
+
+
+Helper classes
+==============
+
+.. autoclass:: brille._brille.RotatesLike

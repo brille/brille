@@ -32,23 +32,12 @@ void wrap_interpolator(py::module &m){
   py::enum_<RotatesLike> enm(m,"RotatesLike",
   R"pbdoc(
     Enumeration indicating how vector and matrix values transform
-
-    Values
-    ------
-    RotatesLike::Real
-      transform like a real space vector or matrix
-    RotatesLike::Reciprocal
-      transform like a reciprocal space vector or matrix
-    RotatesLike::Axis
-      transform like an real space axial vector
-    RotatesLike::Gamma
-      transform like a (real space) phonon eigenvector
   )pbdoc"
 );
-  enm.value("Real", RotatesLike::Real);
-  enm.value("Reciprocal", RotatesLike::Reciprocal);
-  enm.value("Axial", RotatesLike::Axial);
-  enm.value("Gamma", RotatesLike::Gamma);
+  enm.value("Real", RotatesLike::Real, R"pbdoc(real space vector or matrix)pbdoc");
+  enm.value("Reciprocal", RotatesLike::Reciprocal, R"pbdoc(reciprocal scpace vector or matrix)pbdoc");
+  enm.value("Axial", RotatesLike::Axial, R"pbdoc(real space axial vector)pbdoc");
+  enm.value("Gamma", RotatesLike::Gamma, R"pbdoc((real space) phonon eigenvector)pbdoc");
 }
 
 std::tuple<br::RotatesLike, int, int, std::array<double,3>>

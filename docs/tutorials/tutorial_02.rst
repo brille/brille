@@ -29,7 +29,7 @@ so we start with that:
 
 The created `lattice` spans reciprocal space with three orthogonal basis vectors
 each of unit length, :math:`1 \AA^{-1}`, and as a result has a unit cell with
-volume :math:`1 \AA{-3}` which we can access through `lattice.volume`.
+volume :math:`1 \AA^{-3}` which we can access through `lattice.volume`.
 
 Construct the Brillouin zone polyhedron
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -133,7 +133,7 @@ integer lattice point to :math:`\mathbf{Q}`.
   else:
     print('This should be an error, and impossible.')
 
-  if np.allclose(interpolate_values, phi(q_pts)):
+  if np.allclose(interpolated_values, phi(q_pts)):
     print('The interpolation worked as expected!')
   else:
     print('Linear interpolation of a linear scalar field did not work?!')
@@ -146,7 +146,7 @@ integer lattice point to :math:`\mathbf{Q}`.
     print('Linear interpolation or subtracting G did not work?!')
 
 The interpolated results should be exact (to machine precision) in this case
-since the linear interpolation of a linear function is exact independent of the
+since the linear interpolation of a linear function is exactly independent of the
 interpolation grid step size.
 Interpolating any non-linear function will naturally introduce some error in its
 estimate of the function.
@@ -263,7 +263,14 @@ Produces the following plot:
   Interpolated iron spinwave dispersion (black) and exact solution (red).
 
 
-On closer inspection, the linear-interpolation introduced errors are more obvious
+On closer inspection, the linear-interpolation introduced errors are more obvious:
+
+.. code:: python
+
+  plot(x_plot, values, '-k', x_plot, omega_fe(path), '--r')
+  setp(gca(), xticks=ticks_at, xticklabels=tick_labels)
+  setp(gca(), ylabel=r'$\omega(\mathbf{Q})$', xlabel=r'$\mathbf{Q}$')
+  setp(gca(), xlim=(80, 120), ylim=(247,257))
 
 .. figure:: tutorial_02_fig1.svg
   :align: center

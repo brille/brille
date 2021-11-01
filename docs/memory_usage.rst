@@ -9,7 +9,7 @@ general case.
 Orthogonal grid
 ###############
 
-An ortogonal grid in :math:`n` dimensions is comprised of cells which are
+An orthogonal grid in :math:`n` dimensions is comprised of cells which are
 defined by their :math:`2^n` vertices.
 While :py:mod:`brille` does not implement a basic three dimensional orthogonal
 grid, it represents a useful starting point for memory use calculations.

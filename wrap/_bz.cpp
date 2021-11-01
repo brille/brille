@@ -31,7 +31,7 @@ void wrap_brillouinzone(py::module & m){
 
     The region closer to a given lattice point than to any other is the
     Wigner-Seitz cell of that lattice. The same construction is one possible
-    first Brillouin zone of a reciprocal lattice and is used within `brille`.
+    first Brillouin zone of a reciprocal lattice and is used within ``brille``.
     For example, a two-dimensional hexagonal lattice has a first Brillouin
     zone which is a hexagon:
 
@@ -65,13 +65,13 @@ void wrap_brillouinzone(py::module & m){
 
     Since all physical properties of a crystal must have the same periodicity
     as its lattice, the powerful feature of the first Brillouin zone is that it
-    fully encompases a region of reciprocal space which must fully represent all
+    encompasses a region of reciprocal space which must fully represent all
     of reciprocal space.
 
     Most crystals contain rotational or rotoinversion symmetries in addition to
     the translational ones which give rise to the first Brillouin zone. These
     symmetries are the pointgroup of the lattice and enforce that the properties
-    of the crystal also have the same symmetry. The the first Brillouin zone,
+    of the crystal also have the same symmetry. The first Brillouin zone,
     therefore, typically contains redundant information.
 
     An irreducible Brillouin zone is a subsection of the first Brillouin zone
@@ -115,7 +115,7 @@ void wrap_brillouinzone(py::module & m){
         If the provided :py:class:`brille._brille.Reciprocal` lattice is a
         conventional Bravais lattice, this parameter controls whether the
         equivalent primitive Bravais lattice should be used to find the first
-        Brillouin zone. This is `True` by default and should only be modified
+        Brillouin zone. This is ``True`` by default and should only be modified
         for testing purposes.
     search_length: int
         The Wigner-Seitz construction of the first Brillouin zone finds the
@@ -129,26 +129,26 @@ void wrap_brillouinzone(py::module & m){
         :math:`(0\,\pm s_j\,\pm s_k)`, :math:`(\pm s_i\,\pm s_j\,\pm s_k)` for
         :math:`1 \le s_\alpha \le` `search_length`.
         If the reciprocal lattice is primitive then the default `search_length`
-        of 1 should always give the correct first Brillouin zone.
+        of ``1`` should always give the correct first Brillouin zone.
         For extra assurance that the correct first Brillouin zone is found, the
-        proceedure is internally repeated with `search_length` incremented by
+        procedure is internally repeated with `search_length` incremented by
         one and an error is raised if the two constructed polyhedra have
         different volumes.
     time_reversal_symmetry: bool
-        Controls whether time reversal symmetry should be added pointgroups
+        Controls whether time reversal symmetry should be added to pointgroups
         lacking space inversion. This affects the found irreducible Brillouin
-        zone for such systems. To avoid inadvertantly adding time reversal
-        symmetry when it is not appropriate, this is False by default.
+        zone for such systems. To avoid inadvertently adding time reversal
+        symmetry when it is not appropriate, this is ``False`` by default.
     wedge_search: bool
         Controls whether an irreducible Brillouin zone should be found. With
-        this set to False the returned py:class:`brille._brille.BrillouinZone`
-        will only contain the first Brillouin zone. If True the pointgroup
+        this set to ``False`` the returned :py:class:`brille._brille.BrillouinZone`
+        will only contain the first Brillouin zone. If ``True`` the pointgroup
         symmetry operations will be used to identify *an* irreducible Brillouin
         zone as well. If the provided lattice's parameters do not match the
         symmetry of the pointgroup (e.g., a lattice which should be tetragonal
-        like :math:`I4/mmm` but constructed with :math:`gamma=120^\circ`) the
+        like :math:`I4/mmm` but constructed with :math:`\gamma=120^\circ`) the
         algorithm will fail to find an appropriate irreducible Brillouin zone
-        and an error will be raised.
+        and an error will be raised. (Set to ``True`` by default).
   )pbdoc");
   cls.def(py::init<Reciprocal,bool,int,bool,bool>(),
           "lattice"_a, "use_primitive"_a=true, "search_length"_a=1,
@@ -341,13 +341,13 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
+      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
       units of the reciprocal lattice.
 
     Returns
     -------
     :py:class:`numpy.ndarray`
-      One dimensional logical array with `True` indicating 'inside'
+      One dimensional logical array with ``True`` indicating 'inside'
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -367,12 +367,12 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
+      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
       than one the maximum number of OpenMP threads will be used -- this value
-      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
       typically the number of logical cores if not explicitly set.
 
     Returns
@@ -424,22 +424,26 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
+      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
       than one the maximum number of OpenMP threads will be used -- this value
-      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
       typically the number of logical cores if not explicitly set.
 
     Returns
     -------
-    :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
+    Qir : :py:class:`numpy.ndarray`
       The array of equivalent irreducible :math:`\mathbf{q}_\text{ir}` points
       for all :math:`\mathbf{Q}`;
+    tau : :py:class:`numpy.ndarray`
       the closest reciprocal lattice vector, :math:`\boldsymbol{\tau}`,
       to each :math:`\mathbf{Q}`;
-      and the pointgroup symmetry operation and its inverse which obey
+    R : :py:class:`numpy.ndarray`
+      the pointgroup symmetry operation :math:`R`
+    Rinv : :py:class:`numpy.ndarray`
+      the inverse point group symmetry operation which obey
       :math:`\mathbf{Q} = R^{-1} \mathbf{q}_\text{ir} + \boldsymbol{\tau}`.
   )pbdoc");
 
@@ -473,17 +477,17 @@ void wrap_brillouinzone(py::module & m){
     an irreducible part of the full-space 4π steradian solid angle. This method
     will find points equivalent under the pointgroup operations of the lattice
     which fall within this irreducible solid angle and maintain their absolute
-    magntiude.
+    magnitude.
 
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (`Q.shape[1]==3`) expressed in
+      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
       units of the reciprocal lattice.
     threads : integer, optional (default 0)
       The number of parallel threads that should be used. If this value is less
       than one the maximum number of OpenMP threads will be used -- this value
-      can be controled by the environment variable `OMP_NUM_THREADS` and is
+      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
       typically the number of logical cores if not explicitly set.
 
     Returns

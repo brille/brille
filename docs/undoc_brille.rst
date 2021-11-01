@@ -1,4 +1,7 @@
+Undocumented C++ Classes
+------------------------
+
 .. automodule:: brille._brille
-  :members:
   :undoc-members:
   :show-inheritance:
+  :noindex:

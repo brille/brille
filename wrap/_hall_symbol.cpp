@@ -27,11 +27,11 @@ void wrap_hallsymbol(pybind11::module &m){
     generators of a spacegroup. Within his notation each motion is comprised of
     a character with one or more subscripts and superscripts which describe its
     order, unique axis, and translation. The notation specifies that, depending
-    on the position of a motion and details of any preceeding motion, some or
+    on the position of a motion and details of any preceding motion, some or
     all of the sub- and superscripts can be omitted. The :class:`HallSymbol` has
     been written to handle the logic necessary to decode a Hall symbol into its
     equivalent motions.
-    An added compilcation arises when the Hall symbol is encoded as an ASCII
+    An added complication arises when the Hall symbol is encoded as an ASCII
     string. Namely, there are no sub- or superscript glyphs and some scheme must
     be enacted to represent them.
 
