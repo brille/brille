@@ -14,6 +14,8 @@ endif()
 #   )
 # endif()
 
+message(STATUS "Using interpreter: ${PYTHON_EXECUTABLE}")
+
 
 set(CXX_SOURCES
   bravais.cpp

@@ -56,6 +56,19 @@ Note:
   If they are not present or not a supported version, they will be downloaded
   automatically from their respective Github repositories.
 
+debug
+-----
+If you encounter the need to debug the :py:mod:`~brille._brille` module, you can
+compile and install with debugging symbols via
+
+.. code-block:: bash
+   git clone https://github.com/brille/brille
+   cd brille
+   python setup.py debug_install
+
+which is an alias for ``python setup.py build --debug install``
+
+
 development
 -----------
 If you plan to modify the pure Python submodules, e.g.,
