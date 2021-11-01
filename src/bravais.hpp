@@ -46,7 +46,7 @@ A subset of the 10 possible Bravais letters is used herein:
 | C | C-face centred | ½aₛ+½bₛ |
 | I | body centred (*Innenzentriert*) | ½aₛ+½bₛ+½cₛ |
 | F | all-face centred | ½bₛ+½cₛ, ½cₛ+½aₛ, ½aₛ+½bₛ |
-| R | rhombohedrally centred (hexagonal axes) | ⅔aₛ+⅓bₛ+⅓cₛ, ⅓aₛ+⅓bₛ+⅔c |
+| R | rhombohedrally centred (hexagonal axes) | ⅔aₛ+⅓bₛ+⅓cₛ, ⅓aₛ+⅔bₛ+⅔c |
 
 For further details, see the
 [IUCr Online Dictionary of Crystallography](http://reference.iucr.org/dictionary/Centred_lattice).
