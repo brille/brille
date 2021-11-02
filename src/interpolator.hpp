@@ -506,7 +506,7 @@ public:
   runtime.
   */
   size_t bytes_per_point() const {
-    size_t n_elements = data_.numel()/data_.size(0);
+    size_t n_elements = data_.numel() > 0u ? data_.numel()/data_.size(0) : 0u;
     return n_elements * sizeof(T);
   }
 private:

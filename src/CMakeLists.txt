@@ -14,7 +14,7 @@ endif()
 #   )
 # endif()
 
-message(STATUS "Using interpreter: ${PYTHON_EXECUTABLE}")
+message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 
 
 set(CXX_SOURCES
